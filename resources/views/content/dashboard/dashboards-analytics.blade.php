@@ -162,12 +162,18 @@ use Illuminate\Support\Facades\Route;
             <div class="avatar me-4">
               <span class="avatar-initial rounded-3 bg-label-info"><i class='ri-time-line ri-24px'></i></span>
             </div>
-            <h4 class="mb-0">13</h4>
+            <h4 class="mb-0">
+
+              @foreach($certificadosPorVencer AS $certificado)
+              {{ $certificado->num_certificado }}   <small class="text-muted">{{ $certificado->fecha_vencimiento }}</small> <br>
+            @endforeach
+
+            </h4>
           </div>
           <h6 class="mb-0 fw-normal">Certificados por vencer</h6>
           <p class="mb-0">
-            <span class="me-1 fw-medium">-2.5%</span>
-            <small class="text-muted">than last week</small>
+            <!--<span class="me-1 fw-medium">-2.5%</span>
+            <small class="text-muted">than last week</small>-->
           </p>
         </div>
       </div>

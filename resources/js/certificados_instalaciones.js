@@ -133,14 +133,14 @@
            targets: 5,
            render: function (data, type, full, meta) {
              var $num_dictamen = full['num_dictamen'];
-             return '<span class="fw-bold">' + $num_dictamen + '</span>';
+             return $num_dictamen;
            }
          }, 
          {
             targets: 6,
             render: function (data, type, full, meta) {
-              var $num_servicio = full['num_certificado'];
-              return '<span class="user-email">' + $num_servicio + '</span>';
+              var $num_certificado = full['num_certificado'];
+              return '<span class="fw-bold">' + $num_certificado + '</span>';
             }
           },
           {
