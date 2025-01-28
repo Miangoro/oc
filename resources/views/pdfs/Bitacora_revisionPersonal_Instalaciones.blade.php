@@ -260,7 +260,7 @@
                     FIRMAS)
                     </td>
                     <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'C' ? 'C' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'NC' ? 'NC'  .' '. $respuestas['observacion'] : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
                     <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
             </tr>
             <tr>
