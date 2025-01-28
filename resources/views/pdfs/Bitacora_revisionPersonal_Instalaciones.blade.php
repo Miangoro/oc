@@ -259,9 +259,9 @@
                     (FECHA DE INICIO, TÉRMINO Y <br>
                     FIRMAS)
                     </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta15']['respuesta'] == 'C' ? 'C' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta15']['respuesta'] == 'NC' ? 'NC'  .' '. $respuestas['observacion'] : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta15']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'C' ? 'C' : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'NC' ? 'NC'  .' '. $respuestas['observacion'] : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
             </tr>
             <tr>
                 <td class="leftLetter" style="font-size: 6.5px; ">NOMBRE Y PUESTO DEL <br>
