@@ -213,61 +213,55 @@
                     <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta7']['respuesta']) && $respuestas['pregunta7']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
                     <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta7']['respuesta']) && $respuestas['pregunta7']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
             </tr>
+         
             <tr>
-                <td class="leftLetter" style="font-size: 6.5px; ">NOMBRE DE LA EMPRESA O <br>
-                    PERSONA FÍSICA</td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta8']['respuesta']) && $respuestas['pregunta8']['respuesta'] == 'C' ? 'C' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta8']['respuesta']) && $respuestas['pregunta8']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta8']['respuesta']) && $respuestas['pregunta8']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
-            </tr>
-            <tr>
-                <td class="leftLetter" style="font-size: 6.5px; ">DOMICILIO FISCAL DE LAS <br>
+                <td class="leftLetter" style="font-size: 6.5px; ">DOMICILIO LAS <br>
                     INSTALACIONES </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta9']['respuesta']) && $respuestas['pregunta9']['respuesta'] == 'C' ? 'C' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta9']['respuesta']) && $respuestas['pregunta9']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta9']['respuesta']) && $respuestas['pregunta9']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta8']['respuesta']) && $respuestas['pregunta9']['respuesta'] == 'C' ? 'C' : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta8']['respuesta']) && $respuestas['pregunta9']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta8']['respuesta']) && $respuestas['pregunta9']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
             </tr>
             <tr>
                 <td class="leftLetter" style="font-size: 6.5px; ">CORREO ELECTRONICO Y NUMERO <br>
                     TELEFONICO </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta10']['respuesta']) && $respuestas['pregunta10']['respuesta'] == 'C' ? 'C' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta10']['respuesta']) && $respuestas['pregunta10']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta10']['respuesta']) && $respuestas['pregunta10']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta9']['respuesta']) && $respuestas['pregunta10']['respuesta'] == 'C' ? 'C' : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta9']['respuesta']) && $respuestas['pregunta10']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta9']['respuesta']) && $respuestas['pregunta10']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
             </tr>
             <tr>
                 <td class="leftLetter" style="font-size: 6.5px; ">FECHA DE VIGENCIA Y <br>
                     VENCIMIENTO DEL CERTIFICADO </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta11']['respuesta']) && $respuestas['pregunta11']['respuesta'] == 'C' ? 'C' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta11']['respuesta']) && $respuestas['pregunta11']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta11']['respuesta']) && $respuestas['pregunta11']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta10']['respuesta']) && $respuestas['pregunta11']['respuesta'] == 'C' ? 'C' : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta10']['respuesta']) && $respuestas['pregunta11']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta10']['respuesta']) && $respuestas['pregunta11']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
             </tr>
             <tr>
                 <td class="leftLetter" style="font-size: 6.5px; ">ALCANCE DE LA CERTIFICACIÓN </td>
-                <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta12']['respuesta']) && $respuestas['pregunta12']['respuesta'] == 'C' ? 'C' : '---' }} </td>
-                <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta12']['respuesta']) && $respuestas['pregunta12']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
-                <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta12']['respuesta']) && $respuestas['pregunta12']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
+                <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta11']['respuesta']) && $respuestas['pregunta12']['respuesta'] == 'C' ? 'C' : '---' }} </td>
+                <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta11']['respuesta']) && $respuestas['pregunta12']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
+                <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta11']['respuesta']) && $respuestas['pregunta12']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
             </tr>
             <tr>
                 <td class="leftLetter" style="font-size: 6.5px; ">NO. DE CLIENTE</td>
-                <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta13']['respuesta']) && $respuestas['pregunta13']['respuesta'] == 'C' ? 'C' : '---' }} </td>
-                <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta13']['respuesta']) && $respuestas['pregunta13']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
-                <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta13']['respuesta']) && $respuestas['pregunta13']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
+                <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta12']['respuesta']) && $respuestas['pregunta13']['respuesta'] == 'C' ? 'C' : '---' }} </td>
+                <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta12']['respuesta']) && $respuestas['pregunta13']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
+                <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta12']['respuesta']) && $respuestas['pregunta13']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
             </tr>
             <tr>
                 <td class="leftLetter" style="font-size: 6.5px; ">NÚMERO DE DICTAMEN EMITIDO <br>
                     POR LA UVEM </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'C' ? 'C' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta13']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'C' ? 'C' : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta13']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'NC' .' '. $respuestas['pregunta15']['observaciones'] ? 'NC' : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta13']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
             </tr>
             <tr>
                 <td class="leftLetter" style="font-size: 6.5px; ">ACTA DE LA UNIDAD DE INSPECCIÓN <br>
                     (FECHA DE INICIO, TÉRMINO Y <br>
                     FIRMAS)
                     </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta15']['respuesta']) && $respuestas['pregunta15']['respuesta'] == 'C' ? 'C' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta15']['respuesta']) && $respuestas['pregunta15']['respuesta'] == 'NC' ? 'NC'.' '. $respuestas['pregunta15']['observaciones'] : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta15']['respuesta']) && $respuestas['pregunta15']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta15']['respuesta'] == 'C' ? 'C' : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta15']['respuesta'] == 'NC' ? 'NC' : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta14']['respuesta']) && $respuestas['pregunta15']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
             </tr>
             <tr>
                 <td class="leftLetter" style="font-size: 6.5px; ">NOMBRE Y PUESTO DEL <br>
