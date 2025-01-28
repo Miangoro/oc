@@ -16,7 +16,7 @@ use App\Notifications\GeneralNotification;
 use App\Mail\CorreoCertificado;
 use App\Models\Documentacion_url;
 use App\Models\instalaciones;
-
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Storage;
 
@@ -41,85 +41,105 @@ class Certificado_InstalacionesController extends Controller
             6 => 'fecha_vigencia',
             7 => 'fecha_vencimiento',
         ];
-    
+        
         $search = $request->input('search.value');
-        $totalData = Certificados::with([
-            'dictamen.inspeccione.solicitud.instalaciones.empresa.empresaNumClientes',
-            'dictamen.instalaciones',
-            'dictamen.inspeccione.inspector',
-            'firmante'
-        ])->count();
-    
-        $totalFiltered = $totalData;
-        $limit = $request->input('length');
-        $start = $request->input('start');
+        $totalData = Certificados::count();
+        
         $orderIndex = $request->input('order.0.column');
         $orderDir = $request->input('order.0.dir');
-    
         $order = $columns[$orderIndex] ?? 'num_certificado';
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
-    
+        
+        // Base query with eager loading
         $query = Certificados::with([
             'dictamen.inspeccione.solicitud.instalaciones.empresa.empresaNumClientes',
             'dictamen.instalaciones',
             'dictamen.inspeccione.inspector',
             'firmante'
-        ])
-        ->offset($start)
-        ->limit($limit)
-        ->orderByRaw("
-        CAST(SUBSTRING_INDEX(num_certificado, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
-        CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_certificado, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')");
-    
-        $certificados = $query->get();
-    
+        ]);
+        
+        // Apply search filter if present
         if ($search) {
-            $totalFiltered = Certificados::with('dictamen')
-                ->where('num_certificado', 'LIKE', "%{$search}%")
+            $query->where('num_certificado', 'LIKE', "%{$search}%")
                 ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
                 ->orWhereHas('firmante', function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%");
-                })
-                ->count();
+                });
         }
-    
-        $data = $certificados->map(function ($certificado) use (&$start) {
-            $empresa = $certificado->dictamen->instalaciones->empresa ?? null;
-            $razon_social = $empresa->razon_social ?? 'N/A';
-            $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-            ? $empresa->empresaNumClientes
-                ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-            : 'N/A';
         
-    
+        // Calculate filtered records
+        $totalFiltered = $query->count();
+        
+        // Apply sorting and pagination
+        $query->offset($request->input('start'))
+            ->limit($request->input('length'))
+            ->orderByRaw("
+                CAST(SUBSTRING_INDEX(num_certificado, '/', -1) AS UNSIGNED) {$dir}, -- Ordena el año
+                CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_certificado, '-', -1), '/', 1) AS UNSIGNED) {$dir} -- Ordena el consecutivo
+            ");
+        
+        $certificados = $query->get();
+        
+        // Map data for DataTables
+        $data = $certificados->map(function ($certificado, $index) use ($request) {
+            $empresa = $certificado->dictamen->instalaciones->empresa ?? null;
+            $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                ? $empresa->empresaNumClientes
+                    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
+                : 'N/A';
+
+                $fechaActual = Carbon::now()->startOfDay(); // Asegúrate de trabajar solo con fechas, sin horas
+                $fechaVigencia = Carbon::parse($certificado->fecha_vencimiento)->startOfDay();
+                
+                if ($fechaActual->isSameDay($fechaVigencia)) {
+                   $restantes = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
+                } else {
+                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+                
+                    if ($diasRestantes > 0) {
+                        if($diasRestantes > 15){
+                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
+                        }else{
+                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
+                        }
+                        $restantes = $res;
+                    } else {
+                        $restantes = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                    }
+                }
+        
             return [
                 'id_certificado' => $certificado->id_certificado,
                 'id_dictamen' => $certificado->id_dictamen,
-                'fake_id' => ++$start,
+                'fake_id' => $request->input('start') + $index + 1,
                 'num_certificado' => $certificado->num_certificado,
-                'razon_social' => $razon_social,
-                'domicilio_instalacion' => $certificado->dictamen->instalaciones->direccion_completa ?? "NA",
+                'razon_social' => $empresa->razon_social ?? 'N/A',
+                'domicilio_instalacion' => $certificado->dictamen->instalaciones->direccion_completa ?? "N/A",
                 'numero_cliente' => $numero_cliente,
                 'num_autorizacion' => $certificado->num_autorizacion ?? 'N/A',
                 'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
                 'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
                 'maestro_mezcalero' => $certificado->maestro_mezcalero ?? 'N/A',
                 'num_dictamen' => $certificado->dictamen->num_dictamen,
+                'num_servicio' => $certificado->dictamen->inspeccione->num_servicio ?? 'Sin definir',
                 'tipo_dictamen' => $certificado->dictamen->tipo_dictamen,
-                'id_firmante' => $certificado->firmante->name ?? 'Sin asignar',
                 'id_revisor' => $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar',
                 'id_revisor2' => $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar',
+                'id_firmante' => $certificado->firmante->name ?? 'Sin asignar',
                 'estatus' => $certificado->estatus,
+                'diasRestantes' => $restantes,
+
+                
             ];
         });
-    
+        
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
             'recordsFiltered' => intval($totalFiltered),
-            'code' => 200,
             'data' => $data,
         ]);
+        
     }
     
     // Funcion de eliminar

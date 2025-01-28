@@ -51,13 +51,14 @@
                     <th>Cliente</th>
                     <th>Domicilio de instalación</th>
                     <th>Instalaciones de</th>
+                    <th>No. Servicio</th>
                     <th>No. Dictamen</th>
                     <th>No. Certificado</th>
-                    <th>Maestro Mezcalero</th>
                     <th>Fechas</th>
                     <th>Revisor Asignado</th>
                     <th>Dictamen</th>
                     <th>Certificado</th>
+                    <th>Vigencia</th>
                     <th>Estatus</th>
                     <th>Acciones</th>
                 </tr>

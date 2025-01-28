@@ -4561,3 +4561,161 @@ $(document).on('click', '.expediente-record', function () {
   });
 
 
+
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation para la solicitud de muestreo de agave
+    const form3 = document.getElementById('addRegistrarSolicitudMuestreoAgave');
+    const fv3 = FormValidation.formValidation(form3, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el cliente.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la fecha sugerida para la inspección.'
+            }
+          }
+        },
+        punto_reunion: {
+          validators: {
+            notEmpty: {
+              message: 'Introduce la dirección para el punto de reunión.'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      // Validar el formulario
+      var formData = new FormData(form3);
+
+      $.ajax({
+        url: '/registrar-solicitud-muestreo-agave',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#addSolicitudMuestreoAgave').modal('hide');
+          $('#addRegistrarSolicitudMuestreoAgave')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+          console.log(response);
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Solicitud de muestreo registrado exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la solicitud',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+
+    // Inicializar FormValidation para las validaciones por parte del personal oc
+    const form = document.getElementById('addValidarSolicitud');
+    const fv = FormValidation.formValidation(form, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el cliente'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      // Validar el formulario
+      var formData = new FormData(form);
+
+      $.ajax({
+        url: '/registrarValidarSolicitud',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#addSolicitudValidar').modal('hide');
+          $('#addSolicitudValidar')[0].reset();
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Solicitud validada correctamente',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al validar la solicitud',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+    // Inicializar select2 y manejar eventos de cambio por "name"
+    $(
+      'select[name="clases[]"], select[name="categorias[]"], select[name="id_instalacion"], select[name="id_empresa"]'
+    ).on('change', function () {
+      // Revalidar el campo cuando se cambia el valor del select2
+      fv.revalidateField($(this).attr('name'));
+    });
+
+ 
+  });
+

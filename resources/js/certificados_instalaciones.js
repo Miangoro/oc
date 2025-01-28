@@ -50,14 +50,16 @@
          { data: 'Cliente' },          //2  
          { data: 'domicilio_instalacion' },          //3
          { data: 'tipo_dictamen' },    //4 
-         { data: 'num_dictamen' },     //5
-         { data: 'num_certificado' },  //6
-         { data: 'maestro_mezcalero' },//7
+         { data: 'num_servicio' }, //5
+         { data: 'num_dictamen' },    //6
+         { data: 'num_certificado' },    //7
+      
          { data: 'fechas' },           //8
          { data: 'id_revisor' },       //9
          { data: 'Certificado' },      //10
-         { data: 'estatus' },          //11
-         { data: 'actions'},           //12
+         { data: 'diasRestantes' }, //12
+         { data: 'estatus' },          //12
+         { data: 'actions'},           //13
        ],
        columnDefs: [
          {
@@ -129,25 +131,26 @@
             return `<span class="badge rounded-pill bg-label-${$colorDictamen}">${$nombreDictamen}</span>`;
           }     
         },
+        
+        {
+          targets: 5,
+          render: function (data, type, full, meta) {
+            var $num_servicio = full['num_servicio'] ?? 'N/A';
+            return '<span class="user-email">' + $num_servicio + '</span>';
+          }
+        },
           {
-           targets: 5,
+           targets: 6,
            render: function (data, type, full, meta) {
              var $num_dictamen = full['num_dictamen'];
              return $num_dictamen;
            }
          }, 
          {
-            targets: 6,
+            targets: 7,
             render: function (data, type, full, meta) {
               var $num_certificado = full['num_certificado'];
               return '<span class="fw-bold">' + $num_certificado + '</span>';
-            }
-          },
-          {
-            targets: 7,
-            render: function (data, type, full, meta) {
-              var $maestro_mezcalero = full['maestro_mezcalero'] ?? 'N/A';
-              return '<span class="user-email">' + $maestro_mezcalero + '</span>';
             }
           },
           {
@@ -220,7 +223,13 @@
             }
           },
           {
-            target: 12, // Suponiendo que este es el índice de la columna que quieres actualizar
+            targets: 12,
+            render: function (data, type, full, meta) {
+              return full['diasRestantes'];
+            }
+          }, 
+          {
+            target: 13, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
                 var estatus = full['estatus']; // Obtener el estatus del certificado
                 
@@ -249,7 +258,7 @@
         },  
          {
            // Actions
-           targets: 13,
+           targets: 14,
            title: 'Acciones',
            searchable: false,
            orderable: false,

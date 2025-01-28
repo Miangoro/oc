@@ -38,7 +38,7 @@ class RevisionPersonalController extends Controller
         
         $revisoresGranel = $revisoresGranelQuery->first();
         $users = User::where('tipo', 1)->get(); // Select Aprobacion
-        $preguntasRevisor = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 1)->orderBy('orden','asc')->get(); // Preguntas Instalaciones
+        $preguntasRevisor = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 1)->get(); // Preguntas Instalaciones
         $preguntasRevisorGranel = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 2)->get(); // Preguntas Granel
         $noCertificados = (!$revisor || !$revisor->certificado) && (!$revisoresGranel || !$revisoresGranel->certificado); // Alerta si no hay Certificados Asignados al Revisor
  
@@ -232,7 +232,7 @@ class RevisionPersonalController extends Controller
     public function obtenerRespuestas($id_revision)
     {
         try {
-            $revisor = Revisor::where('id_revision', $id_revision)->first(); 
+            $revisor = Revisor::where('id_revision', $id_revision)->first();
     
             if (!$revisor) {
                 return response()->json(['message' => 'El registro no fue encontrado.'], 404);
@@ -285,8 +285,8 @@ class RevisionPersonalController extends Controller
 
     public function bitacora_revisionPersonal_Instalaciones($id)
     {
-        $datos_revisor = Certificados::findOrFail($id);
-        $id_dictamen = $datos_revisor->dictamen->id_dictamen; 
+        $datos_revisor = Revisor::findOrFail($id);
+        $id_dictamen = $datos_revisor->certificado->dictamen->id_dictamen; 
     
         $tipo_certificado = '';
         switch ($id_dictamen) {
