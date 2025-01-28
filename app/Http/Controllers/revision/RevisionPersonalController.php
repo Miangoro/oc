@@ -323,11 +323,11 @@ class RevisionPersonalController extends Controller
         $aprobacion = $revisor->aprobacion ?? 'Pendiente de aprobar';
         $fecha_aprobacion = $revisor->fecha_aprobacion;
     
-        $razonSocial = $datos_revisor->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar';
-        $numero_cliente = $datos_revisor->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar';
+        $razonSocial = $datos_revisor->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar';
+        $numero_cliente = $datos_revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar';
     
         $pdfData = [
-            'num_certificado' => $datos_revisor->num_certificado,
+            'num_certificado' => $datos_revisor->certificado->num_certificado,
             'tipo_certificado' => $tipo_certificado,
             'respuestas' => $respuestasRecientes,
             'decision' => $decision,
