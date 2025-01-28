@@ -251,7 +251,7 @@
                 <td class="leftLetter" style="font-size: 6.5px; ">NÚMERO DE DICTAMEN EMITIDO <br>
                     POR LA UVEM </td>
                     <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta13']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'C' ? 'C' : '---' }} </td>
-                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta13']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'NC' .' '. $respuestas['observaciones'] ? 'NC' : '---' }} </td>
+                    <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta13']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'NC' .' '. $respuestas['observacion'] ? 'NC' : '---' }} </td>
                     <td style="font-size: 6.5px; "> {{ isset($respuestas['pregunta13']['respuesta']) && $respuestas['pregunta14']['respuesta'] == 'NA' ? 'NA' : '---' }}</td>
             </tr>
             <tr>
