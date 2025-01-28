@@ -309,7 +309,7 @@ class RevisionPersonalController extends Controller
                 $tipo_certificado = 'Desconocido';
         }
     
-        $revisor = Revisor::where('id_certificado', $id)->first();
+        $revisor = Revisor::where('id_certificado', $datos_revisor->certificado->id_certificado)->first();
         if (!$revisor) {
             return response()->json(['error' => 'Revisor not found'], 404);
         }
