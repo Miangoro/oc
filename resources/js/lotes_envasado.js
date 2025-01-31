@@ -1112,11 +1112,15 @@ $(function () {
   }).on('core.form.valid', function (e) {
     //e.preventDefault();
     var formData = new FormData(editLoteEnvasadoForm);
+    
 
     $.ajax({
       url: '/lotes-envasado/update/', // Actualiza con la URL correcta
       type: 'POST',
       data: formData,
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Agregar token CSRF
+    },
       processData: false,
       contentType: false,
       success: function (response) {
