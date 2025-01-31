@@ -35,22 +35,20 @@ $(function () {
 
             if (row.id_empresa != 'N/A') {
               id_empresa =
-                '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' +
-                row.id_empresa +
-                '</span>';
+                '<br><span class="fw-bold text-dark small">' +row.id_empresa +'</span>';
             }
             if (row.razon_social != 'N/A') {
               razon_social =
-                '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
+                '<br><span class="small">' +
                 row.razon_social +
-                '</span>';
+                '</span><span class="small"> </span>';
             }
 
             return (
-              '<span class="fw-bold text-dark small">Número del cliente:</span> <span class="small"> ' +
+              '<span class="fw-bold text-dark">' +
               row.id_empresa +
-              '</span><br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
-              row.razon_social
+              '</span> <br><span class="small">'+ row.razon_social+'</span>'
+             
             );
           }
         },
