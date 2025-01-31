@@ -7,7 +7,7 @@
                     <h4 class="address-title mb-2">Editar lote envasado</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form id="editLoteEnvasadoForm" enctype="multipart/form-data">
+                <form id="editLoteEnvasadoForm" method="POST" onsubmit="return false">
                     <input type="hidden" id="edit_id_lote_envasado" name="id">
                     <div class="row">
                         <div class="col-12">
