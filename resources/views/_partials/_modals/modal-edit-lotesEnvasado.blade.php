@@ -227,7 +227,7 @@
                         response.instalaciones[index].direccion_completa + '</option>' + contenido;
                 }
                 if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin lotes a granel registrados</option>';
+                    contenido = '<option value="">Sin instalaciones de envasado registrados</option>';
                 }
                 $('.edit_Instalaciones').html(contenido);
             },
