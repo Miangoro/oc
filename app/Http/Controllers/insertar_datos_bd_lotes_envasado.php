@@ -52,7 +52,7 @@ class insertar_datos_bd_lotes_envasado extends Controller
                             $id_envasado = lotes_envasado::create([
                                 'id_empresa'   => $id_empresa,
                                 'nombre'  => $solicitud['n_lote_envasado'],
-                                'sku'    => $solicitud['no_pedido'],
+                                'sku'    => json_encode(['inicial' => $solicitud['no_pedido'],]),
                                 'id_marca'   => $id_marca ?? 0,
                                 'destino_lote'  => 1,
                                 'cant_botellas'        => $solicitud['n_botellas'],

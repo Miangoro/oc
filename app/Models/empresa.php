@@ -75,7 +75,7 @@ class empresa extends Model
             ->push($this->id_empresa); // Agrega la empresa actual
 
         // Obtener todas las marcas de esas empresas
-        return Marcas::whereIn('id_empresa', $idsEmpresas);
+        return marcas::whereIn('id_empresa', $idsEmpresas);
 }
 
 

@@ -83,9 +83,9 @@
                                 <div class="form-floating form-floating-outline mb-6">
                                     <select class=" form-select" id="edit_unidad" name="edit_unidad"
                                         aria-label="Unidad">
-                                        <option value="Mililitros">Mililitros</option>
-                                        <option value="Litros">Litros</option>
-                                        <option value="Centrilitros">Centrilitros</option>
+                                        <option value="mL">Mililitros</option>
+                                        <option value="L">Litros</option>
+                                        <option value="cL">Centrilitros</option>
                                     </select>
                                     <label for="edit_unidad">Unidad</label>
                                 </div>
