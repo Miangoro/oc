@@ -114,12 +114,17 @@
         },
         {
           "url": "dictamenes/productos",
-          "name": "Producto",
+          "name": "Granel",
           "slug": "dictamenes-productos"
         },
         {
           "url": "dictamenes/envasado",
           "name": "Envasado",
+          "slug": "dictamenes-envasado"
+        },
+        {
+          "url": "dictamenes/envasado",
+          "name": "Exportación",
           "slug": "dictamenes-envasado"
         }
       ]
@@ -141,7 +146,12 @@
         },
         {
           "url": "certificados/producto",
-          "name": "Producto",
+          "name": "Envasado",
+          "slug": "certificados-producto"
+        },
+        {
+          "url": "certificados/producto",
+          "name": "Exportación",
           "slug": "certificados-producto"
         }
       ]

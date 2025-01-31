@@ -83,11 +83,8 @@
             </td>
 
             <td class="con-negra" rowspan="2" colspan="5"
-                style="font-size: 14px; padding-left: 13px; padding-right: 13px;">SOLICITUD DE SERVICIOS</td>
-            <td colspan="5" style="text-align: right; font-size: 8.5px; padding-left: 0; padding-top: 0;">Solicitud
-                de
-                servicios NOM-070-SCFI-2016
-                F7.1-01-32 <br>
+                style="font-size: 14px; padding-left: 5px; padding-right: 5px;">SOLICITUD DE SERVICIOS</td>
+            <td colspan="5" style="text-align: right; font-size: 8px; padding-left: 0; padding-top: 0;">Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32<br>
                 Edición 10 Entrada en vigor:
                 20/06/2024
             </td>
@@ -658,6 +655,11 @@
                     {{ $caracteristicas['fecha_termino'] }}<br>
                     <b>Material de los recipientes:</b> {{ $caracteristicas['material'] }}<br>
                     <b>Capacidad de los recipientes:</b> {{ $caracteristicas['capacidad'] }}<br>
+                 
+                @elseif($muestreo_granel === 'X')
+                <b>Tipo:</b> {{ $caracteristicas['tipo_analisis'] == 1 ? 'Análisis completo' : ($caracteristicas['tipo_analisis'] == 2 ? 'Ajuste de grado alcohólico' : '') }}
+                <br>
+                
 
                 @endif
                 {{ $datos->info_adicional ?? '------------------------' }}
