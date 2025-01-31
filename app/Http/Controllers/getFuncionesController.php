@@ -68,7 +68,7 @@ class getFuncionesController extends Controller
 
         return response()->json([
             'instalaciones' => $empresa->obtenerInstalaciones(),
-            'lotes_granel' => $empresa->lotes_granel(),
+            'lotes_granel' => $empresa->todos_lotes_granel(),
             'marcas' => $marcas,
             'guias' => $empresa->guias(),
             'predios' => $empresa->predios(),

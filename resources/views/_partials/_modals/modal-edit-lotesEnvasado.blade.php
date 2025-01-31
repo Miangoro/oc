@@ -31,7 +31,19 @@
                                 aria-label="Nombre del lote" required />
                             <label for="name">Nombre del lote</label>
                         </div>
+                    </div>
                         <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-floating form-floating-outline mb-6">
+                                    <select id="edit_destino_lote" name="edit_destino_lote" class="form-select">
+                                        <option value="" disabled selected>Selecciona el destino del lote</option>
+                                        <option value="1">Nacional</option>
+                                        <option value="2">Exportación</option>
+                                        <option value="3">Stock</option>
+                                    </select>
+                                    <label for="edit_destino_lote">Destino lote</label>
+                                </div>
+                            </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-5">
                                     <input type="text" id="edit_sku" class="form-control"
@@ -50,17 +62,6 @@
                                         @endforeach
                                     </select>
                                     <label for="edit_marca">Marca</label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-floating form-floating-outline mb-6">
-                                    <select id="edit_destino_lote" name="edit_destino_lote" class="form-select">
-                                        <option value="" disabled selected>Selecciona el destino del lote</option>
-                                        <option value="1">Nacional</option>
-                                        <option value="2">Exportación</option>
-                                        <option value="3">Stock</option>
-                                    </select>
-                                    <label for="edit_destino_lote">Destino lote</label>
                                 </div>
                             </div>
                         </div>
@@ -91,37 +92,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-floating form-floating-outline mb-6">
-                                    <input class="form-control" type="number" step="0.01"
-                                        placeholder="Volumen total" id="edit_volumen_total" name="edit_volumen_total"
-                                        readonly />
-                                    <label for="edit_volumen_total">Volumen total</label>
-                                </div>
-                            </div>
-                            <div class="col-md-8 mb-6">
-                                <div class="input-group">
-                                    <select placeholder="Selecciona el cliente" class="form-select edit_Instalaciones"
-                                        id="edit_Instalaciones" name="edit_Instalaciones"
-                                        aria-label="Default select example">
-                                        <option value="" disabled selected>Seleccione un cliente</option>
-                                    </select>
-                                    <a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect"
-                                        type="button"><i class="ri-add-circle-fill"></i> Registrar instalación de
-                                        envasado</a>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-floating form-floating-outline mb-6">
-                                    <select class=" form-select" name="tipo" aria-label="tipo">
-                                        <option value="Con etiqueta">Con etiqueta</option>
-                                        <option value="Sin etiqueta">Sin etiqueta</option>
-                                    </select>
-                                    <label for="tipo">Etiqueta</label>
-                                </div>
-                            </div>
-                        </div>
+                        
                         <div id="edit_datosOpcion2">
                             <table class="table table-bordered">
                                 <thead>
@@ -150,6 +121,39 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-6">
+                                <div class="input-group">
+                                    <select placeholder="Selecciona el cliente" class="form-select edit_Instalaciones"
+                                        id="edit_Instalaciones" name="edit_Instalaciones"
+                                        aria-label="Default select example">
+                                        <option value="" disabled selected>Seleccione un cliente</option>
+                                    </select>
+                                   <!-- <a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect"
+                                        type="button"><i class="ri-add-circle-fill"></i> Registrar instalación de
+                                        envasado</a>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-floating form-floating-outline mb-6">
+                                    <input class="form-control" type="number" step="0.01"
+                                        placeholder="Volumen total" id="edit_volumen_total" name="edit_volumen_total"
+                                        readonly />
+                                    <label for="edit_volumen_total">Volumen total</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating form-floating-outline mb-6">
+                                    <select class=" form-select" name="tipo" aria-label="tipo">
+                                        <option value="Con etiqueta">Con etiqueta</option>
+                                        <option value="Sin etiqueta">Sin etiqueta</option>
+                                    </select>
+                                    <label for="tipo">Etiqueta</label>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                             <button type="submit" class="btn btn-primary">Actualizar</button>

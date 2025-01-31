@@ -58,36 +58,6 @@
 
 
 
-                    <table class="table table-bordered table-sm">
-                        <thead>
-                            <tr>
-                                <th style="width: 40px"><button type="button" class="btn btn-primary btn-sm add-row"> <i
-                                            class="ri-add-line"></i> </button></th>
-                                <th>Lote a granel</th>
-                                <th>Volumen en litros</th>
-                            </tr>
-                        </thead>
-                        <tbody id="contenidoGraneles">
-                            <tr>
-                                <th>
-                                    <button type="button" class="btn btn-danger btn-sm remove-row" disabled> <i
-                                            class="ri-delete-bin-5-fill"></i> </button>
-                                </th>
-                                <td>
-                                    <select class="id_lote_granel form-control form-control-sm select2" name="id_lote_granel[]"
-                                        id="id_lote_granel">
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control form-control-sm"
-                                        name="volumen_parcial[]" id="volumen_parcial"> 
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-
-
 
                     
                     <div class="row">
@@ -116,6 +86,34 @@
                             </div>
                         </div>
                     </div>
+
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px"><button type="button" class="btn btn-primary btn-sm add-row"> <i
+                                            class="ri-add-line"></i> </button></th>
+                                <th>Lote a granel</th>
+                                <th>Volumen en litros</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contenidoGraneles">
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-danger btn-sm remove-row" disabled> <i
+                                            class="ri-delete-bin-5-fill"></i> </button>
+                                </th>
+                                <td>
+                                    <select class="id_lote_granel form-control form-control-sm select2" name="id_lote_granel[]"
+                                        id="id_lote_granel">
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm"
+                                        name="volumen_parcial[]" id="volumen_parcial"> 
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <div class="row">
                         <div class="col-md-12 mb-6">
                             <label class="form-label" for="basic-default-password42">Instalación de envasado certificada</label>
@@ -125,9 +123,9 @@
                                     <option value="" disabled selected>Seleccione un cliente</option>
                                 </select>
                                
-                                <a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect"
+                                <!--<a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect"
                                     type="button"><i class="ri-add-circle-fill"></i> Registrar instalación de
-                                    envasado</a>
+                                    envasado</a>-->
                             </div>
                             
                         </div>
