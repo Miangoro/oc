@@ -1115,7 +1115,7 @@ $(function () {
     
 
     $.ajax({
-      url: '/lotes-envasado/update/', // Actualiza con la URL correcta
+      url: '/lotes-envasado/update', // Actualiza con la URL correcta
       type: 'POST',
       data: formData,
       headers: {
