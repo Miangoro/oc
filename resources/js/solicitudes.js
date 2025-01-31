@@ -114,13 +114,13 @@ $(function () {
                       <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_traslado || 'N/A'}</span>
                       `;
             case 5:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_inspeccion || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_inspeccion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_inspeccion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_inspeccion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Marca:</span><span class="small"> ${data.id_marca || 'N/A'}</span>
                       <br>
@@ -204,19 +204,29 @@ $(function () {
       { data: 'fecha_servicio' },
       { data: '' },
       {
-        data: 'estatus',
+        data: 'estatus', 
         render: function(data, type, row) {
             // Define las etiquetas para cada estado
-            switch (data) {
-                case 'Pendiente':
-                    return '<span class="badge bg-warning">Pendiente</span>';
-                case 'Con acta':
-                    return '<span class="badge bg-primary">Con acta</span>';
-                case 'Con dictamen':
-                    return '<span class="badge bg-success">Con dictamen</span>';
-                default:
-                    return '<span class="badge bg-secondary">Desconocido</span>';
+            let estatus_validado_oc = 'bg-warning';
+            let estatus_validado_ui = 'bg-warning';
+            if(row.estatus_validado_oc=='Validada'){
+              estatus_validado_oc = 'bg-success';
             }
+            if(row.estatus_validado_oc=='Rechazada'){
+              estatus_validado_oc = 'bg-danger';
+            }
+          
+            if(row.estatus_validado_ui=='Validada'){
+              estatus_validado_ui = 'bg-success';
+            }
+            if(row.estatus_validado_ui=='Rechazada'){
+              estatus_validado_ui = 'bg-danger';
+            }
+            return `<span class="badge bg-warning mb-1">${data}</span><br>
+            <span class="badge ${estatus_validado_oc} mb-1">${row.estatus_validado_oc} por oc</span><br>
+            <span class="badge ${estatus_validado_ui}">${row.estatus_validado_ui} por ui</span>`;
+                    
+              
         }
     },
       { data: 'action' }
@@ -3897,6 +3907,7 @@ $(document).on('click', '.expediente-record', function () {
     $('#modalAddInstalacion').on('hidden.bs.modal', function () {
       if (openedFromFirstModal) {
         $('#addInspeccionEnvasado').modal('show');
+       
         openedFromFirstModal = false;
       }
     });
@@ -4277,8 +4288,15 @@ $(document).on('click', '.expediente-record', function () {
     if (divsMostrar) {
       divsMostrar.forEach(divId => {
         $(`#${divId}`).removeClass('d-none');
+      
+        document.querySelectorAll('.d-none select').forEach(el => {
+          el.disabled = true;
+          
+        });
+        
       });
     }
+  
   }
   // Manejar el clic en los enlaces con clase "validar-solicitudes"
   $(document).on('click', '.validar-solicitudes', function () {
@@ -4289,33 +4307,41 @@ $(document).on('click', '.expediente-record', function () {
     var razon_social = $(this).data('razon-social');
     $('#tipoSolicitud').text(tipoName);
 
+      // Manejar la visibilidad de divs si aplica
+      manejarVisibilidadDivs(idTipo);
+  
+
     $.ajax({
       url: `/getDatosSolicitud/${id_solicitud}`,
       type: 'GET',
       dataType: 'json',
       success: function (response) {
         if (response.success) {
+          $('#solicitud_id').val(id_solicitud);
           $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
           // Validar si `direccion_completa` no está vacío
           if (response.data.instalacion) {
             $('.domicilioInstalacion').text(response.data.instalacion.direccion_completa);
           } else {
             // Si está vacío, usar `ubicacion_predio`
-            $('.domicilioInstalacion').text(response.data.predios.ubicacion_predio);
-            $('.nombrePredio').text(response.data.predios.nombre_predio);
+            $('.domicilioInstalacion').text(response.data?.predios?.ubicacion_predio);
+            $('.nombrePredio').text(response.data?.predios?.nombre_predio);
             $('.preregistro').html(
               "<a target='_Blank' href='/pre-registro_predios/" +
-                response.data.predios.id_predio +
+                response.data?.predios?.id_predio +
                 "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
             );
           }
 
-          var caracteristicas = JSON.parse(response.data.caracteristicas);
+    
 
           $('.razonSocial').text(response?.data?.empresa?.razon_social || 'No disponible');
           $('.fechaHora').text(response?.fecha_visita_formateada || 'No disponible');
-          $('.guiasTraslado').text(response?.data?.caracteristicas?.guias || 'No disponible');
+     
           $('.nombreLote').text(response?.data?.lote_granel?.nombre_lote || 'No disponible');
+
+       
+          $('.guiasTraslado').text(response?.data?.caracteristicas?.guias || 'No disponible');
 
           // Validar categoría
           $('.categoria').text(
@@ -4341,6 +4367,7 @@ $(document).on('click', '.expediente-record', function () {
           // Validar nombre del lote envasado
           $('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
 
+          var caracteristicas = JSON.parse(response.data?.caracteristicas);
           $('.materialRecipiente').text(caracteristicas.material);
           $('.capacidadRecipiente').text(caracteristicas.capacidad);
           $('.numeroRecipiente').text(caracteristicas.num_recipientes);
@@ -4443,8 +4470,7 @@ $(document).on('click', '.expediente-record', function () {
       }
     });
 
-    // Manejar la visibilidad de divs si aplica
-    manejarVisibilidadDivs(idTipo);
+  
   });
 
   $(document).ready(function () {
@@ -4649,12 +4675,70 @@ $(document).on('click', '.expediente-record', function () {
 
     // Inicializar FormValidation para las validaciones por parte del personal oc
     const form = document.getElementById('addValidarSolicitud');
+
     const fv = FormValidation.formValidation(form, {
+      excluded: ':disabled',
       fields: {
-        id_empresa: {
+        razonSocial: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente'
+              message: 'Selecciona la respuesta'
+            }
+          }
+        },
+        razonSocial1: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la respuesta'
+            }
+          }
+        },
+        domicilioFiscal: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la respuesta'
+            }
+          }
+        },
+        domicilioInstalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la respuesta'
+            }
+          }
+        },
+        fechaHora: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la respuesta'
+            }
+          }
+        },
+        actaConstitutiva: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la respuesta'
+            }
+          }
+        },
+        csf: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la respuesta'
+            }
+          }
+        },
+        comprobantePosesion: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la respuesta'
+            }
+          }
+        },
+        planoDistribucion: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la respuesta'
             }
           }
         },
@@ -4664,11 +4748,13 @@ $(document).on('click', '.expediente-record', function () {
         bootstrap5: new FormValidation.plugins.Bootstrap5({
           eleValidClass: '',
           eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating'
+          rowSelector: '.marcar'
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
+
+      
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(form);
@@ -4681,7 +4767,7 @@ $(document).on('click', '.expediente-record', function () {
         contentType: false,
         success: function (response) {
           $('#addSolicitudValidar').modal('hide');
-          $('#addSolicitudValidar')[0].reset();
+          $('#addValidarSolicitud')[0].reset();
           $('.datatables-solicitudes').DataTable().ajax.reload();
 
 
@@ -4708,13 +4794,9 @@ $(document).on('click', '.expediente-record', function () {
         }
       });
     });
-    // Inicializar select2 y manejar eventos de cambio por "name"
-    $(
-      'select[name="clases[]"], select[name="categorias[]"], select[name="id_instalacion"], select[name="id_empresa"]'
-    ).on('change', function () {
-      // Revalidar el campo cuando se cambia el valor del select2
-      fv.revalidateField($(this).attr('name'));
-    });
+
+  
+
 
  
   });

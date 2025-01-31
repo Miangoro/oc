@@ -28,6 +28,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 //clase de exportacion
 use App\Exports\SolicitudesExport;
+use App\Models\solicitudesValidacionesModel;
 use Maatwebsite\Excel\Facades\Excel;
 
 class solicitudesController extends Controller
@@ -80,7 +81,7 @@ class solicitudesController extends Controller
 
         if (empty($request->input('search.value'))) {
             // Consulta sin búsqueda
-            $solicitudes = solicitudesModel::with(['tipo_solicitud', 'empresa', 'instalacion','inspeccion.inspector'])
+            $solicitudes = solicitudesModel::with(['tipo_solicitud', 'empresa', 'instalacion','inspeccion.inspector','ultima_validacion_oc','ultima_validacion_ui'])
                 ->orderBy($order === 'inspector' ? 'inspector_name' : $order, $dir)
                 ->offset($start)
                 ->limit($limit)
@@ -89,7 +90,7 @@ class solicitudesController extends Controller
             // Consulta con búsqueda
             $search = $request->input('search.value');
 
-            $solicitudes = solicitudesModel::with(['tipo_solicitud', 'empresa', 'instalacion','inspeccion.inspector'])
+            $solicitudes = solicitudesModel::with(['tipo_solicitud', 'empresa', 'instalacion','inspeccion.inspector','ultima_validacion_oc','ultima_validacion_ui'])
                 ->where(function ($query) use ($search) {
                     $query->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
                         ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
@@ -115,7 +116,7 @@ class solicitudesController extends Controller
                 ->orderBy("solicitudes.id_solicitud", $dir)
                 ->get();
 
-            $totalFiltered = solicitudesModel::with(['tipo_solicitud', 'empresa', 'instalacion','inspeccion.inspector'])
+            $totalFiltered = solicitudesModel::with(['tipo_solicitud', 'empresa', 'instalacion','inspeccion.inspector','ultima_validacion_oc','ultima_validacion_ui'])
                 ->where(function ($query) use ($search) {
                     $query->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
                         ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
@@ -158,6 +159,8 @@ class solicitudesController extends Controller
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo ?? 'N/A';
                 $nestedData['estatus'] = $solicitud->estatus ?? 'Vacío';
+                $nestedData['estatus_validado_oc'] = $solicitud->ultima_validacion_oc->estatus ?? 'Pendiente';
+                $nestedData['estatus_validado_ui'] = $solicitud->ultima_validacion_ui->estatus ?? 'Pendiente';
                 $nestedData['info_adicional'] = $solicitud->info_adicional ?? 'Vacío';
                 $empresa = $solicitud->empresa;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
@@ -467,10 +470,10 @@ class solicitudesController extends Controller
         $InspeccionEnva->info_adicional = $request->info_adicional;
 
         $InspeccionEnva->caracteristicas = json_encode([
-            'id_lote_granel' => $request->id_lote_granel_inspeccion,
-            'id_categoria_inspeccion' => $request->id_categoria_inspeccion,
-            'id_clase_inspeccion' => $request->id_clase_inspeccion,
-            'id_tipo_maguey_inspeccion' => $request->id_tipo_maguey_inspeccion,
+            'id_lote_envasado' => $request->id_lote_envasado_inspeccion,
+            'id_categoria' => $request->id_categoria_inspeccion,
+            'id_clase' => $request->id_clase_inspeccion,
+            'id_tipo_maguey' => $request->id_tipo_maguey_inspeccion,
             'id_marca' => $request->id_marca,
             'volumen_inspeccion' => $request->volumen_inspeccion,
             'analisis_inspeccion' => $request->analisis_inspeccion,
@@ -1517,5 +1520,50 @@ class solicitudesController extends Controller
       $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
       return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
+
+    public function registrarValidarSolicitud(Request $request)
+{
+
+
+    $validar = new solicitudesValidacionesModel();
+
+    // Extraer solo los datos dinámicos enviados, excluyendo el ID de la solicitud
+    $dynamicData = $request->except(['solicitud_id', '_token']);
+
+    // Almacenar los datos dinámicos en 'validacion_oc' en formato JSON
+    $validar->validacion = json_encode($dynamicData);
+    $validar->id_solicitud = $request->solicitud_id;
+    $estatus = 'Validada';
+    foreach ($dynamicData as $key => $value) {
+        if ($value != 'si') {
+            $estatus = 'Rechazada';
+            break; // Si algún valor no es 'si', se establece como 'Rechazada' y salimos del bucle
+        }
+    }
+    $validar->estatus = $estatus;
+    $validar->tipo_validacion = 'oc';
+    $validar->id_usuario = auth()->id();
+
+    // Guardar los cambios en la base de datos
+    $validar->save();
+
+    // Buscar usuarios para notificar
+    $users = User::whereIn('id', [18, 19, 20])->get();
+
+    // Notificación
+    $data1 = [
+        'title' => 'Solicitud validada',
+        'message' => $validar->folio ,
+        'url' => 'solicitudes-historial',
+    ];
+
+    foreach ($users as $user) {
+        $user->notify(new GeneralNotification($data1));
+    }
+
+    // Respuesta exitosa
+    return response()->json(['message' => 'Validado exitosamente']);
+}
+
 
 }

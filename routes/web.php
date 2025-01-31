@@ -207,6 +207,7 @@ use App\Http\Controllers\Bitacoras\BitacoraProductoTerminadoController;
 use App\Http\Controllers\Bitacoras\BitacoraHologramasController;
 use App\Http\Controllers\insertar_datos_bd_certificados;
 use App\Http\Controllers\insertar_datos_bd_dictamenes;
+use App\Http\Controllers\insertar_datos_bd_lotes_envasado;
 use App\Http\Controllers\Tramite_impi\impiController;
 
 
@@ -765,6 +766,7 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::get('/solicitudes/exportar', 'exportar')->name('solicitudes.exportar');
     Route::post('/registrar-solicitud-lib-prod-term','storeSolicitudLibProdTerm');
     Route::get('/Etiqueta-2401ESPTOB/{id_solicitud}', 'Etiqueta_240');
+    Route::post('/registrarValidarSolicitud','registrarValidarSolicitud');
 });
 
 
@@ -889,6 +891,8 @@ Route::resource('/bitacoraHologramas-list', BitacoraHologramasController::class)
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
 Route::get('/insertarDictamenesDesdeAPI', [insertar_datos_bd_dictamenes::class, 'insertarDictamenesDesdeAPI'])->name('insertarDictamenesDesdeAPI');
 Route::get('/insertarCertificadosDesdeAPI', [insertar_datos_bd_certificados::class, 'insertarCertificadosDesdeAPI'])->name('insertarCertificadosDesdeAPI');
+Route::get('/insertarLotesEnvasadoDesdeAPI', [insertar_datos_bd_lotes_envasado::class, 'insertarLotesEnvasadoDesdeAPI'])->name('insertarLotesEnvasadoDesdeAPI');
+
 
 
 

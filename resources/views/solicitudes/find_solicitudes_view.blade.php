@@ -41,9 +41,9 @@
 
 @section('page-script')
 @vite(['resources/js/solicitudes.js'])
-
-@vite(['resources/js/solicitudes-tipo.js'])
 @vite(['resources/js/instalaciones.js'])
+@vite(['resources/js/solicitudes-tipo.js'])
+
 <script>
 
 

@@ -1276,6 +1276,7 @@ $('#modalVerDocumento').modal('show');
 });
 
   //Date picker
+ /* 
   $(document).ready(function () {
     const flatpickrDateTime = document.querySelectorAll('.flatpickr-datetime');
 
@@ -1291,4 +1292,4 @@ $('#modalVerDocumento').modal('show');
         });
       });
     }
-  });
+  });*/

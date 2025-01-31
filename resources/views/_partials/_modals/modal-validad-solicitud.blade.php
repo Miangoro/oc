@@ -8,98 +8,11 @@
                     <p id="tipoSolicitud" class="solicitud badge bg-primary fs-4"></p>
                     <div class="datos-importantes">
 
-
-
-
-
                     </div>
                 </div>
-                <form id="addValidarSolicitud" >
-                    <div id="addRegistrarSolicitudValidar">
-                        <!--  <div class="row">
-                        <div class="col-md-6">
-                            <div class="card mb-5">
-                                <div class="card-body">
-                                    <span class="fs-6 fw-bold text-dark">Se cuenta con todos los medios para realizar
-                                        todas las actividades de evaluación para la Certificación:</span>
-                                    <p>
-                                        <label>
-                                            <input name="medios" type="radio" value="Si" />
-                                            <span><strong>Sí</strong></span>
-                                        </label>
-                                    </p>
-                                    <p>
-                                        <label>
-                                            <input name="medios" type="radio" value="No" />
-                                            <span><strong>No</strong></span>
-                                        </label>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card mb-5">
-                                <div class="card-body">
-                                    <span class="fs-6 fw-bold text-dark">El organismo de Certificación tiene la
-                                        competencia para realizar la Certificación:</span>
-                                    <p>
-                                        <label>
-                                            <input name="competencia" type="radio" value="Si" />
-                                            <span><strong>Sí</strong></span>
-                                        </label>
-                                    </p>
-                                    <p>
-                                        <label>
-                                            <input name="competencia" type="radio" value="No" />
-                                            <span><strong>No</strong></span>
-                                        </label>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card mb-5">
-                                <div class="card-body">
-                                    <span class="fs-6 fw-bold text-dark">El organismo de Certificación tiene la
-                                        capacidad para llevar a cabo las actividades certificación:</span>
-                                    <p>
-                                        <label>
-                                            <input name="capacidad" type="radio" value="Si" />
-                                            <span><strong>Sí</strong></span>
-                                        </label>
-                                    </p>
-                                    <p>
-                                        <label>
-                                            <input name="capacidad" type="radio" value="No" />
-                                            <span><strong>No</strong></span>
-                                        </label>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card mb-5">
-                                <div class="card-body">
-                                    <span class="fs-6 fw-bold text-dark">¿La solicitud está completa?:</span>
-                                    <p>
-                                        <label>
-                                            <input name="completa" type="radio" value="Si" />
-                                            <span><strong>Sí</strong></span>
-                                        </label>
-                                    </p>
-                                    <p>
-                                        <label>
-                                            <input name="completa" type="radio" value="No" />
-                                            <span><strong>No</strong></span>
-                                        </label>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
-
+                <form id="addValidarSolicitud">
+                    <input type="hidden" name="solicitud_id" id="solicitud_id">
+                    <div>
                         <div id="muestreoAgave" class="d-none terminado">
                             <div class="datos-importantes">
                                 <table style="font-size: 12px;" class="table table-bordered table-sm">
@@ -112,13 +25,12 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Razón
-                                                Social:</th>
+                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Razón Social:</th>
                                             <td class="razonSocial"></td>
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -131,7 +43,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioFiscalEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -145,7 +57,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioInstalacionesEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -159,7 +71,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleFechaHoraVisitaDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -171,7 +83,7 @@
                                             <td class="guiasTraslado"></td>
                                             <td>
                                                 <select class="form-control form-control-sm" id="cumple">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -201,7 +113,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -214,7 +126,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioFiscalEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -228,7 +140,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioInstalacionesEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -242,7 +154,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleFechaHoraVisitaDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -254,7 +166,7 @@
                                             <td class="guiasTraslado"></td>
                                             <td>
                                                 <select class="form-control form-control-sm" id="cumple">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -277,14 +189,12 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Razón
-                                                Social:</th>
+                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Razón Social:</th>
                                             <td class="razonSocial"></td>
-                                            <td>
-                                                <select class="form-control form-control-sm"
+                                            <td class="marcar">
+                                                <select name="razonSocial" class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -294,10 +204,9 @@
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Domicilio Fiscal:</th>
                                             <td class="domicilioFiscal"></td>
-                                            <td>
-                                                <select class="form-control form-control-sm"
-                                                    id="cumpleDomicilioFiscalEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                            <td class="marcar">
+                                                <select name="domicilioFiscal" class="form-control form-control-sm">
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -309,10 +218,9 @@
                                                 Autorizada):
                                             </th>
                                             <td class="domicilioInstalacion"></td>
-                                            <td>
-                                                <select class="form-control form-control-sm"
-                                                    id="cumpleDomicilioInstalacionesEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                            <td class="marcar">
+                                                <select name="domicilioInstalacion" class="form-control form-control-sm">
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -323,10 +231,10 @@
                                                 Fecha y
                                                 Hora de Visita:</th>
                                             <td class="fechaHora"></td>
-                                            <td>
-                                                <select class="form-control form-control-sm"
+                                            <td class="marcar">
+                                                <select name="fechaHora" class="form-control form-control-sm"
                                                     id="cumpleFechaHoraVisitaDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -337,10 +245,9 @@
                                                 Acta
                                                 Constitutiva:</th>
                                             <td class="actaConstitutiva"></td>
-                                            <td>
-                                                <select class="form-control form-control-sm"
-                                                    id="cumpleActaConstitutivaDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                            <td class="marcar">
+                                                <select name="actaConstitutiva" class="form-control form-control-sm">
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -351,9 +258,9 @@
                                                 CSF:
                                             </th>
                                             <td class="csf"></td>
-                                            <td>
-                                                <select class="form-control form-control-sm" id="cumpleCsfDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                            <td class="marcar">
+                                                <select name="csf" class="form-control form-control-sm">
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -363,10 +270,10 @@
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Comprobante de Posesión:</th>
                                             <td class="comprobantePosesion"></td>
-                                            <td>
-                                                <select class="form-control form-control-sm"
+                                            <td class="marcar">
+                                                <select name="comprobantePosesion" class="form-control form-control-sm"
                                                     id="cumpleComprobantePosesionDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -377,10 +284,9 @@
                                                 Plano
                                                 de Distribución:</th>
                                             <td class="planoDistribucion"></td>
-                                            <td>
-                                                <select class="form-control form-control-sm"
-                                                    id="cumplePlanoDistribucionDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                            <td class="marcar">
+                                                <select name="planoDistribucion" class="form-control form-control-sm">
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -407,10 +313,9 @@
                                                 Razón
                                                 Social:</th>
                                             <td class="razonSocial"></td>
-                                            <td>
-                                                <select class="form-control form-control-sm"
-                                                    id="cumpleRazonSocialEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                            <td class="marcar">
+                                                <select name="razonSocial2" class="form-control form-control-sm">
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -423,7 +328,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioFiscalEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -438,7 +343,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioInstalacionesEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -452,7 +357,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleFechaHoraVisitaDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -466,7 +371,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleNombreLoteRemuestreo">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -479,7 +384,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleCategoriaRemuestreo">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -493,7 +398,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleClaseRemuestreo">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -507,7 +412,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleEspecieAgaveRemuestreo">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -521,7 +426,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleTipoAnalisisRemuestreo">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -535,7 +440,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleActaVigilanciaRemuestreo">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -565,9 +470,9 @@
                                                 Social:</th>
                                             <td class="razonSocial"></td>
                                             <td>
-                                                <select class="form-control form-control-sm"
+                                                <select name="razonSocial3" class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -580,7 +485,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioFiscalEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -595,7 +500,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioInstalacionesEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -609,7 +514,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleFechaHoraVisitaDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -623,7 +528,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleNombreLoteTraslado">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -636,7 +541,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleCategoriaTraslado">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -649,7 +554,7 @@
                                             <td class="clase"></td>
                                             <td>
                                                 <select class="form-control form-control-sm" id="cumpleClaseTraslado">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -663,7 +568,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleEspecieAgaveTraslado">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -676,7 +581,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleContenidoAlcoholTraslado">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -688,7 +593,7 @@
                                             <td class="fq"></td>
                                             <td>
                                                 <select class="form-control form-control-sm" id="cumpleFqTraslado">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -701,7 +606,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleCertificadoGranelTraslado">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -715,7 +620,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleVolumenLoteActualTraslado">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -729,7 +634,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleVolumenTrasladado">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -743,7 +648,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleVolumenSobrante">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -773,7 +678,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -786,7 +691,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioFiscalEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -801,7 +706,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioInstalacionesEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -815,7 +720,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleFechaHoraVisitaDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -827,7 +732,7 @@
                                                 del Lote a Granel:</th>
                                             <td class="nombreLote"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -838,7 +743,7 @@
                                                 del Lote Envasado:</th>
                                             <td class="nombreLoteEnvasado"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -848,7 +753,7 @@
                                                 Cajas/Botellas:</th>
                                             <td class="cajasBotellas"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -858,7 +763,7 @@
                                                 Categoría:</th>
                                             <td class="categoria"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -868,7 +773,7 @@
                                                 Clase:</th>
                                             <td class="clase"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -878,7 +783,7 @@
                                                 Especie de Agave:</th>
                                             <td class="tipos"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -888,7 +793,7 @@
                                                 Contenido Alcohólico:</th>
                                             <td class="cont_alc"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -984,7 +889,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -997,7 +902,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioFiscalEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1012,7 +917,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioInstalacionesEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1026,7 +931,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleFechaHoraVisitaDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1038,7 +943,7 @@
                                                 del Lote a Granel:</th>
                                             <td class="nombreLote"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1048,7 +953,7 @@
                                                 Categoría:</th>
                                             <td class="categoria"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1058,7 +963,7 @@
                                                 Clase:</th>
                                             <td class="clase"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1068,7 +973,7 @@
                                                 Especie de Agave:</th>
                                             <td class="tipos"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1078,7 +983,7 @@
                                                 Contenido Alcohólico:</th>
                                             <td class="cont_alc"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1204,7 +1109,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1217,7 +1122,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioFiscalEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1232,7 +1137,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioInstalacionesEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1246,7 +1151,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleFechaHoraVisitaDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1258,7 +1163,7 @@
                                                 del Lote a Granel:</th>
                                             <td class="nombreLote"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1268,7 +1173,7 @@
                                                 Categoría:</th>
                                             <td class="categoria"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1278,7 +1183,7 @@
                                                 Clase:</th>
                                             <td class="clase"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1288,7 +1193,7 @@
                                                 Especie de Agave:</th>
                                             <td class="tipos"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1298,7 +1203,7 @@
                                                 Contenido Alcohólico:</th>
                                             <td class="cont_alc"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1429,7 +1334,7 @@
                                             <td id="razonSocialEmisorLiberacionPTNacional"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1440,7 +1345,7 @@
                                             <td id="razonSocialReceptorLiberacionPTNacional"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1452,7 +1357,7 @@
                                             <td id="domicilioFiscalEmisorLiberacionPTNacional"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1464,7 +1369,7 @@
                                             <td id="domicilioInstalacionesEmisorLiberacionPTNacional"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1475,7 +1380,7 @@
                                             <td id="fechaHoraVisitaLiberacionPTNacional"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1487,7 +1392,7 @@
                                             <td id="nombreLoteGranelLiberacionPTNacional"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1499,7 +1404,7 @@
                                             <td class="nombreLoteEnvasado"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1510,7 +1415,7 @@
                                             <td class="cajasBotellas"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1521,7 +1426,7 @@
                                             <td class="categoria"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1532,7 +1437,7 @@
                                             <td class="clase"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1543,7 +1448,7 @@
                                             <td class="tipos"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1554,7 +1459,7 @@
                                             <td class="cont_alc"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1565,7 +1470,7 @@
                                             <td class="fq"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1576,7 +1481,7 @@
                                             <td class="certificadoGranel"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1587,7 +1492,7 @@
                                             <td id="rangoHologramasLiberacionPTNacional"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1598,7 +1503,7 @@
                                             <td id="dictamenEnvasadoLiberacionPTNacional"></td>
                                             <td>
                                                 <select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1629,7 +1534,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1642,7 +1547,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioFiscalEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1657,7 +1562,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioInstalacionesEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1671,7 +1576,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleFechaHoraVisitaDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1683,7 +1588,7 @@
                                                 del Lote a Granel:</th>
                                             <td class="nombreLote"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1694,7 +1599,7 @@
                                                 del Lote Envasado:</th>
                                             <td class="nombreLoteEnvasado"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1704,7 +1609,7 @@
                                                 Cajas/Botellas:</th>
                                             <td class="cajasBotellas"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1714,7 +1619,7 @@
                                                 Categoría:</th>
                                             <td class="categoria"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1724,7 +1629,7 @@
                                                 Clase:</th>
                                             <td class="clase"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1734,7 +1639,7 @@
                                                 Especie de Agave:</th>
                                             <td class="tipos"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1744,7 +1649,7 @@
                                                 Contenido Alcohólico:</th>
                                             <td class="cont_alc"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1755,7 +1660,7 @@
                                             </th>
                                             <td class="fq"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1765,7 +1670,7 @@
                                                 Certificado a Granel:</th>
                                             <td class="certificadoGranel"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1775,7 +1680,7 @@
                                                 Dictamen de Envasado:</th>
                                             <td id="dictamenEnvasadoLiberacionPTExportacion"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1785,7 +1690,7 @@
                                                 Factura Proforma:</th>
                                             <td id="facturaProformaLiberacionPTExportacion"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1815,7 +1720,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1828,7 +1733,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioFiscalEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1842,7 +1747,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioInstalacionesEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1856,7 +1761,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleDomicilioInstalacionesEmisorDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1870,7 +1775,7 @@
                                             <td>
                                                 <select class="form-control form-control-sm"
                                                     id="cumpleFechaHoraVisitaDictamen">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select>
@@ -1881,7 +1786,7 @@
                                                 Comprobante de posesión del Predio:</th>
                                             <td class="comprobantePosesion"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>
@@ -1891,7 +1796,7 @@
                                                 Preregistro:</th>
                                             <td class="preregistro"></td>
                                             <td><select class="form-control form-control-sm">
-                                                    <option disabled selected>Seleccionar</option>
+                                                    <option value="" disabled selected>Seleccionar</option>
                                                     <option>Sí</option>
                                                     <option>No</option>
                                                 </select></td>

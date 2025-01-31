@@ -89,3 +89,7 @@
 
 <!-- /Modal -->
 @endsection
+
+<script>
+
+</script>

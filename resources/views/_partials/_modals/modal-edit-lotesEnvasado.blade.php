@@ -112,6 +112,15 @@
                                         envasado</a>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="form-floating form-floating-outline mb-6">
+                                    <select class=" form-select" name="tipo" aria-label="tipo">
+                                        <option value="Con etiqueta">Con etiqueta</option>
+                                        <option value="Sin etiqueta">Sin etiqueta</option>
+                                    </select>
+                                    <label for="tipo">Etiqueta</label>
+                                </div>
+                            </div>
                         </div>
                         <div id="edit_datosOpcion2">
                             <table class="table table-bordered">

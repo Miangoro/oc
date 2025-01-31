@@ -55,7 +55,7 @@ class empresa extends Model
     public function lotes_envasado()
     {
     // Aquí deberías implementar la lógica para obtener los lotes envasados
-    return lotes_envasado::where('id_empresa', $this->id_empresa)->get();
+    return lotes_envasado::where('id_empresa', $this->id_empresa)->with('lotes_envasado_granel.lotes_granel')->get();
     }
 
 /*
@@ -63,9 +63,22 @@ class empresa extends Model
         return marcas::where('id_empresa', $this->id_empresa)->get();
     } */
     public function marcas()
-{
-    return $this->hasMany(marcas::class, 'id_empresa', 'id_empresa');
+    {
+        return $this->hasMany(marcas::class, 'id_empresa', 'id_empresa');
+    }
+
+    public function todasLasMarcas()
+    {
+        // Obtener los IDs de las empresas que tienen a esta empresa como maquilador
+        $idsEmpresas = maquiladores_model::where('id_maquilador', $this->id_empresa)
+            ->pluck('id_maquiladora')
+            ->push($this->id_empresa); // Agrega la empresa actual
+
+        // Obtener todas las marcas de esas empresas
+        return Marcas::whereIn('id_empresa', $idsEmpresas);
 }
+
+
 
 
 

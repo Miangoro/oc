@@ -570,7 +570,7 @@ $(function () {
         method: 'GET',
         success: function (response) {
           var contenido = "";
-          for (let index = 0; index < response.instalaciones.length; index++) {
+          for (let index = 0; index < response.instalaciones.length; index++) { 
             // Verifica si la palabra 'Envasadora' está en la cadena
             if (response.instalaciones[index].tipo.includes('Envasadora')) {
               contenido += '<option value="' + response.instalaciones[index].id_instalacion + '">' +

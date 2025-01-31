@@ -142,11 +142,11 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select" name="etiqueta" aria-label="etiqueta">
+                                <select class=" form-select" name="tipo" aria-label="tipo">
                                     <option value="Con etiqueta">Con etiqueta</option>
                                     <option value="Sin etiqueta">Sin etiqueta</option>
                                 </select>
-                                <label for="etiqueta">Etiqueta</label>
+                                <label for="tipo">Etiqueta</label>
                             </div>
                         </div>
                     </div>
