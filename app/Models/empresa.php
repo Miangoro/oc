@@ -53,15 +53,20 @@ class empresa extends Model
         return LotesGranel::where('id_empresa', $this->id_empresa)->get();
     }
 
-    public function todos_lotes_granel(){
+    public function todos_lotes_granel()
+    {
+        // Obtener las empresas maquiladoras donde esta empresa es maquilador
         $idsEmpresas = maquiladores_model::where('id_maquilador', $this->id_empresa)
             ->pluck('id_maquiladora')
-            ->push($this->id_empresa); // Agrega la empresa actual
-
-        // Obtener todas las marcas de esas empresas
-        return LotesGranel::whereIn('id_empresa', $idsEmpresas);
+            ->toArray(); // Convertir la colección en array
+    
+        // Agregar la empresa actual al array
+        $idsEmpresas[] = $this->id_empresa;
+    
+        // Obtener todos los lotes de granel de esas empresas
+        return LotesGranel::whereIn('id_empresa', $idsEmpresas)->get();
     }
-
+    
     public function lotes_envasado()
     {
     // Aquí deberías implementar la lógica para obtener los lotes envasados
