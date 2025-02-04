@@ -126,7 +126,10 @@ class lotesEnvasadoController extends Controller
 
             foreach ($users as $user) {
   
-                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
+                $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $user->id_empresa)->first();
+                $numero_cliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                    return !empty($numero);
+                });
                 $sku = json_decode($user->sku, true); // Decodifica el JSON en un array
                 $inicial = isset($sku['inicial']) ? $sku['inicial'] : 0; // Obtén el valor de 'inicial' del JSON
                 $nuevo = isset($sku['nuevo']) ? $sku['nuevo'] : 0; // Obtén el valor de 'inicial' del JSON
@@ -142,7 +145,7 @@ class lotesEnvasadoController extends Controller
                     'id_lote_envasado' => $user->id_lote_envasado,
                     'fake_id' => ++$ids,
                     'id_empresa' => $numero_cliente,
-                    'id_marca' => $user->marca->marca,
+                    'id_marca' => $user->marca->marca ?? '',
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
                     'nombre' => $user->nombre,
                     'cant_botellas' => $user->cant_botellas,
@@ -202,6 +205,7 @@ class lotesEnvasadoController extends Controller
             $lotes->volumen_total = $request->volumen_total;
             $lotes->vol_restante = $request->volumen_total;
             $lotes->lugar_envasado = $request->lugar_envasado;
+            $lotes->tipo = $request->tipo;
             $lotes->save();
 
             // Verificar si existen los arrays antes de procesarlos
@@ -270,6 +274,7 @@ class lotesEnvasadoController extends Controller
             $lotes->unidad = $request->edit_unidad;
             $lotes->volumen_total = $request->edit_volumen_total;
             $lotes->lugar_envasado = $request->edit_Instalaciones;
+            $lotes->tipo = $request->tipo;
             $lotes->save();
 
             // Eliminar los registros de `lotes_envasado_granel` relacionados con este lote

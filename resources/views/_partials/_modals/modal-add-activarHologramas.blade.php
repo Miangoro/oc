@@ -17,7 +17,7 @@
                                 aria-label="Default select example">
                                 <option value="" disabled selected>Elige un numero de inspección</option>
                                 @foreach ($inspeccion as $insp)
-                                    <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option>
+                                    <option value="{{ $insp->id_solicitud }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->folio }}</option>
                                 @endforeach
                             </select>
                             <label for="id_inspeccion">No. de servicio</label>
@@ -32,25 +32,41 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select class=" form-select select2" id="categoria" name="categoria"
+                                <select class=" form-select" id="categoria" name="categoria"
                                     aria-label="categoría">
                                     <option value="" disabled selected>Elige una categoría</option>
                                     @foreach ($categorias as $cate)
-                                        <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
+                                        <option value="{{ $cate->id_categoria }}">{{ $cate->categoria }}</option>
                                     @endforeach
                                 </select>
                                 <label for="categoria">Categoría Mezcal</label>
                             </div>
                         </div>
+                        
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="No de análisis de laboratorio:"
-                                    id="no_analisis" name="no_analisis" />
-                                <label for="no_analisis">No de análisis de laboratorio:</label>
+                                <select class=" form-select" id="clase" name="clase" aria-label="Clase">
+                                    @foreach ($clases as $clase)
+                                        <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
+                                     @endforeach
+                                </select>
+                                <label for="clase">Clase</label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <select multiple class=" form-select select2" id="id_tipo" name="id_tipo"
+                                    aria-label="tipo">
+                                    <option value="" disabled selected>Elige un tipo</option>
+                                    @foreach ($tipos as $tipo)
+                                        <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_tipo">Tipo Agave</label>
+                            </div>
+                        </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="number" step="0.01"
@@ -68,30 +84,24 @@
                                 <label for="unidad">Unidad</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select" id="clase" name="clase" aria-label="Clase">
-                                    <option value="Blanco o Joven">Blanco o Joven</option>
-                                    <option value="Maduro en Vidrio">Maduro en Vidrio</option>
-                                    <option value="Reposado">Reposado</option>
-                                    <option value="Añejo">Añejo</option>
-                                    <option value="Abocado con">Abocado con</option>
-                                    <option value="Destilado con">Destilado con</option>
-                                    <option value="No aplica">No aplica</option>
-                                </select>
-                                <label for="clase">Clase</label>
-                            </div>
-                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" type="text" placeholder="No de análisis de laboratorio:"
+                                    id="no_analisis" name="no_analisis" />
+                                <label for="no_analisis">No de análisis de laboratorio:</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="text" placeholder="Contenido Alcohólico:"
                                     id="contenido" name="contenido" />
                                 <label for="contenido">Contenido Alcohólico:</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="text" placeholder="No. de lote de envasado:"
                                     id="no_lote_envasado" name="no_lote_envasado" />
@@ -100,26 +110,14 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <select class=" form-select select2" id="id_tipo" name="id_tipo"
-                                    aria-label="categoría">
-                                    <option value="" disabled selected>Elige una categoría</option>
-                                    @foreach ($tipos as $tipo)
-                                        <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="id_tipo">Categoría Agave</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="text" placeholder="Lugar de producción:"
                                     id="lugar_produccion" name="lugar_produccion" />
                                 <label for="lugar_produccion">Lugar de producción: </label>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="text" step="0.01"
                                     placeholder="Lugar de envasado:" id="lugar_envasado" name="lugar_envasado" />
@@ -193,3 +191,4 @@
         </div>
     </div>
 </div>
+

@@ -60,14 +60,15 @@ class getFuncionesController extends Controller
     public function getDatos(empresa $empresa)
     {
         // Obtener las marcas de la empresa
-        $marcas = $empresa->marcas()->get();  // Llamamos a `get()` para obtener los datos reales
+        //$marcas = $empresa->marcas()->get();  // Llamamos a `get()` para obtener los datos reales
+        $marcas = $empresa->todasLasMarcas()->get(); 
 
         // Depurar las marcas
 
 
         return response()->json([
             'instalaciones' => $empresa->obtenerInstalaciones(),
-            'lotes_granel' => $empresa->lotes_granel(),
+            'lotes_granel' => $empresa->todos_lotes_granel(),
             'marcas' => $marcas,
             'guias' => $empresa->guias(),
             'predios' => $empresa->predios(),
@@ -195,7 +196,7 @@ $solicitudQuery = solicitudesModel::with([
 // Cargamos la solicitud
 $solicitud = $solicitudQuery->where("id_solicitud", $id_solicitud)->first();
 
-if ($solicitud && $solicitud->id_tipo != 11) {
+if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
     // Si el id_tipo no es 11, agregamos las relaciones adicionales
     $solicitud->load([
         'lote_granel.categoria',

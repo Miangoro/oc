@@ -168,6 +168,19 @@ public function clases_agave()
     }
 
     
+    public function ultima_validacion_oc()
+    {
+        return $this->hasOne(solicitudesValidacionesModel::class, 'id_solicitud', 'id_solicitud')
+                ->where('tipo_validacion', 'oc')
+                ->orderByDesc('fecha_realizo'); // Ordenar por la fecha más reciente
+    }
+
+    public function ultima_validacion_ui()
+    {
+        return $this->hasOne(solicitudesValidacionesModel::class, 'id_solicitud', 'id_solicitud')
+                ->where('tipo_validacion', 'ui')
+                ->orderByDesc('fecha_realizo'); // Ordenar por la fecha más reciente
+    }
 
 
     

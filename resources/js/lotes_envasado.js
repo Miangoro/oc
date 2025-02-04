@@ -35,22 +35,20 @@ $(function () {
 
             if (row.id_empresa != 'N/A') {
               id_empresa =
-                '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' +
-                row.id_empresa +
-                '</span>';
+                '<br><span class="fw-bold text-dark small">' +row.id_empresa +'</span>';
             }
             if (row.razon_social != 'N/A') {
               razon_social =
-                '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
+                '<br><span class="small">' +
                 row.razon_social +
-                '</span>';
+                '</span><span class="small"> </span>';
             }
 
             return (
-              '<span class="fw-bold text-dark small">Número del cliente:</span> <span class="small"> ' +
+              '<span class="fw-bold text-dark">' +
               row.id_empresa +
-              '</span><br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
-              row.razon_social
+              '</span> <br><span class="small">'+ row.razon_social+'</span>'
+             
             );
           }
         },
@@ -570,7 +568,7 @@ $(function () {
         method: 'GET',
         success: function (response) {
           var contenido = "";
-          for (let index = 0; index < response.instalaciones.length; index++) {
+          for (let index = 0; index < response.instalaciones.length; index++) { 
             // Verifica si la palabra 'Envasadora' está en la cadena
             if (response.instalaciones[index].tipo.includes('Envasadora')) {
               contenido += '<option value="' + response.instalaciones[index].id_instalacion + '">' +
@@ -1114,11 +1112,15 @@ $(function () {
   }).on('core.form.valid', function (e) {
     //e.preventDefault();
     var formData = new FormData(editLoteEnvasadoForm);
+    
 
     $.ajax({
-      url: '/lotes-envasado/update/', // Actualiza con la URL correcta
+      url: '/lotes-envasado/update', // Actualiza con la URL correcta
       type: 'POST',
       data: formData,
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Agregar token CSRF
+    },
       processData: false,
       contentType: false,
       success: function (response) {

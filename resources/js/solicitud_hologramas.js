@@ -1753,4 +1753,46 @@ $('#addHologramas').on('hidden.bs.modal', function () {
         }
       });
     }); */
+
+    $(document).ready(function () {
+      $('#id_inspeccion').change(function () { 
+          var id_inspeccion = $(this).val(); // Obtener el valor seleccionado
+         
+  
+          if (id_inspeccion) {
+              $.ajax({
+                  url: '/getDatosSolicitud/' + id_inspeccion, // URL del backend
+                  type: 'GET',
+                  dataType: 'json',
+                  success: function (response) {
+                      if (response.success) {
+                          // Llenar los inputs con los datos recibidos
+                          $('#no_lote_agranel').val(response.data.lote_granel.nombre_lote || '');
+                          $('#categoria').val(response.data.lote_granel.id_categoria).trigger('change');
+                          $('#clase').val(response.data.lote_granel.id_clase).trigger('change');
+                          $('#id_tipo').val(response.data.lote_granel.tipo_lote).trigger('change');
+                          $('#cont_neto').val(response.data.lote_envasado.presentacion);
+                          $('#unidad').val(response.data.lote_envasado.unidad);
+                          $('#no_analisis').val(response.data.lote_granel.folio_fq);
+                          $('#contenido').val(response.data.lote_granel.cont_alc);
+                          $('#no_lote_envasado').val(response.data.lote_envasado.nombre);
+                          $('#lugar_envasado').val(response.data.instalacion.direccion_completa);
+
+                          
+                          
+                          
+                        
+                      } else {
+                          Swal.fire('Error', 'No se encontraron datos', 'error');
+                      }
+                  },
+                  error: function () {
+                      Swal.fire('Error', 'Ocurrió un problema con la consulta', 'error');
+                  }
+              });
+          }
+      });
+  });
+
+
 });

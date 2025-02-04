@@ -58,6 +58,35 @@
 
 
 
+
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" type="number" placeholder="Ingrese un valor"
+                                    id="cantidad_botellas" name="cant_botellas" min="1" required />
+                                <label for="cantidad_botellas">Cantidad de botellas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" type="number" placeholder="Presentación de la botella"
+                                    id="presentacion" name="presentacion" min="1" />
+                                <label for="presentacion">Presentación de la botella</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select class=" form-select" id="unidad" name="unidad" aria-label="Unidad">
+                                    <option value="mL">Mililitros</option>
+                                    <option value="L">Litros</option>
+                                    <option value="cL">Centrilitros</option>
+                                </select>
+                                <label for="unidad">Unidad</label>
+                            </div>
+                        </div>
+                    </div>
+
                     <table class="table table-bordered table-sm">
                         <thead>
                             <tr>
@@ -85,37 +114,6 @@
                             </tr>
                         </tbody>
                     </table>
-
-
-
-
-                    
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="number" placeholder="Ingrese un valor"
-                                    id="cantidad_botellas" name="cant_botellas" min="1" required />
-                                <label for="cantidad_botellas">Cantidad de botellas</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="number" placeholder="Presentación de la botella"
-                                    id="presentacion" name="presentacion" min="1" />
-                                <label for="presentacion">Presentación de la botella</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select" id="unidad" name="unidad" aria-label="Unidad">
-                                    <option value="Mililitros">Mililitros</option>
-                                    <option value="Litros">Litros</option>
-                                    <option value="Centrilitros">Centrilitros</option>
-                                </select>
-                                <label for="unidad">Unidad</label>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-md-12 mb-6">
                             <label class="form-label" for="basic-default-password42">Instalación de envasado certificada</label>
@@ -125,9 +123,9 @@
                                     <option value="" disabled selected>Seleccione un cliente</option>
                                 </select>
                                
-                                <a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect"
+                                <!--<a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect"
                                     type="button"><i class="ri-add-circle-fill"></i> Registrar instalación de
-                                    envasado</a>
+                                    envasado</a>-->
                             </div>
                             
                         </div>
@@ -142,11 +140,11 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select" name="etiqueta" aria-label="etiqueta">
+                                <select class=" form-select" name="tipo" aria-label="tipo">
                                     <option value="Con etiqueta">Con etiqueta</option>
                                     <option value="Sin etiqueta">Sin etiqueta</option>
                                 </select>
-                                <label for="etiqueta">Etiqueta</label>
+                                <label for="tipo">Etiqueta</label>
                             </div>
                         </div>
                     </div>

@@ -12,6 +12,7 @@ use App\Models\empresaNumCliente;
 use App\Models\inspecciones;
 use App\Models\tipos;
 use App\Models\categorias;
+use App\Models\clases;
 use App\Models\Documentacion_url;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,9 +25,14 @@ class solicitudHolograma extends Controller
     public function UserManagement()
     {
         $Empresa = Empresa::with('empresaNumClientes')->where('tipo', 2)->get();
-        $inspeccion = inspecciones::all();
+        $inspeccion = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
+            $query->where('id_tipo', 5);
+        })
+        ->orderBy('id_inspeccion', 'desc')
+        ->get();
         $categorias = categorias::all();
         $tipos = tipos::all();
+        $clases = clases::all();
 
         $ModelsSolicitudHolograma = ModelsSolicitudHolograma::all();
         $userCount = $ModelsSolicitudHolograma->count();
@@ -44,6 +50,7 @@ class solicitudHolograma extends Controller
             'inspeccion' => $inspeccion,
             'categorias' => $categorias,
             'tipos' => $tipos,
+            'clases' => $clases,
         ]);
     }
 
