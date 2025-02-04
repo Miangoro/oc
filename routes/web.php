@@ -904,4 +904,7 @@ Route::middleware(['auth'])->controller(impiController::class)->group(function (
     Route::get('insta2/{id_impi}/edit', [impiController::class, 'edit'])->name('instalacion.edit');
     ///editar
     Route::put('insta2/{id_impi}', [impiController::class, 'update'])->name('tipos.update');
+
+    //Registrar evento
+    Route::post('crearEvento', [impiController::class, 'store'])->name('evento-create');
 });
