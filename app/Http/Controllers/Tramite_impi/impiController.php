@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Notifications\GeneralNotification;
 use App\Models\Impi;
 use App\Models\empresa;
+use App\Models\Impi_evento;
 
 
 class impiController extends Controller
@@ -17,6 +18,7 @@ class impiController extends Controller
     {
       $tramites = Impi::all();
       $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+      $evento = Impi_evento::all();
       return view('Tramite_impi.find_impi', compact('tramites', 'empresas'));
     }
 
@@ -208,7 +210,26 @@ class impiController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al agregar'], 500);
         }
+
+
+        //EVENTO
+        try {
+            $var1 = new Impi_evento();
+      
+            $var1->evento = $request2->evento;
+            $var1->descripcion = $request2->descripcion;
+    
+            $var1->save();//guardar en BD
+    
+            return response()->json(['success' => 'Registro agregado correctamente22']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al agregar22'], 500);
     }
+
+}
+
+
+
 
 
 

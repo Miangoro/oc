@@ -156,6 +156,7 @@ initializeSelect2(select2Elements);
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
 
                    `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#editDictamen" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar </a>` +
+                   `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#addEvento" href="javascript:;" class="dropdown-item add-event"><i class="ri-add-box-line  ri-25px"></i> Agregar evento </a> ` +
                    `<a data-id="${full['id_impi']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar </a>` +
                   
                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
@@ -650,6 +651,108 @@ $(document).ready(function() {
       });
   });
 });
+
+
+
+
+///REGISTRAR EVENTO
+const fv2 = FormValidation.formValidation(NuevoEvento, { //FORMULARIO ID
+  fields: {
+//valida por name
+/*    fecha_solicitud: {
+          validators: {
+              notEmpty: {
+                  message: 'Seleccione una fecha'
+              }
+          }
+      },
+      tramite: {
+        validators: {
+            notEmpty: {
+                message: 'Seleccione el trámite'
+            }
+        }
+    },
+    id_empresa: {
+          validators: {
+              notEmpty: {
+                  message: 'Seleccione el cliente'
+              }
+          }
+      },
+      contrasena: {
+          validators: {
+              notEmpty: {
+                  message: 'Introduzca una contraseña'
+              }
+          }
+      },
+      pago: {
+          validators: {
+              notEmpty: {
+                  message: 'Introduzca el pago'
+              }
+          }
+      },
+      estatus: {
+        validators: {
+            notEmpty: {
+                message: 'Seleccione un estatus'
+            }
+        }
+      },*/
+  },
+  plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+              return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+          }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+
+var formData = new FormData(NuevoEvento);
+  $.ajax({
+      url: 'crearEvento',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        console.log('Funcionando2 :D', response);
+          $('#addEvento').modal('hide');//modal que encierra al formulario #addEvento
+          $('#NuevoEvento')[0].reset();
+
+          dt_user.ajax.reload();
+          // Mostrar alerta de éxito
+          Swal.fire({
+              icon: 'success',
+              title: '¡Éxito22!',
+              text: response.success,
+              customClass: {
+                  confirmButton: 'btn btn-success'
+              }
+          });
+      },
+      error: function (xhr) {
+        console.log('Error por error:', xhr.responseText);
+          // Mostrar alerta de error
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error22!',
+              text: '¡Error al subir22!',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      }
+  });
+});
+
 
 
 
