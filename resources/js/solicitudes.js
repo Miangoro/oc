@@ -182,15 +182,15 @@ $(function () {
                       <br>
                       <span class="fw-bold text-dark small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
             case 11:
-              return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.nombre_lote_inspeccion || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Marca:</span><span class="small"> ${data.marca || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.volumen_inspeccion || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Cajas:</span><span class="small"> ${data.analisis_inspeccion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Cajas:</span><span class="small"> ${data.cajas || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Botellas:</span><span class="small"> ${data.analisis_inspeccion || 'N/A'}</span>`;
+                      <span class="fw-bold text-dark small">Botellas:</span><span class="small"> ${data.botellas || 'N/A'}</span>`;
             case 14:
               return `<span class="fw-bold text-dark small">
                   ${data.renovacion === 'si' ? 'Es renovación' : 'No es renovación'}

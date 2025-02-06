@@ -174,8 +174,23 @@ class solicitudesController extends Controller
                 $idLoteGranel = $caracteristicas['id_lote_granel'] ?? null;
                 $loteGranel = LotesGranel::find($idLoteGranel); // Busca el lote a granel
 
-                $idLoteEnvasado = $caracteristicas['id_lote_envasado'] ?? null;
-                $loteEnvasado = lotes_envasado::find($idLoteEnvasado); // Busca el lote envasado
+                if (isset($caracteristicas['id_lote_envasado'])) {
+                    $idLoteEnvasado = $caracteristicas['id_lote_envasado'];
+                } elseif (isset($caracteristicas['detalles']) && is_array($caracteristicas['detalles']) && isset($caracteristicas['detalles'][0]['id_lote_envasado'])) {
+                    $idLoteEnvasado = $caracteristicas['detalles'][0]['id_lote_envasado'];
+                    $cajas = $caracteristicas['detalles'][0]['cantidad_cajas'];
+                    $botellas = $caracteristicas['detalles'][0]['cantidad_botellas'];
+                } else {
+                    $idLoteEnvasado = null;
+                }
+                $loteEnvasado = lotes_envasado::with('marca')->find($idLoteEnvasado); // Busca el lote envasado
+
+                if ($loteEnvasado && $loteEnvasado->marca) {
+                    $marca = $loteEnvasado->marca->nombre;
+                } else {
+                    $marca = null; // O un valor por defecto
+                }
+
 
                 $idLoguiass = $caracteristicas['id_guia'] ?? null;
                 $guias = [];
@@ -184,8 +199,8 @@ class solicitudesController extends Controller
                   $guias = guias::whereIn('id_guia', $idLoguiass)->pluck('folio')->toArray();
                 }
 
-              // Devuelve las guías como una cadena separada por comas
-              $nestedData['guias'] = !empty($guias) ? implode(', ', $guias) : 'N/A';
+                // Devuelve las guías como una cadena separada por comas
+                 $nestedData['guias'] = !empty($guias) ? implode(', ', $guias) : 'N/A';
 
 
                 $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
@@ -196,8 +211,11 @@ class solicitudesController extends Controller
                 $nestedData['folio_caracteristicas'] = $caracteristicas['folio'] ?? 'N/A';
                 $nestedData['etapa'] = $caracteristicas['etapa'] ?? 'N/A';
                 $nestedData['fecha_corte'] = isset($caracteristicas['fecha_corte']) ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i') : 'N/A';
-
+                $nestedData['marca'] = $marca ?? 'N/A';
+                $nestedData['cajas'] = $cajas ?? 'N/A';
+                $nestedData['botellas'] = $botellas ?? 'N/A';
                 $idTipoMagueyMuestreo = $caracteristicas['id_tipo_maguey'] ?? null;
+
                  if ($idTipoMagueyMuestreo) {
                  if (is_array($idTipoMagueyMuestreo)) {
                     $idTipoMagueyMuestreo = implode(',', $idTipoMagueyMuestreo);

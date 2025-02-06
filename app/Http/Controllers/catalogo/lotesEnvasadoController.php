@@ -127,9 +127,9 @@ class lotesEnvasadoController extends Controller
             foreach ($users as $user) {
   
                 $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $user->id_empresa)->first();
-                $numero_cliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
-                    return !empty($numero);
-                });
+
+$numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first(fn($numero) => !empty($numero));
+
                 $sku = json_decode($user->sku, true); // Decodifica el JSON en un array
                 $inicial = isset($sku['inicial']) ? $sku['inicial'] : 0; // Obtén el valor de 'inicial' del JSON
                 $nuevo = isset($sku['nuevo']) ? $sku['nuevo'] : 0; // Obtén el valor de 'inicial' del JSON
