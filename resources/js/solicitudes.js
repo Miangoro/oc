@@ -4383,6 +4383,7 @@ $(document).on('click', '.expediente-record', function () {
           // Verificar si 'detalles' existe y es un arreglo
           if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
             // Recorrer cada elemento de 'detalles'
+            $('.cajasBotellas').text('');
             caracteristicas.detalles.forEach(function (detalle) {
               // Asumiendo que '.cajasBotellas' es un contenedor de varias cajas, agregamos el texto en cada una
               $('.cajasBotellas').append(
@@ -4425,6 +4426,18 @@ $(document).on('click', '.expediente-record', function () {
               targetClass: '.actaConstitutiva',
               noDocMessage: 'No hay acta constitutiva',
               condition: (documento, response) => documento.id_empresa == response.data.id_empresa
+            },
+            {
+              ids: [55],
+              targetClass: '.proforma',
+              noDocMessage: 'No hay factura proforma',
+              condition: (documento, response) => documento.id_empresa == response.data.id_empresa
+            },
+            {
+              ids: [128],
+              targetClass: '.domicilioInstalacion',
+              noDocMessage: 'No hay dictamen de instalaciones',
+              condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
             }
           ];
 
@@ -4449,7 +4462,7 @@ $(document).on('click', '.expediente-record', function () {
                 });
 
                 link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
-                $(config.targetClass).empty().append(link);
+                $(config.targetClass).append(link);
                 documentsFound[config.targetClass] = true;
               }
             });
@@ -4679,7 +4692,7 @@ $(document).on('click', '.expediente-record', function () {
     const fv = FormValidation.formValidation(form, {
       excluded: ':disabled',
       fields: {
-        razonSocial: {
+       /* razonSocial: {
           validators: {
             notEmpty: {
               message: 'Selecciona la respuesta'
@@ -4741,7 +4754,7 @@ $(document).on('click', '.expediente-record', function () {
               message: 'Selecciona la respuesta'
             }
           }
-        },
+        }, */
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),

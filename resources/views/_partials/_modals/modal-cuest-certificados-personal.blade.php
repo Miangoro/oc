@@ -59,7 +59,7 @@
                                                                         ? '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente . '/' . 
                                                                             $revisor->obtenerDocumentosClientes($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa) 
                                                                             : 'NA' }}">
-                                                                           <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                                           <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                                         </a>
                                                                     </td>
                                                                 @elseif($pregunta->filtro == 'acta')
@@ -70,7 +70,7 @@
                                                                         ? '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente . '/' .
                                                                           $revisor->obtenerDocumentoActa($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->id_solicitud)
                                                                         : 'NA' }}">
-                                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                                     </a>
                                                                     
                                                                     @endif
@@ -131,7 +131,7 @@
                                                                 
                                                                     @if ($pdf_dictamen)
                                                                         <a target="_blank" href="{{ $pdf_dictamen.$revisor->certificado->dictamen->id_dictamen }}">
-                                                                            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                                            <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                                         </a>
                                                                     @else
                                                                         <span>Dictamen no disponible</span>
@@ -183,7 +183,7 @@
                                                                             '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente . '/' . 
                                                                             $revisor->obtenerDocumentosClientes($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa) 
                                                                             : 'NA' }}">
-                                                                            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                                            <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                                         </a>
                                                                     </td>
                                                                 @else

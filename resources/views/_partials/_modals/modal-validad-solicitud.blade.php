@@ -27,9 +27,8 @@
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Razón Social:</th>
                                             <td class="razonSocial"></td>
-                                            <td>
-                                                <select class="form-control form-control-sm"
-                                                    id="cumpleRazonSocialEmisorDictamen">
+                                            <td class="marcar">
+                                                <select name="razonSocial1" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
@@ -314,7 +313,7 @@
                                                 Social:</th>
                                             <td class="razonSocial"></td>
                                             <td class="marcar">
-                                                <select name="razonSocial2" class="form-control form-control-sm">
+                                                <select  class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
@@ -470,7 +469,7 @@
                                                 Social:</th>
                                             <td class="razonSocial"></td>
                                             <td>
-                                                <select name="razonSocial3" class="form-control form-control-sm"
+                                                <select class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
@@ -1532,11 +1531,10 @@
                                                 Social:</th>
                                             <td class="razonSocial"></td>
                                             <td>
-                                                <select class="form-control form-control-sm"
-                                                    id="cumpleRazonSocialEmisorDictamen">
+                                                <select name="razonSocial" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
+                                                    <option value="Si">Sí</option>
+                                                    <option value="No">No</option>
                                                 </select>
                                             </td>
                                         </tr>
@@ -1688,11 +1686,11 @@
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Factura Proforma:</th>
-                                            <td id="facturaProformaLiberacionPTExportacion"></td>
-                                            <td><select class="form-control form-control-sm">
+                                            <td class="proforma"></td>
+                                            <td><select name="proforma" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
-                                                    <option>Sí</option>
-                                                    <option>No</option>
+                                                    <option value="Si">Si</option>
+                                                    <option value="No">No</option>
                                                 </select></td>
                                         </tr>
                                     </tbody>

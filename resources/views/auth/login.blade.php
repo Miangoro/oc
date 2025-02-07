@@ -260,6 +260,7 @@
             background-image: url('{{ asset('assets/img/branding/santa.png') }}');
             background-size: cover;
             animation: volar 5.5s cubic-bezier(0.25, 0.8, 0.25, 1) infinite;
+            display: none;
         }
 
         @keyframes volar {
@@ -430,7 +431,7 @@
                             </a>
                         </div>
                         <div style="text-align: center">
-                            <p>👇¡Síguenos en nuestras redes sociales!👇</p>
+                            <p>¡Síguenos en nuestras redes sociales!</p>
                         </div>
                         <div class="flex-container">
                             <a href="https://www.facebook.com/organismo.certificador.CIDAM" target="_blank">
