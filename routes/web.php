@@ -205,6 +205,7 @@ use App\Http\Controllers\Bitacoras\BitacoraProductoMaduracionController;
 use App\Http\Controllers\Bitacoras\BitacoraProcesoElaboracionController;
 use App\Http\Controllers\Bitacoras\BitacoraProductoTerminadoController;
 use App\Http\Controllers\Bitacoras\BitacoraHologramasController;
+use App\Http\Controllers\catalogo\EtiquetasController;
 use App\Http\Controllers\insertar_datos_bd_certificados;
 use App\Http\Controllers\insertar_datos_bd_dictamenes;
 use App\Http\Controllers\Tramite_impi\impiController;
@@ -516,6 +517,12 @@ Route::post('/marcas-list/update', [marcasCatalogoController::class, 'update'])-
 Route::post('/marcas-list/update', [marcasCatalogoController::class, 'update'])->name('marcas.update');
 Route::post('/etiquetado/updateEtiquetas', [marcasCatalogoController::class, 'updateEtiquetas']);
 Route::get('/marcas-list/{id}/editEtiquetas', [marcasCatalogoController::class, 'editEtiquetas'])->name('marcas.edit');
+
+//Etiquetas
+Route::get('/catalogo/etiquetas', [EtiquetasController::class, 'UserManagement'])->name('catalogo-etiquetas');
+Route::resource('/etiquetas-list', EtiquetasController::class);
+Route::post('/registrar-etiqueta', [EtiquetasController::class, 'store']);
+Route::get('/edit-etiqueta/{id_etiqueta}', [EtiquetasController::class, 'edit_etiqueta']);
 
 /* ruta de clases catalogo */
 Route::get('/catalogo/clases', [claseController::class, 'UserManagement'])->name('catalogo-clases');
