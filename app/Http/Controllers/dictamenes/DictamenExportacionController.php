@@ -8,13 +8,15 @@ use Illuminate\Http\Request;
 use App\Models\Dictamen_Exportacion;
 use App\Models\inspecciones; 
 use App\Models\User;
-
-use App\Models\Instalaciones; 
 use App\Models\empresa; 
-use App\Models\solicitudesModel;
-use App\Notifications\GeneralNotification;
+
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+
+use App\Models\Instalaciones; 
+use App\Models\solicitudesModel;
+use App\Notifications\GeneralNotification;
+
 use Faker\Extension\Helper;
 
 class DictamenExportacionController extends Controller
@@ -210,6 +212,42 @@ public function edit($id_dictamen)
     } catch (\Exception $e) {
         return response()->json(['error' => 'Error al editar'], 500);
     }
+}
+
+
+
+///FUNCION PDF DICTAMEN EXPORTACION
+public function MostrarDictamenExportacion($id_dictamen) 
+{
+    // Obtener los datos del dictamen específico
+    //$datos = Dictamen_Exportacion::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);    
+    $data = Dictamen_Exportacion::find($id_dictamen);
+
+    if (!$data) {
+        return abort(404, 'Dictamen no encontrado');
+    }
+
+    // Verifica qué valor tiene esta variable
+    $fecha_emision2 = Helpers::formatearFecha($data->fecha_emision);
+    $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
+    $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
+
+    // Determinar si la marca de agua debe ser visible
+    $watermarkText = $data->estatus === 'Cancelado';
+
+    $pdf = Pdf::loadView('pdfs.dictamen_exportacion_ed2', [//formato del PDF
+        'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
+        'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
+        'domicilio' => $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrada',
+        'rfc' => $data->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
+        'no_dictamen' => $data->num_dictamen,
+        'fecha_servicio' => $fecha_servicio,
+        'fecha_emision' => $fecha_emision2,
+        'fecha_vigencia' => $fecha_vigencia,
+        'watermarkText' => $watermarkText,
+    ]);
+    //nombre al descarga
+    return $pdf->stream('F-UV-04-18 Ver 2. Dictamen de Cumplimiento para Producto de Exportación.pdf');
 }
 
 

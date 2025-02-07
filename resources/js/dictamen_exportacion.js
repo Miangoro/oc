@@ -139,7 +139,7 @@ initializeSelect2(select2Elements);
             className: 'text-center',
             render: function (data, type, full, meta) {
               var $id = full['id_dictamen'];
-              return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdfDictamen1" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+              return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
             }
           },
  
@@ -638,10 +638,9 @@ $(document).ready(function() {
 
 
 ///FORMATO PDF
-$(document).on('click', '.pdf', function () {
-  var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en opciones
-  var registro = $(this).data('registro');//ID de razon social "data-registro"
-  var pdfUrl = '/dictamen_cumplimiento_mezcal_granel/' + id; // URL del PDF
+$(document).on('click', '.pdf', function ()  {
+  var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
+  var pdfUrl = '/dictamen_cumplimiento_exportacion/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
       
@@ -650,17 +649,17 @@ $(document).on('click', '.pdf', function () {
     iframe.hide();
     
     //Cargar el PDF con el ID
-      iframe.attr('src', pdfUrl);
+    iframe.attr('src', pdfUrl);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-      $("#NewPestana").attr('href', pdfUrl).show();
+    $("#NewPestana").attr('href', pdfUrl).show();
 
-      $("#titulo_modal").text("Dictamen de Cumplimiento NOM Mezcal a Granel");
-      $("#subtitulo_modal").text("PDF de Dictamen");
+    $("#titulo_modal").text("Dictamen de Cumplimiento para Producto de Exportación");
+    $("#subtitulo_modal").text("PDF del Dictamen");
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-      iframe.on('load', function () {
-        spinner.hide();
-        iframe.show();
-      });
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
 });
 
 

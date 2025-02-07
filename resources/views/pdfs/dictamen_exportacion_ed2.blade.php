@@ -195,6 +195,15 @@
 </head>
 
 <body>
+
+    @if ($watermarkText)
+        <div class="watermark">
+            Cancelado
+        </div>
+    @endif
+
+
+    {{-- cabecera --}}
     <img src="{{ public_path('img_pdf/UVEM_logo.png') }}"
         style="width: 270px; float: left; margin-left: -40px; margin-top: -30px;" alt="logo de CIDAM 3D">
     <div class="letter-color" style=" line-height: 0.6; color: #151442">
@@ -214,19 +223,19 @@
     <table>
         <tr>
             <td style="font-size: 15px;padding-bottom: 15px; padding-top: 15px"><b>Fecha de emisión</b></td>
-            <td style="width: 130px">&nbsp;</td>
-            <td style="font-size: 15px; width: 170px"><b>Número de informe:</b></td>
-            <td style="width: 130px">&nbsp;</td>
+            <td style="width: 130px">{{ $fecha_emision }}</td>
+            <td style="font-size: 15px; width: 170px"><b>Número de dictamen:</b></td>
+            <td style="width: 130px">{{ $no_dictamen }}</td>
         </tr>
         <tr>
             <td style="font-size: 15px;padding-bottom: 25px; padding-top: 25px"><b>Razón social</b></td>
-            <td>&nbsp;</td>
+            <td>{{ $empresa }}</td>
             <td style="font-size: 15px"><b>Domicilio fiscal</b></td>
-            <td>&nbsp;</td>
+            <td>{{$domicilio}}</td>
         </tr>
         <tr>
             <td style="font-size: 15px; padding-bottom: 15px; padding-top: 15px"><b>RFC</b></td>
-            <td>&nbsp;</td>
+            <td>{{$rfc}}</td>
             <td style="font-size: 15px"><b>Contraseña NOM</b></td>
             <td>&nbsp;</td>
         </tr>

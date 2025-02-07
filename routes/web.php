@@ -913,6 +913,7 @@ Route::middleware(['auth'])->controller(impiController::class)->group(function (
 
 //-------------------DICTAMEN EXPORTACION-------------------
 Route::middleware(['auth'])->controller(DictamenExportacionController::class)->group(function () {
+    //Mostrar
     Route::get('dictamenes/exportacion', 'UserManagement')->name('dictamenes-exportacion');
     Route::resource('expor-list', DictamenExportacionController::class);
     //Registrar
@@ -923,4 +924,6 @@ Route::middleware(['auth'])->controller(DictamenExportacionController::class)->g
     Route::get('editar2/{id_dictamen}/edit', 'edit')->name('instalacion.edit');
     ///Editar
     Route::put('editar2/{id_dictamen}', 'update')->name('tipos.update');
+    // Ruta PDF con ID
+    Route::get('/dictamen_cumplimiento_exportacion/{id_dictamen}', 'MostrarDictamenExportacion')->name('PDF-dictamen-exportacion');
 });
