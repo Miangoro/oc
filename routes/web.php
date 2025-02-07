@@ -207,8 +207,8 @@ use App\Http\Controllers\Bitacoras\BitacoraProductoTerminadoController;
 use App\Http\Controllers\Bitacoras\BitacoraHologramasController;
 use App\Http\Controllers\insertar_datos_bd_certificados;
 use App\Http\Controllers\insertar_datos_bd_dictamenes;
-use App\Http\Controllers\insertar_datos_bd_lotes_envasado;
 use App\Http\Controllers\Tramite_impi\impiController;
+use App\Http\Controllers\dictamenes\DictamenExportacionController;
 
 
 // Main Page Route
@@ -546,7 +546,7 @@ Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement']
 Route::resource('/lotes-list', LotesEnvasadoController::class);
 Route::post('/lotes-envasado', [LotesEnvasadoController::class, 'store']);
 Route::get('/lotes-envasado/edit/{id}', [lotesEnvasadoController::class, 'edit']);
-Route::post('/lotes-envasado/update', [lotesEnvasadoController::class, 'update']);
+Route::post('/lotes-envasado/update/', [lotesEnvasadoController::class, 'update']);
 Route::get('/lotes-envasado/editSKU/{id}', [lotesEnvasadoController::class, 'editSKU']);
 Route::post('/lotes-envasado/updateSKU/', [lotesEnvasadoController::class, 'updateSKU']);
 Route::get('/obtenerDocumentos/{id_marca}', [LotesEnvasadoController::class, 'obtenerDocumentosPorMarca']);
@@ -766,7 +766,6 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::get('/solicitudes/exportar', 'exportar')->name('solicitudes.exportar');
     Route::post('/registrar-solicitud-lib-prod-term','storeSolicitudLibProdTerm');
     Route::get('/Etiqueta-2401ESPTOB/{id_solicitud}', 'Etiqueta_240');
-    Route::post('/registrarValidarSolicitud','registrarValidarSolicitud');
 });
 
 
@@ -891,8 +890,6 @@ Route::resource('/bitacoraHologramas-list', BitacoraHologramasController::class)
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
 Route::get('/insertarDictamenesDesdeAPI', [insertar_datos_bd_dictamenes::class, 'insertarDictamenesDesdeAPI'])->name('insertarDictamenesDesdeAPI');
 Route::get('/insertarCertificadosDesdeAPI', [insertar_datos_bd_certificados::class, 'insertarCertificadosDesdeAPI'])->name('insertarCertificadosDesdeAPI');
-Route::get('/insertarLotesEnvasadoDesdeAPI', [insertar_datos_bd_lotes_envasado::class, 'insertarLotesEnvasadoDesdeAPI'])->name('insertarLotesEnvasadoDesdeAPI');
-
 
 
 
@@ -911,4 +908,19 @@ Route::middleware(['auth'])->controller(impiController::class)->group(function (
 
     //Registrar evento
     Route::post('crearEvento', [impiController::class, 'store'])->name('evento-create');
+});
+
+
+//-------------------DICTAMEN EXPORTACION-------------------
+Route::middleware(['auth'])->controller(DictamenExportacionController::class)->group(function () {
+    Route::get('dictamenes/exportacion', 'UserManagement')->name('dictamenes-exportacion');
+    Route::resource('expor-list', DictamenExportacionController::class);
+    //Registrar
+    Route::post('registrar', 'store')->name('dic-expor.create');
+    ///Eliminar
+    Route::delete('eliminar2/{id_dictamen}', 'destroy')->name('instalacion.delete');
+    ///Obtener Editar
+    Route::get('editar2/{id_dictamen}/edit', 'edit')->name('instalacion.edit');
+    ///Editar
+    Route::put('editar2/{id_dictamen}', 'update')->name('tipos.update');
 });

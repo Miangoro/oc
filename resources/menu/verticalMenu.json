@@ -123,9 +123,9 @@
           "slug": "dictamenes-envasado"
         },
         {
-          "url": "dictamenes/envasado",
+          "url": "dictamenes/exportacion",
           "name": "Exportación",
-          "slug": "dictamenes-envasado"
+          "slug": "dictamenes-exportacion"
         }
       ]
     },
