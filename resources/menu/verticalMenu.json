@@ -177,6 +177,11 @@
           "slug": "catalogo-marcas"
         },
         {
+          "url": "catalogo/etiquetas",
+          "name": "Etiquetas",
+          "slug": "catalogo-etiquetas"
+        },
+        {
           "url": "catalogo/categorias",
           "name": "Categorías de mezcal",
           "slug": "catalogo-categorias"

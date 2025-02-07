@@ -1,76 +1,125 @@
-<style>
-    .modal-custom-size {
-        max-width: 100%;
-    width: auto;
-    max-height: 90vh; /* Limita la altura máxima al 90% de la altura de la ventana */
-    overflow-y: auto; /* Permite el scroll vertical si el contenido excede la altura */
-    }
-
-    .select2-container .select2-selection--single {
-    height: 31px !important; /* Altura más pequeña */
-    line-height: 1.5 !important; /* Altura de línea adecuada */
-    font-size: 0.875rem; /* Tamaño de texto */
-    display: flex; /* Para alinear el contenido */
-    align-items: center; /* Centrar verticalmente */
-}
-
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    padding: 0 10px !important; /* Ajusta el espacio interior */
-    white-space: nowrap; /* Evita que el texto se corte en varias líneas */
-    overflow: hidden; /* Oculta el texto que excede el espacio */
-    text-overflow: ellipsis; /* Agrega puntos suspensivos si el texto es demasiado largo */
-}
-
-
-</style>
 <div class="modal fade" id="etiquetas" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-custom-size modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-custom-size  modal-lg modal-simple modal-add-new-address">
         <div class="modal-content">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2"> Subir/Ver etiquetas</h4>
+                    <h4 class="address-title mb-2"> Subir etiquetas</h4>
                     <p class="subtitulo badge bg-primary"></p>
                 </div>
                 <form id="etiquetasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
-                        <input type="hidden" id="etiqueta_marca" name="id_marca">
-                        <input type="hidden" id="id_empresa">
-                        <div class="table-responsive">
-                            <table style="table-layout: fixed;" class="table table-bordered table-sm">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 100px"><button type="button"
-                                                class="btn btn-primary add-row-add"> <i class="ri-add-line"></i>
-                                            </button></th>
-                                        <th style="width: 20%">Destino de exportación</th>
-                                        <th>SKU</th>
-                                        <th>Información</th>
-                                        <th>Cont. Neto</th>
-                                        <th>% Alc. Vol.</th>
-                                        <th>Etiqueta</th>
-                                        <th>Corrugado</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="contenidoRango">
-
-                                </tbody>
-                                <tbody>
-                                    <tr>
-                                        <th style="width: 100px"><button type="button"
-                                                class="btn btn-primary add-row-add"> <i class="ri-add-line"></i>
-                                            </button></th>
-                                        <th style="width: 20%">Destino de exportación</th>
-                                        <th>SKU</th>
-                                        <th>Información</th>
-                                        <th>Cont. Neto</th>
-                                        <th>% Alc. Vol.</th>
-                                        <th>Etiqueta</th>
-                                        <th>Corrugado</th>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <input type="hidden" id="id_etiqueta" name="id_etiqueta">
+                        
+                        <div class="col-sm-12">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <select multiple id="id_destino" name="id_destino[]" class="select2 form-select" required>
+                                    @foreach ($destinos as $destino)
+                                        <option value="{{ $destino->id_direccion }}">{{ $destino->destinatario }} | {{ $destino->direccion }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_destino">Destinos</label>
+                            </div>
                         </div>
+                        <div class="col-sm-8">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <select id="id_marca" name="id_marca" class="select2 form-select" required>
+                                    @foreach ($marcas as $marca)
+                                        <option value="{{ $marca->id_marca }}">{{ $marca->marca }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_marca">Marca</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input id="sku" type="text" name="sku" class="form-control"
+                                    placeholder="Introduce el sku" />
+                                <label for="sku">SKU</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input id="presentacion" type="text" name="presentacion" class="form-control"
+                                    placeholder="Introduce el cont. neto" />
+                                    
+                                <label for="presentacion">Cont. Neto</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <select id="unidad" class="form-control form-control-sm" name="unidad">
+                                    <option value="mL">mL</option>
+                                    <option value="L">L</option>
+                                    <option value="cL">cL</option>
+                                </select>
+                                <label for="unidad">Unidad</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 col-sm-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input id="alc_vol" type="text" name="alc_vol" class="form-control"
+                                    placeholder="Introduce el %Alc. Vol." />
+                                <label for="alc_vol">%Alc. Vol.</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <select id="id_categoria" name="id_categoria" class="form-select" required>
+                                    <option value="" disabled selected>Categoría de mezcal</option>
+                                    @foreach ($categorias as $categoria)
+                                        <option value="{{ $categoria->id_categoria }}">{{ $categoria->categoria }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_norma">Categoría de mezcal</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <select id="id_clase" name="id_clase" class="select2 form-select" required>
+                                    <option value="" disabled selected>Clase de mezcal</option>
+                                    @foreach ($clases as $clase)
+                                        <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_norma">Clase de agave</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <select id="id_tipo" name="id_tipo" class="select2 form-select" required>
+                                    <option value="" disabled selected>Tipos de agave</option>
+                                    @foreach ($tipos as $tipo)
+                                        <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_tipo">Tipos de agave</label>
+                            </div>
+                        </div>
+            
+                        <div class="col-md-10  mb-5">
+                            <label for="file60" class="form-label">Etiqueta</label>
+                            <input class="form-control" type="file" id="file60" data-id="60" name="url_etiqueta">
+                            <input value="60" class="form-control" type="hidden" name="id_documento_etiqueta">
+                            <input value="Etiqueta" class="form-control" type="hidden" name="nombre_documento_etiqueta">
+                           
+                        </div>
+
+                        <div class="col-md-2" id="doc_etiqueta"></div>
+                        
+                        <div class="col-md-10  mb-5">
+                            <label for="file75" class="form-label">Corrugado</label>
+                            <input class="form-control" type="file" id="file75" data-id="75" name="url_corrugado">
+                            <input value="75" class="form-control" type="hidden" name="id_documento_corrugado">
+                            <input value="Corrugado" class="form-control" type="hidden" name="nombre_documento_corrugado">
+                        </div>
+                        <div class="col-md-2" id="doc_corrugado"></div>
+
+                     
+
+                    </div>
+                        
                         <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                             <button type="submit" class="btn btn-primary">Registrar</button>
                             <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
@@ -81,92 +130,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function() {
-        $('#etiquetas').on('shown.bs.modal', function() {
-            $('#contenidoRango .select2').select2({
-                dropdownParent: $('#etiquetas')
-            });
-        });
-        //Agregar o eliminar filas en la tabla
-        var i = 0;
-        $('.add-row-add').click(function() {
-            obtenerDirecciones(i);
-            let opciones = `
-            @foreach ($tipos as $nombre)
-                <option value="{{ $nombre->id_tipo }}">{{ $nombre->nombre }}</option>
-            @endforeach
-        `;
-            let opciones2 = `
-            @foreach ($clases as $clase)
-                <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
-            @endforeach
-        `;
-            let opciones3 = `
-            @foreach ($categorias as $categoria)
-                <option value="{{ $categoria->id_categoria }}">{{ $categoria->categoria }}</option>
-            @endforeach
-        `;
-
-            var newRow = `
-            <tr>
-                <th>
-                    <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
-                </th>
-                <td><select id="id_direccion_destino` + i + `" class="form-control select2 .id_direccion_destino" name="id_direccion[]"></select></td>
-                <td><input type="text" class="form-control form-control-sm" name="sku[]" id="sku"></td>
-                <td><select class="form-control" name="id_categoria[]">` + opciones3 + `</select>
-                    <select class="form-control select2" name="id_tipo[]">` + opciones + `</select>
-                    <select class="form-control select2" name="id_clase[]">` + opciones2 + `</select></td>
-                <td><input type="number" class="form-control form-control-sm" name="presentacion[]" step="0.01" min="0">
-                    <select class="form-control" name="unidad[]"><option value="mL">mL</option><option value="L">L</option><option value="cL">cL</option></select></td>
-                <td><input type="text" class="form-control form-control-sm" name="alc_vol[]"></td>
-                <td><input class="form-control form-control-sm" type="file" name="url[]"><input value="60" class="form-control" type="hidden" name="id_documento[]"><input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]"></td>
-                <td><input class="form-control form-control-sm" type="file" name="url[]"><input value="75" class="form-control" type="hidden" name="id_documento[]"><input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]"></td>
-            </tr>`;
-
-            $('#contenidoRango').append(newRow);
-            // Reinicializa select2 en todos los selects agregados
-            $('#contenidoRango .select2').select2({
-                dropdownParent: $('#etiquetas')
-            });
-            i++;
-        });
-
-        $(document).on('click', '.remove-row', function() {
-            $(this).closest('tr').remove();
-        });
-    });
-
-    function obtenerDirecciones(aux) {
-        var empresa = $("#id_empresa").val();
-
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response.direcciones_destino);
-                var contenido = "";
-                for (let index = 0; index < response.direcciones_destino.length; index++) {
-                    // Limpia el campo tipo usando la función limpiarTipo
-
-
-                    contenido = '<option value="' + response.direcciones_destino[index].id_direccion +
-                        '">' +
-                        response.direcciones_destino[index].destinatario + ' | ' + response
-                        .direcciones_destino[index].direccion + '</option>' +
-                        contenido;
-                }
-                if (response.direcciones_destino.length == 0) {
-                    contenido = '<option value="">Sin direcciones registradas</option>';
-                }
-                $('#id_direccion_destino' + aux).html(contenido);
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
-    }
-</script>

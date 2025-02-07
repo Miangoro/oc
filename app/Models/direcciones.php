@@ -10,7 +10,7 @@ class direcciones extends Model
     use HasFactory;
 
     protected $table = 'direcciones'; // Asegúrate de que este nombre coincida con tu tabla en la base de datos
-    protected $primaryKey = 'id_direccion '; // Clave primaria de la tabla
+    protected $primaryKey = 'id_direccion'; // Clave primaria de la tabla
     protected $fillable = [
         'id_direccion',
         'tipo_direccion',
@@ -33,6 +33,11 @@ class direcciones extends Model
     public function solicitudesHologramas()
     {
         return $this->hasMany(solicitudHolograma::class, 'id_direccion','id_direccion');
+    }
+
+    public function etiquetas()
+    {
+        return $this->belongsToMany(etiquetas::class, 'etiquetas_destino', 'id_direccion', 'id_etiqueta');
     }
 
 
