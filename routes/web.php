@@ -523,6 +523,7 @@ Route::get('/catalogo/etiquetas', [EtiquetasController::class, 'UserManagement']
 Route::resource('/etiquetas-list', EtiquetasController::class);
 Route::post('/registrar-etiqueta', [EtiquetasController::class, 'store']);
 Route::get('/edit-etiqueta/{id_etiqueta}', [EtiquetasController::class, 'edit_etiqueta']);
+//oute::get('/eliminar-etiqueta/{id_etiqueta}', [EtiquetasController::class, 'destroy']);
 
 /* ruta de clases catalogo */
 Route::get('/catalogo/clases', [claseController::class, 'UserManagement'])->name('catalogo-clases');

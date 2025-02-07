@@ -28,6 +28,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 //clase de exportacion
 use App\Exports\SolicitudesExport;
+use App\Models\etiquetas;
 use App\Models\solicitudesValidacionesModel;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -1242,6 +1243,19 @@ class solicitudesController extends Controller
     }
 
     public function obtenerMarcasPorEmpresa($id_marca, $id_direccion)
+    {
+
+        $etiquetas = etiquetas::with('marca.empresa.empresaNumClientes', 'destinos', 'url_etiqueta', 'url_corrugado')
+    ->where('id_marca', $id_marca)
+    ->whereHas('destinos', function ($query) use ($id_direccion) {
+        $query->where('direcciones.id_direccion', $id_direccion); // Especifica la tabla
+    })
+    ->get();
+        // Retornar las marcas como respuesta JSON
+        return response()->json($etiquetas);
+    }
+
+    public function obtenerMarcasPorEmpresaAntiguo($id_marca, $id_direccion)
     {
 
         $marcas = marcas::with('empresa.empresaNumClientes','documentacion_url')->whereJsonContains('etiquetado->id_direccion', $id_direccion)

@@ -38,6 +38,7 @@
 
                     <tr>
                         <th>No.</th>
+                        <th>Cliente</th>
                         <th>Sku</th>
                         <th>Marca</th>
                         <th>Presentación</th>

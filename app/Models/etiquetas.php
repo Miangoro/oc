@@ -48,6 +48,11 @@ class etiquetas extends Model
 
     public function url_etiqueta()
     {
-        return $this->belongsTo(Documentacion_url::class, 'id_etiqueta','id_relacion');
+        return $this->belongsTo(Documentacion_url::class, 'id_etiqueta','id_relacion')->where('id_documento',60);
+    }
+
+    public function url_corrugado()
+    {
+        return $this->belongsTo(Documentacion_url::class, 'id_etiqueta','id_relacion')->where('id_documento',75);
     }
 }
