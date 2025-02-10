@@ -64,6 +64,8 @@ class Certificado_InstalacionesController extends Controller
                 ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
                 ->orWhereHas('firmante', function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%");
+                })->orWhereHas('dictamen.instalaciones', function ($q) use ($search) {
+                    $q->where('direccion_completa', 'LIKE', "%{$search}%");
                 });
         }
         
@@ -389,6 +391,8 @@ class Certificado_InstalacionesController extends Controller
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
             'numero_cliente' => $numero_cliente,
             'nombre_firmante' => $datos->firmante->name,
+            'firma_firmante' => $datos->firmante->firma ?? '',
+            'puesto_firmante' => $datos->firmante->puesto ?? '',
             'leyenda' => $leyenda,
             'categorias' => $datos->dictamen->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', '),
             'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
@@ -439,6 +443,8 @@ class Certificado_InstalacionesController extends Controller
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
             'numero_cliente' => $numero_cliente,
             'nombre_firmante' => $datos->firmante->name,
+            'firma_firmante' => $datos->firmante->firma ?? '',
+            'puesto_firmante' => $datos->firmante->puesto ?? '',
             'leyenda' => $leyenda,
             'categorias' => $datos->dictamen->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', '),
             'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
@@ -487,6 +493,8 @@ class Certificado_InstalacionesController extends Controller
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
             'numero_cliente' => $numero_cliente,
             'nombre_firmante' => $datos->firmante->name ?? 'Nombre del firmante no disponible',
+            'firma_firmante' => $datos->firmante->firma ?? '',
+            'puesto_firmante' => $datos->firmante->puesto ?? '',
             'leyenda' => $leyenda,
             'categorias' => $datos->dictamen->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', '),
             'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),

@@ -1693,6 +1693,16 @@
                                                     <option value="No">No</option>
                                                 </select></td>
                                         </tr>
+                                        <tr>
+                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                                Etiqueta/Corrugado:</th>
+                                            <td class="etiqueta"></td>
+                                            <td><select name="etiqueta" class="form-control form-control-sm">
+                                                    <option value="" disabled selected>Seleccionar</option>
+                                                    <option value="Si">Si</option>
+                                                    <option value="No">No</option>
+                                                </select></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

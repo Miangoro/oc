@@ -1320,6 +1320,7 @@ class solicitudesController extends Controller
             'cantidad_botellas' => 'array',  // Asegurarse de que las cantidades sean arrays
             'cantidad_cajas' => 'array',  // Asegurarse de que las cantidades sean arrays
             'presentacion' => 'array',  // Asegurarse de que las presentaciones sean arrays
+            'id_etiqueta' => 'nullable|integer',
         ]);
 
         // Procesar características
@@ -1330,6 +1331,7 @@ class solicitudesController extends Controller
         $data['no_pedido'] = $validated['no_pedido'];  // Solo si es enviado
         $data['aduana_salida'] = $validated['aduana_salida'];  // Solo si es enviado
         $data['direccion_destinatario'] = $validated['direccion_destinatario'];  // Solo si es enviado
+        $data['id_etiqueta'] = $validated['id_etiqueta'];  // Solo si es enviado
         // Preparar los detalles
         $detalles = [];
         $totalLotes = count($validated['lote_envasado']);  // Suponiendo que todos los arrays tienen el mismo tamaño

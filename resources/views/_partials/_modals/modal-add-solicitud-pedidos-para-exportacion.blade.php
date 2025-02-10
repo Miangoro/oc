@@ -440,7 +440,7 @@
                         tbody += `
                             <td>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="marcaSeleccionada" id="radio_${marcas[i].id_etiqueta}" value="${marcas[i].id_etiqueta}" />
+                                    <input class="form-check-input" type="radio" name="id_etiqueta" id="radio_${marcas[i].id_etiqueta}" value="${marcas[i].id_etiqueta}" />
                                 </div>
                             </td>
                         `;
