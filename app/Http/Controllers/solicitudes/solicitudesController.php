@@ -28,6 +28,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 //clase de exportacion
 use App\Exports\SolicitudesExport;
+use App\Models\etiquetas;
 use App\Models\solicitudesValidacionesModel;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -1244,6 +1245,19 @@ class solicitudesController extends Controller
     public function obtenerMarcasPorEmpresa($id_marca, $id_direccion)
     {
 
+        $etiquetas = etiquetas::with('marca.empresa.empresaNumClientes', 'destinos', 'url_etiqueta', 'url_corrugado')
+    ->where('id_marca', $id_marca)
+    ->whereHas('destinos', function ($query) use ($id_direccion) {
+        $query->where('direcciones.id_direccion', $id_direccion); // Especifica la tabla
+    })
+    ->get();
+        // Retornar las marcas como respuesta JSON
+        return response()->json($etiquetas);
+    }
+
+    public function obtenerMarcasPorEmpresaAntiguo($id_marca, $id_direccion)
+    {
+
         $marcas = marcas::with('empresa.empresaNumClientes','documentacion_url')->whereJsonContains('etiquetado->id_direccion', $id_direccion)
         ->where('id_marca', $id_marca)
         ->get();
@@ -1306,6 +1320,7 @@ class solicitudesController extends Controller
             'cantidad_botellas' => 'array',  // Asegurarse de que las cantidades sean arrays
             'cantidad_cajas' => 'array',  // Asegurarse de que las cantidades sean arrays
             'presentacion' => 'array',  // Asegurarse de que las presentaciones sean arrays
+            'id_etiqueta' => 'nullable|integer',
         ]);
 
         // Procesar características
@@ -1316,6 +1331,7 @@ class solicitudesController extends Controller
         $data['no_pedido'] = $validated['no_pedido'];  // Solo si es enviado
         $data['aduana_salida'] = $validated['aduana_salida'];  // Solo si es enviado
         $data['direccion_destinatario'] = $validated['direccion_destinatario'];  // Solo si es enviado
+        $data['id_etiqueta'] = $validated['id_etiqueta'];  // Solo si es enviado
         // Preparar los detalles
         $detalles = [];
         $totalLotes = count($validated['lote_envasado']);  // Suponiendo que todos los arrays tienen el mismo tamaño

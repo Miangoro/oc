@@ -186,6 +186,7 @@ class getFuncionesController extends Controller
 $solicitudQuery = solicitudesModel::with([
     'empresa.empresaNumClientes',
     'instalacion.certificado_instalacion',
+   
     'predios',
     'marcas',
      'lote_envasado.lotes_envasado_granel.lotes_granel.clase',
@@ -201,6 +202,14 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
     $solicitud->load([
         'lote_granel.categoria',
         'lote_granel.clase',
+
+    ]);
+}
+
+if ($solicitud && $solicitud->id_tipo == 11) {
+    // Si el id_tipo es 11, agregamos las relaciones adicionales
+    $solicitud->load([
+        'url_etiqueta',
 
     ]);
 }

@@ -274,10 +274,13 @@ instalaciones indicadas a continuación.</p>
 
 <p class="text"><strong>No. De Dictamen de cumplimiento con la NOM:</strong> {{$num_dictamen}}</p>
 
+<p class="text"><strong>Convenio de corresponsabilidad:</strong></p>
+
 <div class="signature">
+    <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/'.$firma_firmante) }}">
     <div class="signature-line"></div>
     <div class="signature-name">{{ $nombre_firmante }}</div>
-    <div class="signature-name">Gerente del Organismo Certificador CIDAM</div>
+    <div class="signature-name">{{ $puesto_firmante }}</div>
 </div>
 
 <div class="down">Certificado como Comercializador de Mezcal NOM-070-2016 F7.1-01-37 <br>Edición 5 Entrada en vigor 12/01/2024 <br>

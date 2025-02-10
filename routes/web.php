@@ -524,6 +524,7 @@ Route::get('/catalogo/etiquetas', [EtiquetasController::class, 'UserManagement']
 Route::resource('/etiquetas-list', EtiquetasController::class);
 Route::post('/registrar-etiqueta', [EtiquetasController::class, 'store']);
 Route::get('/edit-etiqueta/{id_etiqueta}', [EtiquetasController::class, 'edit_etiqueta']);
+//oute::get('/eliminar-etiqueta/{id_etiqueta}', [EtiquetasController::class, 'destroy']);
 
 /* ruta de clases catalogo */
 Route::get('/catalogo/clases', [claseController::class, 'UserManagement'])->name('catalogo-clases');
@@ -774,6 +775,8 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::get('/solicitudes/exportar', 'exportar')->name('solicitudes.exportar');
     Route::post('/registrar-solicitud-lib-prod-term','storeSolicitudLibProdTerm');
     Route::get('/Etiqueta-2401ESPTOB/{id_solicitud}', 'Etiqueta_240');
+    Route::post('/registrarValidarSolicitud', 'registrarValidarSolicitud');
+    
 });
 
 
@@ -921,7 +924,6 @@ Route::middleware(['auth'])->controller(impiController::class)->group(function (
 
 //-------------------DICTAMEN EXPORTACION-------------------
 Route::middleware(['auth'])->controller(DictamenExportacionController::class)->group(function () {
-    //Mostrar
     Route::get('dictamenes/exportacion', 'UserManagement')->name('dictamenes-exportacion');
     Route::resource('expor-list', DictamenExportacionController::class);
     //Registrar
@@ -932,8 +934,6 @@ Route::middleware(['auth'])->controller(DictamenExportacionController::class)->g
     Route::get('editar2/{id_dictamen}/edit', 'edit')->name('instalacion.edit');
     ///Editar
     Route::put('editar2/{id_dictamen}', 'update')->name('tipos.update');
-    // Ruta PDF con ID
-    Route::get('/dictamen_cumplimiento_exportacion/{id_dictamen}', 'MostrarDictamenExportacion')->name('PDF-dictamen-exportacion');
 });
 
 //-------------------CERTIFICADO EXPORTACION-------------------
