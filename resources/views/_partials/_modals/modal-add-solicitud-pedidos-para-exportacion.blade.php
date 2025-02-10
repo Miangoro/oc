@@ -427,9 +427,10 @@
                     $("#encabezado_etiquetas").text(marcas[0].destinos[0].direccion);
                 }
 
+                tbody = "";
                 marcas.forEach(function(marca) {
                     // Asegurar que 'etiquetado' es un objeto
-                  
+                 
                     
 
                     // Iterar sobre los SKU en 'etiquetado'
