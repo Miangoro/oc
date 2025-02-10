@@ -90,6 +90,9 @@ class EtiquetasController extends Controller
                 ->orWhereHas('marca', function ($q) use ($search) {
                     $q->where('marca', 'LIKE', "%{$search}%");
                 })
+                ->orWhereHas('destinos', function ($q) use ($search) {
+                    $q->where('direccion', 'LIKE', "%{$search}%");
+                })
                 ->orWhereHas('categoria', function ($q) use ($search) {
                     $q->where('categoria', 'LIKE', "%{$search}%");
                 })
@@ -108,6 +111,9 @@ class EtiquetasController extends Controller
                 ->orWhere('presentacion', 'LIKE', "%{$search}%")
                 ->orWhereHas('marca', function ($q) use ($search) {
                     $q->where('marca', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('destinos', function ($q) use ($search) {
+                    $q->where('direccion', 'LIKE', "%{$search}%");
                 })
                 ->orWhereHas('categoria', function ($q) use ($search) {
                     $q->where('categoria', 'LIKE', "%{$search}%");

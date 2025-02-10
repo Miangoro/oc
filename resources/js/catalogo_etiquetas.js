@@ -36,11 +36,14 @@ $(function () {
       ],
       columnDefs: [
         {
+          // For Responsive
+          className: 'control',
           searchable: false,
           orderable: false,
+          responsivePriority: 2,
           targets: 0,
           render: function (data, type, full, meta) {
-            return `<span>${full.fake_id}</span>`;
+            return '';
           }
         },
         {
