@@ -464,7 +464,7 @@
                         // Función para generar enlace de documentos
                         function generarEnlaceDocumento(documento, nombre) {
                             if (documento && documento.url) {
-                                let url = `/files/${marcas[i].marcas.empresa.empresa_num_clientes[0].numero_cliente}/${documento.url}`;
+                                let url = `/files/${marcas[i].marca.empresa.empresa_num_clientes[0].numero_cliente}/${documento.url}`;
                                 return `<td><a href="${url}" target="_blank"><i class="ri-file-pdf-2-line ri-20px"></i></a></td>`;
                             }
                             return `<td>--</td>`;
