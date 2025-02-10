@@ -109,6 +109,15 @@ class EtiquetasController extends Controller
                 ->orWhereHas('marca', function ($q) use ($search) {
                     $q->where('marca', 'LIKE', "%{$search}%");
                 })
+                ->orWhereHas('categoria', function ($q) use ($search) {
+                    $q->where('categoria', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('clase', function ($q) use ($search) {
+                    $q->where('clase', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('tipo', function ($q) use ($search) {
+                    $q->where('nombre', 'LIKE', "%{$search}%");
+                })
                 ->count();
         }
 
@@ -122,10 +131,10 @@ class EtiquetasController extends Controller
                 $nestedData['id_etiqueta'] = $etiqueta->id_etiqueta;
                 $nestedData['fake_id'] = ++$ids;
                 $nestedData['marca'] = $etiqueta->marca->marca;
-                $nestedData['sku'] = $etiqueta->sku;
+                $nestedData['sku'] = $etiqueta->sku ?? "--";
                 $nestedData['presentacion'] = $etiqueta->presentacion;
                 $nestedData['unidad'] = $etiqueta->unidad;
-                $nestedData['alc_vol'] = $etiqueta->alc_vol;
+                $nestedData['alc_vol'] = $etiqueta->alc_vol." %Alc.Vol.";
                 $nestedData['categoria'] = $etiqueta->categoria->categoria;
                 $nestedData['clase'] = $etiqueta->clase->clase;
                 $nestedData['tipo'] = $etiqueta->tipo->nombre . " (" . $etiqueta->tipo->cientifico . ")";
