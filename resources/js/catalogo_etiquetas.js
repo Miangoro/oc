@@ -30,6 +30,7 @@ $(function () {
         { data: 'categoria' },
         { data: 'clase' },
         { data: 'tipo' },
+        { data: 'destinos' },
         { data: '' },
         { data: '' }
       ],
@@ -67,7 +68,7 @@ $(function () {
           },
           {
             // pdf
-            targets: 9,
+            targets: 10,
             className: 'text-center',
             render: function (data, type, full, meta) {
               var $id = full['id_empresa'];

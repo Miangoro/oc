@@ -143,6 +143,11 @@ class EtiquetasController extends Controller
                     ?->first(fn($num) => !empty($num)) ?? "";
                 $nestedData['razon_social'] = $etiqueta->marca->empresa->razon_social;
                 $nestedData['url_etiqueta'] = $etiqueta->url_etiqueta->url ?? "Sin documento";
+                $direcciones = $etiqueta->destinos->map(function ($destino) {
+                    return '• ' . $destino->direccion; // Agregar viñeta antes de la dirección
+                })->toArray(); // Convertimos la colección en un array
+                
+                $nestedData['destinos'] = implode('<br>', $direcciones); // Unimos las direcciones con un salto de línea
                 $data[] = $nestedData;
             }
         }

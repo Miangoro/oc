@@ -46,6 +46,7 @@
                         <th>Categoría</th>
                         <th>Clase</th>
                         <th>Tipo</th>
+                        <th>Destinos</th>
                         <th>Etiqueta</th>
                         <th>Acciones</th>
                     </tr>
