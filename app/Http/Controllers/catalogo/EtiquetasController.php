@@ -87,6 +87,18 @@ class EtiquetasController extends Controller
                 ->where('sku', 'LIKE', "%{$search}%")
                 ->orWhere('presentacion', 'LIKE', "%{$search}%")
                 ->orWhere('alc_vol', 'LIKE', "%{$search}%")
+                ->orWhereHas('marca', function ($q) use ($search) {
+                    $q->where('marca', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('categoria', function ($q) use ($search) {
+                    $q->where('categoria', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('clase', function ($q) use ($search) {
+                    $q->where('clase', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('tipo', function ($q) use ($search) {
+                    $q->where('nombre', 'LIKE', "%{$search}%");
+                })
                 ->offset($start)
                 ->limit($limit)
                 //  ->orderBy($order, $dir)
@@ -94,6 +106,9 @@ class EtiquetasController extends Controller
             $totalFiltered = etiquetas::where('sku', 'LIKE', "%{$search}%")
                 ->orWhere('unidad', 'LIKE', "%{$search}%")
                 ->orWhere('presentacion', 'LIKE', "%{$search}%")
+                ->orWhereHas('marca', function ($q) use ($search) {
+                    $q->where('marca', 'LIKE', "%{$search}%");
+                })
                 ->count();
         }
 
