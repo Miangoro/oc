@@ -428,7 +428,7 @@
                 }
 
                 tbody = "";
-                marcas.forEach(function(marca) {
+                
                     // Asegurar que 'etiquetado' es un objeto
                  
                     
@@ -464,19 +464,19 @@
                         // Función para generar enlace de documentos
                         function generarEnlaceDocumento(documento, nombre) {
                             if (documento && documento.url) {
-                                let url = `/files/${marcas[i].marca.empresa.empresa_num_clientes[0].numero_cliente}/${documento.url}`;
+                                let url = `/files/${marcas[i].marcas.empresa.empresa_num_clientes[0].numero_cliente}/${documento.url}`;
                                 return `<td><a href="${url}" target="_blank"><i class="ri-file-pdf-2-line ri-20px"></i></a></td>`;
                             }
                             return `<td>--</td>`;
                         }
 
                         // Enlaces a Etiqueta y Corrugado
-                        tbody += generarEnlaceDocumento(marca.url_etiqueta, "Etiqueta");
-                        tbody += generarEnlaceDocumento(marca.url_corrugado, "Corrugado");
+                        tbody += generarEnlaceDocumento(marcas[i].url_etiqueta, "Etiqueta");
+                        tbody += generarEnlaceDocumento(marcas[i].url_corrugado, "Corrugado");
 
                         tbody += '</tr>';
                     }
-                });
+                
 
                 // Si no hay datos, mostrar mensaje
                 if (!tbody) {
