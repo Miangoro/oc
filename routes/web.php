@@ -206,6 +206,7 @@ use App\Http\Controllers\Bitacoras\BitacoraProcesoElaboracionController;
 use App\Http\Controllers\Bitacoras\BitacoraProductoTerminadoController;
 use App\Http\Controllers\Bitacoras\BitacoraHologramasController;
 use App\Http\Controllers\catalogo\EtiquetasController;
+use App\Http\Controllers\certificados\Certificado_ExportacionController;
 use App\Http\Controllers\insertar_datos_bd_certificados;
 use App\Http\Controllers\insertar_datos_bd_dictamenes;
 use App\Http\Controllers\Tramite_impi\impiController;
@@ -933,4 +934,21 @@ Route::middleware(['auth'])->controller(DictamenExportacionController::class)->g
     Route::put('editar2/{id_dictamen}', 'update')->name('tipos.update');
     // Ruta PDF con ID
     Route::get('/dictamen_cumplimiento_exportacion/{id_dictamen}', 'MostrarDictamenExportacion')->name('PDF-dictamen-exportacion');
+});
+
+//-------------------CERTIFICADO EXPORTACION-------------------
+Route::middleware(['auth'])->controller(Certificado_ExportacionController::class)->group(function () {
+    //Mostrar
+    Route::get('certificados/exportacion', 'UserManagement')->name('certificados-exportacion');
+    Route::resource('CerExpo-list', Certificado_ExportacionController::class);
+    //Registrar
+    Route::post('creaCerExp', 'store')->name('cer-expor.registrar');
+    ///Eliminar
+    Route::delete('deletCerExp/{id_certificado}',  'destroy')->name('cer-expor.eliminar');
+    ///Obtener Editar
+    Route::get('editCerExp/{id_certificado}/edit', 'edit')->name('cer-expor.editar');
+    ///Editar
+    Route::put('editCerExp/{id_certificado}', 'update')->name('cer-expor.actualizar');
+    // Ruta PDF con ID
+    Route::get('/certificado_exportacion/{id_certificado}', 'MostrarCertificadoExportacion')->name('PDF-cer-exportacion');
 });

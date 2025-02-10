@@ -150,9 +150,9 @@
           "slug": "certificados-producto"
         },
         {
-          "url": "certificados/producto",
+          "url": "certificados/exportacion",
           "name": "Exportación",
-          "slug": "certificados-producto"
+          "slug": "certificados-exportacion"
         }
       ]
     },
