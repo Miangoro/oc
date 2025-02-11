@@ -9,6 +9,7 @@ use App\Models\Certificado_Exportacion;
 use App\Models\Dictamen_Exportacion; 
 use App\Models\User;
 use App\Models\empresa; 
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class Certificado_ExportacionController extends Controller
@@ -188,7 +189,7 @@ public function update(Request $request, $id_certificado)
         'fecha_vigencia' => 'nullable|date',
         'id_firmante' => 'required|integer',
     ]);
-    
+
     try {
         $var2 = Certificado_Exportacion::findOrFail($id_certificado);
         $var2->num_certificado = $request->num_certificado;
@@ -205,16 +206,16 @@ public function update(Request $request, $id_certificado)
 }
 
 
-/*
+
 ///FUNCION PDF DICTAMEN EXPORTACION
-public function MostrarDictamenExportacion($id_dictamen) 
+public function MostrarCertificadoExportacion($id_certificado) 
 {
     // Obtener los datos del dictamen específico
     //$datos = Dictamen_Exportacion::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);    
-    $data = Dictamen_Exportacion::find($id_dictamen);
+    $data = Certificado_Exportacion::find($id_certificado);
 
     if (!$data) {
-        return abort(404, 'Dictamen no encontrado');
+        return abort(404, 'Certificado no encontrado');
     }
 
     // Verifica qué valor tiene esta variable
@@ -225,21 +226,21 @@ public function MostrarDictamenExportacion($id_dictamen)
     // Determinar si la marca de agua debe ser visible
     $watermarkText = $data->estatus === 'Cancelado';
 
-    $pdf = Pdf::loadView('pdfs.dictamen_exportacion_ed2', [//formato del PDF
+    $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
-        'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
+        /*'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'domicilio' => $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrada',
         'rfc' => $data->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'no_dictamen' => $data->num_dictamen,
         'fecha_servicio' => $fecha_servicio,
         'fecha_emision' => $fecha_emision2,
-        'fecha_vigencia' => $fecha_vigencia,
+        'fecha_vigencia' => $fecha_vigencia,*/
         'watermarkText' => $watermarkText,
     ]);
     //nombre al descarga
     return $pdf->stream('F-UV-04-18 Ver 2. Dictamen de Cumplimiento para Producto de Exportación.pdf');
 }
-*/
+
 
 
 

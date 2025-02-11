@@ -138,7 +138,7 @@ initializeSelect2(select2Elements);
             orderable: false,
             className: 'text-center',
             render: function (data, type, full, meta) {
-              var $id = full['id_dictamen'];
+              var $id = full['id_certificado'];
               return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
             }
           },
@@ -580,12 +580,12 @@ $(document).ready(function() {
           // Rellenar el formulario con los datos obtenidos
           $('#id_certificado').val(data.id_certificado);
           $('#edit_num_certificado').val(data.num_certificado);
-          //$('#edit_id_dictamen').val(data.id_dictamen).prop('selected', true).change();
-          $('#edit_id_dictamen').val(data.id_dictamen).trigger('change');
+          $('#edit_id_dictamen').val(data.id_dictamen).prop('selected', true).change();
+          //$('#edit_id_dictamen').val(data.id_dictamen).trigger('change');
           $('#edit_fecha_emision').val(data.fecha_emision);
           $('#edit_fecha_vigencia').val(data.fecha_vigencia);
-          //$('#edit_id_firmante').val(data.id_firmante).trigger('change');//funcion en select
-          $('#edit_id_firmante').val(data.id_firmante).prop('selected', true).change();
+          $('#edit_id_firmante').val(data.id_firmante).trigger('change');//funcion en select
+          //$('#edit_id_firmante').val(data.id_firmante).prop('selected', true).change();
           
 
           // Mostrar el modal de edición
@@ -645,11 +645,11 @@ $(document).ready(function() {
 });
 
 
-/*
+
 ///FORMATO PDF
 $(document).on('click', '.pdf', function ()  {
   var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
-  var pdfUrl = '/dictamen_cumplimiento_exportacion/' + id; //Ruta del PDF
+  var pdfUrl = '/certificado_exportacion/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
       
@@ -662,15 +662,15 @@ $(document).on('click', '.pdf', function ()  {
     //Configurar el botón para abrir el PDF en una nueva pestaña
     $("#NewPestana").attr('href', pdfUrl).show();
 
-    $("#titulo_modal").text("Dictamen de Cumplimiento para Producto de Exportación");
-    $("#subtitulo_modal").text("PDF del Dictamen");
+    $("#titulo_modal").text("Certificado de Exportación");
+    $("#subtitulo_modal").text("PDF del Certificado");
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();
       iframe.show();
     });
 });
-*/
+
 
 
  
