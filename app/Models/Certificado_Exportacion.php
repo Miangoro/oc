@@ -28,8 +28,8 @@ class Certificado_Exportacion extends Model
         }
 
       // Método para obtener el nombre del registro que sirve para la trazabilidad
-        /*public function getLogName2(): string
+        public function getLogName2(): string
         {
-            return 'dictamen de instalaciones'; // Devuelve el nombre que desees
-        }*/
+            return 'certificado de exportación'; // Devuelve el nombre que desees
+        }
 }
