@@ -166,6 +166,12 @@ class empresa extends Model
     }
 
 
+    public function estados()
+    {
+        return $this->belongsTo(estados::class, 'estado', 'id');
+    }
+
+
 
 
 }

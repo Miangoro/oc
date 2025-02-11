@@ -10,6 +10,7 @@ use App\Models\Dictamen_Exportacion;
 use App\Models\User;
 use App\Models\empresa; 
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 
 class Certificado_ExportacionController extends Controller
@@ -85,10 +86,12 @@ public function index(Request $request)
             foreach ($users as $user) {
             //MANDA LOS DATOS AL JS
                 $nestedData['id_certificado'] = $user->id_certificado;
-                $nestedData['id_dictamen'] = $user->id_dictamen;
+                $nestedData['no_dictamen'] = $user->dictamen->num_dictamen;
                 $nestedData['num_certificado'] = $user->num_certificado;
-                //$nestedData['id_inspeccion'] = $user->inspeccione->num_servicio;
-                ///numero y nombre empresa
+                ///Folio y no. servicio
+                $nestedData['folio'] = $user->dictamen->inspeccione->solicitud->folio;
+                $nestedData['n_servicio'] = $user->dictamen->inspeccione->num_servicio;
+                //Nombre y Numero empresa
                 $empresa = $user->dictamen->inspeccione->solicitud->empresa;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
                 ? $empresa->empresaNumClientes
@@ -96,10 +99,10 @@ public function index(Request $request)
                 : 'N/A';
                 $nestedData['numero_cliente'] = $numero_cliente;
                 $nestedData['razon_social'] = $user->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
-
+                //Fecha emisión y vigencia
                 $fecha_emision = Helpers::formatearFecha($user->fecha_emision);
                 $fecha_vigencia = Helpers::formatearFecha($user->fecha_vigencia);
-                $nestedData['fechas'] = '<b>Fecha Emisión: </b>' .$fecha_emision. '<br> <b>Fecha Vigencia: </b>' .$fecha_vigencia;
+                $nestedData['fechas'] = '<b>Expedición: </b>' .$fecha_emision. '<br> <b>Vigencia: </b>' .$fecha_vigencia;
                 
                 $data[] = $nestedData;
             }
@@ -210,7 +213,7 @@ public function update(Request $request, $id_certificado)
 ///FUNCION PDF DICTAMEN EXPORTACION
 public function MostrarCertificadoExportacion($id_certificado) 
 {
-    // Obtener los datos del dictamen específico
+    // Obtener los datos del certificado específico
     //$datos = Dictamen_Exportacion::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);    
     $data = Certificado_Exportacion::find($id_certificado);
 
@@ -218,27 +221,33 @@ public function MostrarCertificadoExportacion($id_certificado)
         return abort(404, 'Certificado no encontrado');
     }
 
-    // Verifica qué valor tiene esta variable
-    $fecha_emision2 = Helpers::formatearFecha($data->fecha_emision);
-    $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
-    $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
-
-    // Determinar si la marca de agua debe ser visible
+    //Declara la variable
+    //$fecha = Helpers::formatearFecha($data->fecha_emision);
+    //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
+    $fecha_emision = Carbon::parse($data->fecha_emision);
+        $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
+    $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
+        $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');
+    $empresa = $data->dictamen->inspeccione->solicitud->empresa;
+    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() ? $empresa
+        ->empresaNumClientes
+        ->first(fn($item) => $item->empresa_id === $empresa
+        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'N/A' : 'N/A';
+    $estado = $data->dictamen->inspeccione->solicitud->empresa->estados->nombre;
+    //Determinar si la marca de agua debe ser visible
     $watermarkText = $data->estatus === 'Cancelado';
 
     $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
-        /*'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
-        'domicilio' => $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrada',
-        'rfc' => $data->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
-        'no_dictamen' => $data->num_dictamen,
-        'fecha_servicio' => $fecha_servicio,
-        'fecha_emision' => $fecha_emision2,
-        'fecha_vigencia' => $fecha_vigencia,*/
+        'expedicion' => $fecha1,
+        'vigencia' => $fecha2,
+        'n_cliente' => $numero_cliente,
+        'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
+        'estado' => $estado,
         'watermarkText' => $watermarkText,
     ]);
-    //nombre al descarga
-    return $pdf->stream('F-UV-04-18 Ver 2. Dictamen de Cumplimiento para Producto de Exportación.pdf');
+    //nombre al descargar
+    return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
 }
 
 

@@ -57,7 +57,6 @@ var select2Elements = $('.select2');
   }
 initializeSelect2(select2Elements);
 
-  
 // ajax setup
   $.ajaxSetup({
      headers: {
@@ -66,32 +65,39 @@ initializeSelect2(select2Elements);
   });
  
  
-  ///FUNCIONALIDAD DE LA VISTA datatable
-  if (dt_user_table.length) {
-     var dt_user = dt_user_table.DataTable({
+///FUNCIONALIDAD DE LA VISTA datatable
+if (dt_user_table.length) {
+  var dt_user = dt_user_table.DataTable({
        processing: true,
        serverSide: true,
        ajax: {
          url: baseUrl + 'CerExpo-list'
        },
        columns: [
-         // columns according to JSON
-         { data: '' },
-         { data: 'num_certificado' },
-         { data: 'id_dictamen' },
+
+         { data: '' }, // (0)
+         { data: null, //soli y serv. (1)
+            render: function(data, type, row) {
+            return `<span style="font-size:14px"> <strong>${data.folio}</strong><br>
+                ${data.n_servicio}<span>`;
+            }
+         },
          {data: null, // Se usará null porque combinaremos varios valores
           render: function(data, type, row) {
               return `
               <strong>${data.numero_cliente}</strong><br>
-                  <span style="font-size:11px">${data.razon_social}<span>
+                  <span style="font-size:12px">${data.razon_social}<span>
               `;
             }
          },
+         { data: 'num_certificado' },
          { data: 'fechas' },
          { data: '' },
+         { data: 'no_dictamen' },
+         { data: '' },
          { data: 'action' }
- 
        ],
+
        columnDefs: [
          {
            className: 'control',
@@ -105,42 +111,52 @@ initializeSelect2(select2Elements);
          },
 
           {
-           // Tabla 1
-           targets: 1,
+          //Tabla 3
+           targets: 3,
            render: function (data, type, full, meta) {
              var $num_certificado = full['num_certificado'];
-             return '<span class="fw-bold">' + $num_certificado + '</span>';
+             return '<span>' + $num_certificado + '</span>';
            }
          }, 
          {
-            // Tabla 2
-            targets: 2,
-            render: function (data, type, full, meta) {
-              var $id_dictamen = full['id_dictamen'];
-              return '<span class="user-email">' + $id_dictamen + '</span>';
+          targets: 4,
+          searchable: true,
+          render: function (data, type, full, meta) {
+            var $fech = full['fechas'];
+            return '<span class="small">' + $fech + '</span>';
             }
-          }, 
+        },
 
-          {
-            // Tabla 4
-            targets: 4,
-            searchable: true,
-            render: function (data, type, full, meta) {
-              var $fech = full['fechas'];
-              return '<span class="small">' + $fech + '</span>';
-              }
-          },
-          {
-            ///PDF
-            targets: 5,
-            searchable: false,
-            orderable: false,
-            className: 'text-center',
-            render: function (data, type, full, meta) {
-              var $id = full['id_certificado'];
-              return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
-            }
-          },
+        {
+          ///PDF CERTIFICADO
+          targets: 5,
+          searchable: false,
+          orderable: false,
+          className: 'text-center',
+          render: function (data, type, full, meta) {
+            var $id = full['id_certificado'];
+            return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+          }
+        },
+        {
+        targets: 6,
+        render: function (data, type, full, meta) {
+          var $id_dictamen = full['no_dictamen'];
+          return '<span>' + $id_dictamen + '</span>';
+        }
+        }, 
+        {
+        targets: 7,
+        render: function (data, type, full, meta) {
+          //var $id_dictamen = full['no_dictamen'];
+          return `
+            <div style="display: flex; flex-direction: column;">
+                <div style="display: inline;"> <span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Revisión OC:</strong> <strong style="color: red;">Sin asignar</strong></span> </div>
+                <div style="display: inline;"> <span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Revisión Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span> </div>
+            </div>
+          `;
+        }
+        },
  
          {
            // Actions
@@ -348,44 +364,44 @@ initializeSelect2(select2Elements);
        ],
  
  ///PAGINA RESPONSIVA
-       responsive: {
-         details: {
-           display: $.fn.dataTable.Responsive.display.modal({
-             header: function (row) {
-               var data = row.data();
-               return 'Detalles de ' + data['id_dictamen'];
-               //return 'Detalles del ' + 'Dictamen';
-             }
-           }),
-           type: 'column',
-           renderer: function (api, rowIdx, columns) {
-             var data = $.map(columns, function (col, i) {
-               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
-                 ? '<tr data-dt-row="' +
-                     col.rowIndex +
-                     '" data-dt-column="' +
-                     col.columnIndex +
-                     '">' +
-                     '<td>' +
-                     col.title +
-                     ':' +
-                     '</td> ' +
-                     '<td>' +
-                     col.data +
-                     '</td>' +
-                     '</tr>'
-                 : '';
-             }).join('');
- 
-             return data ? $('<table class="table"/><tbody />').append(data) : false;
-           }
-         }
-       }
+    responsive: {
+      details: {
+        display: $.fn.dataTable.Responsive.display.modal({
+          header: function (row) {
+            var data = row.data();
+            return 'Detalles de ' + data['id_dictamen'];
+            //return 'Detalles del ' + 'Dictamen';
+          }
+        }),
+        type: 'column',
+        renderer: function (api, rowIdx, columns) {
+          var data = $.map(columns, function (col, i) {
+            return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+              ? '<tr data-dt-row="' +
+                  col.rowIndex +
+                  '" data-dt-column="' +
+                  col.columnIndex +
+                  '">' +
+                  '<td>' +
+                  col.title +
+                  ':' +
+                  '</td> ' +
+                  '<td>' +
+                  col.data +
+                  '</td>' +
+                  '</tr>'
+              : '';
+          }).join('');
+
+          return data ? $('<table class="table"/><tbody />').append(data) : false;
+        }
+      }
+    }
  
        
-     });
-   } 
- 
+  });
+}// end-datatable
+
  
  
 
@@ -514,53 +530,53 @@ $(document).on('click', '.delete-record', function () {//clase del boton "elimin
       buttonsStyling: false
   }).then(function (result) {
       if (result.isConfirmed) {
-          // Enviar solicitud DELETE al servidor
-          $.ajax({
-              type: 'DELETE',
-              url: `${baseUrl}deletCerExp/${id_certificado}`,
-              headers: {
-                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-              },
-              success: function () {
-                  // Actualizar la tabla después de eliminar el registro
-                  dt_user.draw();
+        
+        // Enviar solicitud DELETE al servidor
+        $.ajax({
+          type: 'DELETE',
+          url: `${baseUrl}deletCerExp/${id_certificado}`,
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function () {
+              // Actualizar la tabla después de eliminar el registro
+              dt_user.draw();
 
-                  // Mostrar SweetAlert de éxito
-                  Swal.fire({
-                      icon: 'success',
-                      title: '¡Eliminado!',
-                      text: '¡El Certificado ha sido eliminado correctamente!',
-                      customClass: {
-                          confirmButton: 'btn btn-success'
-                      }
-                  });
-              },
-              error: function (error) {
-                  console.log(error);
+              // Mostrar SweetAlert de éxito
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Eliminado!',
+                  text: '¡El Certificado ha sido eliminado correctamente!',
+                  customClass: {
+                      confirmButton: 'btn btn-success'
+                  }
+              });
+          },
+          error: function (error) {
+              console.log(error);
+              // Mostrar SweetAlert de error
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'No se pudo eliminar el certificado. Inténtelo más tarde.',
+                  footer: `<pre>${error.responseText}</pre>`,
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+        });
 
-                  // Mostrar SweetAlert de error
-                  Swal.fire({
-                      icon: 'error',
-                      title: 'Error',
-                      text: 'No se pudo eliminar el certificado. Inténtelo más tarde.',
-                      footer: `<pre>${error.responseText}</pre>`,
-                      customClass: {
-                          confirmButton: 'btn btn-danger'
-                      }
-                  });
-              }
-
-          });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-          // Acción cancelada, mostrar mensaje informativo
-          Swal.fire({
-              title: 'Cancelado',
-              text: 'La eliminación del Certificado ha sido cancelada',
-              icon: 'info',
-              customClass: {
-                  confirmButton: 'btn btn-primary'
-              }
-          });
+        // Acción cancelada, mostrar mensaje informativo
+        Swal.fire({
+            title: 'Cancelado',
+            text: 'La eliminación del Certificado ha sido cancelada',
+            icon: 'info',
+            customClass: {
+                confirmButton: 'btn btn-primary'
+            }
+        });
       }
   });
 });
@@ -586,7 +602,6 @@ $(document).ready(function() {
           $('#edit_id_firmante').val(data.id_firmante).trigger('change');//funcion en select
           //$('#edit_id_firmante').val(data.id_firmante).prop('selected', true).change();
           
-
           // Mostrar el modal de edición
           $('#editCerExpor').modal('show');
       }).fail(function() {
@@ -595,7 +610,7 @@ $(document).ready(function() {
               title: '¡Error!',
               text: 'Error al obtener los datos',
               customClass: {
-                  confirmButton: 'btn btn-danger'
+                confirmButton: 'btn btn-danger'
               }
           });
       });
@@ -674,6 +689,5 @@ $(document).on('click', '.pdf', function ()  {
 
  
  
- 
- });
- 
+
+});//end-function(jquery)

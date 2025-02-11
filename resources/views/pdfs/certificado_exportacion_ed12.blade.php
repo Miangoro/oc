@@ -147,20 +147,20 @@
                 style="font-weight: bold;font-size: 11.5px;padding-right: 4px;padding-left: 0; text-align: left">Número
                 de Certificado:</td>
             <td class="td-no-margins"
-                style="font-weight: bold;font-size: 11.5px;padding-right: 4px;padding-left: 0; text-align: left">CIDAM
-                C-EXP XXX/2024</td>
+                style="font-weight:bold; font-size:11.5px; padding-right: 4px;padding-left: 0; text-align: left">
+                {{ $data->num_certificado }}</td>
             <td class="td-no-margins"
                 style="font-weight: bold;font-size: 11.5px;padding-right: 4px;padding-left: 0; text-align: right">Fecha
                 de <br> expedición:</td>
             <td class="td-no-margins"
                 style="font-weight: bold;font-size: 11.5px;padding-right: 4px;padding-left: 0; text-align: right">
-                XX/XX/2024</td>
+                {{ $expedicion }}</td>
             <td class="td-no-margins"
                 style="font-weight: bold;font-size: 11.5px;padding-right: 4px;padding-left: 0; text-align: right">
                 Vigencia de 90 días <br> naturales</td>
             <td class="td-no-margins"
                 style="font-weight: bold;font-size: 11.5px;padding-right: 4px;padding-left: 0; text-align: right">
-                XX/XX/2024</td>
+                {{ $vigencia }}</td>
         </tr>
     </table>
     <div class="titulos">
@@ -171,49 +171,45 @@
             <td class="td-margins"
                 style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">
                 Nombre o razón social:</td>
-            <td class="td-margins" style="text-align: left">CRISTA LA SANTA S.A.P.I. DE C.V.</td>
+            <td class="td-margins" style="text-align: left">{{$empresa}}</td>
             <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;">
                 Número de Cliente:</td>
-            <td class="td-margins" style="text-align: left">NOM-070-005C</td>
+            <td class="td-margins" style="text-align: left">{{ $n_cliente}}</td>
         </tr>
         <tr>
             <td class="td-margins"
                 style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px; padding-top: 8px;padding-bottom: 8px;">
                 Domicilio:</td>
             <td class="td-margins" style="text-align: left; padding-top: 8px;padding-bottom: 8px;" colspan="3">
-                GUILLERMO GONZÁLEZ CAMARENA NO. 800 PISO 2,
-                SANTA FE, ÁLVARO OBREGÓN,
-                CIUDAD DE
-                MÉXICO.</td>
+                {{ $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal}}</td>
         </tr>
         <tr>
             <td class="td-margins"
                 style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px; padding-top: 10px;padding-bottom: 10px;">
                 Código Postal:</td>
-            <td class="td-margins" style="text-align: left">01210</td>
+            <td class="td-margins" style="text-align: left"> &nbsp; </td>
             <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
                 Estado:</td>
-            <td class="td-margins" style="text-align: left; padding-right: 4px;">CIUDAD DE MÉXICO</td>
+            <td class="td-margins" style="text-align: left; padding-right: 4px;">{{ $estado}}</td>
         </tr>
         <tr>
             <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;">
-                Registro Federal de
-                Contribuyentes:</td>
-            <td class="td-margins" style="text-align: left">NCO111222NV5</td>
+                Registro Federal de Contribuyentes:</td>
+            <td class="td-margins" style="text-align: left">
+                {{ $data->dictamen->inspeccione->solicitud->empresa->rfc}}</td>
             <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
                 País:</td>
-            <td class="td-margins" style="text-align: left">MÉXICO</td>
+            <td class="td-margins" style="text-align: left"> MÉXICO </td>
         </tr>
         <tr>
             <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;">
-                Registro de Productor <br>
-                Autorizado (Uso de la <br>
-                DOM):</td>
-            <td class="td-margins" style="text-align: left">&nbsp;</td>
+                Registro de Productor <br> Autorizado (Uso de la <br> DOM):</td>
+            <td class="td-margins" style="text-align: left">
+                {{ $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA'}}</td>
             <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
-                Número de Convenio de
-                corresponsabilidad:</td>
-            <td class="td-margins" style="text-align: left">1128</td>
+                Número de Convenio de corresponsabilidad:</td>
+            <td class="td-margins" style="text-align: left">
+                {{ $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA'}}</td>
         </tr>
     </table>
     <div class="titulos">
@@ -223,71 +219,88 @@
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Marca:</td>
-            <td style="text-align: left; padding-right: 0;padding-left: 8px;">400 CONEJOS</td>
+            <td style="text-align: left; padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Categoría y Clase:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">MEZCAL ARTESANAL, BLANCO <br> O JOVEN</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">Edad
                 (solo aplica en Añejo):</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">1 año</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Certificado <br> NOM a <br>Granel:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">CIDAM C-GRA-103/2023</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Volumen:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">750 mL</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">%Alc.
                 Vol.:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">38%</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 de análisis:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">NNMZ-37724</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 lote granel:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">02423AM-EE</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">
                 Botellas:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">396</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 de análisis ajuste:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">NA</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 de lote envasado:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">002-23AM</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">Cajas:
             </td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">33</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">Tipo
                 de Maguey:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">Maguey Espadín(A. angustifolia)</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Envasado en:</td>
-            <td style="text-align: justify;padding-right: 0;padding-left: 8px;">LIBRAMIENTO 5 SEÑORES NO. 915, CARRETERA
-                INTERNACIONAL, TLALIXTAC DE CABRERA,
-                C.P. <br> 68270, TLALIXTAC DE CABRERA, OAXACA.</td>
+            <td style="text-align: justify;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">Folio
                 Hologramas:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">005C-G1617661 - 005C-G1629667</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;">
+                &nbsp;
+            </td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Aduana de despacho:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">AEROPUERTO INTERNACIONAL DE LA CIUDAD DE
-                MÉXICO</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;">
+                &nbsp;</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Fracción Arancelaria:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">2208.90.05.00</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;">
+                &nbsp;</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">No.
                 de <br> pedido:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;">/4012111</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;">
+                &nbsp;
+            </td>
         </tr>
     </table>
     <div class="titulos" style="padding-bottom: none;">
@@ -298,21 +311,24 @@
             <td class="td-margins-none"
                 style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nombre:</td>
-            <td class="td-margins-none" style="text-align: left">DUFRY MÉXICO, S.A. DE C.V.</td>
+            <td class="td-margins-none" style="text-align: left"> 
+                &nbsp;
+            </td>
         </tr>
         <tr>
             <td class=" td-margins-none"
                 style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
                 Domicilio:</td>
-            <td class="td-margins-none" style="text-align: left">VENUSTIANO CARRANZA AV. CAPITÁN CARLOS LEÓN SN 2N E,
-                OF 11 C.P. 15520 PEÑÓN DE LOS BAÑOS, CIUDAD DE
-                MÉXICO.</td>
+            <td class="td-margins-none" style="text-align: left">
+                &nbsp;</td>
         </tr>
         <tr>
             <td class="td-margins-none"
                 style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
                 País destino:</td>
-            <td class="td-margins-none" style="text-align: left">MÉXICO</td>
+            <td class="td-margins-none" style="text-align: left">
+                &nbsp;
+            </td>
         </tr>
     </table>
     <div>

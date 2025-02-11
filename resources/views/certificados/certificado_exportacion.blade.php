@@ -31,7 +31,6 @@
   'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
   'resources/assets/vendor/libs/sweetalert2/sweetalert2.js',
   'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js',
-
 ])
 @endsection
 
@@ -41,9 +40,7 @@
 @endsection
 
 @section('content')
-
-{{-- <meta name="csrf-token" content="{{ csrf_token() }}">
- --}}
+{{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
 <!-- Users List Table -->
 <div class="card">
     <div class="card-header pb-0">
@@ -55,20 +52,21 @@
             <thead class="table-dark">
                 <tr>
                     <th></th>
-                    <th>No. certificado</th>
-                    <th>No. dictamen</th>
+                    <th>Solicitud /<br>no. servicio</th>
                     <th>Cliente</th>
-                    <th>Fecha</th>
+                    <th>No. certificado</th>
+                    <th>Fechas</th>
                     <th>certificado</th>
+                    <th>Dictamen</th>
+                    <th>Estatus</th>
                     <th>ACCIONES</th>
                 </tr>
             </thead>
         </table>
     </div>
 
-
-
 </div>
+
 
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
