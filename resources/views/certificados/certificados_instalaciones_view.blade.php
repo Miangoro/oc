@@ -49,8 +49,8 @@
                     <th>#</th>
                     <th>ID</th>
                     <th>Cliente</th>
-                    <th>Domicilio de instalación</th>
-                    <th>Instalaciones de</th>
+                    <th>Instalación</th>
+                    <!--<th>Tipo</th>-->
                     <th>No. Servicio</th>
                     <th>No. Dictamen</th>
                     <th>No. Certificado</th>

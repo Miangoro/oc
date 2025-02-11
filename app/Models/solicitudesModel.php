@@ -183,13 +183,6 @@ public function clases_agave()
     }
 
 
-    public function url_etiqueta()
-    {
-        return $this->hasOne(Documentacion_url::class, 'id_relacion', 'id_etiqueta')->where(
-            'id_relacion', optional(json_decode($this->caracteristicas, true))['id_etiqueta'] ?? null
-        );
-    }
-    
     
 
     

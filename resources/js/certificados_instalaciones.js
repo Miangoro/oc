@@ -49,7 +49,7 @@
          { data: 'fake_id' },          //1
          { data: 'Cliente' },          //2  
          { data: 'domicilio_instalacion' },          //3
-         { data: 'tipo_dictamen' },    //4 
+   
          { data: 'num_servicio' }, //5
          { data: 'num_dictamen' },    //6
          { data: 'num_certificado' },    //7
@@ -88,13 +88,13 @@
             return `
               <div>
                 <span class="fw-bold">${$numero_cliente}</span><br>
-                <small  class="user-email">${$razon_social}</small>
+                <small>${$razon_social}</small>
               </div>
             `;
           }
         },
          {
-          targets: 4,
+          targets: 3,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $tipoDictamen = parseInt(full['tipo_dictamen']);
@@ -128,33 +128,33 @@
             }
         
             // Retorna el badge con el texto y color apropiado
-            return `<span class="badge rounded-pill bg-label-${$colorDictamen}">${$nombreDictamen}</span>`;
+            return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span><br><small>${full['domicilio_instalacion']}</small>`;
           }     
         },
         
         {
-          targets: 5,
+          targets: 4,
           render: function (data, type, full, meta) {
             var $num_servicio = full['num_servicio'] ?? 'N/A';
-            return '<span class="user-email">' + $num_servicio + '</span>';
+            return '<small>' + $num_servicio + '</small>';
           }
         },
           {
-           targets: 6,
+           targets: 5,
            render: function (data, type, full, meta) {
              var $num_dictamen = full['num_dictamen'];
-             return $num_dictamen;
+             return '<small>' + $num_dictamen + '</small>';
            }
          }, 
          {
-            targets: 7,
+            targets: 6,
             render: function (data, type, full, meta) {
               var $num_certificado = full['num_certificado'];
               return '<span class="fw-bold">' + $num_certificado + '</span>';
             }
           },
           {
-            targets: 8, // Suponiendo que este es el índice de la columna que quieres actualizar
+            targets: 7, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
         
                 // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
@@ -175,7 +175,7 @@
             }
           },   
           {
-            targets: 9,
+            targets: 8,
             render: function (data, type, full, meta) {
                 var id_revisor = full['id_revisor'];   // Obtener el id_revisor
                 var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
@@ -185,16 +185,16 @@
         
                 // Para el revisor personal
                 if (id_revisor !== 'Sin asignar') {
-                    revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Revisión OC:</strong> ${id_revisor}</span>`;
+                    revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>OC:</strong> ${id_revisor}</span>`;
                 } else {
-                    revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Revisión OC:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
+                    revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>OC:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
                 }
         
                 // Para el revisor miembro
                 if (id_revisor2 !== 'Sin asignar') {
-                    revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Revisión Consejo:</strong> ${id_revisor2}</span>`;
+                    revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> ${id_revisor2}</span>`;
                 } else {
-                    revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Revisión Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
+                    revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
                 }
         
                 // Retorna los revisores en formato HTML
@@ -208,7 +208,7 @@
           },
           {
             // Abre el pdf del certificado
-            targets: 10,
+            targets: 9,
             className: 'text-center',
             render: function (data, type, full, meta) {
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-es="1" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['num_dictamen']} "></i>`;
@@ -216,20 +216,20 @@
           },
           {
             // Abre el pdf del certificado
-            targets: 11,
+            targets: 10,
             className: 'text-center',
             render: function (data, type, full, meta) {
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-es="2" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
             }
           },
           {
-            targets: 12,
+            targets: 11,
             render: function (data, type, full, meta) {
               return full['diasRestantes'];
             }
           }, 
           {
-            target: 13, // Suponiendo que este es el índice de la columna que quieres actualizar
+            target: 12, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
                 var estatus = full['estatus']; // Obtener el estatus del certificado
                 
@@ -253,12 +253,12 @@
                     colorEstatus = isActive ? 'success' : 'secondary'; // Color según el estatus
                 }
         
-                return `<span class="badge rounded-pill bg-label-${colorEstatus}">${badgeText}</span>`;
+                return `<span class="badge rounded-pill bg-${colorEstatus}">${badgeText}</span>`;
             }
         },  
          {
            // Actions
-           targets: 14,
+           targets: 13,
            title: 'Acciones',
            searchable: false,
            orderable: false,

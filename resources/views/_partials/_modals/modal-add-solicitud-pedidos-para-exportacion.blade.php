@@ -115,7 +115,7 @@
                         <!-- Sección original: Características del Producto -->
                         <div class="card mt-4" id="caracteristicas_Ex">
                             <div class="card-body">
-                                <h5>Características del Producto</h5>
+                                <h6>Características del Producto</h6>
                                 <div class="row caracteristicas-row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
@@ -178,7 +178,7 @@
 
                     <div class="card mt-2">
                         <div class="card-body">
-                            <h5>Información del lote envasado</h5>
+                            <h6>Información del lote envasado</h6>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-floating form-floating-outline mb-2">

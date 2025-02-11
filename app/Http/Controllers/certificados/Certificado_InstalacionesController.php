@@ -100,13 +100,13 @@ class Certificado_InstalacionesController extends Controller
                 
                     if ($diasRestantes > 0) {
                         if($diasRestantes > 15){
-                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
+                            $res = "<span class='badge bg-label-success'>$diasRestantes días de vigencia.</span>";
                         }else{
-                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
+                            $res = "<span class='badge bgl-label-warning'>$diasRestantes días de vigencia.</span>";
                         }
                         $restantes = $res;
                     } else {
-                        $restantes = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                        $restantes = "<span class='badge bg-label-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
                     }
                 }
         

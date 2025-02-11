@@ -206,13 +206,7 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
     ]);
 }
 
-if ($solicitud && $solicitud->id_tipo == 11) {
-    // Si el id_tipo es 11, agregamos las relaciones adicionales
-    $solicitud->load([
-        'url_etiqueta',
 
-    ]);
-}
     if (!$solicitud) {
         return response()->json([
             'success' => false,
@@ -231,10 +225,28 @@ if ($solicitud && $solicitud->id_tipo == 11) {
     // Obtener documentos relacionados
     $documentos = Documentacion_url::where("id_empresa", $solicitud->empresa->id_empresa)->get();
 
+    if ($solicitud && $solicitud->id_tipo == 11) {
+        $caracteristicas = is_string($solicitud->caracteristicas) 
+            ? json_decode($solicitud->caracteristicas, true) 
+            : $solicitud->caracteristicas;
+    
+        $idEtiqueta = is_array($caracteristicas) 
+            ? ($caracteristicas['id_etiqueta'] ?? null) 
+            : ($caracteristicas->id_etiqueta ?? null);
+    
+        if ($idEtiqueta) {
+            $url_etiqueta = Documentacion_url::where('id_relacion', $idEtiqueta)
+            ->where('id_documento', 60)
+            ->value('url'); // Obtiene directamente el valor del campo 'url'
+        }
+    }
+    
+
     return response()->json([
         'success' => true,
         'data' => $solicitud,
         'documentos' => $documentos,
+        'url_etiqueta' => $url_etiqueta ?? '',
         'fecha_visita_formateada' => Helpers::formatearFechaHora($solicitud->fecha_visita),
         'tipos_agave' => $tipos
     ]);
