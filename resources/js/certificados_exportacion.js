@@ -79,14 +79,13 @@ initializeSelect2(select2Elements);
          { data: '' },
          { data: 'num_certificado' },
          { data: 'id_dictamen' },
-         {data:''
-          /*data: null, // Se usará null porque combinaremos varios valores
+         {data: null, // Se usará null porque combinaremos varios valores
           render: function(data, type, row) {
               return `
               <strong>${data.numero_cliente}</strong><br>
                   <span style="font-size:11px">${data.razon_social}<span>
               `;
-            }*/
+            }
          },
          { data: 'fechas' },
          { data: '' },
@@ -124,7 +123,7 @@ initializeSelect2(select2Elements);
 
           {
             // Tabla 4
-            targets: 3,
+            targets: 4,
             searchable: true,
             render: function (data, type, full, meta) {
               var $fech = full['fechas'];

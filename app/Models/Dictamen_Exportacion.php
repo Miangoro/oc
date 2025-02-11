@@ -39,7 +39,7 @@ class Dictamen_Exportacion extends Model
             return $this->belongsTo(instalaciones::class, 'id_instalacion', 'id_instalacion');
         }
 
-        Public function certificado()
+        /*Public function certificado()
         {
             return $this->belongsTo(Certificados::class, 'id_dictamen', 'id_dictamen');   
         }  
@@ -47,5 +47,6 @@ class Dictamen_Exportacion extends Model
         public function firmante()
         {
             return $this->belongsTo(User::class, 'id_firmante', 'id');
-        }
+        }*/
+
 }

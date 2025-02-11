@@ -20,9 +20,9 @@ class Certificado_ExportacionController extends Controller
         $certificado = Certificado_Exportacion::all(); // Obtener todos los datos
         $dictamen = Dictamen_Exportacion::all();
         $users = User::where('tipo',1)->get(); //Solo inspectores 
-        //$empresa = empresa::all();
+        $empresa = empresa::all();
 
-        return view('certificados.certificado_exportacion', compact('certificado', 'dictamen', 'users'));
+        return view('certificados.certificado_exportacion', compact('certificado', 'dictamen', 'users', 'empresa'));
     }
 
 
@@ -32,7 +32,7 @@ public function index(Request $request)
     //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
         1 => 'num_certificado',
         2 => 'id_dictamen',
-        //3 => 'razon_social',
+        3 => 'razon_social',
         4 => 'fecha_emision',
     ];
 
@@ -87,16 +87,16 @@ public function index(Request $request)
                 $nestedData['id_certificado'] = $user->id_certificado;
                 $nestedData['id_dictamen'] = $user->id_dictamen;
                 $nestedData['num_certificado'] = $user->num_certificado;
-                /*$nestedData['id_inspeccion'] = $user->inspeccione->num_servicio;
+                //$nestedData['id_inspeccion'] = $user->inspeccione->num_servicio;
                 ///numero y nombre empresa
-                $empresa = $user->inspeccione->solicitud->empresa;
+                $empresa = $user->dictamen->inspeccione->solicitud->empresa;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
                 ? $empresa->empresaNumClientes
                     ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
                 : 'N/A';
                 $nestedData['numero_cliente'] = $numero_cliente;
-                $nestedData['razon_social'] = $user->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
-                */
+                $nestedData['razon_social'] = $user->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
+
                 $fecha_emision = Helpers::formatearFecha($user->fecha_emision);
                 $fecha_vigencia = Helpers::formatearFecha($user->fecha_vigencia);
                 $nestedData['fechas'] = '<b>Fecha Emisión: </b>' .$fecha_emision. '<br> <b>Fecha Vigencia: </b>' .$fecha_vigencia;
