@@ -212,7 +212,7 @@ class solicitudesController extends Controller
                 $nestedData['folio_caracteristicas'] = $caracteristicas['folio'] ?? 'N/A';
                 $nestedData['etapa'] = $caracteristicas['etapa'] ?? 'N/A';
                 $nestedData['fecha_corte'] = isset($caracteristicas['fecha_corte']) ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i') : 'N/A';
-                $nestedData['marca'] = $marca ?? 'N/A';
+                $nestedData['marca'] = $marca ?? 'N/A3333';
                 $nestedData['cajas'] = $cajas ?? 'N/A';
                 $nestedData['botellas'] = $botellas ?? 'N/A';
                 $idTipoMagueyMuestreo = $caracteristicas['id_tipo_maguey'] ?? null;
