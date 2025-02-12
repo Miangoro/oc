@@ -504,6 +504,7 @@ class PrediosController extends Controller
 
             $datos = Predios::with([
                 'predio_plantaciones.tipo',
+                'solicitudes',
                 'empresa.empresaNumClientes' => function ($query) {
                     $query->whereNotNull('numero_cliente')->where('numero_cliente', '!=', '');
                 }

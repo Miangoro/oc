@@ -52,6 +52,8 @@ class insertar_datos_bd_actas extends Controller
                         
                         // Obtener solo el nombre del archivo
                         $fileName = basename($fileUrl);
+                        $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION); // "pdf"
+                        $nombreArchivo = str_replace('/', '-','Acta de inspección '.$sol->inspeccion?->num_servicio) . '_' . time() . '.' . $fileExtension;
 
                         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $sol->id_empresa)->first();
                         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
@@ -62,7 +64,7 @@ class insertar_datos_bd_actas extends Controller
                         $storagePath = "uploads/{$numeroCliente}";
                 
                         // Ruta final en storage/app/public/
-                        $destinationPath = storage_path("app/public/{$storagePath}/{$fileName}");
+                        $destinationPath = storage_path("app/public/{$storagePath}/{$nombreArchivo}");
                 
                         // Crear la carpeta si no existe
                         if (!file_exists(storage_path("app/public/{$storagePath}"))) {
@@ -75,8 +77,8 @@ class insertar_datos_bd_actas extends Controller
                             file_put_contents($destinationPath, $fileContent);
                 
                             // Guardar la ruta en la base de datos
-                            $documentacion_url->nombre_documento = 'Acta de inspección';
-                            $documentacion_url->url = "{$storagePath}/{$fileName}";
+                            $documentacion_url->nombre_documento = 'Acta de inspección '.$sol->inspeccion?->num_servicio;
+                            $documentacion_url->url =  $nombreArchivo;
                             $documentacion_url->fecha_vigencia = null;
                             $documentacion_url->save();
                         } else {
