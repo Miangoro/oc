@@ -22,14 +22,21 @@ class Certificado_Exportacion extends Model
         'id_firmante'
       ];
 
+      // Relación con el modelo Dictamen_Exportacion (dictamenes)
       public function dictamen()
-        {
-            return $this->belongsTo(Dictamen_Exportacion::class, 'id_dictamen', 'id_dictamen');
-        }
+      {
+          return $this->belongsTo(Dictamen_Exportacion::class, 'id_dictamen', 'id_dictamen');
+      }
+
+      // Relación con el modelo User (Firmante)
+      public function firmante()
+      {
+          return $this->belongsTo(User::class, 'id_firmante', 'id');
+      }
 
       // Método para obtener el nombre del registro que sirve para la trazabilidad
-        public function getLogName2(): string
-        {
-            return 'certificado de exportación'; // Devuelve el nombre que desees
-        }
+      public function getLogName2(): string
+      {
+          return 'certificado de exportación'; // Devuelve el nombre que desees
+      }
 }

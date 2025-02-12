@@ -47,7 +47,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control datepicker" name="fecha_emision"
+                            <input type="text" class="form-control datepicker" name="fecha_emision"
                                 id="fecha_emision">
                                 <label for="">Fecha de emisión</label>
                             </div>
@@ -105,7 +105,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input type="text" class="form-control" name="num_certificado" 
-                                    id="edit_num_certificado"  placeholder="no. certificado" >
+                                    id="edit_num_certificado"  placeholder="no. certificado">
                                 <label for="">No. de certificado</label>
                             </div>
                         </div>

@@ -342,11 +342,12 @@
        <b>AUTORIZÓ</b> 
     </div>
     <div class="titutlos-footer" style="margin-top: 0;">
-       <b> XXXXX <br> XXXX del Organismo Certificador CIDAM</b>
+       <b>{{ $data->firmante->name }}<br>{{ $data->firmante->puesto }}</b>
         <p style="text-align: right; font-size: 7.5px; margin-top: 0; ">Certificado de Exportación NOM-070-SCFI-2016 F7.1-01-23 Ed 12 <br>
-            Entrada en vigor: XX-XX-2024</p>
-            <center> <img src="{{ public_path('img_pdf/pie_certificado.png') }}" style="height: 40px; width: 710px; position: absolute; margin-top: 0;"
-                alt="pie de certificado"></center>
+            Entrada en vigor: 26-08-2024</p>
+            
+        <center> <img src="{{ public_path('img_pdf/pie_certificado.png') }}" style="height: 40px; width: 710px; position: absolute; margin-top: 0;"
+            alt="pie de certificado"></center>
     </div>
     <div>
 
