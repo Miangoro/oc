@@ -954,4 +954,8 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::put('editCerExp/{id_certificado}', 'update')->name('cer-expor.actualizar');
     // Ruta PDF con ID
     Route::get('/certificado_exportacion/{id_certificado}', 'MostrarCertificadoExportacion')->name('PDF-cer-exportacion');
+    //Asignar revisor
+    Route::post('asignar_revisor_exportacion', [Certificado_ExportacionController::class, 'storeRevisor'])->name('cer-expor.asignarRevisor');
+    //Reexpedicion
+    //Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::class, 'reexpedir'])->name('certificados.reexpedir.granel');
 });

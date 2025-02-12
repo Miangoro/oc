@@ -71,6 +71,7 @@
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-certificado-exportacion')
+@include('_partials/_modals/modal-add-asignar-revisor')
 <!-- /Modal -->
 
 @endsection

@@ -9,6 +9,7 @@ use App\Models\Certificado_Exportacion;
 use App\Models\Dictamen_Exportacion; 
 use App\Models\User;
 use App\Models\empresa; 
+use App\Models\RevisorExportacion; 
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 
@@ -22,8 +23,9 @@ class Certificado_ExportacionController extends Controller
         $dictamen = Dictamen_Exportacion::all();
         $users = User::where('tipo',1)->get(); //Solo inspectores 
         $empresa = empresa::all();
+        $revisores = RevisorExportacion::all(); 
 
-        return view('certificados.certificado_exportacion', compact('certificado', 'dictamen', 'users', 'empresa'));
+        return view('certificados.certificado_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores'));
     }
 
 
@@ -103,6 +105,9 @@ public function index(Request $request)
                 $fecha_emision = Helpers::formatearFecha($user->fecha_emision);
                 $fecha_vigencia = Helpers::formatearFecha($user->fecha_vigencia);
                 $nestedData['fechas'] = '<b>Expedición: </b>' .$fecha_emision. '<br> <b>Vigencia: </b>' .$fecha_vigencia;
+                //Revisiones
+                $nestedData['id_revisor'] = $user->revisor && $user->revisor->user ? $user->revisor->user->name : 'Sin asignar';
+                $nestedData['id_revisor2'] = $user->revisor && $user->revisor->user2 ? $user->revisor->user2->name : 'Sin asignar';
                 
                 $data[] = $nestedData;
             }
@@ -248,6 +253,119 @@ public function MostrarCertificadoExportacion($id_certificado)
     ]);
     //nombre al descargar
     return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
+}
+
+
+
+///FUNCION PARA AGREGAR REVISOR
+public function storeRevisor(Request $request)
+{
+    try {
+        $validatedData = $request->validate([
+            'tipoRevisor' => 'required|string|in:1,2',
+            'nombreRevisor' => 'required|integer|exists:users,id',
+            'numeroRevision' => 'required|string|max:50',
+            'esCorreccion' => 'nullable|in:si,no',
+            'observaciones' => 'nullable|string|max:255',
+            'id_certificado' => 'required|integer|exists:certificados_exportacion,id_certificado',
+        ]);
+        
+        $user = User::find($validatedData['nombreRevisor']);
+        if (!$user) {
+            return response()->json(['message' => 'El revisor no existe.'], 404);
+        }
+
+        $certificado = Certificado_Exportacion::find($validatedData['id_certificado']);
+        if (!$certificado) {
+            return response()->json(['message' => 'El certificado no existe.'], 404);
+        }
+
+        $revisor = RevisorExportacion::where('id_certificado', $validatedData['id_certificado'])->first();
+        $message = ''; // Inicializar el mensaje
+
+        if ($revisor) {
+            // Actualizar el revisor existente
+            if ($validatedData['tipoRevisor'] == '1') {
+                if ($revisor->id_revisor == $validatedData['nombreRevisor']) {
+                    $message = 'Revisor reasignado.'; 
+                } else {
+                    $revisor->id_revisor = $validatedData['nombreRevisor'];
+                    $message = 'Revisor asignado exitosamente.';
+                }
+            } else {
+                if ($revisor->id_revisor2 == $validatedData['nombreRevisor']) {
+                    $message = 'Revisor reasignado.';
+                } else {
+                    $revisor->id_revisor2 = $validatedData['nombreRevisor'];
+                    $message = 'Revisor Miembro del consejo asignado exitosamente.';
+                }
+            }
+        } else {
+            // Crear un nuevo revisor
+            $revisor = new RevisorExportacion();
+            $revisor->id_certificado = $validatedData['id_certificado'];
+            $revisor->tipo_revision = $validatedData['tipoRevisor'];
+
+            if ($validatedData['tipoRevisor'] == '1') {
+                $revisor->id_revisor = $validatedData['nombreRevisor'];
+                $message = 'Revisor asignado exitosamente.';
+            } else {
+                $revisor->id_revisor2 = $validatedData['nombreRevisor'];
+                $message = 'Revisor Miembro del consejo asignado exitosamente.';
+            }
+        }
+
+        // Guardar los datos del revisor
+        $revisor->numero_revision = $validatedData['numeroRevision'];
+        $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
+        $revisor->observaciones = $validatedData['observaciones'] ?? '';
+        $revisor->save();
+
+        // Preparar datos para el correo
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud',
+            'message' => 'Se ha asignado el revisor (' . $user->name . ') al certificado número ' . $certificado->num_certificado, 
+            'url' => 'solicitudes-historial',
+            'nombreRevisor' => $user->name,
+            'emailRevisor' => $user->email,
+            'num_certificado' => $certificado->num_certificado,
+            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+            'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento), 
+            'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar',
+            'numero_cliente' => $certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar',
+            'tipo_certificado' => $certificado->id_dictamen
+        ];
+
+        // Notificación Local
+        /*$users = User::whereIn('id', [18, 19, 20])->get();
+        foreach ($users as $notifiedUser) {
+            $notifiedUser->notify(new GeneralNotification($data1));
+        }*/
+
+/*             // Correo a Revisores
+        try {
+            info('Enviando correo a: ' . $user->email);
+
+            if (empty($user->email)) {
+                return response()->json(['message' => 'El correo del revisor no está disponible.'], 404);
+            }
+
+            Mail::to($user->email)->send(new CorreoCertificado($data1)); 
+            info('Correo enviado a: ' . $user->email);
+        } catch (\Exception $e) {
+            Log::error('Error al enviar el correo: ' . $e->getMessage()); 
+            return response()->json(['message' => 'Error al enviar el correo: ' . $e->getMessage()], 500);
+        } */
+
+        return response()->json([
+            'message' => $message ?? 'Revisor del OC asignado exitosamente',
+        ]);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json(['message' => $e->validator->errors()->first()], 422);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Ocurrió un error al asignar el revisor: ' . $e->getMessage()], 500);
+    }
 }
 
 
