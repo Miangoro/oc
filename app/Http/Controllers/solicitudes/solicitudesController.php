@@ -181,6 +181,7 @@ class solicitudesController extends Controller
                     $idLoteEnvasado = $caracteristicas['detalles'][0]['id_lote_envasado'];
                     $cajas = $caracteristicas['detalles'][0]['cantidad_cajas'];
                     $botellas = $caracteristicas['detalles'][0]['cantidad_botellas'];
+                    $presentacion = $caracteristicas['detalles'][0]['presentacion'];
                 } else {
                     $idLoteEnvasado = null;
                 }
@@ -216,8 +217,7 @@ class solicitudesController extends Controller
                 $nestedData['cajas'] = $cajas ?? 'N/A';
                 $nestedData['botellas'] = $botellas ?? 'N/A';
                 $idTipoMagueyMuestreo = $caracteristicas['id_tipo_maguey'] ?? null;
-                $nestedData['presentacion'] = isset($loteEnvasado->presentacion, $loteEnvasado->unidad) ? $loteEnvasado->presentacion . ' ' . $loteEnvasado->unidad : 'N/A';
-
+                $nestedData['presentacion'] = $presentacion ?? 'N/A';
 
                  if ($idTipoMagueyMuestreo) {
                  if (is_array($idTipoMagueyMuestreo)) {

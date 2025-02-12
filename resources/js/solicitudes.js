@@ -186,7 +186,7 @@ $(function () {
                       <br>
                       <span class="fw-bold text-dark small">Marca:</span><span class="small"> ${data.marca || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.presentacion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Cont. Neto.:</span><span class="small"> ${data.presentacion || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Cajas:</span><span class="small"> ${data.cajas || 'N/A'}</span>
                       <br>
