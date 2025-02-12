@@ -187,7 +187,7 @@ class solicitudesController extends Controller
                 $loteEnvasado = lotes_envasado::with('marca')->find($idLoteEnvasado); // Busca el lote envasado
 
                 if ($loteEnvasado && $loteEnvasado->marca) {
-                    $marca = $loteEnvasado->marca->nombre;
+                    $marca = $loteEnvasado->marca->marca;
                 } else {
                     $marca = null; // O un valor por defecto
                 }
@@ -212,10 +212,12 @@ class solicitudesController extends Controller
                 $nestedData['folio_caracteristicas'] = $caracteristicas['folio'] ?? 'N/A';
                 $nestedData['etapa'] = $caracteristicas['etapa'] ?? 'N/A';
                 $nestedData['fecha_corte'] = isset($caracteristicas['fecha_corte']) ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i') : 'N/A';
-                $nestedData['marca'] = $marca ?? 'N/A3333';
+                $nestedData['marca'] = $marca ?? 'N/A';
                 $nestedData['cajas'] = $cajas ?? 'N/A';
                 $nestedData['botellas'] = $botellas ?? 'N/A';
                 $idTipoMagueyMuestreo = $caracteristicas['id_tipo_maguey'] ?? null;
+                $nestedData['presentacion'] = isset($loteEnvasado->presentacion, $loteEnvasado->unidad) ? $loteEnvasado->presentacion . ' ' . $loteEnvasado->unidad : 'N/A';
+
 
                  if ($idTipoMagueyMuestreo) {
                  if (is_array($idTipoMagueyMuestreo)) {
