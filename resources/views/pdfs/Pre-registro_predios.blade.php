@@ -173,7 +173,7 @@
 		</tr>
 		<tr>
 			<td><strong>Fecha de servicio</strong></td>
-			<td>{{ $datos->solicitudes->inspeccion->fecha_servicio ?? '----' }}</td>
+			<td>{{ $datos->solicitudes[0]->inspeccion->fecha_servicio ?? '----' }}</td>
 			<td><strong>Dirección del punto de reunión</strong></td>
 			<td>----</td>
 		</tr>
