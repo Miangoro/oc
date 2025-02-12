@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Revisor;
 use App\Models\RevisorGranel;
+use App\Models\RevisorExportacion;//EXPORTACION
 use App\Models\Certificados;
 use App\Models\empresa;
 use App\Models\User;
@@ -22,27 +23,35 @@ class RevisionPersonalController extends Controller
         $userId = auth()->id();   
         $EstadisticasInstalaciones = $this->calcularCertificadosInstalaciones($userId); // Estadisticas Instalaciones
         $EstadisticasGranel = $this->calcularCertificadosGranel($userId); // Estadisticas Granel
-        $revisorQuery = Revisor::with('certificado');
 
+        $revisorQuery = Revisor::with('certificado');
         if ($userId != 1) {
             $revisorQuery->where('id_revisor', $userId);
         }
-        
         $revisor = $revisorQuery->first();
         
         $revisoresGranelQuery = RevisorGranel::with('certificado');
-
         if ($userId != 1) {
             $revisoresGranelQuery->where('id_revisor', $userId);
         }
-        
         $revisoresGranel = $revisoresGranelQuery->first();
+
+        //EXPORTACION
+        $EstadisticasExportacion = $this->calcularCertificadosExportacion($userId);
+        $revisoresExportacionQuery = RevisorExportacion::with('certificado');
+        if ($userId != 1) {
+            $revisoresExportacionQuery->where('id_revisor', $userId);
+        }
+        $revisoresExportacion = $revisoresExportacionQuery->first();
+        $preguntasRevisorExportacion = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 3)->get();
+
+
         $users = User::where('tipo', 1)->get(); // Select Aprobacion
         $preguntasRevisor = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 1)->get(); // Preguntas Instalaciones
         $preguntasRevisorGranel = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 2)->get(); // Preguntas Granel
-        $noCertificados = (!$revisor || !$revisor->certificado) && (!$revisoresGranel || !$revisoresGranel->certificado); // Alerta si no hay Certificados Asignados al Revisor
+        $noCertificados = (!$revisor || !$revisor->certificado) && (!$revisoresGranel || !$revisoresGranel->certificado) && (!$revisoresExportacion || !$revisoresExportacion->certificado); // Alerta si no hay Certificados Asignados al Revisor
  
-        return view('revision.revision_certificados-personal_view', compact('revisor', 'revisoresGranel', 'preguntasRevisor', 'preguntasRevisorGranel', 'EstadisticasInstalaciones', 'EstadisticasGranel', 'users', 'noCertificados'));
+        return view('revision.revision_certificados-personal_view', compact('revisor', 'revisoresGranel', 'preguntasRevisor', 'preguntasRevisorGranel', 'EstadisticasInstalaciones', 'EstadisticasGranel', 'users', 'noCertificados', 'revisoresExportacion', 'preguntasRevisorExportacion','EstadisticasExportacion'));
     }
 
     public function index(Request $request)
@@ -64,11 +73,14 @@ class RevisionPersonalController extends Controller
         // Inicializar la consulta para Revisor y RevisorGranel
         $queryRevisor = Revisor::with(['certificado.dictamen']);
         $queryRevisorGranel = RevisorGranel::with(['certificado.dictamen']);
+        $queryRevisorExportacion = RevisorExportacion::with(['certificado.dictamen']);
 
         // Filtrar por usuario si no es admin (ID 8)
         if ($userId != 1) {
             $queryRevisor->where('id_revisor', $userId);
             $queryRevisorGranel->where('id_revisor', $userId);
+            $queryRevisorGranel->where('id_revisor', $userId);
+            $queryRevisorExportacion->where('id_revisor', $userId);
         }
 
         // Filtros de búsqueda
@@ -90,6 +102,15 @@ class RevisionPersonalController extends Controller
                     ->orWhere('observaciones', 'LIKE', "%{$search}%")
                     ->orWhere('tipo_revision', 'LIKE', "%{$search}%");
             });
+
+            $queryRevisorExportacion->where(function ($q) use ($search) {
+                $q->where('id_revisor', 'LIKE', "%{$search}%")
+                    ->orWhereHas('certificado', function ($q) use ($search) {
+                        $q->where('num_certificado', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('observaciones', 'LIKE', "%{$search}%")
+                    ->orWhere('tipo_revision', 'LIKE', "%{$search}%");
+            });
         }
 
         // Paginación y ordenación
@@ -104,10 +125,12 @@ class RevisionPersonalController extends Controller
         // Obtener los totales de registros por separado
         $totalDataRevisor = $queryRevisor->count();
         $totalDataGranel = $queryRevisorGranel->count();
+        $totalDataExportacion = $queryRevisorExportacion->count();
 
         // Consultar los registros
         $revisores = $queryRevisor->offset($start)->limit($limit)->orderBy($order, $dir)->get();
         $revisoresGranel = $queryRevisorGranel->offset($start)->limit($limit)->orderBy($order, $dir)->get();
+        $revisoresExportacion = $queryRevisorExportacion->offset($start)->limit($limit)->orderBy($order, $dir)->get();
 
         // Formatear los datos para la vista
         $dataRevisor = $revisores->map(function ($revisor) use (&$start) {
@@ -168,15 +191,47 @@ class RevisionPersonalController extends Controller
             ];
         });
 
+        ///EXPORTACION
+        $dataExportacion = $revisoresExportacion->map(function ($revisor) use (&$start) {
+            $nameRevisor = $revisor->user->name ?? null;
+            $tipoDictamen = $revisor->certificado && $revisor->certificado->dictamen ? $revisor->certificado->dictamen->tipo_dictamen : null;
+            $numDictamen = $revisor->certificado && $revisor->certificado->dictamen ? $revisor->certificado->dictamen->num_dictamen : null;
+            $fechaVigencia = $revisor->certificado ? $revisor->certificado->fecha_emision : null;
+            $fechaVencimiento = $revisor->certificado ? $revisor->certificado->fecha_vigencia : null;
+            $fechaCreacion = $revisor->created_at;
+            $fechaActualizacion = $revisor->updated_at;
+
+            return [
+                'id_revision' => $revisor->id_revision,
+                'fake_id' => ++$start,
+                'id_revisor' => $nameRevisor,
+                'id_revisor2' => $revisor->id_revisor2,
+                'observaciones' => $revisor->observaciones,
+                'num_certificado' => $revisor->certificado ? $revisor->certificado->num_certificado : null,
+                'id_certificado' => $revisor->certificado ? $revisor->certificado->id_certificado : null,
+                'tipo_dictamen' => $tipoDictamen,
+                'num_dictamen' => $numDictamen,
+                'fecha_vigencia' => Helpers::formatearFecha($fechaVigencia),
+                'fecha_vencimiento' => Helpers::formatearFecha($fechaVencimiento),
+                'fecha_creacion' => Helpers::formatearFecha($fechaCreacion),
+                'created_at' => Helpers::formatearFecha($revisor->created_at),
+                'updated_at' => Helpers::formatearFecha($revisor->updated_at),
+                'decision' => $revisor->decision,
+                'tipo_revision' => 'RevisorExportacion',
+            ];
+        });
+
+
+
         // Total de resultados
-        $totalData = $totalDataRevisor + $totalDataGranel;
+        $totalData = $totalDataRevisor + $totalDataGranel + $totalDataExportacion;
 
         // Devolver los resultados como respuesta JSON
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
             'recordsFiltered' => intval($totalData),
-            'data' => array_merge($dataRevisor->toArray(), $dataGranel->toArray()), // Combinacion
+            'data' => array_merge($dataRevisor->toArray(), $dataGranel->toArray(), $dataExportacion->toArray()), // Combinacion
         ]);
     }
     
@@ -593,6 +648,43 @@ class RevisionPersonalController extends Controller
         // Generar y mostrar el PDF
         return Pdf::loadView('pdfs.pre-certificado', $pdfData)->stream("Pre-certificado.pdf");
     }
-    
-//end
+
+
+
+///CERTIFICADOS EXPORTACION 
+public function calcularCertificadosExportacion($userId)
+{
+    $totalCertificadosExportacion = RevisorExportacion::where('id_revisor', $userId)->count();
+    $totalCertificadosExportacionGlobal = RevisorGranel::count();
+    $porcentajeExportacion = $totalCertificadosExportacion > 0 ? ($totalCertificadosExportacion / $totalCertificadosExportacionGlobal) * 100 : 0;
+
+    $certificadosPendientesExportacion = RevisorExportacion::where('id_revisor', $userId)
+        ->where(function ($query) {
+            $query->whereNull('decision')
+                ->orWhere('decision', ''); 
+        })
+        ->count();
+
+    $certificadosRevisadosExportacion = RevisorExportacion::where('id_revisor', $userId)
+        ->whereNotNull('decision')
+        ->count();
+
+    $porcentajePendientesExportacion = $totalCertificadosExportacion > 0 ? ($certificadosPendientesExportacion / $totalCertificadosExportacion) * 100 : 0;
+    $porcentajeRevisadosExportacion = $totalCertificadosExportacion > 0 ? ($certificadosRevisadosExportacion / $totalCertificadosExportacion) * 100 : 0;
+
+    return [
+        'totalCertificadosExportacion' => $totalCertificadosExportacion,
+        'porcentajeExportacion' => $porcentajeExportacion,
+        'certificadosPendientesExportacion' => $certificadosPendientesExportacion,
+        'porcentajePendientesExportacion' => $porcentajePendientesExportacion,
+        'certificadosRevisadosExportacion' => $certificadosRevisadosExportacion,
+        'porcentajeRevisadosExportacion' => $porcentajeRevisadosExportacion
+    ];  
 }
+
+
+
+
+ 
+
+}//end

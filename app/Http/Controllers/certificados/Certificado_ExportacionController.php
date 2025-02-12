@@ -215,7 +215,7 @@ public function update(Request $request, $id_certificado)
 
 
 
-///FUNCION PDF DICTAMEN EXPORTACION
+///FUNCION PDF CERTIFICADO EXPORTACION
 public function MostrarCertificadoExportacion($id_certificado) 
 {
     // Obtener los datos del certificado específico

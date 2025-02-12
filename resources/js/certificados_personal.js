@@ -70,7 +70,18 @@ $(function () {
                           <span class="fw-bold mt-1"></span>
                       </a>
                   `;
-              }
+              } else if (tipoRevision === 'RevisorExportacion') {
+                icono = `
+                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportacion" class="d-flex flex-column align-items-center">
+                        <div class="avatar me-2">
+                            <div class="avatar-initial bg-label-success rounded-3">
+                                <i class="ri-building-2-line ri-26px"></i>
+                            </div>
+                        </div>
+                        <span class="fw-bold mt-1"></span>
+                    </a>
+                `;
+            }
               return icono;
           }
         },
@@ -88,6 +99,10 @@ $(function () {
               </div>
               `;
             } else if (full['tipo_revision'] === 'RevisorGranel') {
+              return `<span class="fw-bold">
+                        ${$num_certificado}
+                      </span>`;
+            } else if (full['tipo_revision'] === 'RevisorExportacion') {
               return `<span class="fw-bold">
                         ${$num_certificado}
                       </span>`;
