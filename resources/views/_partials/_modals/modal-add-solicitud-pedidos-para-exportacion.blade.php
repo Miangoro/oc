@@ -450,16 +450,16 @@
                         tbody += `<td>${marcas[i].sku || 'N/A'}</td>`;
 
                         // Tipo
-                        tbody += `<td>${marcas[i].id_tipo|| 'N/A'}</td>`;
+                        tbody += `<td>${marcas[i].tipo.nombre|| 'N/A'}</td>`;
 
                         // Presentación
                         tbody += `<td>${marcas[i].presentacion || 'N/A'} ${marcas[i].unidad || ''}</td>`;
 
                         // Clase
-                        tbody += `<td>${marcas[i].id_clase || 'N/A'}</td>`;
+                        tbody += `<td>${marcas[i].clase.clase || 'N/A'}</td>`;
 
                         // Categoría
-                        tbody += `<td>${marcas[i].id_categoria || 'N/A'}</td>`;
+                        tbody += `<td>${marcas[i].categoria.categoria || 'N/A'}</td>`;
 
                         // Función para generar enlace de documentos
                         function generarEnlaceDocumento(documento, nombre) {
