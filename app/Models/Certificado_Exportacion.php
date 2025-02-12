@@ -19,7 +19,8 @@ class Certificado_Exportacion extends Model
         'id_dictamen',
         'fecha_emision',
         'fecha_vigencia',
-        'id_firmante'
+        'id_firmante',
+        'observaciones',
       ];
 
     // Método para obtener el nombre del registro que sirve para la trazabilidad

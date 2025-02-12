@@ -19,6 +19,7 @@ use App\Models\instalaciones;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class Certificado_InstalacionesController extends Controller
 {

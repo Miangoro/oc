@@ -10,8 +10,10 @@ use App\Models\Dictamen_Exportacion;
 use App\Models\User;
 use App\Models\empresa; 
 use App\Models\RevisorExportacion; 
+///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 
 class Certificado_ExportacionController extends Controller
@@ -132,6 +134,7 @@ public function index(Request $request)
 
 
 
+
 //FUNCION PARA REGISTRAR
 public function store(Request $request)
 {
@@ -153,6 +156,7 @@ public function store(Request $request)
 
 
 
+
 //FUNCION PARA ELIMINAR
 public function destroy($id_certificado)
 {
@@ -165,6 +169,7 @@ public function destroy($id_certificado)
         return response()->json(['error' => 'Error al eliminar'], 500);
     }
 }
+
 
 
 
@@ -215,6 +220,7 @@ public function update(Request $request, $id_certificado)
 
 
 
+
 ///FUNCION PDF CERTIFICADO EXPORTACION
 public function MostrarCertificadoExportacion($id_certificado) 
 {
@@ -254,6 +260,54 @@ public function MostrarCertificadoExportacion($id_certificado)
     //nombre al descargar
     return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
 }
+
+
+
+/*
+//FUNCION PARA REEXPEDIR CERTIFICADO EXPOTACION
+public function reexpedir(Request $request)
+{
+    try {
+        $request->validate([
+        'id_firmante' => 'required|integer',
+        'id_dictamen' => 'required|integer',
+        'num_certificado' => 'required|string',
+        'fecha_emision' => 'required|date',
+        'fecha_vigencia' => 'required|date',
+        'observaciones' => 'nullable|string',
+        ]);
+
+        $certificado = Certificado_Exportacion::findOrFail($request->id_certificado);
+
+        if ($request->accion_reexpedir == '1') {
+            $certificado->estatus = 1; 
+            $certificado->observaciones = $request->observaciones; 
+            $certificado->save();
+        } elseif ($request->accion_reexpedir == '2') {
+            $certificado->estatus = 1;
+            $certificado->observaciones = $request->observaciones; 
+            $certificado->save(); 
+
+            // Crear un nuevo registro de certificado (reexpedición)
+            $nuevoCertificado = new Certificado_Exportacion();
+            $nuevoCertificado->id_dictamen = $request->id_dictamen;
+            $nuevoCertificado->num_certificado = $request->num_certificado;
+            $nuevoCertificado->fecha_vigencia = $request->fecha_vigencia;
+            $nuevoCertificado->fecha_vencimiento = $request->fecha_vencimiento;
+            $nuevoCertificado->id_firmante = $request->id_firmante;
+            $nuevoCertificado->estatus = 2;
+            
+            // Guarda el nuevo certificado
+            $nuevoCertificado->save();
+        }
+
+        return response()->json(['message' => 'Certificado procesado correctamente.']);
+    } catch (\Exception $e) {
+        Log::error($e);
+        return response()->json(['message' => 'Error al procesar el certificado.', 'error' => $e->getMessage()], 500);
+    }
+}
+*/
 
 
 
