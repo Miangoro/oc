@@ -194,6 +194,8 @@ if (dt_user_table.length) {
                    `<a data-id="${full['id_certificado']}" class="dropdown-item delete-record  waves-effect text-danger"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
                    //Botón Asignar revisor
                    `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-warning"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
+                   //Botón Reexpedir Certificado
+                   `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor" class="dropdown-item waves-effect text-info reexpedir"> <i class="ri-file-edit-fill"></i> Reexpedir  </a>` +
                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
                  '<a href="' + userView + '" class="dropdown-item">View</a>' +
                  '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
@@ -707,6 +709,284 @@ $(document).on('click', '.pdf', function ()  {
       iframe.show();
     });
 });
+
+
+
+
+///REEXPEDIR CERTIFICADO
+//Evento para saber que certificado Reexpedir
+let isLoadingData = false;
+let fieldsValidated = []; 
+
+$(document).ready(function () {
+    $(document).on('click', '.reexpedir', function () {
+        var id_certificado = $(this).data('id');
+        console.log('ID Certificado para reexpedir:', id_certificado);
+        $('#reexpedir_id_certificado').val(id_certificado);
+        $('#modalAddReexCerExpor').modal('show');
+    });
+
+    $('#fecha_vigencia_rex').on('change', function () {
+        var fechaVigencia = $(this).val();
+        if (fechaVigencia) {
+            var fecha = moment(fechaVigencia, 'YYYY-MM-DD');
+            var fechaVencimiento = fecha.add(1, 'years').format('YYYY-MM-DD');
+            $('#fecha_vencimiento_rex').val(fechaVencimiento);
+        }
+    });
+
+    $(document).on('change', '#accion_reexpedir', function () {
+        var accionSeleccionada = $(this).val();
+        console.log('Acción seleccionada:', accionSeleccionada);
+        var id_certificado = $('#reexpedir_id_certificado').val();
+
+        if (accionSeleccionada && !isLoadingData) {
+            isLoadingData = true;
+            cargarDatosReexpedicion(id_certificado);
+        }
+
+        if (accionSeleccionada === '2') {
+            $('#campos_condicionales').slideDown();
+        }else {
+            $('#campos_condicionales').slideUp();
+        }
+    });
+
+    $(document).on('change', '#id_dictamen_rex', function () {
+      var tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');
+      console.log('Tipo de Dictamen seleccionado:', tipoDictamen);
+  
+      if (tipoDictamen === 1) {
+          $('#campos_productor').show();
+          addFieldValidation('maestro_mezcalero', 'El nombre del maestro mezcalero es obligatorio.');
+          addFieldValidation('num_autorizacion', 'El campo No. Autorización es obligatorio.', true);
+      } else {
+          $('#campos_productor').hide(); 
+          clearProductorFields();
+          removeFieldValidation('maestro_mezcalero');
+          removeFieldValidation('num_autorizacion');
+      }
+  
+      const shouldShowProductorFields = $('#accion_reexpedir').val() === '2' && tipoDictamen === 1;
+      if (shouldShowProductorFields) {
+          $('#campos_productor').show();
+      }
+
+  });
+
+  $(document).on('change', '#accion_reexpedir', function () {
+    var accionSeleccionada = $(this).val();
+    console.log('Acción seleccionada:', accionSeleccionada);
+    var id_certificado = $('#reexpedir_id_certificado').val();
+
+    let shouldShowProductorFields = false;
+
+    if (accionSeleccionada && !isLoadingData) {
+        isLoadingData = true;
+        cargarDatosReexpedicion(id_certificado);
+    }
+
+    $('#campos_productor').hide(); 
+
+    if (accionSeleccionada === '2') {
+      $('#campos_condicionales').slideDown();
+    }else {
+        $('#campos_condicionales').slideUp();
+    }
+
+    const tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');
+    if (tipoDictamen === 1) {
+        shouldShowProductorFields = true; 
+    }
+
+    if (shouldShowProductorFields) {
+        $('#campos_productor').show();
+    }
+});
+  
+  function cargarDatosReexpedicion(id_certificado) {
+      console.log('Cargando datos para la reexpedición con ID:', id_certificado);
+      clearFields();
+  
+      $.get(`/editCerExp/${id_certificado}/edit`)
+          .done(function (data) {
+              console.log('Respuesta completa:', data);
+  
+              if (data.error) {
+                  showError(data.error);
+                  return;
+              }
+  
+              $('#id_dictamen_rex').val(data.id_dictamen).trigger('change');
+  
+              $('#numero_certificado_rex').val(data.num_certificado);
+              $('#id_firmante_rex').val(data.id_firmante).trigger('change');
+              $('#fecha_vigencia_rex').val(data.fecha_vigencia);
+              $('#fecha_vencimiento_rex').val(data.fecha_vencimiento);
+              $('#observaciones_rex').val(data.observaciones);
+  
+              const tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');
+              console.log('Tipo de Dictamen seleccionado:', tipoDictamen);
+              if (Number(tipoDictamen) === 1) {
+                  $('#campos_productor').show(); 
+                  $('#maestro_mezcalero_rex').val(data.maestro_mezcalero || ''); 
+                  $('#no_autorizacion_rex').val(data.num_autorizacion || '');
+                  console.log('Campos de Productor cargados y mostrados.');
+              } else {
+                  $('#campos_productor').hide(); 
+                  clearProductorFields();
+                  console.log('Campos de Productor ocultos porque el tipo no es 1.');
+              }
+  
+              $('#accion_reexpedir').trigger('change'); 
+              isLoadingData = false;
+  
+              console.log('Campos de productor visibles:', $('#campos_productor').is(':visible'));
+          })
+          .fail(function () {
+              showError('No se pudieron cargar los datos para la reexpedición.');
+              isLoadingData = false;
+          });
+  }
+  
+    function clearFields() {
+        $('#maestro_mezcalero_rex').val('');
+        $('#no_autorizacion_rex').val('');
+        $('#numero_certificado_rex').val('');
+        $('#id_firmante_rex').val('');
+        $('#fecha_vigencia_rex').val('');
+        $('#fecha_vencimiento_rex').val('');
+        $('#observaciones_rex').val('');
+    }
+
+    function clearProductorFields() {
+        $('#maestro_mezcalero_rex').val(''); 
+        $('#no_autorizacion_rex').val(''); 
+    }
+
+    function showError(message) {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: message,
+            customClass: {
+                confirmButton: 'btn btn-danger'
+            }
+        });
+    }
+
+    function addFieldValidation(field, message, isNumeric = false) {
+        if (!fieldsValidated.includes(field)) {
+            const validators = {
+                notEmpty: {
+                    message: message
+                }
+            };
+            if (isNumeric) {
+                validators.numeric = {
+                    message: 'El campo debe contener solo números.'
+                };
+            }
+            validatorReexpedir.addField(field, {
+                validators: validators
+            });
+            fieldsValidated.push(field);
+        }
+    }
+
+    function removeFieldValidation(field) {
+        if (fieldsValidated.includes(field)) {
+            validatorReexpedir.removeField(field);
+            fieldsValidated = fieldsValidated.filter(f => f !== field);
+        }
+    }
+
+    $('#modalAddReexCerExpor').on('hidden.bs.modal', function () {
+        $('#formAddReexCerExpor')[0].reset();
+        clearFields();
+        $('#campos_condicionales').hide();
+        $('#campos_productor').hide();
+        fieldsValidated = []; 
+    });
+
+    const formReexpedir = document.getElementById('formAddReexCerExpor');
+    const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
+        fields: {
+            'accion_reexpedir': {
+                validators: {
+                    notEmpty: {
+                        message: 'Debes seleccionar una acción.'
+                    }
+                }
+            },
+            'observaciones': {
+                validators: {
+                    notEmpty: {
+                        message: 'El motivo de cancelación es obligatorio.'
+                    }
+                }
+            },
+            'num_certificado': {
+                validators: {
+                    notEmpty: {
+                        message: 'El número de certificado es obligatorio.'
+                    }
+                }
+            },
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: '.form-floating'
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+    }).on('core.form.valid', function () {
+        const formData = $(formReexpedir).serialize();
+
+        $.ajax({
+            url: $(formReexpedir).attr('action'),
+            method: 'POST',
+            data: formData,
+            success: function (response) {
+                $('#modalAddReexCerExpor').modal('hide');
+                formReexpedir.reset();
+
+                dt_user_table.DataTable().ajax.reload();
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.message,
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                });
+            },
+            error: function (jqXHR) {
+                console.log('Error en la solicitud:', jqXHR);
+                let errorMessage = 'No se pudo registrar la reexpedición. Por favor, verifica los datos.';
+                try {
+                    let response = JSON.parse(jqXHR.responseText);
+                    errorMessage = response.message || errorMessage;
+                } catch (e) {
+                    console.error('Error al parsear la respuesta del servidor:', e);
+                }
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: errorMessage,
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        });
+    });
+});
+
 
 
 

@@ -263,18 +263,23 @@ public function MostrarCertificadoExportacion($id_certificado)
 
 
 
-/*
+
 //FUNCION PARA REEXPEDIR CERTIFICADO EXPOTACION
 public function reexpedir(Request $request)
 {
     try {
         $request->validate([
-        'id_firmante' => 'required|integer',
-        'id_dictamen' => 'required|integer',
-        'num_certificado' => 'required|string',
-        'fecha_emision' => 'required|date',
-        'fecha_vigencia' => 'required|date',
-        'observaciones' => 'nullable|string',
+            'accion_reexpedir' => 'required|in:1,2', 
+            'id_certificado' => 'required|exists:certificados,id_certificado',
+            'num_certificado' => 'required|string|max:25',
+            'id_dictamen' => 'required|integer',
+            'fecha_emision' => 'required|date',
+            'fecha_vigencia' => 'required|date',
+            'id_firmante' => 'required|integer',
+            'observaciones' => 'nullable|string',
+
+            /*'maestro_mezcalero' => 'nullable|string|max:60',
+            'num_autorizacion' => 'nullable|integer',*/
         ]);
 
         $certificado = Certificado_Exportacion::findOrFail($request->id_certificado);
@@ -290,13 +295,16 @@ public function reexpedir(Request $request)
 
             // Crear un nuevo registro de certificado (reexpedición)
             $nuevoCertificado = new Certificado_Exportacion();
-            $nuevoCertificado->id_dictamen = $request->id_dictamen;
             $nuevoCertificado->num_certificado = $request->num_certificado;
+            $nuevoCertificado->id_dictamen = $request->id_dictamen;
+            $nuevoCertificado->fecha_emision = $request->fecha_emision;
             $nuevoCertificado->fecha_vigencia = $request->fecha_vigencia;
-            $nuevoCertificado->fecha_vencimiento = $request->fecha_vencimiento;
             $nuevoCertificado->id_firmante = $request->id_firmante;
             $nuevoCertificado->estatus = 2;
-            
+
+            /*$nuevoCertificado->maestro_mezcalero = $request->maestro_mezcalero ?: null;
+            $nuevoCertificado->num_autorizacion = $request->num_autorizacion ?: null;*/
+
             // Guarda el nuevo certificado
             $nuevoCertificado->save();
         }
@@ -307,7 +315,7 @@ public function reexpedir(Request $request)
         return response()->json(['message' => 'Error al procesar el certificado.', 'error' => $e->getMessage()], 500);
     }
 }
-*/
+
 
 
 

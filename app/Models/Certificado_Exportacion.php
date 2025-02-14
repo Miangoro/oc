@@ -20,6 +20,7 @@ class Certificado_Exportacion extends Model
         'fecha_emision',
         'fecha_vigencia',
         'id_firmante',
+        'estatus',
         'observaciones',
       ];
 
