@@ -61,14 +61,12 @@
             border-collapse: collapse;
         }
 
-        th,
         td {
             border: 2px solid black;
             padding-top: 8px;
             padding-bottom: 8px;
             text-align: center;
             font-size: 11px;
-
         }
 
         th {
@@ -76,7 +74,6 @@
             color: white;
             text-align: center;
             font-size: 11px;
-
         }
 
         .td-margins {
@@ -105,8 +102,6 @@
             border-right: none;
             border-left: 1px solid black;
         }
-
-
 
         .titulos {
             font-size: 22px;
@@ -150,9 +145,6 @@
             page-break-before: always;
         }
 
-
-
-
         .sello {
             text-align: right;
             font-size: 11px;
@@ -163,8 +155,6 @@
             top: 825px;
             font-family: 'Arial Negrita' !important;
         }
-
-
 
         .textx, .textsello {
             line-height: 1.2;
@@ -191,13 +181,30 @@
             top: -20px; 
             width: 240px;
         }
+
+        .watermark-cancelado {
+            font-family: Arial;
+            color: red;
+            position: fixed;
+            top: 48%;
+            left: 45%;
+            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
+            opacity: 0.5;
+            /* Opacidad predeterminada */
+            letter-spacing: 3px;
+            font-size: 150px;
+            white-space: nowrap;
+            z-index:-1;
+        }
+
     </style>
 </head>
 
 <body>
 
+    <!-- Aparece la marca de agua solo si la variable 'watermarkText' tiene valor -->
     @if ($watermarkText)
-        <div class="watermark">
+        <div class="watermark-cancelado">
             Cancelado
         </div>
     @endif

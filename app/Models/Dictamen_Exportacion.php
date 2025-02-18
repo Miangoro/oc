@@ -20,7 +20,9 @@ class Dictamen_Exportacion extends Model
         'id_inspeccion',
         'fecha_emision',
         'fecha_vigencia',
-        'id_firmante'
+        'id_firmante',
+        'estatus',
+        'observaciones',
       ];
 
       // Método para obtener el nombre del registro que sirve para la trazabilidad
@@ -39,14 +41,5 @@ class Dictamen_Exportacion extends Model
             return $this->belongsTo(instalaciones::class, 'id_instalacion', 'id_instalacion');
         }
 
-        /*Public function certificado()
-        {
-            return $this->belongsTo(Certificados::class, 'id_dictamen', 'id_dictamen');   
-        }  
-        
-        public function firmante()
-        {
-            return $this->belongsTo(User::class, 'id_firmante', 'id');
-        }*/
 
 }

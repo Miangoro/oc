@@ -9,9 +9,10 @@ use App\Models\Dictamen_Exportacion;
 use App\Models\inspecciones; 
 use App\Models\User;
 use App\Models\empresa; 
-
+//Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Instalaciones; 
 use App\Models\solicitudesModel;
@@ -97,6 +98,7 @@ public function index(Request $request)
             //MANDA LOS DATOS AL JS
                 $nestedData['id_dictamen'] = $user->id_dictamen;
                 $nestedData['num_dictamen'] = $user->num_dictamen;
+                $nestedData['estatus'] = $user->estatus;
                 $nestedData['id_inspeccion'] = $user->inspeccione->num_servicio;
                 ///numero y nombre empresa
                 $empresa = $user->inspeccione->solicitud->empresa;
@@ -232,8 +234,8 @@ public function MostrarDictamenExportacion($id_dictamen)
     $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
     $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
 
-    // Determinar si la marca de agua debe ser visible
-    $watermarkText = $data->estatus === 'Cancelado';
+    //Determinar si la marca de agua debe ser visible
+    $watermarkText = $data->estatus == 1;
 
     $pdf = Pdf::loadView('pdfs.dictamen_exportacion_ed2', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
@@ -253,8 +255,71 @@ public function MostrarDictamenExportacion($id_dictamen)
 
 
 
+//FUNCION PARA REEXPEDIR 
+public function reexpedir(Request $request)
+{
+    try {
+        $request->validate([
+            'accion_reexpedir' => 'required|in:1,2',
+            'observaciones' => 'nullable|string',
+        ]);
+
+        if ($request->accion_reexpedir == '2') {
+            $request->validate([
+                'id_dictamen' => 'required|exists:dictamenes_exportacion,id_dictamen',
+                'num_dictamen' => 'required|string|max:25',
+                'id_inspeccion' => 'required|integer',
+                'fecha_emision' => 'required|date',
+                'fecha_vigencia' => 'required|date',
+                'id_firmante' => 'required|integer',
+            ]);
+        }
+
+        $dictamen = Dictamen_Exportacion::findOrFail($request->id_dictamen);
+
+        if ($request->accion_reexpedir == '1') {
+            $dictamen->estatus = 1; 
+            // Decodificar el JSON actual
+            $observacionesActuales = json_decode($dictamen->observaciones, true);
+            // Actualiza solo 'observaciones' sin modificar 'id_certificado_sustituye'
+            $observacionesActuales['observaciones'] = $request->observaciones;
+            // Volver a codificar el array y asignarlo a $certificado->observaciones
+            $dictamen->observaciones = json_encode($observacionesActuales); 
+            $dictamen->save();
+        } elseif ($request->accion_reexpedir == '2') {
+            $dictamen->estatus = 1;
+                $observacionesActuales = json_decode($dictamen->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $dictamen->observaciones = json_encode($observacionesActuales);
+            $dictamen->save(); 
 
 
+            // Crear un nuevo registro de reexpedición
+            $nuevoDictamen = new Dictamen_Exportacion();
+            $nuevoDictamen->num_dictamen = $request->num_dictamen;
+            $nuevoDictamen->id_inspeccion = $request->id_inspeccion;
+            $nuevoDictamen->fecha_emision = $request->fecha_emision;
+            $nuevoDictamen->fecha_vigencia = $request->fecha_vigencia;
+            $nuevoDictamen->id_firmante = $request->id_firmante;
+            $nuevoDictamen->estatus = 2;
+            $nuevoDictamen->observaciones = json_encode([
+                'id_dictamen_sustituye' => $request->id_dictamen,
+                ]);
+            // Guardar
+            $nuevoDictamen->save();
+        }
 
-
+        return response()->json(['message' => 'Dictamen procesado correctamente.']);
+    } catch (\Exception $e) {
+        Log::error($e);
+        return response()->json(['message' => 'Error al procesar el dictamen.', 'error' => $e->getMessage()], 500);
+    }
 }
+
+
+
+
+
+
+
+}//end-classController

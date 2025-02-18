@@ -73,6 +73,7 @@
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-dictamen_exportacion')
+@include('_partials/_modals/modal-reexpedir-dictamen-exportacion')
 <!-- /Modal -->
 
 @endsection

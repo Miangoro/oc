@@ -84,7 +84,7 @@ initializeSelect2(select2Elements);
           render: function(data, type, row) {
               return `
               <strong>${data.numero_cliente}</strong><br>
-                  <span style="font-size:11px">${data.razon_social}<span>
+                  <span style="font-size:12px">${data.razon_social}<span>
               `;
             }
          },
@@ -124,7 +124,7 @@ initializeSelect2(select2Elements);
 
           {
             // Tabla 4
-            targets: 3,
+            targets: 4,
             searchable: true,
             render: function (data, type, full, meta) {
               var $fech = full['fechas'];
@@ -152,15 +152,19 @@ initializeSelect2(select2Elements);
            render: function (data, type, full, meta) {
              return (
               '<div class="d-flex align-items-center gap-50">' +
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                   `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#editDictExpor" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar dictamen</a>` +
+                `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info') + `" data-bs-toggle="dropdown">` +
+                (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
+                '</button>' +
+                '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                   `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#editDictExpor" href="javascript:;" class="dropdown-item text-info edit-record"><i class="ri-edit-box-line ri-20px"></i> Editar dictamen</a>` +
                    `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar dictamen</a>` +
+                   //Botón Reexpedir Certificado
+                   `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalAddReexDicExpor" class="dropdown-item waves-effect reexpedir"> <i class="ri-file-edit-fill"></i> Reexpedir/Cancelar</a>` +
                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
                  '<a href="' + userView + '" class="dropdown-item">View</a>' +
                  '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
                  '</div>' +
-               '</div>'
+              '</div>'
              );
            }
          }
@@ -425,6 +429,7 @@ const fv = FormValidation.formValidation(NuevoDictamenExport, {
                 }
             }
         },
+        
 
     },
     plugins: {
@@ -664,8 +669,240 @@ $(document).on('click', '.pdf', function ()  {
 
 
 
+
+///REEXPEDIR DICTAMEN 
+//Evento para saber que dictamen Reexpedir
+let isLoadingData = false;
+let fieldsValidated = []; 
+
+$(document).ready(function () {
+    $(document).on('click', '.reexpedir', function () {
+        var id_dictamen = $(this).data('id');
+        console.log('ID Dictamen para reexpedir:', id_dictamen);
+        $('#reexpedir_id_dictamen').val(id_dictamen);
+        $('#modalAddReexDicExpor').modal('show');
+    });
+
+    $('#fecha_emision_rex').on('change', function () {
+        var fecha_emision = $(this).val();
+        if (fecha_emision) {
+            var fecha = moment(fecha_emision, 'YYYY-MM-DD');
+            var fecha_vigencia = fecha.add(1, 'years').format('YYYY-MM-DD');
+            $('#fecha_vigencia_rex').val(fecha_vigencia);
+        }
+    });
+
+    $(document).on('change', '#accion_reexpedir', function () {
+        var accionSeleccionada = $(this).val();
+        console.log('Acción seleccionada:', accionSeleccionada);
+        var id_dictamen = $('#reexpedir_id_dictamen').val();
+
+        if (accionSeleccionada && !isLoadingData) {
+            isLoadingData = true;
+            cargarDatosReexpedicion(id_dictamen);
+        }
+
+        if (accionSeleccionada === '2') {
+          $('#campos_condicionales').slideDown();
+        }else {
+            $('#campos_condicionales').slideUp();
+        }
+
+
+    });
+
+
+
+  $(document).on('change', '#accion_reexpedir', function () {
+    var accionSeleccionada = $(this).val();
+    console.log('Acción seleccionada:', accionSeleccionada);
+    var id_dictamen = $('#reexpedir_id_dictamen').val();
+
+    let shouldShowProductorFields = false;
+
+    if (accionSeleccionada && !isLoadingData) {
+        isLoadingData = true;
+        cargarDatosReexpedicion(id_dictamen);
+    }
+
+    if (accionSeleccionada === '2') {
+      $('#campos_condicionales').slideDown();
+    }else {
+        $('#campos_condicionales').slideUp();
+    }
+
+});
+  
+  function cargarDatosReexpedicion(id_dictamen) {
+      console.log('Cargando datos para la reexpedición con ID:', id_dictamen);
+      clearFields();
+  
+      $.get(`/editar2/${id_dictamen}/edit`)
+          .done(function (data) {
+              console.log('Respuesta completa:', data);
+  
+              if (data.error) {
+                  showError(data.error);
+                  return;
+              }
+  
+              $('#id_inspeccion_rex').val(data.id_inspeccion).trigger('change');
+              $('#numero_dictamen_rex').val(data.num_dictamen);
+              $('#id_firmante_rex').val(data.id_firmante).trigger('change');
+              $('#fecha_emision_rex').val(data.fecha_emision);
+              $('#fecha_vigencia_rex').val(data.fecha_vigencia);
+              $('#observaciones_rex').val(data.observaciones);
+  
+ 
+  
+              $('#accion_reexpedir').trigger('change'); 
+              isLoadingData = false;
+  
+          })
+          .fail(function () {
+              showError('No se pudieron cargar los datos para la reexpedición.');
+              isLoadingData = false;
+          });
+  }
+  
+    function clearFields() {
+        $('#numero_dictamen_rex').val('');
+        $('#id_firmante_rex').val('');
+        $('#fecha_emision_rex').val('');
+        $('#fecha_vigencia_rex').val('');
+        $('#observaciones_rex').val('');
+    }
+
+  
+    function showError(message) {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: message,
+            customClass: {
+                confirmButton: 'btn btn-danger'
+            }
+        });
+    }
+
+
+
+    $('#modalAddReexDicExpor').on('hidden.bs.modal', function () {
+        $('#formAddReexDicExpor')[0].reset();
+        clearFields();
+        $('#campos_condicionales').hide();
+        fieldsValidated = []; 
+    });
+
+    const formReexpedir = document.getElementById('formAddReexDicExpor');
+    const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
+        fields: {
+            'accion_reexpedir': {
+                validators: {
+                    notEmpty: {
+                        message: 'Debes seleccionar una acción.'
+                    }
+                }
+            },
+            'observaciones': {
+                validators: {
+                    notEmpty: {
+                        message: 'El motivo de cancelación es obligatorio.'
+                    }
+                }
+            },
+            'num_dictamen': {
+                validators: {
+                    notEmpty: {
+                        message: 'El número de dictamen es obligatorio.'
+                    }
+                }
+            },
+            'id_inspeccion': {
+                validators: {
+                    notEmpty: {
+                        message: 'Debes seleccionar una acción.'
+                    }
+                }
+            },
+            'id_firmante': {
+                validators: {
+                    notEmpty: {
+                        message: 'Debes seleccionar una acción.'
+                    }
+                }
+            },
+            'fecha_emision': {
+                validators: {
+                    notEmpty: {
+                        message: 'Debes seleccionar una acción.'
+                    }
+                }
+            },
+            'fecha_vigencia': {
+                validators: {
+                    notEmpty: {
+                        message: 'Debes seleccionar una acción.'
+                    }
+                }
+            },
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: '.form-floating'
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+    }).on('core.form.valid', function () {
+        const formData = $(formReexpedir).serialize();
+
+        $.ajax({
+            url: $(formReexpedir).attr('action'),
+            method: 'POST',
+            data: formData,
+            success: function (response) {
+                $('#modalAddReexDicExpor').modal('hide');
+                formReexpedir.reset();
+
+                dt_user_table.DataTable().ajax.reload();
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.message,
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                });
+            },
+            error: function (jqXHR) {
+                console.log('Error en la solicitud:', jqXHR);
+                let errorMessage = 'No se pudo registrar la reexpedición. Por favor, verifica los datos.';
+                try {
+                    let response = JSON.parse(jqXHR.responseText);
+                    errorMessage = response.message || errorMessage;
+                } catch (e) {
+                    console.error('Error al parsear la respuesta del servidor:', e);
+                }
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: errorMessage,
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        });
+    });
+});
+
+
  
  
  
- });
+ });//end-function(jquery)
  

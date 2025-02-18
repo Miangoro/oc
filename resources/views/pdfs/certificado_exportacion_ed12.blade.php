@@ -122,13 +122,36 @@
             text-align: center;
             padding: 10px;
         }
+
+        .watermark-cancelado {
+            font-family: Arial;
+            color: red;
+            position: fixed;
+            top: 48%;
+            left: 45%;
+            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
+            opacity: 0.5;
+            /* Opacidad predeterminada */
+            letter-spacing: 3px;
+            font-size: 150px;
+            white-space: nowrap;
+            z-index:-1;
+        }
+
     </style>
 </head>
 
 <body>
+    <!-- Aparece la marca de agua solo si la variable 'watermarkText' tiene valor -->
+    @if ($watermarkText)
+        <div class="watermark-cancelado">
+            Cancelado
+        </div>
+    @endif
+ 
+
     <div class="img-background"></div>
     <div class="img-background-left"></div>
-
 
     <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}"
         style="width: 300px; float: left; margin-left: -20px; margin-top: -20px;" alt="logo de CIDAM 3D">

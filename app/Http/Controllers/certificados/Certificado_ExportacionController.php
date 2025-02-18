@@ -90,8 +90,9 @@ public function index(Request $request)
             foreach ($users as $user) {
             //MANDA LOS DATOS AL JS
                 $nestedData['id_certificado'] = $user->id_certificado;
-                $nestedData['no_dictamen'] = $user->dictamen->num_dictamen;
+                $nestedData['dictamen'] = $user->dictamen->id_dictamen;
                 $nestedData['num_certificado'] = $user->num_certificado;
+                $nestedData['estatus'] = $user->estatus;
                 ///Folio y no. servicio
                 $nestedData['folio'] = $user->dictamen->inspeccione->solicitud->folio;
                 $nestedData['n_servicio'] = $user->dictamen->inspeccione->num_servicio;
@@ -246,7 +247,7 @@ public function MostrarCertificadoExportacion($id_certificado)
         ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'N/A' : 'N/A';
     $estado = $data->dictamen->inspeccione->solicitud->empresa->estados->nombre;
     //Determinar si la marca de agua debe ser visible
-    $watermarkText = $data->estatus === 'Cancelado';
+    $watermarkText = $data->estatus == 1;
 
     $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
@@ -257,6 +258,7 @@ public function MostrarCertificadoExportacion($id_certificado)
         'estado' => $estado,
         'watermarkText' => $watermarkText,
     ]);
+    
     //nombre al descargar
     return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
 }
@@ -269,29 +271,42 @@ public function reexpedir(Request $request)
 {
     try {
         $request->validate([
-            'accion_reexpedir' => 'required|in:1,2', 
-            'id_certificado' => 'required|exists:certificados,id_certificado',
-            'num_certificado' => 'required|string|max:25',
-            'id_dictamen' => 'required|integer',
-            'fecha_emision' => 'required|date',
-            'fecha_vigencia' => 'required|date',
-            'id_firmante' => 'required|integer',
+            'accion_reexpedir' => 'required|in:1,2',
             'observaciones' => 'nullable|string',
-
-            /*'maestro_mezcalero' => 'nullable|string|max:60',
-            'num_autorizacion' => 'nullable|integer',*/
         ]);
+
+        if ($request->accion_reexpedir == '2') {
+            $request->validate([
+                'id_certificado' => 'required|exists:certificados,id_certificado',
+                'num_certificado' => 'required|string|max:25',
+                'id_dictamen' => 'required|integer',
+                'fecha_emision' => 'required|date',
+                'fecha_vigencia' => 'required|date',
+                'id_firmante' => 'required|integer',
+                /*'maestro_mezcalero' => 'nullable|string|max:60',
+                'num_autorizacion' => 'nullable|integer',*/
+            ]);
+        }
 
         $certificado = Certificado_Exportacion::findOrFail($request->id_certificado);
 
         if ($request->accion_reexpedir == '1') {
             $certificado->estatus = 1; 
-            $certificado->observaciones = $request->observaciones; 
+            //$certificado->observaciones = $request->observaciones;
+                // Decodificar el JSON actual
+                $observacionesActuales = json_decode($certificado->observaciones, true);
+                // Actualiza solo 'observaciones' sin modificar 'id_certificado_sustituye'
+                $observacionesActuales['observaciones'] = $request->observaciones;
+                // Volver a codificar el array y asignarlo a $certificado->observaciones
+            $certificado->observaciones = json_encode($observacionesActuales); 
             $certificado->save();
         } elseif ($request->accion_reexpedir == '2') {
             $certificado->estatus = 1;
-            $certificado->observaciones = $request->observaciones; 
+                $observacionesActuales = json_decode($certificado->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $certificado->observaciones = json_encode($observacionesActuales);
             $certificado->save(); 
+
 
             // Crear un nuevo registro de certificado (reexpedición)
             $nuevoCertificado = new Certificado_Exportacion();
@@ -301,10 +316,11 @@ public function reexpedir(Request $request)
             $nuevoCertificado->fecha_vigencia = $request->fecha_vigencia;
             $nuevoCertificado->id_firmante = $request->id_firmante;
             $nuevoCertificado->estatus = 2;
-
+            $nuevoCertificado->observaciones = json_encode([
+                'id_certificado_sustituye' => $request->id_certificado,
+                ]);
             /*$nuevoCertificado->maestro_mezcalero = $request->maestro_mezcalero ?: null;
             $nuevoCertificado->num_autorizacion = $request->num_autorizacion ?: null;*/
-
             // Guarda el nuevo certificado
             $nuevoCertificado->save();
         }

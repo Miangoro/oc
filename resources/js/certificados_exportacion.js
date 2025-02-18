@@ -93,7 +93,7 @@ if (dt_user_table.length) {
          { data: 'num_certificado' },
          { data: 'fechas' },
          { data: '' },
-         { data: 'no_dictamen' },
+         { data: 'dictamen' },
          { data: '' },//Revisores
          { data: 'action' }
        ],
@@ -135,14 +135,16 @@ if (dt_user_table.length) {
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $id = full['id_certificado'];
-            return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+            return '<i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdf" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
           }
         },
         {
         targets: 6,
         render: function (data, type, full, meta) {
-          var $id_dictamen = full['no_dictamen'];
-          return '<span>' + $id_dictamen + '</span>';
+          /*var $id_dictamen = full['no_dictamen'];
+          return '<span>' + $id_dictamen + '</span>';*/
+          var $id_dictamen = full['dictamen'];
+            return '<i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdfDictamen" data-id="' + $id_dictamen + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
         }
         }, 
         {
@@ -188,18 +190,20 @@ if (dt_user_table.length) {
            render: function (data, type, full, meta) {
              return (
               '<div class="d-flex align-items-center gap-50">' +
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                   `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#editCerExpor" href="javascript:;" class="dropdown-item edit-record text-info"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-                   `<a data-id="${full['id_certificado']}" class="dropdown-item delete-record  waves-effect text-danger"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
-                   //Botón Asignar revisor
-                   `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-warning"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
-                   //Botón Reexpedir Certificado
-                   `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor" class="dropdown-item waves-effect text-info reexpedir"> <i class="ri-file-edit-fill"></i> Reexpedir  </a>` +
-                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
+              `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info') + `" data-bs-toggle="dropdown">` +
+              (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
+              '</button>' +
+                '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                  `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#editCerExpor" href="javascript:;" class="dropdown-item edit-record text-info"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+                  `<a data-id="${full['id_certificado']}" class="dropdown-item delete-record  waves-effect text-danger"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
+                  //Botón Asignar revisor
+                  `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-warning"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
+                  //Botón Reexpedir Certificado
+                  `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor" class="dropdown-item waves-effect text-info reexpedir"> <i class="ri-file-edit-fill"></i> Reexpedir/Cancelar</a>` +
+                 /* '<div class="dropdown-menu dropdown-menu-end m-0">' +
                  '<a href="' + userView + '" class="dropdown-item">View</a>' +
-                 '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-                 '</div>' +
+                 '<a href="javascript:;" class="dropdown-item">Suspend</a>' + */
+                '</div>' +
                '</div>'
              );
            }
@@ -685,7 +689,7 @@ $(document).ready(function() {
 
 
 
-///FORMATO PDF
+///FORMATO PDF CERTIFICADO EXPORTACION
 $(document).on('click', '.pdf', function ()  {
   var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
   var pdfUrl = '/certificado_exportacion/' + id; //Ruta del PDF
@@ -703,6 +707,28 @@ $(document).on('click', '.pdf', function ()  {
 
     $("#titulo_modal").text("Certificado de Exportación");
     $("#subtitulo_modal").text("PDF del Certificado");
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
+
+///FORMATO PDF DICTAMEN
+$(document).on('click', '.pdfDictamen', function ()  {
+  var id = $(this).data('id');
+  var pdfUrl = '/dictamen_cumplimiento_exportacion/' + id; //Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    //Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
+    $("#titulo_modal").text("Dictamen de Cumplimiento para Producto de Exportación");
+    $("#subtitulo_modal").text("PDF del Dictamen");
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();
@@ -994,6 +1020,8 @@ $(document).ready(function () {
 $(document).ready(function() {
   $('#tipoRevisor').on('change', function() {
       var tipoRevisor = $(this).val();
+
+      $('#nombreRevisor').empty().append('<option value="">Seleccione un revisor</option>');
 
       if (tipoRevisor) {
           var tipo = (tipoRevisor === '1') ? 1 : 4; 

@@ -937,6 +937,8 @@ Route::middleware(['auth'])->controller(DictamenExportacionController::class)->g
     Route::put('editar2/{id_dictamen}', 'update')->name('tipos.update');
     // Ruta PDF con ID
     Route::get('/dictamen_cumplimiento_exportacion/{id_dictamen}', 'MostrarDictamenExportacion')->name('PDF-dictamen-exportacion');
+    //Reexpedir
+    Route::post('/registrar/reexpedir', 'reexpedir')->name('dic-expor.reex');
 });
 
 //-------------------CERTIFICADO EXPORTACION-------------------
