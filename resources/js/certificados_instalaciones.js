@@ -169,7 +169,7 @@
         
                 // Retorna las fechas en formato de columnas
                 return `
-                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <div>
                         <div>${fechaVigenciaMessage}</div>
                         <div>${fechaVencimientoMessage}</div>
                         <div style="text-aling: center">${full['diasRestantes']}</div>
@@ -180,33 +180,30 @@
           {
             targets: 7,
             render: function (data, type, full, meta) {
-                var id_revisor = full['id_revisor'];   // Obtener el id_revisor
-                var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
-        
+                var $revisor_oc = full['id_revisor'];   // Obtener el id_revisor
+                var $revisor_consejo = full['id_revisor2']; // Obtener el id_revisor2
+                return '<span class="small"> <b>OC:</b> <strong style="color: red;">' + $revisor_oc + '</strong></span> <br> <span class="small"><b>Consejo:</b> <strong style="color: red;">' + $revisor_consejo + '</strong></span>';
+              /*
                 // Mensajes para los revisores
                 var revisorPersonal, revisorMiembro;
-        
                 // Para el revisor personal
                 if (id_revisor !== 'Sin asignar') {
                     revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>OC:</strong> ${id_revisor}</span>`;
                 } else {
                     revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>OC:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
                 }
-        
                 // Para el revisor miembro
                 if (id_revisor2 !== 'Sin asignar') {
                     revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> ${id_revisor2}</span>`;
                 } else {
                     revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
                 }
-        
                 // Retorna los revisores en formato HTML
-                return `
-                    <div style="display: flex; flex-direction: column;">
+                return ` <div style="display: flex; flex-direction: column;">
                         <div style="display: inline;">${revisorPersonal}</div>
                         <div style="display: inline;">${revisorMiembro}</div>
-                    </div>
-                `;
+                    </div> `;
+              */
             }
           },
           /*{
