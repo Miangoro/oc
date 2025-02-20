@@ -56,8 +56,8 @@
                     <th>No. Certificado</th>
                     <th>Fechas</th>
                     <th>Revisor Asignado</th>
-                    <th>Dictamen</th>
-                    <th>Certificado</th>
+                    {{-- <th>Dictamen</th> --}}
+                    {{-- <th>Certificado</th> --}}
                     <th>Vigencia</th>
                     <th>Estatus</th>
                     <th>Acciones</th>

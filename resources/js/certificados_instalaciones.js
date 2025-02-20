@@ -50,16 +50,15 @@
          { data: 'Cliente' },          //2  
          { data: 'domicilio_instalacion' },          //3
    
-         { data: 'num_servicio' }, //5
-         { data: 'num_dictamen' },    //6
-         { data: 'num_certificado' },    //7
-      
-         { data: 'fechas' },           //8
-         { data: 'id_revisor' },       //9
-         { data: 'Certificado' },      //10
-         { data: 'diasRestantes' }, //12
-         { data: 'estatus' },          //12
-         { data: 'actions'},           //13
+         { data: 'num_servicio' }, //4
+         { data: 'num_dictamen' },    //5
+         { data: 'num_certificado' },    //6
+         { data: 'fechas' },           //7
+         { data: 'id_revisor' },       //8
+         //{ data: 'Certificado' },
+         { data: 'diasRestantes' }, //9
+         { data: 'estatus' },          //10
+         { data: 'actions'},           //11
        ],
        columnDefs: [
          {
@@ -143,14 +142,16 @@
            targets: 5,
            render: function (data, type, full, meta) {
              var $num_dictamen = full['num_dictamen'];
-             return '<small>' + $num_dictamen + '</small>';
+             return `<small>`+ $num_dictamen + `</small>` +
+              `<i style class="ri-file-pdf-2-fill text-danger ri-28px pdf cursor-pointer" data-es="1" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['num_dictamen']} "></i>`;
            }
          }, 
          {
             targets: 6,
             render: function (data, type, full, meta) {
               var $num_certificado = full['num_certificado'];
-              return '<span class="fw-bold">' + $num_certificado + '</span>';
+              return '<span class="fw-bold">' + $num_certificado + '</span>' +
+                `<i style class="ri-file-pdf-2-fill text-danger ri-28px pdf cursor-pointer" data-es="2" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
             }
           },
           {
@@ -206,8 +207,8 @@
                 `;
             }
           },
-          {
-            // Abre el pdf del certificado
+          /*{
+            // Abre el pdf del DICTAMEN
             targets: 9,
             className: 'text-center',
             render: function (data, type, full, meta) {
@@ -216,20 +217,20 @@
           },
           {
             // Abre el pdf del certificado
-            targets: 10,
+            targets: 9,
             className: 'text-center',
             render: function (data, type, full, meta) {
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-es="2" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
             }
-          },
+          },*/
           {
-            targets: 11,
+            targets: 9,
             render: function (data, type, full, meta) {
               return full['diasRestantes'];
             }
           }, 
           {
-            target: 12, // Suponiendo que este es el índice de la columna que quieres actualizar
+            target: 10, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
                 var estatus = full['estatus']; // Obtener el estatus del certificado
                 
@@ -258,7 +259,7 @@
         },  
          {
            // Actions
-           targets: 13,
+           targets: 11,
            title: 'Acciones',
            searchable: false,
            orderable: false,

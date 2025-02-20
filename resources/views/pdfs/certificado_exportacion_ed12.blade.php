@@ -343,7 +343,7 @@
                 style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
                 Domicilio:</td>
             <td class="td-margins-none" style="text-align: left">
-                &nbsp;</td>
+                {{$dom_destino}}</td>
         </tr>
         <tr>
             <td class="td-margins-none"

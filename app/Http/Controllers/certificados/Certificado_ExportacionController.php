@@ -256,6 +256,25 @@ public function MostrarCertificadoExportacion($id_certificado)
     //Busca el registro del certificado que tiene el id igual a $id_sustituye
     Certificado_Exportacion::find($id_sustituye)->num_certificado ?? '' : '';
 
+    
+    //Obtener Caracteristicas de la solicitud
+    $json_data = '{"tipo_solicitud":"1","direccion_destinatario":"150","aduana_salida":"Aduena Salida","no_pedido":"N de Pedido","factura_proforma":"FacturaProforma_67b77c07d106d.pdf","detalles":[{"id_lote_envasado":4,"cantidad_botellas":100,"cantidad_cajas":50,"presentacion":100}]}';
+    $data = json_decode($json_data, true);
+    //Acceder a los datos por separado
+    $tipo_solicitud = $data['tipo_solicitud'] ?? null;  // "1"
+    $direccion_destinatario = $data['direccion_destinatario'] ?? null;  // "150"
+    $aduana_salida = $data['aduana_salida'] ?? null;  // "Aduena Salida"
+    $no_pedido = $data['no_pedido'] ?? null;  // "N de Pedido"
+    $factura_proforma = $data['factura_proforma'] ?? null;  // "FacturaProforma_67b77c07d106d.pdf"
+    //Acceder a los detalles (ARRAY)
+    $detalles = $data['detalles'][0];  // Obtiene el primer objeto del array 'detalles'
+    $id_lote_envasado = $detalles['id_lote_envasado'] ?? null;  // "4"
+    $cantidad_botellas = $detalles['cantidad_botellas'] ?? null;  // "100"
+    $cantidad_cajas = $detalles['cantidad_cajas'] ?? null;  // "50"
+    $presentacion = $detalles['presentacion'] ?? null;  // "100"
+
+    //BUSCANDO ID'S DE LAS VARIABLES
+   
 
     $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
@@ -266,6 +285,27 @@ public function MostrarCertificadoExportacion($id_certificado)
         'estado' => $estado,
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
+        ///caracteristicas
+        /*'marca' => $estado,
+        'categoria_clase' => $estado,
+        'edad' => $estado,
+        'cer_granel' => $estado,
+        'volumen' => $estado,
+        'vol_alc' => $estado,
+        'n_analisis' => $estado,
+        'lote_granel' => $estado,
+        'botellas' => $estado,
+        'n_analisis_ajuste' => $estado,
+        'lote_envasado' => $estado,
+        'cajas' => $estado,
+        'tipo_maguey' => $estado,
+        'envasado_en' => $estado,
+        'folio_hologramas' => $estado,
+        'aduana' => $estado,
+        'fracc_arancelaria' => $estado,
+        'n_pedido' => $estado,*/
+        'dom_destino' => $direccion_destinatario,
+
     ]);
     
     //nombre al descargar
