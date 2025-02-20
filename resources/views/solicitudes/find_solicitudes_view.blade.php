@@ -168,7 +168,7 @@
         <h3 class="card-title mb-0 fw-bold">Solicitudes de servicio</h3>
     </div>
     <div class="card-datatable table-responsive">
-        <table style="font-size: 14px"  class="datatables-solicitudes table">
+        <table style="font-size: 14px"  class="datatables-solicitudes table table-bordered  table-hover">
             <thead class="table-dark">
                 <tr>
                     <th></th>
