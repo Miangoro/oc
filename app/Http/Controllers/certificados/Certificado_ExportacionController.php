@@ -258,22 +258,34 @@ public function MostrarCertificadoExportacion($id_certificado)
 
     
     //Obtener Caracteristicas de la solicitud
-    $json_data = '{"tipo_solicitud":"1","direccion_destinatario":"150","aduana_salida":"Aduena Salida","no_pedido":"N de Pedido","factura_proforma":"FacturaProforma_67b77c07d106d.pdf","detalles":[{"id_lote_envasado":4,"cantidad_botellas":100,"cantidad_cajas":50,"presentacion":100}]}';
-    $data = json_decode($json_data, true);
-    //Acceder a los datos por separado
-    $tipo_solicitud = $data['tipo_solicitud'] ?? null;  // "1"
-    $direccion_destinatario = $data['direccion_destinatario'] ?? null;  // "150"
-    $aduana_salida = $data['aduana_salida'] ?? null;  // "Aduena Salida"
-    $no_pedido = $data['no_pedido'] ?? null;  // "N de Pedido"
-    $factura_proforma = $data['factura_proforma'] ?? null;  // "FacturaProforma_67b77c07d106d.pdf"
-    //Acceder a los detalles (ARRAY)
-    $detalles = $data['detalles'][0];  // Obtiene el primer objeto del array 'detalles'
-    $id_lote_envasado = $detalles['id_lote_envasado'] ?? null;  // "4"
-    $cantidad_botellas = $detalles['cantidad_botellas'] ?? null;  // "100"
-    $cantidad_cajas = $detalles['cantidad_cajas'] ?? null;  // "50"
-    $presentacion = $detalles['presentacion'] ?? null;  // "100"
+$caracteristicas_json = $data->dictamen->inspeccione->solicitud->caracteristicas;
+// Verificar si las características existen
+if ($caracteristicas_json) {
+    // Decodificar el JSON
+    $caracteristicas = json_decode($caracteristicas_json, true);
+    //Acceder a los datos
+    $tipo_solicitud = $caracteristicas['tipo_solicitud'] ?? '';
+    $direccion_destinatario = $caracteristicas['direccion_destinatario'] ?? '';
+    $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
+    $no_pedido = $caracteristicas['no_pedido'] ?? '';
+    $factura_proforma = $caracteristicas['factura_proforma'] ?? '';
 
-    //BUSCANDO ID'S DE LAS VARIABLES
+    // Acceder a los detalles (que es un array)
+    $detalles = $caracteristicas['detalles'] ?? [];
+
+    foreach ($detalles as $detalle) {
+        $id_lote_envasado = $detalle['id_lote_envasado'] ?? '';
+        $cantidad_botellas = $detalle['cantidad_botellas'] ?? '';
+        $cantidad_cajas = $detalle['cantidad_cajas'] ?? '';
+        $presentacion = $detalle['presentacion'] ?? '';
+
+        // Mostrar los detalles
+        echo "Lote: $id_lote_envasado, Botellas: $cantidad_botellas, Cajas: $cantidad_cajas, Presentación: $presentacion<br>";
+    }
+
+} else {
+    return abort(404, 'No se encontraron características.');
+}
    
 
     $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF

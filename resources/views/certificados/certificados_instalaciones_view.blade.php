@@ -46,14 +46,14 @@
         <table class="datatables-users table">
             <thead class="table-dark">
                 <tr>
-                    <th>#</th>
-                    <th>ID</th>
+                     <th></th>
+                    {{--<th>ID</th> --}}
                     <th>Cliente</th>
                     <th>Instalación</th>
                     <!--<th>Tipo</th>-->
-                    <th>No. Servicio</th>
-                    <th>No. Dictamen</th>
                     <th>No. Certificado</th>
+                    <th>No. Dictamen</th>
+                    <th>No. Servicio</th>
                     <th>Fechas</th>
                     <th>Revisor Asignado</th>
                     {{--<th>Dictamen</th>

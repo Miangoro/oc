@@ -45,14 +45,14 @@
          url: baseUrl + 'certificados-list',
        },
        columns: [
-         { data: '#' },                //0
-         { data: 'fake_id' },          //1
+         { data: '' },                //0
+         //{ data: 'fake_id' },          //1
          { data: 'Cliente' },          //2  
          { data: 'domicilio_instalacion' },          //3
    
-         { data: 'num_servicio' }, //4
+         { data: 'num_certificado' }, //4
          { data: 'num_dictamen' },    //5
-         { data: 'num_certificado' },    //6
+         { data: 'num_servicio' },    //6
          { data: 'fechas' },           //7
          { data: 'id_revisor' },       //8
          //{ data: 'Certificado' },
@@ -71,16 +71,16 @@
              return '';
            }
          },
-         {
+         /*{
            searchable: false,
            orderable: false,
            targets: 1,
            render: function (data, type, full, meta) {
              return `<span>${full.fake_id}</span>`;
            }
-         },
+         },*/
          {
-          targets: 2,
+          targets: 1,
           render: function (data, type, full, meta) {
             var $numero_cliente = full['numero_cliente'];
             var $razon_social = full['razon_social'];
@@ -93,7 +93,7 @@
           }
         },
          {
-          targets: 3,
+          targets: 2,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $tipoDictamen = parseInt(full['tipo_dictamen']);
@@ -130,16 +130,16 @@
             return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span><br><small>${full['domicilio_instalacion']}</small>`;
           }     
         },
-        
         {
-          targets: 4,
+          targets: 3,
           render: function (data, type, full, meta) {
-            var $num_servicio = full['num_servicio'] ?? 'N/A';
-            return '<small>' + $num_servicio + '</small>';
+            var $num_certificado = full['num_certificado'];
+            return '<span class="fw-bold">' + $num_certificado + '</span>' +
+              `<i style class="ri-file-pdf-2-fill text-danger ri-28px pdf cursor-pointer" data-es="2" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
           }
         },
           {
-           targets: 5,
+           targets: 4,
            render: function (data, type, full, meta) {
              var $num_dictamen = full['num_dictamen'];
              return `<small>`+ $num_dictamen + `</small>` +
@@ -147,15 +147,15 @@
            }
          }, 
          {
-            targets: 6,
-            render: function (data, type, full, meta) {
-              var $num_certificado = full['num_certificado'];
-              return '<span class="fw-bold">' + $num_certificado + '</span>' +
-                `<i style class="ri-file-pdf-2-fill text-danger ri-28px pdf cursor-pointer" data-es="2" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
-            }
-          },
+          targets: 5,
+          render: function (data, type, full, meta) {
+            var $num_servicio = full['num_servicio'] ?? 'N/A';
+            return '<small>' + $num_servicio + '</small>';
+          }
+        },
+         
           {
-            targets: 7, // Suponiendo que este es el índice de la columna que quieres actualizar
+            targets: 6, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
         
                 // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
@@ -164,8 +164,8 @@
                 
         
                 // Definir los mensajes de fecha con formato
-                var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:</strong> ${$fecha_vigencia}</span>`;
-                var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vencimiento:</strong> ${$fecha_vencimiento}</span>`;
+                var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span>`;
+                var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vencimiento:<br></strong> ${$fecha_vencimiento}</span>`;
         
                 // Retorna las fechas en formato de columnas
                 return `
@@ -178,7 +178,7 @@
             }
           },   
           {
-            targets: 8,
+            targets: 7,
             render: function (data, type, full, meta) {
                 var id_revisor = full['id_revisor'];   // Obtener el id_revisor
                 var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
@@ -232,7 +232,7 @@
             }
           },*/
           {
-            target: 9, // Suponiendo que este es el índice de la columna que quieres actualizar
+            target: 8, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
                 var estatus = full['estatus']; // Obtener el estatus del certificado
                 
@@ -261,7 +261,7 @@
         },  
          {
            // Actions
-           targets: 10,
+           targets: 9,
            title: 'Acciones',
            searchable: false,
            orderable: false,
