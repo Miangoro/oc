@@ -52,4 +52,5 @@ class Certificado_Exportacion extends Model
         return $this->belongsTo(RevisorExportacion::class, 'id_certificado', 'id_certificado');
     }
 
+
 }

@@ -233,9 +233,14 @@ public function MostrarDictamenExportacion($id_dictamen)
     $fecha_emision2 = Helpers::formatearFecha($data->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
     $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
-
     //Determinar si la marca de agua debe ser visible
     $watermarkText = $data->estatus == 1;
+    //Obtener un valor específico del JSON
+    $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON actual
+    ['id_dictamen_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+    $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado 
+    //Busca el registro del certificado que tiene el id igual a $id_sustituye
+    Dictamen_Exportacion::find($id_sustituye)->num_dictamen ?? '' : '';
 
     $pdf = Pdf::loadView('pdfs.dictamen_exportacion_ed2', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
@@ -247,6 +252,7 @@ public function MostrarDictamenExportacion($id_dictamen)
         'fecha_emision' => $fecha_emision2,
         'fecha_vigencia' => $fecha_vigencia,
         'watermarkText' => $watermarkText,
+        'id_sustituye' => $nombre_id_sustituye,
     ]);
     //nombre al descarga
     return $pdf->stream('F-UV-04-18 Ver 2. Dictamen de Cumplimiento para Producto de Exportación.pdf');

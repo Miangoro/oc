@@ -249,6 +249,14 @@ public function MostrarCertificadoExportacion($id_certificado)
     //Determinar si la marca de agua debe ser visible
     $watermarkText = $data->estatus == 1;
 
+    //Obtener un valor específico del JSON
+    $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON actual
+    ['id_certificado_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+    $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado 
+    //Busca el registro del certificado que tiene el id igual a $id_sustituye
+    Certificado_Exportacion::find($id_sustituye)->num_certificado ?? '' : '';
+
+
     $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
         'expedicion' => $fecha1,
@@ -257,6 +265,7 @@ public function MostrarCertificadoExportacion($id_certificado)
         'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'estado' => $estado,
         'watermarkText' => $watermarkText,
+        'id_sustituye' => $nombre_id_sustituye,
     ]);
     
     //nombre al descargar

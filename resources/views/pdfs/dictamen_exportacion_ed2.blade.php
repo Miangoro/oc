@@ -281,8 +281,16 @@
             <td></td>
         </tr>
     </table>
-    <div class="pie" style="transform: translate(520px, 245px);">Entrada en vigor: 15-07-2024 <br>
-        F-UV-04-18 Ver 2s</div>
+
+    <div class="pie" style="transform: translate(520px, 210px);">
+        <!-- Aparece  solo si tiene valor -->
+        @if ($id_sustituye)
+        Este dictamen sustituye al: {{ $id_sustituye }}
+        @endif
+        <br>Entrada en vigor: 15-07-2024
+        <br>F-UV-04-18 Ver 2.
+    </div>
+
     <div class="footer-bar" style="line-height: 0.7;">
         <p class="font-lucida-sans-seminegrita" style="font-size: 11px"><b>www.cidam.org .
                 unidadverificacion@cidam.org</b></p>
@@ -290,6 +298,8 @@
             catálogo C.P. 58341. Morelia Michoacán</p>
     </div>
 
+
+    
     {{-- Segunda hoja --}}
     <div class="page-break"></div>
     <img src="{{ public_path('img_pdf/UVEM_logo.png') }}"
@@ -399,8 +409,15 @@
     </p>
 
 
-    <div class="pie" style="transform: translate(520px, 250px);">Entrada en vigor: 15-07-2024 <br>
-        F-UV-04-18 Ver 2s</div>
+    <div class="pie" style="transform: translate(520px, 230px);">
+        <!-- Aparece  solo si tiene valor -->
+        @if ($id_sustituye)
+        Este dictamen sustituye al: {{ $id_sustituye }}
+        @endif
+        <br>Entrada en vigor: 15-07-2024
+        <br>F-UV-04-18 Ver 2.
+    </div>
+
     <div class="footer-bar" style="line-height: 0.7;">
         <p class="font-lucida-sans-seminegrita" style="font-size: 11px"><b>www.cidam.org .
                 unidadverificacion@cidam.org</b></p>
