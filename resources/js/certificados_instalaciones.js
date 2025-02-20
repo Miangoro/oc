@@ -56,9 +56,9 @@
          { data: 'fechas' },           //7
          { data: 'id_revisor' },       //8
          //{ data: 'Certificado' },
-         { data: 'diasRestantes' }, //9
-         { data: 'estatus' },          //10
-         { data: 'actions'},           //11
+         //{ data: 'diasRestantes' }, //
+         { data: 'estatus' },          //9
+         { data: 'actions'},           //10
        ],
        columnDefs: [
          {
@@ -161,6 +161,7 @@
                 // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
                 var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A'; // Fecha de vigencia
                 var $fecha_vencimiento = full['fecha_vencimiento'] ?? 'N/A'; // Fecha de vencimiento
+                
         
                 // Definir los mensajes de fecha con formato
                 var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:</strong> ${$fecha_vigencia}</span>`;
@@ -171,6 +172,7 @@
                     <div style="display: flex; flex-direction: column; gap: 5px;">
                         <div>${fechaVigenciaMessage}</div>
                         <div>${fechaVencimientoMessage}</div>
+                        <div style="text-aling: center">${full['diasRestantes']}</div>
                     </div>
                 `;
             }
@@ -222,15 +224,15 @@
             render: function (data, type, full, meta) {
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-es="2" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
             }
-          },*/
+          },
           {
             targets: 9,
             render: function (data, type, full, meta) {
               return full['diasRestantes'];
             }
-          }, 
+          },*/
           {
-            target: 10, // Suponiendo que este es el índice de la columna que quieres actualizar
+            target: 9, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
                 var estatus = full['estatus']; // Obtener el estatus del certificado
                 
@@ -259,7 +261,7 @@
         },  
          {
            // Actions
-           targets: 11,
+           targets: 10,
            title: 'Acciones',
            searchable: false,
            orderable: false,
