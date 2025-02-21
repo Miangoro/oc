@@ -314,11 +314,11 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Aduana de despacho:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;">
-                &nbsp;</td>
+                {{$aduana}}</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Fracción Arancelaria:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;">
-                &nbsp;</td>
+                {{$lote_envasado}}</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">No.
                 de <br> pedido:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;">

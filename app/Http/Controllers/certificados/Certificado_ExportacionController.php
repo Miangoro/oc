@@ -10,6 +10,8 @@ use App\Models\Dictamen_Exportacion;
 use App\Models\User;
 use App\Models\empresa; 
 use App\Models\RevisorExportacion; 
+use App\Models\direcciones; 
+use App\Models\lotes_envasado;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -265,7 +267,12 @@ if ($caracteristicas_json) {
     $caracteristicas = json_decode($caracteristicas_json, true);
     //Acceder a los datos
     $tipo_solicitud = $caracteristicas['tipo_solicitud'] ?? '';
-    $direccion_destinatario = $caracteristicas['direccion_destinatario'] ?? '';
+
+
+    $direccion_destinatario = $caracteristicas['direccion_destinatario'] ?? null;
+    $direccion = $direccion_destinatario ? direcciones::find($direccion_destinatario)->direccion ?? '' : '';
+
+
     $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
     $no_pedido = $caracteristicas['no_pedido'] ?? '';
     $factura_proforma = $caracteristicas['factura_proforma'] ?? '';
@@ -274,7 +281,11 @@ if ($caracteristicas_json) {
     $detalles = $caracteristicas['detalles'] ?? [];
 
     foreach ($detalles as $detalle) {
-        $id_lote_envasado = $detalle['id_lote_envasado'] ?? '';
+        //$id_lote_envasado = $detalle['id_lote_envasado'] ?? '';
+    $id_lote_envasado = $detalle['id_lote_envasado'] ?? '';
+    $lote_envasado = $id_lote_envasado ? lotes_envasado::find($id_lote_envasado)->nombre ?? '' : '';
+
+
         $cantidad_botellas = $detalle['cantidad_botellas'] ?? '';
         $cantidad_cajas = $detalle['cantidad_cajas'] ?? '';
         $presentacion = $detalle['presentacion'] ?? '';
@@ -316,7 +327,10 @@ if ($caracteristicas_json) {
         'aduana' => $estado,
         'fracc_arancelaria' => $estado,
         'n_pedido' => $estado,*/
-        'dom_destino' => $direccion_destinatario,
+        'dom_destino' => $direccion,
+        'aduana' => $aduana_salida,
+        'lote_envasado' => $lote_envasado,
+
 
     ]);
     
