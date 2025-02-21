@@ -230,6 +230,7 @@ public function MostrarCertificadoExportacion($id_certificado)
     // Obtener los datos del certificado específico
     //$datos = Dictamen_Exportacion::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);    
     $data = Certificado_Exportacion::find($id_certificado);
+    $datos = $data->dictamen->inspeccione->solicitud;
 
     if (!$data) {
         return abort(404, 'Certificado no encontrado');
@@ -301,6 +302,7 @@ if ($caracteristicas_json) {
 
     $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
+        'datos' =>$datos,
         'expedicion' => $fecha1,
         'vigencia' => $fecha2,
         'n_cliente' => $numero_cliente,

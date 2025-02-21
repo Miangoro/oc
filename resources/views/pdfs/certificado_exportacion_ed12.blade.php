@@ -243,7 +243,7 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Marca:</td>
             <td style="text-align: left; padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
+                {{ $datos->lote_envasado->marca->marca }} </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Categoría y Clase:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
@@ -271,11 +271,11 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 de análisis:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
+                {{ $datos->lote_granel->folio_fq }} </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 lote granel:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
+                {{ $datos->lote_granel->nombre_lote }} </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">
                 Botellas:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
@@ -289,7 +289,7 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 de lote envasado:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
+                {{ $datos->lote_envasado->nombre }}</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">Cajas:
             </td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
