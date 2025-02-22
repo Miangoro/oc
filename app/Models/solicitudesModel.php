@@ -183,6 +183,23 @@ public function clases_agave()
     }
 
 
+    public function getIdDireccion_DestinoAttribute()
+    {
+        $caracteristicas = json_decode($this->caracteristicas, true);
+    
+        // Busca directamente en la raíz del JSON
+        if (isset($caracteristicas['direccion_destinatario'])) {
+            return $caracteristicas['direccion_destinatario'];
+        }
+ 
+        // Devuelve null si no se encuentra
+        return null;
+    }
+
+    public function direccion_destino()
+    {
+        return $this->belongsTo(direcciones::class, 'direccion_destinatario', 'id_direccion');
+    }
     
 
     

@@ -289,7 +289,7 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 de lote envasado:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                {{ $datos->lote_envasado->nombre }}</td>
+                {{ $lote_envasado }}</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">Cajas:
             </td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
@@ -322,7 +322,7 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">No.
                 de <br> pedido:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;">
-                &nbsp;
+                {{ $n_pedido }}
             </td>
         </tr>
     </table>

@@ -230,7 +230,6 @@ public function MostrarCertificadoExportacion($id_certificado)
     // Obtener los datos del certificado específico
     //$datos = Dictamen_Exportacion::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);    
     $data = Certificado_Exportacion::find($id_certificado);
-    $datos = $data->dictamen->inspeccione->solicitud;
 
     if (!$data) {
         return abort(404, 'Certificado no encontrado');
@@ -260,39 +259,25 @@ public function MostrarCertificadoExportacion($id_certificado)
     Certificado_Exportacion::find($id_sustituye)->num_certificado ?? '' : '';
 
     
-    //Obtener Caracteristicas de la solicitud
-$caracteristicas_json = $data->dictamen->inspeccione->solicitud->caracteristicas;
+$datos = $data->dictamen->inspeccione->solicitud;//Obtener Morelo-Relacion de ID
+$caracteristicas_json = $data->dictamen->inspeccione->solicitud->caracteristicas;//Obtener Caracteristicas de la solicitud
 // Verificar si las características existen
 if ($caracteristicas_json) {
     // Decodificar el JSON
     $caracteristicas = json_decode($caracteristicas_json, true);
     //Acceder a los datos
-    $tipo_solicitud = $caracteristicas['tipo_solicitud'] ?? '';
-
-
     $direccion_destinatario = $caracteristicas['direccion_destinatario'] ?? null;
     $direccion = $direccion_destinatario ? direcciones::find($direccion_destinatario)->direccion ?? '' : '';
-
-
     $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
     $no_pedido = $caracteristicas['no_pedido'] ?? '';
-    $factura_proforma = $caracteristicas['factura_proforma'] ?? '';
 
     // Acceder a los detalles (que es un array)
     $detalles = $caracteristicas['detalles'] ?? [];
 
     foreach ($detalles as $detalle) {
-        //$id_lote_envasado = $detalle['id_lote_envasado'] ?? '';
-    $id_lote_envasado = $detalle['id_lote_envasado'] ?? '';
-    $lote_envasado = $id_lote_envasado ? lotes_envasado::find($id_lote_envasado)->nombre ?? '' : '';
-
-
         $cantidad_botellas = $detalle['cantidad_botellas'] ?? '';
         $cantidad_cajas = $detalle['cantidad_cajas'] ?? '';
         $presentacion = $detalle['presentacion'] ?? '';
-
-        // Mostrar los detalles
-        echo "Lote: $id_lote_envasado, Botellas: $cantidad_botellas, Cajas: $cantidad_cajas, Presentación: $presentacion<br>";
     }
 
 } else {
@@ -302,7 +287,7 @@ if ($caracteristicas_json) {
 
     $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
-        'datos' =>$datos,
+        'datos' =>$datos,//modelo-relacion
         'expedicion' => $fecha1,
         'vigencia' => $fecha2,
         'n_cliente' => $numero_cliente,
@@ -310,6 +295,11 @@ if ($caracteristicas_json) {
         'estado' => $estado,
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
+        //caracteristicas modelo-relacion
+        'lote_envasado' => $datos->lote_envasado->nombre,
+
+        'dom_cestino' => $datos->direccion_destino->direccion,
+        //'dom_destino' => $direccion,
         ///caracteristicas
         /*'marca' => $estado,
         'categoria_clase' => $estado,
@@ -327,12 +317,9 @@ if ($caracteristicas_json) {
         'envasado_en' => $estado,
         'folio_hologramas' => $estado,
         'aduana' => $estado,
-        'fracc_arancelaria' => $estado,
-        'n_pedido' => $estado,*/
-        'dom_destino' => $direccion,
+        'fracc_arancelaria' => $estado,*/
+        'n_pedido' => $no_pedido,
         'aduana' => $aduana_salida,
-        'lote_envasado' => $lote_envasado,
-
 
     ]);
     
