@@ -181,26 +181,24 @@ public function clases_agave()
                 ->where('tipo_validacion', 'ui')
                 ->orderByDesc('fecha_realizo'); // Ordenar por la fecha más reciente
     }
-
-
-    public function getIdDireccion_DestinoAttribute()
-    {
-        $caracteristicas = json_decode($this->caracteristicas, true);
     
-        // Busca directamente en la raíz del JSON
-        if (isset($caracteristicas['direccion_destinatario'])) {
-            return $caracteristicas['direccion_destinatario'];
+
+    
+
+        // Accesor para obtener el id de la dirección destinataria desde el JSON
+        public function getIdDireccionDestinoAttribute()
+        {
+            $caracteristicas = json_decode($this->caracteristicas, true);
+
+            return $caracteristicas['direccion_destinatario'] ?? null;
         }
- 
-        // Devuelve null si no se encuentra
-        return null;
-    }
 
-    public function direccion_destino()
-    {
-        return $this->belongsTo(direcciones::class, 'direccion_destinatario', 'id_direccion');
-    }
-    
+        // Relación con el modelo Direcciones
+        public function direccion_destino()
+        {
+            return $this->belongsTo(Direcciones::class, 'id_direccion_destino', 'id_direccion');
+        }
+
 
     
 

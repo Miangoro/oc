@@ -298,7 +298,7 @@ if ($caracteristicas_json) {
         //caracteristicas modelo-relacion
         'lote_envasado' => $datos->lote_envasado->nombre,
 
-        'dom_cestino' => $datos->direccion_destino->direccion,
+        'dom_destino' => $datos->direccion_destino->direccion ?? "nadaaa",
         //'dom_destino' => $direccion,
         ///caracteristicas
         /*'marca' => $estado,
