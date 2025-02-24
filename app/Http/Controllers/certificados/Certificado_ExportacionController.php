@@ -296,9 +296,9 @@ if ($caracteristicas_json) {
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
         //caracteristicas modelo-relacion
-        'lote_envasado' => $datos->lote_envasado->nombre,
+        'lote_envasado' => $datos->lote_envasado->nombre  ?? "",
 
-        'dom_destino' => $datos->direccion_destino->direccion ?? "nadaaa",
+        'dom_destino' => $datos->direccion_destino->direccion ?? "",
         //'dom_destino' => $direccion,
         ///caracteristicas
         /*'marca' => $estado,
