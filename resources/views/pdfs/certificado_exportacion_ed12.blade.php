@@ -204,7 +204,7 @@
                 style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px; padding-top: 8px;padding-bottom: 8px;">
                 Domicilio:</td>
             <td class="td-margins" style="text-align: left; padding-top: 8px;padding-bottom: 8px;" colspan="3">
-                {{ $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal}}</td>
+                {{ $domicilio}}</td>
         </tr>
         <tr>
             <td class="td-margins"
@@ -219,7 +219,7 @@
             <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;">
                 Registro Federal de Contribuyentes:</td>
             <td class="td-margins" style="text-align: left">
-                {{ $data->dictamen->inspeccione->solicitud->empresa->rfc}}</td>
+                {{ $rfc }}</td>
             <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
                 País:</td>
             <td class="td-margins" style="text-align: left"> MÉXICO </td>
@@ -228,13 +228,20 @@
             <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;">
                 Registro de Productor <br> Autorizado (Uso de la <br> DOM):</td>
             <td class="td-margins" style="text-align: left">
-                {{ $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA'}}</td>
+                {{ $DOM}}</td>
             <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
                 Número de Convenio de corresponsabilidad:</td>
             <td class="td-margins" style="text-align: left">
-                {{ $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA'}}</td>
+                {{ $convenio}}</td>
         </tr>
     </table>
+
+
+
+
+
+@foreach ($datos as $lote)
+
     <div class="titulos">
         DESCRIPCIÓN DEL EMBARQUE QUE AMPARA EL CERTIFICADO
     </div>
@@ -243,15 +250,15 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Marca:</td>
             <td style="text-align: left; padding-right: 0;padding-left: 8px;"> 
-                {{ $datos->lote_envasado->marca->marca }} </td>
+                {{ $lote->lote_envasado->marca->marca ?? "" }} </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Categoría y Clase:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
+                {{ $lote->lote_granel->categoria->categoria ?? "" }}, {{ $lote->lote_granel->clase->clase ?? "" }} </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">Edad
                 (solo aplica en Añejo):</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
+                {{ $lote->lote_granel->edad ?? "NA" }} </td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
@@ -261,54 +268,57 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Volumen:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
+                {{ $lote->lote_granel->volumen_restante ?? "" }}&nbsp; </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">%Alc.
                 Vol.:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
+                {{ $lote->lote_granel->cont_alc ?? "" }} </td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 de análisis:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                {{ $datos->lote_granel->folio_fq }} </td>
+                {{ $lote->lote_granel->folio_fq ?? "" }} </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 lote granel:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                {{ $datos->lote_granel->nombre_lote }} </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">
-                Botellas:</td>
+                 </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
+                de lote envasado:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
+                {{ $lote->lote_envasado->nombre  ?? "" }}</td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 de análisis ajuste:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
                 &nbsp; </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
-                de lote envasado:</td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                {{ $lote_envasado }}</td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">Cajas:
-            </td>
-            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
-        </tr>
-        <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">Tipo
                 de Maguey:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
-                Envasado en:</td>
-            <td style="text-align: justify;padding-right: 0;padding-left: 8px;"> 
                 &nbsp; </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">Folio
                 Hologramas:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;">
                 &nbsp;
             </td>
+        </tr>
+
+{{------------------------- ULTIMA COLUMNA -------------------------}}
+    {{-- @if ($a == 2)  --}}{{-- if ($i == count($informacion) - 1) (Si estamos en la última tabla) --}}
+        <tr>
+            <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
+                Envasado en:</td>
+            <td style="text-align: justify;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">Cajas:
+            </td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                &nbsp; </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">
+                Botellas:</td>
+            <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
+                {{$botellas}} </td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
@@ -325,7 +335,18 @@
                 {{ $n_pedido }}
             </td>
         </tr>
-    </table>
+    {{-- @endif --}}
+{{------------------------- TERMINA CAJAS MULTIPLES FINNN -------------------------}}
+
+</table>
+
+@endforeach
+
+
+
+
+
+
     <div class="titulos" style="padding-bottom: none;">
         DESTINATARIO
     </div>
@@ -350,7 +371,7 @@
                 style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
                 País destino:</td>
             <td class="td-margins-none" style="text-align: left">
-                &nbsp;
+                {{$pais}} 
             </td>
         </tr>
     </table>

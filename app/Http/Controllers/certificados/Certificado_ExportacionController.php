@@ -266,61 +266,52 @@ if ($caracteristicas_json) {
     // Decodificar el JSON
     $caracteristicas = json_decode($caracteristicas_json, true);
     //Acceder a los datos
-    $direccion_destinatario = $caracteristicas['direccion_destinatario'] ?? null;
-    $direccion = $direccion_destinatario ? direcciones::find($direccion_destinatario)->direccion ?? '' : '';
+    /*$direccion_destinatario = $caracteristicas['direccion_destinatario'] ?? null;
+    $direccion = $direccion_destinatario ? direcciones::find($direccion_destinatario)->direccion ?? '' : '';*/
     $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
     $no_pedido = $caracteristicas['no_pedido'] ?? '';
-
     // Acceder a los detalles (que es un array)
     $detalles = $caracteristicas['detalles'] ?? [];
-
-    foreach ($detalles as $detalle) {
-        $cantidad_botellas = $detalle['cantidad_botellas'] ?? '';
-        $cantidad_cajas = $detalle['cantidad_cajas'] ?? '';
-        $presentacion = $detalle['presentacion'] ?? '';
-    }
-
+        foreach ($detalles as $detalle) {
+            $botellas = $detalle['cantidad_botellas'] ?? '';
+            $cajas = $detalle['cantidad_cajas'] ?? '';
+            $presentacion = $detalle['presentacion'] ?? '';
+        }
 } else {
-    return abort(404, 'No se encontraron características.');
+    return abort(404, 'No se encontraron características');
 }
    
 
     $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
         'datos' =>$datos,//modelo-relacion
-        'expedicion' => $fecha1,
-        'vigencia' => $fecha2,
-        'n_cliente' => $numero_cliente,
+        'expedicion' => $fecha1 ?? "",
+        'vigencia' => $fecha2 ?? "",
+        'n_cliente' => $numero_cliente ,
         'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
-        'estado' => $estado,
+        'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
+        'estado' => $estado ?? "",
+        'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? "",
+        'convenio' => $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA',
+        'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
         //caracteristicas modelo-relacion
-        'lote_envasado' => $datos->lote_envasado->nombre  ?? "",
-
         'dom_destino' => $datos->direccion_destino->direccion ?? "",
-        //'dom_destino' => $direccion,
+        'lote_envasado' => $datos->lote_envasado->nombre  ?? "",
+        'marca' => $datos->lote_envasado->marca->marca ?? "",
+        'categoria' => $datos->lote_granel->categoria->categoria ?? "",
+        'clase' => $datos->lote_granel->clase->clase ?? "",
+        'edad' => $datos->lote_granel->edad ?? "NA",
+        'volumen' => $datos->lote_granel->volumen_restante ?? "",
+        'cont_alc' => $datos->lote_granel->cont_alc ?? "",
+        'FQ' => $datos->lote_granel->folio_fq ?? "",
+        'lote_granel' => $datos->lote_granel->nombre_lote ?? "",
+        'pais' => $datos->direccion_destino->pais_destino ?? "",
         ///caracteristicas
-        /*'marca' => $estado,
-        'categoria_clase' => $estado,
-        'edad' => $estado,
-        'cer_granel' => $estado,
-        'volumen' => $estado,
-        'vol_alc' => $estado,
-        'n_analisis' => $estado,
-        'lote_granel' => $estado,
-        'botellas' => $estado,
-        'n_analisis_ajuste' => $estado,
-        'lote_envasado' => $estado,
-        'cajas' => $estado,
-        'tipo_maguey' => $estado,
-        'envasado_en' => $estado,
-        'folio_hologramas' => $estado,
-        'aduana' => $estado,
-        'fracc_arancelaria' => $estado,*/
-        'n_pedido' => $no_pedido,
-        'aduana' => $aduana_salida,
-
+        'n_pedido' => $no_pedido ?? "",
+        'aduana' => $aduana_salida ?? "",
+        'botellas' => $botellas ?? "",
     ]);
     
     //nombre al descargar
