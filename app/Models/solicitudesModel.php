@@ -9,7 +9,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class solicitudesModel extends Model
 {
-    use  HasFactory;
+    use LogsActivity, TranslatableActivityLog, HasFactory;
 
     protected $table = 'solicitudes';
     protected $primaryKey = 'id_solicitud';
