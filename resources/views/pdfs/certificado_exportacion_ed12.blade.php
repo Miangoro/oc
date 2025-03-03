@@ -240,7 +240,7 @@
 
 
 
-@foreach ($datos as $lote)
+    @foreach($lotes as $lote)
 
     <div class="titulos">
         DESCRIPCIÓN DEL EMBARQUE QUE AMPARA EL CERTIFICADO
@@ -250,43 +250,43 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Marca:</td>
             <td style="text-align: left; padding-right: 0;padding-left: 8px;"> 
-                {{ $lote->lote_envasado->marca->marca ?? "" }} </td>
+                {{ $lote->marca->marca ?? "N"}} </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Categoría y Clase:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                {{ $lote->lote_granel->categoria->categoria ?? "" }}, {{ $lote->lote_granel->clase->clase ?? "" }} </td>
+                {{ $lote->lotesGranel->first()->categoria->categoria ?? "N"}}, {{ $lote->lotesGranel->first()->clase->clase ?? "N"}} </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">Edad
                 (solo aplica en Añejo):</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                {{ $lote->lote_granel->edad ?? "NA" }} </td>
+                {{ $lote->lotesGranel->first()->edad ?? "N"}} </td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Certificado <br> NOM a <br>Granel:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
+                {{ $lote->lotesGranel->first()->folio_certificado ?? "N" }}&nbsp; </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Volumen:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                {{ $lote->lote_granel->volumen_restante ?? "" }}&nbsp; </td>
+                {{$presentacion}}  </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">%Alc.
                 Vol.:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                {{ $lote->lote_granel->cont_alc ?? "" }} </td>
+                {{ $lote->lotesGranel->first()->cont_alc ?? "N" }}% </td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 de análisis:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                {{ $lote->lote_granel->folio_fq ?? "" }} </td>
+                {{ $lote->lotesGranel->first()->folio_fq ?? "N" }} </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 lote granel:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                 </td>
+                {{ $lote->lotesGranel->first()->nombre_lote ?? "N" }}</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
                 de lote envasado:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                {{ $lote->lote_envasado->nombre  ?? "" }}</td>
+                {{ $lote->nombre ?? "N" }}</td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">No.
@@ -296,16 +296,17 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">Tipo
                 de Maguey:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
+                {{ $lote->lotesGranel->first()->tipos }} </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">Folio
                 Hologramas:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;">
-                &nbsp;
+                
             </td>
         </tr>
 
 {{------------------------- ULTIMA COLUMNA -------------------------}}
     {{-- @if ($a == 2)  --}}{{-- if ($i == count($informacion) - 1) (Si estamos en la última tabla) --}}
+    @if($loop->last)
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Envasado en:</td>
@@ -314,7 +315,7 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">Cajas:
             </td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
-                &nbsp; </td>
+                {{$cajas}} </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">
                 Botellas:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;"> 
@@ -328,7 +329,7 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
                 Fracción Arancelaria:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;">
-                {{$lote_envasado}}</td>
+                Falta</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 0;">No.
                 de <br> pedido:</td>
             <td style="text-align: left;padding-right: 0;padding-left: 8px;">
@@ -336,6 +337,7 @@
             </td>
         </tr>
     {{-- @endif --}}
+    @endif
 {{------------------------- TERMINA CAJAS MULTIPLES FINNN -------------------------}}
 
 </table>
@@ -356,7 +358,7 @@
                 style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nombre:</td>
             <td class="td-margins-none" style="text-align: left"> 
-                &nbsp;
+                {{$nombre_destinatario}}
             </td>
         </tr>
         <tr>

@@ -227,15 +227,12 @@ public function update(Request $request, $id_certificado)
 ///FUNCION PDF CERTIFICADO EXPORTACION
 public function MostrarCertificadoExportacion($id_certificado) 
 {
-    // Obtener los datos del certificado específico
-    //$datos = Dictamen_Exportacion::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);    
-    $data = Certificado_Exportacion::find($id_certificado);
+    $data = Certificado_Exportacion::find($id_certificado);//Obtener datos del certificado
 
     if (!$data) {
         return abort(404, 'Certificado no encontrado');
     }
 
-    //Declara la variable
     //$fecha = Helpers::formatearFecha($data->fecha_emision);
     //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
     $fecha_emision = Carbon::parse($data->fecha_emision);
@@ -247,10 +244,8 @@ public function MostrarCertificadoExportacion($id_certificado)
         ->empresaNumClientes
         ->first(fn($item) => $item->empresa_id === $empresa
         ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'N/A' : 'N/A';
-    $estado = $data->dictamen->inspeccione->solicitud->empresa->estados->nombre;
     //Determinar si la marca de agua debe ser visible
     $watermarkText = $data->estatus == 1;
-
     //Obtener un valor específico del JSON
     $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON actual
     ['id_certificado_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
@@ -258,47 +253,53 @@ public function MostrarCertificadoExportacion($id_certificado)
     //Busca el registro del certificado que tiene el id igual a $id_sustituye
     Certificado_Exportacion::find($id_sustituye)->num_certificado ?? '' : '';
 
-    
-$datos = $data->dictamen->inspeccione->solicitud;//Obtener Morelo-Relacion de ID
-$caracteristicas_json = $data->dictamen->inspeccione->solicitud->caracteristicas;//Obtener Caracteristicas de la solicitud
-// Verificar si las características existen
-if ($caracteristicas_json) {
-    // Decodificar el JSON
-    $caracteristicas = json_decode($caracteristicas_json, true);
-    //Acceder a los datos
-    /*$direccion_destinatario = $caracteristicas['direccion_destinatario'] ?? null;
-    $direccion = $direccion_destinatario ? direcciones::find($direccion_destinatario)->direccion ?? '' : '';*/
-    $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
-    $no_pedido = $caracteristicas['no_pedido'] ?? '';
-    // Acceder a los detalles (que es un array)
-    $detalles = $caracteristicas['detalles'] ?? [];
+    $datos = $data->dictamen->inspeccione->solicitud->caracteristicas; //Obtener Características Solicitud
+    if ($datos) {
+        $caracteristicas = json_decode($datos, true); //Decodificar el JSON
+        $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
+        $no_pedido = $caracteristicas['no_pedido'] ?? '';
+        $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
+        // Acceder a los detalles
         foreach ($detalles as $detalle) {
             $botellas = $detalle['cantidad_botellas'] ?? '';
             $cajas = $detalle['cantidad_cajas'] ?? '';
             $presentacion = $detalle['presentacion'] ?? '';
         }
-} else {
-    return abort(404, 'No se encontraron características');
-}
-   
+        // Obtener todos los IDs de los lotes
+        $loteIds = collect($detalles)->pluck('id_lote_envasado');
+        // Buscar los lotes envasados
+        $lotes = Lotes_Envasado::whereIn('id_lote_envasado', $loteIds)->get();
+        /*$lotes = collect();//mutliples lotes
+        foreach (json_decode($datos)->detalles as $detalle) {
+            $lote = Lotes_Envasado::find($detalle->id_lote_envasado);//compara el valor "id_lote_envasado" con "Lotes_Envasado"
+            if ($lote) {
+                $lotes->push($lote);//Agregar el lote a la colección
+            }
+        }*/
+    } else {
+        return abort(404, 'No se encontraron características');
+    }
+
 
     $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
-        'datos' =>$datos,//modelo-relacion
+        'lotes' =>$lotes,
         'expedicion' => $fecha1 ?? "",
         'vigencia' => $fecha2 ?? "",
-        'n_cliente' => $numero_cliente ,
+        'n_cliente' => $numero_cliente,
         'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
-        'estado' => $estado ?? "",
+        'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? "",
         'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? "",
         'convenio' => $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA',
         'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
-        //caracteristicas modelo-relacion
-        'dom_destino' => $datos->direccion_destino->direccion ?? "",
-        'lote_envasado' => $datos->lote_envasado->nombre  ?? "",
+        //caracteristicas
+        'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? "",
+        'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? "",
+        'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? "",
+        /*'lote_envasado' => $datos->lote_envasado->nombre  ?? "",
         'marca' => $datos->lote_envasado->marca->marca ?? "",
         'categoria' => $datos->lote_granel->categoria->categoria ?? "",
         'clase' => $datos->lote_granel->clase->clase ?? "",
@@ -306,12 +307,13 @@ if ($caracteristicas_json) {
         'volumen' => $datos->lote_granel->volumen_restante ?? "",
         'cont_alc' => $datos->lote_granel->cont_alc ?? "",
         'FQ' => $datos->lote_granel->folio_fq ?? "",
-        'lote_granel' => $datos->lote_granel->nombre_lote ?? "",
-        'pais' => $datos->direccion_destino->pais_destino ?? "",
+        'lote_granel' => $datos->lote_granel->nombre_lote ?? "",*/
         ///caracteristicas
         'n_pedido' => $no_pedido ?? "",
         'aduana' => $aduana_salida ?? "",
         'botellas' => $botellas ?? "",
+        'cajas' => $cajas ?? "",
+        'presentacion' => $presentacion ?? "",
     ]);
     
     //nombre al descargar
