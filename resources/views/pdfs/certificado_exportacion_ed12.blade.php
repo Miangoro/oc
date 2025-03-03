@@ -240,11 +240,11 @@
 
 
 
-    @foreach($lotes as $lote)
+@foreach($lotes as $lote)
 
-    <div class="titulos">
-        DESCRIPCIÓN DEL EMBARQUE QUE AMPARA EL CERTIFICADO
-    </div>
+<div class="titulos">
+    DESCRIPCIÓN DEL EMBARQUE QUE AMPARA EL CERTIFICADO
+</div>
     <table>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
@@ -303,9 +303,9 @@
                 
             </td>
         </tr>
-
+        
 {{------------------------- ULTIMA COLUMNA -------------------------}}
-    {{-- @if ($a == 2)  --}}{{-- if ($i == count($informacion) - 1) (Si estamos en la última tabla) --}}
+    {{-- if ($i == count($informacion) - 1) (Si estamos en la última tabla) --}}
     @if($loop->last)
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px;padding-right: 8px;padding-left: 4px;">
@@ -336,12 +336,9 @@
                 {{ $n_pedido }}
             </td>
         </tr>
-    {{-- @endif --}}
     @endif
-{{------------------------- TERMINA CAJAS MULTIPLES FINNN -------------------------}}
-
-</table>
-
+{{------------------------- TERMINA CAJAS MULTIPLES -------------------------}}
+    </table>
 @endforeach
 
 

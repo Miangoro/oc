@@ -295,25 +295,15 @@ public function MostrarCertificadoExportacion($id_certificado)
         'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
-        //caracteristicas
         'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? "",
         'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? "",
         'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? "",
-        /*'lote_envasado' => $datos->lote_envasado->nombre  ?? "",
-        'marca' => $datos->lote_envasado->marca->marca ?? "",
-        'categoria' => $datos->lote_granel->categoria->categoria ?? "",
-        'clase' => $datos->lote_granel->clase->clase ?? "",
-        'edad' => $datos->lote_granel->edad ?? "NA",
-        'volumen' => $datos->lote_granel->volumen_restante ?? "",
-        'cont_alc' => $datos->lote_granel->cont_alc ?? "",
-        'FQ' => $datos->lote_granel->folio_fq ?? "",
-        'lote_granel' => $datos->lote_granel->nombre_lote ?? "",*/
         ///caracteristicas
-        'n_pedido' => $no_pedido ?? "",
-        'aduana' => $aduana_salida ?? "",
-        'botellas' => $botellas ?? "",
-        'cajas' => $cajas ?? "",
-        'presentacion' => $presentacion ?? "",
+        'aduana' => $aduana_salida,
+        'n_pedido' => $no_pedido,
+        'botellas' => $botellas,
+        'cajas' => $cajas,
+        'presentacion' => $presentacion,
     ]);
     
     //nombre al descargar
