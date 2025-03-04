@@ -195,7 +195,7 @@ public function clases_agave()
     // Relación con el modelo Direcciones
     public function direccion_destino()
     {
-        return $this->belongsTo(Direcciones::class, 'id_direccion_destino', 'id_direccion');
+        return $this->belongsTo(direcciones::class, 'id_direccion_destino', 'id_direccion');
     }
 
 

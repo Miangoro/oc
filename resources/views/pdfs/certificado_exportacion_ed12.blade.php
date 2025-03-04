@@ -13,49 +13,35 @@
             margin-left: 80px;
             margin-bottom: 1px;
         }
-
         body {
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: Helvetica;
             font-size: 12px;
             padding-right: 4px;
             padding-left: 4px;
             ;
         }
-
-        .leftLetter {
-            text-align: left;
-        }
-
-        .letter-color {
+        .cidam {
             color: #161c4a;
             text-align: center;
             margin-left: 0;
             margin-bottom: 20px;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
+            /*table-layout: fixed; /* Esto asegura que las columnas tengan un ancho fijo */
         }
-
-        th,
         td {
             border: 1px solid #366091;
-            /*             padding-top: 8px;
-            padding-bottom: 8px; */
             text-align: center;
             font-size: 11px;
-
         }
-
         th {
             background-color: #608390;
             color: white;
             text-align: center;
             font-size: 11px;
-
         }
-
         .td-margins {
             border-bottom: 1px solid #366091;
             border-top: 1px solid #366091;
@@ -63,7 +49,6 @@
             border-left: none;
             font-size: 11px;
         }
-
         .td-margins-none {
             border-bottom: 1px solid #366091;
             border-top: none;
@@ -71,18 +56,9 @@
             border-left: none;
             font-size: 11px;
         }
-
         .td-no-margins {
             border: none;
         }
-
-        .td-barra {
-            border-bottom: none;
-            border-top: none;
-            border-right: none;
-            border-left: 1px solid black;
-        }
-
         .img-background {
             position: absolute;
             top: 250px;
@@ -96,7 +72,6 @@
             background-position: center;
             opacity: 0.1;
         }
-
         .img-background-left {
             position: absolute;
             top: 130px;
@@ -109,20 +84,17 @@
             background-repeat: no-repeat;
             background-position: center;
         }
-
         .titulos {
             font-size: 15px;
             padding: 10px;
             text-align: center;
             font-weight: bold;
         }
-
         .titutlos-footer {
             font-size: 12px;
             text-align: center;
             padding: 10px;
         }
-
         .watermark-cancelado {
             font-family: Arial;
             color: red;
@@ -137,7 +109,6 @@
             white-space: nowrap;
             z-index:-1;
         }
-
     </style>
 </head>
 
@@ -155,7 +126,7 @@
 
     <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}"
         style="width: 300px; float: left; margin-left: -20px; margin-top: -20px;" alt="logo de CIDAM 3D">
-    <div class="letter-color" style="margin-bottom: 15px">
+    <div class="cidam" style="margin-bottom: 15px">
         <b style="font-size: 16px;">CENTRO DE INNOVACIÓN Y DESARROLLO <br> AGROALIMENTARIO DE MICHOACÁN A.C.</b>
         <p style="font-size: 10px">Organismo de Certificación de producto acreditado ante la <br> entidad mexicana de
             acreditación ema A.C. con <b> No.
