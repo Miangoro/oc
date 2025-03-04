@@ -299,11 +299,11 @@ public function MostrarCertificadoExportacion($id_certificado)
         'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? "",
         'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? "",
         ///caracteristicas
-        'aduana' => $aduana_salida,
-        'n_pedido' => $no_pedido,
-        'botellas' => $botellas,
-        'cajas' => $cajas,
-        'presentacion' => $presentacion,
+        'aduana' => $aduana_salida ?? "",
+        'n_pedido' => $no_pedido ?? "",
+        'botellas' => $botellas ?? "",
+        'cajas' => $cajas ?? "",
+        'presentacion' => $presentacion ?? "",
     ]);
     
     //nombre al descargar
