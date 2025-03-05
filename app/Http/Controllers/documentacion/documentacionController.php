@@ -20,7 +20,7 @@ class documentacionController extends Controller
     $documentos = Documentacion::where('subtipo', '=', 'Todas')->get();
     $productor_agave = Documentacion::where('subtipo', '=', 'Generales Productor')->get();
 
-    $empresas = Empresa::with('empresaNumClientes')->where('tipo', 2)->get();
+    $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get();
     $instalaciones = instalaciones::where('tipo', '=', 2)->get();
 
     return view("documentacion.documentacion_view", ["documentos" => $documentos, "productor_agave" => $productor_agave, "empresas" => $empresas]);

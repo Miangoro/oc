@@ -35,7 +35,13 @@ class clientesConfirmadosController extends Controller
         $normas = normas_catalo::where('id_norma', '!=', 3)->get();
         $actividadesClientes = catalogo_actividad_cliente::all();
         $empresas_inactivas = empresa::where('tipo', 2)->where('estatus',2)->count();
-        $empresas_confirmadas = empresa::where('tipo', 2)->get();
+        $empresas_confirmadas = Empresa::with('empresaNumClientes')
+    ->withCount('empresaNumClientes') // Cuenta los clientes por empresa
+    ->where('tipo', 2)
+    ->orderByDesc('empresa_num_clientes_count') // Ordena por la cantidad de clientes
+    ->get();
+
+
 
         // Total de empresas
         $total_empresas = $empresas + $empresas_inactivas;
