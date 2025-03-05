@@ -165,7 +165,7 @@ class documentacionController extends Controller
               $mostrarDocumento = '';
           
               foreach ($urls as $urlData) {
-                  $mostrarDocumento .= '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $urlData->url . '\')" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i> ';
+                  $mostrarDocumento .= '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $urlData->url . '\','.$urlData->id.')" data-id="'.$urlData->id.'" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"  data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i> ';
               }
           }
           
@@ -594,6 +594,7 @@ if ($act_instalacion != 'Produccion de agave') {
       $i = 0;
       $uploadedFiles = [];
       $documento_id = [];
+      $id = [];
       foreach ($request->file('url') as $index => $file) {
         $filename = str_replace('/', '-', $request->nombre_documento[$index]) . '_' . time().$i. '.' . $file->getClientOriginalExtension();
         $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
@@ -609,11 +610,34 @@ if ($act_instalacion != 'Produccion de agave') {
         $documentacion_url->id_empresa = $request->id_empresa;
         $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null; // Usa null si no hay fecha
         $documentacion_url->save();
+        $id[] = $documentacion_url->id;
         $i++;
       }
     }
 
 
-    return response()->json(['success' => $request, 'files' => $uploadedFiles,'id_documento' => $documento_id, 'folder'=>$numeroCliente]);
+    return response()->json(['success' => $request, 'files' => $uploadedFiles,'id_documento' => $documento_id,'id'=>$id, 'folder'=>$numeroCliente]);
   }
+
+  public function eliminarDocumento($id)
+    {
+        // Buscar el documento por su ID
+        $documento = Documentacion_url::find($id);
+
+        if ($documento) {
+            // Eliminar el archivo de almacenamiento (si es necesario)
+          /*  if (Storage::exists($documento->ruta)) {
+                Storage::delete($documento->ruta);
+            }*/
+
+            // Eliminar el documento de la base de datos
+            $documento->delete();
+
+            // Retornar una respuesta exitosa
+            return response()->json(['success' => true, 'message' => 'Documento eliminado exitosamente.']);
+        }
+
+        // Si no se encuentra el documento, retornar un error
+        return response()->json(['success' => false, 'message' => 'Documento no encontrado.'], 404);
+    }
 }

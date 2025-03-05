@@ -127,31 +127,93 @@ $(document).ready(function() {
 });
 
 
+function abrirModal(url,idDocumento) { 
 
-  function abrirModal(url) {
-    var id = $(this).data('id');
-        var registro = $(this).data('registro');
-            var iframe = $('#pdfViewer');
-           
-            var spinner = $('#cargando');
-         
-          spinner.show();
-          iframe.hide();
     
-    //Cargar el PDF con el ID
-        iframe.attr('src', url);
-    //Configurar el botón para abrir el PDF en una nueva pestaña
-      $("#NewPestana").attr('href', url).show();
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+    var modalHeader = $("#encabezado_modal"); // Selecciona la cabecera del modal
+    
+    spinner.show();
+    iframe.hide();
 
-      /*$("#titulo_modal").text(titulo);
-      $("#subtitulo_modal").text(registro); */ 
+    // Cargar el PDF en el iframe
+    iframe.attr('src', url);
+    
+    // Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', url).show();
 
-    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-      iframe.on('load', function () {
+    // Eliminar botón anterior si ya existe
+    $("#btnEliminarDocumento").remove();
+
+    // Crear botón dinámicamente
+    var btnEliminar = $('<button>', {
+        id: "btnEliminarDocumento",
+        class: "btn btn-danger btn-sm ms-auto waves-effect waves-light",
+        html: '<i class="ri-delete-bin-6-line"></i> Eliminar Documento',
+        click: function () {
+            eliminarDocumento(idDocumento);
+        }
+    });
+
+    // Insertar botón en la cabecera del modal
+    modalHeader.prepend(btnEliminar);
+
+    // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
         spinner.hide();
         iframe.show();
-      });
-  }
+    });
+}
+
+function eliminarDocumento(idDocumento) {
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: "No podrás revertir esta acción.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/eliminar-documento/' + idDocumento,
+                type: 'DELETE',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    Swal.fire({
+                        title: "Eliminado",
+                        text: "El documento ha sido eliminado correctamente.",
+                        icon: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    $("#btnEliminarDocumento").remove(); // Elimina el botón
+                    $("#pdfViewer").attr('src', ''); // Limpia el iframe
+                    $('i.ri-file-pdf-2-fill[data-id="' + idDocumento + '"]').remove();
+                    $('#mostrarPdf').modal('hide'); // Cierra el modal
+                },
+                error: function () {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Hubo un problema al eliminar el documento.",
+                        icon: "error"
+                    });
+                }
+            });
+        }
+    });
+}
+
+
+
+
+
 
   document.getElementById('uploadForm').addEventListener('submit', function(e) {
     e.preventDefault(); // Evita el envío normal del formulario
@@ -212,7 +274,7 @@ Swal.fire({
             let response = JSON.parse(xhr.responseText);
             for (let i = 0; i < response.id_documento.length; i++) {
               $('input[type="file"]').val('');
-                  $("#mostrar"+response.id_documento[i]).html('<i onclick="abrirModal(\'files/' +response.folder+ '/' +response.files[i]+ '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>');
+                  $("#mostrar"+response.id_documento[i]).append('<i onclick="abrirModal(\'files/' +response.folder+ '/' +response.files[i]+ '\','+response.id[i]+')" data-id="'+response.id[i]+'" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"  data-registro=""></i>');
               }
         } else {
             Swal.fire({

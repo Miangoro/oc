@@ -2,7 +2,12 @@
 <div class="modal fade" id="mostrarPdf" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-simple">
     <div class="modal-content">
-    <a id="NewPestana" href="#" target="_blank" class="btn btn-primary btn-sm ms-auto" style="display: none;">Abrir PDF en nueva pestaña</a>
+    <div id="encabezado_modal" class="d-flex align-items-center gap-2">
+                    <a id="NewPestana" href="#" target="_blank" class="btn btn-primary btn-sm" style="display: none;">
+                        Abrir PDF en nueva pestaña
+                    </a>
+                
+                </div>
       <!-- Botón de cierre alineado a la derecha -->
       <button type="button" class="btn-close btn-sm ml-auto" data-bs-dismiss="modal" aria-label="Close"></button>
       <div class="modal-body p-0 d-flex flex-column justify-content-center align-items-center">
