@@ -67,7 +67,7 @@
                                     <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
                                 @endforeach
                             </select>
-                            <label for="">Clases de agave</label>
+                            <label for="">Clases de mezcal</label>
                         </div>
                       </div>
 

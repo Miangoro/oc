@@ -43,10 +43,10 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="me-1">
-              <p class="text-heading mb-1">Clientes activos</p>
+              <p class="text-heading mb-1 fw-bold">Clientes activos</p>
               <div class="d-flex align-items-center">
                 <h4 class="mb-1 me-2">{{$empresas}}</h4>
-                <p class="text-success mb-1">({{ $porcentaje_activas }}%)</p>
+                <p class="text-info mb-1">({{ $porcentaje_activas }}%)</p>
               </div>
             </div>
             <div class="avatar">
@@ -63,7 +63,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="me-1">
-              <p class="text-heading mb-1">Personas físicas</p>
+              <p class="text-heading mb-1 fw-bold">Personas físicas</p>
               <div class="d-flex align-items-center">
                 <h4 class="mb-1 me-1">{{$fisicas}}</h4>
                 <p class="text-success mb-1"></p>
@@ -84,7 +84,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="me-1">
-              <p class="text-heading mb-1">Personas morales</p>
+              <p class="text-heading mb-1 fw-bold">Personas morales</p>
               <div class="d-flex align-items-center">
                 <h4 class="mb-1 me-1">{{$morales}}</h4>
                 <p class="text-danger mb-1"></p>
@@ -105,10 +105,10 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="me-1">
-              <p class="text-heading mb-1">Clientes inactivos</p>
+              <p class="text-heading mb-1 fw-bold">Clientes inactivos</p>
               <div class="d-flex align-items-center">
                 <h4 class="mb-1 me-1">{{$empresas_inactivas}}</h4>
-                <p class="text-success mb-1">({{ $porcentaje_inactivas }}%)</p>
+                <p class="text-danger mb-1">({{ $porcentaje_inactivas }}%)</p>
               </div>
             
             </div>

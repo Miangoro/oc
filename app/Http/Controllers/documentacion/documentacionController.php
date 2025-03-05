@@ -157,21 +157,18 @@ class documentacionController extends Controller
 
         foreach ($documentos2 as $indexD => $documento) {
 
-          $urlPrimera = $documento->documentacionUrls->where('id_empresa', $id_empresa)->first();
+          $urls = $documento->documentacionUrls->where('id_empresa', $id_empresa);
 
-          $url = '';
-
-          if (!empty($urlPrimera)) {
-            $url = $urlPrimera->url;
+          $mostrarDocumento = '---';
+          
+          if ($urls->isNotEmpty()) {
+              $mostrarDocumento = '';
+          
+              foreach ($urls as $urlData) {
+                  $mostrarDocumento .= '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $urlData->url . '\')" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i> ';
+              }
           }
-
-
-          if (!empty($url)) {
-            $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
-          } else {
-            $mostrarDocumento = '---';
-          }
-
+          
 
           $contenidoDocumentosGenerales = $contenidoDocumentosGenerales . '<tr>
                       <td>' . ($indexD + 1) . '</td>
@@ -260,21 +257,18 @@ foreach ($predios as $indexI => $predio) {
 foreach ($documentos as $indexD => $documento) {
   
 
-  $urlPrimera = $documento->documentacionUrls
-  ->where('id_relacion', $predio->id_predio)
-  ->first();
+  $urls = $documento->documentacionUrls->where('id_relacion', $predio->id_predio);
 
-  $url = '';
-
-  if (!empty($urlPrimera)) {
-    $url = $urlPrimera->url;
+  $mostrarDocumento = '---';
+  
+  if ($urls->isNotEmpty()) {
+      $mostrarDocumento = '';
+  
+      foreach ($urls as $urlData) {
+          $mostrarDocumento .= '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $urlData->url . '\')" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i> ';
+      }
   }
-
-  if (!empty($url)) {
-    $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
-  } else {
-    $mostrarDocumento = '---';
-  }
+  
 
   $contenidoDocumentosPredios = $contenidoDocumentosPredios . '
       <tr>
@@ -335,21 +329,17 @@ if ($act_instalacion != 'Produccion de agave') {
         foreach ($documentos as $indexD => $documento) {
           
 
-          $urlPrimera = $documento->documentacionUrls
-          ->where('id_relacion', $instalacion->id_instalacion)
-          ->first();
+          $urls = $documento->documentacionUrls->where('id_relacion', $instalacion->id_instalacion);
 
-          $url = '';
+        $mostrarDocumento = '---';
 
-          if (!empty($urlPrimera)) {
-            $url = $urlPrimera->url;
-          }
+        if ($urls->isNotEmpty()) {
+            $mostrarDocumento = '';
 
-          if (!empty($url)) {
-            $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
-          } else {
-            $mostrarDocumento = '---';
-          }
+            foreach ($urls as $urlData) {
+                $mostrarDocumento .= '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $urlData->url . '\')" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i> ';
+            }
+        }
 
           $contenidoDocumentos = $contenidoDocumentos . '
               <tr>
@@ -412,21 +402,18 @@ if ($act_instalacion != 'Produccion de agave') {
           $contenidoDocumentosMarcas = '';
           foreach ($documentos3 as $indexD => $documento) {
 
-            $urlPrimera = $documento->documentacionUrls->first();
-  
-            $url = '';
-  
-            if (!empty($urlPrimera)) {
-              $url = $urlPrimera->url;
-            }
-  
-  
-            if (!empty($url)) {
-              $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
-            } else {
-              $mostrarDocumento = '---';
-            }
-  
+            $urls = $documento->documentacionUrls;
+
+          $mostrarDocumento = '---';
+
+          if ($urls->isNotEmpty()) {
+              $mostrarDocumento = '';
+
+              foreach ($urls as $urlData) {
+                  $mostrarDocumento .= '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $urlData->url . '\')" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i> ';
+              }
+          }
+
   
             $contenidoDocumentosMarcas = $contenidoDocumentosMarcas . '<tr>
                         <td>' . ($indexD + 1) . '</td>

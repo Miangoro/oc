@@ -107,7 +107,7 @@
             <td class="con-negra" rowspan="2" colspan="2">Nombre del cliente/ o<br> Razon social:</td>
             <td rowspan="2" colspan="4">{{ $datos->empresa->razon_social }}</td>
             <td class="con-negra" colspan="3">N° de cliente:</td>
-            <td colspan="4">{{ $datos->empresa->empresaNumClientes[0]->numero_cliente }}</td>
+            <td colspan="4">{{ $datos->empresa->empresaNumClientes->whereNotNull('numero_cliente')->where('numero_cliente', '!=', '')->pluck('numero_cliente')->implode(', ') }}</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="3">e-mail:</td>
