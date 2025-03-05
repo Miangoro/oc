@@ -305,7 +305,7 @@ public function MostrarCertificadoExportacion($id_certificado)
         'cajas' => $cajas ?? "",
         'presentacion' => $presentacion ?? "",
     ]);
-    
+
     //nombre al descargar
     return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
 }
