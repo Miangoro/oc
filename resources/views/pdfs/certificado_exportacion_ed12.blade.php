@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Certificado de Exportacion</title>
     <style>
+        
         @page {
             size: 227mm 292mm;
             margin-top: 30;
@@ -17,6 +18,7 @@
         body {
             font-family: Helvetica;
             font-size: 12px;
+            padding-top: 22%;
             padding-right: 4px;
             padding-left: 4px;
         }
@@ -87,8 +89,12 @@
             background-repeat: no-repeat;
             background-position: center;
         }
-        .encabezado{
+
+        .encabezado {
             position: fixed;
+            width: 100%; 
+            top: 0;
+            left: 0;
         }
         .footer {
             position: fixed;
@@ -121,19 +127,15 @@
             white-space: nowrap;
             z-index:-1;
         }
-
-        .salto {
-            page-break-before: always;
-        }
     </style>
 </head>
 
 <body>
 <!-- Aparece la marca de agua solo si la variable 'watermarkText' tiene valor -->
 @if ($watermarkText)
-<div class="watermark-cancelado">
-    Cancelado
-</div>
+    <div class="watermark-cancelado">
+        Cancelado
+    </div>
 @endif
 
 <div class="img-fondo"></div>
@@ -152,7 +154,7 @@
     <div class="img-footer"></div>
 </div>
     
-<div class="">
+<div class="encabezado">
 <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" style="width: 300px; float: left; margin-left: -20px; margin-top: -20px;" alt="logo de CIDAM 3D">
 
     <div class="cidam" style="margin-bottom: 15px">
@@ -180,7 +182,7 @@
     </table>
 </div>
 
-    
+
     <div class="titulos">DATOS GENERALES DEL EXPORTADOR</div>
     <table>
         <tr>
@@ -231,240 +233,114 @@
 
 
 
-
-{{-- @foreach($lotes as $lote) --}}
-@foreach($lotes->take(2) as $lote)<!--hasta 2 tablas-->
+@foreach($lotes as $lote) 
 
     <div class="titulos">DESCRIPCIÓN DEL EMBARQUE QUE AMPARA EL CERTIFICADO</div>
     <table>
         <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px; width: 12%;">
-                Marca:</td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px; width: 12%;">Marca:</td>
             <td style="text-align: left; padding-left: 4px; width: 22%;"> 
-                {{ $lote->marca->marca ?? "N"}} </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
-                Categoría y Clase:</td>
-            <td style="text-align: left; padding-left: 4px; width: 22%;"> 
-                {{ $lote->lotesGranel->first()->categoria->categoria ?? "N"}}, {{ $lote->lotesGranel->first()->clase->clase ?? "N"}} </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Edad
-                (solo aplica en Añejo):</td>
-            <td style="text-align: left; padding-left: 4px; "> 
-                {{ $lote->lotesGranel->first()->edad ?? "N"}}  </td>
-        </tr>
-        <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px;">
-                Certificado <br> NOM a <br>Granel:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->folio_certificado ?? "N" }}&nbsp; </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
-                Volumen:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{$presentacion}}  </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">%Alc.
-                Vol.:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->cont_alc ?? "N" }}% </td>
-        </tr>
-        <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No.
-                de análisis:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->folio_fq ?? "N" }} </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No.
-                lote granel:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->nombre_lote ?? "N" }}</td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No.
-                de lote envasado:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->nombre ?? "N" }}</td>
-        </tr>
-        <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px">No.
-                de análisis ajuste:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                &nbsp; </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Tipo
-                de Maguey:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->tipos }} </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Folio
-                Hologramas:</td>
-            <td style="text-align: left; font-size: 9px; padding-left: 4px;">
-       
+                {{ $lote->marca->marca ?? "N"}} 
             </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Categoría y Clase:</td>
+            <td style="text-align: left; padding-left: 4px; width: 22%;"> 
+                {{ $lote->lotesGranel->first()->categoria->categoria ?? "N"}}, 
+                {{ $lote->lotesGranel->first()->clase->clase ?? "N"}} 
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Edad (solo aplica en Añejo):</td>
+            <td style="text-align: left; padding-left: 4px;"> 
+                {{ $lote->lotesGranel->first()->edad ?? "N"}}  
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px;">Certificado <br> NOM a <br>Granel:</td>
+            <td style="text-align: left; padding-left: 4px;"> 
+                {{ $lote->lotesGranel->first()->folio_certificado ?? "N" }}&nbsp; 
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Volumen:</td>
+            <td style="text-align: left; padding-left: 4px;"> 
+                {{$presentacion}}  
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">%Alc. Vol.:</td>
+            <td style="text-align: left; padding-left: 4px;"> 
+                {{ $lote->lotesGranel->first()->cont_alc ?? "N" }}% 
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de análisis:</td>
+            <td style="text-align: left; padding-left: 4px;"> 
+                {{ $lote->lotesGranel->first()->folio_fq ?? "N" }} 
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. lote granel:</td>
+            <td style="text-align: left; padding-left: 4px;"> 
+                {{ $lote->lotesGranel->first()->nombre_lote ?? "N" }}
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de lote envasado:</td>
+            <td style="text-align: left; padding-left: 4px;"> 
+                {{ $lote->nombre ?? "N" }}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px">No. de análisis ajuste:</td>
+            <td style="text-align: left; padding-left: 4px;">&nbsp;</td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Tipo de Maguey:</td>
+            <td style="text-align: left; padding-left: 4px;"> 
+                {{ $lote->lotesGranel->first()->tipos }} 
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Folio Hologramas:</td>
+            <td style="text-align: left; font-size: 9px; padding-left: 4px;"></td>
         </tr>
 
-{{------------------------- ULTIMA COLUMNA -------------------------}}
-    @if($lotes->count() == 1)<!--si es una tabla (base) -->
+<!--Si es 1 tabla, agregamos la ultima-->
+@if( $lotes->count() == 1 )
         <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">
-                Envasado en:</td>
-            <td style="text-align: justify; font-size: 9px; padding-left: 4px; width: 22%;"> 
-                &nbsp;</td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Cajas:
-            </td>
-            <td style="text-align: left; padding-left: 4px; width: 22%;"> 
-                {{$cajas}} </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
-                Botellas:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{$botellas}} </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">Envasado en:</td>
+            <td style="text-align: justify; font-size: 9px; padding-left: 4px; width: 22%;">&nbsp;</td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Cajas:</td>
+            <td style="text-align: left; padding-left: 4px; width: 22%;">{{$cajas}}</td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Botellas:</td>
+            <td style="text-align: left; padding-left: 4px;">{{$botellas}}</td>
         </tr>
         <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 35px;">
-                Aduana de despacho:</td>
-            <td style="text-align: left; padding-left: 4px;">
-                {{$aduana}}</td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
-                Fracción Arancelaria:</td>
-            <td style="text-align: left; padding-left: 4px;">
-                Falta</td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No.
-                de <br> pedido:</td>
-            <td style="text-align: left; padding-left: 4px;">
-                {{ $n_pedido }}
-            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 35px;">Aduana de despacho:</td>
+            <td style="text-align: left; padding-left: 4px;">{{$aduana}}</td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Fracción Arancelaria:</td>
+            <td style="text-align: left; padding-left: 4px;">Falta</td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de <br>pedido:</td>
+            <td style="text-align: left; padding-left: 4px;">{{ $n_pedido }}</td>
         </tr>
-    @endif <!--si es una tabla (base) FIN-->
-{{------------------------- TERMINA CAJAS MULTIPLES -------------------------}}
+@endif
+
     </table>
-@endforeach<!--hasta 2 tablas FIN-->
 
+@if($loop->iteration == 2)<!--Salto de pag después de tabla 2-->
+    <div style="page-break-before: always;"></div> 
+@endif
 
-    @if($lotes->count() > 1) <!--si son mas de 2 tablas, agrega salto-->
-    <div class="salto"></div>
-
-@if($lotes->count() == 2)<!--si es una tabla (base) -->
-    <table>
-    <tr>
-        <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">
-            Envasado en:</td>
-        <td style="text-align: justify; font-size: 9px; padding-left: 4px; width: 22%;"> 
-            &nbsp;</td>
-        <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Cajas:
-        </td>
-        <td style="text-align: left; padding-left: 4px; width: 22%;"> 
-            {{$cajas}} </td>
-        <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
-            Botellas:</td>
-        <td style="text-align: left; padding-left: 4px;"> 
-            {{$botellas}} </td>
-    </tr>
-    <tr>
-        <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 35px;">
-            Aduana de despacho:</td>
-        <td style="text-align: left; padding-left: 4px;">
-            {{$aduana}}</td>
-        <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
-            Fracción Arancelaria:</td>
-        <td style="text-align: left; padding-left: 4px;">
-            Falta</td>
-        <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No.
-            de <br> pedido:</td>
-        <td style="text-align: left; padding-left: 4px;">
-            {{ $n_pedido }}
-        </td>
-    </tr>
-    </table>
-@endif <!--si es una tabla (base) FIN-->
-
-
-@foreach($lotes->skip(2) as $lote) <!--mas de 2 tabals continuar-->
-<div class="titulos">DESCRIPCIÓN DEL EMBARQUE QUE AMPARA EL CERTIFICADO</div>
+<!--si hay más de un lote, agregar al final una nueva-->
+@if($loop->iteration > 1 && $loop->last)
+    <br><br>
     <table>
         <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px; width: 12%;">
-                Marca:</td>
-            <td style="text-align: left; padding-left: 4px; width: 22%;"> 
-                {{ $lote->marca->marca ?? "N"}} </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
-                Categoría y Clase:</td>
-            <td style="text-align: left; padding-left: 4px; width: 22%;"> 
-                {{ $lote->lotesGranel->first()->categoria->categoria ?? "N"}}, {{ $lote->lotesGranel->first()->clase->clase ?? "N"}} </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Edad
-                (solo aplica en Añejo):</td>
-            <td style="text-align: left; padding-left: 4px; "> 
-                {{ $lote->lotesGranel->first()->edad ?? "N"}}  </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">Envasado en:</td>
+            <td style="text-align: justify; font-size: 9px; padding-left: 4px; width: 22%;">&nbsp;</td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Cajas:</td>
+            <td style="text-align: left; padding-left: 4px; width: 22%;">{{$cajas}}</td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Botellas:</td>
+            <td style="text-align: left; padding-left: 4px;">{{$botellas}}</td>
         </tr>
         <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px;">
-                Certificado <br> NOM a <br>Granel:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->folio_certificado ?? "N" }}&nbsp; </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
-                Volumen:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{$presentacion}}  </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">%Alc.
-                Vol.:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->cont_alc ?? "N" }}% </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 35px;">Aduana de despacho:</td>
+            <td style="text-align: left; padding-left: 4px;">{{$aduana}}</td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Fracción Arancelaria:</td>
+            <td style="text-align: left; padding-left: 4px;">Falta</td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de <br>pedido:</td>
+            <td style="text-align: left; padding-left: 4px;">{{ $n_pedido }}</td>
         </tr>
-        <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No.
-                de análisis:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->folio_fq ?? "N" }} </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No.
-                lote granel:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->nombre_lote ?? "N" }}</td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No.
-                de lote envasado:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->nombre ?? "N" }}</td>
-        </tr>
-        <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px">No.
-                de análisis ajuste:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                &nbsp; </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Tipo
-                de Maguey:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->tipos }} </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Folio
-                Hologramas:</td>
-            <td style="text-align: left; font-size: 9px; padding-left: 4px;">
-       
-            </td>
-        </tr>
-
-@if($loop->last)  <!--la ultima tabla hoja 2 (base)-->
-        <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">
-                Envasado en:</td>
-            <td style="text-align: justify; font-size: 9px; padding-left: 4px; width: 22%;"> 
-                &nbsp;</td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Cajas:
-            </td>
-            <td style="text-align: left; padding-left: 4px; width: 22%;"> 
-                {{$cajas}} </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
-                Botellas:</td>
-            <td style="text-align: left; padding-left: 4px;"> 
-                {{$botellas}} </td>
-        </tr>
-        <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 35px;">
-                Aduana de despacho:</td>
-            <td style="text-align: left; padding-left: 4px;">
-                {{$aduana}}</td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
-                Fracción Arancelaria:</td>
-            <td style="text-align: left; padding-left: 4px;">
-                Falta</td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No.
-                de <br> pedido:</td>
-            <td style="text-align: left; padding-left: 4px;">
-                {{ $n_pedido }}
-            </td>
-        </tr>
-@endif <!--la ultima tabla hoja 2 (base) FIN-->
     </table>
-@endforeach <!--mas de 2 tabals continuar FIN-->
-    @endif<!--si son mas de 2 tablas, agrega salto-->
+@endif
+
+@endforeach <!-- Fin del for lotes -->
 
 
 
@@ -508,12 +384,6 @@
     </div>
 
 
-
-
-
-
-
-   
 
 
 </body>
