@@ -645,7 +645,7 @@ $(document).ready(function() {
 ///FORMATO PDF
 $(document).on('click', '.pdf', function ()  {
   var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
-  var pdfUrl = '/dictamen_cumplimiento_exportacion/' + id; //Ruta del PDF
+  var pdfUrl = '/dictamen_exportacion/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
       

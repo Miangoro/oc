@@ -9,6 +9,7 @@ use App\Models\Dictamen_Exportacion;
 use App\Models\inspecciones; 
 use App\Models\User;
 use App\Models\empresa; 
+use App\Models\lotes_envasado;
 //Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -242,8 +243,30 @@ public function MostrarDictamenExportacion($id_dictamen)
     //Busca el registro del certificado que tiene el id igual a $id_sustituye
     Dictamen_Exportacion::find($id_sustituye)->num_dictamen ?? '' : '';
 
+    $datos = $data->inspeccione->solicitud->caracteristicas; //Obtener Características Solicitud
+    if ($datos) {
+        $caracteristicas = json_decode($datos, true); //Decodificar el JSON
+        $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
+        $no_pedido = $caracteristicas['no_pedido'] ?? '';
+        $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
+        // Acceder a los detalles
+        foreach ($detalles as $detalle) {
+            $botellas = $detalle['cantidad_botellas'] ?? '';
+            $cajas = $detalle['cantidad_cajas'] ?? '';
+            $presentacion = $detalle['presentacion'] ?? '';
+        }
+        // Obtener todos los IDs de los lotes
+        $loteIds = collect($detalles)->pluck('id_lote_envasado');
+        // Buscar los lotes envasados
+        $lotes = Lotes_Envasado::whereIn('id_lote_envasado', $loteIds)->get();
+
+    } else {
+        return abort(404, 'No se encontraron características');
+    }
+
     $pdf = Pdf::loadView('pdfs.dictamen_exportacion_ed2', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
+        'lotes' =>$lotes,
         'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'domicilio' => $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrada',
         'rfc' => $data->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
