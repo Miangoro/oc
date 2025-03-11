@@ -33,7 +33,7 @@
 
 <!-- Page Scripts -->
 @section('page-script')
-{{-- @vite(['resources/js/clientes_prospecto.js']) --}}
+@vite(['resources/js/impi.js'])
 @endsection
 
 
@@ -53,7 +53,8 @@
         <form id="uploadForm" enctype="multipart/form-data">
 
           <div class="form-floating form-floating-outline m-5 col-md-6">
-            <select name="id_empresa" id="id_empresa" class="select2 form-select">
+            <select name="id_empresa" id="id_empresa" class="form-select select2">
+                <option value="" disabled selected>Selecciona la empresa</option>
               @foreach ($empresa->empresaNumClientes as $cliente)
                   <option value="{{ $cliente->id_empresa }}">
                       {{ $cliente->numero_cliente }} | {{ $empresa->razon_social }}
