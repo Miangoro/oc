@@ -291,6 +291,13 @@
       "url": "tramiteIMPI",
       "icon": "menu-icon ri-bank-fill",
       "slug": "IMPI"
+    },
+
+    {
+      "name": "Resumen de datos",
+      "url": "resumen-datos",
+      "icon": "menu-icon ri-contacts-book-2-fill",
+      "slug": "resumen"
     }
     
  ]

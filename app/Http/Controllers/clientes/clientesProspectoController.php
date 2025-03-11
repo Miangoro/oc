@@ -20,19 +20,6 @@ class clientesProspectoController extends Controller
 {
 
   public function UserManagement() {
-  
-    $id_empresa = 4;
-
-    $empresa = empresa::with(['marcas', 'instalaciones'])->where('id_empresa', $id_empresa)->first();
-
-    return view("clientes.find_clientes_prospecto_view", ["empresa" => $empresa]);
-}
-  
-
-
-
-/* ------------------------------------------------------------------------------------
-  public function UserManagement() {
     // dd('UserManagement');
     $usuarios = User::where("tipo",1)->get();
     // $userCount = $empresas->count();
@@ -237,7 +224,8 @@ class clientesProspectoController extends Controller
     $pdf = Pdf::loadView('pdfs.solicitudInfoClienteNOM-199');
     return $pdf->stream('solicitud_Info_ClienteNOM-199.pdf');
   }
-*/
+
+  
 
 
 }

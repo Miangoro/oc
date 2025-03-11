@@ -211,6 +211,7 @@ use App\Http\Controllers\insertar_datos_bd_certificados;
 use App\Http\Controllers\insertar_datos_bd_dictamenes;
 use App\Http\Controllers\Tramite_impi\impiController;
 use App\Http\Controllers\dictamenes\DictamenExportacionController;
+use App\Http\Controllers\clientes\resumenController;
 use App\Http\Controllers\insertar_datos_bd_actas;
 
 // Main Page Route
@@ -964,4 +965,9 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     //Asignar revisor
     Route::post('asignar_revisor_exportacion', [Certificado_ExportacionController::class, 'storeRevisor'])->name('cer-expor.asignarRevisor');
     
+});
+
+//-------------------RESUMEN DE INFORMACION DEL CLIENTE-------------------
+Route::middleware(['auth'])->controller(resumenController::class)->group(function () {
+    Route::get('resumen-datos', 'UserManagement')->name('resumen');
 });
