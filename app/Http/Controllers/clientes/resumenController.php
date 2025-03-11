@@ -21,9 +21,9 @@ class resumenController extends Controller
 
   public function UserManagement() {
   
-    $id_empresa = 4;
+    $id_empresa = 22;
 
-    $empresa = empresa::with(['marcas', 'instalaciones'])->where('id_empresa', $id_empresa)->first();
+    $empresa = empresa::with(['marcas', 'instalaciones', 'users'])->where('id_empresa', $id_empresa)->first();
 
     return view("clientes.find_resumen_clientes", ["empresa" => $empresa]);
 }

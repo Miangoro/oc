@@ -100,7 +100,7 @@
                         <!-- Título de la tarjeta como el encabezado del acordeón -->
                         <h5 class="accordion-header" id="headingOne">
                             <button class="accordion-button text-white {{ $empresa && $empresa->instalaciones->count() > 0 ? 'bg-primary' : 'bg-danger' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                INSTALACIÓN ({{ $empresa->instalaciones->count() }})<br><br>
+                                INSTALACIONES ({{ $empresa->instalaciones->count() }})<br><br>
                                 @if($empresa && $empresa->instalaciones->count() > 0)
                                     Despliega para ver instalaciones
                                 @else
@@ -110,7 +110,7 @@
                         </h5>
                         
                         <!-- Contenido que se despliega -->
-                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionCard1">
+                        <div id="collapseOne" class="accordion-collapse collapse p-3" aria-labelledby="headingOne" data-bs-parent="#accordionCard1">
                             {{-- <div class="accordion-body">
                                 @if($empresa && $empresa->instalaciones->count() > 0)
                                     @foreach($empresa->instalaciones as $instalacion)
@@ -122,10 +122,10 @@
                             </div> --}}
 
                             @if($empresa && $empresa->instalaciones->count() > 0)
-                                <div class="row mt-3">
+                                <div class="row">
                                     <!-- Tarjeta para cada marca dentro del contenido desplegable -->
                                     @foreach($empresa->instalaciones as $instalacion)
-                                        <div class="col-lg-6 mb-5" style="font-size: 14px">
+                                        <div class="col-lg-6 mb-3" style="font-size: 14px">
                                             <div class="card bg-label-primary">
                                                 <div class="card-body">
                                                     <p class="card-title"><b>
@@ -163,10 +163,10 @@
                     <div class="accordion-item">
                         <!-- Título de la tarjeta como el encabezado del acordeón -->
                         <h5 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button text-white {{ $empresa && $empresa->marcas->count() > 0 ? 'bg-primary' : 'bg-danger' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                MARCAS ({{ $empresa->marcas->count() }})<br><br>
-                                @if($empresa && $empresa->marcas->count() > 0)
-                                    Despliega para ver las marcas
+                            <button class="accordion-button text-white {{ $empresa && $empresa->users->count() > 0 ? 'bg-primary' : 'bg-danger' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                USUARIOS ({{ $empresa->users->count() }})<br><br>
+                                @if($empresa && $empresa->users->count() > 0)
+                                    Despliega para ver los usuarios
                                 @else
                                     Sin registros
                                 @endif
@@ -174,7 +174,7 @@
                         </h5>
                         
                         <!-- Contenido que se despliega -->
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionCard2">
+                        <div id="collapseTwo" class="accordion-collapse collapse p-3" aria-labelledby="headingTwo" data-bs-parent="#accordionCard2">
                             {{-- <div class="accordion-body">
                                 @if($empresa && $empresa->marcas->count() > 0)
                                     @foreach($empresa->marcas as $marca)
@@ -186,17 +186,17 @@
                             </div> --}}
         
                             <!-- Añadir tarjetas dentro del contenido desplegable de marcas -->
-                            @if($empresa && $empresa->marcas->count() > 0)
-                                <div class="row mt-3">
+                            @if($empresa && $empresa->users->count() > 0)
+                                <div class="row">
                                     <!-- Tarjeta para cada marca dentro del contenido desplegable -->
-                                    @foreach($empresa->marcas as $marca)
-                                        <div class="col-lg-6 mb-5" style="font-size: 14px">
-                                            <div class="card bg-label-primary">
+                                    @foreach($empresa->users as $usuarios)
+                                        <div class="col-lg-6 mb-3" style="font-size: 14px">
+                                            <div class="card bg-label-info">
                                                 <div class="card-body">
-                                                    <p class="card-title"><b>{{ $marca->marca }}</b></p>
+                                                    <p class="card-title"><b>{{ $usuarios->name }}</b></p>
                                                     <p class="card-text">
-                                                      Folio: {{ $marca->folio }} <span class="d-block mt-2">
-                                                      Norma: {{ $marca->catalogo_norma_certificar->norma }}</p>
+                                                      Correo: {{ $usuarios->email }} <span class="d-block mt-2">
+                                                      Teléfono: {{ $usuarios->telefono ?? '' }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -224,14 +224,14 @@
                           </button>
                       </h5>
                       <!-- Contenido que se despliega -->
-                      <div id="coleccion3" class="accordion-collapse collapse" aria-labelledby="titulo3" data-bs-parent="#accordionCard3">
+                      <div id="coleccion3" class="accordion-collapse collapse p-3" aria-labelledby="titulo3" data-bs-parent="#accordionCard3">
                           <!-- Añadir tarjetas dentro del contenido desplegable de marcas -->
                           @if($empresa && $empresa->marcas->count() > 0)
-                              <div class="row mt-3">
+                              <div class="row">
                                   <!-- Tarjeta para cada marca dentro del contenido desplegable -->
                                   @foreach($empresa->marcas as $marca)
-                                    <div class="col-lg-6 mb-5" style="font-size: 14px">
-                                        <div class="card bg-label-primary">
+                                    <div class="col-lg-6 mb-3" style="font-size: 14px">
+                                        <div class="card bg-label-warning">
                                             <div class="card-body">
                                                 <p class="card-title"><b>{{ $marca->marca }}</b></p>
                                                 <p class="card-text">
@@ -243,11 +243,14 @@
                                     </div>
                                   @endforeach
                               </div>
+                              
                           @endif
                       </div>
                   </div>
               </div>
           </div>
+          
+
         </div><!--FIN-->
         
        
