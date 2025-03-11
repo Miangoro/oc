@@ -90,76 +90,101 @@
 
 
 
+
           <!--CUARTO 2.2-->
           <div class="form-floating-outline m-2 row">
             <!-- TARJETA 1 -->
             <div class="col-md-6 col-xl-4 mb-3">
-              <div class="accordion" id="accordionCard1">
-                <div class="accordion-item">
-                  <!-- Título de la tarjeta como el encabezado del acordeón -->
-                  <h5 class="accordion-header" id="headingOne">
-                    <button class="accordion-button text-white {{ $empresa && $empresa->instalaciones->count() > 0 ? 'bg-primary' : 'bg-danger' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                      INSTALACIÓN<br><br>
-                      @if($empresa && $empresa->instalaciones->count() > 0)
-                        Despliega para ver instalaciones
-                      @else
-                          Sin registros
-                      @endif
-                    </button>
-                  </h5>
-                  
-                  <!-- Contenido que se despliega -->
-                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionCard1">
-                    <div class="accordion-body">
-                      @if($empresa && $empresa->instalaciones->count() > 0)
-                           
-                          @foreach($empresa->instalaciones as $instalacion)
-                              <li>{{ $instalacion->direccion_completa }}</li><br>
-                          @endforeach
-                        @else
-                            <p>No hay instalaciones registradas para esta empresa.</p>
-                        @endif
-
+                <div class="accordion" id="accordionCard1">
+                    <div class="accordion-item">
+                        <!-- Título de la tarjeta como el encabezado del acordeón -->
+                        <h5 class="accordion-header" id="headingOne">
+                            <button class="accordion-button text-white {{ $empresa && $empresa->instalaciones->count() > 0 ? 'bg-primary' : 'bg-danger' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                INSTALACIÓN ({{ $empresa->instalaciones->count() }})<br><br>
+                                @if($empresa && $empresa->instalaciones->count() > 0)
+                                    Despliega para ver instalaciones
+                                @else
+                                    Sin registros
+                                @endif
+                            </button>
+                        </h5>
+                        
+                        <!-- Contenido que se despliega -->
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionCard1">
+                            <div class="accordion-body">
+                              @php
+                                  $counter = 1;  
+                              @endphp
+                                @if($empresa && $empresa->instalaciones->count() > 0)
+                                    @foreach($empresa->instalaciones as $instalacion)
+                                        {{ $counter }}. {{ $instalacion->direccion_completa }}<br><br>
+                                      @php
+                                          $counter++;
+                                      @endphp
+                                    @endforeach
+                                @else
+                                    <p>No hay instalaciones registradas para esta empresa.</p>
+                                @endif
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-              </div>
             </div>
+            
             <!-- TARJETA 2 -->
             <div class="col-md-6 col-xl-4 mb-3">
-              <div class="accordion" id="accordionCard2">
-                <div class="accordion-item">
-                  <!-- Título de la tarjeta como el encabezado del acordeón -->
-                  <h5 class="accordion-header" id="headingTwo">
-                    <button class="accordion-button text-white {{ $empresa && $empresa->marcas->count() > 0 ? 'bg-primary' : 'bg-danger' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      MARCAS<br><br>
-                        @if($empresa && $empresa->marcas->count() > 0)
-                          Despliega para ver las marcas
-                        @else
-                          Sin registros
-                        @endif
-                    </button>
-                  </h5>
-                  <!-- Contenido que se despliega -->
-                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionCard2">
-                    <div class="accordion-body">
-                      @if($empresa && $empresa->marcas->count() > 0)
-                            
-                              @foreach($empresa->marcas as $marca)
-                                <li>{{ $marca->marca }}</li><br>
-                              @endforeach
-                            
-                        @else
-                            <p>No hay marcas registradas para esta empresa.</p>
-                        @endif
+                <div class="accordion" id="accordionCard2">
+                    <div class="accordion-item">
+                        <!-- Título de la tarjeta como el encabezado del acordeón -->
+                        <h5 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button text-white {{ $empresa && $empresa->marcas->count() > 0 ? 'bg-primary' : 'bg-danger' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                MARCAS ({{ $empresa->marcas->count() }})<br><br>
+                                @if($empresa && $empresa->marcas->count() > 0)
+                                    Despliega para ver las marcas
+                                @else
+                                    Sin registros
+                                @endif
+                            </button>
+                        </h5>
+                        
+                        <!-- Contenido que se despliega -->
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionCard2">
+                            {{-- <div class="accordion-body">
+                                @if($empresa && $empresa->marcas->count() > 0)
+                                    @foreach($empresa->marcas as $marca)
+                                        <li>{{ $marca->marca }}</li><br>
+                                    @endforeach
+                                @else
+                                    <p>No hay marcas registradas para esta empresa.</p>
+                                @endif
+                            </div> --}}
+        
+                            <!-- Añadir tarjetas dentro del contenido desplegable de marcas -->
+                            @if($empresa && $empresa->marcas->count() > 0)
+                                <div class="row mt-4">
+                                    <!-- Tarjeta para cada marca dentro del contenido desplegable -->
+                                    @foreach($empresa->marcas as $marca)
+                                        <div class="col-md-6 col-xl-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <p class="card-title" style="font-size: 15px"><b>{{ $marca->marca }}</b></p>
+                                                    <p class="card-text">Folio: {{ $marca->folio }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
                     </div>
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
+        </div>
+        
        
           
+
+
 
         <br>
         </form>
