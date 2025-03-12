@@ -970,4 +970,5 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
 //-------------------RESUMEN DE INFORMACION DEL CLIENTE-------------------
 Route::middleware(['auth'])->controller(resumenController::class)->group(function () {
     Route::get('resumen-datos', 'UserManagement')->name('resumen');
+
 });
