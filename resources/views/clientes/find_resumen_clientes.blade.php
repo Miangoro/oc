@@ -54,17 +54,11 @@
 
         <div class="form-floating form-floating-outline m-5 col-md-6">
             <select id="id_empresa" class="form-select select2">
-                {{--<option value="" disabled selected>Selecciona la empresa</option>
+                <option value="" disabled selected>Selecciona la empresa</option>
                  @foreach ($empresas as $cliente)
-                  <option value="{{ $cliente->id_empresa ?? '' }}">
+                  <option value="{{ $cliente->id_empresa }}">
                     {{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }} | {{ $cliente->razon_social }}
                   </option>
-                @endforeach --}}
-                <option value="" disabled selected>Selecciona la empresa</option>
-                @foreach ($empresas as $empresa)
-                    <option value="{{ $empresa->id_empresa }}">
-                        {{ $empresa->empresaNumClientes[0]->numero_cliente }} | {{ $empresa->razon_social }}
-                    </option>
                 @endforeach
             </select>
         </div>
@@ -148,121 +142,6 @@
                         </div>
                   </div>
                </div>
-            </div>
-
-            <!-- TARJETA 3 -->
-            <div class="col-md-6 col-xl-4 mb-3">
-              <div class="accordion">
-                  <div class="accordion-item">
-                    <!-- Título -->
-                    <h5 class="accordion-header">
-                        <button class="accordion-button text-white {{ $empresa && $empresa->marcas->count() > 0 ? 'bg-primary' : 'bg-danger' }}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion3">
-                            MARCAS ({{ $empresa->marcas->count() }})<br><br>
-                            @if($empresa && $empresa->marcas->count() > 0)
-                                Despliega para ver las marcas
-                            @else
-                                Sin registros
-                            @endif
-                        </button>
-                    </h5>
-                    <!-- Contenido que despliega -->
-                    <div id="coleccion3" class="accordion-collapse collapse row p-3">
-                        @if($empresa && $empresa->marcas->count() > 0)
-                            @foreach($empresa->marcas as $marca)
-                            <div class="col-lg-6 mb-3" style="font-size: 14px">
-                                <div class="card bg-label-warning">
-                                    <div class="card-body">
-                                        <p class="card-title"><b>{{ $marca->marca }}</b></p>
-                                        <p class="card-text">
-                                            Folio: {{ $marca->folio }} <span class="d-block mt-2">
-                                            Norma: {{ $marca->catalogo_norma_certificar->norma }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        @else
-                            <p>No hay marcas registradas para esta empresa.</p>
-                        @endif
-                    </div>
-                  </div>
-               </div>
-            </div>
-
-            <!-- TARJETA 4 -->
-            <div class="col-md-6 col-xl-4 mb-3">
-                <div class="accordion">
-                    <div class="accordion-item">
-                        <!-- Título -->
-                        <h5 class="accordion-header">
-                            <button class="accordion-button text-white {{ $empresa && $empresa->lotes_granel->count() > 0 ? 'bg-primary' : 'bg-danger' }}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion4">
-                                LOTES GRANEL ({{ $empresa->lotes_granel->count() }})<br><br>
-                                @if($empresa && $empresa->lotes_granel->count() > 0)
-                                    Despliega para ver las lotes granel
-                                @else
-                                    Sin registros
-                                @endif
-                            </button>
-                        </h5>
-                        <!-- Contenido que despliega -->
-                        <div id="coleccion4" class="accordion-collapse collapse row p-3">
-                            @if($empresa && $empresa->lotes_granel->count() > 0)
-                                @foreach($empresa->lotes_granel as $LoteGranel)
-                                <div class="col-lg-6 mb-3" style="font-size: 14px">
-                                    <div class="card bg-label-danger">
-                                        <div class="card-body">
-                                            <p class="card-title"><b>{{ $LoteGranel->nombre_lote }}</b></p>
-                                            <p class="card-text">
-                                                Volumen: {{ $LoteGranel->volumen }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endforeach
-                            @else
-                                <p>No hay lotes granel registrados para esta empresa.</p>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TARJETA 5 -->
-            <div class="col-md-6 col-xl-4 mb-3">
-                <div class="accordion">
-                    <div class="accordion-item">
-                        <!-- Título -->
-                        <h5 class="accordion-header">
-                            <button class="accordion-button text-white {{ $empresa && $empresa->lotes_envasado->count() > 0 ? 'bg-primary' : 'bg-danger' }}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion5">
-                                LOTES ENVASADOS ({{ $empresa->lotes_envasado->count() }})<br><br>
-                                @if($empresa && $empresa->lotes_envasado->count() > 0)
-                                    Despliega para ver las lotes granel
-                                @else
-                                    Sin registros
-                                @endif
-                            </button>
-                        </h5>
-                        <!-- Contenido que despliega -->
-                        <div id="coleccion5" class="accordion-collapse collapse row p-3">
-                            @if($empresa && $empresa->lotes_envasado->count() > 0)
-                                @foreach($empresa->lotes_envasado as $LoteEnvasado)
-                                <div class="col-lg-6 mb-3" style="font-size: 14px">
-                                    <div class="card bg-label-dark">
-                                        <div class="card-body">
-                                            <p class="card-title"><b>{{ $LoteEnvasado->nombre }}</b></p>
-                                            <p class="card-text">
-                                                Marca: {{ $LoteEnvasado->marca->marca ?? 'Sin marca'}}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endforeach
-                            @else
-                                <p>No hay lotes envasados registrados para esta empresa.</p>
-                            @endif
-                        </div>
-                    </div>
-                </div>
             </div> --}}
 
         </div><!--CARDS FIN-->
@@ -306,13 +185,33 @@ $(document).ready(function() {
         //INSTALACIONES
         var instalaciones = empresa.instalaciones.length > 0 
             ? empresa.instalaciones.map(function(instalacion) {
-                var Array = JSON.parse(instalacion.tipo);
-                var tipos = Array.join(', ');
+                var tipos = JSON.parse(instalacion.tipo).join(', ');//tipo de instalacion
+                var dictamen = '<span class="badge rounded-pill bg-danger">Sin dictamen</span>'; //Valor por defecto
+                var certificado = '<span class="badge rounded-pill bg-danger">Sin certificado</span>';
+                    if (instalacion.dictamen) {
+                    var fechaVigencia = new Date(instalacion.dictamen.fecha_vigencia);
+                    var fechaActual = new Date();
+                        if (fechaVigencia < fechaActual) {
+                            dictamen = `${instalacion.dictamen.num_dictamen}<span class="badge rounded-pill bg-danger">Vencido</span>`;
+                        } else {
+                            dictamen = `${instalacion.dictamen.num_dictamen}`;
+                        }
+                    }     
+                    if (instalacion.certificado) {// Verificar si existe un certificado asociado al dictamen
+                    var fechaVigencia = new Date(instalacion.certificado.fecha_vencimiento);
+                        if (fechaVigencia < fechaActual) {
+                            certificado = `${instalacion.certificado.num_certificado} <span class="badge rounded-pill bg-danger">Vencido</span>`;
+                        } else {
+                            certificado = `${instalacion.certificado.num_certificado}`;
+                        }   
+                    }
                 return `<div class="col-lg-6 mb-3" style="font-size: 14px">
                             <div class="card bg-label-primary">
                                 <div class="card-body">
                                     <b class="card-title">${tipos}</b> <span class="d-block mt-1">
-                                    Dirección: ${instalacion.direccion_completa}
+                                    Dirección: ${instalacion.direccion_completa} <span class="d-block mt-3">
+                                    Dictamen: ${dictamen} <span class="d-block mt-3">
+                                    Certificado: ${certificado}
                                 </div>
                             </div>
                         </div> `;
@@ -400,7 +299,7 @@ $(document).ready(function() {
                             <div class="card bg-label-danger">
                                 <div class="card-body">
                                     <b class="card-title">${lote.nombre_lote}</b> <span class="d-block mt-1">
-                                        Volumen: ${lote.volumen}
+                                        Volumen: ${lote.volumen} 
                                 </div>
                             </div>
                         </div>  `;

@@ -964,12 +964,10 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::post('/creaCerExp/reexpedir', [Certificado_ExportacionController::class, 'reexpedir'])->name('cer-expor.reex');
     //Asignar revisor
     Route::post('asignar_revisor_exportacion', [Certificado_ExportacionController::class, 'storeRevisor'])->name('cer-expor.asignarRevisor');
-    
 });
 
 //-------------------RESUMEN DE INFORMACION DEL CLIENTE-------------------
 Route::middleware(['auth'])->controller(resumenController::class)->group(function () {
     Route::get('resumen-datos', 'UserManagement')->name('resumen');
     Route::get('/get-datos-empresa/{id_empresa}', [resumenController::class, 'DatosEmpresa']);
-
 });
