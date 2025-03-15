@@ -46,7 +46,7 @@
 
         {{-- <img src="{{ asset('assets/img/branding/banner_documentos.png') }}" alt="timeline-image" class="card-img-top img-fluid" style="object-fit: cover;"> --}}
         <div class="card-header d-flex align-items-center justify-content-between">
-            <h2 class="m-0 me-2">Resumen de informacion del cliente</h2>
+            <h2 class="m-0 me-2">Resumen de información del cliente</h2>
         </div>
 
     <div class="card-body p-0">
