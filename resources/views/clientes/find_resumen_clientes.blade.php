@@ -182,56 +182,78 @@ $(document).ready(function() {
     function updateTarjetas(empresa) {//Actualiza las tarjetas
     var tarjetasHTML = '';
 
-        //INSTALACIONES
-        var instalaciones = empresa.instalaciones.length > 0 
-            ? empresa.instalaciones.map(function(instalacion) {
-                var tipos = JSON.parse(instalacion.tipo).join(', ');//tipo de instalacion
-                var dictamen = '<span class="badge rounded-pill bg-danger">Sin dictamen</span>'; //Valor por defecto
-                var certificado = '<span class="badge rounded-pill bg-danger">Sin certificado</span>';
-                    if (instalacion.dictamen) {
-                    var fechaVigencia = new Date(instalacion.dictamen.fecha_vigencia);
-                    var fechaActual = new Date();
-                        if (fechaVigencia < fechaActual) {
-                            dictamen = `${instalacion.dictamen.num_dictamen}<span class="badge rounded-pill bg-danger">Vencido</span>`;
-                        } else {
-                            dictamen = `${instalacion.dictamen.num_dictamen}`;
-                        }
-                    }     
-                    if (instalacion.certificado) {// Verificar si existe un certificado asociado al dictamen
-                    var fechaVigencia = new Date(instalacion.certificado.fecha_vencimiento);
-                        if (fechaVigencia < fechaActual) {
-                            certificado = `${instalacion.certificado.num_certificado} <span class="badge rounded-pill bg-danger">Vencido</span>`;
-                        } else {
-                            certificado = `${instalacion.certificado.num_certificado}`;
-                        }   
-                    }
-                return `<div class="col-lg-6 mb-3" style="font-size: 14px">
-                            <div class="card bg-label-primary">
-                                <div class="card-body">
-                                    <b class="card-title">${tipos}</b> <span class="d-block mt-1">
-                                    Dirección: ${instalacion.direccion_completa} <span class="d-block mt-3">
-                                    Dictamen: ${dictamen} <span class="d-block mt-3">
-                                    Certificado: ${certificado}
-                                </div>
-                            </div>
-                        </div> `;
-            }).join('') : '<p>No hay instalaciones registradas para esta empresa.</p>';
+        // INSTALACIONES
+var instalaciones = empresa.instalaciones.length > 0 
+    ? empresa.instalaciones.map(function(instalacion) {
+        var tipos = JSON.parse(instalacion.tipo).join(', '); // tipo de instalación
+        var dictamenesHTML = ''; // Variable para almacenar los dictámenes
 
-        tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
-                            <div class="accordion">
-                                <div class="accordion-item">
-                                    <h5 class="accordion-header">
-                                        <button class="accordion-button text-white ${empresa.instalaciones.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
-                                            INSTALACIONES (${empresa.instalaciones.length}) <br><br>
-                                            ${empresa.instalaciones.length > 0 ? 'Despliega para ver instalaciones' : 'Sin registros'}
-                                        </button>
-                                    </h5>
-                                    <div id="collapseOne" class="accordion-collapse collapse p-3 row">
-                                        ${instalaciones}
-                                    </div>
-                                </div>
+        // Iteramos sobre los dictámenes de la instalación por tipo
+        Object.keys(instalacion.dictamenes).forEach(function(tipo) {
+            var dictamen = instalacion.dictamenes[tipo];
+            var dictamenTexto = dictamen.num_dictamen;
+            var certificado = '<span class="badge rounded-pill bg-danger">Sin certificado</span>'; // Valor por defecto
+            var dictamenStatus = '<span class="badge rounded-pill bg-danger">Sin dictamen</span>'; // Valor por defecto
+
+            var fechaVigenciaDictamen = new Date(dictamen.fecha_vigencia);
+            var fechaActual = new Date();
+
+            // Verificamos si el dictamen está vencido o vigente
+            if (fechaVigenciaDictamen < fechaActual) {
+                dictamenStatus = `${dictamenTexto} <span class="badge rounded-pill bg-danger">Vencido</span>`;
+            } else {
+                dictamenStatus = `${dictamenTexto}`;
+            }
+
+            // Verificamos si hay un certificado relacionado con el dictamen
+            if (dictamen.certificado) {
+                var fechaVigenciaCertificado = new Date(dictamen.certificado.fecha_vencimiento);
+
+                if (fechaVigenciaCertificado < fechaActual) {
+                    certificado = `${dictamen.certificado.num_certificado} <span class="badge rounded-pill bg-danger">Vencido</span>`;
+                } else {
+                    certificado = `${dictamen.certificado.num_certificado}`;
+                }
+            }
+
+            // Añadimos el dictamen y certificado a la variable dictamenesHTML
+            dictamenesHTML += `<span style='border: 1px solid #7ee07c; padding: 1px; display: inline-block;'>
+                                Dictamen: ${dictamenStatus}
+                                Certificado: ${certificado}</span>  <span class="d-block mt-2"></span>`;
+        });
+
+        // Si no hay dictámenes, mostramos un mensaje por defecto
+        if (dictamenesHTML === '') {
+            dictamenesHTML = '<span class="badge rounded-pill bg-danger">Sin dictamen</span>';
+        }
+
+        // Retornamos el HTML para mostrarlo en la interfaz
+        return `<div class="col-lg-6 mb-3" style="font-size: 14px">
+                    <div class="card bg-label-primary">
+                        <div class="card-body">
+                            <b class="card-title">${tipos}</b>
+                            <span class="d-block mt-2">Dirección: ${instalacion.direccion_completa}</span>
+                            <span class="d-block mt-2">${dictamenesHTML}</span>
+                        </div>
+                    </div>
+                </div>`;
+    }).join('') : '<p>No hay instalaciones registradas para esta empresa.</p>';
+
+tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
+                    <div class="accordion">
+                        <div class="accordion-item">
+                            <h5 class="accordion-header">
+                                <button class="accordion-button text-white ${empresa.instalaciones.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                    INSTALACIONES (${empresa.instalaciones.length}) <br><br>
+                                    ${empresa.instalaciones.length > 0 ? 'Despliega para ver instalaciones' : 'Sin registros'}
+                                </button>
+                            </h5>
+                            <div id="collapseOne" class="accordion-collapse collapse p-3 row">
+                                ${instalaciones}
                             </div>
-                        </div>`;
+                        </div>
+                    </div>
+                </div>`;
 
         //USUARIOS
         var usuarios = empresa.users.length > 0 
@@ -239,7 +261,7 @@ $(document).ready(function() {
                 return `<div class="col-lg-6 mb-3" style="font-size: 14px">
                             <div class="card bg-label-info">
                                 <div class="card-body">
-                                    <b class="card-title">${usuario.name}</b> <span class="d-block mt-1">
+                                    <b class="card-title">${usuario.name}</b> <span class="d-block mt-2">
                                         Correo: ${usuario.email} <span class="d-block mt-3">
                                         Teléfono: ${usuario.telefono || ''}
                                 </div>
@@ -269,7 +291,7 @@ $(document).ready(function() {
                 return `<div class="col-lg-6 mb-3" style="font-size: 14px">
                             <div class="card bg-label-warning">
                                 <div class="card-body">
-                                    <b class="card-title">${marca.marca}</b> <span class="d-block mt-1">
+                                    <b class="card-title">${marca.marca}</b> <span class="d-block mt-2">
                                     Folio: ${marca.folio}
                                 </div>
                             </div>
@@ -298,7 +320,7 @@ $(document).ready(function() {
                 return ` <div class="col-lg-6 mb-3" style="font-size: 14px">
                             <div class="card bg-label-danger">
                                 <div class="card-body">
-                                    <b class="card-title">${lote.nombre_lote}</b> <span class="d-block mt-1">
+                                    <b class="card-title">${lote.nombre_lote}</b> <span class="d-block mt-2">
                                         Volumen: ${lote.volumen} 
                                 </div>
                             </div>
@@ -327,7 +349,7 @@ $(document).ready(function() {
                 return ` <div class="col-lg-6 mb-3" style="font-size: 14px">
                         <div class="card bg-label-dark">
                             <div class="card-body">
-                                <b class="card-title">${loteEnv.nombre}</b> <span class="d-block mt-1">
+                                <b class="card-title">${loteEnv.nombre}</b> <span class="d-block mt-2">
                                     Marca: ${loteEnv.marca && loteEnv.marca.marca ? loteEnv.marca.marca : 'Sin marca'}
                             </div>
                         </div>
