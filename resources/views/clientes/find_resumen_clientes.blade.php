@@ -168,8 +168,8 @@ $(document).ready(function() {
                 url: '/get-datos-empresa/' + id_empresa,
                 type: 'GET',
                 success: function(response) {
-                    // Actualizar las tarjetas con la respuesta
-                    updateTarjetas(response);
+                    console.log(response);
+                    updateTarjetas(response);//Actualizar las tarjetas con la respuesta
                 },
                 error: function(xhr, status, error) {
                     console.error("Error al obtener los datos");
@@ -218,8 +218,8 @@ var instalaciones = empresa.instalaciones.length > 0
 
             // Añadimos el dictamen y certificado a la variable dictamenesHTML
             dictamenesHTML += `<span style='border: 1px solid #7ee07c; padding: 1px; display: inline-block;'>
-                                Dictamen: ${dictamenStatus}
-                                Certificado: ${certificado}</span>  <span class="d-block mt-2"></span>`;
+                                Dictamen ${tipos}: ${dictamenStatus}
+                                Certificado ${tipos}: ${certificado}</span>  <span class="d-block mt-2"></span>`;
         });
 
         // Si no hay dictámenes, mostramos un mensaje por defecto

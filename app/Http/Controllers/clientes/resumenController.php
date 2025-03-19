@@ -50,15 +50,12 @@ class resumenController extends Controller {
     foreach ($empresa->instalaciones as $instalacion) {
       // Inicializamos el array de dictámenes por tipo
       $dictamenes = [];
-
       // Iteramos sobre los tres tipos de instalación: Productor, Envasador, Comercializador
-      $tiposInstalacion = [1, 2, 3]; // 1 = Productor, 2 = Envasador, 3 = Comercializador
+      $tiposInstalacion = [1, 2, 3, 4]; // 1 = Productor, 2 = Envasador, 3 = Comercializador
 
       foreach ($tiposInstalacion as $tipo) {
           $dictamen = Dictamen_instalaciones::where('id_instalacion', $instalacion->id_instalacion)
               ->where('tipo_dictamen', $tipo) // Filtramos por tipo
-              ->where('fecha_emision', '<=', now()) // Fecha de emisión menor o igual al día actual
-              ->where('fecha_vigencia', '>=', now()) // Fecha de vigencia mayor o igual al día actual
               ->orderByDesc('fecha_emision') // Ordenar por la fecha más reciente
               ->first(); // Obtener el dictamen más reciente para ese tipo de instalación
 
