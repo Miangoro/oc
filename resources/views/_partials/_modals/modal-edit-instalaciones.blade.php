@@ -12,12 +12,12 @@
 
                     <div class="form-floating form-floating-outline mb-4">
                         <select id="edit_id_empresa" name="edit_id_empresa" class="form-select select2" required>
-                            <option value="" disabled selected>Selecciona la empresa</option>
+                            <option value="" disabled selected>Selecciona el cliente</option>
                             @foreach ($empresas as $empresa)
                                 <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
                             @endforeach
                         </select>
-                        <label for="edit_id_empresa">Empresa</label>
+                        <label for="edit_id_empresa">Cliente</label>
                     </div>
 
                     <div class="row">

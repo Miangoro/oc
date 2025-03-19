@@ -102,14 +102,23 @@ class DomiciliosController extends Controller
                     $query->where('tipo', 2);
                 })
                 ->where(function ($query) use ($search) {
-                    $query->where('id_instalacion', 'LIKE', "%{$search}%")
+                    $query->where('responsable', 'LIKE', "%{$search}%")
+                        ->orWhereHas('empresa', function ($subQuery) use ($search) {
+                            $subQuery->where('razon_social', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
+                            $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('estados', function ($subQuery) use ($search) {
+                            $subQuery->where('nombre', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('organismos', function ($subQuery) use ($search) {
+                            $subQuery->where('organismo', 'LIKE', "%{$search}%");
+                        })
                         ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
-                        ->orWhere('estado', 'LIKE', "%{$search}%")
                         ->orWhere('folio', 'LIKE', "%{$search}%")
-                        ->orWhere('tipo', 'LIKE', "%{$search}%")
-                        ->orWhere('id_organismo', 'LIKE', "%{$search}%")
-                        ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
-                        ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%");
+                        ->orWhere('tipo', 'LIKE', "%{$search}%");
+                    
                 })
                 ->count();
         }
