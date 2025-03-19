@@ -717,7 +717,7 @@ $(document).on('click', '.pdf', function ()  {
 ///FORMATO PDF DICTAMEN
 $(document).on('click', '.pdfDictamen', function ()  {
   var id = $(this).data('id');
-  var pdfUrl = '/dictamen_cumplimiento_exportacion/' + id; //Ruta del PDF
+  var pdfUrl = '/dictamen_exportacion/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF

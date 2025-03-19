@@ -182,11 +182,37 @@ $(document).ready(function() {
     function updateTarjetas(empresa) {//Actualiza las tarjetas
     var tarjetasHTML = '';
 
+//DOMICILIO FISCAL
+var fiscal = empresa.domicilio_fiscal 
+            ? `<div class="col-md-12 p-8">
+                    <div class="accordion">
+                        <div class="accordion-item">
+                            <h6 class="accordion-header">
+                                ${empresa.domicilio_fiscal}
+                            </h6>
+                        </div>
+                    </div>
+                </div>`
+            : '<p>No hay domicilio fiscal registrado para esta empresa.</p> <br><br>';
+
+// Añadir el domicilio fiscal como tarjeta simple
+tarjetasHTML += `${fiscal}`;
+
+
+
         // INSTALACIONES
 var instalaciones = empresa.instalaciones.length > 0 
     ? empresa.instalaciones.map(function(instalacion) {
         var tipos = JSON.parse(instalacion.tipo).join(', '); // tipo de instalación
         var dictamenesHTML = ''; // Variable para almacenar los dictámenes
+        // Mapa que relaciona el tipo numérico con el nombre del tipo de dictamen
+        var tipoDictamenMap = {
+            1: 'Productor',
+            2: 'Envasador',
+            3: 'Comercializador',
+            4: 'Almacén y Bodega',
+            5: 'Área de maduración'
+        };
 
         // Iteramos sobre los dictámenes de la instalación por tipo
         Object.keys(instalacion.dictamenes).forEach(function(tipo) {
@@ -216,10 +242,14 @@ var instalaciones = empresa.instalaciones.length > 0
                 }
             }
 
+            // Usamos el mapa para obtener el tipo de dictamen correspondiente
+            var tipoDictamenNombre = tipoDictamenMap[tipo] || 'Desconocido';
             // Añadimos el dictamen y certificado a la variable dictamenesHTML
             dictamenesHTML += `<span style='border: 1px solid #7ee07c; padding: 1px; display: inline-block;'>
-                                Dictamen ${tipos}: ${dictamenStatus}
-                                Certificado ${tipos}: ${certificado}</span>  <span class="d-block mt-2"></span>`;
+                            <a href="#" class="pdfDictamen" data-id="${dictamen.num_dictamen}">
+                                Dictamen ${tipoDictamenNombre}: ${dictamenStatus}
+                            </a>
+                                Certificado ${tipoDictamenNombre}: ${certificado}</span>  <span class="d-block mt-2"></span>`;
         });
 
         // Si no hay dictámenes, mostramos un mensaje por defecto
@@ -238,6 +268,33 @@ var instalaciones = empresa.instalaciones.length > 0
                     </div>
                 </div>`;
     }).join('') : '<p>No hay instalaciones registradas para esta empresa.</p>';
+
+
+    $(document).on('click', '.pdfDictamen', function () {
+    var id = $(this).data('id'); // Obtener el id del dictamen
+    var pdfUrl = '/dictamen_exportacion/' + id; // Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+
+    // Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+
+    // Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+
+    // Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
+    $("#titulo_modal").text("Dictamen de Cumplimiento para Producto de Exportación");
+    $("#subtitulo_modal").text("PDF del Dictamen");
+
+    // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+        spinner.hide();
+        iframe.show();
+    });
+});
+
 
 tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
                     <div class="accordion">

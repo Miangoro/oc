@@ -51,7 +51,7 @@ class resumenController extends Controller {
       // Inicializamos el array de dictámenes por tipo
       $dictamenes = [];
       // Iteramos sobre los tres tipos de instalación: Productor, Envasador, Comercializador
-      $tiposInstalacion = [1, 2, 3, 4]; // 1 = Productor, 2 = Envasador, 3 = Comercializador
+      $tiposInstalacion = [1, 2, 3, 4, 5]; //1=Productor,2=Envasador,3=Comercializador,4=Almacen, 5=maduracion
 
       foreach ($tiposInstalacion as $tipo) {
           $dictamen = Dictamen_instalaciones::where('id_instalacion', $instalacion->id_instalacion)
