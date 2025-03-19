@@ -154,6 +154,8 @@
   </div>
 </div>
 
+<!-- Modal -->
+@include('_partials/_modals/modal-pdfs-frames')
 
 <!----------------------->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -246,7 +248,7 @@ var instalaciones = empresa.instalaciones.length > 0
             var tipoDictamenNombre = tipoDictamenMap[tipo] || 'Desconocido';
             // Añadimos el dictamen y certificado a la variable dictamenesHTML
             dictamenesHTML += `<span style='border: 1px solid #7ee07c; padding: 1px; display: inline-block;'>
-                            <a href="#" class="pdfDictamen" data-id="${dictamen.num_dictamen}">
+                            <a href="#" class="pdfDictamen" data-id="${dictamen.id_dictamen}" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
                                 Dictamen ${tipoDictamenNombre}: ${dictamenStatus}
                             </a>
                                 Certificado ${tipoDictamenNombre}: ${certificado}</span>  <span class="d-block mt-2"></span>`;
