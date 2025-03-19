@@ -248,7 +248,7 @@ var instalaciones = empresa.instalaciones.length > 0
             var tipoDictamenNombre = tipoDictamenMap[tipo] || 'Desconocido';
             // Añadimos el dictamen y certificado a la variable dictamenesHTML
             dictamenesHTML += `<span style='border: 1px solid #7ee07c; padding: 1px; display: inline-block;'>
-                            <a href="#" class="pdfDictamen" data-id="${dictamen.id_dictamen}" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+                            <a href="#" class="pdfDictamen" data-id="${dictamen.id_dictamen}" data-tipo="${dictamen.tipo_dictamen}" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
                                 Dictamen ${tipoDictamenNombre}: ${dictamenStatus}
                             </a>
                                 Certificado ${tipoDictamenNombre}: ${certificado}</span>  <span class="d-block mt-2"></span>`;
@@ -272,29 +272,51 @@ var instalaciones = empresa.instalaciones.length > 0
     }).join('') : '<p>No hay instalaciones registradas para esta empresa.</p>';
 
 
-    $(document).on('click', '.pdfDictamen', function () {
-    var id = $(this).data('id'); // Obtener el id del dictamen
-    var pdfUrl = '/dictamen_exportacion/' + id; // Ruta del PDF
+$(document).on('click', '.pdfDictamen', function () {
+  var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en opciones
+  var tipo = $(this).data('tipo');
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
 
-    // Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    
+
+      if(tipo == 1){ // Productor
+        var tipo_dictamen = '../dictamen_productor/'+id;
+        var titulo = "Dictamen de productor";
+      }
+      if(tipo == 2){ // Envasador
+        var tipo_dictamen = '../dictamen_envasador/'+id;
+        var titulo = "Dictamen de envasador";
+      }
+      if(tipo == 3){ // Comercializador
+        var tipo_dictamen = '../dictamen_comercializador/'+id;
+        var titulo = "Dictamen de comercializador";
+      }
+      if(tipo == 4){ // Almacén y bodega
+        var tipo_dictamen = '../dictamen_almacen/'+id;
+        var titulo = "Dictamen de almacén y bodega";
+      }
+      if(tipo == 5){ // Área de maduración
+        var tipo_dictamen = '../dictamen_maduracion/'+id;
+        var titulo = "Dictamen de área de maduración de mezcal";
+      }
+      
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
     spinner.show();
     iframe.hide();
+    
+    //Cargar el PDF con el ID
+      iframe.attr('src', tipo_dictamen);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+      $("#NewPestana").attr('href', tipo_dictamen).show();
 
-    // Cargar el PDF con el ID
-    iframe.attr('src', pdfUrl);
+      $("#titulo_modal").text(titulo);
 
-    // Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', pdfUrl).show();
-    $("#titulo_modal").text("Dictamen de Cumplimiento para Producto de Exportación");
-    $("#subtitulo_modal").text("PDF del Dictamen");
-
-    // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-    iframe.on('load', function () {
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+      iframe.on('load', function () {
         spinner.hide();
         iframe.show();
-    });
+      });
 });
 
 
