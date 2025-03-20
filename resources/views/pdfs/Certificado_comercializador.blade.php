@@ -277,7 +277,7 @@ instalaciones indicadas a continuación.</p>
 <p class="text"><strong>Convenio de corresponsabilidad:</strong></p>
 
 <div class="signature">
-    <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/'.$firma_firmante) }}">
+    {{-- <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/'.$firma_firmante) }}"> --}}
     <div class="signature-line"></div>
     <div class="signature-name">{{ $nombre_firmante }}</div>
     <div class="signature-name">{{ $puesto_firmante }}</div>

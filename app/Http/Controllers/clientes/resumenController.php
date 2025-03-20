@@ -29,7 +29,6 @@ class resumenController extends Controller {
   }
 
 
-
   // FUNCION CARGAR DATOS DE EMPRESA
   public function DatosEmpresa($id_empresa) {
     //relacion (marcas, instalaciones, usuarios)
@@ -44,7 +43,7 @@ class resumenController extends Controller {
     foreach ($empresa->lotes_envasado as $lote) {
       $lote->marca = marcas::find($lote->id_marca); //Asignamos la marca al lote
     }
-
+    
 
     // Cargar los dictámenes más recientes para cada instalación
     foreach ($empresa->instalaciones as $instalacion) {
@@ -73,7 +72,6 @@ class resumenController extends Controller {
       // Asignamos los dictámenes obtenidos a la instalación
       $instalacion->dictamenes = $dictamenes;
   }
-
 
 
   // Retornar los datos en formato JSON

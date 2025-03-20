@@ -237,7 +237,7 @@
         <tr>
             <td style="font-size: 15px; padding-bottom: 15px; padding-top: 15px"><b>RFC</b></td>
             <td>{{$rfc}}</td>
-            <td style="font-size: 15px"><b>Contraseña NOM</b></td>
+            <td style="font-size: 15px"><b>Registro de productor autorizado</b></td>
             <td>&nbsp;</td>
         </tr>
     </table>

@@ -104,7 +104,6 @@
                   </div>
                </div>
             </div>
-            
             <!-- TARJETA 2 -->
             <div class="col-md-6 col-xl-4 mb-3">
                 <div class="accordion">
@@ -143,27 +142,23 @@
                   </div>
                </div>
             </div> --}}
-
         </div><!--CARDS FIN-->
         
-        
-    <br>
     </form>
     </div>
     </div>
   </div>
 </div>
 
-<!-- Modal -->
-@include('_partials/_modals/modal-pdfs-frames')
 
-<!----------------------->
+
+<!-------- SCRIPT -------->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
+
     $('#id_empresa').change(function() {
         var id_empresa = $(this).val();
-
         if(id_empresa) {
             //solicitud AJAX para obtener los datos de la empresa seleccionada
             $.ajax({
@@ -184,37 +179,30 @@ $(document).ready(function() {
     function updateTarjetas(empresa) {//Actualiza las tarjetas
     var tarjetasHTML = '';
 
-//DOMICILIO FISCAL
-var fiscal = empresa.domicilio_fiscal 
-            ? `<div class="col-md-12 p-8">
-                    <div class="accordion">
+    //DOMICILIO FISCAL
+    var fiscal = empresa.domicilio_fiscal 
+                ? `<div class="col-md-12 p-6">
                         <div class="accordion-item">
-                            <h6 class="accordion-header">
+                            <h5 class="accordion-header">
                                 ${empresa.domicilio_fiscal}
-                            </h6>
+                            </h5>
                         </div>
-                    </div>
-                </div>`
-            : '<p>No hay domicilio fiscal registrado para esta empresa.</p> <br><br>';
-
-// Añadir el domicilio fiscal como tarjeta simple
-tarjetasHTML += `${fiscal}`;
+                    </div>`
+                : '<p>No hay domicilio fiscal registrado para esta empresa.</p>';
+    tarjetasHTML += `${fiscal}`;
 
 
-
-        // INSTALACIONES
-var instalaciones = empresa.instalaciones.length > 0 
+    // INSTALACIONES
+    var instalaciones = empresa.instalaciones.length > 0 
     ? empresa.instalaciones.map(function(instalacion) {
         var tipos = JSON.parse(instalacion.tipo).join(', '); // tipo de instalación
         var dictamenesHTML = ''; // Variable para almacenar los dictámenes
-        // Mapa que relaciona el tipo numérico con el nombre del tipo de dictamen
-        var tipoDictamenMap = {
+        var tipoDictamenMap = { //relaciona el tipo numérico con el nombre del tipo de dictamen
             1: 'Productor',
             2: 'Envasador',
             3: 'Comercializador',
             4: 'Almacén y Bodega',
-            5: 'Área de maduración'
-        };
+            5: 'Área de maduración' };
 
         // Iteramos sobre los dictámenes de la instalación por tipo
         Object.keys(instalacion.dictamenes).forEach(function(tipo) {
@@ -222,9 +210,9 @@ var instalaciones = empresa.instalaciones.length > 0
             var dictamenTexto = dictamen.num_dictamen;
             var certificado = '<span class="badge rounded-pill bg-danger">Sin certificado</span>'; // Valor por defecto
             var dictamenStatus = '<span class="badge rounded-pill bg-danger">Sin dictamen</span>'; // Valor por defecto
-
-            var fechaVigenciaDictamen = new Date(dictamen.fecha_vigencia);
             var fechaActual = new Date();
+            var fechaVigenciaDictamen = new Date(dictamen.fecha_vigencia);
+            //var id_certificado = '';
 
             // Verificamos si el dictamen está vencido o vigente
             if (fechaVigenciaDictamen < fechaActual) {
@@ -235,23 +223,31 @@ var instalaciones = empresa.instalaciones.length > 0
 
             // Verificamos si hay un certificado relacionado con el dictamen
             if (dictamen.certificado) {
-                var fechaVigenciaCertificado = new Date(dictamen.certificado.fecha_vencimiento);
+            var fechaVigenciaCertificado = new Date(dictamen.certificado.fecha_vencimiento);
+            //var id_certificado = dictamen.certificado.id_certificado;
 
                 if (fechaVigenciaCertificado < fechaActual) {
-                    certificado = `${dictamen.certificado.num_certificado} <span class="badge rounded-pill bg-danger">Vencido</span>`;
+                    certificado = `
+                    <a href="#" class="pdfCertificado" data-id="${dictamen.certificado.id_certificado}" data-tipo="${dictamen.tipo_dictamen}" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+                        ${dictamen.certificado.num_certificado} 
+                    </a> <span class="badge rounded-pill bg-danger">Vencido</span>`;
                 } else {
-                    certificado = `${dictamen.certificado.num_certificado}`;
+                    certificado = `
+                    <a href="#" class="pdfCertificado" data-id="${dictamen.certificado.id_certificado}" data-tipo="${dictamen.tipo_dictamen}" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+                        ${dictamen.certificado.num_certificado} </a>`;
                 }
             }
 
             // Usamos el mapa para obtener el tipo de dictamen correspondiente
             var tipoDictamenNombre = tipoDictamenMap[tipo] || 'Desconocido';
             // Añadimos el dictamen y certificado a la variable dictamenesHTML
-            dictamenesHTML += `<span style='border: 1px solid #7ee07c; padding: 1px; display: inline-block;'>
-                            <a href="#" class="pdfDictamen" data-id="${dictamen.id_dictamen}" data-tipo="${dictamen.tipo_dictamen}" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
-                                Dictamen ${tipoDictamenNombre}: ${dictamenStatus}
-                            </a>
-                                Certificado ${tipoDictamenNombre}: ${certificado}</span>  <span class="d-block mt-2"></span>`;
+            dictamenesHTML += `
+            <span style='border: 1px solid #7ee07c; padding: 1px; display: inline-block;'>
+            <a href="#" class="pdfDictamen" data-id="${dictamen.id_dictamen}" data-tipo="${dictamen.tipo_dictamen}" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+                Dictamen ${tipoDictamenNombre}: <u>${dictamenStatus}</u>
+            </a>
+                Certificado ${tipoDictamenNombre}: <u>${certificado}</u>
+            </span>  <span class="d-block mt-2"></span>`;
         });
 
         // Si no hay dictámenes, mostramos un mensaje por defecto
@@ -261,205 +257,255 @@ var instalaciones = empresa.instalaciones.length > 0
 
         // Retornamos el HTML para mostrarlo en la interfaz
         return `<div class="col-lg-6 mb-3" style="font-size: 14px">
-                    <div class="card bg-label-primary">
-                        <div class="card-body">
-                            <b class="card-title">${tipos}</b>
-                            <span class="d-block mt-2">Dirección: ${instalacion.direccion_completa}</span>
-                            <span class="d-block mt-2">${dictamenesHTML}</span>
-                        </div>
-                    </div>
+                  <div class="card bg-label-primary">
+                     <div class="card-body">
+                        <b class="card-title">${tipos}</b>
+                        <span class="d-block mt-2">Dirección: ${instalacion.direccion_completa}</span>
+                        <span class="d-block mt-2">${dictamenesHTML}</span>
+                     </div>
+                  </div>
                 </div>`;
+
     }).join('') : '<p>No hay instalaciones registradas para esta empresa.</p>';
 
 
-$(document).on('click', '.pdfDictamen', function () {
-  var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en opciones
-  var tipo = $(this).data('tipo');
-    var iframe = $('#pdfViewer');
-    var spinner = $('#cargando');
-
-    
-
-      if(tipo == 1){ // Productor
-        var tipo_dictamen = '../dictamen_productor/'+id;
-        var titulo = "Dictamen de productor";
-      }
-      if(tipo == 2){ // Envasador
-        var tipo_dictamen = '../dictamen_envasador/'+id;
-        var titulo = "Dictamen de envasador";
-      }
-      if(tipo == 3){ // Comercializador
-        var tipo_dictamen = '../dictamen_comercializador/'+id;
-        var titulo = "Dictamen de comercializador";
-      }
-      if(tipo == 4){ // Almacén y bodega
-        var tipo_dictamen = '../dictamen_almacen/'+id;
-        var titulo = "Dictamen de almacén y bodega";
-      }
-      if(tipo == 5){ // Área de maduración
-        var tipo_dictamen = '../dictamen_maduracion/'+id;
-        var titulo = "Dictamen de área de maduración de mezcal";
-      }
-      
-    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-    spinner.show();
-    iframe.hide();
-    
-    //Cargar el PDF con el ID
-      iframe.attr('src', tipo_dictamen);
-    //Configurar el botón para abrir el PDF en una nueva pestaña
-      $("#NewPestana").attr('href', tipo_dictamen).show();
-
-      $("#titulo_modal").text(titulo);
-
-    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-      iframe.on('load', function () {
-        spinner.hide();
-        iframe.show();
-      });
-});
-
-
 tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
-                    <div class="accordion">
-                        <div class="accordion-item">
-                            <h5 class="accordion-header">
-                                <button class="accordion-button text-white ${empresa.instalaciones.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
-                                    INSTALACIONES (${empresa.instalaciones.length}) <br><br>
-                                    ${empresa.instalaciones.length > 0 ? 'Despliega para ver instalaciones' : 'Sin registros'}
-                                </button>
-                            </h5>
-                            <div id="collapseOne" class="accordion-collapse collapse p-3 row">
-                                ${instalaciones}
-                            </div>
+                  <div class="accordion">
+                     <div class="accordion-item">
+                        <h5 class="accordion-header">
+                            <button class="accordion-button text-white ${empresa.instalaciones.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                INSTALACIONES (${empresa.instalaciones.length}) <br><br>
+                                ${empresa.instalaciones.length > 0 ? 'Despliega para ver instalaciones' : 'Sin registros'}
+                            </button>
+                        </h5>
+                        <div id="collapseOne" class="accordion-collapse collapse p-3 row">
+                            ${instalaciones}
                         </div>
-                    </div>
+                     </div>
+                  </div>
                 </div>`;
 
-        //USUARIOS
-        var usuarios = empresa.users.length > 0 
-            ? empresa.users.map(function(usuario) {
-                return `<div class="col-lg-6 mb-3" style="font-size: 14px">
-                            <div class="card bg-label-info">
-                                <div class="card-body">
-                                    <b class="card-title">${usuario.name}</b> <span class="d-block mt-2">
-                                        Correo: ${usuario.email} <span class="d-block mt-3">
-                                        Teléfono: ${usuario.telefono || ''}
-                                </div>
-                            </div>
-                        </div> `;
-            }).join('') : '<p>No hay usuarios registrados para esta empresa.</p>';
+    //USUARIOS
+    var usuarios = empresa.users.length > 0 
+        ? empresa.users.map(function(usuario) {
+        return `<div class="col-lg-6 mb-3" style="font-size: 14px">
+                    <div class="card bg-label-info">
+                        <div class="card-body">
+                            <b class="card-title">${usuario.name}</b> <span class="d-block mt-2">
+                                Correo: ${usuario.email} <span class="d-block mt-3">
+                                Teléfono: ${usuario.telefono || ''}
+                        </div>
+                    </div>
+                </div> `;
+    }).join('') : '<p>No hay usuarios registrados para esta empresa.</p>';
 
-        tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
-                            <div class="accordion">
-                                <div class="accordion-item">
-                                    <h5 class="accordion-header">
-                                        <button class="accordion-button text-white ${empresa.users.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion2">
-                                            USUARIOS (${empresa.users.length}) <br><br>
-                                            ${empresa.users.length > 0 ? 'Despliega para ver los usuarios' : 'Sin registros'}
-                                        </button>
-                                    </h5>
-                                    <div id="coleccion2" class="accordion-collapse collapse p-3 row">
-                                        ${usuarios}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
+tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
+                  <div class="accordion">
+                     <div class="accordion-item">
+                        <h5 class="accordion-header">
+                            <button class="accordion-button text-white ${empresa.users.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion2">
+                                USUARIOS (${empresa.users.length}) <br><br>
+                                ${empresa.users.length > 0 ? 'Despliega para ver los usuarios' : 'Sin registros'}
+                            </button>
+                        </h5>
+                        <div id="coleccion2" class="accordion-collapse collapse p-3 row">
+                            ${usuarios}
+                        </div>
+                     </div>
+                  </div>
+                </div>`;
 
-        //MARCAS
-        var marcas = empresa.marcas.length > 0 
-            ? empresa.marcas.map(function(marca) {
-                return `<div class="col-lg-6 mb-3" style="font-size: 14px">
-                            <div class="card bg-label-warning">
-                                <div class="card-body">
-                                    <b class="card-title">${marca.marca}</b> <span class="d-block mt-2">
-                                    Folio: ${marca.folio}
-                                </div>
-                            </div>
-                        </div> `;
-            }).join('') : '<p>No hay marcas registradas para esta empresa.</p>';
+    //MARCAS
+    var marcas = empresa.marcas.length > 0 
+        ? empresa.marcas.map(function(marca) {
+        return `<div class="col-lg-6 mb-3" style="font-size: 14px">
+                  <div class="card bg-label-warning">
+                     <div class="card-body">
+                        <b class="card-title">${marca.marca}</b> <span class="d-block mt-2">
+                        Folio: ${marca.folio}
+                     </div>
+                  </div>
+                </div> `;
+    }).join('') : '<p>No hay marcas registradas para esta empresa.</p>';
 
-        tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
-                            <div class="accordion">
-                                <div class="accordion-item">
-                                    <h5 class="accordion-header">
-                                        <button class="accordion-button text-white ${empresa.marcas.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion3">
-                                            MARCAS (${empresa.marcas.length}) <br><br>
-                                            ${empresa.marcas.length > 0 ? 'Despliega para ver las marcas' : 'Sin registros'}
-                                        </button>
-                                    </h5>
-                                    <div id="coleccion3" class="accordion-collapse collapse p-3 row">
-                                        ${marcas}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
+tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
+                  <div class="accordion">
+                     <div class="accordion-item">
+                        <h5 class="accordion-header">
+                            <button class="accordion-button text-white ${empresa.marcas.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion3">
+                                MARCAS (${empresa.marcas.length}) <br><br>
+                                ${empresa.marcas.length > 0 ? 'Despliega para ver las marcas' : 'Sin registros'}
+                            </button>
+                        </h5>
+                        <div id="coleccion3" class="accordion-collapse collapse p-3 row">
+                            ${marcas}
+                        </div>
+                     </div>
+                  </div>
+                </div>`;
 
-        //LOTES GRANEL
-        var lotesGranel = empresa.lotes_granel.length > 0 
-            ? empresa.lotes_granel.map(function(lote) {
-                return ` <div class="col-lg-6 mb-3" style="font-size: 14px">
-                            <div class="card bg-label-danger">
-                                <div class="card-body">
-                                    <b class="card-title">${lote.nombre_lote}</b> <span class="d-block mt-2">
-                                        Volumen: ${lote.volumen} 
-                                </div>
-                            </div>
-                        </div>  `;
-            }).join('') : '<p>No hay lotes granel registrados para esta empresa.</p>';
-
-        tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
-                            <div class="accordion">
-                                <div class="accordion-item">
-                                    <h5 class="accordion-header">
-                                        <button class="accordion-button text-white ${empresa.lotes_granel.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion4">
-                                            LOTES GRANEL (${empresa.lotes_granel.length}) <br><br>
-                                            ${empresa.lotes_granel.length > 0 ? 'Despliega para ver los lotes granel' : 'Sin registros'}
-                                        </button>
-                                    </h5>
-                                    <div id="coleccion4" class="accordion-collapse collapse p-3 row">
-                                        ${lotesGranel}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
-
-        //LOTES ENVASADOS
-        var lotesEnvasado = empresa.lotes_envasado.length > 0 
-            ? empresa.lotes_envasado.map(function(loteEnv) {
-                return ` <div class="col-lg-6 mb-3" style="font-size: 14px">
-                        <div class="card bg-label-dark">
+    //LOTES GRANEL
+    var lotesGranel = empresa.lotes_granel.length > 0 
+        ? empresa.lotes_granel.map(function(lote) {
+        return ` <div class="col-lg-6 mb-3" style="font-size: 14px">
+                        <div class="card bg-label-danger">
                             <div class="card-body">
-                                <b class="card-title">${loteEnv.nombre}</b> <span class="d-block mt-2">
-                                    Marca: ${loteEnv.marca && loteEnv.marca.marca ? loteEnv.marca.marca : 'Sin marca'}
+                                <b class="card-title">${lote.nombre_lote}</b> <span class="d-block mt-2">
+                                Volumen: ${lote.volumen} 
                             </div>
                         </div>
-                    </div> `;
-            }).join('') : '<p>No hay lotes envasados registrados para esta empresa.</p>';
+                    </div>  `;
+    }).join('') : '<p>No hay lotes granel registrados para esta empresa.</p>';
 
-        tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
-                            <div class="accordion">
-                                <div class="accordion-item">
-                                    <h5 class="accordion-header">
-                                        <button class="accordion-button text-white ${empresa.lotes_envasado.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion5">
-                                            LOTES ENVASADOS (${empresa.lotes_envasado.length}) <br><br>
-                                            ${empresa.lotes_envasado.length > 0 ? 'Despliega para ver los lotes envasado' : 'Sin registros'}
-                                        </button>
-                                    </h5>
-                                    <div id="coleccion5" class="accordion-collapse collapse p-3 row">
-                                        ${lotesEnvasado}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
+tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
+                  <div class="accordion">
+                     <div class="accordion-item">
+                        <h5 class="accordion-header">
+                            <button class="accordion-button text-white ${empresa.lotes_granel.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion4">
+                                LOTES GRANEL (${empresa.lotes_granel.length}) <br><br>
+                                ${empresa.lotes_granel.length > 0 ? 'Despliega para ver los lotes granel' : 'Sin registros'}
+                            </button>
+                        </h5>
+                        <div id="coleccion4" class="accordion-collapse collapse p-3 row">
+                            ${lotesGranel}
+                        </div>
+                     </div>
+                  </div>
+                </div>`;
+
+    //LOTES ENVASADOS
+    var lotesEnvasado = empresa.lotes_envasado.length > 0 
+        ? empresa.lotes_envasado.map(function(loteEnv) {
+        return ` <div class="col-lg-6 mb-3" style="font-size: 14px">
+                    <div class="card bg-label-dark">
+                        <div class="card-body">
+                            <b class="card-title">${loteEnv.nombre}</b> <span class="d-block mt-2">
+                                Marca: ${loteEnv.marca && loteEnv.marca.marca ? loteEnv.marca.marca : 'Sin marca'}
+                        </div>
+                    </div>
+                </div> `;
+    }).join('') : '<p>No hay lotes envasados registrados para esta empresa.</p>';
+
+tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
+                  <div class="accordion">
+                     <div class="accordion-item">
+                        <h5 class="accordion-header">
+                            <button class="accordion-button text-white ${empresa.lotes_envasado.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion5">
+                                LOTES ENVASADOS (${empresa.lotes_envasado.length}) <br><br>
+                                ${empresa.lotes_envasado.length > 0 ? 'Despliega para ver los lotes envasado' : 'Sin registros'}
+                            </button>
+                        </h5>
+                        <div id="coleccion5" class="accordion-collapse collapse p-3 row">
+                            ${lotesEnvasado}
+                        </div>
+                     </div>
+                  </div>
+                </div>`;
 
 
     // Insertar las tarjetas en el HTML
     $('#tarjetas').html(tarjetasHTML);
     }
 
+});//FIN (document).ready(function()
+
+
+
+///PDF DICTAMEN
+$(document).on('click', '.pdfDictamen', function () {
+  var id = $(this).data('id');//ID del atributo "data-id"
+  var tipo = $(this).data('tipo');//ID del atributo "data-tipo"
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+
+    if(tipo == 1){ // Productor
+      var tipo_dictamen = '../dictamen_productor/'+id;
+      var titulo = "Dictamen de productor";
+    }
+    if(tipo == 2){ // Envasador
+      var tipo_dictamen = '../dictamen_envasador/'+id;
+      var titulo = "Dictamen de envasador";
+    }
+    if(tipo == 3){ // Comercializador
+      var tipo_dictamen = '../dictamen_comercializador/'+id;
+      var titulo = "Dictamen de comercializador";
+    }
+    if(tipo == 4){ // Almacén y bodega
+      var tipo_dictamen = '../dictamen_almacen/'+id;
+      var titulo = "Dictamen de almacén y bodega";
+    }
+    if(tipo == 5){ // Área de maduración
+      var tipo_dictamen = '../dictamen_maduracion/'+id;
+      var titulo = "Dictamen de área de maduración de mezcal";
+    }
+      
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    
+    //Cargar el PDF con ID
+    iframe.attr('src', tipo_dictamen);
+    //Configurar el botón para abrir PDF en una nueva pestaña
+    $("#NewPestana").attr('href', tipo_dictamen).show();
+    $("#titulo_modal").text(titulo);
+
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
 });
+
+
+///PDF CERTIFICADOS
+$(document).on('click', '.pdfCertificado', function () {
+  var id = $(this).data('id');
+  var tipo = $(this).data('tipo');
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+
+    if(tipo == 1){ // Productor
+      var tipo_certificado = '../certificado_productor_mezcal/' + id;
+      titulo = "Certificado de productor";
+    }
+    if(tipo == 2){ // Envasador
+      var tipo_certificado = '../certificado_envasador_mezcal/' + id;
+      titulo = "Certificado de envasador";
+    }
+    if(tipo == 3){ // Comercializador
+      var tipo_certificado = '../certificado_comercializador/' + id;
+      titulo = "Certificado de comercializador";
+    }
+    if(tipo == 4){ // Almacén y bodega
+      var tipo_certificado = '../dictamen_almacen/'+id;
+      var titulo = "Certificado de almacén y bodega";
+    }
+    if(tipo == 5){ // Área de maduración
+      var tipo_certificado = '../dictamen_maduracion/'+id;
+      var titulo = "Certificado de área de maduración de mezcal";
+    }
+
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    
+    //Cargar el PDF con ID
+    iframe.attr('src', tipo_certificado);
+    //Configurar el botón para abrir PDF en una nueva pestaña
+    $("#NewPestana").attr('href', tipo_certificado).show();
+    $("#titulo_modal").text(titulo);
+
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
+
 </script>
 
+
+<!-------- MODAL -------->
+@include('_partials/_modals/modal-pdfs-frames')
 
 @endsection

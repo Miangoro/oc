@@ -277,7 +277,7 @@ a la Denominación de Origen Mezcal, para ser aplicada a la bebida alcohólica d
 de Noviembre de 1994, así como sus subsecuentes modificaciones.</p>
 
 <div class="signature">
-    <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/'.$firma_firmante) }}">
+    {{-- <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/'.$firma_firmante) }}"> --}}
     <div class="signature-line"></div>
     <div class="signature-name">{{ $nombre_firmante }}</div>
     <div class="signature-name">{{ $puesto_firmante }}</div>
