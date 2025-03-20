@@ -12,4 +12,10 @@ class HologramasValidacion extends Controller
     $pageConfigs = ['myLayout' => 'blank'];
     return view('content.pages.pages-hologramas-validacion', ['pageConfigs' => $pageConfigs]);
   }
+
+  public function validar_dictamen()
+  {
+    
+    return view('content.pages.visualizador_dictamen_qr');
+  }
 }

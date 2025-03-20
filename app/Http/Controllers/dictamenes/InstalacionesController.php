@@ -6,57 +6,66 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dictamen_instalaciones;
-use App\Models\clases; 
+use App\Models\clases;
 use App\Models\categorias;
-use App\Models\inspecciones; 
-use App\Models\Instalaciones; 
+use App\Models\inspecciones;
+use App\Models\Instalaciones;
 
-use App\Models\empresa; 
+use App\Models\empresa;
 use App\Models\solicitudesModel;
 use App\Models\User;
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Faker\Extension\Helper;
+
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\ValidationException;
 
 class InstalacionesController extends Controller
 {
 
-  public function UserManagement()
+    public function UserManagement()
     {
         $dictamenes = Dictamen_instalaciones::all(); // Obtener todos los datos
         $clases = clases::all();
-        $users = User::where('tipo',2)->get(); //Solo inspectores 
+        $users = User::where('tipo', 2)->get(); //Solo inspectores 
         $categoria = categorias::all();
         $inspeccion = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 14);
         })
-        ->orderBy('id_inspeccion', 'desc')
-        ->get();
-        
+            ->orderBy('id_inspeccion', 'desc')
+            ->get();
+
         $empresa = empresa::all();
         $soli = solicitudesModel::all();
 
-        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'categoria', 'inspeccion','users'));
+        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'categoria', 'inspeccion', 'users'));
     }
 
 
-public function index(Request $request)
-{
+    public function index(Request $request)
+    {
         $columns = [
-        //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
+            //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
             1 => 'id_dictamen',
             2 => 'tipo_dictamen',
             3 => 'num_dictamen',
             4 => 'num_servicio',
             5 => 'fecha_emision',
-            6 => 'razon_social',//este lugar lo ocupa fecha en find
+            6 => 'razon_social', //este lugar lo ocupa fecha en find
             7 => 'direccion_completa',
             8 => 'fecha_vigencia'
         ];
 
         $search = [];
-        
+
         $totalData = Dictamen_instalaciones::count();
 
         $totalFiltered = $totalData;
@@ -70,17 +79,17 @@ public function index(Request $request)
         if (empty($request->input('search.value'))) {
             // ORDENAR EL BUSCADOR "thead"
             $users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
-            ->offset($start)
-            ->limit($limit)
-            ->orderByRaw("
+                ->offset($start)
+                ->limit($limit)
+                ->orderByRaw("
                 CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
                 CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')
             ")
-            ->get();
+                ->get();
         } else {
             // BUSCADOR
             $search = $request->input('search.value');
-        
+
             // Definimos el nombre al valor de "tipo_dictamen"
             $map = [
                 'productor' => 1,
@@ -89,14 +98,14 @@ public function index(Request $request)
                 'almacén y bodega' => 4,
                 'área de maduración' => 5,
             ];
-        
+
             // Verificar si la búsqueda es uno de los valores mapeados
             $searchValue = strtolower(trim($search)); // Convertir a minúsculas
             $searchType = $map[$searchValue] ?? null; // Obtener el valor del mapa si existe
-        
+
             // Consulta inicial con relaciones cargadas
             $query = Dictamen_instalaciones::with('inspeccione.solicitud.empresa');
-        
+
             // Filtrar por tipo_dictamen si se proporciona un valor válido
             if ($searchType !== null) {
                 $query->where('tipo_dictamen', $searchType);
@@ -118,7 +127,7 @@ public function index(Request $request)
                         });
                 });
             }
-        
+
             // Obtener resultados con paginación
             $users = $query->offset($start)
                 ->limit($limit)
@@ -126,7 +135,7 @@ public function index(Request $request)
                 CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
                 CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')")
                 ->get();
-        
+
             // Calcular el total filtrado
             $totalFiltered = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
                 ->where(function ($q) use ($search, $searchType) {
@@ -150,7 +159,7 @@ public function index(Request $request)
                 })
                 ->count();
         }
-        
+
 
         $data = [];
 
@@ -158,15 +167,15 @@ public function index(Request $request)
             $ids = $start;
 
             foreach ($users as $user) {
-            //MANDA LOS DATOS AL JS
+                //MANDA LOS DATOS AL JS
                 //$nestedData['fake_id'] = ++$ids;
                 $nestedData['id_dictamen'] = $user->id_dictamen;
                 $nestedData['tipo_dictamen'] = $user->tipo_dictamen;
                 $empresa = $user->inspeccione->solicitud->empresa;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                ? $empresa->empresaNumClientes
+                    ? $empresa->empresaNumClientes
                     ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-                : 'N/A';
+                    : 'N/A';
                 $nestedData['numero_cliente'] = $numero_cliente;
                 $nestedData['razon_social'] = $user->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
                 $nestedData['num_dictamen'] = $user->num_dictamen;
@@ -177,23 +186,23 @@ public function index(Request $request)
                 //$fecha_emision= Helpers::formatearFecha($user->fecha_emision) ?? 'N/A';
                 $fecha_emision = Helpers::formatearFecha($user->fecha_emision);
                 $fecha_vigencia = Helpers::formatearFecha($user->fecha_vigencia);
-                $nestedData['fechas'] = '<b>Fecha Emisión: </b>' .$fecha_emision. '<br> <b>Fecha Vigencia: </b>' .$fecha_vigencia;
+                $nestedData['fechas'] = '<b>Fecha Emisión: </b>' . $fecha_emision . '<br> <b>Fecha Vigencia: </b>' . $fecha_vigencia;
                 $nestedData['direccion_completa'] = $user->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrada';
 
 
 
                 $fechaActual = Carbon::now()->startOfDay(); // Asegúrate de trabajar solo con fechas, sin horas
                 $fechaVigencia = Carbon::parse($user->fecha_vigencia)->startOfDay();
-                
+
                 if ($fechaActual->isSameDay($fechaVigencia)) {
                     $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
                 } else {
                     $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
-                
+
                     if ($diasRestantes > 0) {
-                        if($diasRestantes > 15){
+                        if ($diasRestantes > 15) {
                             $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
-                        }else{
+                        } else {
                             $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
                         }
                         $nestedData['diasRestantes'] = $res;
@@ -201,7 +210,7 @@ public function index(Request $request)
                         $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
                     }
                 }
-                
+
 
 
                 $data[] = $nestedData;
@@ -223,168 +232,188 @@ public function index(Request $request)
                 'data' => [],
             ]);
         }
-}
+    }
 
 
 
-//FUNCION PARA REGISTRAR
-public function store(Request $request)
-{
-    try {
-        // Busca la inspección y carga las relaciones necesarias
-        $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
-    
-        // Verifica si la inspección y las relaciones existen
-        if (!$instalaciones || !$instalaciones->solicitud || !$instalaciones->solicitud->instalacion) {
-            return response()->json(['error' => 'No se encontró la instalación asociada a la inspección'], 404);
+    //FUNCION PARA REGISTRAR
+    public function store(Request $request)
+    {
+        try {
+            // Busca la inspección y carga las relaciones necesarias
+            $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
+
+            // Verifica si la inspección y las relaciones existen
+            if (!$instalaciones || !$instalaciones->solicitud || !$instalaciones->solicitud->instalacion) {
+                return response()->json(['error' => 'No se encontró la instalación asociada a la inspección'], 404);
+            }
+
+            // Crear y guardar el nuevo dictamen
+            $var = new Dictamen_instalaciones();
+            $var->id_inspeccion = $request->id_inspeccion;
+            $var->tipo_dictamen = $request->tipo_dictamen;
+            $var->id_instalacion = $instalaciones->solicitud->instalacion->id_instalacion;
+            $var->num_dictamen = $request->num_dictamen;
+            $var->fecha_emision = $request->fecha_emision;
+            $var->fecha_vigencia = $request->fecha_vigencia;
+            $var->id_firmante = $request->id_firmante;
+            // $var->categorias = json_encode($request->categorias);
+            // $var->clases = json_encode($request->clases);
+            $var->save(); // Guardar en BD
+
+            return response()->json(['success' => 'Registro agregado correctamente']);
+        } catch (\Exception $e) {
+            // Registrar el error en el log
+
+
+            return response()->json(['error' => 'Ocurrió un error al intentar agregar el registro'], 500);
         }
-    
-        // Crear y guardar el nuevo dictamen
-        $var = new Dictamen_instalaciones();
-        $var->id_inspeccion = $request->id_inspeccion;
-        $var->tipo_dictamen = $request->tipo_dictamen;
-        $var->id_instalacion = $instalaciones->solicitud->instalacion->id_instalacion;
-        $var->num_dictamen = $request->num_dictamen;
-        $var->fecha_emision = $request->fecha_emision;
-        $var->fecha_vigencia = $request->fecha_vigencia;
-        $var->id_firmante = $request->id_firmante;
-        // $var->categorias = json_encode($request->categorias);
-        // $var->clases = json_encode($request->clases);
-        $var->save(); // Guardar en BD
-    
-        return response()->json(['success' => 'Registro agregado correctamente']);
-    } catch (\Exception $e) {
-        // Registrar el error en el log
-        
-    
-        return response()->json(['error' => 'Ocurrió un error al intentar agregar el registro'], 500);
     }
-    
-}
 
 
 
-//FUNCION PARA ELIMINAR
-public function destroy($id_dictamen)
-{
-    try {
-        $eliminar = Dictamen_instalaciones::findOrFail($id_dictamen);
-        $eliminar->delete();
+    //FUNCION PARA ELIMINAR
+    public function destroy($id_dictamen)
+    {
+        try {
+            $eliminar = Dictamen_instalaciones::findOrFail($id_dictamen);
+            $eliminar->delete();
 
-        return response()->json(['success' => 'Eliminado correctamente']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al eliminar'], 500);
+            return response()->json(['success' => 'Eliminado correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al eliminar'], 500);
+        }
     }
-}
 
 
 
-//FUNCION PARA LLENAR EL FORMULARIO
-public function edit($id_dictamen)
-{
-    try {
-        $var1 = Dictamen_instalaciones::findOrFail($id_dictamen);
+    //FUNCION PARA LLENAR EL FORMULARIO
+    public function edit($id_dictamen)
+    {
+        try {
+            $var1 = Dictamen_instalaciones::findOrFail($id_dictamen);
 
-        $categorias = json_decode($var1->categorias);  //Convertir array
-        $clases = json_decode($var1->clases);  //Convertir array
-        //return response()->json($var1);
-        return response()->json([
-            'id_dictamen' => $var1->id_dictamen,
-            'tipo_dictamen' => $var1->tipo_dictamen,
-            'num_dictamen' => $var1->num_dictamen,
-            'fecha_emision' => $var1->fecha_emision,
-            'fecha_vigencia' => $var1->fecha_vigencia,
-            'id_inspeccion' => $var1->id_inspeccion,
-            'categorias' => $categorias,
-            'clases' => $clases,
-            'id_firmante' => $var1->id_firmante,
+            $categorias = json_decode($var1->categorias);  //Convertir array
+            $clases = json_decode($var1->clases);  //Convertir array
+            //return response()->json($var1);
+            return response()->json([
+                'id_dictamen' => $var1->id_dictamen,
+                'tipo_dictamen' => $var1->tipo_dictamen,
+                'num_dictamen' => $var1->num_dictamen,
+                'fecha_emision' => $var1->fecha_emision,
+                'fecha_vigencia' => $var1->fecha_vigencia,
+                'id_inspeccion' => $var1->id_inspeccion,
+                'categorias' => $categorias,
+                'clases' => $clases,
+                'id_firmante' => $var1->id_firmante,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener el dictamen'], 500);
+        }
+    }
+
+
+
+    //FUNCION PARA EDITAR
+    public function update(Request $request, $id_dictamen)
+    {
+        $request->validate([
+            'tipo_dictamen' => 'required|integer',
+            'num_dictamen' => 'required|string|max:255',
+            'fecha_emision' => 'nullable|date',
+            'fecha_vigencia' => 'nullable|date',
+            //'categorias' => 'required|array',
+            //'clases' => 'required|array',  
+            'id_inspeccion' => 'required|integer',
+            'id_firmante' => 'required|integer',
         ]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al obtener el dictamen'], 500);
+        try {
+            $var2 = Dictamen_instalaciones::findOrFail($id_dictamen);
+            $var2->id_inspeccion = $request->id_inspeccion;
+            $var2->tipo_dictamen = $request->tipo_dictamen;
+            $var2->num_dictamen = $request->num_dictamen;
+            $var2->fecha_emision = $request->fecha_emision;
+            $var2->fecha_vigencia = $request->fecha_vigencia;
+            $var2->categorias = $request->categorias;
+            $var2->clases = $request->clases;
+            $var2->id_firmante = $request->id_firmante;
+            $var2->save();
+
+            return response()->json(['success' => 'Editado correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al editar'], 500);
+        }
     }
-}
 
 
 
-//FUNCION PARA EDITAR
-    public function update(Request $request, $id_dictamen) 
-{
-    $request->validate([
-        'tipo_dictamen' => 'required|integer',
-        'num_dictamen' => 'required|string|max:255',
-        'fecha_emision' => 'nullable|date',
-        'fecha_vigencia' => 'nullable|date',
-        //'categorias' => 'required|array',
-        //'clases' => 'required|array',  
-        'id_inspeccion' => 'required|integer',
-        'id_firmante' => 'required|integer',
-    ]);
-    try {
-        $var2 = Dictamen_instalaciones::findOrFail($id_dictamen);
-        $var2->id_inspeccion = $request->id_inspeccion;
-        $var2->tipo_dictamen = $request->tipo_dictamen;
-        $var2->num_dictamen = $request->num_dictamen;
-        $var2->fecha_emision = $request->fecha_emision;
-        $var2->fecha_vigencia = $request->fecha_vigencia;
-        $var2->categorias = $request->categorias;
-        $var2->clases = $request->clases;
-        $var2->id_firmante = $request->id_firmante;
-        $var2->save();
-
-        return response()->json(['success' => 'Editado correctamente']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al editar'], 500);
-    }
-}
-
-
-
-//PDF'S DICTAMEN DE INSTALACIONES
+    //PDF'S DICTAMEN DE INSTALACIONES
     public function dictamen_productor($id_dictamen)
-    {   
+    {
         $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
-        
+
         $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
         $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-        $pdf = Pdf::loadView('pdfs.DictamenProductor',['datos'=>$datos, 'fecha_inspeccion'=>$fecha_inspeccion,'fecha_emision'=>$fecha_emision,'fecha_vigencia'=>$fecha_vigencia]);
+        $pdf = Pdf::loadView('pdfs.DictamenProductor', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia]);
         return $pdf->stream('F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor.pdf');
     }
 
     public function dictamen_envasador($id_dictamen)
-    {   
+    {
         $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
 
         $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
         $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-        $pdf = Pdf::loadView('pdfs.DictamenEnvasado',['datos'=>$datos, 'fecha_inspeccion'=>$fecha_inspeccion,'fecha_emision'=>$fecha_emision,'fecha_vigencia'=>$fecha_vigencia]);
+        $pdf = Pdf::loadView('pdfs.DictamenEnvasado', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia]);
         return $pdf->stream('F-UV-02-11 Ver 5, Dictamen de cumplimiento de Instalaciones como envasador.pdf');
     }
 
     public function dictamen_comercializador($id_dictamen)
-    {   
+    {
         $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
+        // URL que quieres codificar en el QR
+        $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
 
+        $qrCode = new QrCode(
+            data: $url,
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::Low,
+            size: 300,
+            margin: 10,
+            roundBlockSizeMode: RoundBlockSizeMode::Margin,
+            foregroundColor: new Color(0, 0, 0),
+            backgroundColor: new Color(255, 255, 255)
+        );
+    
+        // Escribir el QR en formato PNG
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+    
+        // Convertirlo a Base64
+        $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+        
         $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
         $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-        $pdf = Pdf::loadView('pdfs.DictamenComercializador',['datos'=>$datos, 'fecha_inspeccion'=>$fecha_inspeccion,'fecha_emision'=>$fecha_emision,'fecha_vigencia'=>$fecha_vigencia]);
-        return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones como comercializador.pdf');
+        $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos->inspeccione->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
+        $pdf = Pdf::loadView('pdfs.DictamenComercializador', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
+        return $pdf->stream($datos->num_dictamen . ' Dictamen de cumplimiento de instalaciones como comercializador.pdf');
     }
 
     public function dictamen_almacen($id_dictamen)
     {
         $datos = Dictamen_instalaciones::find($id_dictamen);
-    
+
         $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
         $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-    
+
         // Solucion al problema de la cadena, como se guarda en la BD: ["Blanco o Joven","Reposado", "A\u00f1ejo"
         $categorias = json_decode($datos->categorias, true);
         $clases = json_decode($datos->clases, true);
-    
+
         $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_Instalaciones', [
             'datos' => $datos,
             'fecha_inspeccion' => $fecha_inspeccion,
@@ -393,22 +422,22 @@ public function edit($id_dictamen)
             'categorias' => $categorias,
             'clases' => $clases
         ]);
-    
+
         return $pdf->stream('F-UV-02-13 Ver 1, Dictamen de cumplimiento de Instalaciones almacén.pdf');
     }
-    
+
     public function dictamen_maduracion($id_dictamen)
     {
         $datos = Dictamen_instalaciones::find($id_dictamen);
-    
+
         $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
         $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-    
+
         // Solucion al problema de la cadena, como se guarda en la BD: ["Blanco o Joven","Reposado", "A\u00f1ejo"
         $categorias = json_decode($datos->categorias, true);
         $clases = json_decode($datos->clases, true);
-    
+
         $pdf = Pdf::loadView('pdfs.Dictamen_Instalaciones_maduracion_mezcal', [
             'datos' => $datos,
             'fecha_inspeccion' => $fecha_inspeccion,
@@ -420,10 +449,4 @@ public function edit($id_dictamen)
 
         return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones del área de maduración.pdf');
     }
-    
-
-
-
-
-
 }

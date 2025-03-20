@@ -9,9 +9,46 @@ use App\Models\marcas;
 use App\Models\Predios;
 use App\Models\solicitudesModel;
 use Carbon\Carbon;
+use PhpCfdi\Credentials\Credential;
 
 class Helpers
-{
+{ 
+
+
+  public static function firmarCadena(string $cadenaOriginal, string $password, int $userId)
+    {
+        try {
+        
+
+            // Rutas de los archivos en storage
+            $cerPath = storage_path("app/public/firmas/efirma/{$userId}.cer");
+            $keyPath = storage_path("app/public/firmas/efirma/{$userId}.key");
+
+            // Verificar que los archivos existen
+            if (!file_exists($cerPath) || !file_exists($keyPath)) {
+                return response()->json(['error' => 'No se encontraron los archivos de la firma'], 404);
+            }
+
+  
+
+            // Crear la credencial con los archivos
+            $credential = Credential::openFiles($cerPath, $keyPath, $password);
+
+            // Firmar la cadena
+            $firma = base64_encode($credential->sign($cadenaOriginal));
+
+            return [
+                'cadena_original' => $cadenaOriginal,
+                'firma' => $firma,
+                'rfc' => $credential->certificate()->rfc(),
+                'nombre' => $credential->certificate()->legalName()];
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'No se pudo firmar la cadena: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
   public static function generarFolioMarca($id_empresa)
   {
       $count = marcas::where('id_empresa', $id_empresa)->count();

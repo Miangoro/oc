@@ -212,6 +212,7 @@ use App\Http\Controllers\insertar_datos_bd_dictamenes;
 use App\Http\Controllers\Tramite_impi\impiController;
 use App\Http\Controllers\dictamenes\DictamenExportacionController;
 use App\Http\Controllers\clientes\resumenController;
+use App\Http\Controllers\efirma\firmaController;
 use App\Http\Controllers\insertar_datos_bd_actas;
 
 // Main Page Route
@@ -311,6 +312,7 @@ Route::get('/pages/faq', [Faq::class, 'index'])->name('pages-faq');
 Route::get('/pages/pricing', [PagesPricing::class, 'index'])->name('pages-pricing');
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
 Route::get('/pages/hologramas-validacion/{folio}', [HologramasValidacion::class, 'index'])->name('pages-hologramas-validacion');
+Route::get('/validar_dictamen', [HologramasValidacion::class, 'validar_dictamen'])->name('validar_dictamen');
 
 Route::get('/pages/misc-under-maintenance', [MiscUnderMaintenance::class, 'index'])->name('pages-misc-under-maintenance');
 Route::get('/pages/misc-comingsoon', [MiscComingSoon::class, 'index'])->name('pages-misc-comingsoon');
@@ -970,4 +972,8 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
 Route::middleware(['auth'])->controller(resumenController::class)->group(function () {
     Route::get('resumen-datos', 'UserManagement')->name('resumen');
     Route::get('/get-datos-empresa/{id_empresa}', [resumenController::class, 'DatosEmpresa']);
+});
+
+Route::middleware(['auth'])->controller(firmaController::class)->group(function () {
+    Route::get('firmarCadena', 'firmarCadena')->name('firmarCadena');
 });
