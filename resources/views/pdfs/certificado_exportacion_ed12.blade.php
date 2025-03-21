@@ -205,7 +205,7 @@
             <td class="td-margins"
                 style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px; padding-top: 10px;padding-bottom: 10px;">
                 Código Postal:</td>
-            <td class="td-margins" style="text-align: left"> &nbsp; </td>
+            <td class="td-margins" style="text-align: left"> {{ $cp}}&nbsp; </td>
             <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
                 Estado:</td>
             <td class="td-margins" style="text-align: left; padding-right: 4px;">{{ $estado}}</td>
@@ -249,7 +249,7 @@
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Edad (solo aplica en Añejo):</td>
             <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->edad ?? "N"}}  
+                {{ $lote->lotesGranel->first()->edad ?? "NA"}}  
             </td>
         </tr>
         <tr>

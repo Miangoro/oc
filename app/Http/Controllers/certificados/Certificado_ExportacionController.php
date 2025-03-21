@@ -291,6 +291,7 @@ public function MostrarCertificadoExportacion($id_certificado)
         'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
         'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? "",
         'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? "",
+        'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? "",
         'convenio' => $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA',
         'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
         'watermarkText' => $watermarkText,
