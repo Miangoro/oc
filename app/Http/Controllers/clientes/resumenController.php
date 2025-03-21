@@ -7,12 +7,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\empresa;
 use App\Models\empresaNumCliente;
-use App\Models\User;
+use App\Models\Predios;
 use App\Models\LotesGranel;
 use App\Models\lotes_envasado;
 use App\Models\marcas;
 use App\Models\Dictamen_instalaciones;
 use App\Models\Certificados;
+use App\Models\direcciones;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -37,6 +38,8 @@ class resumenController extends Controller {
                       ->first();
 
     // Cargar los lotes manualmente
+    $empresa->predios = Predios::where('id_empresa', $id_empresa)->get();
+    $empresa->direccion_destino = direcciones::where('id_empresa', $id_empresa)->get();
     $empresa->lotes_granel = LotesGranel::where('id_empresa', $id_empresa)->get();
     $empresa->lotes_envasado = lotes_envasado::where('id_empresa', $id_empresa)->get();
     // Cargar las marcas asociadas a cada lote_envasado

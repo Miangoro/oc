@@ -285,6 +285,64 @@ tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
                   </div>
                 </div>`;
 
+    //PREDIOS
+    var predios = empresa.predios.length > 0 
+        ? empresa.predios.map(function(predios) {
+        return `<div class="col-lg-6 mb-3" style="font-size: 14px">
+                  <div class="card bg-label-warning">
+                     <div class="card-body">
+                        <b class="card-title">${predios.nombre_predio}</b> <span class="d-block mt-2">
+                        No. de predio: ${predios.num_predio}
+                     </div>
+                  </div>
+                </div> `;
+    }).join('') : '<p>No hay predios registrados para esta empresa.</p>';
+
+tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
+                  <div class="accordion">
+                     <div class="accordion-item">
+                        <h5 class="accordion-header">
+                            <button class="accordion-button text-white ${empresa.predios.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion6">
+                                PREDIOS (${empresa.predios.length}) <br><br>
+                                ${empresa.predios.length > 0 ? 'Despliega para ver los predios' : 'Sin registros'}
+                            </button>
+                        </h5>
+                        <div id="coleccion6" class="accordion-collapse collapse p-3 row">
+                            ${predios}
+                        </div>
+                     </div>
+                  </div>
+                </div>`;
+
+    //DIRECCION DESTINOS
+    var destinos = empresa.direccion_destino.length > 0 
+        ? empresa.direccion_destino.map(function(destino) {
+        return `<div class="col-lg-6 mb-3" style="font-size: 14px">
+                  <div class="card bg-label-warning">
+                     <div class="card-body">
+                        <b class="card-title">${destino.destinatario}</b> <span class="d-block mt-2">
+                        Domicilio: ${destino.direccion}
+                     </div>
+                  </div>
+                </div> `;
+    }).join('') : '<p>No hay direcciones de destino registradas para esta empresa.</p>';
+
+tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
+                  <div class="accordion">
+                     <div class="accordion-item">
+                        <h5 class="accordion-header">
+                            <button class="accordion-button text-white ${empresa.direccion_destino.length > 0 ? 'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion7">
+                                DIRECCION DESTINOS (${empresa.direccion_destino.length}) <br><br>
+                                ${empresa.direccion_destino.length > 0 ? 'Despliega para ver las direcciones' : 'Sin registros'}
+                            </button>
+                        </h5>
+                        <div id="coleccion7" class="accordion-collapse collapse p-3 row">
+                            ${destinos}
+                        </div>
+                     </div>
+                  </div>
+                </div>`;
+                
     //USUARIOS
     var usuarios = empresa.users.length > 0 
         ? empresa.users.map(function(usuario) {
