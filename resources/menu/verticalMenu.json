@@ -144,11 +144,7 @@
           "name": "Granel",
           "slug": "certificados-granel"
         },
-        {
-          "url": "certificados/producto",
-          "name": "Envasado",
-          "slug": "certificados-producto"
-        },
+
         {
           "url": "certificados/exportacion",
           "name": "Exportación",
