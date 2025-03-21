@@ -333,7 +333,7 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 35px;">Aduana de despacho:</td>
             <td style="text-align: left; padding-left: 4px;">{{$aduana}}</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Fracción Arancelaria:</td>
-            <td style="text-align: left; padding-left: 4px;">Falta</td>
+            <td style="text-align: left; padding-left: 4px;">2208.90.05.00</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de <br>pedido:</td>
             <td style="text-align: left; padding-left: 4px;">{{ $n_pedido }}</td>
         </tr>

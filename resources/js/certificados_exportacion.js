@@ -14,22 +14,14 @@ $(document).ready(function () {
 ///FUNCION FECHAS
 $('#fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
-//Sumar 1 año a la fecha inicial
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-//Sumar 1 día a la fecha inicial
-  fechaInicial.setDate(fechaInicial.getDate() + 1);
-  //Establecer el calendario de #fecha_vigencia en el año sumado
+  fechaInicial.setDate(fechaInicial.getDate() + 91);//Sumar 90 días a la fecha inicial
   $('#fecha_vigencia').datepicker("setDate", fechaInicial);
 });
 
 ///FUNCION FECHAS EDIT
 $('#edit_fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
-  //Sumar 1 año a la fecha inicial
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-  //Sumar 1 día a la fecha inicial
-  fechaInicial.setDate(fechaInicial.getDate() + 1);
-  //Establecer el calendario de #fecha_vigencia en el año sumado
+  fechaInicial.setDate(fechaInicial.getDate() + 91);
   $('#edit_fecha_vigencia').datepicker("setDate", fechaInicial);
 });
 
