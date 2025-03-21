@@ -381,6 +381,7 @@ public function editar_cliente_confirmado(Request $request)
         'domicilio_fiscal' => 'required|string|max:255',
         'representante' => 'nullable|string|max:255',
         'estado' => 'required|exists:estados,id',
+        'cp' => 'required|string|max:5',
         'rfc' => 'required|string|max:13',
         'correo' => 'required|email|max:255',
         'telefono' => 'nullable|string|max:15',
@@ -404,6 +405,7 @@ public function editar_cliente_confirmado(Request $request)
       : 'No aplica';
  
       $cliente->estado = $validatedData['estado'];
+      $cliente->cp = $validatedData['cp'];
       $cliente->rfc = $validatedData['rfc'];
       $cliente->correo = $validatedData['correo'];
       $cliente->telefono = $validatedData['telefono'];
@@ -552,6 +554,7 @@ public function actualizarRegistros(Request $request)
           'domicilio_fiscal' => 'required|string|max:255',
           'representante' => 'nullable|string|max:255',
           'estado' => 'required|exists:estados,id',
+          'cp' => 'required|string|max:5',
           'rfc' => 'required|string|max:13',
           'correo' => 'required|email|max:255',
           'telefono' => 'nullable|string|max:15',
@@ -574,6 +577,7 @@ public function actualizarRegistros(Request $request)
         ? $validatedData['representante']
         : 'No aplica';
         /*  */
+        $cliente->cp = $validatedData['cp'];
         $cliente->estado = $validatedData['estado'];
         $cliente->rfc = $validatedData['rfc'];
         $cliente->correo = $validatedData['correo'];

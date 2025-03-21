@@ -52,9 +52,17 @@
                     </div>
                     <div id="normas-info"></div>
                     <!-- Sección de estado y representante -->
+
                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input maxlength="5" type="number" id="cp" name="cp" class="form-control"
+                                    autocomplete="off" placeholder="Código postal" required/>
+                                <label for="cp">Código postal</label>
+                            </div>
+                        </div>
                         <!-- Estado -->
-                        <div id="EstadosClass" class="col-md-12">
+                        <div id="EstadosClass" class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select class="form-select select2" id="estado" name="estado"
                                     data-placeholder="Seleccione un estado" aria-label="Estado" required>
@@ -67,9 +75,10 @@
                                 <label for="estado">Estado</label>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="row">
                         <!-- Representante Legal (Oculto por defecto) -->
-                        <div id="MostrarRepresentante" class="d-none col-md-6">
+                        <div id="MostrarRepresentante" class="d-none col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
                                 <input type="text" id="representante" name="representante" class="form-control"
                                     autocomplete="off" placeholder="Representante" required />
@@ -90,7 +99,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="normas">actividad</label>
+                                <label for="normas">Actividad</label>
                             </div>
                         </div>
                     </div>

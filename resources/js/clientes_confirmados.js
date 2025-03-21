@@ -834,11 +834,11 @@ $(function () {
 
       if (tipoPersona === 'Persona moral') {
         $('#MostrarRepresentante').removeClass('d-none');
-        $('#EstadosClass').removeClass('col-md-12').addClass('col-md-6');
+        $('#EstadosClass').removeClass('col-md-6').addClass('col-md-4');
         fv.enableValidator('representante');
       } else {
         $('#MostrarRepresentante').addClass('d-none');
-        $('#EstadosClass').removeClass('col-md-6').addClass('col-md-12');
+        $('#EstadosClass').removeClass('col-md-4').addClass('col-md-6');
         fv.disableValidator('representante');
       }
     });
@@ -969,6 +969,7 @@ $(document).ready(function() {
                   $('#actividad_edit').val(actividad).trigger('change');
                   
                   $('#estado_edit').val(dato.estado).trigger('change');
+                  $('#cp_edit').val(dato.cp);
                   $('#domicilio_fiscal_edit').val(dato.domicilio_fiscal);
                   $('#rfc_edit').val(dato.rfc);
                   $('#correo_edit').val(dato.correo);
