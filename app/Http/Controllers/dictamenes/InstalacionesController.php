@@ -119,6 +119,12 @@ class InstalacionesController extends Controller
                         ->orWhereHas('inspeccione', function ($q) use ($search) {
                             $q->where('num_servicio', 'LIKE', "%{$search}%");
                         })
+                        ->orWhereHas('inspeccione.solicitud', function ($q) use ($search) {
+                            $q->where('folio', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('inspeccione.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
+                            $q->where('numero_cliente', 'LIKE', "%{$search}%");
+                        })
                         ->orWhereHas('inspeccione.solicitud.empresa', function ($q) use ($search) {
                             $q->where('razon_social', 'LIKE', "%{$search}%");
                         })
@@ -148,6 +154,12 @@ class InstalacionesController extends Controller
                             ->orWhere('dictamenes_instalaciones.fecha_vigencia', 'LIKE', "%{$search}%")
                             ->orWhereHas('inspeccione', function ($q) use ($search) {
                                 $q->where('num_servicio', 'LIKE', "%{$search}%");
+                            })
+                            ->orWhereHas('inspeccione.solicitud', function ($q) use ($search) {
+                                $q->where('folio', 'LIKE', "%{$search}%");
+                            })
+                            ->orWhereHas('inspeccione.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
+                                $q->where('numero_cliente', 'LIKE', "%{$search}%");
                             })
                             ->orWhereHas('inspeccione.solicitud.empresa', function ($q) use ($search) {
                                 $q->where('razon_social', 'LIKE', "%{$search}%");
@@ -393,7 +405,7 @@ class InstalacionesController extends Controller
     
         // Convertirlo a Base64
         $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
-        
+
         $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
         $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);

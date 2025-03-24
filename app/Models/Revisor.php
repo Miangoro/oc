@@ -26,7 +26,8 @@ class Revisor extends Model
         'desicion',
         'id_aprobador',
         'aprobacion',
-        'fecha_aprobacion'  
+        'fecha_aprobacion',
+        'tipo_certificado'
     ];
 
     public function getLogName2(): string
@@ -34,11 +35,36 @@ class Revisor extends Model
         return 'Revisor'; // Devuelve el nombre que desees
     }
 
-    // Relación inversa con Certificados
     public function certificado()
     {
         return $this->belongsTo(Certificados::class, 'id_certificado', 'id_certificado');
     }
+    
+    public function certificadoGranel()
+    {
+        return $this->belongsTo(CertificadosGranel::class, 'id_certificado', 'id_certificado');
+    }
+    
+    public function certificadoExportacion()
+    {
+        return $this->belongsTo(Certificado_Exportacion::class, 'id_certificado', 'id_certificado');
+    }
+    
+    // Usar un accesor en lugar de un método de relación
+    public function getCertificadoAttribute()
+    {
+        switch ($this->tipo_certificado) {
+            case 1:
+                return $this->certificado()->first();
+            case 2:
+                return $this->certificadoGranel->first();
+            case 3:
+                return $this->certificadoExportacion->first();
+            default:
+                return null;
+        }
+    }
+    
 
     public function user()
     {

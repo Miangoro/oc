@@ -869,6 +869,9 @@ Route::middleware(['auth'])->controller(RevisionPersonalController::class)->grou
     Route::post('/editar-respuestas', 'editarRespuestas');
     // -Granel-
     Route::get('/bitacora_revisionPersonal_Granel/{id}', 'Bitacora_revisionPersonal_Granel');
+
+
+    Route::get('/add_revision/{id_revision}', 'add_revision');
 });
 
 

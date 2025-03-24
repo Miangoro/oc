@@ -205,6 +205,59 @@
                                                         @endforeach
                                                     </tbody>
                                                 @endif
+
+
+                                                    <!-- Preguntas de tipo preguntasRevisorExportacion -->
+                                                    @if($preguntasRevisorExportacion->isNotEmpty())
+                                                    <tbody id="revisorExportacion">
+                                                        @foreach($preguntasRevisorExportacion as $index => $pregunta)
+                                                            <tr>
+                                                                <td>{{ $contador++ }}</td>
+                                                                <td>{{ $pregunta->pregunta }}</td>
+
+                                                                @if($pregunta->filtro == 'num_certificado')
+                                                                <td><b class="text-danger">{{ $revisor->certificado->num_certificado ?? 'N/A' }}</b></td>
+
+                                                                @elseif($pregunta->filtro == 'direccion_fiscal')
+                                                                    <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }}</b></td>
+
+                                                                @elseif($pregunta->filtro == 'pais')
+                                                                <td><b>México</b></td>
+
+                                                                @elseif($pregunta->filtro == 'cp')
+                                                                <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}</b></td>
+                                            
+                                                                @elseif($pregunta->documentacion?->documentacionUrls)
+                                                                    <td>
+                                                                        <a target="_blank" href="{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->isNotEmpty() ? 
+                                                                            '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente . '/' . 
+                                                                            $revisor->obtenerDocumentosClientes($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa) 
+                                                                            : 'NA' }}">
+                                                                            <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                @else
+                                                                    <td>Sin datos</td>
+                                                                @endif
+                                            
+                                                                <td>
+                                                                    <select class="form-select form-select-sm" aria-label="Elige la respuesta" name="respuesta[{{ $index }}]">
+                                                                        <option value="" selected>Selecciona</option>
+                                                                        <option value="1">C</option>
+                                                                        <option value="2">NC</option>
+                                                                        <option value="3">NA</option>
+                                                                    </select>                                                          
+                                                                </td>
+                                                                <td>
+                                                                    <textarea rows="1" name="" id="" class="form-control" placeholder="Observaciones"></textarea>                               
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                @endif
+
+
+
                                             </tbody>
                                                                                                                                  
                                         </table>

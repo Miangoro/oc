@@ -17,6 +17,7 @@ class empresa extends Model
         'razon_social',
         'domicilio_fiscal',
         'tipo',
+        'cp'
       ];
 
       public function getLogName2(): string

@@ -682,6 +682,25 @@ public function calcularCertificadosExportacion($userId)
     ];  
 }
 
+public function add_revision($id_revision){
+
+    $datos = Revisor::with('certificado')->where("id_revision",$id_revision)->first();
+    $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->get();
+    if($datos->tipo_certificado == 1){ //Instalaciones
+        $url = "/certificado_comercializador/".$datos->id_certificado;
+        $tipo = "Instalaciones";
+    }
+    if($datos->tipo_certificado == 2){//Granel
+        $url = "/Pre-certificado/".$datos->id_certificado;
+        $tipo = "Granel";
+    }
+    if($datos->tipo_certificado == 3){//Exportación
+        $url = "/certificado_exportacion/".$datos->id_certificado;
+        $tipo = "Exportación";
+    }
+    return view('certificados.add_revision', compact('datos','preguntas','url','tipo'));
+}
+
 
 
 
