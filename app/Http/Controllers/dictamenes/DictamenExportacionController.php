@@ -267,15 +267,28 @@ public function MostrarDictamenExportacion($id_dictamen)
     $pdf = Pdf::loadView('pdfs.dictamen_exportacion_ed2', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
         'lotes' =>$lotes,
-        'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
-        'domicilio' => $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrada',
-        'rfc' => $data->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'no_dictamen' => $data->num_dictamen,
-        'fecha_servicio' => $fecha_servicio,
         'fecha_emision' => $fecha_emision2,
-        'fecha_vigencia' => $fecha_vigencia,
+        'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
+        'domicilio' => $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
+        'rfc' => $data->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
+        'productor_autorizado' => $data->inspeccione->solicitud->empresa->registro_productor ?? '',
+        'importador' => $data->inspeccione->solicitud->direccion_destino->destinatario ?? "No encontrada",
+        //'direccion' => $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrada',
+        'direccion' => $data->inspeccione->solicitud->direccion_destino->direccion ?? "No encontrada",
+        'pais' => $data->inspeccione->solicitud->direccion_destino->pais_destino ?? "No encontrada",
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
+        ///caracteristicas
+        'aduana' => $aduana_salida ?? "No encontrada",
+        'n_pedido' => $no_pedido ?? "No encontrada",
+        'botellas' => $botellas ?? "No encontrada",
+        'cajas' => $cajas ?? "No encontrada",
+        'presentacion' => $presentacion ?? "No encontrada",
+
+        'fecha_servicio' => $fecha_servicio,
+        'fecha_vigencia' => $fecha_vigencia,
+        
     ]);
     //nombre al descarga
     return $pdf->stream('F-UV-04-18 Ver 2. Dictamen de Cumplimiento para Producto de Exportación.pdf');

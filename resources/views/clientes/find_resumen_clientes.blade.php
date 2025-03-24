@@ -317,11 +317,30 @@ tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
     //DIRECCION DESTINOS
     var destinos = empresa.direccion_destino.length > 0 
         ? empresa.direccion_destino.map(function(destino) {
+        var tipoDireccion = '';
+        switch (destino.tipo_direccion) {
+        case 1:
+            tipoDireccion = 'Exportación';
+            color = 'bg-info';
+            break;
+        case 2:
+            tipoDireccion = 'Venta Nacional';
+            color = 'bg-primary';
+            break;
+        case 3:
+            tipoDireccion = 'Hologramas';
+            color = 'bg-danger';
+            break;
+        default:
+            tipoDireccion = 'Tipo desconocido';
+            break;
+        }
         return `<div class="col-lg-6 mb-3" style="font-size: 14px">
                   <div class="card bg-label-warning">
                      <div class="card-body">
                         <b class="card-title">${destino.destinatario}</b> <span class="d-block mt-2">
-                        Domicilio: ${destino.direccion}
+                        Tipo direccion: <span class="badge rounded-pill ${color}">${tipoDireccion} </span> <span class="d-block mt-3">
+                        Domicilio: ${destino.direccion} 
                      </div>
                   </div>
                 </div> `;

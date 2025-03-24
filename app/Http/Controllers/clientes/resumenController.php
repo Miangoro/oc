@@ -38,8 +38,14 @@ class resumenController extends Controller {
                       ->first();
 
     // Cargar los lotes manualmente
-    $empresa->predios = Predios::where('id_empresa', $id_empresa)->get();
-    $empresa->direccion_destino = direcciones::where('id_empresa', $id_empresa)->get();
+    $empresa->predios = Predios::where('id_empresa', $id_empresa)
+      ->orderByDesc('id_predio')
+      ->take(50)
+      ->get();
+    $empresa->direccion_destino = direcciones::where('id_empresa', $id_empresa)
+      ->orderBy('id_direccion', 'desc')
+      ->take(50)
+      ->get();
     $empresa->lotes_granel = LotesGranel::where('id_empresa', $id_empresa)->get();
     $empresa->lotes_envasado = lotes_envasado::where('id_empresa', $id_empresa)->get();
     // Cargar las marcas asociadas a cada lote_envasado

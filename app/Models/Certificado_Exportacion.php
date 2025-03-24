@@ -49,7 +49,7 @@ class Certificado_Exportacion extends Model
 
     public function revisor()
     {
-        return $this->belongsTo(RevisorExportacion::class, 'id_certificado', 'id_certificado');
+        return $this->belongsTo(Revisor::class, 'id_certificado', 'id_certificado');
     }
 
 

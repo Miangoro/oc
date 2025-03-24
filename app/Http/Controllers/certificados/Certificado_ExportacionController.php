@@ -9,7 +9,7 @@ use App\Models\Certificado_Exportacion;
 use App\Models\Dictamen_Exportacion; 
 use App\Models\User;
 use App\Models\empresa; 
-use App\Models\RevisorExportacion; 
+use App\Models\Revisor; 
 use App\Models\direcciones; 
 use App\Models\lotes_envasado;
 ///Extensiones
@@ -27,7 +27,7 @@ class Certificado_ExportacionController extends Controller
         $dictamen = Dictamen_Exportacion::all();
         $users = User::where('tipo',1)->get(); //Solo inspectores 
         $empresa = empresa::all();
-        $revisores = RevisorExportacion::all(); 
+        $revisores = Revisor::all(); 
 
         return view('certificados.certificado_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores'));
     }
@@ -406,7 +406,7 @@ public function storeRevisor(Request $request)
             return response()->json(['message' => 'El certificado no existe.'], 404);
         }
 
-        $revisor = RevisorExportacion::where('id_certificado', $validatedData['id_certificado'])->first();
+        $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])->first();
         $message = ''; // Inicializar el mensaje
 
         if ($revisor) {
@@ -428,7 +428,7 @@ public function storeRevisor(Request $request)
             }
         } else {
             // Crear un nuevo revisor
-            $revisor = new RevisorExportacion();
+            $revisor = new Revisor();
             $revisor->id_certificado = $validatedData['id_certificado'];
             $revisor->tipo_revision = $validatedData['tipoRevisor'];
 

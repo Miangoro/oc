@@ -238,7 +238,7 @@
             <td style="font-size: 15px; padding-bottom: 15px; padding-top: 15px"><b>RFC</b></td>
             <td>{{$rfc}}</td>
             <td style="font-size: 15px"><b>Registro de productor autorizado</b></td>
-            <td>&nbsp;</td>
+            <td>{{$productor_autorizado}}&nbsp;</td>
         </tr>
     </table>
 
@@ -260,20 +260,20 @@
     <table>
         <tr>
             <td style="font-size: 15px; width: 160px; padding-bottom: 15px; padding-top: 15px"><b>Importador</b></td>
-            <td style="width: 160px"></td>
+            <td style="width: 160px">{{$importador}}</td>
             <td style="font-size: 15px; width: 120px"><b>Dirección</b></td>
-            <td style="width: 180px"></td>
+            <td style="width: 180px">{{$direccion}}</td>
         </tr>
         <tr>
             <td style="font-size: 15px"><b>País de destino</b></td>
-            <td></td>
+            <td>{{$pais}}</td>
             <td style="font-size: 15px" rowspan="2"><b>Aduana de <br>
                     salida</b></td>
-            <td rowspan="2"></td>
+            <td rowspan="2">{{$aduana}}</td>
         </tr>
         <tr>
             <td style="font-size: 15px"><b>RFC</b></td>
-            <td></td>
+            <td>---</td>
         </tr>
     </table>
 
@@ -285,27 +285,27 @@
     <table>
         <tr>
             <td style="font-size: 15px; padding-bottom: 15px; padding-top: 15px; width: 90px"><b>Identificación</b></td>
-            <td style="width: 90px"></td>
+            <td style="width: 90px">---</td>
             <td style="font-size: 15px; padding-bottom: 10px; padding-top: 10px; width: 90px"><b>Marca</b></td>
-            <td style="width: 90px"></td>
+            <td style="width: 90px">{{ $lote->marca->marca ?? "No encontrada"}} </td>
             <td style="font-size: 15px; padding-bottom: 10px; padding-top: 10px; width: 90px"><b>Producto</b></td>
-            <td style="width: 90px"></td>
+            <td style="width: 90px">{{ $lote->lotesGranel->first()->categoria->categoria ?? "No encontrada"}}</td>
         </tr>
         <tr>
             <td style="font-size: 15px;padding-bottom: 0; padding-top: 0;"><b>Categoría</b></td>
-            <td></td>
+            <td>{{ $lote->lotesGranel->first()->categoria->categoria ?? "No encontrada"}}</td>
             <td style="font-size: 15px;padding-bottom: 0; padding-top: 0;"><b>Clase</b></td>
-            <td></td>
+            <td>{{ $lote->lotesGranel->first()->clase->clase ?? "N"}}</td>
             <td style="font-size: 15px;padding-bottom: 0; padding-top: 0;"><b>% Alc. Vol.<br>(etiqueta)</b></td>
-            <td></td>
+            <td> {{ $lote->lotesGranel->first()->cont_alc ?? "No encontrada" }}% </td>
         </tr>
         <tr>
             <td style="font-size: 15px;"><b>Cont. Net. <br>(mL)</b></td>
-            <td></td>
+            <td>{{$presentacion}} </td>
             <td style="font-size: 15px;"><b>No. Botellas</b></td>
-            <td></td>
+            <td>{{$botellas}}</td>
             <td style="font-size: 15px;"><b>No. Cajas</b></td>
-            <td></td>
+            <td>{{$cajas}}</td>
         </tr>
         {{-- <tr>
             <td class="leftLetter" style="font-size: 15px;padding-bottom: 0; padding-top: 0;" colspan="6"><b>No. de
@@ -313,25 +313,25 @@
         </tr> --}}
         <tr>
             <td style="font-size: 15px;"><b>Lote de <br>Envasado</b></td>
-            <td></td>
+            <td>{{ $lote->nombre ?? "No encontrada" }}</td>
             <td style="font-size: 15px;"><b>Estado <br>Productor</b></td>
             <td></td>
             <td style="font-size: 15px;"><b>Lote a <br>granel</b></td>
-            <td></td>
+            <td>{{ $lote->lotesGranel->first()->nombre_lote ?? "No encontrada" }}</td>
         </tr>
         <tr>
             <td style="font-size: 15px;"><b>No. Análisis</b></td>
-            <td></td>
+            <td>{{ $lote->lotesGranel->first()->folio_fq ?? "No encontrada" }}</td>
             <td style="font-size: 15px;"><b>% Alc. Vol. <br>(No. análisis)</b></td>
-            <td></td>
+            <td>{{ $lote->lotesGranel->first()->cont_alc ?? "No encontrada" }}% Alc. Vol.</td>
             <td style="font-size: 15px;" rowspan="2"><b>Especie de agave o maguey</b></td>
             <td style="font-size: 15px;" rowspan="2"></td>
         </tr>
         <tr>
             <td style="font-size: 15px;"><b>Ingrediente</b></td>
-            <td></td>
+            <td>---</td>
             <td style="font-size: 15px;"><b>Sellos</b></td>
-            <td></td>
+            <td>---</td>
         </tr>
     </table>
 
