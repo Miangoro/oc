@@ -60,7 +60,10 @@ class marcas extends Model
         return $this->hasMany(Destinos::class, 'id_direccion', 'id_direccion');
     }
 
-
+    public function etiquetas()
+    {
+        return $this->hasMany(etiquetas::class, 'id_marca');
+    }
 
 
 }

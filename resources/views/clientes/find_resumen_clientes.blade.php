@@ -421,6 +421,47 @@ tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
                   </div>
                 </div>`;
 
+    //ETIQUETAS
+    var totalEtiquetas = empresa.marcas.reduce((count, marca) => {
+        return count + marca.etiquetas.length; // Sumar la cantidad de etiquetas por cada marca
+    }, 0);
+    //${full['numero_cliente']}/${full['url_etiqueta']}
+    /*URL: ${etiqueta.url_etiqueta ? etiqueta.url_etiqueta.url : 'SIN URL'}
+    NUM-CLIENTE: ${empresa.numero_cliente}*/
+    var etiquetas = empresa.marcas.some(marca => marca.etiquetas.length > 0) 
+    ? empresa.marcas.map(function(marca) {
+        return marca.etiquetas.length > 0 
+            ? marca.etiquetas.map(function(etiqueta) {
+                return `<div class="col-lg-6 mb-3" style="font-size: 14px">
+                            <div class="card bg-label-warning">
+                                <div class="card-body">
+                                    <b class="card-title">${etiqueta.marca.marca}</b> <span class="d-block mt-2">
+                                    Descripción: ${etiqueta.sku || 'Sin descripción'} <span class="d-block mt-2">
+                                <i class="pdfEtiqueta ri-file-pdf-2-fill text-danger ri-20px cursor-pointer" data-url="${empresa.numero_cliente}/${etiqueta.url_etiqueta ? etiqueta.url_etiqueta.url : ''}"></i>
+                                </div>
+                            </div>
+                        </div>`;
+            }).join('') 
+            : '<p>No hay etiquetas registradas para esta marca.</p>';
+    }).join('') 
+    : '<p>No hay etiquetas registradas para esta empresa.</p>';
+
+tarjetasHTML += `<div class="col-md-6 col-xl-4 mb-3">
+                  <div class="accordion">
+                     <div class="accordion-item">
+                        <h5 class="accordion-header">
+                            <button class="accordion-button text-white ${empresa.marcas.some(marca => marca.etiquetas.length > 0) ?  'bg-primary' : 'bg-danger'}" type="button" data-bs-toggle="collapse" data-bs-target="#coleccion8">
+                                ETIQUETAS (${totalEtiquetas})<br><br>
+                                ${empresa.marcas.some(marca => marca.etiquetas.length > 0) ? 'Despliega para ver las etiquetas' : 'Sin registros'}
+                            </button>
+                        </h5>
+                        <div id="coleccion8" class="accordion-collapse collapse p-3 row">
+                            ${etiquetas}
+                        </div>
+                     </div>
+                  </div>
+                </div>`;
+
     //LOTES GRANEL
     var lotesGranel = empresa.lotes_granel.length > 0 
         ? empresa.lotes_granel.map(function(lote) {
@@ -576,6 +617,37 @@ $(document).on('click', '.pdfCertificado', function () {
     iframe.on('load', function () {
       spinner.hide();
       iframe.show();
+    });
+});
+
+
+///ETIQUETAS
+$(document).on('click', '.pdfEtiqueta', function () {
+    var url = $(this).data("url");  // URL de la ruta
+
+    $('#NewPestana').attr('href', "/files/"+url);
+
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');  // Spinner
+    spinner.show();
+    iframe.hide();
+
+    // Asegurarse de que la URL esté bien formada
+    iframe.attr('src', "/files/"+url);    // Concatenar la URL con el ID de la solicitud
+
+    // Configurar el botón para abrir el PDF en una nueva pestaña
+    $('#pdfViewer')
+      .attr('href', "/files/"+url)
+      .show();
+
+    // Mostrar el modal
+    $('#mostrarPdf').modal('show');
+
+    // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+        console.log('PDF cargado en el iframe.');
+        spinner.hide();
+        iframe.show();
     });
 });
 

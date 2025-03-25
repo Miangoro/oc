@@ -33,9 +33,23 @@ class resumenController extends Controller {
   // FUNCION CARGAR DATOS DE EMPRESA
   public function DatosEmpresa($id_empresa) {
     //relacion (marcas, instalaciones, usuarios)
-    $empresa = empresa::with(['marcas', 'instalaciones', 'users'])
+    $empresa = empresa::with(['marcas.etiquetas.marca', 'instalaciones', 'users', 'marcas.etiquetas.url_etiqueta', 'empresaNumClientes'])
                       ->where('id_empresa', $id_empresa)
                       ->first();
+
+    // Filtramos los registros de empresaNumClientes para obtener el primer numero_cliente que no esté vacío
+    $empresa->numero_cliente = $empresa->empresaNumClientes
+                                ->firstWhere(function($cliente) {
+                                    return !empty($cliente->numero_cliente); // Filtra los que no tienen numero_cliente vacío
+                                });
+    // Si hay un numero_cliente válido, tomamos el primer valor que no esté vacío
+    if ($empresa->numero_cliente) {
+        $empresa->numero_cliente = $empresa->numero_cliente->numero_cliente;
+    } else {
+        $empresa->numero_cliente = 'Sin número de cliente'; // Si no hay número de cliente, asignamos un valor por defecto
+    }
+
+
 
     // Cargar los lotes manualmente
     $empresa->predios = Predios::where('id_empresa', $id_empresa)
