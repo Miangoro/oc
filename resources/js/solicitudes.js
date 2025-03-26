@@ -327,12 +327,7 @@ $(function () {
               data-razon-social="${full['razon_social']}"
               class="cursor-pointer dropdown-item text-dark edit-record-tipo">` +
             '<i class="text-warning ri-edit-fill"></i> Editar</a>' +
-            `<a  data-id="${full['id']}"
-              data-id-solicitud="${full['id_solicitud']}"
-              data-tipo="${full['tipo']}"
-              data-id-tipo="${full['id_tipo']}"
-              data-razon-social="${full['razon_social']}" data-bs-toggle="modal"  data-bs-target="#expedienteServicio"  class="dropdown-item expediente-record cursor-pointer">` +
-            '<i class="text-info ri-folder-3-fill"></i> Expediente del servicio</a>' +
+         
             // Aquí agregamos la opción de eliminar
             `<a  data-id="${full['id']}"   data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">` +
             '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>' +

@@ -42,6 +42,11 @@ class TrazabilidadController extends Controller
             $query->where('subject_type', 'App\Models\Documentacion_url')
                 ->where('properties->attributes->id_relacion', $id);
         })
+        ->orWhere(function($query) use ($id) {
+           
+            $query->where('subject_type', 'App\Models\solicitudesValidacionesModel')
+                ->where('properties->attributes->id_solicitud', $id);
+        })
         ->orderBy('created_at', 'desc')
         ->get()
         ->map(function($log) {
@@ -78,6 +83,11 @@ class TrazabilidadController extends Controller
                 ? $log->properties['attributes']['num_servicio']?? null 
                 : null;
 
+            $pdf_validacion = ($log->subject_type == 'App\Models\solicitudesValidacionesModel') 
+                ? $log->subject_id ?? null 
+                : null;
+            
+
             // Construcción del contenido condicionalmente
             $contenido = '';  // Inicializar vacío
 
@@ -111,6 +121,11 @@ class TrazabilidadController extends Controller
 
             if ($num_servicio) {
                 $contenido .= "<b>Número de servicio:</b> <span class='badge bg-secondary'>$num_servicio</span> ";
+            }
+
+            
+            if ($pdf_validacion) {
+                $contenido .= "<a class='btn btn-primary btn-sm' target='_blank' href='/pdf_validar_solicitud/$pdf_validacion '><i class='ri-file-pdf-2-fill ri-30px'></i></a>";
             }
 
 

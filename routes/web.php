@@ -783,6 +783,7 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::post('/registrar-solicitud-lib-prod-term','storeSolicitudLibProdTerm');
     Route::get('/Etiqueta-2401ESPTOB/{id_solicitud}', 'Etiqueta_240');
     Route::post('/registrarValidarSolicitud', 'registrarValidarSolicitud');
+    Route::get('/pdf_validar_solicitud/{id_validacion}', 'pdf_validar_solicitud');
     
 });
 
