@@ -320,12 +320,12 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         return abort(404, 'Certificado no encontrado');
     }
 
-    //$fecha = Helpers::formatearFecha($data->fecha_emision);
+    $fecha = Helpers::formatearFecha($data->fecha_emision);
     //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
-    $fecha_emision = Carbon::parse($data->fecha_emision);
+    /*$fecha_emision = Carbon::parse($data->fecha_emision);
         $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
     $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
-        $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');
+        $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');*/
     $empresa = $data->dictamen->inspeccione->solicitud->empresa;
     $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() ? $empresa
         ->empresaNumClientes
@@ -354,7 +354,7 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
     $pdf = Pdf::loadView('pdfs.solicitud_certificado_exportacion_ed10', [//formato del PDF
         'data' => $data,
         'lotes' =>$lotes,
-        'expedicion' => $fecha1 ?? "",
+        'expedicion' => $fecha ?? "",
         'vigencia' => $fecha2 ?? "",
         'n_cliente' => $numero_cliente,
         'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
