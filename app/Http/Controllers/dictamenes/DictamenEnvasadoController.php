@@ -128,25 +128,25 @@ class DictamenEnvasadoController extends Controller
     {
         $validatedData = $request->validate([
             'num_dictamen' => 'required|string|max:100',
-            'id_empresa' => 'required|exists:empresa,id_empresa',
+            //'id_empresa' => 'required|exists:empresa,id_empresa',
             'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
-            'id_lote_envasado' => 'required|integer|exists:lotes_envasado,id_lote_envasado',
+            //'id_lote_envasado' => 'required|integer|exists:lotes_envasado,id_lote_envasado',
             'fecha_emision' => 'required|date',
             'fecha_vigencia' => 'required|date',
-            'fecha_servicio' => 'required|date',
+            //'fecha_servicio' => 'required|date',
             'id_firmante' => 'required|exists:users,id',
         ]);
         
         // Crear una nueva instancia del modelo Dictamen_Granel
         $dictamen = new Dictamen_Envasado();
         $dictamen->num_dictamen = $validatedData['num_dictamen'];
-        $dictamen->id_empresa = $validatedData['id_empresa'];
+        //$dictamen->id_empresa = $validatedData['id_empresa'];
         $dictamen->id_inspeccion = $validatedData['id_inspeccion'];
-        $dictamen->id_lote_envasado = $validatedData['id_lote_envasado'];
+        //$dictamen->id_lote_envasado = $validatedData['id_lote_envasado'];
         $dictamen->fecha_emision = $validatedData['fecha_emision'];
         $dictamen->fecha_vigencia = $validatedData['fecha_vigencia'];
-        $dictamen->fecha_servicio = $validatedData['fecha_servicio'];
-        $dictamen->id_firmante = $validatedData['id_firmante'];
+        //$dictamen->fecha_servicio = $validatedData['fecha_servicio'];
+        //$dictamen->id_firmante = $validatedData['id_firmante'];
         $dictamen->save();
         
         return response()->json([
@@ -154,6 +154,8 @@ class DictamenEnvasadoController extends Controller
             'message' => 'Dictamen registrado exitosamente',
         ]);
     }
+
+
 
      /* obtener los datos de los registros */
      public function edit($id_dictamen_envasado)

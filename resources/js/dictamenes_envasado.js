@@ -476,6 +476,8 @@ $(function () {
     });
     /* funcion para ingresar un nuevo dictamen*/
 
+
+
     /* agregar un nuevo dictamen */
     $(function () {
         // Configuración CSRF para Laravel
@@ -496,13 +498,13 @@ $(function () {
                         },
                     }
                 },
-                'id_empresa': {
+                /*'id_empresa': {
                     validators: {
                         notEmpty: {
                             message: 'Selecciona una empresa cliente.'
                         }
                     }
-                },
+                },*/
                 'id_inspeccion': {
                     validators: {
                         notEmpty: {
@@ -510,13 +512,13 @@ $(function () {
                         }
                     }
                 },
-                'id_lote_envasado': {
+                /*'id_lote_envasado': {
                     validators: {
                         notEmpty: {
                             message: 'Selecciona el lote.'
                         }
                     }
-                },
+                },*/
                 'fecha_emision': {
                     validators: {
                         notEmpty: {
@@ -542,7 +544,7 @@ $(function () {
                         }
                     }
                 },
-                'fecha_servicio': {
+                /*'fecha_servicio': {
                     validators: {
                         notEmpty: {
                             message: 'La fecha de servicio es obligatoria.',
@@ -552,7 +554,7 @@ $(function () {
                             message: 'Ingresa una fecha válida (yyyy-mm-dd).',
                         }
                     }
-                },
+                },*/
                 'id_firmante': {
                     validators: {
                         notEmpty: {
@@ -603,7 +605,7 @@ $(function () {
                     Swal.fire({
                         icon: 'error',
                         title: '¡Error!',
-                        text: 'Error al registrar el dictamen de granel',
+                        text: 'Error al registrar el dictamen de envasado',
                         customClass: {
                             confirmButton: 'btn btn-danger'
                         }
@@ -612,12 +614,15 @@ $(function () {
             });
         });
 
-        // Inicializar select2
-        $('#id_empresa, #id_inspeccion, #id_lote_envasado, #fecha_emision, #fecha_vigencia, #fecha_servicio, #id_firmante').on('change', function () {
-            // Revalidar el campo cuando se cambia el valor del select2
+        // Inicializar select2 OCULTO
+    //$('#id_empresa, #id_inspeccion, #id_lote_envasado, #fecha_emision, #fecha_vigencia, #fecha_servicio, #id_firmante').on('change', function () {
+        $('#id_inspeccion, #fecha_emision, #fecha_vigencia, #id_firmante').on('change', function () {
+        // Revalidar el campo cuando se cambia el valor del select2
             fv.revalidateField($(this).attr('name'));
         });
     });
+
+
 
 
     /* editar el dictamen envasado */
