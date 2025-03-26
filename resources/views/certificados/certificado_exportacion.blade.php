@@ -56,6 +56,7 @@
                     <th>Cliente</th>
                     <th>No. certificado</th>
                     <th>Fechas</th>
+                    <th>Solicitud</th>
                     <th>certificado</th>
                     <th>Dictamen</th>
                     <th>Estatus</th>

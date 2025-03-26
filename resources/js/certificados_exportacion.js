@@ -83,7 +83,8 @@ if (dt_user_table.length) {
             }
          },
          { data: 'num_certificado' },
-         { data: 'fechas' },
+         { data: 'fechas' }, //(4)
+         { data: '' },//solicitud
          { data: '' },
          { data: 'dictamen' },
          { data: '' },//Revisores
@@ -118,20 +119,31 @@ if (dt_user_table.length) {
             return '<span class="small">' + $fech + '</span>';
             }
         },
-
         {
-          ///PDF CERTIFICADO
+          ///PDF SOLICITUDDD
           targets: 5,
           searchable: false,
           orderable: false,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $id = full['id_certificado'];
-            return '<i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdf" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+            return '<i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdfSolicitud" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+          }
+        },
+
+        {
+          ///PDF CERTIFICADO
+          targets: 6,
+          searchable: false,
+          orderable: false,
+          className: 'text-center',
+          render: function (data, type, full, meta) {
+            var $id = full['id_certificado'];
+            return '<i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdfCertificado" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
           }
         },
         {
-        targets: 6,
+        targets: 7,
         render: function (data, type, full, meta) {
           /*var $id_dictamen = full['no_dictamen'];
           return '<span>' + $id_dictamen + '</span>';*/
@@ -140,7 +152,7 @@ if (dt_user_table.length) {
         }
         }, 
         {
-        targets: 7,
+        targets: 8,
         render: function (data, type, full, meta) {
           //var $id_dictamen = full['no_dictamen'];
           var id_revisor = full['id_revisor'];   // Obtener el id_revisor
@@ -682,7 +694,7 @@ $(document).ready(function() {
 
 
 ///FORMATO PDF CERTIFICADO EXPORTACION
-$(document).on('click', '.pdf', function ()  {
+$(document).on('click', '.pdfCertificado', function ()  {
   var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
   var pdfUrl = '/certificado_exportacion/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
@@ -699,6 +711,31 @@ $(document).on('click', '.pdf', function ()  {
 
     $("#titulo_modal").text("Certificado de Exportación");
     $("#subtitulo_modal").text("PDF del Certificado");
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
+
+///FORMATO PDF SOLICITUD CERTIFICADO
+$(document).on('click', '.pdfSolicitud', function ()  {
+  var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
+  var pdfUrl = '/solicitud_certificado_exportacion/' + id; //Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+      
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    
+    //Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
+
+    $("#titulo_modal").text("Solicitud Certificado de Exportación");
+    $("#subtitulo_modal").text("PDF de la solicitud");
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();

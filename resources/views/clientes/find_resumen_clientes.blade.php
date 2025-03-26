@@ -623,29 +623,22 @@ $(document).on('click', '.pdfCertificado', function () {
 
 ///ETIQUETAS
 $(document).on('click', '.pdfEtiqueta', function () {
-    var url = $(this).data("url");  // URL de la ruta
-
-    $('#NewPestana').attr('href', "/files/"+url);
-
+    var url = $(this).data("url");
     var iframe = $('#pdfViewer');
-    var spinner = $('#cargando');  // Spinner
+    var spinner = $('#cargando');
+
     spinner.show();
     iframe.hide();
-
-    // Asegurarse de que la URL esté bien formada
-    iframe.attr('src', "/files/"+url);    // Concatenar la URL con el ID de la solicitud
+    iframe.attr('src', "/files/"+url);// Asegurarse de que la URL esté bien formada
 
     // Configurar el botón para abrir el PDF en una nueva pestaña
-    $('#pdfViewer')
-      .attr('href', "/files/"+url)
-      .show();
-
-    // Mostrar el modal
-    $('#mostrarPdf').modal('show');
+    $('#NewPestana').attr('href', "/files/"+url);
+    //$('#pdfViewer').attr('href', "/files/"+url).show();
+    $('#mostrarPdf').modal('show');// Mostrar el modal
 
     // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
-        console.log('PDF cargado en el iframe.');
+        console.log('PDF cargado en el iframe');
         spinner.hide();
         iframe.show();
     });

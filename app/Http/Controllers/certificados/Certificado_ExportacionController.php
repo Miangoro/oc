@@ -312,6 +312,75 @@ public function MostrarCertificadoExportacion($id_certificado)
 }
 
 
+///FUNCION PDF SOLICITUD CERTIFICADO
+public function MostrarSolicitudCertificadoExportacion($id_certificado) 
+{
+    $data = Certificado_Exportacion::find($id_certificado);
+    if (!$data) {
+        return abort(404, 'Certificado no encontrado');
+    }
+
+    //$fecha = Helpers::formatearFecha($data->fecha_emision);
+    //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
+    $fecha_emision = Carbon::parse($data->fecha_emision);
+        $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
+    $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
+        $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');
+    $empresa = $data->dictamen->inspeccione->solicitud->empresa;
+    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() ? $empresa
+        ->empresaNumClientes
+        ->first(fn($item) => $item->empresa_id === $empresa
+        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'N/A' : 'N/A';
+    $watermarkText = $data->estatus == 1;//Determinar si marca de agua es visible
+
+    $datos = $data->dictamen->inspeccione->solicitud->caracteristicas; //Obtener Características Solicitud
+    if ($datos) {
+        $caracteristicas = json_decode($datos, true); //Decodificar el JSON
+        $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
+        $no_pedido = $caracteristicas['no_pedido'] ?? '';
+        $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
+        foreach ($detalles as $detalle) {// Acceder a los detalles
+            $botellas = $detalle['cantidad_botellas'] ?? '';
+            $cajas = $detalle['cantidad_cajas'] ?? '';
+            $presentacion = $detalle['presentacion'] ?? '';
+        }
+        $loteIds = collect($detalles)->pluck('id_lote_envasado');// Obtener todos los IDs de los lotes
+        $lotes = Lotes_Envasado::whereIn('id_lote_envasado', $loteIds)->get();// Buscar los lotes envasados
+    } else {
+        return abort(404, 'No se encontraron características');
+    }
+
+
+    $pdf = Pdf::loadView('pdfs.solicitud_certificado_exportacion_ed10', [//formato del PDF
+        'data' => $data,
+        'lotes' =>$lotes,
+        'expedicion' => $fecha1 ?? "",
+        'vigencia' => $fecha2 ?? "",
+        'n_cliente' => $numero_cliente,
+        'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
+        'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
+        'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? "",
+        'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? "",
+        'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? "",
+        'convenio' => $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA',
+        'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
+        'watermarkText' => $watermarkText,
+        'id_sustituye' => '',
+        'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? "",
+        'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? "",
+        'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? "",
+        ///caracteristicas
+        'aduana' => $aduana_salida ?? "",
+        'n_pedido' => $no_pedido ?? "",
+        'botellas' => $botellas ?? "",
+        'cajas' => $cajas ?? "",
+        'presentacion' => $presentacion ?? "",
+    ]);
+    //nombre al descargar
+    return $pdf->stream('F7.1-01-21 Ver 10. Solicitud de emisión de Certificado para Exportación.pdf');
+}
+
+
 
 
 //FUNCION PARA REEXPEDIR CERTIFICADO EXPOTACION
