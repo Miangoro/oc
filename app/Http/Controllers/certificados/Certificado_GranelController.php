@@ -16,6 +16,7 @@ use App\Models\tipos;
 use App\Notifications\GeneralNotification;
 //Enviar Correo
 use App\Mail\CorreoCertificado;
+use App\Models\Revisor;
 use Illuminate\Support\Facades\Mail; 
 
 class Certificado_GranelController extends Controller
@@ -25,7 +26,7 @@ class Certificado_GranelController extends Controller
         $certificados = CertificadosGranel::all(); 
         $dictamenes = Dictamen_Granel::all();
         $users = User::all(); 
-        $revisores = RevisorGranel::all(); 
+        $revisores = Revisor::all(); 
         return view('certificados.certificados_granel_view', compact('certificados' , 'dictamenes' , 'users', 'revisores'));
     }
 
@@ -129,7 +130,7 @@ class Certificado_GranelController extends Controller
             $certificado = CertificadosGranel::findOrFail($id_certificado);
     
             // Eliminar todos los revisores asociados al certificado en la tabla certificados_revision
-            RevisorGranel::where('id_certificado', $id_certificado)->delete();
+            Revisor::where('id_certificado', $id_certificado)->delete();
     
             // Luego, eliminar el certificado
             $certificado->delete();
@@ -231,7 +232,7 @@ class Certificado_GranelController extends Controller
                 return response()->json(['message' => 'El certificado no existe.'], 404);
             }
 
-            $revisor = RevisorGranel::where('id_certificado', $validatedData['id_certificado'])->first();
+            $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])->where('tipo_certificado',2)->first();
             $message = ''; // Inicializar el mensaje
 
             if ($revisor) {
@@ -253,7 +254,7 @@ class Certificado_GranelController extends Controller
                 }
             } else {
                 // Crear un nuevo revisor
-                $revisor = new RevisorGranel();
+                $revisor = new Revisor();
                 $revisor->id_certificado = $validatedData['id_certificado'];
                 $revisor->tipo_revision = $validatedData['tipoRevisor'];
 
@@ -267,6 +268,7 @@ class Certificado_GranelController extends Controller
             }
 
             // Guardar los datos del revisor
+            $revisor->tipo_certificado = 2; //El 2 corresponde al certificado de granel
             $revisor->numero_revision = $validatedData['numeroRevision'];
             $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
             $revisor->observaciones = $validatedData['observaciones'] ?? '';
@@ -365,7 +367,7 @@ class Certificado_GranelController extends Controller
 
     public function PreCertificado($id_certificado)
     {
-        $certificado = CertificadosGranel::with('dictamen.empresa.instalaciones', 'dictamen.lote_granel.clase', 'dictamen.lote_granel.tipo')->findOrFail($id_certificado);
+        $certificado = CertificadosGranel::with('dictamen.empresa.instalaciones', 'dictamen.lote_granel.clase', 'dictamen.lote_granel')->findOrFail($id_certificado);
     
         $direccionCompleta = $certificado->dictamen->empresa->instalaciones->first()->direccion_completa ?? 'N/A';
         $clase = $certificado->dictamen->lote_granel->clase->clase ?? 'N/A';

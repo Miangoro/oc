@@ -14,7 +14,7 @@ $(function () {
       columns: [
         { data: '#' },                //0
         { data: 'fake_id' },          //1
-        { data: 'tipo_dictamen' },    //2
+        { data: '' },    //2
         { data: 'num_certificado' },  //3
         { data: 'id_revisor' },       //4
         { data: 'created_at' },       //5
@@ -48,40 +48,15 @@ $(function () {
               var tipoRevision = row['tipo_revision'];
               var icono = '';
       
-              if (tipoRevision === 'Revisor') {
-                  icono = `
-                      <a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Instalaciones" class="d-flex flex-column align-items-center">
-                          <div class="avatar me-2">
-                              <div class="avatar-initial bg-label-primary rounded-3">
-                                  <i class="ri-building-2-line ri-26px"></i>
-                              </div>
-                          </div>
-                          <span class="fw-bold mt-1"></span>
-                      </a>
-                  `;
-              } else if (tipoRevision === 'RevisorGranel') {
-                  icono = `
-                      <a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Granel" class="d-flex flex-column align-items-center">
-                          <div class="avatar me-2">
-                              <div class="avatar-initial bg-label-success rounded-3">
-                                  <i class="ri-bar-chart-line ri-26px"></i>
-                              </div>
-                          </div>
-                          <span class="fw-bold mt-1"></span>
-                      </a>
-                  `;
-              } else if (tipoRevision === 'RevisorExportacion') {
-                icono = `
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exportacion" class="d-flex flex-column align-items-center">
-                        <div class="avatar me-2">
-                            <div class="avatar-initial bg-label-success rounded-3">
-                                <i class="ri-building-2-line ri-26px"></i>
-                            </div>
-                        </div>
-                        <span class="fw-bold mt-1"></span>
-                    </a>
-                `;
-            }
+              if (tipoRevision === 'Instalaciones de productor' || tipoRevision === 'Instalaciones de envasador' || tipoRevision === 'Instalaciones de comercializador' || tipoRevision === 'Instalaciones de almacén o bodega' || tipoRevision === 'Instalaciones de área de maduración') {
+                  icono = `<span class="fw-bold mt-1 badge bg-secondary">${tipoRevision}</span>`;
+              } 
+              if (tipoRevision === 'Granel') {
+                icono = `<span class="fw-bold mt-1 badge bg-dark">${tipoRevision}</span>`;
+            } 
+            if (tipoRevision === 'Exportación') {
+              icono = `<span class="fw-bold mt-1 badge bg-primary">${tipoRevision}</span>`;
+          } 
               return icono;
           }
         },
@@ -90,7 +65,7 @@ $(function () {
           render: function (data, type, full, meta) {
             var $num_certificado = full['num_certificado'];
 
-            if (full['tipo_revision'] === 'Revisor') {
+            
               return `
               <div style="display: flex; flex-direction: column; align-items: start; gap: 4px;">
                 <span class="fw-bold">
@@ -98,18 +73,8 @@ $(function () {
                 </span>
               </div>
               `;
-            } else if (full['tipo_revision'] === 'RevisorGranel') {
-              return `<span class="fw-bold">
-                        ${$num_certificado}
-                      </span>`;
-            } else if (full['tipo_revision'] === 'RevisorExportacion') {
-              return `<span class="fw-bold">
-                        ${$num_certificado}
-                      </span>`;
-            } else {
-              return '<span class="text-muted">Tipo de revisión desconocido</span>';
-            }
-          }
+            } 
+          
         },
         {
           targets: 4,
@@ -139,7 +104,7 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-              if (full['decision']) {
+              if (full['decision']!='Pendiente') {
                   // Si existe la decisión, el ícono es funcional (activo)
                   return `
                       <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"
@@ -168,20 +133,20 @@ $(function () {
 
             switch ($decision) {
               case "positiva":
-                $nombreDesicion = 'Revision Positiva';
+                $nombreDesicion = 'Revisión positiva';
                 $colorDesicion = 'primary';
               break; 
 
               case "negativa":
-                $nombreDesicion = 'Revision Negativa';
+                $nombreDesicion = 'Revisión negativa';
                 $colorDesicion = 'danger';
               break;
               default:
-                $nombreDesicion = 'Desconocido';
-                $colorDesicion = 'secondary';
+                $nombreDesicion = 'Pendiente';
+                $colorDesicion = 'warning';
             }
 
-            return `<span class="badge rounded-pill bg-label-${$colorDesicion}">${$nombreDesicion}</span>`;
+            return `<span class="badge rounded-pill bg-${$colorDesicion}">${$nombreDesicion}</span>`;
           }
         },
         {
@@ -199,6 +164,7 @@ $(function () {
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               // Botón para revisar
               `<a class="dropdown-item waves-effect text-info cuest" ` +
+              `href="/add_revision/${full['id_revision']}" ` +
               `data-id="${full['id_revision']}" ` +
               `data-revisor-id="${full['id_revisor']}" ` +
               `data-dictamen-id="${full['id_certificado']}" ` +
@@ -209,8 +175,7 @@ $(function () {
               `data-fecha-vencimiento="${full['fecha_vigencia']}" ` +
               `data-tipo="${full['tipo_dictamen']}" ` +
               `data-tipo_revision="${full['tipo_revision']}" ` +
-              `data-accion="revisar" ` +  // Identificador
-              `data-bs-toggle="modal" ` +
+   
               `data-bs-target="#fullscreenModal">` +
               '<i class="ri-eye-fill ri-20px text-info"></i> Revisar' +
               '</a>' +
@@ -701,12 +666,8 @@ $(document).on('click', '.pdf', function () {
   console.log('Número de Certificado:', num_certificado);
 
   // Definir URL según el tipo de revisión
-  var url_pdf;
-  if (tipoRevision === 'Revisor') {
-      url_pdf = '../bitacora_revisionPersonal_Instalaciones/' + id_revisor;
-  } else if (tipoRevision === 'RevisorGranel') {
-      url_pdf = '../bitacora_revisionPersonal_Granel/' + id_revisor;
-  }
+  var url_pdf = '../pdf_bitacora_revision_personal/' + id_revisor;
+
 
   console.log('URL del PDF:', url_pdf);
 

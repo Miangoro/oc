@@ -86,8 +86,8 @@
                     <div class="me-1">
                         <p class="text-heading mb-1">Granel</p>
                         <div class="d-flex align-items-center">
-                            <h4 class="mb-1 me-2">{{ $EstadisticasGranel['totalCertificadosGranel'] }}</h4>
-                            <p class="text-success mb-1">({{ number_format($EstadisticasGranel['porcentajeGranel'], 2) }}%)</p>
+                            <h4 class="mb-1 me-2">{{ $EstadisticasGranel['totalCertificados'] }}</h4>
+                            <p class="text-success mb-1">({{ number_format($EstadisticasGranel['porcentaje'], 2) }}%)</p>
                         </div>
                          <small class="mb-0">Certificados Asignados</small>
                     </div>
@@ -100,15 +100,15 @@
                 <div class="d-flex justify-content-between mt-auto"> 
                     <div class="me-1">
                         <div class="d-flex align-items-center">
-                            <h4 class="mb-1 me-2">{{ $EstadisticasGranel['certificadosPendientesGranel'] }}</h4>
-                            <p class="text-danger mb-1">({{ number_format($EstadisticasGranel['porcentajePendientesGranel'], 2) }}%)</p>
+                            <h4 class="mb-1 me-2">{{ $EstadisticasGranel['certificadosPendientes'] }}</h4>
+                            <p class="text-danger mb-1">({{ number_format($EstadisticasGranel['porcentajePendientes'], 2) }}%)</p>
                         </div>
                         <small class="mb-0">Certificados Pendientes</small>
                     </div>
                     <div class="me-1">
                         <div class="d-flex align-items-center">
-                            <h4 class="mb-1 me-2">{{ $EstadisticasGranel['certificadosRevisadosGranel'] }}</h4>
-                            <p class="text-info mb-1">({{ number_format($EstadisticasGranel['porcentajeRevisadosGranel'], 2) }}%)</p>
+                            <h4 class="mb-1 me-2">{{ $EstadisticasGranel['certificadosRevisados'] }}</h4>
+                            <p class="text-info mb-1">({{ number_format($EstadisticasGranel['porcentajeRevisados'], 2) }}%)</p>
                         </div>
                         <small class="mb-0">Certificados Revisados</small>
                     </div>
@@ -164,7 +164,7 @@
     </div>
 </div>
 
-@include('_partials/_modals/modal-cuest-certificados-personal')
+{{-- @include('_partials/_modals/modal-cuest-certificados-personal') --}}
 @include('_partials/_modals/modal-pdfs-certificados')
 @include('_partials/_modals/modal-aprobacion-revision-personal')
 @include('_partials/_modals/modal-historial')

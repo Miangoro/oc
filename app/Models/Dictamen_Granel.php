@@ -26,7 +26,7 @@ class Dictamen_Granel extends Model
         'id_firmante'
     ];
 
-    public function inspeccion()
+    public function inspeccione()
     {
         return $this->belongsTo(inspecciones::class, 'id_inspeccion');
     }
@@ -51,4 +51,6 @@ class Dictamen_Granel extends Model
     {
         return $this->belongsTo(User::class, 'id_firmante', 'id');
     }
+
+    
 }

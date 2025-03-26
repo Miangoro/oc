@@ -13,10 +13,10 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="tipo_solicitud" class="form-select" name="tipo_solicitud">
                                     <option value="1">Inspección y certificado de exportación</option>
-                                    <option value="2">Inspección</option>
+                                    <!--<option value="2">Inspección</option>-->
                                     <option value="3">Inspección y certificado de exportación (combinado)</option>
-                                    <option value="4">Certificado de exportación</option>
-                                    <option value="5">Certificado de exportación (combinado)</option>
+                                    <!--<option value="4">Certificado de exportación</option>
+                                    <option value="5">Certificado de exportación (combinado)</option>-->
                                 </select>
                                 <label for="tipo_solicitud">Tipo de solicitud</label>
                             </div>
@@ -271,7 +271,7 @@
                 var tipoLimpio = limpiarTipo(instalaciones[index].tipo);
                 contenidoInstalaciones += `
             <option value="${instalaciones[index].id_instalacion}">
-                ${tipoLimpio} | ${instalaciones[index].direccion_completa}
+                  ${instalaciones[index].direccion_completa}
             </option>`;
             }
             if (instalaciones.length === 0) {

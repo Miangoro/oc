@@ -304,7 +304,7 @@
                 <td rowspan="2">
                    <b>Domicilio fiscal:</b>  {{ $data->empresa->domicilio_fiscal }}<br>
 
-                    <b>Domicilio de instalaciones:</b> {{ $data->inspeccion->solicitud->instalacion->direccion_completa ?? 'N/A' }}
+                    <b>Domicilio de instalaciones:</b> {{ $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'N/A' }}
 
                 </td>
                 <td style="color: #17365D; font-weight: bold; width: 18%;">RFC</td>
@@ -319,13 +319,13 @@
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">No. de servicio</td>
-                <td>{{ $data->inspeccion->num_servicio }}</td>
+                <td>{{ $data->inspeccione->num_servicio }}</td>
                 <td style="color: #17365D; font-weight: bold;">Número de dictamen</td>
                 <td>{{ $data->num_dictamen }}</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">Nombre del Inspector</td>
-                <td>{{ $data->inspeccion->inspector->name }}</td>
+                <td>{{ $data->inspeccione->inspector->name }}</td>
                 <td style="color: #17365D; font-weight: bold;">Fecha de servicio</td>
                 <td>{{ $fecha_servicio }}</td>
             </tr>
@@ -342,7 +342,7 @@
             <tr>
                 <td colspan="6" style="font-weight: bold; font-size: 13px; text-transform: uppercase;">
                     <p>producto {{ $data->lote_granel->categoria->categoria ?? 'N/A' }}</p>
-                    <p>origen {{ $data->inspeccion->solicitud->instalacion->estados->nombre ?? 'N/A' }}</p>
+                    <p>origen {{ $data->inspeccione->solicitud->instalacion->estados->nombre ?? 'N/A' }}</p>
                 </td>
             </tr>
             <tr>

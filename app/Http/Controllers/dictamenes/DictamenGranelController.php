@@ -56,7 +56,7 @@ class DictamenGranelController extends Controller
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
     
-        $query = Dictamen_Granel::with(['inspeccion', 'empresa', 'lote_granel']);
+        $query = Dictamen_Granel::with(['inspeccione', 'empresa', 'lote_granel']);
     
         if (!empty($search)) {
             $query = $query->where(function ($q) use ($search) {

@@ -21,7 +21,7 @@ class CorreoCertificado extends Mailable
 
     public function build()
     {
-        return $this->subject('Notificación de Asignación de Revisor') 
+        return $this->subject($this->details['asunto']) 
                     ->view('emails.CorreoCertificados')
                     ->with([
                         'nombreRevisor' => $this->details['nombreRevisor'], 
@@ -31,6 +31,8 @@ class CorreoCertificado extends Mailable
                         'razon_social' => $this->details['razon_social'], 
                         'numero_cliente' => $this->details['numero_cliente'], 
                         'tipo_certificado' => $this->details['tipo_certificado'], 
+                        'observaciones' => $this->details['observaciones'], 
+                        'url' => $this->details['url'], 
                     ]);
     }    
 }

@@ -44,23 +44,25 @@ switch ($tipo_certificado) {
 </p>
 
 <p style="color: #555555; margin-bottom: 10px;">
-    Se le ha asignado la revisión del certificado <strong>{{ $num_certificado }}</strong>. A continuación, algunos detalles relevantes:
+    Se le ha asignado la revisión del certificado <strong>{{ $num_certificado }}</strong>:
 </p>
 
 <ul style="color: #555555; margin-bottom: 10px; text-align:left;">
     <li><strong>Fecha de vigencia:</strong> {{ $fecha_vigencia }}</li>
     <li><strong>Fecha de vencimiento:</strong> {{ $fecha_vencimiento }}</li>
-    <li><strong>Razón social:</strong> {{ $razon_social }}</li>
+    <li><strong>Cliente:</strong> {{ $razon_social }}</li>
     <li><strong>Número de cliente:</strong> {{ $numero_cliente }}</li>
-    <li><strong>Tipo de certificado:</strong> <?php echo $tipoCertificadoTexto; ?></li>
+    <li><strong>Tipo de certificado:</strong> {{ $tipo_certificado }}</li>
+    <li><strong>Observaciones:</strong> {{ $observaciones ?? 'Ninguna' }}</li>
 </ul>
 
 <p style="color: #555555; margin-bottom: 10px;">
-    Agradecemos su pronta atención y le recordamos que puede consultar el historial de este certificado en el apartado (Revisión de Certificados), utilizando su cuenta personal.
+    Agradecemos su pronta atención y le recordamos que puede consultar el historial de este certificado en el apartado (Revisión de Certificados), utilizando su cuenta institucional.
 </p>
         </p>
         <p style="color: #555555; margin-bottom: 10px;"></p>
-        <a href="http://localhost:8000/revision/personal" style="display: block; width: 200px; height: 50px; background-color: #0C1444; color: #ffffff; text-align: center; line-height: 50px; text-decoration: none; border-radius: 25px; margin: 20px auto;">Click aquí</a>
+      <a href="{{ url($url) }}" style="display: block; width: 200px; height: 50px; background-color: #0C1444; color: #ffffff; text-align: center; line-height: 50px; text-decoration: none; border-radius: 25px; margin: 20px auto;">Click aquí</a>
+
     </div>
     
     <div style="background-color: #17905E; padding: 20px; text-align: center; font-size: 12px; color: #ffffff; border-radius: 0 0 10px 10px;">

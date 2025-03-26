@@ -23,7 +23,7 @@ class Revisor extends Model
         'es_correccion',
         'observaciones',
         'respuestas',
-        'desicion',
+        'decision',
         'id_aprobador',
         'aprobacion',
         'fecha_aprobacion',

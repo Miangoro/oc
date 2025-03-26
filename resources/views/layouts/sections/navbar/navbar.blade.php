@@ -204,7 +204,8 @@ $navbarDetached = ($navbarDetached ?? '');
                     @if(Auth::user()->unreadNotifications->count() > 0)
                       @foreach (Auth::user()->unreadNotifications as $notification)
 
-                        <li class="list-group-item list-group-item-action dropdown-notifications-item">
+                        <li class="list-group-item list-group-item-action dropdown-notifications-item"
+                        onclick="redirigirNotificacion('{{ $notification->data['url'] }}', '{{ $notification->id }}')">
                           <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
                               <div class="avatar">
@@ -219,7 +220,7 @@ $navbarDetached = ($navbarDetached ?? '');
                             </div>
                             <div class="flex-shrink-0 dropdown-notifications-actions">
                               <a onclick="marcarComoLeida('{{ $notification->id }}')" href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                              <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ri-close-line ri-20px"></span></a>
+                              <a onclick="marcarComoLeida('{{ $notification->id }}')" class="dropdown-notifications-archive"><span class="ri-close-line ri-20px"></span></a>
                             </div>
                           </div>
                         </li>
@@ -389,6 +390,12 @@ $navbarDetached = ($navbarDetached ?? '');
 
 
   <script>
+
+function redirigirNotificacion(url, id) {
+        marcarComoLeida(id);
+        window.location.href = url; 
+    }
+
 
 
 

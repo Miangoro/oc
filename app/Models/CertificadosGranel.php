@@ -32,6 +32,6 @@ class CertificadosGranel extends Model
 
     public function revisor()
     {
-        return $this->belongsTo(RevisorGranel::class, 'id_certificado', 'id_certificado');
+        return $this->belongsTo(Revisor::class, 'id_certificado', 'id_certificado')->where('tipo_certificado',2);
     }
 }
