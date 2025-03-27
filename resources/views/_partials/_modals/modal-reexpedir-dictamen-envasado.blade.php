@@ -1,18 +1,20 @@
-<!-- Modal para agregar nuevo dictamen de Envasado -->
+<!--Modal para reexpedirdictamen de Envasado -->
 <div class="modal fade" id="modalReexpredirDictamenEnvasado" tabindex="-1" aria-labelledby="modalReexpedirDictamenEnvasadoLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-lz">
         <div class="modal-content">
+
             <div class="modal-header">
-                <h5 id="modalReexpedirDictamenEnvasadoLabel" class="modal-title">Cancelar/Reexpedir Dictamen Envasado</h5>
+                <h5 id="modalReexpedirDictamenEnvasadoLabel" class="modal-title">Reexpedir/Cancelar Dictamen Envasado</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
             <div class="modal-body">
                 <form id="addReexpedirDictamenEnvasadoForm" method="POST">
                     @csrf
                     <div class="row mb-4">
                         <!-- Número de Dictamen -->
                         <input type="hidden" id="reexpedir_id_dictamen" name="id_dictamen">
-                        <!-- Select de Empresa Cliente -->
+                        
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline">
                                 <select id="cancelar_reexpedir" name="cancelar_reexpedir" class="form-select"
@@ -26,34 +28,11 @@
                         </div>
                     </div>
                     <hr>
-                    <!-- Fila 2 -->
+
                     <div class="reexpedirFields" style="display: none;">
                         <div class="row mb-4">
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline">
-                                    <select onchange="obtenerLotess()" id="reexpedir_id_empresa" name="id_empresa"
-                                        class="select2 form-select">
-                                        <option value="" disabled selected>Selecciona la empresa cliente</option>
-                                        @foreach ($empresas as $empresa)
-                                            <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
-                                        @endforeach
-                                    </select>
-                                    <label for="id_empresa">Empresa Cliente</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" id="reexpedir_num_dictamen"
-                                        autocomplete="off" name="num_dictamen" placeholder="Número de dictamen">
-                                    <label for="num_dictamen">Número de Dictamen</label>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Fila 3 -->
-                        <div class="row mb-4">
-                            <!-- Select de Inspección -->
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline">
+                            <div class="col-md-12">
+                                <div class="form-floating form-floating-outline ">
                                     <select id="reexpedir_id_inspeccion" name="id_inspeccion" class="select2 form-select">
                                         <option value="" disabled selected>Selecciona el número de servicio</option>
                                         @foreach ($inspecciones as $inspeccion)
@@ -61,49 +40,23 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    <label for="id_inspeccion">Número de Servicio</label>
-                                </div>
-                            </div>
-                            <!-- Select de Lote Granel -->
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline">
-                                    <select id="reexpedir_id_lote_envasado" name="id_lote_envasado" class="select2 form-select">
-                                        <option value="" disabled selected>Selecciona el lote envasado</option>
-                                        <!-- Opciones serán cargadas dinámicamente -->
-                                    </select>
-                                    <label for="id_lote_envasado">Lote a envasado</label>
+                                    <label for="id_inspeccion">No. de servicio</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-4">
-                            <!-- Fecha de Emisión -->
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline">
-                                    <input class="form-control datepicker" id="reexpedir_fecha_emision" name="fecha_emision"
-                                        autocomplete="off" placeholder="yyyy-mm-dd">
-                                    <label for="fecha_emision">Fecha de Emisión</label>
-                                </div>
-                            </div>
 
-                            <!-- Fecha de Vigencia -->
-                            <div class="col-md-6">
+                        <div class="row mb-4">
+                            <div class="col-md-12">
                                 <div class="form-floating form-floating-outline">
-                                    <input class="form-control datepicker" id="reexpedir_fecha_vigencia" autocomplete="off"
-                                        name="fecha_vigencia" placeholder="yyyy-mm-dd">
-                                    <label for="fecha_vigencia">Fecha de Vigencia</label>
+                                    <input type="text" class="form-control" id="reexpedir_num_dictamen"
+                                        autocomplete="off" name="num_dictamen" placeholder="Número de dictamen">
+                                    <label for="num_dictamen">No. de dictamen</label>
                                 </div>
                             </div>
                         </div>
+
                         <div class="row mb-4">
-                            <!-- Fecha de Servicio -->
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline">
-                                    <input class="form-control datepicker" id="reexpedir_fecha_servicio" autocomplete="off"
-                                        name="fecha_servicio" placeholder="yyyy-mm-dd">
-                                    <label for="fecha_servicio">Fecha de Servicio</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-floating form-floating-outline">
                                     <select id="reexpedir_id_firmante" name="id_firmante" class="select2 form-select">
                                         <option value="" disabled selected>Selecciona el nombre del firmante</option>
@@ -115,19 +68,32 @@
                                 </div>
                             </div>
                         </div>
-                        <hr>
-                    </div>
-                    <h5>Motivo de la cancelación</h5>
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <div class="form-floating form-floating-outline">
-                                <textarea class="form-control h-px-100" id="observaciones" name="observaciones" placeholder="Motivo de cancelación"
-                                    autocomplete="off"></textarea>
-                                <label for="observaciones">Motivo de cancelación</label>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    <input class="form-control flatpickr-datetime" id="reexpedir_fecha_emision" name="fecha_emision"
+                                        autocomplete="off" placeholder="yyyy-mm-dd">
+                                    <label for="fecha_emision">Fecha de emisión</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    <input class="form-control" id="reexpedir_fecha_vigencia" autocomplete="off"
+                                        name="fecha_vigencia" placeholder="yyyy-mm-dd" readonly>
+                                    <label for="fecha_vigencia">Fecha de vigencia</label>
+                                </div>
                             </div>
                         </div>
 
                     </div>
+          
+
+                        <div class="form-floating form-floating-outline mb-6">
+                            <textarea class="form-control h-px-75" id="observaciones" name="observaciones" placeholder="Motivo de cancelación"
+                                autocomplete="off"></textarea>
+                            <label for="observaciones">Motivo de cancelación</label>
+                        </div>
 
                     <div class="d-flex justify-content-end mt-3">
                         <button type="submit" class="btn btn-primary me-2">Registrar</button>

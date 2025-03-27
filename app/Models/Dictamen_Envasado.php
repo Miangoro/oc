@@ -13,15 +13,12 @@ class Dictamen_Envasado extends Model
     protected $primaryKey = 'id_dictamen_envasado';
     protected $fillable = [
         'num_dictamen',
-        'id_empresa',
         'id_inspeccion',
-        'id_lote_envasado',
         'fecha_emision',
         'fecha_vigencia',
-        'fecha_servicio',
+        'id_firmante',
         'estatus',
         'observaciones',
-        'id_firmante'
     ];
 
     public function inspeccion()

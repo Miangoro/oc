@@ -2,7 +2,7 @@
  Page User List
  */
  'use strict';
- $(document).ready(function () {
+ /* $(document).ready(function () {
   $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     autoclose: true,
@@ -10,28 +10,69 @@
     language: 'es' // Configura el idioma a español
   });
 });
-
 ///FECHAS
 $('#fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
-//Sumar 1 año a la fecha inicial
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-//Sumar 1 día a la fecha inicial
-  fechaInicial.setDate(fechaInicial.getDate() + 1);
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);//Sumar 1 año a la fecha inicial
+  fechaInicial.setDate(fechaInicial.getDate() + 1);//Sumar 1 día a la fecha inicial
   //Establecer el calendario de #fecha_vigencia en el año sumado
   $('#fecha_vigencia').datepicker("setDate", fechaInicial);
 });
-
 ///FECHAS EDIT
 $('#edit_fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
-  //Sumar 1 año a la fecha inicial
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-  //Sumar 1 día a la fecha inicial
-  fechaInicial.setDate(fechaInicial.getDate() + 1);
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);//Sumar 1 año a la fecha inicial
+  fechaInicial.setDate(fechaInicial.getDate() + 1); //Sumar 1 día a la fecha inicial
   //Establecer el calendario de #fecha_vigencia en el año sumado
   $('#edit_fecha_vigencia').datepicker("setDate", fechaInicial);
+}); */
+$(document).ready(function () {
+  flatpickr(".flatpickr-datetime", {
+      dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
+      enableTime: false,   // Desactiva la  hora
+      allowInput: true,    // Permite al usuario escribir la fecha manualmente
+      locale: "es",        // idioma a español
+  });
 });
+//FECHAS
+$('#fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);// Sumar 1 año a la fecha inicial
+  //fechaInicial.setDate(fechaInicial.getDate() + 1); // Sumar 1 día a la fecha inicial
+  // Establecer la fecha de vigencia al año sumado sin que el calendario se recargue
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+  // Actualizamos el valor de #fecha_vigencia
+  $('#fecha_vigencia').val(fechaVigencia);
+  // Deshabilitar la interacción con flatpickr en #fecha_vigencia.
+  flatpickr("#fecha_vigencia", {
+      dateFormat: "Y-m-d", // Formato de la fecha
+      enableTime: false,    // Desactiva la hora
+      allowInput: true,     // Permite la escritura manual
+      locale: "es",         // Español
+      static: true,         // Establece el calendario como no interactivo
+      disable: true          // Español
+  });
+});
+//FECHAS EDIT
+$('#edit_fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);// Sumar 1 año a la fecha iniciaL
+  // Establecer el valor en el campo edit_fecha_vigencia
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+  // Actualizamos el valor de #edit_fecha_vigencia
+  $('#edit_fecha_vigencia').val(fechaVigencia);
+
+  // Deshabilitar la interacción con flatpickr en #edit_fecha_vigencia
+  flatpickr("#edit_fecha_vigencia", {
+    dateFormat: "Y-m-d",  // Formato de la fecha
+    enableTime: false,     // Desactiva la hora
+    allowInput: true,      // Permite la escritura manual
+    locale: "es",          // Español
+    static: true,          // Hace que el calendario no se muestre como interactivo
+    disable: true          // Deshabilita la selección
+  });
+});
+
 
 
 
@@ -156,10 +197,12 @@ initializeSelect2(select2Elements);
                 (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
                 '</button>' +
                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                    //Botón Editar
                    `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#editDictExpor" href="javascript:;" class="dropdown-item text-info edit-record"><i class="ri-edit-box-line ri-20px"></i> Editar dictamen</a>` +
-                   `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar dictamen</a>` +
                    //Botón Reexpedir Certificado
                    `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalAddReexDicExpor" class="dropdown-item waves-effect reexpedir"> <i class="ri-file-edit-fill"></i> Reexpedir/Cancelar</a>` +
+                   //Botón Eliminar
+                   `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar dictamen</a>` +
                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
                  '<a href="' + userView + '" class="dropdown-item">View</a>' +
                  '<a href="javascript:;" class="dropdown-item">Suspend</a>' +

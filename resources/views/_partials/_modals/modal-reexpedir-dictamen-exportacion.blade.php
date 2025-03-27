@@ -2,12 +2,13 @@
 <div class="modal fade" id="modalAddReexDicExpor" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lz">
         <div class="modal-content">
+
             <div class="modal-header">
-                <h5  class="modal-title">Reexpedir Dictamen de Exportación</h5>
+                <h5  class="modal-title">Reexpedir/Cancelar Dictamen de Exportación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
 
+            <div class="modal-body">
             <form id="formAddReexDicExpor" method="POST" action="{{ route('dic-expor.reex') }}">
                     @csrf
                     <div class="row mb-4">
@@ -29,9 +30,9 @@
             <!-- Campos Condicionales -->
             <div id="campos_condicionales" style="display: none;">
 
-                        <!-- Selección de Servicio -->
+                    <div class="row mb-4">
                         <div class="col-md-12">
-                            <div class="form-floating form-floating-outline mb-3">
+                            <div class="form-floating form-floating-outline">
                             <select class="select2 form-select" id="id_inspeccion_rex" name="id_inspeccion" 
                                 data-placeholder="Seleccione el no. de servicio">
                                 <option value="" disabled selected>NULL</option>
@@ -42,33 +43,43 @@
                                 <label for="">No. de servicio</label>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Número de Dictamen -->
-                        <div class="form-floating form-floating-outline mb-3">
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                        <div class="form-floating form-floating-outline">
                             <input type="text" class="form-control" id="numero_dictamen_rex" placeholder="No. de dictamen" name="num_dictamen" aria-label="No. de Certificado">
-                            <label for="numero_dictamen_rex">No. de Dictamen</label>
+                            <label for="numero_dictamen_rex">No. de dictamen</label>
                         </div>
+                        </div>
+                    </div>
 
-                        <!-- Firmante -->
-                        <div class="form-floating form-floating-outline mb-3">
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                        <div class="form-floating form-floating-outline">
                             <select class="select2 form-select" id="id_firmante_rex" name="id_firmante" aria-label="Nombre Firmante">
-                                <option value="" disabled selected>Seleccione un firmante</option>
                                 @foreach($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
+                            <label for="">Selecciona un firmante</label>
                         </div>
+                        </div>
+                    </div>
 
-                        <!-- Fechas -->
-                        <div class="d-flex justify-content-between mb-3">
-                            <div class="form-floating form-floating-outline flex-fill me-2">
-                                <input class="form-control datepicker" id="fecha_emision_rex" placeholder="yyyy-mm-dd" name="fecha_emision" aria-label="Fecha de Vigencia" autocomplete="off" readonly>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline">
+                                <input class="form-control flatpickr-datetime" id="fecha_emision_rex" placeholder="YYYY-MM-DD" name="fecha_emision" aria-label="Fecha de Vigencia" autocomplete="off" >
                                 <label for="fecha_emision_rex">Fecha de emisión</label>
                             </div>
-                            <div class="form-floating form-floating-outline flex-fill ms-2">
-                                <input class="form-control datepicker" id="fecha_vigencia_rex" placeholder="yyyy-mm-dd" name="fecha_vigencia" aria-label="Fecha de Vencimiento" autocomplete="off" readonly>
-                                <label for="fecha_vigencia_rex">Vigencia hasta</label>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline">
+                                <input class="form-control" id="fecha_vigencia_rex" placeholder="YYYY-MM-DD" name="fecha_vigencia" aria-label="Fecha de Vencimiento" autocomplete="off" readonly>
+                                <label for="fecha_vigencia_rex">Fecha de vigencia</label>
                             </div>
+                        </div>
                         </div>
             </div>
                     

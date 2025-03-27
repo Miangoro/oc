@@ -110,7 +110,10 @@ class DictamenEnvasadoController extends Controller
             'data' => $data,
         ]);
     }
-    /* funcion para eliminar */
+
+
+    
+    //FUNCION PARA ELIMIAR 
     public function destroy($id_dictamen_envasado)
     {
         try {
@@ -123,30 +126,26 @@ class DictamenEnvasadoController extends Controller
         }
     }
 
-    /* funcion para insertar datos */
+
+
+    //FUNCION PARA INSERTAR DATOS
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'num_dictamen' => 'required|string|max:100',
-            //'id_empresa' => 'required|exists:empresa,id_empresa',
             'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
-            //'id_lote_envasado' => 'required|integer|exists:lotes_envasado,id_lote_envasado',
             'fecha_emision' => 'required|date',
             'fecha_vigencia' => 'required|date',
-            //'fecha_servicio' => 'required|date',
             'id_firmante' => 'required|exists:users,id',
         ]);
         
-        // Crear una nueva instancia del modelo Dictamen_Granel
+        // Crear una nueva instancia del modelo Dictamen
         $dictamen = new Dictamen_Envasado();
         $dictamen->num_dictamen = $validatedData['num_dictamen'];
-        //$dictamen->id_empresa = $validatedData['id_empresa'];
         $dictamen->id_inspeccion = $validatedData['id_inspeccion'];
-        //$dictamen->id_lote_envasado = $validatedData['id_lote_envasado'];
         $dictamen->fecha_emision = $validatedData['fecha_emision'];
         $dictamen->fecha_vigencia = $validatedData['fecha_vigencia'];
-        //$dictamen->fecha_servicio = $validatedData['fecha_servicio'];
-        //$dictamen->id_firmante = $validatedData['id_firmante'];
+        $dictamen->id_firmante = $validatedData['id_firmante'];
         $dictamen->save();
         
         return response()->json([
@@ -157,7 +156,7 @@ class DictamenEnvasadoController extends Controller
 
 
 
-     /* obtener los datos de los registros */
+     //FUNCION PARA OBTENER LOS REGISTROS
      public function edit($id_dictamen_envasado)
      {
          try {
@@ -173,31 +172,26 @@ class DictamenEnvasadoController extends Controller
      }
      
  
-     /* funcion para actualizar */
+
+     //FUNCION PARA ACTUALIZAR
      public function update(Request $request, $id_dictamen_envasado)
      {
          try {
              // Validar los datos del formulario
              $validated = $request->validate([
                  'num_dictamen' => 'required|string|max:70',
-                 'id_empresa' => 'required|exists:empresa,id_empresa',
                  'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
-                 'id_lote_envasado' => 'required|integer|exists:lotes_envasado,id_lote_envasado',
                  'fecha_emision' => 'required|date',
                  'fecha_vigencia' => 'required|date',
-                 'fecha_servicio' => 'required|date',
                  'id_firmante' => 'required|exists:users,id',
              ]);
              $dictamen = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
              // Actualizar lote
              $dictamen->update([
                  'num_dictamen' => $validated['num_dictamen'],
-                 'id_empresa' => $validated['id_empresa'],
                  'id_inspeccion' => $validated['id_inspeccion'],
-                 'id_lote_envasado' => $validated['id_lote_envasado'],
                  'fecha_emision' => $validated['fecha_emision'],
                  'fecha_vigencia' => $validated['fecha_vigencia'],
-                 'fecha_servicio' => $validated['fecha_servicio'],
                  'id_firmante' => $validated['id_firmante'],
              ]);
              return response()->json([
@@ -214,7 +208,7 @@ class DictamenEnvasadoController extends Controller
 
 
      
-    /* reexpedir un dictamen */
+    //REEXPEDIR DICTAMEN
     public function reexpedirDictamen(Request $request, $id_dictamen_envasado)
     {
         DB::beginTransaction();
@@ -222,12 +216,9 @@ class DictamenEnvasadoController extends Controller
             // Validar los datos
             $validatedData = $request->validate([
                 'num_dictamen' => 'required',
-                'id_empresa' => 'required',
                 'id_inspeccion' => 'required',
-                'id_lote_envasado' => 'required',
                 'fecha_emision' => 'required|date',
                 'fecha_vigencia' => 'required|date',
-                'fecha_servicio' => 'required|date',
                 'id_firmante' => 'required',
                 'observaciones' => 'required',
                 'cancelar_reexpedir' => 'required'
@@ -235,10 +226,9 @@ class DictamenEnvasadoController extends Controller
     
             // Obtener el dictamen original
             $dictamenOriginal = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
-    
             // Actualizar el dictamen original con observaciones y estatus
             $dictamenOriginal->update([
-                'estatus' => 'Cancelado',
+                'estatus' => 1,
                 'observaciones' => $request->input('observaciones')
             ]);
     
@@ -247,13 +237,10 @@ class DictamenEnvasadoController extends Controller
                 // Crear un nuevo dictamen
                 $nuevoDictamen = $dictamenOriginal->replicate();
                 $nuevoDictamen->num_dictamen = $request->input('num_dictamen');
-                $nuevoDictamen->id_empresa = $request->input('id_empresa');
                 $nuevoDictamen->id_inspeccion = $request->input('id_inspeccion');
-                $nuevoDictamen->id_lote_envasado = $request->input('id_lote_envasado');
                 $nuevoDictamen->fecha_emision = $request->input('fecha_emision');
                 $nuevoDictamen->fecha_vigencia = $request->input('fecha_vigencia');
-                $nuevoDictamen->fecha_servicio = $request->input('fecha_servicio');
-                $nuevoDictamen->estatus = 'Emitido';
+                $nuevoDictamen->estatus = 2;
                 $nuevoDictamen->save();
             }
     
@@ -266,6 +253,8 @@ class DictamenEnvasadoController extends Controller
     }
     
 
+
+    //PDF DICTAMEN ENVASADO
     public function dictamenDeCumplimientoEnvasado($id_dictamen)
     {
         // Obtener los datos del dictamen con la relación de lotes a granel

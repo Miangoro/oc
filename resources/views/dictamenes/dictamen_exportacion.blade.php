@@ -12,9 +12,13 @@
   'resources/assets/vendor/libs/@form-validation/form-validation.scss',
   'resources/assets/vendor/libs/animate-css/animate.scss',
   'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
+  //calendario1
   'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss',
 //Animacion "loading"
-  'resources/assets/vendor/libs/spinkit/spinkit.scss'
+  'resources/assets/vendor/libs/spinkit/spinkit.scss',
+  //calendario2
+  'resources/assets/vendor/libs/flatpickr/flatpickr.scss',
+  'resources/assets/vendor/libs/pickr/pickr-themes.scss',
 ])
 @endsection
 
@@ -30,8 +34,11 @@
   'resources/assets/vendor/libs/cleavejs/cleave.js',
   'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
   'resources/assets/vendor/libs/sweetalert2/sweetalert2.js',
-  'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js',
-
+  'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js',//calendario1
+  //calendario2
+  'resources/assets/vendor/libs/flatpickr/flatpickr.js',
+    'resources/assets/vendor/libs/pickr/pickr.js',
+    'resources/assets/vendor/libs/flatpickr/l10n/es.js' // Archivo local del idioma
 ])
 @endsection
 
