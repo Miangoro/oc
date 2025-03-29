@@ -198,11 +198,11 @@ initializeSelect2(select2Elements);
                 '</button>' +
                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
                     //Botón Editar
-                   `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#editDictExpor" href="javascript:;" class="dropdown-item text-info edit-record"><i class="ri-edit-box-line ri-20px"></i> Editar dictamen</a>` +
+                   `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#editDictExpor" href="javascript:;" class="dropdown-item text-info edit-record"><i class="ri-edit-box-line ri-20px"></i> Editar</a>` +
                    //Botón Reexpedir Certificado
                    `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalAddReexDicExpor" class="dropdown-item waves-effect reexpedir"> <i class="ri-file-edit-fill"></i> Reexpedir/Cancelar</a>` +
                    //Botón Eliminar
-                   `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar dictamen</a>` +
+                   `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
                  '<a href="' + userView + '" class="dropdown-item">View</a>' +
                  '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
@@ -385,7 +385,7 @@ initializeSelect2(select2Elements);
            ]
          },
          {
-           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Dictamen</span>',
+           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo dictamen</span>',
            className: 'add-new btn btn-primary waves-effect waves-light',
            attr: {
             'data-bs-toggle': 'modal',
@@ -444,34 +444,41 @@ initializeSelect2(select2Elements);
 // Validación del formulario
 const fv = FormValidation.formValidation(NuevoDictamenExport, {
     fields: {
-        num_dictamen: {
-            validators: {
-                notEmpty: {
-                    message: 'Introduzca el no. de dictamen'
-                }
+      id_inspeccion: {
+        validators: {
+            notEmpty: {
+                message: 'Selecciona una opción'
             }
-        },
-        id_inspeccion: {
+        }
+      },
+      num_dictamen: {
           validators: {
               notEmpty: {
-                  message: 'Seleccione una opcion'
+                  message: 'Introduzca el no. de dictamen'
               }
           }
-        },
-        fecha_emision: {
-            validators: {
-                notEmpty: {
-                    message: 'Seleccione una fecha'
-                }
+      },
+      id_firmante: {
+        validators: {
+            notEmpty: {
+                message: 'Selecciona una opción'
             }
-        },
-        fecha_vigencia: {
-            validators: {
-                notEmpty: {
-                    message: 'Seleccione una fecha'
-                }
-            }
-        },
+        }
+      },
+      fecha_emision: {
+          validators: {
+              notEmpty: {
+                  message: 'Selecciona una fecha'
+              }
+          }
+      },
+      fecha_vigencia: {
+          validators: {
+              notEmpty: {
+                  message: 'Selecciona una fecha'
+              }
+          }
+      },
         
 
     },

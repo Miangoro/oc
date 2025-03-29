@@ -89,16 +89,23 @@ class DictamenGranelController extends Controller
     
             foreach ($dictamenes as $dictamen) {
                 $nestedData['id_dictamen'] = $dictamen->id_dictamen;
-                $nestedData['fake_id'] = ++$ids;
                 $nestedData['num_dictamen'] = $dictamen->num_dictamen;
-                $nestedData['id_empresa'] = $dictamen->empresa->razon_social ?? 'N/A';
                 $nestedData['id_inspeccion'] = $dictamen->inspeccion->num_servicio ?? 'N/A';
                 $nestedData['id_lote_granel'] = $dictamen->lote_granel->nombre_lote ?? 'N/A';
                 $nestedData['folio_fq'] = $dictamen->lote_granel->folio_fq ?? 'N/A';
-                $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
-                $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha($dictamen->fecha_servicio);
                 $nestedData['estatus'] = $dictamen->estatus;
+                $fecha_emision = Helpers::formatearFecha($dictamen->fecha_emision);
+                $fecha_vigencia = Helpers::formatearFecha($dictamen->fecha_vigencia);
+                $nestedData['fechas'] = '<span class="small"><b>Fecha Emisión: </b>' .$fecha_emision. '<br> <b>Fecha Vigencia: </b>' .$fecha_vigencia. '</span>';
+                ///numero y nombre empresa
+                $empresa = $dictamen->inspeccione->solicitud->empresa;
+                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                ? $empresa->empresaNumClientes
+                    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
+                : 'N/A';
+                $nestedData['numero_cliente'] = $numero_cliente;
+                $nestedData['razon_social'] = $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
     
                 $data[] = $nestedData;
             }

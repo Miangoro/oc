@@ -238,7 +238,7 @@ public function MostrarDictamenExportacion($id_dictamen)
     $watermarkText = $data->estatus == 1;
     //Obtener un valor específico del JSON
     $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON actual
-    ['id_dictamen_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+    ['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado 
     //Busca el registro del certificado que tiene el id igual a $id_sustituye
     Dictamen_Exportacion::find($id_sustituye)->num_dictamen ?? '' : '';
@@ -345,7 +345,7 @@ public function reexpedir(Request $request)
             $nuevoDictamen->id_firmante = $request->id_firmante;
             $nuevoDictamen->estatus = 2;
             $nuevoDictamen->observaciones = json_encode([
-                'id_dictamen_sustituye' => $request->id_dictamen,
+                'id_sustituye' => $request->id_dictamen,
                 ]);
             // Guardar
             $nuevoDictamen->save();

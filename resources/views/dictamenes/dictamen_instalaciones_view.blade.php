@@ -13,8 +13,9 @@
   'resources/assets/vendor/libs/animate-css/animate.scss',
   'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
   'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss',
-//Animacion "loading"
-  'resources/assets/vendor/libs/spinkit/spinkit.scss'
+  'resources/assets/vendor/libs/spinkit/spinkit.scss',//Animacion "loading"
+  'resources/assets/vendor/libs/flatpickr/flatpickr.scss',//calendario2
+  'resources/assets/vendor/libs/pickr/pickr-themes.scss',
 ])
 @endsection
 
@@ -31,7 +32,9 @@
   'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
   'resources/assets/vendor/libs/sweetalert2/sweetalert2.js',
   'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js',
-
+  'resources/assets/vendor/libs/flatpickr/flatpickr.js', //calendario2
+  'resources/assets/vendor/libs/pickr/pickr.js',
+  'resources/assets/vendor/libs/flatpickr/l10n/es.js' // Archivo local del idioma
 ])
 @endsection
 
@@ -47,7 +50,7 @@
 <!-- Users List Table -->
 <div class="card">
     <div class="card-header pb-0">
-        <h3 class="card-title mb-0">Dictámenes de Instalaciones</h3>
+        <h3 class="card-title mb-0">Dictámenes de instalaciones</h3>
     </div>
 
     <div class="card-datatable table-responsive">
@@ -62,7 +65,6 @@
                     <th>Cliente</th>
                     <th>Domicilio de Instalación</th>
                     <th>Fecha</th>
-                    <th>Días de vigencia</th>
                     <th>Dictamen</th>
                     <th>ACCIONES</th>
                 </tr>
@@ -79,6 +81,7 @@
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-dictamen_instalaciones')
+@include('_partials/_modals/modal-reexpedir-dictamen-instalaciones')
 <!-- /Modal -->
 
 @endsection

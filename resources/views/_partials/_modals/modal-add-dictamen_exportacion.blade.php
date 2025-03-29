@@ -1,10 +1,10 @@
-<!-- Add New Lote Envasado Modal -->
+<!-- AGREGAR DICTAMEN EXPORTACION Modal -->
 <div class="modal fade" id="addDictExpor" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Nuevo Dictamen de Exportación</h5>
+                <h5 class="modal-title">Nuevo dictamen de exportación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -14,7 +14,7 @@
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="id_inspeccion" name="id_inspeccion"
-                                    data-placeholder="Seleccione el número de servicio" class="form-select select2"
+                                    data-placeholder="Selecciona el número de servicio" class="form-select select2"
                                     aria-label="Default select example">
                                     <option value="" disabled selected>NULL</option>
                                     @foreach ($inspeccion as $insp)
@@ -35,7 +35,7 @@
                         </div>
                         <!-- Firmante -->
                         <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-3">
+                            <div class="form-floating form-floating-outline mb-6">
                                 <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante">
                                     <option value="" disabled selected>Selecciona un firmante</option>
                                     @foreach($users as $user)
@@ -85,7 +85,7 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Editar Dictamen de Exportación</h5>
+                <h5 class="modal-title">Editar dictamen de exportación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 

@@ -32,14 +32,12 @@
                 <thead class="table-dark">
                     <tr>
                         <th></th>
-                        <th>ID</th>
                         <th>No. dictamen</th>
                         <th>Cliente</th>
                         <th>No. Servicio</th>
                         <th>Lote a granel</th>
                         <th>Folio FQ</th>
-                        <th>Fecha de emisión</th>
-                        <th>Fecha de vigencia</th>
+                        <th>Fechas</th>
                         <th>Fecha de servicio</th>
                         <th>Dictamen</th>
                         <th>Estatus</th>

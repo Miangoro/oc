@@ -2,16 +2,62 @@
  Page User List
  */
  'use strict';
- $(document).ready(function () {
+/*$(document).ready(function () {
   $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     autoclose: true,
     todayHighlight: true,
     language: 'es' // Configura el idioma a español
   });
+});*/
+$(document).ready(function () {
+  flatpickr(".flatpickr-datetime", {
+      dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
+      enableTime: false,   // Desactiva la  hora
+      allowInput: true,    // Permite al usuario escribir la fecha manualmente
+      locale: "es",        // idioma a español
+  });
+});
+//FECHAS
+$('#fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);// Sumar 1 año a la fecha inicial
+  //fechaInicial.setDate(fechaInicial.getDate() + 1); // Sumar 1 día a la fecha inicial
+  // Establecer la fecha de vigencia al año sumado sin que el calendario se recargue
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+  // Actualizamos el valor de #fecha_vigencia
+  $('#fecha_vigencia').val(fechaVigencia);
+  // Deshabilitar la interacción con flatpickr en #fecha_vigencia.
+  flatpickr("#fecha_vigencia", {
+      dateFormat: "Y-m-d", // Formato de la fecha
+      enableTime: false,    // Desactiva la hora
+      allowInput: true,     // Permite la escritura manual
+      locale: "es",         // Español
+      static: true,         // Establece el calendario como no interactivo
+      disable: true          // Español
+  });
+});
+//FECHAS EDIT
+$('#edit_fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);// Sumar 1 año a la fecha iniciaL
+  // Establecer el valor en el campo edit_fecha_vigencia
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+  // Actualizamos el valor de #edit_fecha_vigencia
+  $('#edit_fecha_vigencia').val(fechaVigencia);
+
+  // Deshabilitar la interacción con flatpickr en #edit_fecha_vigencia
+  flatpickr("#edit_fecha_vigencia", {
+    dateFormat: "Y-m-d",  // Formato de la fecha
+    enableTime: false,     // Desactiva la hora
+    allowInput: true,      // Permite la escritura manual
+    locale: "es",          // Español
+    static: true,          // Hace que el calendario no se muestre como interactivo
+    disable: true          // Deshabilita la selección
+  });
 });
 
-//const { formatDate } = require("@fullcalendar/core/index.js");
+
 
  // Datatable (jquery)
  $(function () {
@@ -35,43 +81,6 @@ var select2Elements = $('.select2');
     });
   }
 initializeSelect2(select2Elements);
-
-
-///FECHAS FORMAT ADD
-$('#fecha_emision').on('change', function() {
-  var fechaInicial = new Date($(this).val());
-
-//Sumar 1 año a la fecha inicial
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-//Sumar 1 día a la fecha inicial
-  fechaInicial.setDate(fechaInicial.getDate() + 1);
-
-//Formatear la fecha en YYYY-MM-DD
-  var year = fechaInicial.getFullYear();
-  var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2); // Los meses empiezan desde 0
-  var day = ('0' + fechaInicial.getDate() ).slice(-2); // Usamos el día original
-
-//Asignar la fecha final al input correspondiente
-  //$('#fecha_vigencia').val(year + '/' + month + '/' + day);//misma funcion que la linea de abajo
-
-//Establecer el calendario de #fecha_vigencia en el año sumado
-  //$('#fecha_vigencia').datepicker("option", "yearRange", (year) + ":" + (year)); //rango de años
-  $('#fecha_vigencia').datepicker("setDate", fechaInicial); // un dia menos, calendario bien
-});
-
-
-//7FECHAS FORMAT EDIT
-$('#edit_fecha_emision').on('change', function() {
-  var fechaInicial = new Date($(this).val());
-
-  //Sumar 1 año a la fecha inicial
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-  //Sumar 1 día a la fecha inicial
-  fechaInicial.setDate(fechaInicial.getDate() + 1);
-
-  //Establecer el calendario de #fecha_vigencia en el año sumado
-  $('#edit_fecha_vigencia').datepicker("setDate", fechaInicial); // un dia menos, calendario bien
-});
 
 
 
@@ -100,19 +109,18 @@ $('#edit_fecha_emision').on('change', function() {
          { data: 'num_servicio' },
          { data: 'folio_solicitud' },
          {
-          data: null, // Se usará null porque combinaremos varios valores
-          render: function(data, type, row) {
-              return `
-              <strong>${data.numero_cliente}</strong><br>
-                  <span style="font-size:11px">${data.razon_social}<span>
-                  
-              `;
-          }
-      },
+           data: null, // Se usará null porque combinaremos varios valores
+            render: function(data, type, row) {
+                return `
+                <strong>${data.numero_cliente}</strong><br>
+                    <span style="font-size:11px">${data.razon_social}<span>
+                    
+                `;
+            }
+          },
       
          { data: 'direccion_completa' },
          { data: 'fechas' },
-         { data: 'diasRestantes' },
          { data: '' },
          { data: 'action' }
  
@@ -128,16 +136,8 @@ $('#edit_fecha_emision').on('change', function() {
              return '';
            }
          },
-         /*{//Tabla 1
-           searchable: false,
-           orderable: false,
-           targets: 1,
-           render: function (data, type, full, meta) {
-             return `<span>${full.fake_id}</span>`;
-           }
-         },*/
          {
-           // Tabla 2
+           // Tabla 1
            targets: 1,
            responsivePriority: 4,
            render: function (data, type, full, meta) {
@@ -197,7 +197,7 @@ $('#edit_fecha_emision').on('change', function() {
             }
           },*/
           {
-            // Tabla 5
+            // Tabla 7
             targets: 7,
             searchable: true,
             render: function (data, type, full, meta) {
@@ -206,15 +206,17 @@ $('#edit_fecha_emision').on('change', function() {
               }
           },
           {
-            // Abre el pdf del dictamen
-            targets: 9,
+            //pdf del dictamen
+            targets: 8,
             searchable: false,
             orderable: false,
             className: 'text-center',
             //searchable: false, orderable: false, //Inhabilita "thead" busqueda/orden
             render: function (data, type, full, meta) {
               var $id = full['id_dictamen'];
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>
+              <br>
+              <span class="small">${full['diasRestantes']}</span>`;
             }
           },
  
@@ -232,6 +234,8 @@ $('#edit_fecha_emision').on('change', function() {
 /*               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_dictamen']} data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#editDictamen"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
               `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_dictamen']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` + */
                    `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#editDictamen" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar dictamen</a>` +
+                   //Botón Reexpedir Certificado
+                   `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalReexDicInsta" class="dropdown-item waves-effect text-success reexpedir"> <i class="ri-file-edit-fill"></i> Reexpedir/Cancelar</a>` +
                    `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar dictamen</a>` +
                    //'<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
@@ -667,59 +671,6 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
 
 
 
-//RECIBE LOS DATOS DEL PDF
-$(document).on('click', '.pdf', function () {
-  var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en opciones
-  var registro = $(this).data('registro');//ID de razon social "data-registro"
-  var tipo = $(this).data('tipo');
-    var iframe = $('#pdfViewer');
-    var spinner = $('#cargando');
-
-    
-
-      if(tipo == 1){ // Productor
-        var tipo_dictamen = '../dictamen_productor/'+id;
-        var titulo = "Dictamen de productor";
-      }
-      if(tipo == 2){ // Envasador
-        var tipo_dictamen = '../dictamen_envasador/'+id;
-        var titulo = "Dictamen de envasador";
-      }
-      if(tipo == 3){ // Comercializador
-        var tipo_dictamen = '../dictamen_comercializador/'+id;
-        var titulo = "Dictamen de comercializador";
-      }
-      if(tipo == 4){ // Almacén y bodega
-        var tipo_dictamen = '../dictamen_almacen/'+id;
-        var titulo = "Dictamen de almacén y bodega";
-      }
-      if(tipo == 5){ // Área de maduración
-        var tipo_dictamen = '../dictamen_maduracion/'+id;
-        var titulo = "Dictamen de área de maduración de mezcal";
-      }
-      
-    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-    spinner.show();
-    iframe.hide();
-    
-    //Cargar el PDF con el ID
-      iframe.attr('src', tipo_dictamen);
-    //Configurar el botón para abrir el PDF en una nueva pestaña
-      $("#NewPestana").attr('href', tipo_dictamen).show();
-
-      $("#titulo_modal").text(titulo);
-      $("#subtitulo_modal").text(registro);  
-
-    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-      iframe.on('load', function () {
-        spinner.hide();
-        iframe.show();
-      });
-});
-
-
-
-
 // FUNCION PARA EDITAR un registro
 $(document).ready(function() {
   // Abrir el modal y cargar datos para editar
@@ -799,6 +750,62 @@ $(document).ready(function() {
       });
   });
 });
+
+
+
+
+//RECIBE LOS DATOS DEL PDF
+$(document).on('click', '.pdf', function () {
+  var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en opciones
+  var registro = $(this).data('registro');//ID de razon social "data-registro"
+  var tipo = $(this).data('tipo');
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+
+    
+
+      if(tipo == 1){ // Productor
+        var tipo_dictamen = '../dictamen_productor/'+id;
+        var titulo = "Dictamen de productor";
+      }
+      if(tipo == 2){ // Envasador
+        var tipo_dictamen = '../dictamen_envasador/'+id;
+        var titulo = "Dictamen de envasador";
+      }
+      if(tipo == 3){ // Comercializador
+        var tipo_dictamen = '../dictamen_comercializador/'+id;
+        var titulo = "Dictamen de comercializador";
+      }
+      if(tipo == 4){ // Almacén y bodega
+        var tipo_dictamen = '../dictamen_almacen/'+id;
+        var titulo = "Dictamen de almacén y bodega";
+      }
+      if(tipo == 5){ // Área de maduración
+        var tipo_dictamen = '../dictamen_maduracion/'+id;
+        var titulo = "Dictamen de área de maduración de mezcal";
+      }
+      
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    
+    //Cargar el PDF con el ID
+      iframe.attr('src', tipo_dictamen);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+      $("#NewPestana").attr('href', tipo_dictamen).show();
+
+      $("#titulo_modal").text(titulo);
+      $("#subtitulo_modal").text(registro);  
+
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+      iframe.on('load', function () {
+        spinner.hide();
+        iframe.show();
+      });
+});
+
+
+
 
 
  

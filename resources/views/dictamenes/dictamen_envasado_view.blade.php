@@ -48,7 +48,7 @@
     <!-- Users List Table -->
     <div class="card">
         <div class="card-header pb-0">
-            <h3 class="card-title mb-0">Dictámenes envasado</h3>
+            <h3 class="card-title mb-0">Dictámenes de envasado</h3>
         </div>
 
         <div class="card-datatable table-responsive">
@@ -56,13 +56,11 @@
                 <thead class="table-dark">
                     <tr>
                         <th></th>
-                        <th>ID</th>
                         <th>No. dictamen</th>
                         <th>Cliente</th>
                         <th>No. Servicio</th>
                         <th>Lote envasado</th>
-                        <th>Fecha de emisión</th>
-                        <th>Fecha de vigencia</th>
+                        <th>Fechas</th>
                         <th>Fecha de servicio</th>
                         <th>Dictamen</th>
                         <th>Estatus</th>

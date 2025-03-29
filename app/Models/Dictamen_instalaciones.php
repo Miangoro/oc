@@ -16,13 +16,12 @@ class Dictamen_instalaciones extends Model
         'id_dictamen',
         'id_inspeccion',
         'tipo_dictamen',
-        'id_instalacion',
         'num_dictamen',
         'fecha_emision',
         'fecha_vigencia',
-        'categorias',
-        'clases',
-        'id_firmante'
+        'id_firmante',
+        'estatus',
+        'observaciones',
       ];
 
       // Método para obtener el nombre del registro que sirve para la trazabilidad

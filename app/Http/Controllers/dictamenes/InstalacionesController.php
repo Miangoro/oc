@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
@@ -180,7 +181,6 @@ class InstalacionesController extends Controller
 
             foreach ($users as $user) {
                 //MANDA LOS DATOS AL JS
-                //$nestedData['fake_id'] = ++$ids;
                 $nestedData['id_dictamen'] = $user->id_dictamen;
                 $nestedData['tipo_dictamen'] = $user->tipo_dictamen;
                 $empresa = $user->inspeccione->solicitud->empresa;
@@ -461,4 +461,11 @@ class InstalacionesController extends Controller
 
         return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones del área de maduración.pdf');
     }
+
+
+
+
+
+
+
 }

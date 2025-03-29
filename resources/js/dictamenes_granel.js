@@ -52,10 +52,15 @@ $(function () {
         type: 'GET'
       },
       columns: [
-        { data: null, defaultContent: '' },
-        { data: 'id_dictamen' },
+        { data: ''},
         { data: 'num_dictamen' },
-        { data: 'id_empresa' },
+        { data: null, // Se usará null porque combinaremos varios valores
+          render: function(data, type, row) {
+              return `
+              <strong>${data.numero_cliente}</strong><br>
+              <span style="font-size:12px">${data.razon_social}<span>`;
+            }
+         },
         { data: 'id_inspeccion' },
         { data: 'id_lote_granel' },
         {
@@ -65,8 +70,7 @@ $(function () {
             return '<a href="#" data-id="' + row.id_dictamen + '" data-bs-placement="bottom" data-bs-custom-class="tooltip-seccondary" title="Folios de Análisis fisicoquímicos Y Certificados de lote a granel" data-bs-toggle="tooltip" data-bs-target="#modalVerDocumento" class="ver-folio-fq">' + data + '</a>';
           }
         },
-        { data: 'fecha_emision' },
-        { data: 'fecha_vigencia' },
+        { data: 'fechas' },
         { data: 'fecha_servicio' },
         { data: null, defaultContent: '' },
         {
@@ -99,17 +103,8 @@ $(function () {
           }
         },
         {
-          searchable: false,
-          orderable: true,
-          targets: 1,
-          render: function (data, type, full, meta) {
-            return `<span>${full.fake_id}</span>`;
-          }
-        },
-
-        {
           // User full name
-          targets: 2,
+          targets: 1,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $name = full['num_dictamen'];
@@ -135,9 +130,8 @@ $(function () {
           }
         },
         {
-
-          // Abre el pdf del dictamen
-          targets: 10,
+          // PDF
+          targets: 8,
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
@@ -158,7 +152,7 @@ $(function () {
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalEditDictamenGranel" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-              `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalReexpredirDictamenGranel" class="dropdown-item reexpedir-record waves-effect"><i class="ri-edit-box-line ri-20px text-success"></i> Reexpedir dictamen</a>` +
+              `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalReexpredirDictamenGranel" class="dropdown-item waves-effect reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
               `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
@@ -364,7 +358,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar dictamen a granel</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Nuevo dictamen</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'modal',
