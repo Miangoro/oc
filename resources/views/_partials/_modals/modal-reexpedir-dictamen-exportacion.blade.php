@@ -4,7 +4,7 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5  class="modal-title">Reexpedir/Cancelar dictamen de Exportación</h5>
+                <h5  class="modal-title">Reexpedir/Cancelar dictamen de exportación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -34,7 +34,7 @@
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline">
                             <select class="select2 form-select" id="id_inspeccion_rex" name="id_inspeccion" 
-                                data-placeholder="Seleccione el no. de servicio">
+                                data-placeholder="Selecciona el no. de servicio">
                                 <option value="" disabled selected>NULL</option>
                                 @foreach($inspeccion as $insp)
                                 <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->folio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}</option>

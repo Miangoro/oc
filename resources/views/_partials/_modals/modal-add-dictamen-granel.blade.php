@@ -1,119 +1,75 @@
-<!-- Modal para agregar nuevo dictamen de granel -->
+<!--MODAL NUEVO DICTAMEN GRANEL -->
 <div class="modal fade" id="modalAddDictamenGranel" tabindex="-1" aria-labelledby="modalAddDictamenGranelLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
+
             <div class="modal-header">
-                <h5 id="modalAddDictamenGranelLabel" class="modal-title">Nuevo Dictamen a Granel</h5>
+                <h5 id="modalAddDictamenGranelLabel" class="modal-title">Nuevo dictamen a granel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
             <div class="modal-body">
                 <form id="addNewDictamenGranelForm" method="POST">
                     @csrf
-                    <!-- Fila 1 -->
-                    <div class="row mb-4">
-                        <!-- Número de Dictamen -->
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" id="num_dictamen" name="num_dictamen" autocomplete="off"
-                                    placeholder="Número de dictamen">
-                                <label for="num_dictamen">Número de Dictamen</label>
-                            </div>
-                        </div>
-
-                        <!-- Select de Empresa Cliente -->
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <select onchange="obtenerLote()" id="id_empresa" name="id_empresa"
-                                    class="select2 form-select">
-                                    <option value="" disabled selected>Selecciona la empresa cliente</option>
-                                    @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="id_empresa">Empresa Cliente</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Fila 2 -->
-                    <div class="row mb-4">
-                        <!-- Select de Inspección -->
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <select id="id_inspeccion" name="id_inspeccion" class="select2 form-select">
-                                    <option value="" disabled selected>Selecciona el número de servicio</option>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select id="id_inspeccion" name="id_inspeccion" class="select2 form-select" data-placeholder="Selecciona el número de servicio">
+                                    <option value="" disabled selected> </option>
                                     @foreach ($inspecciones as $inspeccion)
                                         <option value="{{ $inspeccion->id_inspeccion }}">{{ $inspeccion->num_servicio }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="id_inspeccion">Número de Servicio</label>
-                            </div>
-                        </div>
-
-                        <!-- Select de Lote Granel -->
-                        <!-- Select de Lote Granel -->
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <select id="id_lote_granel" name="id_lote_granel" class="select2 form-select">
-                                    <option value="" disabled selected>Selecciona el lote a granel</option>
-                                    <!-- Opciones serán cargadas dinámicamente -->
-                                </select>
-                                <label for="id_lote_granel">Lote a granel</label>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Fila 3 -->
-                    <div class="row mb-4">
-                        <!-- Fecha de Emisión -->
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <input class="form-control datepicker" id="fecha_emision" name="fecha_emision" autocomplete="off"
-                                    placeholder="yyyy-mm-dd">
-                                <label for="fecha_emision">Fecha de Emisión</label>
-                            </div>
-                        </div>
-
-                        <!-- Fecha de Vigencia -->
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <input class="form-control datepicker" id="fecha_vigencia" name="fecha_vigencia" autocomplete="off"
-                                    placeholder="yyyy-mm-dd">
-                                <label for="fecha_vigencia">Fecha de Vigencia</label>
+                                <label for="id_inspeccion">No. de servicio</label>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row mb-4">
-                        <!-- Fecha de Servicio -->
+                    <div class="row">
                         <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <input class="form-control datepicker" id="fecha_servicio" name="fecha_servicio" autocomplete="off"
-                                    placeholder="yyyy-mm-dd">
-                                <label for="fecha_servicio">Fecha de Servicio</label>
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="text" class="form-control" id="num_dictamen" name="num_dictamen" autocomplete="off"
+                                    placeholder="no. dictamen">
+                                <label for="num_dictamen">No. de dictamen</label>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
+                            <div class="form-floating form-floating-outline mb-6">
                                 <select  id="id_firmante" name="id_firmante" class="select2 form-select">
-                                <option value="" disabled selected>Selecciona el nombre del firmante</option>
-                                @foreach ($inspectores as $inspector)
-                                    <option value="{{ $inspector->id }}">{{ $inspector->name }}</option>
-                                @endforeach
-                             </select>
-                                <label for="id_firmante">Nombre del inspector</label>
+                                    <option value="" disabled selected>Selecciona un firmante</option>
+                                    @foreach ($inspectores as $inspector)
+                                        <option value="{{ $inspector->id }}">{{ $inspector->name }}</option>
+                                    @endforeach
+                                </select>
+                                    <label for="id_firmante">Selecciona un firmante</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control flatpickr-datetime" id="fecha_emision" name="fecha_emision" autocomplete="off"
+                                    placeholder="YYYY-MM-DD">
+                                <label for="fecha_emision">Fecha de emisión</label>
+                            </div>
+                        </div>    
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" id="fecha_vigencia" name="fecha_vigencia" autocomplete="off"
+                                    placeholder="YYYY-MM-DD" readonly>
+                                <label for="fecha_vigencia">Fecha de vigencia</label>
                             </div>
                         </div>
                     </div>
 
 
-                    <div class="d-flex justify-content-end mt-3">
+                    <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary"
-                            data-bs-dismiss="modal">Cancelar</button>
+                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                            aria-label="Close">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -121,37 +77,84 @@
     </div>
 </div>
 
-<script>
-function obtenerLote() {
-    var empresa = $("#id_empresa").val();
 
-    if (!empresa) {
-        return;
-    }
-    // Hacer una petición AJAX para obtener los detalles de la empresa
-    $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            if (response.error) {
-                console.error(response.error);
-                return;
-            }
 
-            var contenido = "";
-            for (let index = 0; index < response.lotes_granel.length; index++) {
-                contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                    response.lotes_granel[index].nombre_lote + '</option>' + contenido;
-            }
-            if (response.lotes_granel.length == 0) {
-                contenido = '<option value="" disabled selected>Sin lotes a granel registrados</option>';
-            }
-            $('#id_lote_granel').html(contenido);
-        },
-        error: function(xhr, status, error) {
-            console.error('Error al cargar los lotes a granel:', error);
-        }
-    });
-}
+<!--MODAL EDITAR DICTAMEN GRANEL -->
+<div class="modal fade" id="modalEditDictamenGranel" tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
 
-</script>
+            <div class="modal-header">
+                <h5 id="modalAddDictamenGranelLabel" class="modal-title">Editar dictamen a granel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="addNEditDictamenGranelForm" method="POST">
+                    @csrf
+                    <div class="row">
+                        <input type="hidden" id="edit_id_dictamen" name="id_dictamen">
+
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select id="edit_id_inspeccion" name="id_inspeccion" class="select2 form-select" data-placeholder="Selecciona el número de servicio">
+                                    <option value="" disabled selected> </option>
+                                    @foreach ($inspecciones as $inspeccion)
+                                        <option value="{{ $inspeccion->id_inspeccion }}">{{ $inspeccion->num_servicio }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label for="id_inspeccion">No. de servicio</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="text" class="form-control" id="edit_num_dictamen" name="num_dictamen" autocomplete="off"
+                                    placeholder="no. dictamen">
+                                <label for="num_dictamen">No. de dictamen</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select  id="edit_id_firmante" name="id_firmante" class="select2 form-select">
+                                    @foreach ($inspectores as $inspector)
+                                        <option value="{{ $inspector->id }}">{{ $inspector->name }}</option>
+                                    @endforeach
+                                </select>
+                                    <label for="id_firmante">Selecciona un firmante</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control flatpickr-datetime" id="edit_fecha_emision" name="fecha_emision" autocomplete="off"
+                                    placeholder="YYYY-MM-DD">
+                                <label for="fecha_emision">Fecha de emisión</label>
+                            </div>
+                        </div>    
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" autocomplete="off"
+                                    placeholder="YYYY-MM-DD" readonly>
+                                <label for="fecha_vigencia">Fecha de vigencia</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="d-flex mt-6 justify-content-center">
+                        <button type="submit" class="btn btn-primary me-2">Editar</button>
+                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                            aria-label="Close">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

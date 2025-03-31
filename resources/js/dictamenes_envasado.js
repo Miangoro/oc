@@ -109,8 +109,7 @@ if (dt_user_table.length) {
             { data: 'fechas' },
             { data: 'fecha_servicio' },
             { data: null, defaultContent: '' },
-            {
-                data: 'estatus',
+            { data: 'estatus',
                 searchable: false, 
                 orderable: false,
                 render: function (data, type, row) {
@@ -176,7 +175,7 @@ if (dt_user_table.length) {
                 searchable: false, orderable: false,
                 render: function (data, type, full, meta) {
                     var $id = full['id_dictamen_envasado'];
-                    return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdfDictamen1" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+                    return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdfDictamen cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
                 }
             },
 
@@ -1064,27 +1063,30 @@ $(function () {
 
 
 
-// Reciben los datos del PDF
-$(document).on('click', '.pdf', function () {
-    var id = $(this).data('id'); // Obtén el ID desde el atributo data-id
-    var iframe = $('#pdfViewerDictamen1');
-    var spinner = $('#loading-spinner1');
-    // Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-    spinner.show();
-    iframe.hide();
-
-    // Cargar el PDF con el ID
-    iframe.attr('src', '/Dictamen-MezcalEnvasado/' + id); // Usa URL absoluta
-
-    $("#titulo_modal_Dictamen1").text("Dictamen de Cumplimiento NOM de Mezcal Envasado");
-    $("#subtitulo_modal_Dictamen1").text("PDF de Dictamen");
-
-    // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-    iframe.on('load', function () {
+///VER PDF DICTAMEN
+$(document).on('click', '.pdfDictamen', function ()  {
+    var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
+    var pdfUrl = '/dictamen_envasado/' + id; //Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+        
+      //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+      spinner.show();
+      iframe.hide();
+      
+      //Cargar el PDF con el ID
+      iframe.attr('src', pdfUrl);
+      //Configurar el botón para abrir el PDF en una nueva pestaña
+      $("#NewPestana").attr('href', pdfUrl).show();
+  
+      $("#titulo_modal").text("Dictamen de Cumplimiento NOM de Mezcal Envasado");
+      $("#subtitulo_modal").text("PDF del Dictamen");
+      //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+      iframe.on('load', function () {
         spinner.hide();
         iframe.show();
-    });
-});
+      });
+  });
 
 
 
