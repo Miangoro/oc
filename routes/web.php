@@ -686,7 +686,7 @@ Route::post('/dictamenes/productos/{id_dictamen}/reexpedir', [DictamenGranelCont
 
 /*------------------- PDFS de Dictamenes a granel -------------------*/
 // Ruta para el PDF con ID
-route::get('/dictamen_cumplimiento_mezcal_granel/{id_dictamen}', [DictamenGranelController::class, 'dictamenDeCumplimientoGranel'])->name('dictamen-cumplimiento-granel');
+route::get('/dictamen_granel/{id_dictamen}', [DictamenGranelController::class, 'MostrarDictamenGranel'])->name('dictamen-cumplimiento-granel');
 
 /*------------------- Dictamenes envadaso -------------------*/
 Route::get('/dictamenes/envasado', [DictamenEnvasadoController::class, 'UserManagement'])->name('dictamenes-envasado');
@@ -699,7 +699,7 @@ Route::post('/dictamenes/envasado/{id_dictamen}/reexpedir', [DictamenEnvasadoCon
 
 /*------------------- PDFS de Dictamenes envadaso -------------------*/
 // Ruta para el PDF con ID
-route::get('/Dictamen-MezcalEnvasado/{id_dictamen}', [DictamenEnvasadoController::class, 'dictamenDeCumplimientoEnvasado'])->name('dictamen-cumplimiento-envasado');
+route::get('/dictamen_envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'MostrarDictamenEnvasado'])->name('dictamen-cumplimiento-envasado');
 
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');

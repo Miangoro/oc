@@ -262,7 +262,7 @@ public function reexpedirDictamen(Request $request, $id_dictamen_envasado)
 
 
 //PDF DICTAMEN ENVASADO
-public function dictamenDeCumplimientoEnvasado($id_dictamen)
+public function MostrarDictamenEnvasado($id_dictamen)
 {
     // Obtener los datos del dictamen con la relación de lotes a granel
     $data = Dictamen_Envasado::with(['lote_envasado.lotesGranel'])->find($id_dictamen);
@@ -283,7 +283,7 @@ public function dictamenDeCumplimientoEnvasado($id_dictamen)
     $watermarkText = $data->estatus === 'Cancelado';
 
     // Renderizar el PDF con los lotes a granel
-    $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_mezcal-envasado', [
+    $pdf = Pdf::loadView('pdfs.dictamen_envasado_ed6', [
         'lote_envasado' => $loteEnvasado,
         'marca' => $marca,
         'lotesGranel' => $lotesGranel, // Pasamos los lotes a granel a la vista

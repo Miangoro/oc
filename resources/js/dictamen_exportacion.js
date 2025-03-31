@@ -479,7 +479,6 @@ const fv = FormValidation.formValidation(NuevoDictamenExport, {
               }
           }
       },
-        
 
     },
     plugins: {
@@ -577,7 +576,7 @@ const fv = FormValidation.formValidation(NuevoDictamenExport, {
                     Swal.fire({
                         icon: 'success',
                         title: '¡Eliminado!',
-                        text: '¡El Dictamen ha sido eliminada correctamente!',
+                        text: '¡El Dictamen ha sido eliminado correctamente!',
                         customClass: {
                             confirmButton: 'btn btn-success'
                         }
@@ -590,7 +589,7 @@ const fv = FormValidation.formValidation(NuevoDictamenExport, {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'No se pudo eliminar el dictamen. Inténtelo más tarde.',
+                        text: 'No se pudo eliminar el dictamen.',
                         footer: `<pre>${error.responseText}</pre>`,
                         customClass: {
                             confirmButton: 'btn btn-danger'
@@ -603,7 +602,7 @@ const fv = FormValidation.formValidation(NuevoDictamenExport, {
             // Acción cancelada, mostrar mensaje informativo
             Swal.fire({
                 title: 'Cancelado',
-                text: 'La eliminación del Dictamen ha sido cancelada',
+                text: 'La eliminación del dictamen ha sido cancelada',
                 icon: 'info',
                 customClass: {
                     confirmButton: 'btn btn-primary'

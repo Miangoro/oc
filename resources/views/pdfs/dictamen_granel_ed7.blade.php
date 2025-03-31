@@ -297,7 +297,7 @@
         <table class="datos_empresa">
             <tr>
                 <td style="color: #17365D; font-weight: bold;  width: 15%;">Nombre de la empresa</td>
-                <td colspan="3">{{ $data->empresa->razon_social }}</td>
+                <td colspan="3">{{ $data->empresa->razon_social ?? ''}}</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;" rowspan="2">Dirección</td>
