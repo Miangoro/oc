@@ -14,7 +14,7 @@
                                 <select id="tipo_solicitud" class="form-select" name="tipo_solicitud">
                                     <option value="1">Inspección y certificado de exportación</option>
                                     <!--<option value="2">Inspección</option>-->
-                                    <option value="3">Inspección y certificado de exportación (combinado)</option>
+                                    <option value="3">Inspección y certificado de exportación (Combinado)</option>
                                     <!--<option value="4">Certificado de exportación</option>
                                     <option value="5">Certificado de exportación (combinado)</option>-->
                                 </select>
@@ -109,6 +109,18 @@
                                 </div>
 
                             </div>
+                            <div class="row mt-2">
+                               <div class="col-md-12">
+                                   <div class="form-floating form-floating-outline mb-4">
+                                       <select class="select2 form-select" id="id_instalacion_envasado_2"
+                                           name="id_instalacion_envasado_2" aria-label="id_instalacion_envasado_2"
+                                           required>
+                                           <option value="" disabled selected>Lista de instalaciones de envasado</option>
+                                       </select>
+                                       <label for="id_instalacion_envasado_2">Domicilio de envasado</label>
+                                   </div>
+                               </div>
+                           </div>
                         </div>
                     </div>
                     <div id="sections-container">
@@ -152,7 +164,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" class="form-control" name="presentacion[0]"
+                                            <input type="text" class="form-control presentacion" name="presentacion[0]"
                                                 placeholder="Ej. 750ml">
                                             <label for="presentacion">Presentación</label>
                                         </div>
@@ -180,16 +192,21 @@
                         <div class="card-body">
                             <h6>Información del lote envasado</h6>
                             <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-floating form-floating-outline mb-2">
-                                        <select class="select2 form-select" id="id_instalacion_envasado"
-                                            name="id_instalacion_envasado" aria-label="id_instalacion_envasado"
-                                            required>
-                                            <option value="" selected>Lista de instalaciones</option>
-                                        </select>
-                                        <label for="id_predio">Domicilio de envasado</label>
-                                    </div>
-                                </div>
+                                <table id="tablaLotes" class="table table-bordered mb-2 table-sm" style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nombre del Lote</th>
+                                            <th>SKU</th>
+                                            <th>Presentación</th>
+                                            <th>Cantidad de botellas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Aquí se insertarán dinámicamente los datos -->
+                                    </tbody>
+                                </table>
+                                
                             </div>
                         </div>
                     </div>
@@ -277,6 +294,7 @@
             if (instalaciones.length === 0) {
                 contenidoInstalaciones = '<option value="" disabled selected>Sin instalaciones registradas</option>';
             }
+            contenidoInstalaciones='<option value="" disabled selected>Seleccione un domicilio de inspección</option>'+contenidoInstalaciones;
             $('#id_instalacion_exportacion').html(contenidoInstalaciones);
         }
     }
@@ -294,7 +312,8 @@
             if (instalaciones.length === 0) {
                 contenidoInstalaciones = '<option value="" disabled selected>Sin instalaciones registradas</option>';
             }
-            $('#id_instalacion_envasado').html(contenidoInstalaciones);
+            contenidoInstalaciones = '<option value="" disabled selected>Seleccione un domicilio de envasado</option>'+contenidoInstalaciones;
+            $('#id_instalacion_envasado_2').html(contenidoInstalaciones);
         }
     }
 
@@ -312,6 +331,7 @@
             if (direcciones.length === 0) {
                 contenidoDirecciones = '<option value="" disabled selected>Sin direcciones registradas</option>';
             }
+            contenidoDirecciones = '<option value="" disabled selected>Seleccione un domicililio del destinatario</option>'+contenidoDirecciones;
             $('#direccion_destinatario_ex').html(contenidoDirecciones);
             //cargarMarcas();
         }
@@ -322,7 +342,8 @@
     function cargarLotesEnvasado(lotesEnvasado, marcas) {
         var contenidoLotes = "";
         for (let index = 0; index < lotesEnvasado.length; index++) {
-            var skuLimpio = limpiarSku(lotesEnvasado[index].sku);
+            var skuLimpiot = limpiarSku(lotesEnvasado[index].sku);
+            var skuLimpio = (skuLimpiot === '{"inicial":""}') ? "SKU no definido" : skuLimpiot;
             var marcaEncontrada = marcas.find(marca => marca.id_marca === lotesEnvasado[index].id_marca);
             var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
 
@@ -364,28 +385,70 @@
             $('.lotes_granel_export').html(contenidoLotesGraneles);
         }
     }
-
     function cargarDetallesLoteEnvasado(idLoteEnvasado) {
-        if (idLoteEnvasado !== "" && idLoteEnvasado !== null && idLoteEnvasado !== undefined) {
-            $.ajax({
-                url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
-                method: 'GET',
-                success: function(response) {
-                    console.log(response); // Verifica la respuesta que recibes
-                    if (response.detalle) {
-                        // Si hay detalles, convierte el array en una cadena separada por comas
-                        $('.lotes_granel_export').val(response.detalle.join(
-                        ', ')); // Une los nombres de los lotes con coma y espacio
-                    } else {
-                        $('.lotes_granel_export').val(''); // Si no hay detalles, limpia el campo
-                    }
-                },
-                error: function() {
-                    console.error('Error al cargar el detalle del lote envasado.');
+    if (idLoteEnvasado) {
+        $.ajax({
+            url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+            method: 'GET',
+            success: function(response) {
+                console.log(response); // Verifica la respuesta en la consola
+
+                let tbody = $('#tablaLotes tbody');
+                tbody.empty(); // Limpia los datos anteriores
+
+                // Verifica si existe lote_envasado y lo muestra en la tabla
+                if (response.lote_envasado) {
+                    $(".presentacion").val(response.lote_envasado.presentacion + " "+response.lote_envasado.unidad);
+
+                    let filaEnvasado = `
+                        <tr>
+                            <td>1</td>
+                            <td>${response.lote_envasado.nombre}</td>
+                            <td>${limpiarSku(response.lote_envasado.sku) == '{"inicial":""}' ? "SKU no definido" : limpiarSku(response.lote_envasado.sku)}</td>
+                            <td>${response.lote_envasado.presentacion || 'N/A'} ${response.lote_envasado.unidad || ''}</td>
+                            
+                            <td>Botellas: ${response.lote_envasado.cant_botellas}<br>Cajas: Sin definir</td>
+                        </tr>`;
+                    tbody.append(filaEnvasado);
                 }
-            });
-        }
+
+                // Verifica si hay lotes a granel asociados y los muestra
+                if (response.detalle && response.detalle.length > 0) {
+                    tbody.append(`
+                        <tr>
+                            <td style='background-color: #f5f5f7' colspan="5" class="text-center font-weight-bold fw-bold">Lotes a granel asociados</td>
+                        </tr>`);
+                    let nombre_lote_granel = "";
+                    response.detalle.forEach((lote, index) => {
+                        let filaGranel = `
+                            <tr>
+                                <td>${index + 2}</td>
+                                <td>${lote.nombre_lote}<br><b>Certificado: </b>${lote.folio_certificado}</td>
+                                <td>${lote.folio_fq || 'N/A'}</td>
+                                <td>${lote.cont_alc || 'N/A'}</td>
+                               <td>
+                                ${lote.categoria.categoria || 'N/A'}<br>
+                                ${lote.clase.clase || 'N/A'}<br>
+                                ${lote.tiposMaguey.length ? lote.tiposMaguey.map(tipo => tipo.nombre + ' (<i>'+tipo.cientifico+'</i>)').join('<br>') : 'N/A'}
+                            </td>
+
+                            </tr>`;
+                        tbody.append(filaGranel);
+                        nombre_lote_granel += lote.nombre_lote;
+                    });
+
+                    $('.lotes_granel_export').val(nombre_lote_granel);
+                } else {
+                    tbody.append(`<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`);
+                }
+            },
+            error: function() {
+                console.error('Error al cargar el detalle del lote envasado.');
+            }
+        });
     }
+}
+
 
 
 
@@ -404,7 +467,7 @@
             let parsedSku = JSON.parse(sku);
             return parsedSku && parsedSku.inicial ? parsedSku.inicial : sku;
         } catch (e) {
-            return sku;
+            return 'Sin definir';
         }
     }
 
@@ -439,7 +502,7 @@
 
                         // Radio button
                         tbody += `
-                            <td>
+                            <td class="mb-4">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="id_etiqueta" id="radio_${marcas[i].id_etiqueta}" value="${marcas[i].id_etiqueta}" />
                                 </div>

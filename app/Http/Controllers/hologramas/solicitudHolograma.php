@@ -582,41 +582,33 @@ class solicitudHolograma extends Controller
             return response()->json(['error' => 'La solicitud no existe.'], 400);
         }
 
-        // Validar que el rango esté dentro del rango de la solicitud
-        if ($folio_inicial < $solicitud->folio_inicial || $folio_final > $solicitud->folio_final) {
+          // Validar que el rango esté dentro del rango de la solicitud
+          if ($folio_inicial < $solicitud->folio_inicial || $folio_final > $solicitud->folio_final) {
             return response()->json(['error' => 'El rango de folios está fuera del rango permitido por la solicitud.'], 400);
         }
-        // ** Segunda Consulta: Verificar que el rango de folios no se solape con rangos existentes **
-        $rangoExistente = activarHologramasModelo::where(function ($query) use ($folio_inicial, $folio_final) {
-            // Verificar si el nuevo rango se solapa con algún rango existente
-            $query->where('folio_inicial', '<=', $folio_final)
-                ->where('folio_final', '>=', $folio_inicial);
-        })->where('id_solicitud', $id_solicitud)->exists();
 
+// Verificar si los folios ya fueron activados en otras activaciones
+$activaciones = activarHologramasModelo::where('id_solicitud', $id_solicitud)->get();
 
-        // ** Tercera Consulta: Verificar que el nuevo rango no envuelva a los rangos existentes **
-        $rangoEnvolvente = activarHologramasModelo::where(function ($query) use ($folio_inicial, $folio_final) {
-            // Verificar si el nuevo rango envuelve algún rango existente
-            $query->where('folio_inicial', '>=', $folio_inicial)
-                ->where('folio_final', '<=', $folio_final);
-        })->where('id_solicitud', $id_solicitud)->exists();
+foreach ($activaciones as $activacion) {
+    $folios_activados = json_decode($activacion->folios, true);
+    
+    // Recorrer todos los rangos almacenados en el JSON
+    for ($i = 0; $i < count($folios_activados['folio_inicial']); $i++) {
+        $activado_folio_inicial = (int) $folios_activados['folio_inicial'][$i];
+        $activado_folio_final = (int) $folios_activados['folio_final'][$i];
 
-
-
-        /*$sql = $query->toSql();
-    $bindings = $query->getBindings();
-    $rangoExistente = $query->exists();
-
-    Log::info('Consulta SQL: ' . $sql);
-    Log::info('Parámetros: ', $bindings);*/
-
-        if ($rangoEnvolvente) {
-            return response()->json(['error' => 'El rango de folios no puede envolver a otro rango ya activado.'], 400);
+        // Verificar si al menos UN folio del nuevo rango ya está activado
+        if (
+            ($folio_inicial >= $activado_folio_inicial && $folio_inicial <= $activado_folio_final) || // Folio inicial dentro de un rango activado
+            ($folio_final >= $activado_folio_inicial && $folio_final <= $activado_folio_final) ||     // Folio final dentro de un rango activado
+            ($folio_inicial <= $activado_folio_inicial && $folio_final >= $activado_folio_final)      // Rango nuevo envuelve al rango activado
+        ) {
+            return response()->json(['error' => 'Entra dentro del rango activado '. $activado_folio_inicial. ' y '.$activado_folio_final], 400);
         }
+    }
+}
 
-        if ($rangoExistente) {
-            return response()->json(['error' => 'Este rango de folios ya está activado.'], 400);
-        }
 
         return response()->json(['success' => 'El rango de folios está disponible.']);
     }

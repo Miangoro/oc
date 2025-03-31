@@ -1311,6 +1311,7 @@ class solicitudesController extends Controller
             'id_empresa' => 'required|integer',
             'fecha_visita' => 'required|date',
             'id_instalacion' => 'required|integer',
+            'id_instalacion_envasado_2' => 'required|integer',
             'direccion_destinatario' => 'required|integer',
             'aduana_salida' => 'required|string|max:255',
             'no_pedido' => 'required|string|max:255',
@@ -1322,7 +1323,7 @@ class solicitudesController extends Controller
             'cantidad_botellas' => 'array',  // Asegurarse de que las cantidades sean arrays
             'cantidad_cajas' => 'array',  // Asegurarse de que las cantidades sean arrays
             'presentacion' => 'array',  // Asegurarse de que las presentaciones sean arrays
-            //'id_etiqueta' => 'nullable|integer',
+            'id_etiqueta' => 'nullable|integer',
         ]);
 
         // Procesar características
@@ -1333,7 +1334,8 @@ class solicitudesController extends Controller
         $data['no_pedido'] = $validated['no_pedido'];  // Solo si es enviado
         $data['aduana_salida'] = $validated['aduana_salida'];  // Solo si es enviado
         $data['direccion_destinatario'] = $validated['direccion_destinatario'];  // Solo si es enviado
-        //$data['id_etiqueta'] = $validated['id_etiqueta'];  // Solo si es enviado
+        $data['id_etiqueta'] = $validated['id_etiqueta'];  // Solo si es enviado
+        $data['id_instalacion_envasado'] = $validated['id_instalacion_envasado_2'];  // Solo si es enviado
         // Preparar los detalles
         $detalles = [];
         $totalLotes = count($validated['lote_envasado']);  // Suponiendo que todos los arrays tienen el mismo tamaño
@@ -1495,26 +1497,25 @@ class solicitudesController extends Controller
         // Retornar una respuesta JSON indicando éxito
         return response()->json(['success' => 'Solicitud registrada correctamente']);
     }
-
-
     public function getDetalleLoteEnvasado($id_lote_envasado)
     {
-        $lote = lotes_envasado::find($id_lote_envasado);
+        $lote = lotes_envasado::with('lotesGranel.categoria','lotesGranel.clase')->find($id_lote_envasado); // Cargar relación
+        
         if (!$lote) {
             return response()->json(['error' => 'Lote no encontrado'], 404);
         }
-        // Usando la relación 'lotesGranel' para obtener los lotes a granel asociados
-        $lotesGranel = $lote->lotesGranel; // Esto devuelve los lotes a granel asociados
-        // Si no hay lotes a granel asociados, puedes devolver un mensaje o array vacío
-        if ($lotesGranel->isEmpty()) {
-            return response()->json(['detalle' => null], 200);
-        }
-        // Si hay lotes a granel, devolverlos en el formato adecuado
+    
         return response()->json([
-            'detalle' => $lotesGranel->pluck('nombre_lote') // Puedes cambiar 'nombre_lote' por cualquier campo relevante de LotesGranel
-        ]);
+            'lote_envasado' => $lote, // Devuelve todos los datos del lote envasado
+            'detalle' => $lote->lotesGranel->isEmpty() ? null : $lote->lotesGranel->map(function ($granel) {
+                return array_merge($granel->toArray(), [
+                    'tiposMaguey' => $granel->tiposRelacionados
+                ]);
+            })
+        ], 200);
+        
     }
-
+    
 
     public function getDetalleLoteTipo($id_lote_granel)
     {

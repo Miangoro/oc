@@ -36,4 +36,30 @@ class activarHologramasModelo extends Model
     {
         return $this->belongsTo(inspecciones::class, 'id_inspeccion');
     }
+
+    public function solicitudHolograma()
+{
+    return $this->belongsTo(SolicitudHolograma::class, 'id_solicitud');
+}
+
+public function activarHologramasDesdeVariasSolicitudes($solicitudes, $folios)
+{
+    // Buscamos si alguno de estos folios ya ha sido activado
+    $foliosExistentes = $this->whereRaw("FIND_IN_SET(folios, ?) > 0", [implode(',', $folios)])->pluck('folios')->toArray();
+    $foliosExistentes = array_unique(explode(',', implode(',', $foliosExistentes))); // Convertimos en un array único
+
+    // Filtramos solo los folios que aún no han sido activados
+    $foliosNuevos = array_diff($folios, $foliosExistentes);
+
+    if (!empty($foliosNuevos)) {
+        // Creamos una nueva activación
+        $this->create([
+            'id_solicitud' => implode(',', $solicitudes),  // Guardamos múltiples solicitudes en una sola activación
+            'folios'       => implode(',', $foliosNuevos),
+            'estado'       => 'activado'
+        ]);
+    }
+}
+
+
 }

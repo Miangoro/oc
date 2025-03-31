@@ -221,6 +221,11 @@
           "slug": "hologramas-solicitud"
         },
         {
+          "url": "/find_hologramas_activar",
+          "name": "Activar",
+          "slug": "find_hologramas_activar"
+        },
+        {
           "url": "#",
           "name": "Inventario CIDAM",
           "slug": "#"

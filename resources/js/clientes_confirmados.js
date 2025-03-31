@@ -718,6 +718,13 @@ $(function () {
             }
           }
         },
+        cp: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el código postal'
+            }
+          }
+        },
         domicilio_fiscal: {
           validators: {
             notEmpty: {

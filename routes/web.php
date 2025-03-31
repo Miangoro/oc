@@ -213,6 +213,7 @@ use App\Http\Controllers\Tramite_impi\impiController;
 use App\Http\Controllers\dictamenes\DictamenExportacionController;
 use App\Http\Controllers\clientes\resumenController;
 use App\Http\Controllers\efirma\firmaController;
+use App\Http\Controllers\hologramas\hologramasACtivar;
 use App\Http\Controllers\insertar_datos_bd_actas;
 use App\Http\Controllers\insertar_datos_bd_lotes_envasado;
 
@@ -747,16 +748,20 @@ Route::get('/solicitud_holograma/editActivos/{id}', [solicitudHolograma::class, 
 Route::get('/solicitud_holograma/editActivados/{id}', [solicitudHolograma::class, 'editActivados']);
 
 //solicitud hologrammas
-Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
-Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
-Route::post('/solicitud_holograma/update/', [solicitudHolograma::class, 'update']);
-Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');
-Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2']);
-Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
-Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
-Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
+
 Route::post('/verificar-folios', [solicitudHolograma::class, 'verificarFolios']);
 Route::post('/solicitud_holograma/update/updateActivar', [solicitudHolograma::class, 'updateActivar']);
+
+
+//Activación de hologramas
+Route::get('/find_hologramas_activar', [hologramasACtivar::class, 'find_hologramas_activar'])->name('find_hologramas_activar')->middleware('auth');
+
+Route::middleware(['auth'])->controller(hologramasACtivar::class)->group(function () {
+    Route::resource('/find_hologramas_activar-list', hologramasACtivar::class);
+    Route::get('/getDatosInpeccion/{id_inspeccion}','getDatosInpeccion');
+
+});
+
 
 //Módulo de solicitudes
 Route::middleware(['auth'])->controller(solicitudesController::class)->group(function () {

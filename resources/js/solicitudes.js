@@ -4137,6 +4137,36 @@ $(document).on('click', '.expediente-record', function () {
             }
           }
         },
+        id_instalacion_envasado_2: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un domicilio de envasado.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un domicilio para la inspección.'
+            }
+          }
+        },
+
+       
+        'cantidad_botellas[0]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor introduzca el número de botellas'
+            }
+          }
+        },
+        'cantidad_cajas[0]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor introduzca el número de cajas'
+            }
+          }
+        },
         fecha_visita: {
           validators: {
             notEmpty: {
@@ -4144,10 +4174,11 @@ $(document).on('click', '.expediente-record', function () {
             }
           }
         },
-        id_instalacion: {
+
+        id_etiqueta: {
           validators: {
             notEmpty: {
-              message: 'Por favor seleccione una instalación.'
+              message: 'Por favor seleccione una etiqueta.'
             }
           }
         },

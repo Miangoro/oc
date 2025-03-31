@@ -187,10 +187,12 @@ class lotesGranelController extends Controller
                       if (isset($lotesOriginales['lotes'])) {
                           // Obtener los nombres de los lotes utilizando los IDs
                           $nombresLotes = LotesGranel::whereIn('id_lote_granel', $lotesOriginales['lotes'])
-                              ->pluck('nombre_lote')
-                              ->toArray();
+                          ->get(['nombre_lote', 'cont_alc']) // Trae ambas columnas
+                          ->toArray();
+                      
 
-                          $nestedData['lote_procedencia'] = '' . implode(', ', $nombresLotes);
+                          $nestedData['lote_procedencia'] = implode(', ', array_map(fn($lote) => "{$lote['nombre_lote']} ({$lote['cont_alc']} % Alc. Vol.)", $nombresLotes));
+
                       } else {
                           $nestedData['lote_procedencia'] = 'Lote de procedencia: No tiene lotes disponibles en el JSON.';
                       }
