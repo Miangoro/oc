@@ -37,15 +37,7 @@ class Dictamen_Granel extends Model
         return 'dictamen de granel'; // Devuelve el nombre que desees
     }
 
-    public function empresa()
-    {
-        return $this->belongsTo(empresa::class, 'id_empresa');
-    }
-
-    public function lote_granel()
-    {
-        return $this->belongsTo(LotesGranel::class, 'id_lote_granel');
-    }
+  
 
     public function inspectores()
     {

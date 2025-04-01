@@ -58,13 +58,10 @@
                     <tr>
                         <th></th>
                         <th>No. dictamen</th>
+                        <th>No. Servicio/Solicitud</th>
                         <th>Cliente</th>
-                        <th>No. Servicio</th>
-                        <th>Lote a granel</th>
-                        <th>Folio FQ</th>
+                        <th>Características</th>
                         <th>Fechas</th>
-                        <th>Fecha de servicio</th>
-                        <th>Dictamen</th>
                         <th>Estatus</th>
                         <th>ACCIONES</th>
                     </tr>

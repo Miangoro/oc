@@ -90,89 +90,128 @@ if (dt_user_table.length) {
     columns: [
       { data: ''},
       { data: 'num_dictamen' },
-      { data: null, // Se usará null porque combinaremos varios valores
-        render: function(data, type, row) {
-            return `
-            <strong>${data.numero_cliente}</strong><br>
-            <span style="font-size:12px">${data.razon_social}<span>`;
-          }
-      },
-      { data: 'id_inspeccion' },
-      { data: 'id_lote_granel' },
-      { data: 'folio_fq',
-        render: function (data, type, row) {
-          // Construimos el enlace con data-id y data-bs-toggle para el tooltip y modal
-          return '<a href="#" data-id="' + row.id_dictamen + '" data-bs-placement="bottom" data-bs-custom-class="tooltip-seccondary" title="Folios de Análisis fisicoquímicos Y Certificados de lote a granel" data-bs-toggle="tooltip" data-bs-target="#modalVerDocumento" class="ver-folio-fq">' + data + '</a>';
-        }
-      },
-      { data: 'fechas' },
-      { data: 'fecha_servicio' },
-      { data: null, defaultContent: '' },
-      { data: 'estatus',
-        searchable: false, 
-        orderable: false,
-        render: function (data, type, row) {
-            let color, estatus;
-            if (data == 1) {
-                color = 'badge rounded-pill bg-danger';
-                estatus = 'Cancelado';
-            } else {
-                color = 'badge rounded-pill bg-success';
-                estatus = 'Emitido';
+         { data: 'num_servicio' },
+         
+         {
+           data: null, // Se usará null porque combinaremos varios valores
+          
+            render: function(data, type, row) {
+                return `
+                <strong>${data.numero_cliente}</strong><br>
+                    <span style="font-size:11px">${data.razon_social}<span>
+                    
+                `;
             }
-            // Devolvemos el HTML con el color y el texto que se mostrarán en la tabla
-            return '<span class="' + color + '">' + estatus + '</span>';
-        }
-      },
-      { data: 'action', orderable: false, searchable: false }
-    ],
+          },
+      
+        { data: 'nombre_lote' }, // Ajusta el ancho aquí
+         { data: 'fecha_emision'},
+         { data: 'estatus',
+          searchable: false, 
+          orderable: false,
+          render: function (data, type, row) {
+              let color, estatus;
+              if (data == 1) {
+                  color = 'badge rounded-pill bg-danger';
+                  estatus = 'Cancelado';
+              } else {
+                  color = 'badge rounded-pill bg-success';
+                  estatus = 'Emitido';
+              }
+              // Devolvemos el HTML con el color y el texto que se mostrarán en la tabla
+              return '<span class="' + color + '">' + estatus + '</span>';
+          }
+        },
+         
+         { data: 'action' }
+ 
+       ],
+       columnDefs: [
+         {
+           className: 'control',
+           searchable: false,
+           orderable: false,
+           responsivePriority: 2,
+           targets: 0,
+           render: function (data, type, full, meta) {
+             return '';
+           }
+         },
+         {
+          targets: 1,
+          render: function (data, type, full, meta) {
+            var $num_dictamen = full['num_dictamen'];
+            var $id = full['id_dictamen'];
+            return `<small>`+ $num_dictamen + `</small>` +
+             `<i class="ri-file-pdf-2-fill text-danger ri-28px pdfDictamen cursor-pointer" data-id="` + $id + `" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+          }
+        }, 
+         {
+            // Tabla 3
+            targets: 2,
+            render: function (data, type, full, meta) {
+              var $num_servicio = full['num_servicio'];
+              var $folio_solicitud = full['folio_solicitud'];
+              return '<span class="fw-bold">Servicio:</span> ' + $num_servicio +'<br><span class="fw-bold">Solicitud: </span>' + $folio_solicitud;
+            }
+          }, 
 
+          {
+            targets: 4,
+            responsivePriority: 4,
+            render: function (data, type, full, meta) {
+         
+              // Retorna el badge con el texto y color apropiado
+              return `<b>Lote: </b><small>${full['nombre_lote']}</small><br><b>FQs: </b><small>${full['analisis']}</small>`;
+            }     
+          },
+          {
+            targets: 5, // Suponiendo que este es el índice de la columna que quieres actualizar
+            render: function (data, type, full, meta) {
+        
+                // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
+                var $fecha_emision = full['fecha_emision'] ?? 'N/A'; // Fecha de vigencia
+                var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A'; // Fecha de vencimiento
+                
+        
+                // Definir los mensajes de fecha con formato
+                var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span>`;
+                var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span>`;
+        
+                // Retorna las fechas en formato de columnas
+                return `
+                    <div>
+                        <div>${fechaVigenciaMessage}</div>
+                        <div>${fechaVencimientoMessage}</div>
+                        <div style="text-aling: center" class="small">${full['diasRestantes']}</div>
+                    </div>
+                `;
+            }
+          }, 
 
-    columnDefs: [
-      {
-        // For Responsive
-        className: 'control',
-        searchable: false,
-        orderable: true,
-        responsivePriority: 2,
-        targets: 0,
-        render: function (data, type, full, meta) {
-          return '';
-        }
-      },
-      {
-        // User full name
-        targets: 1,
-        responsivePriority: 4,
-        render: function (data, type, full, meta) {
-          var $name = full['num_dictamen'];
-          var stateNum = Math.floor(Math.random() * 6);
-          var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
-          var $state = states[stateNum];
-          var $row_output =
-            '<div class="d-flex justify-content-start align-items-center user-name">' +
-            '<div class="avatar-wrapper">' +
-            '</div>' +
-            '</div>' +
-            '<div class="d-flex flex-column">' +
-            '<span class="fw-medium">' +
-            $name +
-            '</span>' +
-            '</div>' +
-            '</div>';
-          return $row_output;
-        }
-      },
-      {
-        // PDF
-        targets: 8,
-        className: 'text-center',
-        searchable: false, orderable: false,
-        render: function (data, type, full, meta) {
-          var $id = full['id_dictamen'];
-          return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdfDictamen cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
-        }
-      },
+          {
+            // User full name
+            targets: 1,
+            responsivePriority: 4,
+            render: function (data, type, full, meta) {
+              var $name = full['num_dictamen'];
+              var stateNum = Math.floor(Math.random() * 6);
+              var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
+              var $state = states[stateNum];
+              var $row_output =
+                '<div class="d-flex justify-content-start align-items-center user-name">' +
+                '<div class="avatar-wrapper">' +
+                '</div>' +
+                '</div>' +
+                '<div class="d-flex flex-column">' +
+                '<span class="fw-medium">' +
+                $name +
+                '</span>' +
+                '</div>' +
+                '</div>';
+              return $row_output;
+            }
+          },
 
       {
         // Actions botones de eliminar y actualizar(editar)
