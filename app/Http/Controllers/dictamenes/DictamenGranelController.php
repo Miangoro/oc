@@ -78,14 +78,13 @@ class DictamenGranelController extends Controller
             $totalFiltered = $query->count();
         }
     
-        $dictamenes = $query->offset($start)
-       
-            ->limit($limit)
-            ->orderByRaw("
+        $dictamenes = $query
+        ->offset($start)
+        ->limit($limit)
+        ->orderByRaw("
         CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
         CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')")
-            ->get();
-    
+        ->get();
         $data = [];
         if (!empty($dictamenes)) {
             $ids = $start;
