@@ -59,10 +59,10 @@
                 <tr>
                     <th></th>
                     <th>No. dictamen</th>
-                    <th>No. Servicio</th>
+                    <th>No. Servicio / Solicitud</th>
                     <th>Cliente</th>
                     <th>Instalación</th>
-                    <th>Fecha</th>
+                    <th>Fechas</th>
                     <th>ACCIONES</th>
                 </tr>
             </thead>

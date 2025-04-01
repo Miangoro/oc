@@ -141,7 +141,7 @@ initializeSelect2(select2Elements);
           render: function (data, type, full, meta) {
             var $num_dictamen = full['num_dictamen'];
             return `<small>`+ $num_dictamen + `</small>` +
-             `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
+             `<i style class="ri-file-pdf-2-fill text-danger ri-28px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
           }
         }, 
          {
@@ -212,8 +212,8 @@ initializeSelect2(select2Elements);
                 
         
                 // Definir los mensajes de fecha con formato
-                var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_emision}</span>`;
-                var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vencimiento:<br></strong> ${$fecha_vigencia}</span>`;
+                var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span>`;
+                var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span>`;
         
                 // Retorna las fechas en formato de columnas
                 return `
