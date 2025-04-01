@@ -109,7 +109,7 @@ initializeSelect2(select2Elements);
          
          {
            data: null, // Se usará null porque combinaremos varios valores
-           width: "230px",
+          
             render: function(data, type, row) {
                 return `
                 <strong>${data.numero_cliente}</strong><br>
@@ -119,9 +119,9 @@ initializeSelect2(select2Elements);
             }
           },
       
-        { data: 'direccion_completa', width: "250px" }, // Ajusta el ancho aquí
-         { data: 'fechas', width: "150px" },
-         { data: '' },
+        { data: 'direccion_completa' }, // Ajusta el ancho aquí
+         { data: 'fecha_emision'},
+         
          { data: 'action' }
  
        ],
@@ -136,14 +136,14 @@ initializeSelect2(select2Elements);
              return '';
            }
          },
-          {
-           // Tabla 2
-           targets: 1,
-           render: function (data, type, full, meta) {
-             var $num_dictamen = full['num_dictamen'];
-             return '<span class="fw-bold">' + $num_dictamen + '</span>';
-           }
-         }, 
+         {
+          targets: 1,
+          render: function (data, type, full, meta) {
+            var $num_dictamen = full['num_dictamen'];
+            return `<small>`+ $num_dictamen + `</small>` +
+             `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
+          }
+        }, 
          {
             // Tabla 3
             targets: 2,
@@ -203,28 +203,28 @@ initializeSelect2(select2Elements);
             }     
           },
           {
-            // Tabla 7
-            targets: 5,
-            searchable: true,
+            targets: 5, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
-              var $fech = full['fechas'];
-              return '<span class="small">' + $fech + '</span>';
-              }
-          },
-          {
-            //pdf del dictamen
-            targets: 6,
-            searchable: false,
-            orderable: false,
-            className: 'text-center',
-            //searchable: false, orderable: false, //Inhabilita "thead" busqueda/orden
-            render: function (data, type, full, meta) {
-              var $id = full['id_dictamen'];
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>
-              <br>
-              <span class="small">${full['diasRestantes']}</span>`;
+        
+                // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
+                var $fecha_emision = full['fecha_emision'] ?? 'N/A'; // Fecha de vigencia
+                var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A'; // Fecha de vencimiento
+                
+        
+                // Definir los mensajes de fecha con formato
+                var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_emision}</span>`;
+                var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vencimiento:<br></strong> ${$fecha_vigencia}</span>`;
+        
+                // Retorna las fechas en formato de columnas
+                return `
+                    <div>
+                        <div>${fechaVigenciaMessage}</div>
+                        <div>${fechaVencimientoMessage}</div>
+                        <div style="text-aling: center" class="small">${full['diasRestantes']}</div>
+                    </div>
+                `;
             }
-          },
+          },   
  
          {
            // Actions

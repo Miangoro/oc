@@ -63,7 +63,6 @@
                     <th>Cliente</th>
                     <th>Instalación</th>
                     <th>Fecha</th>
-                    <th>Dictamen</th>
                     <th>ACCIONES</th>
                 </tr>
             </thead>

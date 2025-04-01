@@ -196,9 +196,10 @@ class InstalacionesController extends Controller
                 /*$nestedData['fecha_emision'] = $user->fecha_emision;
                 $nestedData['fecha_vigencia'] = $user->fecha_vigencia;*/
                 //$fecha_emision= Helpers::formatearFecha($user->fecha_emision) ?? 'N/A';
-                $fecha_emision = Helpers::formatearFecha($user->fecha_emision);
-                $fecha_vigencia = Helpers::formatearFecha($user->fecha_vigencia);
-                $nestedData['fechas'] = '<b>Emisión:</b><br>' . $fecha_emision . '<br> <b>Vigencia:</b><br>' . $fecha_vigencia;
+          
+                
+                $nestedData['fecha_emision'] = Helpers::formatearFecha($user->fecha_emision);
+                $nestedData['fecha_vigencia'] = Helpers::formatearFecha($user->fecha_vigencia);
                 $nestedData['direccion_completa'] = $user->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrada';
 
 
