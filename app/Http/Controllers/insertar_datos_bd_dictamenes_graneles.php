@@ -56,7 +56,7 @@ class insertar_datos_bd_dictamenes_graneles extends Controller
                         echo $id_firmante = 6;
                     }
                     else {
-                        echo $id_firmante = 0;
+                        echo $id_firmante = 14;
                     }
 
                         

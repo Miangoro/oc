@@ -297,24 +297,24 @@
         <table class="datos_empresa">
             <tr>
                 <td style="color: #17365D; font-weight: bold;  width: 15%;">Nombre de la empresa</td>
-                <td colspan="3">{{ $data->empresa->razon_social ?? ''}}</td>
+                <td colspan="3">{{ $data->inspeccione->solicitud->empresa->razon_social ?? ''}}</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;" rowspan="2">Dirección</td>
                 <td rowspan="2">
-                   <b>Domicilio fiscal:</b>  {{ $data->empresa->domicilio_fiscal }}<br>
+                   <b>Domicilio fiscal:</b>  {{ $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? ''}}<br>
 
                     <b>Domicilio de instalaciones:</b> {{ $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'N/A' }}
 
                 </td>
                 <td style="color: #17365D; font-weight: bold; width: 18%;">RFC</td>
-                <td>{{ $data->empresa->rfc }}</td>
+                <td>{{  $data->inspeccione->solicitud->empresa->rfc }}</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">
                     Representante legal
                 </td>
-                <td>{{ $data->empresa->representante }}
+                <td>{{ $data->inspeccione->solicitud->empresa->representante }}
                 </td>
             </tr>
             <tr>
