@@ -56,7 +56,9 @@ class DictamenGranelController extends Controller
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
     
-        $query = Dictamen_Granel::with(['inspeccione', 'empresa', 'lote_granel']);
+        $query = Dictamen_Granel::with(['inspeccione', 'empresa', 'lote_granel'])  ->orderByRaw("
+        CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
+        CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')");
     
         if (!empty($search)) {
             $query = $query->where(function ($q) use ($search) {
