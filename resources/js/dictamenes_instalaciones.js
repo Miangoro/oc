@@ -110,6 +110,7 @@ initializeSelect2(select2Elements);
          { data: 'folio_solicitud' },
          {
            data: null, // Se usará null porque combinaremos varios valores
+           width: "230px",
             render: function(data, type, row) {
                 return `
                 <strong>${data.numero_cliente}</strong><br>
@@ -119,8 +120,8 @@ initializeSelect2(select2Elements);
             }
           },
       
-         { data: 'direccion_completa' },
-         { data: 'fechas' },
+          { data: 'direccion_completa', width: "250px" }, // Ajusta el ancho aquí
+         { data: 'fechas', width: "150px" },
          { data: '' },
          { data: 'action' }
  
