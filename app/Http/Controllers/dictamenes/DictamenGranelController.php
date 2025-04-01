@@ -231,7 +231,7 @@ public function MostrarDictamenGranel($id_dictamen)
 
     $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
-    $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
+    $fecha_servicio = Helpers::formatearFecha($data->inspeccione->fecha_servicio);
     // Determinar si la marca de agua debe ser visible
     $watermarkText = $data->estatus == 1;
 
