@@ -54,14 +54,16 @@ class DictamenGranelController extends Controller
         $search = $request->input('search.value');
         $totalData = Dictamen_Granel::count();
         $totalFiltered = $totalData;
-
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
-
+        
+        $limit = $request->input('length', 10); // Por defecto 10 si no se envía
+        $start = $request->input('start', 0);
+        $columns = ['id_dictamen', 'num_dictamen', 'estatus']; // Define las columnas a ordenar
+        $orderColumnIndex = $request->input('order.0.column', 0); 
+        $order = $columns[$orderColumnIndex] ?? 'id_dictamen'; // Usa una columna válida
+        $dir = $request->input('order.0.dir', 'desc');
+        
         $query = Dictamen_Granel::with(['inspeccione.solicitud.empresa']);
-
+        
         if (!empty($search)) {
             $query = $query->where(function ($q) use ($search) {
                 $q->where('id_dictamen', 'LIKE', "%{$search}%")
@@ -78,24 +80,29 @@ class DictamenGranelController extends Controller
                     ->orWhereHas('inspeccione.solicitud', function ($q) use ($search) {
                         $q->where('folio', 'LIKE', "%{$search}%");
                     })
-                    /*->orWhereHas('lote_granel', function ($q) use ($search) {
-                        $q->where('nombre_lote', 'LIKE', "%{$search}%");
-                        $q->orWhere('folio_fq', 'LIKE', "%{$search}%");
-                    })*/
                     ->orWhere('estatus', 'LIKE', "%{$search}%");
             });
-
-            $totalFiltered = $query->count();
+        
+            $totalFiltered = $query->clone()->count(); // Usa clone para contar sin afectar la paginación
         }
-
+        
+        // Aplicar paginación y ordenación
         $dictamenes = $query
-            ->offset($start)
-            ->limit($limit)
             ->orderByRaw("
-        CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
-        CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')")
+                CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año
+                CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo
+            ")
+            ->skip($start)
+            ->take($limit)
             ->get();
-        $data = [];
+        
+        return response()->json([
+            'draw' => intval($request->input('draw')),
+            'recordsTotal' => $totalData,
+            'recordsFiltered' => $totalFiltered,
+            'data' => $dictamenes
+        ]);
+        
         if (!empty($dictamenes)) {
             $ids = $start;
 
