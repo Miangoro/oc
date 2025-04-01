@@ -79,11 +79,11 @@ class DictamenGranelController extends Controller
         }
     
         $dictamenes = $query->offset($start)
-        ->orderByRaw("
+       
+            ->limit($limit)
+            ->orderByRaw("
         CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
         CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')")
-            ->limit($limit)
-            ->orderBy($order, $dir)
             ->get();
     
         $data = [];
