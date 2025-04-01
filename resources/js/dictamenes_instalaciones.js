@@ -107,7 +107,7 @@ initializeSelect2(select2Elements);
          { data: 'tipo_dictamen' },
          { data: 'num_dictamen' },
          { data: 'num_servicio' },
-         { data: 'folio_solicitud' },
+         
          {
            data: null, // Se usará null porque combinaremos varios valores
            width: "230px",
@@ -175,15 +175,8 @@ initializeSelect2(select2Elements);
             targets: 3,
             render: function (data, type, full, meta) {
               var $num_servicio = full['num_servicio'];
-              return '<span class="user-email">' + $num_servicio + '</span>';
-            }
-          }, 
-          {
-            // Tabla 4
-            targets: 4,
-            render: function (data, type, full, meta) {
               var $folio_solicitud = full['folio_solicitud'];
-              return '<span class="user-email">' + $folio_solicitud + '</span>';
+              return '<span class="fw-bold">Servicio:</span> ' + $num_servicio +'<br><span class="fw-bold">Solicitud: </span>' + $folio_solicitud;
             }
           }, 
           /*{
@@ -199,7 +192,7 @@ initializeSelect2(select2Elements);
           },*/
           {
             // Tabla 7
-            targets: 7,
+            targets: 6,
             searchable: true,
             render: function (data, type, full, meta) {
               var $fech = full['fechas'];
@@ -208,7 +201,7 @@ initializeSelect2(select2Elements);
           },
           {
             //pdf del dictamen
-            targets: 8,
+            targets: 7,
             searchable: false,
             orderable: false,
             className: 'text-center',

@@ -61,7 +61,6 @@
                     <th>Tipo de dictamen</th>
                     <th>No. dictamen</th>
                     <th>No. Servicio</th>
-                    <th>No. Solicitud</th>
                     <th>Cliente</th>
                     <th>Domicilio de Instalación</th>
                     <th>Fecha</th>
