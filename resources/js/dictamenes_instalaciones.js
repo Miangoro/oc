@@ -104,7 +104,6 @@ initializeSelect2(select2Elements);
        columns: [
          // columns according to JSON
          { data: '' },
-         { data: 'tipo_dictamen' },
          { data: 'num_dictamen' },
          { data: 'num_servicio' },
          
@@ -120,7 +119,7 @@ initializeSelect2(select2Elements);
             }
           },
       
-          { data: 'direccion_completa', width: "250px" }, // Ajusta el ancho aquí
+        { data: 'direccion_completa', width: "250px" }, // Ajusta el ancho aquí
          { data: 'fechas', width: "150px" },
          { data: '' },
          { data: 'action' }
@@ -137,34 +136,9 @@ initializeSelect2(select2Elements);
              return '';
            }
          },
-         {
-           // Tabla 1
-           targets: 1,
-           responsivePriority: 4,
-           render: function (data, type, full, meta) {
-             var $name = full['tipo_dictamen'];
-             if ($name == 1){
-                return '<span class="badge rounded-pill bg-primary">Productor</span>';
-             }
-             else if($name == 2){ 
-                    return '<span class="badge rounded-pill bg-success">Envasador</span>';
-             }
-             else if($name == 3){ 
-                return '<span class="badge rounded-pill bg-info">Comercializador</span>';
-            }
-            else if($name == 4){ 
-                return '<span class="badge rounded-pill bg-danger">Almacén y bodega</span>';
-            }
-            else if($name == 5){ 
-              return '<span class="badge rounded-pill bg-warning">Área de maduración</span>';
-            }
-
-             //return $name;
-           }
-         },
           {
            // Tabla 2
-           targets: 2,
+           targets: 1,
            render: function (data, type, full, meta) {
              var $num_dictamen = full['num_dictamen'];
              return '<span class="fw-bold">' + $num_dictamen + '</span>';
@@ -172,7 +146,7 @@ initializeSelect2(select2Elements);
          }, 
          {
             // Tabla 3
-            targets: 3,
+            targets: 2,
             render: function (data, type, full, meta) {
               var $num_servicio = full['num_servicio'];
               var $folio_solicitud = full['folio_solicitud'];
@@ -191,8 +165,46 @@ initializeSelect2(select2Elements);
             }
           },*/
           {
+            targets: 4,
+            responsivePriority: 4,
+            render: function (data, type, full, meta) {
+              var $tipoDictamen = parseInt(full['tipo_dictamen']);
+              var $colorDictamen;
+              var $nombreDictamen;
+          
+              switch ($tipoDictamen) {
+                case 1:
+                  $nombreDictamen = 'Productor';
+                  $colorDictamen = 'primary'; // Azul
+                  break;
+                case 2:
+                  $nombreDictamen = 'Envasador';
+                  $colorDictamen = 'success'; // Verde
+                  break;
+                case 3:
+                  $nombreDictamen = 'Comercializador';
+                  $colorDictamen = 'info'; // Celeste
+                  break;
+                case 4:
+                  $nombreDictamen = 'Almacén y bodega';
+                  $colorDictamen = 'danger'; // Rojo
+                  break;
+                case 5:
+                  $nombreDictamen = 'Área de maduración';
+                  $colorDictamen = 'warning'; // Amarillo
+                  break;
+                default:
+                  $nombreDictamen = 'Desconocido';
+                  $colorDictamen = 'secondary'; // Gris, color por defecto
+              }
+          
+              // Retorna el badge con el texto y color apropiado
+              return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span><br><small>${full['direccion_completa']}</small>`;
+            }     
+          },
+          {
             // Tabla 7
-            targets: 6,
+            targets: 5,
             searchable: true,
             render: function (data, type, full, meta) {
               var $fech = full['fechas'];
@@ -201,7 +213,7 @@ initializeSelect2(select2Elements);
           },
           {
             //pdf del dictamen
-            targets: 7,
+            targets: 6,
             searchable: false,
             orderable: false,
             className: 'text-center',
@@ -414,7 +426,7 @@ initializeSelect2(select2Elements);
            ]
          },
          {
-           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Dictamen</span>',
+           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo dictamen</span>',
            className: 'add-new btn btn-primary waves-effect waves-light',
            attr: {
              /*'data-bs-toggle': 'offcanvas',
@@ -432,7 +444,7 @@ initializeSelect2(select2Elements);
            display: $.fn.dataTable.Responsive.display.modal({
              header: function (row) {
                var data = row.data();
-               return 'Detalles de ' + data['id_dictamen'];
+               return 'Detalles de ' + data['num_dictamen'];
                //return 'Detalles del ' + 'Dictamen';
              }
            }),

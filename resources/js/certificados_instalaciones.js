@@ -457,7 +457,7 @@
            ]
          },
          {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Certificado</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo certificado</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'modal',
@@ -470,7 +470,7 @@
            display: $.fn.dataTable.Responsive.display.modal({
              header: function (row) {
                var data = row.data();
-               return 'Detalles de Certificado de Instalaciones: ' + data['num_certificado'];
+               return 'Detalles del certificado: ' + data['num_certificado'];
              }
            }),
            type: 'column',
