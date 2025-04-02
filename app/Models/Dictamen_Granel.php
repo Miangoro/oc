@@ -44,5 +44,10 @@ class Dictamen_Granel extends Model
         return $this->belongsTo(User::class, 'id_firmante', 'id');
     }
 
+    public function firmante()
+        {
+            return $this->belongsTo(User::class, 'id_firmante', 'id');
+        }
+
     
 }

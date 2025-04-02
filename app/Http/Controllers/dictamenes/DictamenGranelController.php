@@ -17,6 +17,15 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\ValidationException;
 
 
 class DictamenGranelController extends Controller
@@ -268,7 +277,26 @@ class DictamenGranelController extends Controller
         if (!$data) {
             return abort(404, 'Dictamen no encontrado');
         }
+        $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
+        $qrCode = new QrCode(
+            data: $url,
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::Low,
+            size: 300,
+            margin: 10,
+            roundBlockSizeMode: RoundBlockSizeMode::Margin,
+            foregroundColor: new Color(0, 0, 0),
+            backgroundColor: new Color(255, 255, 255)
+        );
 
+        // Escribir el QR en formato PNG
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+
+        // Convertirlo a Base64
+        $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+
+        $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccione->num_servicio, 'Mejia2307', $data->id_firmante);  // 9 es el ID del usuario en este ejemplo
         $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
         $fecha_servicio = Helpers::formatearFecha($data->inspeccione->fecha_servicio);
@@ -281,6 +309,8 @@ class DictamenGranelController extends Controller
             'fecha_emision' => $fecha_emision,
             'fecha_vigencia' => $fecha_vigencia,
             'watermarkText' => $watermarkText,
+            'firmaDigital' => $firmaDigital,
+            'qrCodeBase64' => $qrCodeBase64
         ]);
 
         return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
