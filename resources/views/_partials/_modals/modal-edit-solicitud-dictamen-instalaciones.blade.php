@@ -1,12 +1,11 @@
 <div class="modal fade" id="editSolicitudDictamen" tabindex="-1">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Editar solicitud de dictaminación de instalaciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
             <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Editar solicitud de dictaminación de instalaciones</h4>
-                    <p class="solicitud badge bg-primary"></p>
-                </div>
                 <form id="addEditSolicitud">
                     @csrf
 

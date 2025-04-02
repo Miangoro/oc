@@ -215,6 +215,7 @@ use App\Http\Controllers\clientes\resumenController;
 use App\Http\Controllers\efirma\firmaController;
 use App\Http\Controllers\hologramas\hologramasACtivar;
 use App\Http\Controllers\insertar_datos_bd_actas;
+use App\Http\Controllers\insertar_datos_bd_dictamenes_graneles;
 use App\Http\Controllers\insertar_datos_bd_lotes_envasado;
 
 // Main Page Route
@@ -918,6 +919,7 @@ Route::resource('/bitacoraHologramas-list', BitacoraHologramasController::class)
 
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
 Route::get('/insertarDictamenesDesdeAPI', [insertar_datos_bd_dictamenes::class, 'insertarDictamenesDesdeAPI'])->name('insertarDictamenesDesdeAPI');
+Route::get('/insertarDictamenesGranelesDesdeAPI', [insertar_datos_bd_dictamenes_graneles::class, 'insertarDictamenesGranelesDesdeAPI'])->name('insertarDictamenesGranelesDesdeAPI');
 Route::get('/insertarCertificadosDesdeAPI', [insertar_datos_bd_certificados::class, 'insertarCertificadosDesdeAPI'])->name('insertarCertificadosDesdeAPI');
 Route::get('/insertarActasDesdeAPI', [insertar_datos_bd_actas::class, 'insertarActasDesdeAPI'])->name('insertarActasDesdeAPI');
 Route::get('/insertarLotesEnvasadoDesdeAPI', [insertar_datos_bd_lotes_envasado::class, 'insertarLotesEnvasadoDesdeAPI'])->name('insertarLotesEnvasadoDesdeAPI');

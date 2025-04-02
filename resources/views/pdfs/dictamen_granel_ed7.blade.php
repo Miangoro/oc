@@ -7,6 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel</title>
     <style>
+            @font-face {
+                font-family: 'fuenteNormal';
+                src: url('{{ storage_path('fonts/lsansuni.ttf') }}');
+            }
+
+            @font-face {
+                font-family: 'fuenteNegrita';
+                src: url('{{ storage_path('fonts/LSANSD.ttf') }}');
+            }
         .header {
             display: flex;
             /* Alinea los elementos al inicio */
@@ -116,11 +125,12 @@
         }
 
         .container {
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-            font-size: 14px;
+            font-family: 'fuenteNormal','Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: 13px;
             padding: 5px;
             margin: 15px;
             margin-top: 47px;
+            line-height: 0.8;
         }
 
         .contentt {
@@ -171,8 +181,10 @@
         }
 
         .images-container {
-            position: fixed;
-            margin-top: -20px;
+            position: relative;
+            display: flex;
+            margin-top: -40px;
+         
             width: 100%;
         }
 
@@ -204,10 +216,8 @@
         }
 
         .textsello {
-            position: fixed;
             text-align: left;
             font-size: 8px;
-            bottom: 30px;
             margin: 0;
             padding: 0;
         }
@@ -224,11 +234,10 @@
         }
 
         .image-right {
-            height: auto;
-            position: fixed;
-            right: 0;
-            width: 225px;
-            top: -20px;
+            position: absolute;
+            right: 10px;
+            top: 18px;
+            width: 240px;
         }
 
         .pie {
@@ -253,6 +262,10 @@
             font-size: 150px;
             white-space: nowrap;
             z-index: -1;
+        }
+
+        .negrita{
+            font-family: 'fuenteNegrita';
         }
     </style>
 </head>
@@ -292,81 +305,88 @@
             acreditación, A.C.
         </p>
 
-        <br><strong>I. &nbsp;&nbsp;&nbsp;&nbsp;Datos de la empresa</strong><br>
+        <br><span class="negrita">I. &nbsp;&nbsp;&nbsp;Datos de la empresa</span><br>
         <br>
         <table class="datos_empresa">
             <tr>
-                <td style="color: #17365D; font-weight: bold;  width: 15%;">Nombre de la empresa</td>
-                <td colspan="3">{{ $data->empresa->razon_social ?? ''}}</td>
+                <td class="negrita" style="color: #17365D; width: 15%;">Nombre de la empresa</td>
+                <td  class="negrita" colspan="3" style="width: 43%; font-size:16px">{{ $data->inspeccione->solicitud->empresa->razon_social ?? ''}}</td>
             </tr>
             <tr>
-                <td style="color: #17365D; font-weight: bold;" rowspan="2">Dirección</td>
+                <td class="negrita" style="color: #17365D;" rowspan="2">Dirección</td>
                 <td rowspan="2">
-                   <b>Domicilio fiscal:</b>  {{ $data->empresa->domicilio_fiscal }}<br>
+                   <span class="negrita">Domicilio fiscal:</span>  {{ $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? ''}}<br>
 
-                    <b>Domicilio de instalaciones:</b> {{ $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'N/A' }}
+                   <span class="negrita">Domicilio de instalaciones:</span> {{ $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'NA' }}
 
                 </td>
-                <td style="color: #17365D; font-weight: bold; width: 18%;">RFC</td>
-                <td>{{ $data->empresa->rfc }}</td>
+                <td class="negrita" style="color: #17365D; width: 17%;">RFC</td>
+                <td style="width: 25%;">{{  $data->inspeccione->solicitud->empresa->rfc }}</td>
             </tr>
             <tr>
-                <td style="color: #17365D; font-weight: bold;">
+                <td class="negrita" style="color: #17365D;">
                     Representante legal
                 </td>
-                <td>{{ $data->empresa->representante }}
+                <td>{{ $data->inspeccione->solicitud->empresa->representante }}
                 </td>
             </tr>
             <tr>
-                <td style="color: #17365D; font-weight: bold;">No. de servicio</td>
+                <td class="negrita" style="color: #17365D;">No. de servicio</td>
                 <td>{{ $data->inspeccione->num_servicio }}</td>
-                <td style="color: #17365D; font-weight: bold;">Número de dictamen</td>
+                <td class="negrita" style="color: #17365D;">Número de dictamen</td>
                 <td>{{ $data->num_dictamen }}</td>
             </tr>
             <tr>
-                <td style="color: #17365D; font-weight: bold;">Nombre del Inspector</td>
+                <td class="negrita" style="color: #17365D;">Nombre del Inspector</td>
                 <td>{{ $data->inspeccione->inspector->name }}</td>
-                <td style="color: #17365D; font-weight: bold;">Fecha de servicio</td>
+                <td class="negrita" style="color: #17365D;">Fecha de servicio</td>
                 <td>{{ $fecha_servicio }}</td>
             </tr>
             <tr>
-                <td style="color: #17365D; font-weight: bold;">Fecha de emisión</td>
+                <td class="negrita" style="color: #17365D;">Fecha de emisión</td>
                 <td>{{ $fecha_emision }}</td>
-                <td style="color: #17365D; font-weight: bold;">Vigencia hasta</td>
+                <td class="negrita" style="color: #17365D;">Vigencia hasta</td>
                 <td>{{ $fecha_vigencia }}</td>
             </tr>
         </table>
-        <strong>II.&nbsp;&nbsp;&nbsp;&nbsp; Descripción del producto</strong>
+        <span class="negrita">II.&nbsp;&nbsp;&nbsp;Descripción del producto</span>
         <br><br>
         <table class="table_description">
             <tr>
-                <td colspan="6" style="font-weight: bold; font-size: 13px; text-transform: uppercase;">
-                    <p>producto {{ $data->lote_granel->categoria->categoria ?? 'N/A' }}</p>
-                    <p>origen {{ $data->inspeccione->solicitud->instalacion->estados->nombre ?? 'N/A' }}</p>
+                <td colspan="6" class="negrita" style="font-size: 13px; text-transform: uppercase; padding: 5px;">
+                    <p>producto {{ $data->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'NA' }}</p>
+                    <p>origen {{ $data->inspeccione->solicitud->instalacion->estados->nombre ?? 'NA' }}</p>
                 </td>
             </tr>
             <tr>
-                <td style="color: #17365D; font-weight: bold; width: 16%;">Categoría y clase</td>
-                <td>{{ $data->lote_granel->categoria->categoria ?? 'N/A' }} {{ $data->lote_granel->clase->clase ?? 'N/A' }}</td>
-                <td style="color: #17365D; font-weight: bold; width: 19%">No. de lote a granel</td>
-                <td>{{ $data->lote_granel->nombre_lote ?? 'N/A' }}</td>
-                <td style="color: #17365D; font-weight: bold; width: 14%;">No. de análisis</td>
-                <td>{{ $data->lote_granel->folio_fq ?? 'N/A'}}</td>
+                <td class="negrita" style="color: #17365D; width: 16%;">Categoría y clase</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'NA' }} {{$data->inspeccione->solicitud->lote_granel->clase->clase ?? 'NA' }}</td>
+                <td class="negrita" style="color: #17365D;  width: 19%">No. de lote a granel</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->nombre_lote ?? '------' }}</td>
+                <td class="negrita" style="color: #17365D; width: 14%;">No. de análisis</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->folio_fq ?? 'NA'}}</td>
             </tr>
             <tr>
-                <td style="color: #17365D; font-weight: bold;">Ingredientes</td>
-                <td>{{ $data->lote_granel->ingredientes ?? 'N/A' }}</td>
-                <td style="color: #17365D; font-weight: bold;">Volumen de lote</td>
-                <td>{{ $data->lote_granel->volumen ?? 'N/A' }}</td>
-                <td style="color: #17365D; font-weight: bold;">Contenido alcohólico</td>
-                <td>{{ $data->lote_granel->cont_alc ?? 'N/A' }} % Alc. Vol.</td>
+                <td class="negrita" style="color: #17365D;">Ingredientes</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->ingredientes ?? 'NA' }}</td>
+                <td class="negrita" style="color: #17365D;">Volumen de lote</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->volumen ?? '----' }} L</td>
+                <td class="negrita" style="color: #17365D;">Contenido alcohólico</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->cont_alc ?? 'NA' }} % Alc. Vol.</td>
             </tr>
             <tr>
-                <td style="color: #17365D; font-weight: bold;">Edad</td>
-                <td>{{ $data->lote_granel->edad ?? 'N/A' }}</td>
-                <td style="color: #17365D; font-weight: bold;">Tipo de maguey</td>
-                <td colspan="3">{{ $data->lote_granel->tipo->nombre ?? 'N/A' }}
-                    <i>{{ $data->lote_granel->tipo->cientifico ?? 'N/A' }}</>
+                <td class="negrita" style="color: #17365D;">Edad</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->edad ?? 'NA' }}</td>
+                <td class="negrita" style="color: #17365D;">Tipo de maguey</td>
+                <td colspan="3">
+                    @if(!empty($data->inspeccione->solicitud->lote_granel->tiposRelacionados))
+                    @foreach($data->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
+                        {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>)
+                    @endforeach
+                        @else
+                            ------
+                     @endif
+                    
                 </td>
             </tr>
         </table>
@@ -375,36 +395,38 @@
             NOM-070-SCFI-2016. Bebidas alcohólicas -mezcal-especificaciones.</p>
     </div>
 
-    <div class="contentt">
+<br><br>
+
+<div style="margin-left: 15px;">
         <p class="sello">Sello de Unidad de Inspección</p>
         <div class="images-container">
-            <img src="{{ public_path('img_pdf/qr_umc-074.png') }}" alt="Logo UVEM" width="88px">
+            <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
             <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
         </div>
-        <p class="textx1" style="font-size: 10px; margin: 1;">
+        <p class="textx" style="font-size: 9px;">
             <strong>AUTORIZÓ</strong>
             <span style="margin-left: 50px;">
-                <strong>Gerente Técnico Sustituto de la Unidad de Inspección | {{$data->inspectores->name ?? 'N/A'}}</strong>
+                <strong>{{ $data->firmante->puesto }} | {{ $data->firmante->name }}</strong>
             </span>
         </p>
 
-        <p class="textx2" style="font-size: 10px; margin: 1;">
-            <strong>Cadena Origina</strong>
-            <span style="margin-left: 29px;">
-                <strong>UMG-159/2024|2024-06-26|UMS-1094/2024</strong>
+        <p class="textx" style="font-size: 9px;">
+            <strong>CADENA ORIGINAL</strong>
+            <span style="margin-left: 14px;">
+                <strong>{{ $firmaDigital['cadena_original'] }}</strong>
             </span>
         </p>
-        <p class="textx3" style="font-size: 10px; margin: 1;">
-            <strong>Sello Digital</strong>
+
+        <p class="textx" style="font-size: 9px; ">
+            <strong>SELLO DIGITAL</strong>
         </p>
 
-        <p class = "textsello">e2N1P+r+E79e0YxKzS/jMssKuASlmYXy2ppP+2PJN8vKUeFRxYTSY99MEWrgiHOnA
-            N3pLUrdUBiD39v25Y648G4TK5qQ0LwZPLofRmjRQ2Ty5rHlDwnPRm37zaOkMjkRD<br>
-            xC0ikyHPD+T3EFhEc9sgAFI6bZUd88yevfS+ZFZ7j9f5EA44Sz76jsN3P4e7lyePHmNz
-            Jxg5ZupHICg5xBZu5ygOniMZNbzG6w0ZDPL58yoMQK1JDi8lwwiGJBaCNHN6krn<br>
-            No5v5rvZPkbUthYT2r5M0sGP5Y+s97oLa8GA5hqyDAgE9P0d1u0uwU7Q8SF0GYfe lavijxvsWaZg5QA5og==
+        <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
+            {{ $firmaDigital['firma'] }}
         </p>
+
     </div>
+
 
 
     <p class="pie">Entrada en vigor: 15-07-2024 <br>

@@ -400,9 +400,7 @@ public function editar_cliente_confirmado(Request $request)
       $cliente->regimen = $validatedData['regimen'];
       $cliente ->domicilio_fiscal = $validatedData['domicilio_fiscal'];
       /* solamente es prueba  */
-      $cliente->representante = isset($validatedData['representante']) && !empty($validatedData['representante'])
-      ? $validatedData['representante']
-      : 'No aplica';
+      $cliente->representante = $validatedData['representante'] ?? 'No aplica';
  
       $cliente->estado = $validatedData['estado'];
       $cliente->cp = $validatedData['cp'];

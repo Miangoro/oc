@@ -40,9 +40,7 @@ class InstalacionesController extends Controller
         $categoria = categorias::all();
         $inspeccion = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 14);
-        })
-            ->orderBy('id_inspeccion', 'desc')
-            ->get();
+        })->orderBy('id_inspeccion', 'desc')->get();
 
         $empresa = empresa::all();
         $soli = solicitudesModel::all();

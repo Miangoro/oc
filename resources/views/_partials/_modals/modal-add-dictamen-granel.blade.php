@@ -4,8 +4,8 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 id="modalAddDictamenGranelLabel" class="modal-title">Nuevo dictamen a granel</h5>
+            <div class="modal-header bg-primary pb-4">
+                <h5 id="modalAddDictamenGranelLabel" class="modal-title text-white">Nuevo dictamen a granel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -67,9 +67,9 @@
 
 
                     <div class="d-flex mt-6 justify-content-center">
-                        <button type="submit" class="btn btn-primary me-2">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -85,8 +85,8 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 id="modalAddDictamenGranelLabel" class="modal-title">Editar dictamen a granel</h5>
+            <div class="modal-header bg-primary pb-4">
+                <h5 id="modalAddDictamenGranelLabel" class="modal-title text-white">Editar dictamen a granel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -146,12 +146,10 @@
                             </div>
                         </div>
                     </div>
-
-
                     <div class="d-flex mt-6 justify-content-center">
-                        <button type="submit" class="btn btn-primary me-2">Editar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
+                        aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
