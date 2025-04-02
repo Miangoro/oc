@@ -150,8 +150,8 @@
   </div>
   <!-- Offcanvas to add new user -->
   <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
-    <div class="offcanvas-header border-bottom">
-      <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Titulo Agregar</h5>
+    <div class="offcanvas-header border-bottom bg-primary">
+      <h5 id="offcanvasAddUserLabel" class="offcanvas-title text-white">Titulo Agregar</h5>
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body mx-0 flex-grow-0 h-100">
@@ -175,7 +175,14 @@
             <option value="" disabled selected>NULL</option>
               @foreach ($empresas as $empresa)
                 <option value="{{ $empresa->id_empresa }}">
-                
+                  @if(isset($empresa->empresaNumClientes[0]))
+                  {{ $empresa->empresaNumClientes[0]->numero_cliente }}
+              @elseif(isset($empresa->empresaNumClientes[1]))
+                  {{ $empresa->empresaNumClientes[1]->numero_cliente }}
+              @else
+                  No asignado
+              @endif
+              
                 | {{ $empresa->razon_social }}</option>
               @endforeach
           </select>
@@ -191,9 +198,13 @@
           </select>
           <label for="id_contacto">Persona de contacto CIDAM</label>
         </div>
+
+        <div class="d-flex mt-6 justify-content-center">
+          <button type="submit" id="registrar-editar" class="btn btn-primary me-sm-3 me-1 data-submit"><i class="ri-add-line"></i> Registrar</button>
+          <button type="reset" class="btn btn-danger" data-bs-dismiss="offcanvas"><i class="ri-close-line"></i> Cancelar</button>
+      </div>
         
-        <button type="submit" id="registrar-editar" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
-        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
+       
       </form>
     </div>
   </div>
