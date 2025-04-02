@@ -63,7 +63,7 @@
                         </div>
                     </div>
                       <!-- Estado -->
-                      <div id="EstadosClass" class="col-md-6">
+                      <div id="EstadosClassEdit" class="col-md-6">
                           <div class="form-floating form-floating-outline mb-4">
                               <select class="form-select select2" id="estado_edit" name="estado"
                                   data-placeholder="Seleccione un estado" aria-label="Estado" required>
@@ -78,9 +78,9 @@
                       </div>
 
                       <!-- Representante Legal (Oculto por defecto) -->
-                      <div id="MostrarRepresentante" class="d-none col-md-4">
+                      <div id="MostrarRepresentanteEdit" class="d-none col-md-4">
                           <div class="form-floating form-floating-outline mb-4">
-                              <input type="text" id="representante" name="representante_edit" class="form-control"
+                              <input type="text" id="representante_edit" name="representante" class="form-control"
                                   autocomplete="off" placeholder="Representante"  />
                               <label for="Representante">Representante</label>
                           </div>

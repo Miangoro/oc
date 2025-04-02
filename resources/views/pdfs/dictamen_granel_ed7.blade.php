@@ -304,7 +304,7 @@
                 <td rowspan="2">
                    <b>Domicilio fiscal:</b>  {{ $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? ''}}<br>
 
-                    <b>Domicilio de instalaciones:</b> {{ $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'N/A' }}
+                    <b>Domicilio de instalaciones:</b> {{ $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'NA' }}
 
                 </td>
                 <td style="color: #17365D; font-weight: bold; width: 18%;">RFC</td>
@@ -341,32 +341,39 @@
         <table class="table_description">
             <tr>
                 <td colspan="6" style="font-weight: bold; font-size: 13px; text-transform: uppercase;">
-                    <p>producto {{ $data->lote_granel->categoria->categoria ?? 'N/A' }}</p>
-                    <p>origen {{ $data->inspeccione->solicitud->instalacion->estados->nombre ?? 'N/A' }}</p>
+                    <p>producto {{ $data->lote_granel->categoria->categoria ?? 'NA' }}</p>
+                    <p>origen {{ $data->inspeccione->solicitud->instalacion->estados->nombre ?? 'NA' }}</p>
                 </td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold; width: 16%;">Categoría y clase</td>
-                <td>{{ $data->lote_granel->categoria->categoria ?? 'N/A' }} {{ $data->lote_granel->clase->clase ?? 'N/A' }}</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'NA' }} {{$data->inspeccione->solicitud->lote_granel->clase->clase ?? 'NA' }}</td>
                 <td style="color: #17365D; font-weight: bold; width: 19%">No. de lote a granel</td>
-                <td>{{ $data->lote_granel->nombre_lote ?? 'N/A' }}</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->nombre_lote ?? '------' }}</td>
                 <td style="color: #17365D; font-weight: bold; width: 14%;">No. de análisis</td>
-                <td>{{ $data->lote_granel->folio_fq ?? 'N/A'}}</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->folio_fq ?? 'NA'}}</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">Ingredientes</td>
-                <td>{{ $data->lote_granel->ingredientes ?? 'N/A' }}</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->ingredientes ?? 'NA' }}</td>
                 <td style="color: #17365D; font-weight: bold;">Volumen de lote</td>
-                <td>{{ $data->lote_granel->volumen ?? 'N/A' }}</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->volumen ?? '----' }} L</td>
                 <td style="color: #17365D; font-weight: bold;">Contenido alcohólico</td>
-                <td>{{ $data->lote_granel->cont_alc ?? 'N/A' }} % Alc. Vol.</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->cont_alc ?? 'NA' }} % Alc. Vol.</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">Edad</td>
-                <td>{{ $data->lote_granel->edad ?? 'N/A' }}</td>
+                <td>{{ $data->inspeccione->solicitud->lote_granel->edad ?? 'NA' }}</td>
                 <td style="color: #17365D; font-weight: bold;">Tipo de maguey</td>
-                <td colspan="3">{{ $data->lote_granel->tipo->nombre ?? 'N/A' }}
-                    <i>{{ $data->lote_granel->tipo->cientifico ?? 'N/A' }}</>
+                <td colspan="3">
+                    @if(!empty($data->inspeccione->solicitud->lote_granel->tiposRelacionados))
+                    @foreach($data->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
+                        {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>)
+                    @endforeach
+                        @else
+                            ------
+                     @endif
+                    
                 </td>
             </tr>
         </table>
@@ -384,7 +391,7 @@
         <p class="textx1" style="font-size: 10px; margin: 1;">
             <strong>AUTORIZÓ</strong>
             <span style="margin-left: 50px;">
-                <strong>Gerente Técnico Sustituto de la Unidad de Inspección | {{$data->inspectores->name ?? 'N/A'}}</strong>
+                <strong>Gerente Técnico Sustituto de la Unidad de Inspección | {{$data->inspectores->name ?? 'NA'}}</strong>
             </span>
         </p>
 

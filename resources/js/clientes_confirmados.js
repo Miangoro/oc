@@ -850,6 +850,20 @@ $(function () {
       }
     });
 
+    $('#regimen_edit').on('change', function () {
+      var tipoPersona = $(this).val();
+
+      if (tipoPersona === 'Persona moral') {
+        $('#MostrarRepresentanteEdit').removeClass('d-none');
+        $('#EstadosClassEdit').removeClass('col-md-6').addClass('col-md-4');
+        fv.enableValidator('representante');
+      } else {
+        $('#MostrarRepresentanteEdit').addClass('d-none');
+        $('#EstadosClassEdit').removeClass('col-md-4').addClass('col-md-6');
+        fv.disableValidator('representante');
+      }
+    });
+
     // Inicializar el comportamiento por defecto para el campo "representante"
     $('#regimen').trigger('change');
     fv.on('core.form.valid', function () {
@@ -977,6 +991,7 @@ $(document).ready(function() {
                   
                   $('#estado_edit').val(dato.estado).trigger('change');
                   $('#cp_edit').val(dato.cp);
+                  $('#representante_edit').val(dato.representante);
                   $('#domicilio_fiscal_edit').val(dato.domicilio_fiscal);
                   $('#rfc_edit').val(dato.rfc);
                   $('#correo_edit').val(dato.correo);
