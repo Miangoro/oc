@@ -175,14 +175,15 @@
             <option value="" disabled selected>NULL</option>
               @foreach ($empresas as $empresa)
                 <option value="{{ $empresa->id_empresa }}">
-                  @if(isset($empresa->empresaNumClientes[0]))
+                  @if(isset($empresa->empresaNumClientes[0]) && $empresa->empresaNumClientes[0]->numero_cliente)
                   {{ $empresa->empresaNumClientes[0]->numero_cliente }}
               @elseif(isset($empresa->empresaNumClientes[1]))
                   {{ $empresa->empresaNumClientes[1]->numero_cliente }}
               @else
-                  No asignado
+                  N/A
               @endif
               
+
                 | {{ $empresa->razon_social }}</option>
               @endforeach
           </select>
