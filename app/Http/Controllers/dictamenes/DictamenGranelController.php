@@ -296,7 +296,24 @@ class DictamenGranelController extends Controller
         // Convertirlo a Base64
         $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
 
-        $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccione->num_servicio, 'Mejia2307', $data->id_firmante);  // 9 es el ID del usuario en este ejemplo
+        if($data->id_firmante == 9){ //Erik
+            $pass = 'Mejia2307';
+        }
+
+        if($data->id_firmante == 6){ //Karen velzquez
+            $pass = '890418jks';
+        }
+
+        if($data->id_firmante == 7){ //Karen Zaida
+            $pass = 'ZA27CI09';
+        }
+
+        if($data->id_firmante == 14){ //Mario
+            $pass = 'v921009villa';
+        }
+
+
+        $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccione->num_servicio, $pass, $data->id_firmante);  // 9 es el ID del usuario en este ejemplo
         $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
         $fecha_servicio = Helpers::formatearFecha($data->inspeccione->fecha_servicio);
