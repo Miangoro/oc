@@ -305,12 +305,12 @@
             acreditación, A.C.
         </p>
 
-        <br><strong>I. &nbsp;&nbsp;&nbsp;&nbsp;Datos de la empresa</strong><br>
+        <br><span class="negrita">I. &nbsp;&nbsp;&nbsp;Datos de la empresa</span><br>
         <br>
         <table class="datos_empresa">
             <tr>
                 <td class="negrita" style="color: #17365D; width: 15%;">Nombre de la empresa</td>
-                <td colspan="3" style="width: 43%;">{{ $data->inspeccione->solicitud->empresa->razon_social ?? ''}}</td>
+                <td  class="negrita" colspan="3" style="width: 43%; font-size:16px">{{ $data->inspeccione->solicitud->empresa->razon_social ?? ''}}</td>
             </tr>
             <tr>
                 <td class="negrita" style="color: #17365D;" rowspan="2">Dirección</td>
@@ -349,7 +349,7 @@
                 <td>{{ $fecha_vigencia }}</td>
             </tr>
         </table>
-        <strong>II.&nbsp;&nbsp;&nbsp;&nbsp; Descripción del producto</strong>
+        <span class="negrita">II.&nbsp;&nbsp;&nbsp;Descripción del producto</span>
         <br><br>
         <table class="table_description">
             <tr>
