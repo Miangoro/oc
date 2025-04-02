@@ -175,7 +175,7 @@
             <option value="" disabled selected>NULL</option>
               @foreach ($empresas as $empresa)
                 <option value="{{ $empresa->id_empresa }}">
-                {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                
                 | {{ $empresa->razon_social }}</option>
               @endforeach
           </select>
