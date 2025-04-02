@@ -537,7 +537,6 @@ $(function () {
 
   }).on('core.form.valid', function () {
     var formData = new FormData(form);
-
     // Imprimir los datos del formulario para verificar
     console.log('Form Data:', Object.fromEntries(formData.entries()));
 
@@ -993,7 +992,7 @@ $(document).on('click', '.ver-pdf', function (e) {
 
 
 
-/* reexpedir dictamen a granel */
+///REEXPEDIR DICTAMEN
 $(function () {
   // Configuración CSRF para Laravel
   $.ajaxSetup({

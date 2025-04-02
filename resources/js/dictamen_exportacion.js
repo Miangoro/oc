@@ -525,7 +525,7 @@ const fv = FormValidation.formValidation(NuevoDictamenExport, {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
-                text: 'Error al subir!',
+                text: 'Error al registrar el dictamen',
                 customClass: {
                     confirmButton: 'btn btn-danger'
                 }
@@ -732,6 +732,7 @@ $(document).ready(function () {
         $('#modalAddReexDicExpor').modal('show');
     });
 
+    //funcion fechas
     $('#fecha_emision_rex').on('change', function () {
         var fecha_emision = $(this).val();
         if (fecha_emision) {
@@ -741,107 +742,77 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('change', '#accion_reexpedir', function () {
-        var accionSeleccionada = $(this).val();
-        console.log('Acción seleccionada:', accionSeleccionada);
-        var id_dictamen = $('#reexpedir_id_dictamen').val();
-
-        if (accionSeleccionada && !isLoadingData) {
-            isLoadingData = true;
-            cargarDatosReexpedicion(id_dictamen);
-        }
-
-        if (accionSeleccionada === '2') {
-          $('#campos_condicionales').slideDown();
-        }else {
-            $('#campos_condicionales').slideUp();
-        }
-
-
-    });
-
-
 
   $(document).on('change', '#accion_reexpedir', function () {
     var accionSeleccionada = $(this).val();
     console.log('Acción seleccionada:', accionSeleccionada);
     var id_dictamen = $('#reexpedir_id_dictamen').val();
 
-    let shouldShowProductorFields = false;
+      if (accionSeleccionada && !isLoadingData) {
+          isLoadingData = true;
+          cargarDatosReexpedicion(id_dictamen);
+      }
 
-    if (accionSeleccionada && !isLoadingData) {
-        isLoadingData = true;
-        cargarDatosReexpedicion(id_dictamen);
-    }
-
-    if (accionSeleccionada === '2') {
-      $('#campos_condicionales').slideDown();
-    }else {
-        $('#campos_condicionales').slideUp();
-    }
-
-});
+      if (accionSeleccionada === '2') {
+        $('#campos_condicionales').slideDown();
+      }else {
+          $('#campos_condicionales').slideUp();
+      }
+  });
   
   function cargarDatosReexpedicion(id_dictamen) {
       console.log('Cargando datos para la reexpedición con ID:', id_dictamen);
       clearFields();
   
-      $.get(`/editar2/${id_dictamen}/edit`)
-          .done(function (data) {
-              console.log('Respuesta completa:', data);
+      $.get(`/editar2/${id_dictamen}/edit`).done(function (data) {
+      console.log('Respuesta completa:', data);
   
-              if (data.error) {
-                  showError(data.error);
-                  return;
-              }
+            if (data.error) {
+                showError(data.error);
+                return;
+            }
+
+            $('#id_inspeccion_rex').val(data.id_inspeccion).trigger('change');
+            $('#numero_dictamen_rex').val(data.num_dictamen);
+            $('#id_firmante_rex').val(data.id_firmante).trigger('change');
+            $('#fecha_emision_rex').val(data.fecha_emision);
+            $('#fecha_vigencia_rex').val(data.fecha_vigencia);
+            $('#observaciones_rex').val(data.observaciones);
+
+            $('#accion_reexpedir').trigger('change'); 
+            isLoadingData = false;
   
-              $('#id_inspeccion_rex').val(data.id_inspeccion).trigger('change');
-              $('#numero_dictamen_rex').val(data.num_dictamen);
-              $('#id_firmante_rex').val(data.id_firmante).trigger('change');
-              $('#fecha_emision_rex').val(data.fecha_emision);
-              $('#fecha_vigencia_rex').val(data.fecha_vigencia);
-              $('#observaciones_rex').val(data.observaciones);
-  
- 
-  
-              $('#accion_reexpedir').trigger('change'); 
-              isLoadingData = false;
-  
-          })
-          .fail(function () {
+      }).fail(function () {
               showError('No se pudieron cargar los datos para la reexpedición.');
               isLoadingData = false;
-          });
+        });
   }
   
-    function clearFields() {
-        $('#numero_dictamen_rex').val('');
-        $('#id_firmante_rex').val('');
-        $('#fecha_emision_rex').val('');
-        $('#fecha_vigencia_rex').val('');
-        $('#observaciones_rex').val('');
-    }
+  function clearFields() {
+      $('#numero_dictamen_rex').val('');
+      $('#id_firmante_rex').val('');
+      $('#fecha_emision_rex').val('');
+      $('#fecha_vigencia_rex').val('');
+      $('#observaciones_rex').val('');
+  }
 
-  
-    function showError(message) {
-        Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: message,
-            customClass: {
-                confirmButton: 'btn btn-danger'
-            }
-        });
-    }
+  function showError(message) {
+      Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: message,
+          customClass: {
+              confirmButton: 'btn btn-danger'
+          }
+      });
+  }
 
-
-
-    $('#modalAddReexDicExpor').on('hidden.bs.modal', function () {
-        $('#formAddReexDicExpor')[0].reset();
-        clearFields();
-        $('#campos_condicionales').hide();
-        fieldsValidated = []; 
-    });
+  $('#modalAddReexDicExpor').on('hidden.bs.modal', function () {
+      $('#formAddReexDicExpor')[0].reset();
+      clearFields();
+      $('#campos_condicionales').hide();
+      fieldsValidated = []; 
+  });
 
     const formReexpedir = document.getElementById('formAddReexDicExpor');
     const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
@@ -860,17 +831,17 @@ $(document).ready(function () {
                     }
                 }
             },
-            'num_dictamen': {
-                validators: {
-                    notEmpty: {
-                        message: 'El número de dictamen es obligatorio.'
-                    }
-                }
-            },
             'id_inspeccion': {
                 validators: {
                     notEmpty: {
                         message: 'Debes seleccionar una acción.'
+                    }
+                }
+            },
+            'num_dictamen': {
+                validators: {
+                    notEmpty: {
+                        message: 'El número de dictamen es obligatorio.'
                     }
                 }
             },

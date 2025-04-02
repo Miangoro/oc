@@ -320,12 +320,12 @@ public function foliofq($id_dictamen)
 
 
 ///REEXPEDIR DICTAMEN
-public function reexpedirDictamen(Request $request, $id_dictamen)
+/*public function reexpedirDictamen(Request $request, $id_dictamen)
 {
     DB::beginTransaction();
     try {
         // Validar los datos
-        $validatedData = $request->validate([
+        $request->validate([
             'num_dictamen' => 'required',
             'id_inspeccion' => 'required',
             'fecha_emision' => 'required|date',
@@ -334,6 +334,7 @@ public function reexpedirDictamen(Request $request, $id_dictamen)
             'observaciones' => 'required',
             'cancelar_reexpedir' => 'required'
         ]);
+
 
         // Obtener el dictamen original
         $dictamenOriginal = Dictamen_Granel::findOrFail($id_dictamen);
@@ -364,6 +365,65 @@ public function reexpedirDictamen(Request $request, $id_dictamen)
     } catch (\Exception $e) {
         DB::rollBack();
         return response()->json(['message' => 'Error al procesar la operación.', 'error' => $e->getMessage()], 500);
+    }
+}*/
+public function reexpedirDictamen(Request $request)
+{
+    try {
+        //validar siempre
+        $request->validate([
+            'accion_reexpedir' => 'required|in:1,2',
+            'observaciones' => 'nullable|string',
+        ]);
+        //validar si es opcion 2
+        if ($request->accion_reexpedir == '2') {
+            $request->validate([
+                'id_inspeccion' => 'required|integer',
+                'num_dictamen' => 'required|string|max:25',
+                'id_firmante' => 'required|integer',
+                'fecha_emision' => 'required|date',
+                'fecha_vigencia' => 'required|date',
+            ]);
+        }
+
+        $dictamen = Dictamen_Granel::findOrFail($request->id_dictamen);
+
+        if ($request->accion_reexpedir == '1') {
+            $dictamen->estatus = 1; 
+            // Decodificar el JSON actual
+            $observacionesActuales = json_decode($dictamen->observaciones, true);
+            // Actualiza solo 'observaciones' sin modificar 'id_certificado_sustituye'
+            $observacionesActuales['observaciones'] = $request->observaciones;
+            // Volver a codificar el array y asignarlo a $certificado->observaciones
+            $dictamen->observaciones = json_encode($observacionesActuales); 
+            $dictamen->save();
+        } elseif ($request->accion_reexpedir == '2') {
+            $dictamen->estatus = 1;
+                $observacionesActuales = json_decode($dictamen->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $dictamen->observaciones = json_encode($observacionesActuales);
+            $dictamen->save(); 
+
+
+            // Crear un nuevo registro de reexpedición
+            $nuevoDictamen = new Dictamen_Granel();
+            $nuevoDictamen->num_dictamen = $request->num_dictamen;
+            $nuevoDictamen->id_inspeccion = $request->id_inspeccion;
+            $nuevoDictamen->fecha_emision = $request->fecha_emision;
+            $nuevoDictamen->fecha_vigencia = $request->fecha_vigencia;
+            $nuevoDictamen->id_firmante = $request->id_firmante;
+            $nuevoDictamen->estatus = 2;
+            $nuevoDictamen->observaciones = json_encode([
+                'id_sustituye' => $request->id_dictamen,
+                ]);
+            // Guardar
+            $nuevoDictamen->save();
+        }
+
+        return response()->json(['message' => 'Dictamen procesado correctamente.']);
+    } catch (\Exception $e) {
+        Log::error($e);
+        return response()->json(['message' => 'Error al procesar el dictamen.', 'error' => $e->getMessage()], 500);
     }
 }
     
