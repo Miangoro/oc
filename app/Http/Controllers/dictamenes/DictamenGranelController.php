@@ -413,7 +413,7 @@ class DictamenGranelController extends Controller
 
 
     ///REEXPEDIR DICTAMEN
-    public function reexpedirDictamen(Request $request, $id_dictamen)
+    public function reexpedirDictamen(Request $request)
     {
         try {
             $request->validate([
@@ -423,7 +423,7 @@ class DictamenGranelController extends Controller
 
             if ($request->accion_reexpedir == '2') {
                 $request->validate([
-                    'id_dictamen' => 'required|exists:dictamenes_exportacion,id_dictamen',
+                    'id_dictamen' => 'required|exists:dictamenes_granel,id_dictamen',
                     'num_dictamen' => 'required|string|max:25',
                     'id_inspeccion' => 'required|integer',
                     'fecha_emision' => 'required|date',
@@ -449,7 +449,6 @@ class DictamenGranelController extends Controller
                     $observacionesActuales['observaciones'] = $request->observaciones;
                 $dictamen->observaciones = json_encode($observacionesActuales);
                 $dictamen->save(); 
-
 
                 // Crear un nuevo registro de reexpedición
                 $nuevoDictamen = new Dictamen_Granel();

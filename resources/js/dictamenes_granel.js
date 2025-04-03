@@ -142,7 +142,7 @@ if (dt_user_table.length) {
           render: function (data, type, full, meta) {
             var $num_dictamen = full['num_dictamen'];
             var $id = full['id_dictamen'];
-            return `<small>`+ $num_dictamen + `</small>` +
+            return `<small class="fw-bold">`+ $num_dictamen + `</small>` +
              `<i class="ri-file-pdf-2-fill text-danger ri-28px pdfDictamen cursor-pointer" data-id="` + $id + `" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
           }
         }, 
@@ -1089,7 +1089,7 @@ $(document).ready(function () {
             $('#id_firmante_rex').val(dictamen.id_firmante).trigger('change');
             $('#fecha_emision_rex').val(dictamen.fecha_emision);
             $('#fecha_vigencia_rex').val(dictamen.fecha_vigencia);
-            $('#observaciones_rex').val(dictamen.observaciones);
+            //$('#observaciones_rex').val(dictamen.observaciones);
 
             $('#accion_reexpedir').trigger('change'); 
             isLoadingData = false;
