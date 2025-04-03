@@ -257,7 +257,7 @@ if (dt_user_table.length) {
                 (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
             '</button>' +
             '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalEditDictamenGranel" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+              `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalEditDictamenGranel" class="dropdown-item edit-record waves-effect "><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
               `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalReexDicInsta" class="dropdown-item waves-effect reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
               `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
             '</div>' +
