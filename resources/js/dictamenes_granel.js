@@ -106,7 +106,7 @@ if (dt_user_table.length) {
       
         { data: 'nombre_lote' }, // Ajusta el ancho aquí
          { data: 'fecha_emision'},
-         { data: 'estatus',
+         { data: 'estatus'/*,
           searchable: false, 
           orderable: false,
           render: function (data, type, row) {
@@ -114,16 +114,19 @@ if (dt_user_table.length) {
               if (data == 1) {
                   color = 'badge rounded-pill bg-danger';
                   estatus = 'Cancelado';
-              } else {
+              } else if (data == 2) {
                   color = 'badge rounded-pill bg-success';
-                  estatus = 'Emitido';
-              }
+                  estatus = 'Reexpedido';
+              } else {
+                color = 'badge rounded-pill bg-success';
+                estatus = 'Emitido';
+            }
               // Devolvemos el HTML con el color y el texto que se mostrarán en la tabla
               return '<span class="' + color + '">' + estatus + '</span>';
-          }
+          }*/
         },
          
-         { data: 'action' }
+        { data: 'action' }
  
        ],
        columnDefs: [
@@ -152,7 +155,11 @@ if (dt_user_table.length) {
             render: function (data, type, full, meta) {
               var $num_servicio = full['num_servicio'];
               var $folio_solicitud = full['folio_solicitud'];
-              return '<span class="fw-bold">Servicio:</span> ' + $num_servicio +'<br><span class="fw-bold">Solicitud: </span>' + $folio_solicitud;
+              var $id_solicitud = full['id_solicitud'];
+              return '<span class="fw-bold">Servicio:</span> ' + $num_servicio +
+
+                '<br><span class="fw-bold">Solicitud: </span>' + $folio_solicitud +
+                `<i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-id="` + $id_solicitud + `" data-folio="` + $folio_solicitud + `" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
             }
           }, 
 
@@ -168,16 +175,14 @@ if (dt_user_table.length) {
           {
             targets: 5, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
-        
                 // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
                 var $fecha_emision = full['fecha_emision'] ?? 'N/A'; // Fecha de vigencia
                 var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A'; // Fecha de vencimiento
-                
         
                 // Definir los mensajes de fecha con formato
                 var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span>`;
                 var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span>`;
-        
+
                 // Retorna las fechas en formato de columnas
                 return `
                     <div>
@@ -188,8 +193,32 @@ if (dt_user_table.length) {
                 `;
             }
           }, 
-
           {
+            ///estatus
+            targets: 6,
+            searchable: false,
+            orderable: false,
+            responsivePriority: 4,
+            render: function (data, type, full, meta) {
+              var $estatus = full['estatus'];
+              var $emision = full['emision'];
+              var $vigencia = full['vigencia'];
+              let estatus;
+                if ($emision > $vigencia) {
+                  estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
+                } else if ($estatus == 1) {
+                    estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
+                } else if ($estatus == 2) {
+                    estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+                } else {
+                  estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
+                }
+                
+              return estatus;
+            }
+          },
+
+          /*{
             // User full name
             targets: 1,
             responsivePriority: 4,
@@ -211,7 +240,7 @@ if (dt_user_table.length) {
                 '</div>';
               return $row_output;
             }
-          },
+          },*/
 
       {
         // Actions botones de eliminar y actualizar(editar)
@@ -222,13 +251,15 @@ if (dt_user_table.length) {
         render: function (data, type, full, meta) {
           return (
             '<div class="d-flex align-items-center gap-50">' +
-            '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
+            /*'<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>'+
+            '</button>' +*/
+            `<button class="btn btn-sm dropdown-toggle hide-arrow ` +(full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info')+ `" data-bs-toggle="dropdown">` +
+                (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
+            '</button>' +
             '<div class="dropdown-menu dropdown-menu-end m-0">' +
-            `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalEditDictamenGranel" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-            `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalReexDicInsta" class="dropdown-item waves-effect reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
-            `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
-            '<div class="dropdown-menu dropdown-menu-end m-0">' +
-            '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+              `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalEditDictamenGranel" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+              `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalReexDicInsta" class="dropdown-item waves-effect reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
+              `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
             '</div>' +
             '</div>'
           );
@@ -919,6 +950,32 @@ $(document).on('click', '.pdfDictamen', function ()  {
 
     $("#titulo_modal").text("Dictamen de Cumplimiento NOM Mezcal a Granel");
     $("#subtitulo_modal").text("PDF del Dictamen");
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
+
+///FORMATO PDF SOLICITUD DICTAMEN
+$(document).on('click', '.pdfSolicitud', function ()  {
+  var id = $(this).data('id');
+  var folio = $(this).data('folio');
+  var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+      
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    
+    //Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
+
+    $("#titulo_modal").text("Solicitud de servicios");
+    $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();

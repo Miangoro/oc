@@ -121,6 +121,9 @@ class DictamenGranelController extends Controller
                 $nestedData['estatus'] = $dictamen->estatus;
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
+                $nestedData['id_solicitud'] = $dictamen->inspeccione->solicitud->id_solicitud;
+                $nestedData['emision'] = $dictamen->fecha_emision;
+                $nestedData['vigencia'] = $dictamen->fecha_vigencia;
 
                 $caracteristicas = json_decode($dictamen->inspeccione->solicitud->caracteristicas, true);
                 $idLoteGranel = $caracteristicas['id_lote_granel'] ?? null;
