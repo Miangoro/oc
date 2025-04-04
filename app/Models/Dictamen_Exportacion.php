@@ -9,8 +9,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Dictamen_Exportacion extends Model
 {
-    //use LogsActivity, TranslatableActivityLog, HasFactory;
-    use HasFactory;
+    use LogsActivity, TranslatableActivityLog, HasFactory;
+    //use HasFactory;
 
     protected $table = 'dictamenes_exportacion';
     protected $primaryKey = 'id_dictamen';
