@@ -744,13 +744,13 @@ Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2
 Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
 Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
 Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
-Route::post('/solicitud_holograma/storeActivar', [solicitudHolograma::class, 'storeActivar']);
+
 Route::get('/solicitud_holograma/editActivos/{id}', [solicitudHolograma::class, 'editActivos']);
 Route::get('/solicitud_holograma/editActivados/{id}', [solicitudHolograma::class, 'editActivados']);
 
 //solicitud hologrammas
 
-Route::post('/verificar-folios', [solicitudHolograma::class, 'verificarFolios']);
+
 Route::post('/solicitud_holograma/update/updateActivar', [solicitudHolograma::class, 'updateActivar']);
 
 
@@ -760,6 +760,8 @@ Route::get('/find_hologramas_activar', [hologramasACtivar::class, 'find_hologram
 Route::middleware(['auth'])->controller(hologramasACtivar::class)->group(function () {
     Route::resource('/find_hologramas_activar-list', hologramasACtivar::class);
     Route::get('/getDatosInpeccion/{id_inspeccion}','getDatosInpeccion');
+    Route::post('/verificar-folios', 'verificarFolios');
+    Route::post('/solicitud_holograma/storeActivar', 'storeActivar');
 
 });
 

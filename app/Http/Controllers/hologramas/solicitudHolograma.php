@@ -28,8 +28,8 @@ class solicitudHolograma extends Controller
         $inspeccion = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 5);
         })
-        ->orderBy('id_inspeccion', 'desc')
-        ->get();
+            ->orderBy('id_inspeccion', 'desc')
+            ->get();
         $categorias = categorias::all();
         $tipos = tipos::all();
         $clases = clases::all();
@@ -117,25 +117,25 @@ class solicitudHolograma extends Controller
 
         if ($users->isNotEmpty()) {
             $ids = $start;
-        
+
             foreach ($users as $user) {
                 $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
                 $marca = \App\Models\marcas::where('id_marca', $user->id_marca)->value('marca');
                 $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
                 $name = \App\Models\User::where('id', $user->id_solicitante)->value('name');
-        
+
                 $razon_social = $user->empresa ? $user->empresa->razon_social : '';
-        
+
                 // Concatenar razon_social y numero_cliente
                 $razonSocialFormatted = '<b>' . $numero_cliente . '</b><br>' . $razon_social;
-        
+
                 $nestedData = [
                     'fake_id' => ++$ids,
                     'id_solicitud' => $user->id_solicitud,
                     'folio' => $user->folio,
                     'id_empresa' => $user->id_empresa,
                     'id_solicitante' => $name,
-                    'id_marca' => $marca, 
+                    'id_marca' => $marca,
                     'cantidad_hologramas' => $user->cantidad_hologramas,
                     'id_direccion' => $direccion,
                     'comentarios' => $user->comentarios,
@@ -155,7 +155,7 @@ class solicitudHolograma extends Controller
                 $data[] = $nestedData;
             }
         }
-        
+
 
         return response()->json([
             'draw' => intval($request->input('draw')),
@@ -198,19 +198,19 @@ class solicitudHolograma extends Controller
         $folioInicial = $ultimoFolio ? $ultimoFolio + 1 : 1;
 
 
-                // Obtener el último run_folio creado
-                $ultimoFolio = \App\Models\solicitudHolograma::latest('folio')->first();
-                // Extraer el número del último run_folio y calcular el siguiente número
-                if ($ultimoFolio) {
-                    $ultimoNumero = intval(substr($ultimoFolio->folio, 4, 6)); // Extrae 000001 de SOL-GUIA-000001/24
-                    $nuevoNumero = $ultimoNumero + 1;
-                } else {
-                    $nuevoNumero = 1;
-                }
+        // Obtener el último run_folio creado
+        $ultimoFolio = \App\Models\solicitudHolograma::latest('folio')->first();
+        // Extraer el número del último run_folio y calcular el siguiente número
+        if ($ultimoFolio) {
+            $ultimoNumero = intval(substr($ultimoFolio->folio, 4, 6)); // Extrae 000001 de SOL-GUIA-000001/24
+            $nuevoNumero = $ultimoNumero + 1;
+        } else {
+            $nuevoNumero = 1;
+        }
 
-                $anoActual = Carbon::now()->now()->year;
-                // Formatear el nuevo run_folio
-                $nuevoFolio = sprintf('INV-%06d-%d', $nuevoNumero, $anoActual);
+        $anoActual = Carbon::now()->now()->year;
+        // Formatear el nuevo run_folio
+        $nuevoFolio = sprintf('INV-%06d-%d', $nuevoNumero, $anoActual);
         // Crear una nueva instancia del modelo Hologramas
         $holograma = new ModelsSolicitudHolograma();
         $holograma->folio = $nuevoFolio;
@@ -290,22 +290,22 @@ class solicitudHolograma extends Controller
             $holograma = ModelsSolicitudHolograma::findOrFail($request->input('id_solicitud'));
             $holograma->tipo_pago = $request->input('tipo_pago'); // Nuevo campo tipo_pago
             $holograma->estatus = 'Pagado';
-    
+
             $holograma->save();
-    
+
             // Metodo para guardar el archivo PDF
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
                 return !empty($numero);
             });
-    
+
             foreach ($request->id_documento as $index => $id_documento) {
                 if ($request->hasFile('url') && isset($request->file('url')[$index])) {
                     $file = $request->file('url')[$index];
                     $extension = $file->getClientOriginalExtension();
                     $filename = "Comprobante_de_pago" . '.' . $extension; // Nombre del archivo con extensión
                     $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-    
+
                     // Guarda la información del archivo en la base de datos
                     $documentacion_url = new Documentacion_url();
                     $documentacion_url->id_relacion = $holograma->id_solicitud;
@@ -316,13 +316,13 @@ class solicitudHolograma extends Controller
                     $documentacion_url->save();
                 }
             }
-    
+
             return response()->json(['success' => 'Solicitud de pago actualizada correctamente']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar la solicitud de pago'], 500);
         }
     }
-    
+
 
     //Metodo apra Actualizar y Editar Guia
     public function update3(Request $request)
@@ -447,36 +447,7 @@ class solicitudHolograma extends Controller
         return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
     }
 
-    //Registrar activar
-    public function storeActivar(Request $request)
-    {
-        $loteEnvasado = new activarHologramasModelo();
-        $loteEnvasado->id_inspeccion = $request->id_inspeccion;
-        $loteEnvasado->no_lote_agranel = $request->no_lote_agranel;
-        $loteEnvasado->categoria = $request->categoria;
-        $loteEnvasado->no_analisis = $request->no_analisis;
-        $loteEnvasado->cont_neto = $request->cont_neto;
-        $loteEnvasado->unidad = $request->unidad;
-        $loteEnvasado->clase = $request->clase;
-        $loteEnvasado->contenido = $request->contenido;
-        $loteEnvasado->no_lote_envasado = $request->no_lote_envasado;
-        $loteEnvasado->id_tipo = $request->id_tipo;
-        $loteEnvasado->lugar_produccion = $request->lugar_produccion;
-        $loteEnvasado->lugar_envasado = $request->lugar_envasado;
-        $loteEnvasado->id_solicitud = $request->id_solicitudActivacion;
-        $loteEnvasado->folios = json_encode([
-            'folio_inicial' => $request->rango_inicial,
-            'folio_final' => $request->rango_final, // Puedes agregar otros valores también
-        ]);
-        $loteEnvasado->mermas = json_encode([
-            'mermas' => $request->mermas,
-        ]);
-        //$loteEnvasado->folio_final = $request->id_solicitudActivacion;
-        // Guardar el nuevo lote en la base de datos
-        $loteEnvasado->save();
-        return response()->json(['message' => 'Hologramas activados exitosamente']);
-    }
-
+    
     //Ver activos
     public function editActivos($id)
     {
@@ -536,6 +507,7 @@ class solicitudHolograma extends Controller
         // Buscar el registro existente usando el ID
         try {
             $loteEnvasado = activarHologramasModelo::findOrFail($request->input('id'));
+            $loteEnvasado->folio_activacion = $request->folio_activacion;
             $loteEnvasado->id_solicitud = $request->edit_id_solicitud;
             $loteEnvasado->id_inspeccion = $request->edit_id_inspeccion;
             $loteEnvasado->no_lote_agranel = $request->edit_no_lote_agranel;
@@ -569,47 +541,5 @@ class solicitudHolograma extends Controller
 
 
 
-    public function verificarFolios(Request $request)
-    {
-        $folio_inicial = $request->input('folio_inicial');
-        $folio_final = $request->input('folio_final');
-        $id_solicitud = $request->input('id_solicitud');
-
-        // Obtener el rango de folios de la solicitud
-        $solicitud = ModelsSolicitudHolograma::where('id_solicitud', $id_solicitud)->first();
-
-        if (!$solicitud) {
-            return response()->json(['error' => 'La solicitud no existe.'], 400);
-        }
-
-          // Validar que el rango esté dentro del rango de la solicitud
-          if ($folio_inicial < $solicitud->folio_inicial || $folio_final > $solicitud->folio_final) {
-            return response()->json(['error' => 'El rango de folios está fuera del rango permitido por la solicitud.'], 400);
-        }
-
-// Verificar si los folios ya fueron activados en otras activaciones
-$activaciones = activarHologramasModelo::where('id_solicitud', $id_solicitud)->get();
-
-foreach ($activaciones as $activacion) {
-    $folios_activados = json_decode($activacion->folios, true);
     
-    // Recorrer todos los rangos almacenados en el JSON
-    for ($i = 0; $i < count($folios_activados['folio_inicial']); $i++) {
-        $activado_folio_inicial = (int) $folios_activados['folio_inicial'][$i];
-        $activado_folio_final = (int) $folios_activados['folio_final'][$i];
-
-        // Verificar si al menos UN folio del nuevo rango ya está activado
-        if (
-            ($folio_inicial >= $activado_folio_inicial && $folio_inicial <= $activado_folio_final) || // Folio inicial dentro de un rango activado
-            ($folio_final >= $activado_folio_inicial && $folio_final <= $activado_folio_final) ||     // Folio final dentro de un rango activado
-            ($folio_inicial <= $activado_folio_inicial && $folio_final >= $activado_folio_final)      // Rango nuevo envuelve al rango activado
-        ) {
-            return response()->json(['error' => 'Entra dentro del rango activado '. $activado_folio_inicial. ' y '.$activado_folio_final], 400);
-        }
-    }
-}
-
-
-        return response()->json(['success' => 'El rango de folios está disponible.']);
-    }
 }

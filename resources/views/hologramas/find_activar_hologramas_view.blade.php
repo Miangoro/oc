@@ -54,16 +54,14 @@
       <thead class="table-dark">
         <tr>
           <th></th>
-          <th>Id</th>
-          <th>folio</th>
-          <th>Datos del cliente</th>
-          <th>Solicitante</th>
+          <th>No.</th>
+          <th>Folio activación</th>
+          <th>Folio solicitud</th>
+          <th>Número de servicio</th>
           <th>Marca</th>
-          <th>Hologramas</th>
-          <th>inicial</th>
-          <th>final</th>
-          <th>estatus</th>
-          <th>pdf</th>
+          <th>Lote granel</th>
+          <th>Lote envasado</th>
+          <th>Folios activados</th>
           <th>Acciones</th>
         </tr>
       </thead>

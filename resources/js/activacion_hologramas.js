@@ -18,68 +18,19 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'hologramas-list'
+        url: baseUrl + 'find_hologramas_activar-list'
       },
       columns: [
         // columns according to JSON
         { data: '' },
-        { data: 'id_solicitud' },
-        { data: 'folio' },
-        { data: 'razon_social' },
-        { data: 'id_solicitante' },
-        { data: 'id_marca' },
-        {
-          data: null,
-          searchable: true,
-          orderable: false,
-          render: function (data, type, row) {
-            var cantidad_hologramas = '';
-            var activados = '';
-            var mermas = '';
-            var restantes = '';
-
-            if (row.cantidad_hologramas != 'N/A') {
-              cantidad_hologramas =
-                '<br><span class="fw-bold text-dark small">Solicitados:</span><span class="small"> ' +
-                row.cantidad_hologramas +
-                '</span>';
-            }
-            if (row.activados != 'N/A') {
-              activados =
-                '<br><span class="fw-bold text-dark small">Activados:</span><span class="small"> ' +
-                row.activados +
-                '</span>';
-            }
-            if (row.mermas != 'N/A') {
-              mermas =
-                '<br><span class="fw-bold text-dark small">Mermas:</span><span class="small"> ' +
-                row.mermas +
-                '</span>';
-            }
-            if (row.restantes != 'N/A') {
-              restantes =
-                '<br><span class="fw-bold text-dark small">Restantes:</span><span class="small"> ' +
-                row.restantes +
-                '</span>';
-            }
-
-            return (
-              '<span class="fw-bold text-dark small">Solicitados:</span> <span class="small"> ' +
-              row.cantidad_hologramas +
-              '</span><br><span class="fw-bold text-dark small">Activados:</span><span class="small"> ' +
-              row.activados +
-              '</span><br><span class="fw-bold text-dark small">Mermas:</span><span class="small"> ' +
-              row.mermas +
-              '</span><br><span class="fw-bold text-dark small">Restantes:</span><span class="small"> ' +
-              row.restantes
-            );
-          }
-        },
-
-        { data: 'folio_inicial' },
-        { data: 'folio_final' },
-        { data: 'estatus' },
         { data: '' },
+        { data: 'folio_activacion' },
+        { data: 'folio_solicitud' },
+        { data: 'num_servicio' },
+        { data: 'marca' },
+        { data: 'lote_granel' },
+        { data: 'lote_envasado' },
+        { data: 'folios' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -100,75 +51,6 @@ $(function () {
           targets: 1,
           render: function (data, type, full, meta) {
             return `<span>${full.fake_id}</span>`;
-          }
-        },
-        {
-          // User full name
-          targets: 2,
-          responsivePriority: 4,
-          render: function (data, type, full, meta) {
-            var $name = full['folio'];
-
-            // For Avatar badge
-            var stateNum = Math.floor(Math.random() * 6);
-            var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
-            var $state = states[stateNum];
-
-            // Creates full output for row
-            var $row_output =
-              '<div class="d-flex justify-content-start align-items-center user-name">' +
-              '<div class="avatar-wrapper">' +
-              /*               '<div class="avatar avatar-sm me-3">' + */
-
-              '</d iv>' +
-              '</div>' +
-              '<div class="d-flex flex-column">' +
-              '<a href="' +
-              userView +
-              '" class="text-truncate text-heading"><span class="fw-medium">' +
-              $name +
-              '</span></a>' +
-              '</div>' +
-              '</div>';
-            return $row_output;
-          }
-        },
-        {
-          // email verify
-          targets: 9,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $verified = full['estatus'];
-            var $colorRegimen;
-
-            if ($verified == 'Enviado') {
-              $colorRegimen = 'info';
-            } else if ($verified == 'Pagado') {
-              $colorRegimen = 'warning';
-            } else if ($verified == 'Pendiente') {
-              $colorRegimen = 'danger';
-            } else if ($verified == 'Asignado') {
-              $colorRegimen = 'secondary';
-            } else if ($verified == 'Completado') {
-              $colorRegimen = 'success';
-            } else {
-              $colorRegimen = 'secondary';
-            }
-
-            return `${
-              $verified
-                ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-            }`;
-          }
-        },
-        {
-          // email verify
-          targets: 10,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $id = full['id_solicitud'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_solicitud']}" data-registro="${full['razon_social_pdf']} "></i>`;
           }
         },
         {
@@ -667,7 +549,7 @@ $('#addHologramas').on('hidden.bs.modal', function () {
         // delete the data
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}hologramas-list/${id_solicitud}`,
+          url: `${baseUrl}find_hologramas_activar-list/${id_solicitud}`,
           success: function () {
             dt_user.draw();
           },
@@ -1109,38 +991,50 @@ $('#addHologramas').on('hidden.bs.modal', function () {
 
   //Funcion Validacion de folios
   $(document).ready(function () {
-    $('#folio_inicial, #folio_final').on('input', function () {
-      var folioInicial = $('#folio_inicial').val();
-      var folioFinal = $('#folio_final').val();
-      var id_solicitud = $('#id_solicitudActivacion').val();
-      var subtotal = folioFinal - folioInicial;
-      $("#subtotal").text(subtotal); // No es necesario usar .text()
-      // Solo ejecutar si ambos campos tienen valor
-      if (folioInicial && folioFinal) {
-        $.ajax({
-          url: '/verificar-folios',
-          type: 'POST',
-          data: {
-            folio_inicial: folioInicial,
-            folio_final: folioFinal,
-            id_solicitud: id_solicitud
-          },
-          success: function (response) {
-            $('#mensaje').text(response.success || 'Rango de folios disponible.');
-            $('#mensaje').attr('class', 'alert alert-solid-success');
-            $('#mensaje').show();
-            console.log(response);
-          },
-          error: function (xhr) {
-            $('#mensaje').text(xhr.responseJSON.error || 'Ocurrió un error.');
-            $('#mensaje').attr('class', 'alert alert-solid-danger');
-            $('#mensaje').show();
-            console.log(xhr.responseText);
-          }
-        });
-      }
+    // Delegación de eventos para escuchar el cambio en los inputs de cada fila
+    $(document).on('input', '.folio_inicial, .folio_final', function () {
+        var row = $(this).closest('.folio-row'); // Encuentra la fila más cercana
+        var folioInicial = row.find('.folio_inicial').val();
+        var folioFinal = row.find('.folio_final').val();
+        var id_solicitud = $('#id_solicitudActivacion').val();
+        var subtotal = folioFinal - folioInicial;
+        
+        // Actualizar el subtotal en la fila correspondiente
+        row.find(".subtotal").text(subtotal+1); 
+        
+        // Verificar si ambos campos tienen valores
+        if (folioInicial && folioFinal) {
+            $.ajax({
+                url: '/verificar-folios',
+                type: 'POST',
+                data: {
+                    folio_inicial: folioInicial,
+                    folio_final: folioFinal,
+                    id_solicitud: id_solicitud
+                },
+                success: function (response) {
+                    var mensajeDiv = row.find('.mensaje'); // Obtener el mensaje en la fila actual
+                    mensajeDiv.html(response.success || 'Rango de folios disponible.')
+                              .removeClass('alert-danger alert-warning')
+                              .addClass('alert alert-success')
+                              .show();
+                    console.log(response);
+                },
+                error: function (xhr) {
+                    var mensajeDiv = row.find('.mensaje'); // Obtener el mensaje en la fila actual
+                    mensajeDiv.html(xhr.responseJSON.error || 'Ocurrió un error.')
+                              .removeClass('alert-success alert-warning')
+                              .addClass('alert alert-danger')
+                              .show();
+                    console.log(xhr.responseText);
+                }
+            });
+        }
     });
-  });
+});
+
+
+
 
   //Activar hologramas
   $(document).on('click', '.activar_holograma', function () {
@@ -1156,6 +1050,20 @@ $('#addHologramas').on('hidden.bs.modal', function () {
   const activarHologramasForm = document.getElementById('activarHologramasForm');
   const fv5 = FormValidation.formValidation(activarHologramasForm, {
     fields: {
+      id_solicitudActivacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una solicitud de entrega'
+          }
+        }
+      },
+      folio_activacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor introduzca el folio'
+          }
+        }
+      },
       id_inspeccion: {
         validators: {
           notEmpty: {
@@ -1619,18 +1527,22 @@ $('#addHologramas').on('hidden.bs.modal', function () {
     $('.add-row-add').click(function () {
       // Añade una nueva fila
       var newRow = `
-          <tr>
+          <tr class="folio-row"> 
               <th>
-                  <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+                  <button type="button" class="btn btn-danger remove-row" disabled>
+                      <i class="ri-delete-bin-5-fill"></i>
+                  </button>
               </th>
               <td>
-                  <input type="number" class="form-control form-control-sm rango_inicial" min="0" name="rango_inicial[]"  placeholder="Rango inicial" />
+                  <input type="number" class="form-control form-control-sm folio_inicial" name="rango_inicial[]" min="0" placeholder="Rango inicial">
               </td>
               <td>
-                  <input type="number" class="form-control form-control-sm" min="0" name="rango_final[]"   placeholder="Rango final">
+                  <input type="number" class="form-control form-control-sm folio_final" name="rango_final[]" min="0" placeholder="Rango final">
               </td>
-
-              
+              <th class="subtotal"></th>
+              <td>
+                  <div class="mensaje alert" style="display:none;"></div> <!-- Se movió dentro de la fila -->
+              </td>
           </tr>`;
       $('#contenidoRango').append(newRow);
     });

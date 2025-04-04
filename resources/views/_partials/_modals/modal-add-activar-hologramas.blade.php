@@ -1,43 +1,60 @@
 <!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="activarHologramas" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-xl ">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Activar hologramas</h4>
-                    <p class="address-subtitle"></p>
-                </div>
+
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Activar hologramas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
                 <form id="activarHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
-                   
 
-                        <div class="form-floating form-floating-outline mb-6">
-                            <select id="id_solicitudActivacion" name="id_solicitudActivacion" class="form-select select2"
-                                aria-label="Default select example">
-                                <option value="" disabled selected>Elige la solicitud de entrega</option>
-                                @foreach ($ModelsSolicitudHolograma as $solicitud)
-                                    <option value="{{ $solicitud->id_solicitud }}">{{ $solicitud->folio }} | {{ $solicitud->marcas->marca }} | {{ number_format($solicitud->folio_inicial) }} - {{ number_format($solicitud->folio_final) }}</option>
-                                @endforeach
-                            </select>
-                            <label for="id_solicitud">Solicitud de entrega</label>
+                        <div class="col-md-8">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select id="id_solicitudActivacion" name="id_solicitudActivacion"
+                                    class="form-select select2" aria-label="Default select example">
+                                    <option value="" disabled selected>Elige la solicitud de entrega</option>
+                                    @foreach ($ModelsSolicitudHolograma as $solicitud)
+                                        <option value="{{ $solicitud->id_solicitud }}">{{ $solicitud->folio }} |
+                                            {{ $solicitud->marcas->marca }} |
+                                            {{ number_format($solicitud->folio_inicial) }} -
+                                            {{ number_format($solicitud->folio_final) }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_solicitud">Solicitud de entrega</label>
+                            </div>
+                        </div>
+
+                        
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control" id="folio_activacion"
+                                    placeholder="Introduce el folio" name="folio_activacion"
+                                    aria-label="Nombre del lote" />
+                                <label for="folio_activacion">Folio de activación:</label>
+                            </div>
                         </div>
 
                         <div class="col-md-10">
-                        <div class="form-floating form-floating-outline mb-6">
-                            <select onchange="cargarInfoServicio();" id="id_inspeccion" name="id_inspeccion" class="form-select select2"
-                                aria-label="Default select example">
-                                <option value="" disabled selected>Elige un numero de inspección</option>
-                                @foreach ($inspeccion as $insp)
-                                    <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->folio }} | {{ $insp->solicitud->tipo_solicitud->tipo }}</option>
-                                @endforeach
-                            </select>
-                            <label for="id_inspeccion">No. de servicio</label>
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select onchange="cargarInfoServicio();" id="id_inspeccion" name="id_inspeccion"
+                                    class="form-select select2" aria-label="Default select example">
+                                    <option value="" disabled selected>Elige un numero de inspección</option>
+                                    @foreach ($inspeccion as $insp)
+                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} |
+                                            {{ $insp->solicitud->folio }} | {{ $insp->solicitud->tipo_solicitud->tipo }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label for="id_inspeccion">No. de servicio</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-2">
-                      <div id="contenedorActa"></div>
-                    </div>
+                        <div class="col-md-2">
+                            <div id="contenedorActa"></div>
+                        </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="no_lote_agranel"
@@ -48,8 +65,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select class=" form-select" id="categoria" name="categoria"
-                                    aria-label="categoría">
+                                <select class=" form-select" id="categoria" name="categoria" aria-label="categoría">
                                     <option value="" disabled selected>Elige una categoría</option>
                                     @foreach ($categorias as $cate)
                                         <option value="{{ $cate->id_categoria }}">{{ $cate->categoria }}</option>
@@ -58,13 +74,13 @@
                                 <label for="categoria">Categoría Mezcal</label>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class=" form-select" id="clase" name="clase" aria-label="Clase">
                                     @foreach ($clases as $clase)
                                         <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
-                                     @endforeach
+                                    @endforeach
                                 </select>
                                 <label for="clase">Clase</label>
                             </div>
@@ -102,7 +118,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        
+
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="text" placeholder="No de análisis de laboratorio:"
@@ -146,7 +162,7 @@
                         <h4 class="address-title mb-2">Activar</h4>
                         <p class="address-subtitle"></p>
                     </div>
-                     <div style="display: none;" id="mensaje" role="alert"></div>
+                    <div style="display: none;" id="mensaje" role="alert"></div>
 
                     <table class="table table-bordered">
                         <thead>
@@ -157,33 +173,40 @@
                                 <th>Rango inicial</th>
                                 <th>Rango final</th>
                                 <th>Total</th>
+                                <th></th>
 
                             </tr>
                         </thead>
                         <tbody id="contenidoRango">
-                            <tr>
+                            <tr class="folio-row">
                                 <th>
-                                    <button type="button" class="btn btn-danger remove-row" disabled> <i
-                                            class="ri-delete-bin-5-fill"></i> </button>
+                                    <button type="button" class="btn btn-danger remove-row" disabled>
+                                        <i class="ri-delete-bin-5-fill"></i>
+                                    </button>
                                 </th>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="rango_inicial[]"
-                                        id="folio_inicial" min="0" placeholder="Rango inicial">
+                                    <input type="number" class="form-control form-control-sm folio_inicial"
+                                        name="rango_inicial[]" min="0" placeholder="Rango inicial">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="rango_final[]"
-                                        id="folio_final" min="0" placeholder="Rango final">
+                                    <input type="number" class="form-control form-control-sm folio_final"
+                                        name="rango_final[]" min="0" placeholder="Rango final">
                                 </td>
-                                <th id="subtotal"></th>
+                                <th class="subtotal"></th>
+                                <td>
+                                    <div class="mensaje alert" style="display:none;"></div>
+                                    <!-- Se movió dentro de la fila -->
+                                </td>
                             </tr>
                         </tbody>
+
                     </table>
 
                     <div class="text-center mb-6">
                         <h4 class="address-title mb-2">Mermas (Opcional)</h4>
                         <p class="address-subtitle"></p>
                     </div>
-{{--                     <div style="display: none;" id="mensaje" role="alert"></div>
+                    {{--                     <div style="display: none;" id="mensaje" role="alert"></div>
  --}}
                     <table class="table table-bordered">
                         <thead>
@@ -211,39 +234,39 @@
 </div>
 
 <script>
-     function cargarInfoServicio() {
-    var id_inspeccion = $('#id_inspeccion').val();
-    if (id_inspeccion) {
-        $.ajax({
-            url: '/getDatosInpeccion/' + id_inspeccion,
-            method: 'GET',
-            dataType: 'json', // Especificar que la respuesta es JSON
-            success: function(response) {
-              // Agregar el enlace dentro de un contenedor específico
-            $('#contenedorActa').html(`
+    function cargarInfoServicio() {
+        var id_inspeccion = $('#id_inspeccion').val();
+        if (id_inspeccion) {
+            $.ajax({
+                url: '/getDatosInpeccion/' + id_inspeccion,
+                method: 'GET',
+                dataType: 'json', // Especificar que la respuesta es JSON
+                success: function(response) {
+                    // Agregar el enlace dentro de un contenedor específico
+                    $('#contenedorActa').html(`
             <a id="url_acta" target="_blank" href="/files/${response.numero_cliente}/${response.url_acta[0]}">
                 <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
             </a>
             `);
 
-               // $('#no_lote_agranel').val(response.solicitud.lote_granel.nombre_lote || '').val();
-               // $('#categoria').val(response.solicitud.lote_granel.id_categoria).trigger('change');
-               // $('#clase').val(response.solicitud.lote_granel.id_clase).trigger('change');
-               // $('#id_tipo').val(response.solicitud.lote_granel.tipo_lote).trigger('change');
-                $('#cont_neto').val(response.solicitud.lote_envasado.presentacion).val();
-                $('#unidad').val(response.solicitud.lote_envasado.unidad).val();
-                //$('#no_analisis').val(response.solicitud.lote_granel.folio_fq).val();
-                //$('#contenido').val(response.solicitud.lote_granel.cont_alc).val();
-                $('#no_lote_envasado').val(response.solicitud.lote_envasado.nombre).val();
-                $('#lugar_envasado').val(response.solicitud.instalacion.direccion_completa).val();
+                    // $('#no_lote_agranel').val(response.solicitud.lote_granel.nombre_lote || '').val();
+                    // $('#categoria').val(response.solicitud.lote_granel.id_categoria).trigger('change');
+                    // $('#clase').val(response.solicitud.lote_granel.id_clase).trigger('change');
+                    // $('#id_tipo').val(response.solicitud.lote_granel.tipo_lote).trigger('change');
+                    $('#cont_neto').val(response.solicitud.lote_envasado.presentacion).val();
+                    $('#unidad').val(response.solicitud.lote_envasado.unidad).val();
+                    //$('#no_analisis').val(response.solicitud.lote_granel.folio_fq).val();
+                    //$('#contenido').val(response.solicitud.lote_granel.cont_alc).val();
+                    $('#no_lote_envasado').val(response.solicitud.lote_envasado.nombre).val();
+                    $('#lugar_envasado').val(response.solicitud.instalacion.direccion_completa).val();
 
-            },
-            error: function(xhr) {
-                console.error('Error al obtener marcas:', xhr);
-                $('#tabla_marcas tbody').html('<tr><td colspan="8">Error al cargar los datos</td></tr>');
-            }
-        });
-    } 
-}
+                },
+                error: function(xhr) {
+                    console.error('Error al obtener marcas:', xhr);
+                    $('#tabla_marcas tbody').html(
+                    '<tr><td colspan="8">Error al cargar los datos</td></tr>');
+                }
+            });
+        }
+    }
 </script>
-

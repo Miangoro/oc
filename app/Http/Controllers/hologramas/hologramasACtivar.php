@@ -28,8 +28,8 @@ class hologramasActivar extends Controller
         $inspeccion = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 5)->Orwhere('id_tipo', 6)->Orwhere('id_tipo', 11)->Orwhere('id_tipo', 8);
         })
-        ->orderBy('id_inspeccion', 'desc')
-        ->get();
+            ->orderBy('id_inspeccion', 'desc')
+            ->get();
         $categorias = categorias::all();
         $tipos = tipos::all();
         $clases = clases::all();
@@ -57,18 +57,9 @@ class hologramasActivar extends Controller
     public function index(Request $request)
     {
         $columns = [
-            1 => 'id_solicitud',
-            2 => 'folio',
-            3 => 'id_empresa',
-            4 => 'id_solicitante',
-            5 => 'id_marca',
-            6 => 'cantidad_hologramas',
-            7 => 'id_direccion',
-            8 => 'comentarios',
-            9 => 'tipo_pago',
-            10 => 'fecha_envio',
-            11 => 'costo_envio',
-            12 => 'no_guia'
+            1 => 'id',
+            2 => 'folio_activacion',
+
         ];
 
         $limit = $request->input('length');
@@ -79,27 +70,18 @@ class hologramasActivar extends Controller
 
         $searchValue = $request->input('search.value');
 
-        $query = ModelsSolicitudHolograma::with(['empresa.empresaNumClientes', 'user', 'marcas']);
+        $query = activarHologramasModelo::with(['inspeccion', 'solicitudHolograma.marcas']);
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
-                $q->where('estatus', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('folio', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('id_empresa', 'LIKE', "%{$searchValue}%");
+                $q->where('no_lote_agranel', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('folio_activacion', 'LIKE', "%{$searchValue}%");
 
-                $q->orWhereHas('empresa', function ($Nombre) use ($searchValue) {
-                    $Nombre->where('razon_social', 'LIKE', "%{$searchValue}%");
+                $q->orWhereHas('solicitudHolograma', function ($sql) use ($searchValue) {
+                    $sql->where('folio', 'LIKE', "%{$searchValue}%");
                 });
 
-                $q->orWhereHas('empresa.empresaNumClientes', function ($q) use ($searchValue) {
-                    $q->where('numero_cliente', 'LIKE', "%{$searchValue}%");
-                });
-
-                $q->orWhereHas('user', function ($Solicitante) use ($searchValue) {
-                    $Solicitante->where('name', 'LIKE', "%{$searchValue}%");
-                });
-
-                $q->orWhereHas('marcas', function ($Marca) use ($searchValue) {
+                $q->orWhereHas('solicitudHolograma.marcas', function ($Marca) use ($searchValue) {
                     $Marca->where('marca', 'LIKE', "%{$searchValue}%");
                 });
             });
@@ -108,54 +90,43 @@ class hologramasActivar extends Controller
         $totalData = ModelsSolicitudHolograma::count();
         $totalFiltered = $query->count();
 
-        $users = $query->offset($start)
+        $datos = $query->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
             ->get();
 
         $data = [];
 
-        if ($users->isNotEmpty()) {
+        if ($datos->isNotEmpty()) {
             $ids = $start;
-        
-            foreach ($users as $user) {
-                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
-                $marca = \App\Models\marcas::where('id_marca', $user->id_marca)->value('marca');
-                $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
-                $name = \App\Models\User::where('id', $user->id_solicitante)->value('name');
-        
-                $razon_social = $user->empresa ? $user->empresa->razon_social : '';
-        
-                // Concatenar razon_social y numero_cliente
-                $razonSocialFormatted = '<b>' . $numero_cliente . '</b><br>' . $razon_social;
-        
+
+            foreach ($datos as $dato) {
+
+                $folios = $dato->folios; 
+                $folios = json_decode($folios, true);
+                $rangoFolios = [];
+                for ($i = 0; $i < count($folios['folio_inicial']); $i++) {
+                    $rangoFolios[] = $folios['folio_inicial'][$i] . " - " . $folios['folio_final'][$i];
+                }
+                $mensaje = implode('<br>', $rangoFolios);
+
+
                 $nestedData = [
                     'fake_id' => ++$ids,
-                    'id_solicitud' => $user->id_solicitud,
-                    'folio' => $user->folio,
-                    'id_empresa' => $user->id_empresa,
-                    'id_solicitante' => $name,
-                    'id_marca' => $marca, 
-                    'cantidad_hologramas' => $user->cantidad_hologramas,
-                    'id_direccion' => $direccion,
-                    'comentarios' => $user->comentarios,
-                    'tipo_pago' => $user->tipo_pago,
-                    'fecha_envio' => $user->fecha_envio,
-                    'costo_envio' => $user->costo_envio,
-                    'no_guia' => $user->no_guia,
-                    'estatus' => $user->estatus,
-                    'folio_inicial' => $user->folio_inicial,
-                    'folio_final' => $user->folio_final,
-                    'activados' => $user->cantidadActivados($user->id_solicitud),
-                    'restantes' => max(0, ($user->cantidad_hologramas - $user->cantidadActivados($user->id_solicitud) - $user->cantidadMermas($user->id_solicitud))),
-                    'mermas' => $user->cantidadMermas($user->id_solicitud),
-                    'razon_social' => $razonSocialFormatted, // Aquí asignamos la clave correctamente
-                    'razon_social_pdf' => $user->empresa ? $user->empresa->razon_social : '',
+                    'id' => $dato->id,
+                    'folio_activacion' => $dato->folio_activacion,
+                    'folio_solicitud' => $dato->solicitudHolograma->folio,
+                    'num_servicio' => $dato->inspeccion->num_servicio,
+                    'marca' => $dato->solicitudHolograma->marcas->marca,
+                    'lote_granel' => $dato->no_lote_agranel,
+                    'lote_envasado' => $dato->no_lote_envasado,
+                    'folios' => $mensaje,
+
                 ];
                 $data[] = $nestedData;
             }
         }
-        
+
 
         return response()->json([
             'draw' => intval($request->input('draw')),
@@ -168,40 +139,112 @@ class hologramasActivar extends Controller
 
 
     public function activarHologramas(Request $request)
-{
-    $solicitudes = $request->input('solicitudes'); // Array de solicitudes involucradas
-    $folios = $request->input('folios'); // Array de folios seleccionados
+    {
+        $solicitudes = $request->input('solicitudes'); // Array de solicitudes involucradas
+        $folios = $request->input('folios'); // Array de folios seleccionados
 
-    // Convertimos las cadenas en arrays (si es necesario)
-    if (!is_array($solicitudes)) {
-        $solicitudes = explode(',', $solicitudes);
+        // Convertimos las cadenas en arrays (si es necesario)
+        if (!is_array($solicitudes)) {
+            $solicitudes = explode(',', $solicitudes);
+        }
+        if (!is_array($folios)) {
+            $folios = explode(',', $folios);
+        }
+
+        // Activamos los hologramas
+        $activarHologramas = new activarHologramasModelo();
+        $activarHologramas->activarHologramasDesdeVariasSolicitudes($solicitudes, $folios);
+
+        return response()->json(['message' => 'Hologramas activados correctamente']);
     }
-    if (!is_array($folios)) {
-        $folios = explode(',', $folios);
+
+
+    public function getDatosInpeccion($id_inspeccion)
+    {
+
+        $datos = inspecciones::with('solicitud.lote_envasado')->find($id_inspeccion);
+
+        $numeroCliente = $datos->solicitud->empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
+        $datos->url_acta = $datos->solicitud->documentacion(69)->pluck('url')->toArray();
+        $datos->numero_cliente = $numeroCliente;
+        return response()->json($datos); // Retorna en formato JSON
     }
 
-    // Activamos los hologramas
-    $activarHologramas = new activarHologramasModelo();
-    $activarHologramas->activarHologramasDesdeVariasSolicitudes($solicitudes, $folios);
+    public function verificarFolios(Request $request)
+    {
+        $folio_inicial = $request->input('folio_inicial');
+        $folio_final = $request->input('folio_final');
+        $id_solicitud = $request->input('id_solicitud');
 
-    return response()->json(['message' => 'Hologramas activados correctamente']);
-}
+        // Obtener el rango de folios de la solicitud
+        $solicitud = ModelsSolicitudHolograma::where('id_solicitud', $id_solicitud)->first();
+
+        if (!$solicitud) {
+            return response()->json(['error' => 'La solicitud no existe.'], 400);
+        }
+
+        // Validar que el rango esté dentro del rango de la solicitud
+        if ($folio_inicial < $solicitud->folio_inicial || $folio_final > $solicitud->folio_final) {
+            return response()->json(['error' => 'El rango de folios está fuera del rango permitido por la solicitud.'], 400);
+        }
+
+        // Verificar si los folios ya fueron activados en otras activaciones
+        $activaciones = activarHologramasModelo::where('id_solicitud', $id_solicitud)->get();
+
+        foreach ($activaciones as $activacion) {
+            $folios_activados = json_decode($activacion->folios, true);
 
 
-public function getDatosInpeccion($id_inspeccion){
+            // Recorrer todos los rangos almacenados en el JSON
+            for ($i = 0; $i < count($folios_activados['folio_inicial']); $i++) {
+                $activado_folio_inicial = (int) $folios_activados['folio_inicial'][$i];
+                $activado_folio_final = (int) $folios_activados['folio_final'][$i];
 
-    $datos = inspecciones::with('solicitud.lote_envasado')->find($id_inspeccion);
+                // Verificar si al menos UN folio del nuevo rango ya está activado
+                if (
+                    ($folio_inicial >= $activado_folio_inicial && $folio_inicial <= $activado_folio_final) || // Folio inicial dentro de un rango activado
+                    ($folio_final >= $activado_folio_inicial && $folio_final <= $activado_folio_final) ||     // Folio final dentro de un rango activado
+                    ($folio_inicial <= $activado_folio_inicial && $folio_final >= $activado_folio_final)      // Rango nuevo envuelve al rango activado
+                ) {
+                    return response()->json(['error' => 'Entra dentro del rango activado ' . $activado_folio_inicial . ' y ' . $activado_folio_final . ' de la activación <b>' . $activacion->folio_activacion . '</b>'], 400);
+                }
+            }
+        }
 
-    $numeroCliente = $datos->solicitud->empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
-      return !empty($numero);
-  });
-    $datos->url_acta = $datos->solicitud->documentacion(69)->pluck('url')->toArray();
-    $datos->numero_cliente = $numeroCliente;
-    return response()->json($datos); // Retorna en formato JSON
-}
 
+        return response()->json(['success' => 'El rango de folios está disponible.']);
+    }
 
-    
-
-    
+    //Registrar activar
+    public function storeActivar(Request $request)
+    {
+        $loteEnvasado = new activarHologramasModelo();
+        $loteEnvasado->folio_activacion = $request->folio_activacion;
+        $loteEnvasado->id_inspeccion = $request->id_inspeccion;
+        $loteEnvasado->no_lote_agranel = $request->no_lote_agranel;
+        $loteEnvasado->categoria = $request->categoria;
+        $loteEnvasado->no_analisis = $request->no_analisis;
+        $loteEnvasado->cont_neto = $request->cont_neto;
+        $loteEnvasado->unidad = $request->unidad;
+        $loteEnvasado->clase = $request->clase;
+        $loteEnvasado->contenido = $request->contenido;
+        $loteEnvasado->no_lote_envasado = $request->no_lote_envasado;
+        $loteEnvasado->id_tipo = $request->id_tipo;
+        $loteEnvasado->lugar_produccion = $request->lugar_produccion;
+        $loteEnvasado->lugar_envasado = $request->lugar_envasado;
+        $loteEnvasado->id_solicitud = $request->id_solicitudActivacion;
+        $loteEnvasado->folios = json_encode([
+            'folio_inicial' => $request->rango_inicial,
+            'folio_final' => $request->rango_final, // Puedes agregar otros valores también
+        ]);
+        $loteEnvasado->mermas = json_encode([
+            'mermas' => $request->mermas,
+        ]);
+        //$loteEnvasado->folio_final = $request->id_solicitudActivacion;
+        // Guardar el nuevo lote en la base de datos
+        $loteEnvasado->save();
+        return response()->json(['message' => 'Hologramas activados exitosamente']);
+    }
 }

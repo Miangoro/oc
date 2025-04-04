@@ -14,6 +14,7 @@ class activarHologramasModelo extends Model
     protected $fillable = [
         'id',
         'id_inspeccion',
+        'folio_activacion',
         'no_lote_agranel',
         'categoria',
         'no_analisis',
