@@ -155,8 +155,14 @@ if (dt_user_table.length) {
               var $num_servicio = full['num_servicio'];
               var $folio_solicitud = full['folio_solicitud'];
               var $id_solicitud = full['id_solicitud'];
-              return '<span class="fw-bold">Servicio:</span> ' + $num_servicio +
+              if(full['url_acta']=='Sin subir'){
+                var $acta = '';
+              }else{
+                var $acta = `<i style class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa" data-id="${full['numero_cliente']}/${full['url_acta']}" data-empresa="${full['razon_social']} " data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" ></i>`;
+              }
 
+              return '<span class="fw-bold">Servicio:</span> ' + $num_servicio +
+                '<br>'+$acta+
                 '<br><span class="fw-bold">Solicitud: </span>' + $folio_solicitud +
                 `<i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-id="` + $id_solicitud + `" data-folio="` + $folio_solicitud + `" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
             }
@@ -956,7 +962,7 @@ $(document).on('click', '.pdfDictamen', function ()  {
     });
 });
 
-///FORMATO PDF SOLICITUD DICTAMEN
+///FORMATO PDF SOLICITUD
 $(document).on('click', '.pdfSolicitud', function ()  {
   var id = $(this).data('id');
   var folio = $(this).data('folio');
@@ -975,6 +981,31 @@ $(document).on('click', '.pdfSolicitud', function ()  {
 
     $("#titulo_modal").text("Solicitud de servicios");
     $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
+
+///FORMATO PDF ACTA
+$(document).on('click', '.pdfActa', function () {
+  var id_acta = $(this).data('id');
+  var empresa = $(this).data('empresa');
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+  spinner.show();
+  iframe.hide();
+  
+    //Cargar el PDF con el ID
+    iframe.attr('src', '/files/' + id_acta);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', '/files/' + id_acta).show();
+
+    $("#titulo_modal").text("Acta de inspección");
+    $("#subtitulo_modal").text(empresa);
+
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();

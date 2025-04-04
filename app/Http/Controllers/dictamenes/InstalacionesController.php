@@ -64,9 +64,7 @@ class InstalacionesController extends Controller
         ];
 
         $search = [];
-
         $totalData = Dictamen_instalaciones::count();
-
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -172,13 +170,13 @@ class InstalacionesController extends Controller
         }
 
 
+        //MANDA LOS DATOS AL JS
         $data = [];
 
         if (!empty($users)) {
             $ids = $start;
 
             foreach ($users as $user) {
-                //MANDA LOS DATOS AL JS
                 $nestedData['id_dictamen'] = $user->id_dictamen;
                 $nestedData['tipo_dictamen'] = $user->tipo_dictamen;
                 $empresa = $user->inspeccione->solicitud->empresa;
@@ -247,39 +245,40 @@ class InstalacionesController extends Controller
 
 
 
-    //FUNCION PARA REGISTRAR
-    public function store(Request $request)
-    {
-        try {
-            // Busca la inspección y carga las relaciones necesarias
-            $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
 
-            // Verifica si la inspección y las relaciones existen
-            if (!$instalaciones || !$instalaciones->solicitud || !$instalaciones->solicitud->instalacion) {
-                return response()->json(['error' => 'No se encontró la instalación asociada a la inspección'], 404);
-            }
+//FUNCION PARA REGISTRAR
+public function store(Request $request)
+{
+    try {
+        // Busca la inspección y carga las relaciones necesarias
+        $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
 
-            // Crear y guardar el nuevo dictamen
-            $var = new Dictamen_instalaciones();
-            $var->id_inspeccion = $request->id_inspeccion;
-            $var->tipo_dictamen = $request->tipo_dictamen;
-            $var->id_instalacion = $instalaciones->solicitud->instalacion->id_instalacion;
-            $var->num_dictamen = $request->num_dictamen;
-            $var->fecha_emision = $request->fecha_emision;
-            $var->fecha_vigencia = $request->fecha_vigencia;
-            $var->id_firmante = $request->id_firmante;
-            // $var->categorias = json_encode($request->categorias);
-            // $var->clases = json_encode($request->clases);
-            $var->save(); // Guardar en BD
-
-            return response()->json(['success' => 'Registro agregado correctamente']);
-        } catch (\Exception $e) {
-            // Registrar el error en el log
-
-
-            return response()->json(['error' => 'Ocurrió un error al intentar agregar el registro'], 500);
+        // Verifica si la inspección y las relaciones existen
+        if (!$instalaciones || !$instalaciones->solicitud || !$instalaciones->solicitud->instalacion) {
+            return response()->json(['error' => 'No se encontró la instalación asociada a la inspección'], 404);
         }
+
+        // Crear y guardar el nuevo dictamen
+        $var = new Dictamen_instalaciones();
+        $var->id_inspeccion = $request->id_inspeccion;
+        $var->tipo_dictamen = $request->tipo_dictamen;
+        $var->id_instalacion = $instalaciones->solicitud->instalacion->id_instalacion;
+        $var->num_dictamen = $request->num_dictamen;
+        $var->fecha_emision = $request->fecha_emision;
+        $var->fecha_vigencia = $request->fecha_vigencia;
+        $var->id_firmante = $request->id_firmante;
+        // $var->categorias = json_encode($request->categorias);
+        // $var->clases = json_encode($request->clases);
+        $var->save(); // Guardar en BD
+
+        return response()->json(['success' => 'Registro agregado correctamente']);
+    } catch (\Exception $e) {
+        // Registrar el error en el log
+
+
+        return response()->json(['error' => 'Ocurrió un error al intentar agregar el registro'], 500);
     }
+}
 
 
 
