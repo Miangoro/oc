@@ -121,6 +121,9 @@ class DictamenGranelController extends Controller
                 $nestedData['estatus'] = $dictamen->estatus;
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
+                $nestedData['id_solicitud'] = $dictamen->inspeccione->solicitud->id_solicitud;
+                $nestedData['emision'] = $dictamen->fecha_emision;
+                $nestedData['vigencia'] = $dictamen->fecha_vigencia;
 
                 $caracteristicas = json_decode($dictamen->inspeccione->solicitud->caracteristicas, true);
                 $idLoteGranel = $caracteristicas['id_lote_granel'] ?? null;
@@ -272,6 +275,7 @@ class DictamenGranelController extends Controller
 
 
 
+    ///PDF DICTAMEN
     public function MostrarDictamenGranel($id_dictamen)
     {
         // Obtener los datos del dictamen específico
@@ -337,6 +341,8 @@ class DictamenGranelController extends Controller
     }
 
 
+
+    ///FQ'S
     public function foliofq($id_dictamen)
     {
         try {
@@ -410,50 +416,68 @@ class DictamenGranelController extends Controller
 
 
     ///REEXPEDIR DICTAMEN
-    public function reexpedirDictamen(Request $request, $id_dictamen)
+    public function reexpedirDictamen(Request $request)
     {
-        DB::beginTransaction();
         try {
-            // Validar los datos
-            $validatedData = $request->validate([
-                'num_dictamen' => 'required',
-                'id_inspeccion' => 'required',
-                'fecha_emision' => 'required|date',
-                'fecha_vigencia' => 'required|date',
-                'id_firmante' => 'required',
-                'observaciones' => 'required',
-                'cancelar_reexpedir' => 'required'
+            $request->validate([
+                'accion_reexpedir' => 'required|in:1,2',
+                'observaciones' => 'nullable|string',
             ]);
 
-            // Obtener el dictamen original
-            $dictamenOriginal = Dictamen_Granel::findOrFail($id_dictamen);
+            if ($request->accion_reexpedir == '2') {
+                $request->validate([
+                    'id_dictamen' => 'required|exists:dictamenes_granel,id_dictamen',
+                    'num_dictamen' => 'required|string|max:25',
+                    'id_inspeccion' => 'required|integer',
+                    'fecha_emision' => 'required|date',
+                    'fecha_vigencia' => 'required|date',
+                    'id_firmante' => 'required|integer',
+                ]);
+            }
 
-            // Actualizar el dictamen original con observaciones y estatus
-            $dictamenOriginal->update([
-                'estatus' => 1,
-                'observaciones' => $request->input('observaciones')
-            ]);
+            $dictamen = Dictamen_Granel::findOrFail($request->id_dictamen);
 
-            // Verificar la opción seleccionada
-            if ($request->input('cancelar_reexpedir') == '2') {  // Opción 2: Cancelar y reexpedir
-                // Crear un nuevo dictamen
-                $nuevoDictamen = $dictamenOriginal->replicate();
-                $nuevoDictamen->num_dictamen = $request->input('num_dictamen');
-                $nuevoDictamen->id_empresa = $request->input('id_empresa');
-                $nuevoDictamen->id_inspeccion = $request->input('id_inspeccion');
-                $nuevoDictamen->id_lote_granel = $request->input('id_lote_granel');
-                $nuevoDictamen->fecha_emision = $request->input('fecha_emision');
-                $nuevoDictamen->fecha_vigencia = $request->input('fecha_vigencia');
-                $nuevoDictamen->fecha_servicio = $request->input('fecha_servicio');
+            if ($request->accion_reexpedir == '1') {
+                $dictamen->estatus = 1; 
+                // Decodificar el JSON actual
+                $observacionesActuales = json_decode($dictamen->observaciones, true);
+                // Actualiza solo 'observaciones' sin modificar 'id_certificado_sustituye'
+                $observacionesActuales['observaciones'] = $request->observaciones;
+                // Volver a codificar el array y asignarlo a $certificado->observaciones
+                $dictamen->observaciones = json_encode($observacionesActuales); 
+                $dictamen->save();
+            } elseif ($request->accion_reexpedir == '2') {
+                $dictamen->estatus = 1;
+                    $observacionesActuales = json_decode($dictamen->observaciones, true);
+                    $observacionesActuales['observaciones'] = $request->observaciones;
+                $dictamen->observaciones = json_encode($observacionesActuales);
+                $dictamen->save(); 
+
+                // Crear un nuevo registro de reexpedición
+                $nuevoDictamen = new Dictamen_Granel();
+                $nuevoDictamen->num_dictamen = $request->num_dictamen;
+                $nuevoDictamen->id_inspeccion = $request->id_inspeccion;
+                $nuevoDictamen->fecha_emision = $request->fecha_emision;
+                $nuevoDictamen->fecha_vigencia = $request->fecha_vigencia;
+                $nuevoDictamen->id_firmante = $request->id_firmante;
                 $nuevoDictamen->estatus = 2;
+                $nuevoDictamen->observaciones = json_encode([
+                    'id_sustituye' => $request->id_dictamen,
+                    ]);
+                // Guardar
                 $nuevoDictamen->save();
             }
 
-            DB::commit();
-            return response()->json(['message' => 'Operación realizada con éxito.']);
+            return response()->json(['message' => 'Dictamen procesado correctamente.']);
         } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['message' => 'Error al procesar la operación.', 'error' => $e->getMessage()], 500);
+            Log::error($e);
+            return response()->json(['message' => 'Error al procesar el dictamen.', 'error' => $e->getMessage()], 500);
         }
     }
+
+
+
+
+
+    
 }
