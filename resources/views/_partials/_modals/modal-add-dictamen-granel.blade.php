@@ -1,5 +1,5 @@
-<!--MODAL NUEVO DICTAMEN GRANEL -->
-<div class="modal fade" id="modalAddDictamenGranel" tabindex="-1" aria-hidden="true">
+<!-- MODAL AGREGAR -->
+<div class="modal fade" id="ModalAgregar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
@@ -9,7 +9,7 @@
             </div>
 
             <div class="modal-body">
-                <form id="addNewDictamenGranelForm" method="POST">
+                <form id="FormAgregar" method="POST">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
@@ -69,6 +69,7 @@
                         <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -77,8 +78,8 @@
 
 
 
-<!--MODAL EDITAR DICTAMEN GRANEL -->
-<div class="modal fade" id="modalEditDictamenGranel" tabindex="-1">
+<!-- MODAL EDITAR -->
+<div class="modal fade" id="ModalEditar" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
@@ -88,7 +89,7 @@
             </div>
 
             <div class="modal-body">
-                <form id="addNEditDictamenGranelForm" method="POST">
+                <form id="FormEditar" method="POST">
                     <div class="row">
                         <input type="hidden" id="edit_id_dictamen" name="id_dictamen">
 
@@ -143,11 +144,13 @@
                         </div>
                     </div>
 
+                    
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i> Editar</button>
                         <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
                         aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
+
                 </form>
             </div>
         </div>

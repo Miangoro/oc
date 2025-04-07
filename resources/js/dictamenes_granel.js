@@ -11,7 +11,7 @@ $(document).ready(function () {
       locale: "es",        // idioma a español
   });
 });
-//FECHAS
+//FUNCION FECHAS
 $('#fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
   fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
@@ -26,14 +26,12 @@ $('#fecha_emision').on('change', function() {
       disable: true          
   });
 });
-//FECHAS EDIT
+//FUNCION FECHAS EDIT
 $('#edit_fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
   fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
   var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
   $('#edit_fecha_vigencia').val(fechaVigencia);
-
-  // Deshabilitar la interacción con flatpickr en #edit_fecha_vigencia
   flatpickr("#edit_fecha_vigencia", {
     dateFormat: "Y-m-d",  
     enableTime: false,   
@@ -46,17 +44,16 @@ $('#edit_fecha_emision').on('change', function() {
 
 
 
-
- // Datatable (jquery)
+// Datatable (jquery)
 $(function () {
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
   select2 = $('.select2'),
   userView = baseUrl + 'app/user/view/account',
-  offCanvasForm = $('#modalAddDictamenGranel');
+  offCanvasForm = $('#ModalAgregar');
 
+  //Función para inicializar Select2 en elementos específicos
   var select2Elements = $('.select2');
-  // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
     $elements.each(function () {
       var $this = $(this);
@@ -83,172 +80,124 @@ if (dt_user_table.length) {
     processing: true,
     serverSide: true,
     ajax: {
-      url: baseUrl + 'dictamen-granel-list', // Asegúrate de que esta URL coincida con la ruta en tu archivo de rutas
+      url: baseUrl + 'dictamen-granel-list', //Asegúrate de que esta URL coincida con la ruta en tu archivo de rutas
       type: 'GET'
     },
     columns: [
-      { data: ''},
-      { data: 'num_dictamen' },
-         { data: 'num_servicio' },
-         
-         {
-           data: null, // Se usará null porque combinaremos varios valores
-          
-            render: function(data, type, row) {
-                return `
-                <strong>${data.numero_cliente}</strong><br>
-                    <span style="font-size:11px">${data.razon_social}<span>
-                    
-                `;
-            }
-          },
-      
-        { data: 'nombre_lote' }, // Ajusta el ancho aquí
-         { data: 'fecha_emision'},
-         { data: 'estatus'/*,
-          searchable: false, 
-          orderable: false,
-          render: function (data, type, row) {
-              let color, estatus;
-              if (data == 1) {
-                  color = 'badge rounded-pill bg-danger';
-                  estatus = 'Cancelado';
-              } else if (data == 2) {
-                  color = 'badge rounded-pill bg-success';
-                  estatus = 'Reexpedido';
-              } else {
-                color = 'badge rounded-pill bg-success';
-                estatus = 'Emitido';
-            }
-              // Devolvemos el HTML con el color y el texto que se mostrarán en la tabla
-              return '<span class="' + color + '">' + estatus + '</span>';
-          }*/
-        },
-         
-        { data: 'action' }
+      { data: ''},//0
+      { data: 'num_dictamen' },//1
+      { data: 'num_servicio' },//2
+      { data: null, // Se usará null porque combinaremos varios valores
+          render: function(data, type, row) {
+              return `
+              <strong>${data.numero_cliente}</strong><br>
+                  <span style="font-size:11px">${data.razon_social}<span>
+              `;
+          }
+      },
+      { data: 'nombre_lote' },
+      { data: 'fecha_emision'},
+      { data: 'estatus'},
+      { data: 'action' }
  
-       ],
-       columnDefs: [
-         {
-           className: 'control',
-           searchable: false,
-           orderable: false,
-           responsivePriority: 2,
-           targets: 0,
-           render: function (data, type, full, meta) {
-             return '';
-           }
-         },
-         {
+    ],
+    columnDefs: [
+        {
+          className: 'control',
+          searchable: false,
+          orderable: false,
+          responsivePriority: 2,
+          targets: 0,
+          render: function (data, type, full, meta) {
+            return '';
+          }
+        },
+        {
+          //tabla1
           targets: 1,
           render: function (data, type, full, meta) {
             var $num_dictamen = full['num_dictamen'];
             var $id = full['id_dictamen'];
             return `<small class="fw-bold">`+ $num_dictamen + `</small>` +
-             `<i class="ri-file-pdf-2-fill text-danger ri-28px pdfDictamen cursor-pointer" data-id="` + $id + `" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+              `<i class="ri-file-pdf-2-fill text-danger ri-28px pdfDictamen cursor-pointer" data-id="` + $id + `" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
           }
         }, 
-         {
-            // Tabla 3
-            targets: 2,
-            render: function (data, type, full, meta) {
-              var $num_servicio = full['num_servicio'];
-              var $folio_solicitud = full['folio_solicitud'];
-              var $id_solicitud = full['id_solicitud'];
-              if(full['url_acta']=='Sin subir'){
-                var $acta = '';
-              }else{
-                var $acta = `<i style class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa" data-id="${full['numero_cliente']}/${full['url_acta']}" data-empresa="${full['razon_social']} " data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" ></i>`;
-              }
-
-              return '<span class="fw-bold">Servicio:</span> ' + $num_servicio +
-                '<br>'+$acta+
-                '<br><span class="fw-bold">Solicitud: </span>' + $folio_solicitud +
-                `<i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-id="` + $id_solicitud + `" data-folio="` + $folio_solicitud + `" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+        {
+          //tabla2
+          targets: 2,
+          render: function (data, type, full, meta) {
+            var $num_servicio = full['num_servicio'];
+            var $folio_solicitud = full['folio_solicitud'];
+            var $id_solicitud = full['id_solicitud'];
+            if(full['url_acta']=='Sin subir'){
+              var $acta = '';
+            }else{
+              var $acta = `<i style class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa" data-id="${full['numero_cliente']}/${full['url_acta']}" data-empresa="${full['razon_social']} " data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" ></i>`;
             }
-          }, 
 
-          {
-            targets: 4,
-            responsivePriority: 4,
-            render: function (data, type, full, meta) {
-         
-              // Retorna el badge con el texto y color apropiado
-              return `<b>Lote: </b><small>${full['nombre_lote']}</small><br><b>FQs: </b><small>${full['analisis']}</small>`;
-            }     
-          },
-          {
-            targets: 5, // Suponiendo que este es el índice de la columna que quieres actualizar
-            render: function (data, type, full, meta) {
-                // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
-                var $fecha_emision = full['fecha_emision'] ?? 'N/A'; // Fecha de vigencia
-                var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A'; // Fecha de vencimiento
+            return '<span class="fw-bold">Servicio:</span> ' + $num_servicio +
+              '<span>'+$acta+'</span>'+
+              '<br><span class="fw-bold">Solicitud: </span>' + $folio_solicitud +
+              `<i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-id="` + $id_solicitud + `" data-folio="` + $folio_solicitud + `" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+          }
+        }, 
+        {
+          //tabla4
+          targets: 4,
+          responsivePriority: 4,
+          render: function (data, type, full, meta) {
         
-                // Definir los mensajes de fecha con formato
-                var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span>`;
-                var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span>`;
+            // Retorna el badge con el texto y color apropiado
+            return `<b>Lote: </b><small>${full['nombre_lote']}</small><br><b>FQs: </b><small>${full['analisis']}</small>`;
+          }     
+        },
+        {
+          targets: 5, // Suponiendo que este es el índice de la columna que quieres actualizar
+          render: function (data, type, full, meta) {
+              // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
+              var $fecha_emision = full['fecha_emision'] ?? 'N/A'; // Fecha de vigencia
+              var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A'; // Fecha de vencimiento
+      
+              // Definir los mensajes de fecha con formato
+              var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span>`;
+              var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span>`;
 
-                // Retorna las fechas en formato de columnas
-                return `
-                    <div>
-                        <div>${fechaVigenciaMessage}</div>
-                        <div>${fechaVencimientoMessage}</div>
-                        <div style="text-aling: center" class="small">${full['diasRestantes']}</div>
-                    </div>
-                `;
-            }
-          }, 
-          {
-            ///estatus
-            targets: 6,
-            searchable: false,
-            orderable: false,
-            responsivePriority: 4,
-            render: function (data, type, full, meta) {
-              var $estatus = full['estatus'];
-              var $emision = full['emision'];
-              var $vigencia = full['vigencia'];
-              let estatus;
-                if ($emision > $vigencia) {
-                  estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
-                } else if ($estatus == 1) {
-                    estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
-                } else if ($estatus == 2) {
-                    estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
-                } else {
-                  estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
-                }
-                
-              return estatus;
-            }
-          },
-
-          /*{
-            // User full name
-            targets: 1,
-            responsivePriority: 4,
-            render: function (data, type, full, meta) {
-              var $name = full['num_dictamen'];
-              var stateNum = Math.floor(Math.random() * 6);
-              var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
-              var $state = states[stateNum];
-              var $row_output =
-                '<div class="d-flex justify-content-start align-items-center user-name">' +
-                '<div class="avatar-wrapper">' +
-                '</div>' +
-                '</div>' +
-                '<div class="d-flex flex-column">' +
-                '<span class="fw-medium">' +
-                $name +
-                '</span>' +
-                '</div>' +
-                '</div>';
-              return $row_output;
-            }
-          },*/
+              // Retorna las fechas en formato de columnas
+              return `
+                  <div>
+                      <div>${fechaVigenciaMessage}</div>
+                      <div>${fechaVencimientoMessage}</div>
+                      <div style="text-aling: center" class="small">${full['diasRestantes']}</div>
+                  </div> `;
+          }
+        }, 
+        {
+          ///estatus
+          targets: 6,
+          searchable: false,
+          orderable: false,
+          responsivePriority: 4,
+          render: function (data, type, full, meta) {
+            var $estatus = full['estatus'];
+            var $emision = full['emision'];
+            var $vigencia = full['vigencia'];
+            let estatus;
+              if ($emision > $vigencia) {
+                estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
+              } else if ($estatus == 1) {
+                  estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
+              } else if ($estatus == 2) {
+                  estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+              } else {
+                estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
+              }
+              
+            return estatus;
+          }
+        },
 
       {
-        // Actions botones de eliminar y actualizar(editar)
+        // Actions botones de eliminar y editar
         targets: -1,
         title: 'Acciones',
         searchable: false,
@@ -256,15 +205,13 @@ if (dt_user_table.length) {
         render: function (data, type, full, meta) {
           return (
             '<div class="d-flex align-items-center gap-50">' +
-            /*'<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>'+
-            '</button>' +*/
             `<button class="btn btn-sm dropdown-toggle hide-arrow ` +(full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info')+ `" data-bs-toggle="dropdown">` +
                 (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
             '</button>' +
             '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalEditDictamenGranel" class="dropdown-item waves-effect text-dark edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-              `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalReexDicInsta" class="dropdown-item waves-effect text-black reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
-              `<a data-id="${full['id_dictamen']}" class="dropdown-item waves-effect text-dark delete-record"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
+              `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" class="dropdown-item waves-effect text-dark editar"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+              `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#ModalReexpedir" class="dropdown-item waves-effect text-black reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
+              `<a data-id="${full['id_dictamen']}" class="dropdown-item waves-effect text-dark eliminar"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
               '</div>' +
             '</div>'
           );
@@ -471,7 +418,7 @@ if (dt_user_table.length) {
         className: 'add-new btn btn-primary waves-effect waves-light',
         attr: {
           'data-bs-toggle': 'modal',
-          'data-bs-target': '#modalAddDictamenGranel'
+          'data-bs-target': '#ModalAgregar'
         }
       }
     ],
@@ -511,17 +458,7 @@ if (dt_user_table.length) {
       }
     }
 
-
   });
-
-  // Inicializar tooltips después de renderizar la tabla
-  /*dt_user.on('draw', function () {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-  });*/
-
 }
 
 
@@ -534,15 +471,15 @@ $(function () {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
   });
-
+  
   // Inicializar FormValidation
-  const form = document.getElementById('addNewDictamenGranelForm');
+  const form = document.getElementById('FormAgregar');//id del formulario
   const fv = FormValidation.formValidation(form, {
     fields: {
       'id_inspeccion': {
         validators: {
           notEmpty: {
-            message: 'Selecciona el número de servicio.'
+            message: 'El número de servicio es obligatorio.'
           }
         }
       },
@@ -597,7 +534,6 @@ $(function () {
           }
         }
       },
-      
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -623,8 +559,8 @@ $(function () {
       contentType: false,
       success: function (response) {
         // Ocultar el modal y resetear el formulario
-        $('#modalAddDictamenGranel').modal('hide');
-        $('#addNewDictamenGranelForm')[0].reset();
+        $('#ModalAgregar').modal('hide');
+        $('#FormAgregar')[0].reset();
         $('.select2').val(null).trigger('change');
         $('.datatables-users').DataTable().ajax.reload();
 
@@ -634,7 +570,7 @@ $(function () {
           title: '¡Éxito!',
           text: response.message,
           customClass: {
-            confirmButton: 'btn btn-success'
+            confirmButton: 'btn btn-primary'
           }
         });
       },
@@ -644,7 +580,7 @@ $(function () {
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Error al registrar el dictamen de granel',
+          text: 'Error al registrar',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
@@ -653,33 +589,12 @@ $(function () {
     });
   });
 
-  // Función para actualizar la validación al cambiar la fecha en el datepicker
-  function updateDatepickerValidation() {
-    $('#fecha_vigencia').on('change', function () {
-      fv.revalidateField('fecha_vigencia');
-    });
-
-    $('#fecha_emision').on('change', function () {
-      fv.revalidateField('fecha_emision');
-    });
-  }
-
-  // Función para actualizar la validación al cambiar el valor en los select2
-  function updateSelect2Validation() {
-    $('#id_inspeccion').on('change', function () {
-      fv.revalidateField('id_inspeccion');
-    });
-  }
-  // Llamar a las funciones para actualizar la validación
-  updateDatepickerValidation();
-  updateSelect2Validation();
-
 });
 
 
 
 //ELIMINAR
-$(document).on('click', '.delete-record', function () {
+$(document).on('click', '.eliminar', function () {
   var id_dictamen = $(this).data('id'); // Obtener el ID de la clase
   var dtrModal = $('.dtr-bs-modal.show');
 
@@ -694,11 +609,11 @@ $(document).on('click', '.delete-record', function () {
     text: 'No podrá revertir este evento',
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar',
+    confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+    cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
     customClass: {
-      confirmButton: 'btn btn-primary me-3',
-      cancelButton: 'btn btn-label-secondary'
+      confirmButton: 'btn btn-primary me-2',
+      cancelButton: 'btn btn-danger'
     },
     buttonsStyling: false
   }).then(function (result) {
@@ -717,10 +632,10 @@ $(document).on('click', '.delete-record', function () {
           // Mostrar SweetAlert de éxito
           Swal.fire({
             icon: 'success',
-            title: '¡Eliminado!',
-            text: '¡El dictamen ha sido eliminado correctamente!',
+            title: '¡Exito!',
+            text: 'Eliminado correctamente',
             customClass: {
-              confirmButton: 'btn btn-success'
+              confirmButton: 'btn btn-primary'
             }
           });
         },
@@ -729,8 +644,8 @@ $(document).on('click', '.delete-record', function () {
           // Mostrar SweetAlert de error
           Swal.fire({
             icon: 'error',
-            title: 'Error',
-            text: 'No se pudo eliminar el dictamen.',
+            title: '¡Error!',
+            text: 'Error al eliminar',
             //footer: `<pre>${error.responseText}</pre>`,
             customClass: {
               confirmButton: 'btn btn-danger'
@@ -742,8 +657,8 @@ $(document).on('click', '.delete-record', function () {
     } else if (result.dismiss === Swal.DismissReason.cancel) {
       // Acción cancelada, mostrar mensaje informativo
       Swal.fire({
-        title: 'Cancelado',
-        text: 'La eliminación del dictamen ha sido cancelada',
+        title: '¡Cancelado!',
+        text: 'La eliminación ha sido cancelada',
         icon: 'info',
         customClass: {
           confirmButton: 'btn btn-primary'
@@ -765,9 +680,16 @@ $(function () {
   });
 
   // Inicializar FormValidation para el formulario de creación y edición
-  const form = document.getElementById('addNEditDictamenGranelForm');
+  const form = document.getElementById('FormEditar');
   const fv = FormValidation.formValidation(form, {
     fields: {
+      'id_inspeccion': {
+        validators: {
+          notEmpty: {
+            message: 'El número de servicio es obligatorio.'
+          }
+        }
+      },
       'num_dictamen': {
         validators: {
           notEmpty: {
@@ -775,10 +697,13 @@ $(function () {
           },
         }
       },
-      'id_inspeccion': {
+      'id_firmante': {
         validators: {
           notEmpty: {
-            message: 'Selecciona el número de servicio.'
+            message: 'El nombre del firmante es obligatorio.',
+            enable: function (field) {
+              return !$(field).val();
+            }
           }
         }
       },
@@ -804,16 +729,6 @@ $(function () {
           }
         }
       },
-      'id_firmante': {
-        validators: {
-          notEmpty: {
-            message: 'El nombre del firmante es obligatorio.',
-            enable: function (field) {
-              return !$(field).val();
-            }
-          }
-        }
-      }
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -838,13 +753,13 @@ $(function () {
       processData: false,
       success: function (response) {
         dt_user.ajax.reload();
-        $('#modalEditDictamenGranel').modal('hide');
+        $('#ModalEditar').modal('hide');
         Swal.fire({
           icon: 'success',
           title: '¡Éxito!',
-          text: response.message,
+          text: 'Actualizado correctamente',
           customClass: {
-            confirmButton: 'btn btn-success'
+            confirmButton: 'btn btn-primary'
           }
         });
       },
@@ -857,8 +772,8 @@ $(function () {
 
           Swal.fire({
             icon: 'error',
-            title: 'Error',
-            html: errorMessages,
+            title: '¡Error!',
+            html: 'Error al actualizar',
             customClass: {
               confirmButton: 'btn btn-danger'
             }
@@ -866,8 +781,8 @@ $(function () {
         } else {
           Swal.fire({
             icon: 'error',
-            title: 'Error',
-            text: 'Ha ocurrido un error al actualizar el dictamen.',
+            title: '¡Error!',
+            text: 'Error al actualizar',
             customClass: {
               confirmButton: 'btn btn-danger'
             }
@@ -877,8 +792,8 @@ $(function () {
     });
   });
 
-  // Función del botón de editar para cargar los datos del dictamen
-  $(document).on('click', '.edit-record', function () {
+  // Función para cargar los datos del dictamen
+  $(document).on('click', '.editar', function () {
     var id_dictamen = $(this).data('id');
     $('#edit_id_dictamen').val(id_dictamen);
 
@@ -887,7 +802,7 @@ $(function () {
       method: 'GET',
       success: function (data) {
         if (data.success) {
-          var dictamen = data.dictamen;
+          var dictamen = data.id;//controller "funcion edit"
           // Asignar valores a los campos del formulario
           $('#edit_num_dictamen').val(dictamen.num_dictamen);
           $('#edit_id_inspeccion').val(dictamen.id_inspeccion).trigger('change');
@@ -895,12 +810,12 @@ $(function () {
           $('#edit_fecha_vigencia').val(dictamen.fecha_vigencia);
           $('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');
           // Mostrar el modal
-          $('#modalEditDictamenGranel').modal('show');
+          $('#ModalEditar').modal('show');
         } else {
           Swal.fire({
             icon: 'error',
-            title: 'Error',
-            text: 'No se pudo cargar los datos del dictamen a granel.',
+            title: '¡Error!',
+            text: 'Error al cargar los datos',
             customClass: {
               confirmButton: 'btn btn-danger'
             }
@@ -908,11 +823,11 @@ $(function () {
         }
       },
       error: function (error) {
-        console.error('Error al cargar los datos del dictamen a granel:', error);
+        console.error('Error al cargar los datos:', error);
         Swal.fire({
           icon: 'error',
-          title: 'Error',
-          text: 'No se pudo cargar los datos del dictamen a granel.',
+          title: '¡Error!',
+          text: 'Error al cargar los datos',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
@@ -921,23 +836,11 @@ $(function () {
     });
   });
 
-  // Función para actualizar la validación al cambiar la fecha en el datepicker
-  function updateDatepickerValidation() {
-    $('#edit_fecha_emision').on('change', function () {
-      fv.revalidateField('fecha_emision');
-    });
-
-    $('#edit_fecha_vigencia').on('change', function () {
-      fv.revalidateField('fecha_vigencia');
-    });
-  }
-  // Llamar a la función para actualizar la validación
-  updateDatepickerValidation();
 });
 
 
 
-///VER PDF DICTAMEN
+///FORMATO PDF DICTAMEN
 $(document).on('click', '.pdfDictamen', function ()  {
   var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
   var pdfUrl = '/dictamen_granel/' + id; //Ruta del PDF
@@ -961,6 +864,7 @@ $(document).on('click', '.pdfDictamen', function ()  {
       iframe.show();
     });
 });
+
 
 ///FORMATO PDF SOLICITUD
 $(document).on('click', '.pdfSolicitud', function ()  {
@@ -987,6 +891,7 @@ $(document).on('click', '.pdfSolicitud', function ()  {
       iframe.show();
     });
 });
+
 
 ///FORMATO PDF ACTA
 $(document).on('click', '.pdfActa', function () {
@@ -1123,28 +1028,29 @@ let isLoadingData = false;
 let fieldsValidated = []; 
 
 $(document).ready(function () {
-    $(document).on('click', '.reexpedir', function () {
-        var id_dictamen = $(this).data('id');
-        console.log('ID Dictamen para reexpedir:', id_dictamen);
-        $('#reexpedir_id_dictamen').val(id_dictamen);
-        $('#modalReexDicInsta').modal('show');
-    });
 
-    //funcion fechas
-    $('#fecha_emision_rex').on('change', function () {
-        var fecha_emision = $(this).val();
-        if (fecha_emision) {
-            var fecha = moment(fecha_emision, 'YYYY-MM-DD');
-            var fecha_vigencia = fecha.add(1, 'years').format('YYYY-MM-DD');
-            $('#fecha_vigencia_rex').val(fecha_vigencia);
-        }
-    });
+  $(document).on('click', '.reexpedir', function () {
+      var id_dictamen = $(this).data('id');
+      console.log('ID Dictamen para reexpedir:', id_dictamen);
+      $('#rex_id_dictamen').val(id_dictamen);
+      $('#ModalReexpedir').modal('show');
+  });
+
+  //funcion fechas
+  $('#rex_fecha_emision').on('change', function () {
+      var fecha_emision = $(this).val();
+      if (fecha_emision) {
+          var fecha = moment(fecha_emision, 'YYYY-MM-DD');
+          var fecha_vigencia = fecha.add(1, 'years').format('YYYY-MM-DD');
+          $('#rex_fecha_vigencia').val(fecha_vigencia);
+      }
+  });
 
 
   $(document).on('change', '#accion_reexpedir', function () {
     var accionSeleccionada = $(this).val();
     console.log('Acción seleccionada:', accionSeleccionada);
-    var id_dictamen = $('#reexpedir_id_dictamen').val();
+    var id_dictamen = $('#rex_id_dictamen').val();
 
       if (accionSeleccionada && !isLoadingData) {
           isLoadingData = true;
@@ -1164,163 +1070,170 @@ $(document).ready(function () {
   
       $.get(`/dictamenes/productos/${id_dictamen}/edit`).done(function (data) {
       console.log('Respuesta completa:', data);
-      var dictamen = data.dictamen;
+      var dictamen = data.id;
   
-            if (data.error) {
-                showError(data.error);
-                return;
-            }
+          if (data.error) {
+              showError(data.error);
+              return;
+          }
 
-            $('#id_inspeccion_rex').val(dictamen.id_inspeccion).trigger('change');
-            $('#numero_dictamen_rex').val(dictamen.num_dictamen);
-            $('#id_firmante_rex').val(dictamen.id_firmante).trigger('change');
-            $('#fecha_emision_rex').val(dictamen.fecha_emision);
-            $('#fecha_vigencia_rex').val(dictamen.fecha_vigencia);
-            //$('#observaciones_rex').val(dictamen.observaciones);
+          $('#rex_id_inspeccion').val(dictamen.id_inspeccion).trigger('change');
+          $('#rex_numero_dictamen').val(dictamen.num_dictamen);
+          $('#rex_id_firmante').val(dictamen.id_firmante).trigger('change');
+          $('#rex_fecha_emision').val(dictamen.fecha_emision);
+          $('#rex_fecha_vigencia').val(dictamen.fecha_vigencia);
 
-            $('#accion_reexpedir').trigger('change'); 
-            isLoadingData = false;
-
+          $('#accion_reexpedir').trigger('change'); 
+          isLoadingData = false;
 
 
-
-  
       }).fail(function () {
-              showError('No se pudieron cargar los datos para la reexpedición.');
+              showError('Error al cargar los datos');
               isLoadingData = false;
         });
   }
   
   function clearFields() {
-      $('#numero_dictamen_rex').val('');
-      $('#id_firmante_rex').val('');
-      $('#fecha_emision_rex').val('');
-      $('#fecha_vigencia_rex').val('');
-      $('#observaciones_rex').val('');
+      $('#rex_id_inspeccion').val('');
+      $('#rex_numero_dictamen').val('');
+      $('#rex_id_firmante').val('');
+      $('#rex_fecha_emision').val('');
+      $('#rex_fecha_vigencia').val('');
+      $('#rex_observaciones').val('');
   }
 
   function showError(message) {
       Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: message,
+          text: 'Error al cargar los datos',
           customClass: {
               confirmButton: 'btn btn-danger'
           }
       });
   }
 
-  $('#modalReexDicInsta').on('hidden.bs.modal', function () {
-      $('#formReexDicInsta')[0].reset();
+  $('#ModalReexpedir').on('hidden.bs.modal', function () {
+      $('#FormReexpedir')[0].reset();
       clearFields();
       $('#campos_condicionales').hide();
       fieldsValidated = []; 
   });
 
-    const formReexpedir = document.getElementById('formReexDicInsta');
-    const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
-        fields: {
-            'accion_reexpedir': {
-                validators: {
-                    notEmpty: {
-                        message: 'Debes seleccionar una acción.'
-                    }
-                }
-            },
-            'observaciones': {
-                validators: {
-                    notEmpty: {
-                        message: 'El motivo de cancelación es obligatorio.'
-                    }
-                }
-            },
-            'id_inspeccion': {
-                validators: {
-                    notEmpty: {
-                        message: 'Debes seleccionar una acción.'
-                    }
-                }
-            },
-            'num_dictamen': {
-                validators: {
-                    notEmpty: {
-                        message: 'El número de dictamen es obligatorio.'
-                    }
-                }
-            },
-            'id_firmante': {
-                validators: {
-                    notEmpty: {
-                        message: 'Debes seleccionar una acción.'
-                    }
-                }
-            },
-            'fecha_emision': {
-                validators: {
-                    notEmpty: {
-                        message: 'Debes seleccionar una acción.'
-                    }
-                }
-            },
-            'fecha_vigencia': {
-                validators: {
-                    notEmpty: {
-                        message: 'Debes seleccionar una acción.'
-                    }
-                }
-            },
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: '.form-floating'
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-    }).on('core.form.valid', function () {
-        const formData = $(formReexpedir).serialize();
 
-        $.ajax({
-            url: $(formReexpedir).attr('action'),
-            method: 'POST',
-            data: formData,
-            success: function (response) {
-                $('#modalReexDicInsta').modal('hide');
-                formReexpedir.reset();
-
-                dt_user_table.DataTable().ajax.reload();
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.message,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
-            },
-            error: function (jqXHR) {
-                console.log('Error en la solicitud:', jqXHR);
-                let errorMessage = 'No se pudo registrar la reexpedición. Por favor, verifica los datos.';
-                try {
-                    let response = JSON.parse(jqXHR.responseText);
-                    errorMessage = response.message || errorMessage;
-                } catch (e) {
-                    console.error('Error al parsear la respuesta del servidor:', e);
+  const formReexpedir = document.getElementById('FormReexpedir');
+  const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
+      fields: {
+        'accion_reexpedir': {
+            validators: {
+                notEmpty: {
+                    message: 'Debes seleccionar una acción.'
                 }
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: errorMessage,
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
             }
-        });
-    });
+        },
+        'observaciones': {
+            validators: {
+                notEmpty: {
+                    message: 'El motivo de cancelación es obligatorio.'
+                }
+            }
+        },
+        'id_inspeccion': {
+            validators: {
+                notEmpty: {
+                    message: 'El número de servicio es obligatorio.'
+                }
+            }
+        },
+        'num_dictamen': {
+            validators: {
+                notEmpty: {
+                    message: 'El número de dictamen es obligatorio.'
+                }
+            }
+        },
+        'id_firmante': {
+            validators: {
+                notEmpty: {
+                    message: 'El nombre del firmante es obligatorio.'
+                }
+            }
+        },
+        'fecha_emision': {
+          validators: {
+            notEmpty: {
+              message: 'La fecha de emisión es obligatoria.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+            }
+          }
+        },
+        'fecha_vigencia': {
+          validators: {
+            notEmpty: {
+              message: 'La fecha de vigencia es obligatoria.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+            }
+          }
+        },
+      },
+      plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+              eleValidClass: '',
+              eleInvalidClass: 'is-invalid',
+              rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+  }).on('core.form.valid', function () {
+      const formData = $(formReexpedir).serialize();
+
+      $.ajax({
+          url: $(formReexpedir).attr('action'),
+          method: 'POST',
+          data: formData,
+          success: function (response) {
+              $('#ModalReexpedir').modal('hide');
+              formReexpedir.reset();
+
+              dt_user_table.DataTable().ajax.reload();
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.message,
+                  customClass: {
+                      confirmButton: 'btn btn-primary'
+                  }
+              });
+          },
+          error: function (jqXHR) {
+              console.log('Error en la solicitud:', jqXHR);
+              let errorMessage = 'No se pudo registrar. Por favor, verifica los datos.';
+              try {
+                  let response = JSON.parse(jqXHR.responseText);
+                  errorMessage = response.message || errorMessage;
+              } catch (e) {
+                  console.error('Error al parsear la respuesta del servidor:', e);
+              }
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Error al registrar',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+      });
+  });
+
 });
 
 

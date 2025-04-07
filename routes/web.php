@@ -684,9 +684,8 @@ Route::post('dictamenes-granel',[DictamenGranelController::class, 'store'])->nam
 route::get('/dictamenes/productos/{id_dictamen}/edit', [DictamenGranelController::class, 'edit'])->name('dictamenes.edit');
 Route::post('/dictamenes/productos/{id_dictamen}/update', [DictamenGranelController::class, 'update'])->name('dictamen.update');
 Route::get('/dictamenes/productos/{id_dictamen}/foliofq', [DictamenGranelController::class, 'foliofq'])->name('dictamenes.foliofq');
-//Route::post('/dictamenes/productos/{id_dictamen}/reexpedir', [DictamenGranelController::class, 'reexpedirDictamen'])->name('dictamenes.reexpedir');
 //Reexpedir
-Route::post('/registrar/reexpedir2', [DictamenGranelController::class, 'reexpedirDictamen'])->name('dic-insta.reex');
+Route::post('/registrar/reexpedir2', [DictamenGranelController::class, 'reexpedir'])->name('dic-granel.reex');
 
 /*------------------- PDFS de Dictamenes a granel -------------------*/
 // Ruta para el PDF con ID

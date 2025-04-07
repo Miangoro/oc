@@ -228,7 +228,7 @@ public function MostrarDictamenExportacion($id_dictamen)
     $data = Dictamen_Exportacion::find($id_dictamen);
 
     if (!$data) {
-        return abort(404, 'Dictamen no encontrado');
+        return abort(404, 'Registro no encontrado');
     }
 
     // Verifica qué valor tiene esta variable
