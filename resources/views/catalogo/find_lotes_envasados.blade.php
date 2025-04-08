@@ -1,5 +1,5 @@
 @extends('layouts/layoutMaster')
-@section('title', 'Catálo de lotes envasados')
+@section('title', 'Lotes envasado')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
