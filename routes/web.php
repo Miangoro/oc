@@ -217,6 +217,7 @@ use App\Http\Controllers\hologramas\hologramasACtivar;
 use App\Http\Controllers\insertar_datos_bd_actas;
 use App\Http\Controllers\insertar_datos_bd_dictamenes_graneles;
 use App\Http\Controllers\insertar_datos_bd_lotes_envasado;
+use App\Http\Controllers\permisos\permisosController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -601,19 +602,29 @@ Route::post('/destinos-register/{id_direccion}', [DestinosController::class, 'st
  */route::post('/destinos-update/{id_direccion}', [DestinosController::class, 'update'])->name('destinos.update');
 
 //Usuarios
-Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
-Route::resource('/user-list', UsuariosController::class);
-Route::get('/pdf_asignacion_usuario/{id}', [UsuariosController::class, 'pdfAsignacionUsuario'])->name('pdf_asignacion_usuario');
+Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes')->middleware(['auth']);
+Route::resource('/user-list', UsuariosController::class)->middleware(['auth']);
+Route::get('/pdf_asignacion_usuario/{id}', [UsuariosController::class, 'pdfAsignacionUsuario'])->name('pdf_asignacion_usuario')->middleware(['auth']);
 
-Route::get('/usuarios/inspectores', [UsuariosInspectoresController::class, 'inspectores'])->name('usuarios-inspectores');
-Route::resource('/inspectores-list', UsuariosInspectoresController::class);
+Route::get('/usuarios/inspectores', [UsuariosInspectoresController::class, 'inspectores'])->name('usuarios-inspectores')->middleware(['auth']);
+Route::resource('/inspectores-list', UsuariosInspectoresController::class)->middleware(['auth']);
 
-Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal'])->name('usuarios-personal');
-Route::resource('/personal-list', UsuariosPersonalController::class);
+Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal'])->name('usuarios-personal')->middleware(['auth']);
+Route::resource('/personal-list', UsuariosPersonalController::class)->middleware(['auth']);
 
 //Consejo usuarios
-Route::get('/usuarios/consejo', [UsuariosConsejoController::class, 'consejo'])->name('usuarios-consejo');
-Route::resource('/consejo-list', UsuariosConsejoController::class);
+Route::get('/usuarios/consejo', [UsuariosConsejoController::class, 'consejo'])->name('usuarios-consejo')->middleware(['auth']);
+Route::resource('/consejo-list', UsuariosConsejoController::class)->middleware(['auth']);
+
+Route::middleware(['auth'])->group(function () {
+
+    // Ruta específica para encontrar roles
+    Route::get('/find_roles', [permisosController::class, 'find_roles'])
+        ->name('usuarios-clientes');
+
+    // Rutas RESTful para permisosController
+    Route::resource('permisos', permisosController::class); // usa "permisos" como nombre base
+});
 
 //Documentacion
 Route::middleware(['auth'])->group(function () {
