@@ -16,7 +16,7 @@
                                 <select id="id_inspeccion" name="id_inspeccion" class="select2 form-select" data-placeholder="Selecciona el número de servicio">
                                     <option value="" disabled selected> </option>
                                     @foreach ($inspecciones as $inspeccion)
-                                        <option value="{{ $inspeccion->id_inspeccion }}">{{ $inspeccion->num_servicio }}
+                                        <option value="{{ $inspeccion->id_inspeccion }}">{{ $inspeccion->num_servicio }} | {{ $inspeccion->solicitud->folio }} | {{ $inspeccion->solicitud->instalacion->direccion_completa ?? '' }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -98,7 +98,7 @@
                                 <select id="edit_id_inspeccion" name="id_inspeccion" class="select2 form-select" data-placeholder="Selecciona el número de servicio">
                                     <option value="" disabled selected> </option>
                                     @foreach ($inspecciones as $inspeccion)
-                                        <option value="{{ $inspeccion->id_inspeccion }}">{{ $inspeccion->num_servicio }}
+                                        <option value="{{ $inspeccion->id_inspeccion }}">{{ $inspeccion->num_servicio }} | {{ $inspeccion->solicitud->folio }} | {{ $inspeccion->solicitud->instalacion->direccion_completa ?? '' }}
                                         </option>
                                     @endforeach
                                 </select>

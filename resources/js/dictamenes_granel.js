@@ -679,7 +679,7 @@ $(function () {
     }
   });
 
-  // Inicializar FormValidation para el formulario de creación y edición
+  // Inicializar FormValidation para el formulario
   const form = document.getElementById('FormEditar');
   const fv = FormValidation.formValidation(form, {
     fields: {
@@ -752,7 +752,7 @@ $(function () {
       contentType: false,
       processData: false,
       success: function (response) {
-        dt_user.ajax.reload();
+        dt_user.ajax.reload(); //Recarga los datos en el datatable
         $('#ModalEditar').modal('hide');
         Swal.fire({
           icon: 'success',
@@ -808,9 +808,18 @@ $(function () {
           $('#edit_id_inspeccion').val(dictamen.id_inspeccion).trigger('change');
           $('#edit_fecha_emision').val(dictamen.fecha_emision);
           $('#edit_fecha_vigencia').val(dictamen.fecha_vigencia);
-          $('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');
+          $('#edit_id_firmante').val(dictamen.id_firmante).prop('selected', true).change();
+        //$('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');//funciona igual que arriba
+        
+          flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
+            dateFormat: "Y-m-d",
+            enableTime: false,
+            allowInput: true,
+            locale: "es"
+          });
           // Mostrar el modal
           $('#ModalEditar').modal('show');
+
         } else {
           Swal.fire({
             icon: 'error',
@@ -1085,6 +1094,13 @@ $(document).ready(function () {
 
           $('#accion_reexpedir').trigger('change'); 
           isLoadingData = false;
+
+          flatpickr("#rex_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
+            dateFormat: "Y-m-d",
+            enableTime: false,
+            allowInput: true,
+            locale: "es"
+          });
 
 
       }).fail(function () {

@@ -48,6 +48,7 @@ class DictamenGranelController extends Controller  {
     public function index(Request $request)  {
         
         $columns = [
+        //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
             1 => 'id_dictamen',
             2 => 'num_dictamen',
             3 => 'id_empresa',
