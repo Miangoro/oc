@@ -3,13 +3,13 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 class="modal-title">Nuevo dictamen de exportación</h5>
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Nuevo dictamen de exportación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
-                <form id="NuevoDictamenExport">
+                <form id="NuevoDictamenExport" method="POST">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
@@ -33,7 +33,6 @@
                                 <label for="">No. de dictamen</label>
                             </div>
                         </div>
-                        <!-- Firmante -->
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante">
@@ -55,7 +54,6 @@
                                 <label for="">Fecha de emisión</label>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="text" placeholder="YYYY-MM-DD"
@@ -67,9 +65,9 @@
 
 
                     <div class="d-flex mt-6 justify-content-center">
-                        <button type="submit" class="btn btn-primary me-2">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -80,19 +78,19 @@
 
 
 <!-- Offcanvas EDITAR -->
-<div class="modal fade" id="editDictExpor" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="editDictExpor" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 class="modal-title">Editar dictamen de exportación</h5>
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Editar dictamen de exportación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
-                <form id="EditarDictamenExport">
+                <form id="EditarDictamenExport" method="POST">
                     <div class="row">
-                        <input type="hidden" name="id_dictamen" id="edit_id_dictamen" value="">
+                        <input type="hidden" name="id_dictamen" id="edit_id_dictamen">
 
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
@@ -115,7 +113,6 @@
                                 <label for="">No. de dictamen</label>
                             </div>
                         </div>
-                        <!-- Firmante -->
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-3">
                                 <select class="select2 form-select" id="edit_id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
@@ -136,7 +133,6 @@
                                 <label for="">Fecha de emisión</label>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="text" placeholder="YYYY-MM-DD"
@@ -148,13 +144,11 @@
 
 
                     <div class="d-flex mt-6 justify-content-center">
-                        <button type="submit" class="btn btn-primary me-2">Editar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
-
-
                 
             </div>
         </div>

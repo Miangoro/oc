@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Dictámenes de Exportación')
+@section('title', 'Dictámenes de exportación')
 
 <!-- Vendor Styles -->
 @section('vendor-style')

@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\certificados;
 
-use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Helpers\Helpers;
 use App\Models\Certificado_Exportacion;
 use App\Models\Dictamen_Exportacion; 
 use App\Models\User;
 use App\Models\empresa; 
 use App\Models\Revisor; 
-use App\Models\direcciones; 
 use App\Models\lotes_envasado;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -21,7 +20,8 @@ use Illuminate\Support\Facades\Log;
 class Certificado_ExportacionController extends Controller
 {
 
-  public function UserManagement()
+    
+    public function UserManagement()
     {
         $certificado = Certificado_Exportacion::all(); // Obtener todos los datos
         $dictamen = Dictamen_Exportacion::all();
@@ -43,96 +43,93 @@ public function index(Request $request)
         4 => 'fecha_emision',
     ];
 
-        $search = [];
-        
-        $totalData = Certificado_Exportacion::count();
+    $search = [];
+    $totalData = Certificado_Exportacion::count();
+    $totalFiltered = $totalData;
 
-        $totalFiltered = $totalData;
-
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
+    $limit = $request->input('length');
+    $start = $request->input('start');
+    $order = $columns[$request->input('order.0.column')];
+    $dir = $request->input('order.0.dir');
 
 
-        if (empty($request->input('search.value'))) {
-            // ORDENAR EL BUSCADOR "thead"
-            $users = Certificado_Exportacion::where('id_dictamen', 'LIKE', "%{$request->input('search.value')}%")
-            ->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir)
-            ->get();
+    if (empty($request->input('search.value'))) {
+        // ORDENAR EL BUSCADOR "thead"
+        $users = Certificado_Exportacion::where('id_dictamen', 'LIKE', "%{$request->input('search.value')}%")
+        ->offset($start)
+        ->limit($limit)
+        ->orderBy($order, $dir)
+        ->get();
 
-        } else {
-            // BUSCADOR
-            $search = $request->input('search.value');
-        
-            // Consulta con filtros
-        $query = Certificado_Exportacion::where('id_dictamen', 'LIKE', "%{$search}%")
+    } else {
+    // BUSCADOR
+    $search = $request->input('search.value');
+
+    // Consulta con filtros
+    $query = Certificado_Exportacion::where('id_dictamen', 'LIKE', "%{$search}%")
+    ->where("id_dictamen", 1)
+    ->orWhere('num_certificado', 'LIKE', "%{$search}%");
+
+    $users = $query->offset($start)
+        ->limit($limit)
+        ->orderBy($order, $dir)
+        ->get();
+
+    $totalFiltered = Certificado_Exportacion::where('id_dictamen', 'LIKE', "%{$search}%")
         ->where("id_dictamen", 1)
-        ->orWhere('num_certificado', 'LIKE', "%{$search}%");
+        ->orWhere('num_certificado', 'LIKE', "%{$search}%")
+        ->count();
+    }
+    
 
-        $users = $query->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir)
-            ->get();
-  
-        $totalFiltered = Certificado_Exportacion::where('id_dictamen', 'LIKE', "%{$search}%")
-          ->where("id_dictamen", 1)
-          ->orWhere('num_certificado', 'LIKE', "%{$search}%")
-          ->count();
+    //MANDA LOS DATOS AL JS
+    $data = [];
+
+    if (!empty($users)) {
+        $ids = $start;
+        foreach ($users as $user) {
+            $nestedData['id_certificado'] = $user->id_certificado;
+            $nestedData['dictamen'] = $user->dictamen->id_dictamen;
+            $nestedData['num_certificado'] = $user->num_certificado;
+            $nestedData['estatus'] = $user->estatus;
+            ///Folio y no. servicio
+            $nestedData['folio'] = $user->dictamen->inspeccione->solicitud->folio;
+            $nestedData['n_servicio'] = $user->dictamen->inspeccione->num_servicio;
+            //Nombre y Numero empresa
+            $empresa = $user->dictamen->inspeccione->solicitud->empresa;
+            $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+            ? $empresa->empresaNumClientes
+                ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
+            : 'N/A';
+            $nestedData['numero_cliente'] = $numero_cliente;
+            $nestedData['razon_social'] = $user->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
+            //Fecha emisión y vigencia
+            $fecha_emision = Helpers::formatearFecha($user->fecha_emision);
+            $fecha_vigencia = Helpers::formatearFecha($user->fecha_vigencia);
+            $nestedData['fechas'] = '<b>Expedición: </b>' .$fecha_emision. '<br> <b>Vigencia: </b>' .$fecha_vigencia;
+            //Revisiones
+            $nestedData['id_revisor'] = $user->revisor && $user->revisor->user ? $user->revisor->user->name : 'Sin asignar';
+            $nestedData['id_revisor2'] = $user->revisor && $user->revisor->user2 ? $user->revisor->user2->name : 'Sin asignar';
+            
+            $data[] = $nestedData;
         }
-        
+    }
 
-        $data = [];
-
-        if (!empty($users)) {
-            $ids = $start;
-
-            foreach ($users as $user) {
-            //MANDA LOS DATOS AL JS
-                $nestedData['id_certificado'] = $user->id_certificado;
-                $nestedData['dictamen'] = $user->dictamen->id_dictamen;
-                $nestedData['num_certificado'] = $user->num_certificado;
-                $nestedData['estatus'] = $user->estatus;
-                ///Folio y no. servicio
-                $nestedData['folio'] = $user->dictamen->inspeccione->solicitud->folio;
-                $nestedData['n_servicio'] = $user->dictamen->inspeccione->num_servicio;
-                //Nombre y Numero empresa
-                $empresa = $user->dictamen->inspeccione->solicitud->empresa;
-                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                ? $empresa->empresaNumClientes
-                    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-                : 'N/A';
-                $nestedData['numero_cliente'] = $numero_cliente;
-                $nestedData['razon_social'] = $user->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
-                //Fecha emisión y vigencia
-                $fecha_emision = Helpers::formatearFecha($user->fecha_emision);
-                $fecha_vigencia = Helpers::formatearFecha($user->fecha_vigencia);
-                $nestedData['fechas'] = '<b>Expedición: </b>' .$fecha_emision. '<br> <b>Vigencia: </b>' .$fecha_vigencia;
-                //Revisiones
-                $nestedData['id_revisor'] = $user->revisor && $user->revisor->user ? $user->revisor->user->name : 'Sin asignar';
-                $nestedData['id_revisor2'] = $user->revisor && $user->revisor->user2 ? $user->revisor->user2->name : 'Sin asignar';
-                
-                $data[] = $nestedData;
-            }
-        }
-
-        if ($data) {
-            return response()->json([
-                'draw' => intval($request->input('draw')),
-                'recordsTotal' => intval($totalData),
-                'recordsFiltered' => intval($totalFiltered),
-                'code' => 200,
-                'data' => $data,
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'Internal Server Error',
-                'code' => 500,
-                'data' => [],
-            ]);
-        }
+    if ($data) {
+        return response()->json([
+            'draw' => intval($request->input('draw')),
+            'recordsTotal' => intval($totalData),
+            'recordsFiltered' => intval($totalFiltered),
+            'code' => 200,
+            'data' => $data,
+        ]);
+    } else {
+        return response()->json([
+            'message' => 'Internal Server Error',
+            'code' => 500,
+            'data' => [],
+        ]);
+    }
 }
 
 
