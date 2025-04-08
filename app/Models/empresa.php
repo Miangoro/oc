@@ -77,12 +77,12 @@ class empresa extends Model
     public function todos_lotes_envasado()
     {
         // Obtener los IDs de maquiladoras asociadas a la empresa
-        $idsMaquiladoras = maquiladores_model::where('id_maquilador', $this->id_empresa)
-            ->pluck('id_maquiladora')
+        $idsMaquiladoras = maquiladores_model::where('id_maquiladora', $this->id_empresa)
+            ->pluck('id_maquilador')
             ->toArray();
 
         // Buscar los lotes de envasado correspondientes, incluyendo relaciones anidadas
-        return lotes_envasado::whereIn('id_empresa', $idsMaquiladoras)
+        return lotes_envasado::whereIn('id_empresa', [38])
             ->get();
     }
 
