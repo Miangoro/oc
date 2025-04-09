@@ -74,6 +74,18 @@ class empresa extends Model
     return lotes_envasado::where('id_empresa', $this->id_empresa)->with('lotes_envasado_granel.lotes_granel')->get();
     }
 
+    public function todos_lotes_envasado()
+    {
+        // Obtener los IDs de maquiladoras asociadas a la empresa
+        $idsMaquiladoras = maquiladores_model::where('id_maquiladora', $this->id_empresa)
+            ->pluck('id_maquilador')
+            ->toArray();
+
+        // Buscar los lotes de envasado correspondientes, incluyendo relaciones anidadas
+        return lotes_envasado::whereIn('id_empresa', [38])
+            ->get();
+    }
+
 /*
     public function marcas(){
         return marcas::where('id_empresa', $this->id_empresa)->get();
