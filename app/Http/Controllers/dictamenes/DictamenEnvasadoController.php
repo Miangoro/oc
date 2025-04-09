@@ -18,6 +18,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\ValidationException;
+
 
 class DictamenEnvasadoController extends Controller
 {
@@ -290,49 +300,6 @@ public function update(Request $request, $id_dictamen_envasado)
 
      
 ///REEXPEDIR
-/*public function reexpedirDictamen(Request $request, $id_dictamen_envasado)
-{
-    DB::beginTransaction();
-    try {
-        // Validar los datos
-        $validatedData = $request->validate([
-            'num_dictamen' => 'required',
-            'id_inspeccion' => 'required',
-            'fecha_emision' => 'required|date',
-            'fecha_vigencia' => 'required|date',
-            'id_firmante' => 'required',
-            'observaciones' => 'required',
-            'cancelar_reexpedir' => 'required'
-        ]);
-
-        // Obtener el dictamen original
-        $dictamenOriginal = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
-        // Actualizar el dictamen original con observaciones y estatus
-        $dictamenOriginal->update([
-            'estatus' => 1,
-            'observaciones' => $request->input('observaciones')
-        ]);
-
-        // Verificar la opción seleccionada
-        if ($request->input('cancelar_reexpedir') == '2') {  // Opción 2: Cancelar y reexpedir
-            // Crear un nuevo dictamen
-            $nuevoDictamen = $dictamenOriginal->replicate();
-            $nuevoDictamen->num_dictamen = $request->input('num_dictamen');
-            $nuevoDictamen->id_inspeccion = $request->input('id_inspeccion');
-            $nuevoDictamen->fecha_emision = $request->input('fecha_emision');
-            $nuevoDictamen->fecha_vigencia = $request->input('fecha_vigencia');
-            $nuevoDictamen->estatus = 2;
-            $nuevoDictamen->save();
-        }
-
-        DB::commit();
-        return response()->json(['message' => 'Operación realizada con éxito.']);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['message' => 'Error al procesar la operación.', 'error' => $e->getMessage()], 500);
-    }
-}*/
-///otro
 public function reexpedir(Request $request) 
 {
     try {
@@ -398,7 +365,6 @@ public function reexpedir(Request $request)
 
 
 
-
 //PDF DICTAMEN
 public function MostrarDictamenEnvasado($id_dictamen)
 {
@@ -406,22 +372,52 @@ public function MostrarDictamenEnvasado($id_dictamen)
     $data = Dictamen_Envasado::with(['lote_envasado.lotesGranel'])->find($id_dictamen);
 
     if (!$data) {
-        return abort(404, 'Dictamen no encontrado');
+        return abort(404, 'Registro no encontrado');
+    }
+    $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
+    $qrCode = new QrCode(
+        data: $url,
+        encoding: new Encoding('UTF-8'),
+        errorCorrectionLevel: ErrorCorrectionLevel::Low,
+        size: 300,
+        margin: 10,
+        roundBlockSizeMode: RoundBlockSizeMode::Margin,
+        foregroundColor: new Color(0, 0, 0),
+        backgroundColor: new Color(255, 255, 255)
+    );
+
+    // Escribir el QR en formato PNG
+    $writer = new PngWriter();
+    $result = $writer->write($qrCode);
+
+    // Convertirlo a Base64
+    $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+
+    if($data->id_firmante == 9){ //Erik
+        $pass = 'Mejia2307';
+    }
+    if($data->id_firmante == 6){ //Karen velazquez
+        $pass = '890418jks';
+    }
+    if($data->id_firmante == 7){ //Zaida
+        $pass = 'ZA27CI09';
+    }
+    if($data->id_firmante == 14){ //Mario
+        $pass = 'v921009villa';
     }
 
+    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccion->num_servicio, $pass, $data->id_firmante);
     $loteEnvasado = $data->lote_envasado;
     $marca = $loteEnvasado ? $loteEnvasado->marca : null;
     $lotesGranel = $loteEnvasado ? $loteEnvasado->lotesGranel : collect(); // Si no hay, devuelve una colección vacía
-
     $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
     $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
-
-    // Determinar si la marca de agua debe ser visible
-    $watermarkText = $data->estatus === 'Cancelado';
+    $watermarkText = $data->estatus == 1;//marca de agua
 
     // Renderizar el PDF con los lotes a granel
     $pdf = Pdf::loadView('pdfs.dictamen_envasado_ed6', [
+        'data' => $data,
         'lote_envasado' => $loteEnvasado,
         'marca' => $marca,
         'lotesGranel' => $lotesGranel, // Pasamos los lotes a granel a la vista
@@ -430,6 +426,8 @@ public function MostrarDictamenEnvasado($id_dictamen)
         'fecha_emision' => $fecha_emision,
         'fecha_vigencia' => $fecha_vigencia,
         'watermarkText' => $watermarkText,
+        'firmaDigital' => $firmaDigital,
+        'qrCodeBase64' => $qrCodeBase64
     ]);
 
     return $pdf->stream('Dictamen de Cumplimiento NOM de Mezcal Envasado.pdf');
