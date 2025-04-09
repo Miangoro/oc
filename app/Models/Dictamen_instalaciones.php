@@ -22,6 +22,7 @@ class Dictamen_instalaciones extends Model
         'id_firmante',
         'estatus',
         'observaciones',
+        'id_instalacion'
       ];
 
       // Método para obtener el nombre del registro que sirve para la trazabilidad
