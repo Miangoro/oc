@@ -240,7 +240,7 @@
             <span class="font-lucida-sans-seminegrita">Domicilio de la unidad de envasado:</span>
             </td>
 
-                <td style="text-align: center; vertical-align: middle;">{{ $datos->instalaciones->direccion_completa }}</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->instalaciones->direccion_completa ?? '' }}</td>
             </tr>
             <tr>
                 <td class="font-lucida-sans-seminegrita">Responsable de la inspección:</td>
