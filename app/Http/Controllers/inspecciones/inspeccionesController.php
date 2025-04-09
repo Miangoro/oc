@@ -68,35 +68,20 @@ class inspeccionesController extends Controller
             12 => 'id_inspeccion',
             13 => 'id_empresa',
         ];
-
-        $search = [];
-
-        $totalData = solicitudesModel::count();
-
-        $totalFiltered = $totalData;
-
+        
         $limit = $request->input('length');
         $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
-
-
-
-        if (empty($request->input('search.value'))) {
-
-
-            $solicitudes = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-        } else {
-            $search = $request->input('search.value');
-
-
-            $solicitudes = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
-                ->where(function ($query) use ($search) {
-                    $query->where('id_solicitud', 'LIKE', "%{$search}%")
+        $orderIndex = $request->input('order.0.column');
+        $orderColumn = $columns[$orderIndex] ?? 'id_solicitud';
+        $dir = $request->input('order.0.dir', 'asc');
+        $search = $request->input('search.value');
+        
+        $query = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion');
+        
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('id_solicitud', 'LIKE', "%{$search}%")
+                    ->orWhere('folio', 'LIKE', "%{$search}%")
                     ->orWhereHas('empresa', function ($q) use ($search) {
                         $q->where('razon_social', 'LIKE', "%{$search}%");
                     })
@@ -108,33 +93,38 @@ class inspeccionesController extends Controller
                     })
                     ->orWhereHas('inspector', function ($q) use ($search) {
                         $q->where('name', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhere('folio', 'LIKE', "%{$search}%");
-                })
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-
-            $totalFiltered =  solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
-                ->where(function ($query) use ($search) {
-                    $query->where('id_solicitud', 'LIKE', "%{$search}%")
-                    ->orWhereHas('empresa', function ($q) use ($search) {
-                        $q->where('razon_social', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('inspeccion', function ($q) use ($search) {
-                        $q->where('num_servicio', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
-                        $q->where('tipo', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('inspector', function ($q) use ($search) {
-                        $q->where('name', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhere('folio', 'LIKE', "%{$search}%");
-                })
-                ->count();
+                    });
+            });
         }
+        
+        $totalData = solicitudesModel::count();
+        $totalFiltered = $query->count();
+        
+        // Obtener datos paginados sin orden
+        $solicitudes = $query->get();
+        
+        // Ordenar manualmente si es un campo de relación
+        if (in_array($orderColumn, ['num_servicio', 'razon_social', 'tipo', 'name'])) {
+            $solicitudes = $solicitudes->sortBy(function ($item) use ($orderColumn) {
+                switch ($orderColumn) {
+                    case 'num_servicio':
+                        return $item->inspeccion->num_servicio ?? '';
+                    case 'razon_social':
+                        return $item->empresa->razon_social ?? '';
+                    case 'tipo':
+                        return $item->tipo_solicitud->tipo ?? '';
+                    case 'name':
+                        return $item->inspector->name ?? '';
+                }
+            }, SORT_REGULAR, $dir === 'desc');
+        } else {
+            // Ordenar campos propios del modelo
+            $solicitudes = $solicitudes->sortBy($orderColumn, SORT_REGULAR, $dir === 'desc');
+        }
+        
+        // Paginar manualmente
+        $solicitudes = $solicitudes->slice($start, $limit)->values();
+        
 
         $data = [];
 
@@ -142,11 +132,12 @@ class inspeccionesController extends Controller
             $ids = $start;
 
             foreach ($solicitudes as $solicitud) {
-                $numeroCliente = 
-                $solicitud->empresa->empresaNumClientes[0]->numero_cliente ?? 
-                $solicitud->empresa->empresaNumClientes[1]->numero_cliente ?? 
-                $solicitud->empresa->empresaNumClientes[2]->numero_cliente;
-                $nestedData['num_cliente'] = $numeroCliente;
+                $empresa = $solicitud->empresa;
+                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                ? $empresa->empresaNumClientes
+                    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
+                : 'N/A';
+                $nestedData['numero_cliente'] = $numero_cliente;
                 $nestedData['id_inspeccion'] = $solicitud->inspeccion->id_inspeccion ?? '0';
                 $nestedData['id_empresa'] = $solicitud->empresa->id_empresa ?? '0';
                 $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
@@ -167,6 +158,29 @@ class inspeccionesController extends Controller
                 : '<span class="badge bg-danger">Sin asignar</span>';
             
                 $urls = $solicitud->documentacion(69)->pluck('url')->toArray();
+                switch ($solicitud->inspeccion?->dictamen?->tipo_dictamen) {
+                    case 1:
+                        $tipo_dictamen = 'dictamen_productor';
+                        break;
+                    case 2:
+                        $tipo_dictamen = 'dictamen_envasador';
+                        break;
+                
+                    case 3:
+                        $tipo_dictamen = 'dictamen_comercializador';
+                        break;
+                    case 4:
+                        $tipo_dictamen = 'dictamen_almacen';
+                        break;
+                    default:
+                        $tipo_dictamen = 'Sin tipo';
+                        break;
+                }
+                
+                $nestedData['url_dictamen'] = $solicitud->inspeccion?->dictamen?->id_dictamen 
+                    ? $tipo_dictamen . '/' . $solicitud->inspeccion->dictamen->id_dictamen 
+                    : 'Sin subir';
+                
 
             // Comprobamos si $urls está vacío
             if (empty($urls)) {

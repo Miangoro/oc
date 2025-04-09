@@ -4176,6 +4176,7 @@ $(document).on('click', '.expediente-record', function () {
         },
 
         id_etiqueta: {
+          selector: "input[name='id_etiqueta']",  
           validators: {
             notEmpty: {
               message: 'Por favor seleccione una etiqueta.'

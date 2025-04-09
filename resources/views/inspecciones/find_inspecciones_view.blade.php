@@ -133,7 +133,7 @@
             <h3 class="card-title mb-0 fw-bold">Inspecciones de la Unidad de Inspección</h3>
         </div>
         <div class="card-datatable table-responsive">
-            <table style="font-size: 14px !important" class="datatables-users table">
+            <table style="font-size: 14px"  class="datatables-users table table-bordered  table-hover">
                 <thead class="table-dark">
                     <tr>
                         <th></th>

@@ -28,7 +28,18 @@ $(function () {
       { data: '' },
       { data: 'folio' },
       { data: 'num_servicio' },
-      { data: 'razon_social' },
+      {
+        render: function (data, type, full, meta) {
+          var $numero_cliente = full['numero_cliente'];
+          var $razon_social = full['razon_social'];
+          return `
+            <div>
+              <span class="fw-bold">${$numero_cliente}</span><br>
+              <small style="font-size:12px;" class="user-email">${$razon_social}</small>
+            </div>
+          `;
+        }
+      },
       { data: 'fecha_solicitud' },
       {
         data: function (row) {
@@ -110,20 +121,49 @@ $(function () {
       },*/
 
       {
-        // email verify
         targets: 11,
         className: 'text-center',
         render: function (data, type, full, meta) {
-          var $id = full['id_inspeccion'];
-          //return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_inspeccion']}" data-registro="${full['razon_social']} "></i>`;
-          if(full['url_acta']=='Sin subir'){
-            return '<span class="badge bg-danger">Sin subir</span>';
-          }else{
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['num_cliente']}/${full['url_acta']}" data-registro="${full['razon_social']} "></i>`;
+          const acta = full['url_acta'];
+          const dictamen = full['url_dictamen'];
+          const razon = full['razon_social'];
+          const cliente = full['num_cliente'];
+      
+          let html = '';
+      
+          // ACTA
+          if (acta && acta !== 'Sin subir') {
+            html += `<i class="ri-file-pdf-2-fill text-danger ri-30px me-2 pdf cursor-pointer"
+                        title="Ver Acta"
+                        data-bs-target="#mostrarPdf"
+                        data-bs-toggle="modal"
+                        data-bs-dismiss="modal"
+                        data-id="/files/${cliente}/${acta}"
+                        data-registro="${razon}">
+                     </i>`;
+          } else {
+            html += '<span class="badge bg-danger me-1">Sin acta</span>';
           }
-          
+      
+          // DICTAMEN
+          if (dictamen && dictamen !== 'Sin subir') {
+            html += `<i class="ri-file-pdf-2-fill text-primary ri-30px pdf cursor-pointer"
+                        title="Ver Dictamen"
+                        data-bs-target="#mostrarPdf"
+                        data-bs-toggle="modal"
+                        data-bs-dismiss="modal"
+                        data-id="../${dictamen}"
+                        data-registro="${razon}">
+                     </i>`;
+          } else {
+            html += '<span class="badge bg-warning">Sin dictamen</span>';
+          }
+      
+          return html;
         }
       },
+      
+      
       {
         // Acciones
         targets: -1,
@@ -1017,9 +1057,9 @@ $(function () {
     iframe.hide();
     
     //Cargar el PDF con el ID
-      iframe.attr('src', '/files/' + id_inspeccion);
+      iframe.attr('src', id_inspeccion);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-      $("#NewPestana").attr('href', '/files/' + id_inspeccion).show();
+      $("#NewPestana").attr('href',  + id_inspeccion).show();
 
       $("#titulo_modal").text("Acta de inspección");
       $("#subtitulo_modal").text(registro);
