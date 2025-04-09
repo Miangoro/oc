@@ -133,7 +133,7 @@ if (dt_user_table.length) {
             var $folio_solicitud = full['folio_solicitud'];
             var $id_solicitud = full['id_solicitud'];
             if(full['url_acta']=='Sin subir'){
-              var $acta = '';
+              var $acta = '<small><b>NA</b></small>';
             }else{
               var $acta = `<i style class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa" data-id="${full['numero_cliente']}/${full['url_acta']}" data-empresa="${full['razon_social']} " data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" ></i>`;
             }
