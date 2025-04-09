@@ -703,13 +703,13 @@ Route::post('/registrar/reexpedir2', [DictamenGranelController::class, 'reexpedi
 route::get('/dictamen_granel/{id_dictamen}', [DictamenGranelController::class, 'MostrarDictamenGranel'])->name('dictamen-cumplimiento-granel');
 
 /*------------------- Dictamenes envadaso -------------------*/
-Route::get('/dictamenes/envasado', [DictamenEnvasadoController::class, 'UserManagement'])->name('dictamenes-envasado');
-Route::resource('/dictamen-envasado-list', DictamenEnvasadoController::class);
-Route::delete('dictamen/envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'destroy'])->name('dictamen.delete');
-Route::post('dictamenes-envasado',[DictamenEnvasadoController::class, 'store'])->name('dictamen.store');
-route::get('/dictamenes/envasado/{id_dictamen}/edit', [DictamenEnvasadoController::class, 'edit'])->name('dictamenes.edit');
-Route::post('/dictamenes/envasado/{id_dictamen}/update', [DictamenEnvasadoController::class, 'update'])->name('dictamen.update');
-Route::post('/dictamenes/envasado/{id_dictamen}/reexpedir', [DictamenEnvasadoController::class, 'reexpedirDictamen'])->name('dictamenes.reexpedir');
+Route::get('/dictamenes/envasado', [DictamenEnvasadoController::class, 'UserManagement'])->name('dictamenes-envasado')->middleware(['auth']);
+Route::resource('/dictamen-envasado-list', DictamenEnvasadoController::class)->middleware(['auth']);
+Route::delete('dictamen/envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'destroy'])->name('dictamen.delete')->middleware(['auth']);
+Route::post('dictamenes-envasado',[DictamenEnvasadoController::class, 'store'])->name('dictamen.store')->middleware(['auth']);
+route::get('/dictamenes/envasado/{id_dictamen}/edit', [DictamenEnvasadoController::class, 'edit'])->name('dictamenes.edit')->middleware(['auth']);
+Route::post('/dictamenes/envasado/{id_dictamen}/update', [DictamenEnvasadoController::class, 'update'])->name('dictamen.update')->middleware(['auth']);
+Route::post('/dictamenes/envasado/{id_dictamen}/reexpedir', [DictamenEnvasadoController::class, 'reexpedirDictamen'])->name('dictamenes.reexpedir')->middleware(['auth']);
 
 /*------------------- PDFS de Dictamenes envadaso -------------------*/
 // Ruta para el PDF con ID
