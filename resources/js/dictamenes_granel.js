@@ -3,6 +3,7 @@
  */
 'use strict';
 
+//flatpickr
 $(document).ready(function () {
   flatpickr(".flatpickr-datetime", {
       dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
@@ -91,8 +92,7 @@ if (dt_user_table.length) {
           render: function(data, type, row) {
               return `
               <strong>${data.numero_cliente}</strong><br>
-                  <span style="font-size:11px">${data.razon_social}<span>
-              `;
+              <span style="font-size:11px">${data.razon_social}<span> `;
           }
       },
       { data: 'nombre_lote' },
@@ -150,8 +150,6 @@ if (dt_user_table.length) {
           orderable: false, 
           responsivePriority: 4, 
           render: function (data, type, full, meta) {
-        
-            // Retorna el badge con el texto y color apropiado
             return `<b>Lote: </b><small>${full['nombre_lote']}</small><br><b>FQs: </b><small>${full['analisis']}</small>`;
           }     
         },

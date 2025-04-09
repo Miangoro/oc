@@ -1,10 +1,11 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Dictamenes de Envasado')
+@section('title', 'Dictamenes de envasado')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
-    @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 
+    @vite([
+    'resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 
     'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 
     'resources/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss', 
     'resources/assets/vendor/libs/select2/select2.scss', 
@@ -20,7 +21,8 @@
 
 <!-- Vendor Scripts -->
 @section('vendor-script')
-    @vite(['resources/assets/vendor/libs/moment/moment.js', 
+    @vite([
+    'resources/assets/vendor/libs/moment/moment.js', 
     'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 
     'resources/assets/vendor/libs/select2/select2.js', 
     'resources/assets/vendor/libs/@form-validation/popular.js', 
@@ -57,12 +59,10 @@
                     <tr>
                         <th></th>
                         <th>No. dictamen</th>
+                        <th>No. Servicio/Solicitud</th>
                         <th>Cliente</th>
-                        <th>No. Servicio</th>
-                        <th>Lote envasado</th>
+                        <th>Características</th>
                         <th>Fechas</th>
-                        <th>Fecha de servicio</th>
-                        <th>Dictamen</th>
                         <th>Estatus</th>
                         <th>ACCIONES</th>
                     </tr>
@@ -70,6 +70,7 @@
             </table>
         </div>
     </div>
+    
     <!-- Modal -->
     @include('_partials/_modals/modal-pdfs-frames')
     @include('_partials/_modals/modal-add-dictamen-envasado')

@@ -11,9 +11,12 @@ use App\Models\lotes_envasado;
 use App\Models\Dictamen_Envasado; 
 use App\Models\marcas;
 use App\Models\LotesGranel;
+///Extensiones
 use App\Helpers\Helpers;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 
 class DictamenEnvasadoController extends Controller
@@ -21,7 +24,10 @@ class DictamenEnvasadoController extends Controller
     
     public function UserManagement()
     {
-        $inspecciones = Inspecciones::all();
+        //$inspecciones = Inspecciones::all();
+        $inspecciones = Inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
+            $query->where('id_tipo', 5);
+            })->orderBy('id_inspeccion', 'desc')->get();
         $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $inspectores = User::where('tipo', 2)->get(); // Obtener solo los usuarios con tipo '2' (inspectores)
         $marcas = marcas::all(); // Obtener todas las marcas
@@ -29,34 +35,33 @@ class DictamenEnvasadoController extends Controller
         $envasado = lotes_envasado::all(); // Usa la clase correcta
 
         // Pasar los datos a la vista
-        return view('dictamenes.dictamen_envasado_view', compact('inspecciones', 'empresas', 'envasado', 'inspectores',  'marcas', 'lotes_granel'));
+        return view('dictamenes.find_dictamen_envasado', compact('inspecciones', 'empresas', 'envasado', 'inspectores',  'marcas', 'lotes_granel'));
     }
+
 
     public function index(Request $request)
     {
         $columns = [
             1 => 'id_dictamen_envasado',
-            2 => 'num_dictamen',
-            3 => 'id_empresa',
-            4 => 'id_inspeccion',
-            5 => 'id_lote_envasado',
-            6 => 'fecha_emision',
-            7 => 'fecha_vigencia',
-            8 => 'fecha_servicio',
-            9 => 'estatus',
+            2 => 'id_inspeccion',
+            3 => '',
+            4 => '',
+            5 => 'fecha_emision',
+            6 => 'estatus',
         ];
     
         $search = $request->input('search.value');
-        $totalData = dictamen_envasado::count();
+        $totalData = Dictamen_envasado::count();
         $totalFiltered = $totalData;
     
         $limit = $request->input('length');
         $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')] ?? 'id_dictamen_envasado';
+        $order = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+        /*$order = $columns[$request->input('order.0.column')] ?? 'id_dictamen_envasado';
         $dir = $request->input('order.0.dir', 'asc');
     
         $query = dictamen_envasado::with(['inspeccion', 'empresa', 'lote_envasado']);
-    
         if (!empty($search)) {
             $query = $query->where(function ($q) use ($search) {
                 $q->where('id_dictamen_envasado', 'LIKE', "%{$search}%")
@@ -72,30 +77,66 @@ class DictamenEnvasadoController extends Controller
                     })
                     ->orWhere('estatus', 'LIKE', "%{$search}%");
             });
-    
+            $totalFiltered = $query->count();
+        }*/
+        $query = Dictamen_envasado::with(['inspeccion.solicitud.empresa']);
+        //Buscador
+        if (!empty($search)) {
+            $query = $query->where(function ($q) use ($search) {
+                $q->where('id_dictamen_envasado', 'LIKE', "%{$search}%")
+                    ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
+                    ->orWhere('estatus', 'LIKE', "%{$search}%")
+                    //empresa
+                    ->orWhereHas('inspeccion.solicitud.empresa', function ($q) use ($search) {
+                        $q->where('razon_social', 'LIKE', "%{$search}%");
+                    })
+                    //inspecciones
+                    ->orWhereHas('inspeccion', function ($q) use ($search) {
+                        $q->where('num_servicio', 'LIKE', "%{$search}%")
+                        ->orWhere('id_inspeccion', 'LIKE', "%{$search}%");
+                    })
+                    //num-cliente
+                    ->orWhereHas('inspeccion.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
+                        $q->where('numero_cliente', 'LIKE', "%{$search}%");
+                    })
+                    //solicitudes
+                    ->orWhereHas('inspeccion.solicitud', function ($q) use ($search) {
+                        $q->where('folio', 'LIKE', "%{$search}%")
+                        ->orWhere('caracteristicas', 'LIKE', "%{$search}%");
+                    });
+            });
+            // Calcular el total filtrado
             $totalFiltered = $query->count();
         }
     
-        $dictamenes = $query->offset($start)
+        $res = $query->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
             ->get();
     
+
         $data = [];
-        if (!empty($dictamenes)) {
-            $ids = $start;
-    
-            foreach ($dictamenes as $dictamen) {
+        if (!empty($res)) {
+            foreach ($res as $dictamen) {
                 $nestedData['id_dictamen_envasado'] = $dictamen->id_dictamen_envasado;
                 $nestedData['num_dictamen'] = $dictamen->num_dictamen;
-                $nestedData['id_inspeccion'] = $dictamen->inspeccion->num_servicio ?? 'N/A';
+                $nestedData['num_servicio'] = $dictamen->inspeccion->num_servicio ?? 'N/A';
+                $nestedData['folio_solicitud'] = $dictamen->inspeccion->solicitud->folio;
                 $nestedData['id_lote_envasado'] = $dictamen->lote_envasado->nombre_lote ?? 'N/A';
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha($dictamen->fecha_servicio);
                 $nestedData['estatus'] = $dictamen->estatus;
-                
-                $fecha_emision = Helpers::formatearFecha($dictamen->fecha_emision);
-                $fecha_vigencia = Helpers::formatearFecha($dictamen->fecha_vigencia);
-                $nestedData['fechas'] = '<span class="small"> <b>Fecha Emisión: </b>' .$fecha_emision. '<br> <b>Fecha Vigencia: </b>' .$fecha_vigencia. '</span>';
+                $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
+                $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
+                ///solicitud y acta
+                $nestedData['id_solicitud'] = $dictamen->inspeccion->solicitud->id_solicitud;
+                $urls = $dictamen->inspeccion->solicitud->documentacion(69)->pluck('url')->toArray();
+                    if (empty($urls)) {
+                        $nestedData['url_acta'] = 'Sin subir';
+                    } else {
+                        $nestedData['url_acta'] = implode(', ', $urls);
+                    }
+                $nestedData['emision'] = $dictamen->fecha_emision;
+                $nestedData['vigencia'] = $dictamen->fecha_vigencia;
                 ///numero y nombre empresa
                 $empresa = $dictamen->inspeccion->solicitud->empresa;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
@@ -104,6 +145,25 @@ class DictamenEnvasadoController extends Controller
                 : 'N/A';
                 $nestedData['numero_cliente'] = $numero_cliente;
                 $nestedData['razon_social'] = $dictamen->inspeccion->solicitud->empresa->razon_social ?? 'No encontrado';
+                ///dias vigencia
+                $fechaActual = Carbon::now()->startOfDay(); // Asegúrate de trabajar solo con fechas, sin horas
+                $fechaVigencia = Carbon::parse($dictamen->fecha_vigencia)->startOfDay();
+                    if ($fechaActual->isSameDay($fechaVigencia)) {
+                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
+                    } else {
+                        $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+
+                        if ($diasRestantes > 0) {
+                            if ($diasRestantes > 15) {
+                                $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
+                            } else {
+                                $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
+                            }
+                            $nestedData['diasRestantes'] = $res;
+                        } else {
+                            $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                        }
+                    }
 
                 $data[] = $nestedData;
             }
@@ -119,69 +179,73 @@ class DictamenEnvasadoController extends Controller
     }
 
 
-    
-//FUNCION PARA ELIMIAR 
-public function destroy($id_dictamen_envasado)
+
+///FUNCION PARA REGISTRAR
+public function store(Request $request)
 {
     try {
-        $dictamen = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
-        $dictamen->delete();
-
-        return response()->json(['success' => 'dictamen eliminado correctamente']);
+    $validated = $request->validate([
+        'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
+        'num_dictamen' => 'required|string|max:100',
+        'id_firmante' => 'required|exists:users,id',
+        'fecha_emision' => 'required|date',
+        'fecha_vigencia' => 'required|date',
+    ]);
+    
+    // Crear un registro
+    $new = new Dictamen_Envasado();
+    $new->num_dictamen = $validated['num_dictamen'];
+    $new->id_inspeccion = $validated['id_inspeccion'];
+    $new->fecha_emision = $validated['fecha_emision'];
+    $new->fecha_vigencia = $validated['fecha_vigencia'];
+    $new->id_firmante = $validated['id_firmante'];
+    $new->save();
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'Registrado correctamente',
+        ]);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al eliminar el dictamen'], 500);
+        //Log::error('Error: ' . $e->getMessage());
+        return response()->json(['success' => false, 'message' => 'Error inesperado'], 500);
     }
 }
 
 
 
-//FUNCION PARA INSERTAR DATOS
-public function store(Request $request)
+///FUNCION PARA ELIMINAR
+public function destroy($id_dictamen_envasado) 
 {
-    $validatedData = $request->validate([
-        'num_dictamen' => 'required|string|max:100',
-        'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
-        'fecha_emision' => 'required|date',
-        'fecha_vigencia' => 'required|date',
-        'id_firmante' => 'required|exists:users,id',
-    ]);
-    
-    // Crear una nueva instancia del modelo Dictamen
-    $dictamen = new Dictamen_Envasado();
-    $dictamen->num_dictamen = $validatedData['num_dictamen'];
-    $dictamen->id_inspeccion = $validatedData['id_inspeccion'];
-    $dictamen->fecha_emision = $validatedData['fecha_emision'];
-    $dictamen->fecha_vigencia = $validatedData['fecha_vigencia'];
-    $dictamen->id_firmante = $validatedData['id_firmante'];
-    $dictamen->save();
-    
-    return response()->json([
-        'success' => true,
-        'message' => 'Dictamen registrado exitosamente',
-    ]);
+    try {
+        $eliminar = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
+        $eliminar->delete();
+
+        return response()->json(['success' => 'Eliminado correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al eliminar'], 500);
+    }
 }
 
 
 
 //FUNCION PARA OBTENER LOS REGISTROS
-public function edit($id_dictamen_envasado)
+public function edit($id_dictamen_envasado) 
 {
     try {
         // Cargar el dictamen específico
-        $dictamen = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
+        $editar = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
+
         return response()->json([
             'success' => true,
-            'dictamen' => $dictamen, // Enviar el dictamen específico
+            'id' => $editar, // Enviar el id específico
         ]);
-    } catch (ModelNotFoundException $e) {
+    } catch (\Exception $e) {
         return response()->json(['success' => false], 404);
     }
 }
-     
- 
 
-//FUNCION PARA ACTUALIZAR
-public function update(Request $request, $id_dictamen_envasado)
+///FUNCION PARA ACTUALIZAR
+public function update(Request $request, $id_dictamen_envasado) 
 {
     try {
         // Validar los datos del formulario
@@ -192,30 +256,33 @@ public function update(Request $request, $id_dictamen_envasado)
             'fecha_vigencia' => 'required|date',
             'id_firmante' => 'required|exists:users,id',
         ]);
-        $dictamen = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
+
+        $actualizar = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
+
         // Actualizar lote
-        $dictamen->update([
+        $actualizar->update([
             'num_dictamen' => $validated['num_dictamen'],
             'id_inspeccion' => $validated['id_inspeccion'],
             'fecha_emision' => $validated['fecha_emision'],
             'fecha_vigencia' => $validated['fecha_vigencia'],
             'id_firmante' => $validated['id_firmante'],
         ]);
+
         return response()->json([
             'success' => true,
-            'message' => 'Dictamen envasado actualizado exitosamente',
+            'message' => 'Actualizado correctamente',
         ]);
     } catch (\Exception $e) {
-    return response()->json([
-        'success' => false,
-        'message' => 'Error al actualizar el dictamen envasado',
-    ], 500);
+        Log::error('Error al actualizar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
     }
 }
 
 
      
-//REEXPEDIR DICTAMEN
+//REEXPEDIR
 public function reexpedirDictamen(Request $request, $id_dictamen_envasado)
 {
     DB::beginTransaction();
@@ -258,10 +325,10 @@ public function reexpedirDictamen(Request $request, $id_dictamen_envasado)
         return response()->json(['message' => 'Error al procesar la operación.', 'error' => $e->getMessage()], 500);
     }
 }
-    
 
 
-//PDF DICTAMEN ENVASADO
+
+//PDF DICTAMEN
 public function MostrarDictamenEnvasado($id_dictamen)
 {
     // Obtener los datos del dictamen con la relación de lotes a granel

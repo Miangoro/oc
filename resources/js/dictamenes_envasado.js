@@ -1,14 +1,8 @@
 
 
 'use strict';
-//DATE PICKER
-/*$(document).ready(function () {
-    $('.datepicker').datepicker({
-    format: 'yyyy-mm-dd',
-    autoclose: true,
-    todayHighlight: true
-    });
-});*/
+
+///flatpickr
 $(document).ready(function () {
     flatpickr(".flatpickr-datetime", {
         dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
@@ -16,65 +10,56 @@ $(document).ready(function () {
         allowInput: true,    // Permite al usuario escribir la fecha manualmente
         locale: "es",        // idioma a español
     });
-});
-//FECHAS
+  });
+//FUNCION FECHAS
 $('#fecha_emision').on('change', function() {
-var fechaInicial = new Date($(this).val());
-fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);// Sumar 1 año a la fecha inicial
-//fechaInicial.setDate(fechaInicial.getDate() + 1); // Sumar 1 día a la fecha inicial
-// Establecer la fecha de vigencia al año sumado sin que el calendario se recargue
-var fechaVigencia = fechaInicial.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-// Actualizamos el valor de #fecha_vigencia
-$('#fecha_vigencia').val(fechaVigencia);
-// Deshabilitar la interacción con flatpickr en #fecha_vigencia.
-flatpickr("#fecha_vigencia", {
-    dateFormat: "Y-m-d", // Formato de la fecha
-    enableTime: false,    // Desactiva la hora
-    allowInput: true,     // Permite la escritura manual
-    locale: "es",         // Español
-    static: true,         // Establece el calendario como no interactivo
-    disable: true          // Español
-});
-});
-//FECHAS EDIT
-$('#edit_fecha_emision').on('change', function() {
-var fechaInicial = new Date($(this).val());
-fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);// Sumar 1 año a la fecha iniciaL
-// Establecer el valor en el campo edit_fecha_vigencia
-var fechaVigencia = fechaInicial.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-// Actualizamos el valor de #edit_fecha_vigencia
-$('#edit_fecha_vigencia').val(fechaVigencia);
-
-// Deshabilitar la interacción con flatpickr en #edit_fecha_vigencia
-flatpickr("#edit_fecha_vigencia", {
-    dateFormat: "Y-m-d",  // Formato de la fecha
-    enableTime: false,     // Desactiva la hora
-    allowInput: true,      // Permite la escritura manual
-    locale: "es",          // Español
-    static: true,          // Hace que el calendario no se muestre como interactivo
-    disable: true          // Deshabilita la selección
-});
-});
-  
-
-
-
-$(function () {
-
-var dt_user_table = $('.datatables-users'),
-    select2Elements = $('.select2')
-// Función para inicializar Select2 en elementos específicos
-function initializeSelect2($elements) {
-    $elements.each(function () {
-        var $this = $(this);
-        select2Focus($this);
-        $this.wrap('<div class="position-relative"></div>').select2({
-            dropdownParent: $this.parent()
-        });
+    var fechaInicial = new Date($(this).val());
+    fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+    var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+    $('#fecha_vigencia').val(fechaVigencia);
+    flatpickr("#fecha_vigencia", {
+        dateFormat: "Y-m-d",
+        enableTime: false,  
+        allowInput: true,  
+        locale: "es",     
+        static: true,      
+        disable: true          
     });
-}
-initializeSelect2(select2Elements);
- 
+});
+//FUNCION FECHAS EDIT
+$('#edit_fecha_emision').on('change', function() {
+    var fechaInicial = new Date($(this).val());
+    fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+    var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+    $('#edit_fecha_vigencia').val(fechaVigencia);
+    flatpickr("#edit_fecha_vigencia", {
+        dateFormat: "Y-m-d",  
+        enableTime: false,   
+        allowInput: true,  
+        locale: "es",  
+        static: true,   
+        disable: true  
+    });
+});
+
+
+
+// Datatable (jquery)
+$(function () {
+    // Variable declaration for table
+    var dt_user_table = $('.datatables-users'),
+        select2Elements = $('.select2');
+    function initializeSelect2($elements) {//Función para inicializar Select2
+        $elements.each(function () {
+            var $this = $(this);
+            select2Focus($this);
+            $this.wrap('<div class="position-relative"></div>').select2({
+            dropdownParent: $this.parent()
+            });
+        });
+    }
+    initializeSelect2(select2Elements);
+    
 // ajax setup
 $.ajaxSetup({
     headers: {
@@ -84,10 +69,9 @@ $.ajaxSetup({
 
     
 
-// Users datatable
+//FUNCIONALIDAD DE LA VISTA datatable
 if (dt_user_table.length) {
     var dt_user = dt_user_table.DataTable({
-
         processing: true,
         serverSide: true,
         ajax: {
@@ -97,85 +81,116 @@ if (dt_user_table.length) {
         columns: [
             { data: '' },
             { data: 'num_dictamen' },
+            { data: 'num_servicio' },
             { data: null,
                 render: function(data, type, row) {
                     return `
                     <strong>${data.numero_cliente}</strong><br>
-                    <span style="font-size:12px">${data.razon_social}<span>`;
+                    <span style="font-size:11px">${data.razon_social}<span>`;
                 }
             },
-            { data: 'id_inspeccion' },
             { data: 'id_lote_envasado' },
-            { data: 'fechas' },
-            { data: 'fecha_servicio' },
-            { data: null, defaultContent: '' },
-            { data: 'estatus',
-                searchable: false, 
-                orderable: false,
-                render: function (data, type, row) {
-                    let color, estatus;
-                    if (data == 1) {
-                        color = 'badge rounded-pill bg-danger';
-                        estatus = 'Cancelado';
-                    } else {
-                        color = 'badge rounded-pill bg-success';
-                        estatus = 'Emitido';
-                    }
-                    // Devolvemos el HTML con el color y el texto que se mostrarán en la tabla
-                    return '<span class="' + color + '">' + estatus + '</span>';
-                }
-            },
+            { data: 'fecha_emision' },
+            { data: 'estatus' },
             { data: 'action', orderable: false, searchable: false }
         ],
-
-
         columnDefs: [
             {
                 // For Responsive
+                targets: 0,
                 className: 'control',
                 searchable: false,
                 orderable: true,
                 responsivePriority: 2,
-                targets: 0,
                 render: function (data, type, full, meta) {
                     return '';
                 }
             },
             {
-                // User full name
                 targets: 1,
-                responsivePriority: 4,
+                searchable: true, 
+                orderable: true, 
+                responsivePriority: 4, 
                 render: function (data, type, full, meta) {
-                    var $name = full['num_dictamen'];
-
-                    // For Avatar badge
-                    var stateNum = Math.floor(Math.random() * 6);
-                    var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
-                    var $state = states[stateNum];
-
-                    // Creates full output for row
-                    var $row_output =
-                        '<div class="d-flex justify-content-start align-items-center user-name">' +
-                        '<div class="avatar-wrapper">' +
-                        '</div>' +
-                        '</div>' +
-                        '<div class="d-flex flex-column">' +
-                        '<span class="fw-medium">' +
-                        $name +
-                        '</span>' +
-                        '</div>' +
-                        '</div>';
-                    return $row_output;
+                  var $id = full['id_dictamen_envasado'];
+                  var $num_dictamen = full['num_dictamen'];
+                  return `<small class="fw-bold">`+ $num_dictamen + `</small>` +
+                    `<i class="ri-file-pdf-2-fill text-danger ri-28px pdfDictamen cursor-pointer" data-id="` + $id + `" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
                 }
             },
             {
-                // Abre el pdf del dictamen
-                targets: 7,
-                className: 'text-center',
-                searchable: false, orderable: false,
+                targets: 2,
+                searchable: true,
+                orderable: true, 
                 render: function (data, type, full, meta) {
-                    var $id = full['id_dictamen_envasado'];
-                    return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdfDictamen cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+                  var $num_servicio = full['num_servicio'];
+                  var $folio_solicitud = full['folio_solicitud'];
+                  var $id_solicitud = full['id_solicitud'];
+                  if(full['url_acta']=='Sin subir'){
+                    var $acta = '';
+                  }else{
+                    var $acta = `<i style class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa" data-id="${full['numero_cliente']}/${full['url_acta']}" data-empresa="${full['razon_social']} " data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" ></i>`;
+                  }
+      
+                  return '<span class="fw-bold">Servicio:</span> ' + $num_servicio +
+                    '<span>'+$acta+'</span>'+
+                    '<br><span class="fw-bold">Solicitud: </span>' + $folio_solicitud +
+                    `<i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-id="` + $id_solicitud + `" data-folio="` + $folio_solicitud + `" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+                }
+            }, 
+            {
+                targets: 4,
+                searchable: false,
+                orderable: false, 
+                responsivePriority: 4, 
+                render: function (data, type, full, meta) {
+                  // Retorna el badge con el texto y color apropiado
+                  return `<b>Lote: </b><small></small><br><b>FQs: </b><small></small>`;
+                }     
+            },
+            {
+                targets: 5, 
+                searchable: false,
+                orderable: false,
+                render: function (data, type, full, meta) {
+                    // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
+                    var $fecha_emision = full['fecha_emision'] ?? 'N/A'; // Fecha de vigencia
+                    var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A'; // Fecha de vencimiento
+            
+                    // Definir los mensajes de fecha con formato
+                    var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span>`;
+                    var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span>`;
+      
+                    // Retorna las fechas en formato de columnas
+                    return `
+                        <div>
+                            <div>${fechaVigenciaMessage}</div>
+                            <div>${fechaVencimientoMessage}</div>
+                            <div style="text-aling: center" class="small">${full['diasRestantes']}</div>
+                        </div> `;
+                }
+            }, 
+            {
+                ///estatus
+                targets: 6,
+                searchable: true,
+                orderable: true,
+                render: function (data, type, full, meta) {
+                  var $estatus = full['estatus'];
+                  var $emision = full['emision'];
+                  var $vigencia = full['vigencia'];
+                  let estatus;
+                    if ($emision > $vigencia) {
+                      estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
+                    } else if ($estatus == 1) {
+                        estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
+                    } else if ($estatus == 2) {
+                        estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+                    } else {
+                      estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
+                    }
+                    
+                  return estatus;
                 }
             },
 
@@ -183,8 +198,6 @@ if (dt_user_table.length) {
             // Actions botones de eliminar y actualizar(editar)
             targets: -1,
             title: 'Acciones',
-            searchable: false,
-            orderable: true,
             render: function (data, type, full, meta) {
                 return (
                 '<div class="d-flex align-items-center gap-50">' +
@@ -192,9 +205,9 @@ if (dt_user_table.length) {
                     (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
                     '</button>' +
                     '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                        `<a data-id="${full['id_dictamen_envasado']}" data-bs-toggle="modal" data-bs-target="#modalEditDictamenEnvasado" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-                        `<a data-id="${full['id_dictamen_envasado']}" data-bs-toggle="modal" data-bs-target="#modalReexpredirDictamenEnvasado" class="dropdown-item reexpedir-record waves-effect text-success"><i class="ri-file-edit-fill text-success"></i>Reexpedir/Cancelar</a>`+
-                        `<a data-id="${full['id_dictamen_envasado']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
+                        `<a data-id="${full['id_dictamen_envasado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" class="dropdown-item waves-effect text-dark editar"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+                        `<a data-id="${full['id_dictamen_envasado']}" data-bs-toggle="modal" data-bs-target="#ModalReexpedir" class="dropdown-item waves-effect text-dark reexpedir"><i class="ri-file-edit-fill text-success"></i>Reexpedir/Cancelar</a>`+
+                        `<a data-id="${full['id_dictamen_envasado']}" class="dropdown-item waves-effect text-dark eliminar"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
                     '<div class="dropdown-menu dropdown-menu-end m-0">' +
                     '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
                     '</div>' +
@@ -403,7 +416,7 @@ if (dt_user_table.length) {
                 className: 'add-new btn btn-primary waves-effect waves-light',
                 attr: {
                     'data-bs-toggle': 'modal',
-                    'data-bs-target': '#modalAddDictamenEnvasado'
+                    'data-bs-target': '#ModalAgregar'
                 }
             }
         ],
@@ -420,35 +433,172 @@ if (dt_user_table.length) {
                 }),
                 type: 'column',
                 renderer: function (api, rowIdx, columns) {
-                    var data = $.map(columns, function (col, i) {
-                        return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
-                            ? '<tr data-dt-row="' +
-                            col.rowIndex +
-                            '" data-dt-column="' +
-                            col.columnIndex +
-                            '">' +
-                            '<td>' +
-                            col.title +
-                            ':' +
-                            '</td> ' +
-                            '<td>' +
-                            col.data +
-                            '</td>' +
-                            '</tr>'
-                            : '';
+                  var data = $.map(columns, function (col, i) {
+                     return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+                        ? '<tr data-dt-row="' +
+                        col.rowIndex +
+                        '" data-dt-column="' +
+                        col.columnIndex +
+                        '">' +
+                        '<td>' +
+                        col.title +
+                        ':' +
+                        '</td> ' +
+                        '<td>' +
+                        col.data +
+                        '</td>' +
+                        '</tr>'
+                        : '';
                     }).join('');
 
                     return data ? $('<table class="table"/><tbody />').append(data) : false;
                 }
             }
         }
+
     });
 }
 
 
 
-//eliminar un dictamen
-$(document).on('click', '.delete-record', function () {
+///AGREGAR
+$(function () {
+  // Configuración CSRF para Laravel
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+  
+  // Inicializar FormValidation
+  const form = document.getElementById('FormAgregar');
+  const fv = FormValidation.formValidation(form, {
+    fields: {
+      'id_inspeccion': {
+        validators: {
+          notEmpty: {
+            message: 'El número de servicio es obligatorio.'
+          }
+        }
+      },
+      'num_dictamen': {
+        validators: {
+          notEmpty: {
+            message: 'El número de dictamen es obligatorio.'
+          },
+        }
+      },
+      'id_firmante': {
+        validators: {
+          notEmpty: {
+            message: 'El nombre del firmante es obligatorio.',
+            enable: function (field) {
+              return !$(field).val();
+            }
+          }
+        }
+      },
+      'fecha_emision': {
+        validators: {
+          notEmpty: {
+            message: 'La fecha de emisión es obligatoria.',
+            enable: function (field) {
+              return !$(field).val();
+            }
+          },
+          date: {
+            format: 'YYYY-MM-DD',
+            message: 'Ingresa una fecha válida (yyyy-mm-dd).',
+            enable: function (field) {
+              return !$(field).val();
+            }
+          }
+        }
+      },
+      'fecha_vigencia': {
+        validators: {
+          notEmpty: {
+            message: 'La fecha de vigencia es obligatoria.',
+            enable: function (field) {
+              return !$(field).val();
+            }
+          },
+          date: {
+            format: 'YYYY-MM-DD',
+            message: 'Ingresa una fecha válida (yyyy-mm-dd).',
+            enable: function (field) {
+              return !$(field).val();
+            }
+          }
+        }
+      },
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        eleInvalidClass: 'is-invalid',
+        rowSelector: '.form-floating'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    var formData = new FormData(form);
+    // Imprimir los datos del formulario para verificar
+    console.log('Form Data:', Object.fromEntries(formData.entries()));
+
+    $.ajax({
+      url: '/dictamenes-envasado',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Ocultar el modal y resetear el formulario
+        $('#ModalAgregar').modal('hide');
+        $('#FormAgregar')[0].reset();
+        $('.select2').val(null).trigger('change');
+        $('.datatables-users').DataTable().ajax.reload();
+
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.message,
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      },
+      error: function (xhr) {
+        console.log('Error:', xhr.responseText);
+        // Mostrar mensaje de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al registrar',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  });
+
+    // Inicializar select2 OCULTO
+    //$('#id_empresa, #id_inspeccion, #id_lote_envasado, #fecha_emision, #fecha_vigencia, #fecha_servicio, #id_firmante').on('change', function () {
+    /*$('#id_inspeccion, #fecha_emision, #fecha_vigencia, #id_firmante').on('change', function () {
+        // Revalidar el campo cuando se cambia el valor del select2
+            fv.revalidateField($(this).attr('name'));
+    });*/
+
+});
+
+
+
+///ELIMINAR
+$(document).on('click', '.eliminar', function () {
     var id_dictamen = $(this).data('id'); // Obtener el ID de la clase
     var dtrModal = $('.dtr-bs-modal.show');
 
@@ -463,187 +613,69 @@ $(document).on('click', '.delete-record', function () {
         text: 'No podrá revertir este evento',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+        cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
         customClass: {
-            confirmButton: 'btn btn-primary me-3',
-            cancelButton: 'btn btn-label-secondary'
+        confirmButton: 'btn btn-primary me-2',
+        cancelButton: 'btn btn-danger'
         },
         buttonsStyling: false
     }).then(function (result) {
-        if (result.isConfirmed) {
-            // Enviar solicitud DELETE al servidor
-            $.ajax({
-                type: 'DELETE',
-                url: `${baseUrl}dictamen/envasado/${id_dictamen}`,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function () {
-                    // Actualizar la tabla después de eliminar el registro
-                    dt_user.draw();
-
-                    // Mostrar SweetAlert de éxito
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Eliminado!',
-                        text: '¡El dictamen ha sido eliminado correctamente!',
-                        customClass: {
-                            confirmButton: 'btn btn-success'
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.log(error);
-                    // Mostrar SweetAlert de error
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo eliminar el dictamen.',
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                }
-
-            });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            // Acción cancelada, mostrar mensaje informativo
-            Swal.fire({
-                title: 'Cancelado',
-                text: 'La eliminación del dictamen ha sido cancelada',
-                icon: 'info',
-                customClass: {
-                    confirmButton: 'btn btn-primary'
-                }
-            });
-        }
-    });
-});
+    if (result.isConfirmed) {
+      // Enviar solicitud DELETE al servidor
+      $.ajax({
+        type: 'DELETE',
+        url: `${baseUrl}dictamen/envasado/${id_dictamen}`,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function () {
+            // Actualizar la tabla después de eliminar el registro
+            dt_user.draw();
   
-
-
-
-/* agregar un nuevo dictamen */
-$(function () {
-    // Configuración CSRF para Laravel
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    const form = document.getElementById('addNewDictamenEnvasadoForm');
-    const fv = FormValidation.formValidation(form, {
-        fields: {
-            'num_dictamen': {
-                validators: {
-                    notEmpty: {
-                        message: 'El número de dictamen es obligatorio.'
-                    },
-                }
-            },
-            'id_inspeccion': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona el número de servicio.'
-                    }
-                }
-            },
-            'fecha_emision': {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha de emisión es obligatoria.',
-                    },
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-                    }
-                }
-            },
-            'fecha_vigencia': {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha de vigencia es obligatoria.',
-                        enable: function (field) {
-                            return !$(field).val();
-                        }
-                    },
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-                    }
-                }
-            },
-            'id_firmante': {
-                validators: {
-                    notEmpty: {
-                        message: 'El nombre del firmante es obligatorio.',
-                    }
-                }
-            }
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: '.form-floating'
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-
-    }).on('core.form.valid', function () {
-        var formData = new FormData(form);
-        $.ajax({
-            url: '/dictamenes-envasado',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                // Ocultar el modal y resetear el formulario
-                $('#modalAddDictamenEnvasado').modal('hide');
-                $('#addNewDictamenEnvasadoForm')[0].reset();
-                $('.select2').val(null).trigger('change');
-                $('.datatables-users').DataTable().ajax.reload();
-
-                // Mostrar mensaje de éxito
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.message,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
-            },
-            error: function (xhr) {
-                console.log('Error:', xhr.responseText);
-                // Mostrar mensaje de error
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: 'Error al registrar el dictamen de envasado',
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
-            }
+            // Mostrar SweetAlert de éxito
+            Swal.fire({
+              icon: 'success',
+              title: '¡Exito!',
+              text: 'Eliminado correctamente',
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              }
+            });
+          },
+          error: function (error) {
+            console.log(error);
+            // Mostrar SweetAlert de error
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al eliminar',
+              //footer: `<pre>${error.responseText}</pre>`,
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+  
         });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Acción cancelada, mostrar mensaje informativo
+        Swal.fire({
+          title: '¡Cancelado!',
+          text: 'La eliminación ha sido cancelada',
+          icon: 'info',
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      }
     });
 
-    // Inicializar select2 OCULTO
-    //$('#id_empresa, #id_inspeccion, #id_lote_envasado, #fecha_emision, #fecha_vigencia, #fecha_servicio, #id_firmante').on('change', function () {
-    $('#id_inspeccion, #fecha_emision, #fecha_vigencia, #id_firmante').on('change', function () {
-    // Revalidar el campo cuando se cambia el valor del select2
-        fv.revalidateField($(this).attr('name'));
-    });
 });
 
 
 
-/* editar el dictamen envasado */
+///EDITAR
 $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -652,58 +684,58 @@ $(function () {
         }
     });
 
-    // Inicializar FormValidation para el formulario de creación y edición
-    const form = document.getElementById('addNEditDictamenEnvasadoForm');
+    // Inicializar FormValidation para el formulario
+    const form = document.getElementById('FormEditar');
     const fv = FormValidation.formValidation(form, {
-        fields: {
-            'num_dictamen': {
-                validators: {
-                    notEmpty: {
-                        message: 'El número de dictamen es obligatorio.'
-                    },
-                }
-            },
-            'id_inspeccion': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona el número de servicio.'
-                    }
-                }
-            },
-            'fecha_emision': {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha de emisión es obligatoria.'
-                    },
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-                    }
-                }
-            },
-            'fecha_vigencia': {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha de vigencia es obligatoria.'
-                    },
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-                    }
-                }
-            },
-            'id_firmante': {
-                validators: {
-                    notEmpty: {
-                        message: 'El nombre del firmante es obligatorio.',
-                        enable: function (field) {
-                            return !$(field).val();
-                        }
-                    }
-                }
+      fields: {
+        'id_inspeccion': {
+            validators: {
+            notEmpty: {
+                message: 'El número de servicio es obligatorio.'
+            }
             }
         },
-        plugins: {
+        'num_dictamen': {
+            validators: {
+            notEmpty: {
+                message: 'El número de dictamen es obligatorio.'
+            },
+            }
+        },
+        'id_firmante': {
+            validators: {
+            notEmpty: {
+                message: 'El nombre del firmante es obligatorio.',
+                enable: function (field) {
+                return !$(field).val();
+                }
+            }
+            }
+        },
+        'fecha_emision': {
+            validators: {
+            notEmpty: {
+                message: 'La fecha de emisión es obligatoria.'
+            },
+            date: {
+                format: 'YYYY-MM-DD',
+                message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+            }
+            }
+        },
+        'fecha_vigencia': {
+            validators: {
+            notEmpty: {
+                message: 'La fecha de vigencia es obligatoria.'
+            },
+            date: {
+                format: 'YYYY-MM-DD',
+                message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+            }
+            }
+        },
+      },
+      plugins: {
             trigger: new FormValidation.plugins.Trigger(),
             bootstrap5: new FormValidation.plugins.Bootstrap5({
                 eleValidClass: '',
@@ -712,12 +744,12 @@ $(function () {
             }),
             submitButton: new FormValidation.plugins.SubmitButton(),
             autoFocus: new FormValidation.plugins.AutoFocus()
-        }
+      }
     }).on('core.form.valid', function () {
         // Validar y enviar el formulario cuando pase la validación
         var formData = new FormData(form);
         var dictamenid = $('#edit_id_dictamen').val();
-
+    
         $.ajax({
             url: '/dictamenes/envasado/' + dictamenid + '/update',
             type: 'POST',
@@ -725,48 +757,48 @@ $(function () {
             contentType: false,
             processData: false,
             success: function (response) {
-                dt_user.ajax.reload();
-                $('#modalEditDictamenEnvasado').modal('hide');
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.message,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
+              dt_user.ajax.reload(); //Recarga los datos en el datatable
+              $('#ModalEditar').modal('hide');
+              Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: 'Actualizado correctamente',
+                customClass: {
+                  confirmButton: 'btn btn-primary'
+                }
+              });
             },
             error: function (xhr) {
-                if (xhr.status === 422) {
-                    var errors = xhr.responseJSON.errors;
-                    var errorMessages = Object.keys(errors).map(function (key) {
-                        return errors[key].join('<br>');
-                    }).join('<br>');
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        html: errorMessages,
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Ha ocurrido un error al actualizar el dictamen.',
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                }
+              if (xhr.status === 422) {
+                var errors = xhr.responseJSON.errors;
+                var errorMessages = Object.keys(errors).map(function (key) {
+                  return errors[key].join('<br>');
+                }).join('<br>');
+      
+                Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  html: 'Error al actualizar',
+                  customClass: {
+                    confirmButton: 'btn btn-danger'
+                  }
+                });
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Error al actualizar',
+                  customClass: {
+                    confirmButton: 'btn btn-danger'
+                  }
+                });
+              }
             }
         });
     });
 
-    // Función del botón de editar para cargar los datos del dictamen
-    $(document).on('click', '.edit-record', function () {
+    // Función para cargar los datos del dictamen
+    $(document).on('click', '.editar', function () {
         var id_dictamen = $(this).data('id');
         $('#edit_id_dictamen').val(id_dictamen);
 
@@ -774,48 +806,85 @@ $(function () {
             url: '/dictamenes/envasado/' + id_dictamen + '/edit',
             method: 'GET',
             success: function (data) {
-                if (data.success) {
-                    var dictamen = data.dictamen;
-                    // Asignar valores a los campos del formulario
-                    $('#edit_num_dictamen').val(dictamen.num_dictamen);
-                    $('#edit_id_inspeccion').val(dictamen.id_inspeccion).trigger('change');
-                    $('#edit_fecha_emision').val(dictamen.fecha_emision);
-                    $('#edit_fecha_vigencia').val(dictamen.fecha_vigencia);
-                    $('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');
-                    // Mostrar el modal
-                    $('#modalEditDictamenEnvasado').modal('show');
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo cargar los datos del dictamen envasado.',
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                }
+              if (data.success) {
+                var dictamen = data.id;//controller "funcion edit"
+                // Asignar valores a los campos del formulario
+                $('#edit_num_dictamen').val(dictamen.num_dictamen);
+                $('#edit_id_inspeccion').val(dictamen.id_inspeccion).trigger('change');
+                $('#edit_fecha_emision').val(dictamen.fecha_emision);
+                $('#edit_fecha_vigencia').val(dictamen.fecha_vigencia);
+                $('#edit_id_firmante').val(dictamen.id_firmante).prop('selected', true).change();
+              //$('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');//funciona igual que arriba
+              
+                flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
+                  dateFormat: "Y-m-d",
+                  enableTime: false,
+                  allowInput: true,
+                  locale: "es"
+                });
+                // Mostrar el modal
+                $('#ModalEditar').modal('show');
+      
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Error al cargar los datos',
+                  customClass: {
+                    confirmButton: 'btn btn-danger'
+                  }
+                });
+              }
             },
             error: function (error) {
-                console.error('Error al cargar los datos del dictamen envasado:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No se pudo cargar los datos del dictamen envasado.',
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
+              console.error('Error al cargar los datos:', error);
+              Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al cargar los datos',
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
             }
         });
     });
-
-    // Inicializar select2
+        // Inicializar select2
     //$('#edit_fecha_emision, #edit_fecha_vigencia, #edit_fecha_servicio').on('change', function () {
-    $('#edit_fecha_emision, #edit_fecha_vigencia').on('change', function () {
+    /*$('#edit_fecha_emision, #edit_fecha_vigencia').on('change', function () {
         // Revalidar el campo cuando se cambia el valor del select2
         fv.revalidateField($(this).attr('name'));
+    });*/
+      
+});
+
+
+
+///FORMATO PDF DICTAMEN
+$(document).on('click', '.pdfDictamen', function ()  {
+    var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
+    var pdfUrl = '/dictamen_envasado/' + id; //Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+    
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    
+    //Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
+
+    $("#titulo_modal").text("Dictamen de Cumplimiento NOM de Mezcal Envasado");
+    $("#subtitulo_modal").text("PDF del Dictamen");
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+        spinner.hide();
+        iframe.show();
     });
 });
+    
 
 
 
@@ -966,7 +1035,7 @@ $(function () {
     });
 
     // Guardar los valores originales cuando se edita un dictamen
-    $(document).on('click', '.reexpedir-record', function () {
+    $(document).on('click', '.reexpedir', function () {
         var id_dictamen = $(this).data('id');
         $('#reexpedir_id_dictamen').val(id_dictamen);
 
@@ -1061,32 +1130,6 @@ $(function () {
 
 });
 
-
-
-///VER PDF DICTAMEN
-$(document).on('click', '.pdfDictamen', function ()  {
-    var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
-    var pdfUrl = '/dictamen_envasado/' + id; //Ruta del PDF
-    var iframe = $('#pdfViewer');
-    var spinner = $('#cargando');
-        
-      //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-      spinner.show();
-      iframe.hide();
-      
-      //Cargar el PDF con el ID
-      iframe.attr('src', pdfUrl);
-      //Configurar el botón para abrir el PDF en una nueva pestaña
-      $("#NewPestana").attr('href', pdfUrl).show();
-  
-      $("#titulo_modal").text("Dictamen de Cumplimiento NOM de Mezcal Envasado");
-      $("#subtitulo_modal").text("PDF del Dictamen");
-      //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-      iframe.on('load', function () {
-        spinner.hide();
-        iframe.show();
-      });
-  });
 
 
 

@@ -13,14 +13,15 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_inspeccion" name="id_inspeccion" class="select2 form-select" data-placeholder="Selecciona el número de servicio">
+                                <select id="id_inspeccion" name="id_inspeccion" class="select2 form-select" 
+                                    data-placeholder="Selecciona el número de servicio">
                                     <option value="" disabled selected> </option>
-                                    @foreach ($inspecciones as $inspeccion)
-                                        <option value="{{ $inspeccion->id_inspeccion }}">{{ $inspeccion->num_servicio }} | {{ $inspeccion->solicitud->folio }} | {{ $inspeccion->solicitud->instalacion->direccion_completa ?? '' }}
+                                    @foreach ($inspecciones as $insp)
+                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->folio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="id_inspeccion">No. de servicio</label>
+                                <label for="">No. de servicio</label>
                             </div>
                         </div>
                     </div>
@@ -28,9 +29,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" id="num_dictamen" name="num_dictamen" autocomplete="off"
+                                <input type="text" class="form-control" id="num_dictamen" name="num_dictamen"
                                     placeholder="no. dictamen">
-                                <label for="num_dictamen">No. de dictamen</label>
+                                <label for="">No. de dictamen</label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -41,7 +42,7 @@
                                         <option value="{{ $inspector->id }}">{{ $inspector->name }}</option>
                                     @endforeach
                                 </select>
-                                    <label for="id_firmante">Selecciona un firmante</label>
+                                    <label for="">Selecciona un firmante</label>
                             </div>
                         </div>
                     </div>
@@ -49,16 +50,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control flatpickr-datetime" id="fecha_emision" name="fecha_emision" autocomplete="off"
+                                <input class="form-control flatpickr-datetime" id="fecha_emision" name="fecha_emision"
                                     placeholder="YYYY-MM-DD">
-                                <label for="fecha_emision">Fecha de emisión</label>
+                                <label for="">Fecha de emisión</label>
                             </div>
                         </div>    
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" id="fecha_vigencia" name="fecha_vigencia" autocomplete="off"
+                                <input class="form-control" id="fecha_vigencia" name="fecha_vigencia"
                                     placeholder="YYYY-MM-DD" readonly>
-                                <label for="fecha_vigencia">Fecha de vigencia</label>
+                                <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
                     </div>
@@ -95,14 +96,15 @@
 
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="edit_id_inspeccion" name="id_inspeccion" class="select2 form-select" data-placeholder="Selecciona el número de servicio">
+                                <select id="edit_id_inspeccion" name="id_inspeccion" class="select2 form-select" 
+                                    data-placeholder="Selecciona el número de servicio">
                                     <option value="" disabled selected> </option>
-                                    @foreach ($inspecciones as $inspeccion)
-                                        <option value="{{ $inspeccion->id_inspeccion }}">{{ $inspeccion->num_servicio }} | {{ $inspeccion->solicitud->folio }} | {{ $inspeccion->solicitud->instalacion->direccion_completa ?? '' }}
+                                    @foreach ($inspecciones as $insp)
+                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->folio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="id_inspeccion">No. de servicio</label>
+                                <label for="">No. de servicio</label>
                             </div>
                         </div>
                     </div>
@@ -110,9 +112,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" id="edit_num_dictamen" name="num_dictamen" autocomplete="off"
+                                <input type="text" class="form-control" id="edit_num_dictamen" name="num_dictamen"
                                     placeholder="no. dictamen">
-                                <label for="num_dictamen">No. de dictamen</label>
+                                <label for="">No. de dictamen</label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -122,7 +124,7 @@
                                         <option value="{{ $inspector->id }}">{{ $inspector->name }}</option>
                                     @endforeach
                                 </select>
-                                    <label for="id_firmante">Selecciona un firmante</label>
+                                    <label for="">Selecciona un firmante</label>
                             </div>
                         </div>
                     </div>
@@ -130,16 +132,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control flatpickr-datetime" id="edit_fecha_emision" name="fecha_emision" autocomplete="off"
+                                <input class="form-control flatpickr-datetime" id="edit_fecha_emision" name="fecha_emision"
                                     placeholder="YYYY-MM-DD">
-                                <label for="fecha_emision">Fecha de emisión</label>
+                                <label for="">Fecha de emisión</label>
                             </div>
                         </div>    
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" autocomplete="off"
+                                <input class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia"
                                     placeholder="YYYY-MM-DD" readonly>
-                                <label for="fecha_vigencia">Fecha de vigencia</label>
+                                <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
                     </div>

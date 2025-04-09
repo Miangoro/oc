@@ -35,7 +35,7 @@ class DictamenGranelController extends Controller  {
         // Obtener los datos necesarios
         $inspecciones = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 3);
-        })->orderBy('id_inspeccion', 'desc')->get();
+            })->orderBy('id_inspeccion', 'desc')->get();
         $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $inspectores = User::where('tipo', 2)->get(); // Obtener solo los usuarios con tipo '2' (inspectores)
         $lotesGranel = LotesGranel::all();
@@ -69,6 +69,11 @@ class DictamenGranelController extends Controller  {
 
         // Validamos si el índice de la columna es válido
     $orderColumn = isset($columns[$order]) ? $columns[$order] : 'id_dictamen'; //Por defecto ordenar por 'id_dictamen'
+    
+    // Si el índice de la columna es 2 (id_inspeccion), ignoramos la ordenación
+    if ($orderColumn === 'id_inspeccion') {
+        $orderColumn = 'id_dictamen';  // Cambiar a id_dictamen si la columna es id_inspeccion
+    }
     
         //Declara la relacion
         $query = Dictamen_Granel::with(['inspeccione.solicitud.empresa']);
@@ -194,13 +199,13 @@ public function store(Request $request)
     try {
     $validated = $request->validate([
         'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
-        'id_firmante' => 'required|exists:users,id',
         'num_dictamen' => 'required|string|max:100',
+        'id_firmante' => 'required|exists:users,id',
         'fecha_emision' => 'required|date',
         'fecha_vigencia' => 'required|date',
     ]);
 
-    // Crear una nueva registro
+    // Crear una nuevo registro
     $new = new Dictamen_Granel();
     $new->num_dictamen = $validated['num_dictamen'];
     $new->id_inspeccion = $validated['id_inspeccion'];
@@ -236,7 +241,7 @@ public function destroy($id_dictamen)
 
 
 
-///FUNCION PARA OBTENER LOS DATOS REGISTRADOS
+///FUNCION PARA OBTENER LOS REGISTROS
 public function edit($id_dictamen) 
 {
     try {
@@ -427,7 +432,7 @@ public function foliofq($id_dictamen)
 
 
 
-///REEXPEDIR DICTAMEN
+///REEXPEDIR
 public function reexpedir(Request $request) 
 {
     try {
