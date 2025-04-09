@@ -76,7 +76,7 @@ class lotesEnvasadoController extends Controller
         $limit = $request->input('length');
         $start = $request->input('start');
         $orderColumnIndex = $request->input('order.0.column');
-        $order = $columns[$orderColumnIndex] ?? 'id_lote_envasado';
+        $order = 'id_lote_envasado';
         $dir = $request->input('order.0.dir');
 
         $searchValue = $request->input('search.value');
@@ -87,6 +87,7 @@ class lotesEnvasadoController extends Controller
             $query->where(function ($q) use ($searchValue) {
                 $q->where('destino_lote', 'LIKE', "%{$searchValue}%")
                     ->orWhere('nombre', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('sku', 'LIKE', "%{$searchValue}%")
                     ->orWhere('estatus', 'LIKE', "%{$searchValue}%");
 
                 $q->orWhereHas('marca', function ($qMarca) use ($searchValue) {

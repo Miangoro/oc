@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dictamen_Envasado;
 use App\Models\Dictamen_instalaciones;
 use App\Models\solicitudesModel;
 use Illuminate\Http\Request;
@@ -38,6 +39,20 @@ class insertar_datos_bd_lotes_envasado extends Controller
                     /* if($solicitud['id_cliente']==11 OR $solicitud['id_cliente']==32){
                        
                     }*/
+
+                    $firma = $solicitud['firma'];
+
+                    if ($firma === "../img/Firma Inspector Erik.png") {
+                        echo $id_firmante = 9;
+                    } 
+                    elseif ($firma === "../img/firma_firma karen.png") {
+                        echo $id_firmante = 6;
+                    }elseif (in_array($firma, ["../img/firma_mario.png", "../img/firma_mayra.png"])) {
+                        echo $id_firmante = 14;
+                    } else {
+                        echo $id_firmante = 14;
+                    }
+
                    
                     $id_empresa = empresaNumCliente::where('numero_cliente', trim($solicitud['folio']))->value('id_empresa');
                     $id_marca = marcas::where('marca', trim($solicitud['marca']))->value('id_marca');
@@ -52,7 +67,7 @@ class insertar_datos_bd_lotes_envasado extends Controller
                             $id_envasado = lotes_envasado::create([
                                 'id_empresa'   => $id_empresa,
                                 'nombre'  => $solicitud['n_lote_envasado'],
-                                'sku'    => json_encode(['inicial' => $solicitud['no_pedido'],]),
+                                'sku'    => json_encode(['inicial' => $solicitud['sku_dictamen'] ?? $solicitud['no_pedido'],]),
                                 'id_marca'   => $id_marca ?? 0,
                                 'destino_lote'  => 1,
                                 'cant_botellas'        => $solicitud['n_botellas'],
@@ -72,6 +87,32 @@ class insertar_datos_bd_lotes_envasado extends Controller
                                     'volumen_parcial'    => $solicitud['volumen'],
                                 ]);
                             }
+
+                            if (!empty($solicitud['n_servicio'])) {
+                                $inspecciones = inspecciones::where('num_servicio', $solicitud['n_servicio'])->first();
+                                
+                            } else {
+                                $inspecciones = null; // O maneja este caso según corresponda
+                            }
+
+                            if($inspecciones){
+                                Dictamen_Envasado::create([
+                                    'num_dictamen'   => $solicitud['n_dictamen'],
+                                    'id_inspeccion'  => $inspecciones->id_inspeccion,
+                                    'fecha_emision'    => $solicitud['fecha_emision'],
+                                    'fecha_vigencia'    => $solicitud['fecha_vigencia'],
+                                    'id_firmante' => $id_firmante,
+                                    'estatus' => 0
+                                ]);
+                            }
+
+                         /*   if($id_lote_granel){
+                                lotes_envasado_granel::update([
+                                    'id_lote_envasado'   => $id_envasado->id_lote_envasado,
+                                    'id_lote_granel'  => $id_lote_granel,
+                                    'volumen_parcial'    => $solicitud['volumen'],
+                                ]);
+                            }*/
                             
                             
                            

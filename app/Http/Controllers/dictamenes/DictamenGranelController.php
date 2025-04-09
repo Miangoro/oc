@@ -30,8 +30,8 @@ use Endroid\QrCode\Writer\ValidationException;
 class DictamenGranelController extends Controller  {
 
 
-    public function UserManagement() {
-
+    public function UserManagement() 
+    {
         // Obtener los datos necesarios
         $inspecciones = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 3);
@@ -45,28 +45,31 @@ class DictamenGranelController extends Controller  {
     }
 
 
-    public function index(Request $request)  {
-        
+    public function index(Request $request)  
+    {
         $columns = [
         //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
             1 => 'id_dictamen',
-            2 => 'num_dictamen',
-            3 => 'id_empresa',
-            4 => 'id_inspeccion',
+            2 => 'id_inspeccion',//servicio
+            3 => '',//num-cliente
+            4 => '',//caracteristicas
             5 => 'fecha_emision',
-            6 => 'fecha_vigencia',
-            7 => 'estatus',
+            6 => 'estatus',
         ];
 
-        $search = $request->input('search.value');
-        $totalData = Dictamen_Granel::count();
-        $totalFiltered = $totalData;
+        $search = $request->input('search.value');//Obtener el valor de búsqueda
+        $totalData = Dictamen_Granel::count();// Contar todos los registros sin filtros
+        $totalFiltered = $totalData;// Inicializar totalFiltered con el valor total de registros
 
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
+        $limit = $request->input('length');// Número de registros por página
+        $start = $request->input('start');// Inicio de la paginación
+        //$order = $columns[$request->input('order.0.column')];//Orden de columna
+        $order = $request->input('order.0.column');//Orden de columna
+        $dir = $request->input('order.0.dir');// Dirección del orden (asc o desc)
 
+        // Validamos si el índice de la columna es válido
+    $orderColumn = isset($columns[$order]) ? $columns[$order] : 'id_dictamen'; //Por defecto ordenar por 'id_dictamen'
+    
         //Declara la relacion
         $query = Dictamen_Granel::with(['inspeccione.solicitud.empresa']);
 
@@ -82,7 +85,8 @@ class DictamenGranelController extends Controller  {
                     })
                     //inspecciones
                     ->orWhereHas('inspeccione', function ($q) use ($search) {
-                        $q->where('num_servicio', 'LIKE', "%{$search}%");
+                        $q->where('num_servicio', 'LIKE', "%{$search}%")
+                        ->orWhere('id_inspeccion', 'LIKE', "%{$search}%");
                     })
                     //num-cliente
                     ->orWhereHas('inspeccione.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
@@ -94,7 +98,6 @@ class DictamenGranelController extends Controller  {
                         ->orWhere('caracteristicas', 'LIKE', "%{$search}%");
                     });
             });
-
             // Calcular el total filtrado
             $totalFiltered = $query->count();
         }
@@ -102,18 +105,17 @@ class DictamenGranelController extends Controller  {
         // Obtener resultados con paginación
         $query = $query->offset($start)//$query vincula al foreach del JS
             ->limit($limit)
-            ->offset($start)
+            ->orderBy($orderColumn, $dir)// Ordenamos por la columna seleccionada
             /*->orderByRaw("
         CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
         CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')
         ")*/
-            ->orderBy('id_dictamen', 'desc')
+            //->orderBy('id_dictamen', 'desc')
             ->get();
 
-
+        
         //MANDA LOS DATOS AL JS
         $data = [];
-
         if (!empty($query)) {
             foreach ($query as $dictamen) {
                 $nestedData['id_dictamen'] = $dictamen->id_dictamen;
@@ -174,28 +176,21 @@ class DictamenGranelController extends Controller  {
             }
         }
 
-        if ($data) {
-            return response()->json([
-                'draw' => intval($request->input('draw')),
-                'recordsTotal' => intval($totalData),
-                'recordsFiltered' => intval($totalFiltered),
-                'code' => 200,
-                'data' => $data,
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'Internal Server Error',
-                'code' => 500,
-                'data' => [],
-            ]);
-        }
-}
+
+        return response()->json([//Devuelve los datos y el total de registros filtrados
+            'draw' => intval($request->input('draw')),
+            'recordsTotal' => intval($totalData),
+            'recordsFiltered' => intval($totalFiltered),
+            'code' => 200,
+            'data' => $data,
+        ]);
+    }
 
 
 
 ///FUNCION PARA REGISTRAR
-public function store(Request $request) {
-
+public function store(Request $request) 
+{
     try {
     $validated = $request->validate([
         'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
@@ -227,8 +222,8 @@ public function store(Request $request) {
 
 
 ///FUNCION PARA ELIMINAR
-public function destroy($id_dictamen) {
-
+public function destroy($id_dictamen) 
+{
     try {
         $eliminar = Dictamen_Granel::findOrFail($id_dictamen);
         $eliminar->delete();
@@ -242,8 +237,8 @@ public function destroy($id_dictamen) {
 
 
 ///FUNCION PARA OBTENER LOS DATOS REGISTRADOS
-public function edit($id_dictamen) {
-
+public function edit($id_dictamen) 
+{
     try {
         // Cargar el dictamen específico
         $editar = Dictamen_Granel::findOrFail($id_dictamen);
@@ -258,8 +253,8 @@ public function edit($id_dictamen) {
 }
 
 ///FUNCION PARA ACTUALIZAR
-public function update(Request $request, $id_dictamen) {
-
+public function update(Request $request, $id_dictamen) 
+{
     try {
         // Validar los datos del formulario
         $validated = $request->validate([
@@ -296,8 +291,8 @@ public function update(Request $request, $id_dictamen) {
 
 
 ///PDF DICTAMEN
-public function MostrarDictamenGranel($id_dictamen) {
-
+public function MostrarDictamenGranel($id_dictamen) 
+{
     // Obtener los datos del dictamen específico
     $data = Dictamen_Granel::find($id_dictamen);
 
@@ -359,8 +354,8 @@ public function MostrarDictamenGranel($id_dictamen) {
 
 
 ///FQ'S
-public function foliofq($id_dictamen) {
-
+public function foliofq($id_dictamen) 
+{
     try {
         Log::info('ID del Dictamen: ' . $id_dictamen);
 
@@ -433,8 +428,8 @@ public function foliofq($id_dictamen) {
 
 
 ///REEXPEDIR DICTAMEN
-public function reexpedir(Request $request) {
-
+public function reexpedir(Request $request) 
+{
     try {
         $request->validate([
             'accion_reexpedir' => 'required|in:1,2',

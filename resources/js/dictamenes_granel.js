@@ -103,28 +103,31 @@ if (dt_user_table.length) {
     ],
     columnDefs: [
         {
+          targets: 0,
           className: 'control',
           searchable: false,
           orderable: false,
-          responsivePriority: 2,
-          targets: 0,
+          responsivePriority: 4,
           render: function (data, type, full, meta) {
             return '';
           }
         },
         {
-          //tabla1
           targets: 1,
+          searchable: true, //No será buscable en el cuadro de búsqueda.
+          orderable: true, // No se podrá ordenar esta columna al hacer clic en el encabezado.
+          responsivePriority: 4, //Los valores mas bajos se ocultan primero.
           render: function (data, type, full, meta) {
-            var $num_dictamen = full['num_dictamen'];
             var $id = full['id_dictamen'];
+            var $num_dictamen = full['num_dictamen'];
             return `<small class="fw-bold">`+ $num_dictamen + `</small>` +
               `<i class="ri-file-pdf-2-fill text-danger ri-28px pdfDictamen cursor-pointer" data-id="` + $id + `" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
           }
         }, 
         {
-          //tabla2
           targets: 2,
+          searchable: true,
+          orderable: true, 
           render: function (data, type, full, meta) {
             var $num_servicio = full['num_servicio'];
             var $folio_solicitud = full['folio_solicitud'];
@@ -142,9 +145,10 @@ if (dt_user_table.length) {
           }
         }, 
         {
-          //tabla4
           targets: 4,
-          responsivePriority: 4,
+          searchable: false,
+          orderable: false, 
+          responsivePriority: 4, 
           render: function (data, type, full, meta) {
         
             // Retorna el badge con el texto y color apropiado
@@ -152,7 +156,9 @@ if (dt_user_table.length) {
           }     
         },
         {
-          targets: 5, // Suponiendo que este es el índice de la columna que quieres actualizar
+          targets: 5, 
+          searchable: false,
+          orderable: false,
           render: function (data, type, full, meta) {
               // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
               var $fecha_emision = full['fecha_emision'] ?? 'N/A'; // Fecha de vigencia
@@ -174,9 +180,8 @@ if (dt_user_table.length) {
         {
           ///estatus
           targets: 6,
-          searchable: false,
-          orderable: false,
-          responsivePriority: 4,
+          searchable: true,
+          orderable: true,
           render: function (data, type, full, meta) {
             var $estatus = full['estatus'];
             var $emision = full['emision'];
