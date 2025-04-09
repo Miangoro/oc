@@ -412,7 +412,6 @@ public function MostrarDictamenEnvasado($id_dictamen)
     $lotesGranel = $loteEnvasado ? $loteEnvasado->lotesGranel : collect(); // Si no hay, devuelve una colección vacía
     $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
-    $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
     $watermarkText = $data->estatus == 1;//marca de agua
 
     // Renderizar el PDF con los lotes a granel
@@ -421,8 +420,6 @@ public function MostrarDictamenEnvasado($id_dictamen)
         'lote_envasado' => $loteEnvasado,
         'marca' => $marca,
         'lotesGranel' => $lotesGranel, // Pasamos los lotes a granel a la vista
-        'data' => $data,
-        'fecha_servicio' => $fecha_servicio,
         'fecha_emision' => $fecha_emision,
         'fecha_vigencia' => $fecha_vigencia,
         'watermarkText' => $watermarkText,

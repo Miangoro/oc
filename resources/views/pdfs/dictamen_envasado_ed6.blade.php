@@ -296,31 +296,31 @@
             <tbody>
                 <tr>
                     <td class="column">Nombre de la empresa</td>
-                    <td colspan="3" style="text-align: center;">{{ $data->empresa->razon_social }}</td>
+                    <td colspan="3" style="text-align: center;">{{ $data->empresa->razon_social ?? ''}}</td>
                 </tr>
                 <tr>
                     <td class="column">Representante legal</td>
-                    <td>{{ $data->empresa->representante }}</td>
+                    <td>{{ $data->empresa->representante ?? ''}}</td>
                     <td class="column">Número de dictamen</td>
-                    <td>{{ $data->num_dictamen }}</td>
+                    <td>{{ $data->num_dictamen ?? ''}}</td>
                 </tr>
                 <tr>
                     <td class="column">Dirección</td>
-                    <td> {{ $data->empresa->domicilio_fiscal }}</td>
+                    <td> {{ $data->empresa->domicilio_fiscal ?? ''}}</td>
                     <td class="column">Fecha de emisión</td>
-                    <td> {{ $fecha_emision }}</td>
+                    <td> {{ $fecha_emision ?? ''}}</td>
                 </tr>
                 <tr>
                     <td class="column">RFC</td>
-                    <td> {{ $data->empresa->rfc }}</td>
+                    <td> {{ $data->empresa->rfc ?? ''}}</td>
                     <td class="column">Fecha de vencimiento</td>
-                    <td>{{ $fecha_vigencia }}</td>
+                    <td>{{ $fecha_vigencia ?? ''}}</td>
                 </tr>
                 <tr>
                     <td class="column">No. servicio</td>
                     <td>{{ $data->inspeccion->num_servicio ?? 'N/A' }}</td>
                     <td class="column">Fecha del servicio</td>
-                    <td>{{ $fecha_servicio }}</td>
+                    <td>{{ $fecha_servicio ?? ''}}</td>
                 </tr>
             </tbody>
         </table>
@@ -374,7 +374,7 @@
                     <td>
                         @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->ingredientes }}
+                                {{ $loteGranel->ingredientes ?? ''}}
                                 <!-- Añade una separación si deseas entre los nombres de lotes -->
                                 @if (!$loop->last)
                                     ,
@@ -390,7 +390,7 @@
                     <td>
                         @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->edad }}
+                                {{ $loteGranel->edad ?? ''}}
                                 <!-- Añade una separación si deseas entre los nombres de lotes -->
                                 @if (!$loop->last)
                                     ,
@@ -404,7 +404,7 @@
                     <td>
                         @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->nombre_lote }}
+                                {{ $loteGranel->nombre_lote ?? '' }}
                                 <!-- Añade una separación si deseas entre los nombres de lotes -->
                                 @if (!$loop->last)
                                     ,
@@ -418,7 +418,7 @@
                     <td>
                         @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->folio_fq }}
+                                {{ $loteGranel->folio_fq ?? ''}}
                                 <!-- Añade una separación si deseas entre los nombres de lotes -->
                                 @if (!$loop->last)
                                     ,
@@ -437,7 +437,7 @@
                     <td>
                         @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->volumen }}
+                                {{ $loteGranel->volumen ?? '' }}
                                 <!-- Añade una separación si deseas entre los nombres de lotes -->
                                 @if (!$loop->last)
                                     ,
@@ -451,7 +451,7 @@
                     <td>
                         @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->cont_alc }}
+                                {{ $loteGranel->cont_alc ?? '' }}
                                 <!-- Añade una separación si deseas entre los nombres de lotes -->
                                 @if (!$loop->last)
                                     ,
@@ -491,7 +491,7 @@
             especificaciones.</p>
 
 
-        <p class="sello">Sello de Unidad de Inspección</p>
+        {{-- <p class="sello">Sello de Unidad de Inspección</p>
         <div class="images-container">
             <img src="{{ public_path('img_pdf/qr_umc-074.png') }}" alt="Logo UVEM" width="90px">
             <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
@@ -526,12 +526,47 @@
             <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
             <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341.
                 Morelia Michoacán</p>
-        </div>
+        </div> 
+
 
         <p class="pie">Entrada en vigor: 15-07-2024<br>
             F-UV-04-17 Ver 6.
         </p>
+    </div>  --}}
+
+
+    <br><br>
+
+<div style="margin-left: 15px;">
+    <p class="sello">Sello de Unidad de Inspección</p>
+    <div class="images-container">
+        <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
+        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
     </div>
+    <p class="textx" style="font-size: 9px;">
+        <strong>AUTORIZÓ</strong>
+        <span style="margin-left: 50px;">
+            <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
+        </span>
+    </p>
+
+    <p class="textx" style="font-size: 9px;">
+        <strong>CADENA ORIGINAL</strong>
+        <span style="margin-left: 14px;">
+            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+        </span>
+    </p>
+
+    <p class="textx" style="font-size: 9px; ">
+        <strong>SELLO DIGITAL</strong>
+    </p>
+
+    <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
+        {{ $firmaDigital['firma'] }}
+    </p>
+
+</div>
+
 </body>
 
 </html>
