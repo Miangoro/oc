@@ -687,31 +687,31 @@ Route::middleware(['auth'])->controller(InstalacionesController::class)->group(f
     Route::get('/dictamen_almacen/{id_dictamen}', 'dictamen_almacen')->name('dictamen_almacen');
     Route::get('/dictamen_maduracion/{id_dictamen}', 'dictamen_maduracion')->name('dictamen_maduracion');
 });
+
 /*------------------- Dictamenes a granel -------------------*/
-Route::get('/dictamenes/productos', [DictamenGranelController::class, 'UserManagement'])->name('dictamenes-productos');
-Route::resource('/dictamen-granel-list', DictamenGranelController::class);
-Route::delete('dictamen/granel/{id_dictamen}', [DictamenGranelController::class, 'destroy'])->name('dictamen.delete');
-Route::post('dictamenes-granel',[DictamenGranelController::class, 'store'])->name('dictamen.store');
-route::get('/dictamenes/productos/{id_dictamen}/edit', [DictamenGranelController::class, 'edit'])->name('dictamenes.edit');
-Route::post('/dictamenes/productos/{id_dictamen}/update', [DictamenGranelController::class, 'update'])->name('dictamen.update');
-Route::get('/dictamenes/productos/{id_dictamen}/foliofq', [DictamenGranelController::class, 'foliofq'])->name('dictamenes.foliofq');
-//Reexpedir
-Route::post('/registrar/reexpedir-granel', [DictamenGranelController::class, 'reexpedir'])->name('dic-granel.reex');
-// Ruta para el PDF con ID
-route::get('/dictamen_granel/{id_dictamen}', [DictamenGranelController::class, 'MostrarDictamenGranel'])->name('dictamen-cumplimiento-granel');
+Route::middleware(['auth'])->controller(DictamenGranelController::class)->group(function () {
+    Route::get('/dictamenes/productos', [DictamenGranelController::class, 'UserManagement'])->name('dictamenes-productos');
+    Route::resource('/dictamen-granel-list', DictamenGranelController::class);
+    Route::delete('dictamen/granel/{id_dictamen}', [DictamenGranelController::class, 'destroy'])->name('dictamen.delete');
+    Route::post('dictamenes-granel',[DictamenGranelController::class, 'store'])->name('dictamen.store');
+    route::get('/dictamenes/productos/{id_dictamen}/edit', [DictamenGranelController::class, 'edit'])->name('dictamenes.edit');
+    Route::post('/dictamenes/productos/{id_dictamen}/update', [DictamenGranelController::class, 'update'])->name('dictamen.update');
+    Route::get('/dictamenes/productos/{id_dictamen}/foliofq', [DictamenGranelController::class, 'foliofq'])->name('dictamenes.foliofq');
+    Route::post('/registrar/reexpedir-granel', [DictamenGranelController::class, 'reexpedir'])->name('dic-granel.reex');
+    Route::get('/dictamen_granel/{id_dictamen}', [DictamenGranelController::class, 'MostrarDictamenGranel'])->name('formato-dictamen-granel');
+});
 
 /*------------------- Dictamenes envadaso -------------------*/
-Route::get('/dictamenes/envasado', [DictamenEnvasadoController::class, 'UserManagement'])->name('dictamenes-envasado')->middleware(['auth']);
-Route::resource('/dictamen-envasado-list', DictamenEnvasadoController::class)->middleware(['auth']);
-Route::delete('dictamen/envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'destroy'])->name('dictamen.delete')->middleware(['auth']);
-Route::post('dictamenes-envasado',[DictamenEnvasadoController::class, 'store'])->name('dictamen.store')->middleware(['auth']);
-route::get('/dictamenes/envasado/{id_dictamen}/edit', [DictamenEnvasadoController::class, 'edit'])->name('dictamenes.edit')->middleware(['auth']);
-Route::post('/dictamenes/envasado/{id_dictamen}/update', [DictamenEnvasadoController::class, 'update'])->name('dictamen.update')->middleware(['auth']);
-//Reexpedir
-Route::post('/registrar/reexpedir-envasado', [DictamenEnvasadoController::class, 'reexpedir'])->name('dic-envasado.reex');
-// Ruta para el PDF
-route::get('/dictamen_envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'MostrarDictamenEnvasado'])->name('dictamen-cumplimiento-envasado');
-
+Route::middleware(['auth'])->controller(DictamenEnvasadoController::class)->group(function () {
+    Route::get('/dictamenes/envasado', [DictamenEnvasadoController::class, 'UserManagement'])->name('dictamenes-envasado');
+    Route::resource('/dictamen-envasado-list', DictamenEnvasadoController::class);
+    Route::delete('dictamen/envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'destroy'])->name('dictamen.delete');
+    Route::post('dictamenes-envasado',[DictamenEnvasadoController::class, 'store'])->name('dictamen.store');
+    route::get('/dictamenes/envasado/{id_dictamen}/edit', [DictamenEnvasadoController::class, 'edit'])->name('dictamenes.edit');
+    Route::post('/dictamenes/envasado/{id_dictamen}/update', [DictamenEnvasadoController::class, 'update'])->name('dictamen.update');
+    Route::post('/registrar/reexpedir-envasado', [DictamenEnvasadoController::class, 'reexpedir'])->name('dic-envasado.reex');
+    Route::get('/dictamen_envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'MostrarDictamenEnvasado'])->name('formato-dictamen-envasado');
+});
 
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
