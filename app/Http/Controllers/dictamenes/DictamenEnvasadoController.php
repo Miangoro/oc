@@ -24,9 +24,8 @@ class DictamenEnvasadoController extends Controller
     
     public function UserManagement()
     {
-        //$inspecciones = Inspecciones::all();
         $inspecciones = Inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
-            $query->where('id_tipo', 5);
+            $query->where('id_tipo', 3);
             })->orderBy('id_inspeccion', 'desc')->get();
         $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $inspectores = User::where('tipo', 2)->get(); // Obtener solo los usuarios con tipo '2' (inspectores)
@@ -79,6 +78,14 @@ class DictamenEnvasadoController extends Controller
             });
             $totalFiltered = $query->count();
         }*/
+
+        $order = isset($columns[$order]) ? $columns[$order] : 'id_dictamen_envasado';//Por defecto ordenar por 'id_dictamen'
+
+        // Si el índice de la columna es 2 (id_inspeccion), ignoramos la ordenación
+        if ($order === 'id_inspeccion') {
+            $order = 'id_dictamen_envasado';  // Cambiar a id_dictamen si la columna es id_inspeccion
+        }
+
         $query = Dictamen_envasado::with(['inspeccion.solicitud.empresa']);
         //Buscador
         if (!empty($search)) {
@@ -282,8 +289,8 @@ public function update(Request $request, $id_dictamen_envasado)
 
 
      
-//REEXPEDIR
-public function reexpedirDictamen(Request $request, $id_dictamen_envasado)
+///REEXPEDIR
+/*public function reexpedirDictamen(Request $request, $id_dictamen_envasado)
 {
     DB::beginTransaction();
     try {
@@ -324,7 +331,71 @@ public function reexpedirDictamen(Request $request, $id_dictamen_envasado)
         DB::rollBack();
         return response()->json(['message' => 'Error al procesar la operación.', 'error' => $e->getMessage()], 500);
     }
+}*/
+///otro
+public function reexpedir(Request $request) 
+{
+    try {
+        $request->validate([
+            'accion_reexpedir' => 'required|in:1,2',
+            'observaciones' => 'nullable|string',
+        ]);
+
+        if ($request->accion_reexpedir == '2') {
+            $request->validate([
+                'id_dictamen_envasado' => 'required|exists:dictamenes_envasado,id_dictamen_envasado',
+                'id_inspeccion' => 'required|integer',
+                'num_dictamen' => 'required|string|max:25',
+                'fecha_emision' => 'required|date',
+                'fecha_vigencia' => 'required|date',
+                'id_firmante' => 'required|integer',
+            ]);
+        }
+
+        $reexpedir = Dictamen_Envasado::findOrFail($request->id_dictamen_envasado);
+
+        if ($request->accion_reexpedir == '1') {
+            $reexpedir->estatus = 1; 
+            // Decodificar el JSON actual
+            $observacionesActuales = json_decode($reexpedir->observaciones, true);
+            // Actualiza solo 'observaciones' sin modificar 'id_certificado_sustituye'
+            $observacionesActuales['observaciones'] = $request->observaciones;
+            // Volver a codificar el array y asignarlo a $certificado->observaciones
+            $reexpedir->observaciones = json_encode($observacionesActuales); 
+            $reexpedir->save();
+
+            return response()->json(['message' => 'Cancelado correctamente']);
+
+        } else if ($request->accion_reexpedir == '2') {
+            $reexpedir->estatus = 1;
+                $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales);
+            $reexpedir->save(); 
+
+            // Crear un nuevo registro de reexpedición
+            $new = new Dictamen_Envasado();
+            $new->num_dictamen = $request->num_dictamen;
+            $new->id_inspeccion = $request->id_inspeccion;
+            $new->fecha_emision = $request->fecha_emision;
+            $new->fecha_vigencia = $request->fecha_vigencia;
+            $new->id_firmante = $request->id_firmante;
+            $new->estatus = 2;
+            $new->observaciones = json_encode([
+                'id_sustituye' => $request->id_dictamen_envasado,
+                ]);
+            $new->save();// Guardar
+
+            return response()->json(['message' => 'Registrado correctamente']);
+        }
+
+        return response()->json(['message' => 'Procesado correctamente']);
+    } catch (\Exception $e) {
+        Log::error($e);
+        return response()->json(['message' => 'Error al procesar.', 'error' => $e->getMessage()], 500);
+    }
 }
+
 
 
 

@@ -20,7 +20,7 @@
                                     <option value="1">Cancelar</option>
                                     <option value="2">Cancelar y reexpedir</option>
                                 </select>
-                                <label for="accion_reexpedir">¿Qué quieres hacer?</label>
+                                <label for="">¿Qué quieres hacer?</label>
                             </div>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline">
                             <select class="select2 form-select" id="rex_id_inspeccion" name="id_inspeccion" 
-                                data-placeholder="Selecciona el no. de servicio">
+                                data-placeholder="Selecciona el número de servicio">
                                 <option value="" disabled selected>NULL</option>
                                 @foreach($inspecciones as $insp)
                                 <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->folio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}</option>
@@ -50,8 +50,8 @@
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline">
                                 <input type="text" class="form-control" id="rex_numero_dictamen"
-                                    autocomplete="off" name="num_dictamen" placeholder="No. de dictamen">
-                                <label for="num_dictamen">No. de dictamen</label>
+                                    name="num_dictamen" placeholder="No. de dictamen">
+                                <label for="">No. de dictamen</label>
                             </div>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                                         <option value="{{ $inspector->id }}">{{ $inspector->name }}</option>
                                     @endforeach
                                 </select>
-                                <label for="id_firmante">Selecciona un firmante</label>
+                                <label for="">Selecciona un firmante</label>
                             </div>
                         </div>
                     </div>
@@ -73,15 +73,15 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
                                 <input class="form-control flatpickr-datetime" id="rex_fecha_emision" name="fecha_emision"
-                                    autocomplete="off" placeholder="YYYY-MM-DD">
-                                <label for="fecha_emision">Fecha de emisión</label>
+                                    placeholder="YYYY-MM-DD">
+                                <label for="">Fecha de emisión</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <input class="form-control" id="rex_fecha_vigencia" autocomplete="off"
-                                    name="fecha_vigencia" placeholder="YYYY-MM-DD" readonly>
-                                <label for="fecha_vigencia">Fecha de vigencia</label>
+                                <input class="form-control" id="rex_fecha_vigencia" name="fecha_vigencia" 
+                                    placeholder="YYYY-MM-DD" readonly>
+                                <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                     <div class="form-floating form-floating-outline mb-6">
                         <textarea class="form-control h-px-75" id="rex_observaciones" name="observaciones" placeholder="Escribe el motivo de cancelación"
                             rows="3"></textarea>
-                        <label for="observaciones">Motivo de cancelación</label>
+                        <label for="">Motivo de cancelación</label>
                     </div>
                        
 

@@ -30,7 +30,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input type="text" class="form-control" id="num_dictamen" name="num_dictamen"
-                                    placeholder="Número de dictamen">
+                                    placeholder="No. de dictamen">
                                 <label for="">No. de dictamen</label>
                             </div>
                         </div>
@@ -112,18 +112,18 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input type="text" class="form-control" id="edit_num_dictamen" name="num_dictamen"
-                                    placeholder="no. dictamen">
+                                    placeholder="No. de dictamen">
                                 <label for="">No. de dictamen</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select  id="edit_id_firmante" name="id_firmante" class="select2 form-select">
-                                @foreach ($inspectores as $inspector)
-                                    <option value="{{ $inspector->id }}">{{ $inspector->name }}</option>
-                                @endforeach
-                             </select>
-                                <label for="">Nombre del inspector</label>
+                                    @foreach ($inspectores as $inspector)
+                                        <option value="{{ $inspector->id }}">{{ $inspector->name }}</option>
+                                    @endforeach
+                                </select>
+                             <label for="">Selecciona un firmante</label>
                             </div>
                         </div>
                     </div>

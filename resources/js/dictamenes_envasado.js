@@ -860,36 +860,8 @@ $(function () {
 
 
 
-///FORMATO PDF DICTAMEN
-$(document).on('click', '.pdfDictamen', function ()  {
-    var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
-    var pdfUrl = '/dictamen_envasado/' + id; //Ruta del PDF
-    var iframe = $('#pdfViewer');
-    var spinner = $('#cargando');
-    
-    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-    spinner.show();
-    iframe.hide();
-    
-    //Cargar el PDF con el ID
-    iframe.attr('src', pdfUrl);
-    //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', pdfUrl).show();
-
-    $("#titulo_modal").text("Dictamen de Cumplimiento NOM de Mezcal Envasado");
-    $("#subtitulo_modal").text("PDF del Dictamen");
-    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-    iframe.on('load', function () {
-        spinner.hide();
-        iframe.show();
-    });
-});
-    
-
-
-
 //REEXPEDIR DICTAMEN
-$(function () {
+/*$(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
         headers: {
@@ -1128,8 +1100,257 @@ $(function () {
         fv.revalidateField($(this).attr('name'));
     });
 
+});*/
+///otro
+///REEXPEDIR
+let isLoadingData = false;
+let fieldsValidated = []; 
+
+$(document).ready(function () {
+
+  $(document).on('click', '.reexpedir', function () {
+      var id_dictamen = $(this).data('id');
+      console.log('ID Dictamen para reexpedir:', id_dictamen);
+      $('#rex_id_dictamen').val(id_dictamen);
+      $('#ModalReexpedir').modal('show');
+  });
+
+  //funcion fechas
+  $('#rex_fecha_emision').on('change', function () {
+      var fecha_emision = $(this).val();
+      if (fecha_emision) {
+          var fecha = moment(fecha_emision, 'YYYY-MM-DD');
+          var fecha_vigencia = fecha.add(1, 'years').format('YYYY-MM-DD');
+          $('#rex_fecha_vigencia').val(fecha_vigencia);
+      }
+  });
+
+
+  $(document).on('change', '#accion_reexpedir', function () {
+    var accionSeleccionada = $(this).val();
+    console.log('Acción seleccionada:', accionSeleccionada);
+    var id_dictamen = $('#rex_id_dictamen').val();
+
+      if (accionSeleccionada && !isLoadingData) {
+          isLoadingData = true;
+          cargarDatosReexpedicion(id_dictamen);
+      }
+
+      if (accionSeleccionada === '2') {
+        $('#campos_condicionales').slideDown();
+      }else {
+          $('#campos_condicionales').slideUp();
+      }
+  });
+  
+  function cargarDatosReexpedicion(id_dictamen) {
+      console.log('Cargando datos para la reexpedición con ID:', id_dictamen);
+      clearFields();
+  
+      //$.get(`/dictamenes/productos/${id_dictamen}/edit`).done(function (data) {
+      //url: '/dictamenes/envasado/' + id_dictamen + '/edit',
+      $.get('/dictamenes/envasado/' + id_dictamen + '/edit').done(function (data) {
+      console.log('Respuesta completa:', data);
+      var dictamen = data.id;
+  
+          if (data.error) {
+              showError(data.error);
+              return;
+          }
+
+          $('#rex_id_inspeccion').val(dictamen.id_inspeccion).trigger('change');
+          $('#rex_numero_dictamen').val(dictamen.num_dictamen);
+          $('#rex_id_firmante').val(dictamen.id_firmante).trigger('change');
+          $('#rex_fecha_emision').val(dictamen.fecha_emision);
+          $('#rex_fecha_vigencia').val(dictamen.fecha_vigencia);
+
+          $('#accion_reexpedir').trigger('change'); 
+          isLoadingData = false;
+
+          flatpickr("#rex_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
+            dateFormat: "Y-m-d",
+            enableTime: false,
+            allowInput: true,
+            locale: "es"
+          });
+
+
+      }).fail(function () {
+              showError('Error al cargar los datos');
+              isLoadingData = false;
+        });
+  }
+  
+  function clearFields() {
+      $('#rex_id_inspeccion').val('');
+      $('#rex_numero_dictamen').val('');
+      $('#rex_id_firmante').val('');
+      $('#rex_fecha_emision').val('');
+      $('#rex_fecha_vigencia').val('');
+      $('#rex_observaciones').val('');
+  }
+
+  function showError(message) {
+      Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al cargar los datos',
+          customClass: {
+              confirmButton: 'btn btn-danger'
+          }
+      });
+  }
+
+  $('#ModalReexpedir').on('hidden.bs.modal', function () {
+      $('#FormReexpedir')[0].reset();
+      clearFields();
+      $('#campos_condicionales').hide();
+      fieldsValidated = []; 
+  });
+
+
+  const formReexpedir = document.getElementById('FormReexpedir');
+  const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
+      fields: {
+        'accion_reexpedir': {
+            validators: {
+                notEmpty: {
+                    message: 'Debes seleccionar una acción.'
+                }
+            }
+        },
+        'observaciones': {
+            validators: {
+                notEmpty: {
+                    message: 'El motivo de cancelación es obligatorio.'
+                }
+            }
+        },
+        'id_inspeccion': {
+            validators: {
+                notEmpty: {
+                    message: 'El número de servicio es obligatorio.'
+                }
+            }
+        },
+        'num_dictamen': {
+            validators: {
+                notEmpty: {
+                    message: 'El número de dictamen es obligatorio.'
+                }
+            }
+        },
+        'id_firmante': {
+            validators: {
+                notEmpty: {
+                    message: 'El nombre del firmante es obligatorio.'
+                }
+            }
+        },
+        'fecha_emision': {
+          validators: {
+            notEmpty: {
+              message: 'La fecha de emisión es obligatoria.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+            }
+          }
+        },
+        'fecha_vigencia': {
+          validators: {
+            notEmpty: {
+              message: 'La fecha de vigencia es obligatoria.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+            }
+          }
+        },
+      },
+      plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+              eleValidClass: '',
+              eleInvalidClass: 'is-invalid',
+              rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+  }).on('core.form.valid', function () {
+      const formData = $(formReexpedir).serialize();
+
+      $.ajax({
+          url: $(formReexpedir).attr('action'),
+          method: 'POST',
+          data: formData,
+          success: function (response) {
+              $('#ModalReexpedir').modal('hide');
+              formReexpedir.reset();
+
+              dt_user_table.DataTable().ajax.reload();
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.message,
+                  customClass: {
+                      confirmButton: 'btn btn-primary'
+                  }
+              });
+          },
+          error: function (jqXHR) {
+              console.log('Error en la solicitud:', jqXHR);
+              let errorMessage = 'No se pudo registrar. Por favor, verifica los datos.';
+              try {
+                  let response = JSON.parse(jqXHR.responseText);
+                  errorMessage = response.message || errorMessage;
+              } catch (e) {
+                  console.error('Error al parsear la respuesta del servidor:', e);
+              }
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Error al registrar',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+      });
+  });
+
 });
 
+
+
+///FORMATO PDF DICTAMEN
+$(document).on('click', '.pdfDictamen', function ()  {
+    var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
+    var pdfUrl = '/dictamen_envasado/' + id; //Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+    
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    
+    //Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
+
+    $("#titulo_modal").text("Dictamen de Cumplimiento NOM de Mezcal Envasado");
+    $("#subtitulo_modal").text("PDF del Dictamen");
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+        spinner.hide();
+        iframe.show();
+    });
+});
+    
 
 
 

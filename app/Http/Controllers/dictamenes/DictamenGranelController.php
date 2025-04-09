@@ -108,7 +108,7 @@ class DictamenGranelController extends Controller  {
         }
 
         // Obtener resultados con paginación
-        $query = $query->offset($start)//$query vincula al foreach del JS
+        $res = $query->offset($start)//$query vincula al foreach del JS
             ->limit($limit)
             ->orderBy($orderColumn, $dir)// Ordenamos por la columna seleccionada
             /*->orderByRaw("
@@ -121,8 +121,8 @@ class DictamenGranelController extends Controller  {
         
         //MANDA LOS DATOS AL JS
         $data = [];
-        if (!empty($query)) {
-            foreach ($query as $dictamen) {
+        if (!empty($res)) {
+            foreach ($res as $dictamen) {
                 $nestedData['id_dictamen'] = $dictamen->id_dictamen;
                 $nestedData['num_dictamen'] = $dictamen->num_dictamen;
                 $nestedData['id_inspeccion'] = $dictamen->inspeccione->num_servicio ?? 'N/A';
@@ -295,6 +295,72 @@ public function update(Request $request, $id_dictamen)
 
 
 
+///REEXPEDIR
+public function reexpedir(Request $request) 
+{
+    try {
+        $request->validate([
+            'accion_reexpedir' => 'required|in:1,2',
+            'observaciones' => 'nullable|string',
+        ]);
+
+        if ($request->accion_reexpedir == '2') {
+            $request->validate([
+                'id_dictamen' => 'required|exists:dictamenes_granel,id_dictamen',
+                'num_dictamen' => 'required|string|max:25',
+                'id_inspeccion' => 'required|integer',
+                'fecha_emision' => 'required|date',
+                'fecha_vigencia' => 'required|date',
+                'id_firmante' => 'required|integer',
+            ]);
+        }
+
+        $reexpedir = Dictamen_Granel::findOrFail($request->id_dictamen);
+
+        if ($request->accion_reexpedir == '1') {
+            $reexpedir->estatus = 1; 
+            // Decodificar el JSON actual
+            $observacionesActuales = json_decode($reexpedir->observaciones, true);
+            // Actualiza solo 'observaciones' sin modificar 'id_certificado_sustituye'
+            $observacionesActuales['observaciones'] = $request->observaciones;
+            // Volver a codificar el array y asignarlo a $certificado->observaciones
+            $reexpedir->observaciones = json_encode($observacionesActuales); 
+            $reexpedir->save();
+
+            return response()->json(['message' => 'Cancelado correctamente']);
+
+        } else if ($request->accion_reexpedir == '2') {
+            $reexpedir->estatus = 1;
+                $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales);
+            $reexpedir->save(); 
+
+            // Crear un nuevo registro de reexpedición
+            $new = new Dictamen_Granel();
+            $new->num_dictamen = $request->num_dictamen;
+            $new->id_inspeccion = $request->id_inspeccion;
+            $new->fecha_emision = $request->fecha_emision;
+            $new->fecha_vigencia = $request->fecha_vigencia;
+            $new->id_firmante = $request->id_firmante;
+            $new->estatus = 2;
+            $new->observaciones = json_encode([
+                'id_sustituye' => $request->id_dictamen,
+                ]);
+            $new->save();// Guardar
+
+            return response()->json(['message' => 'Registrado correctamente']);
+        }
+
+        return response()->json(['message' => 'Procesado correctamente']);
+    } catch (\Exception $e) {
+        Log::error($e);
+        return response()->json(['message' => 'Error al procesar.', 'error' => $e->getMessage()], 500);
+    }
+}
+
+
+
 ///PDF DICTAMEN
 public function MostrarDictamenGranel($id_dictamen) 
 {
@@ -355,7 +421,6 @@ public function MostrarDictamenGranel($id_dictamen)
 
     return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
 }
-
 
 
 ///FQ'S
@@ -426,73 +491,6 @@ public function foliofq($id_dictamen)
     } catch (\Exception $e) {
         Log::error('Error inesperado: ' . $e->getMessage());
         return response()->json(['success' => false, 'message' => 'Error inesperado'], 500);
-    }
-}
-
-
-
-
-///REEXPEDIR
-public function reexpedir(Request $request) 
-{
-    try {
-        $request->validate([
-            'accion_reexpedir' => 'required|in:1,2',
-            'observaciones' => 'nullable|string',
-        ]);
-
-        if ($request->accion_reexpedir == '2') {
-            $request->validate([
-                'id_dictamen' => 'required|exists:dictamenes_granel,id_dictamen',
-                'num_dictamen' => 'required|string|max:25',
-                'id_inspeccion' => 'required|integer',
-                'fecha_emision' => 'required|date',
-                'fecha_vigencia' => 'required|date',
-                'id_firmante' => 'required|integer',
-            ]);
-        }
-
-        $reexpedir = Dictamen_Granel::findOrFail($request->id_dictamen);
-
-        if ($request->accion_reexpedir == '1') {
-            $reexpedir->estatus = 1; 
-            // Decodificar el JSON actual
-            $observacionesActuales = json_decode($reexpedir->observaciones, true);
-            // Actualiza solo 'observaciones' sin modificar 'id_certificado_sustituye'
-            $observacionesActuales['observaciones'] = $request->observaciones;
-            // Volver a codificar el array y asignarlo a $certificado->observaciones
-            $reexpedir->observaciones = json_encode($observacionesActuales); 
-            $reexpedir->save();
-
-            return response()->json(['message' => 'Cancelado correctamente']);
-
-        } else if ($request->accion_reexpedir == '2') {
-            $reexpedir->estatus = 1;
-                $observacionesActuales = json_decode($reexpedir->observaciones, true);
-                $observacionesActuales['observaciones'] = $request->observaciones;
-            $reexpedir->observaciones = json_encode($observacionesActuales);
-            $reexpedir->save(); 
-
-            // Crear un nuevo registro de reexpedición
-            $new = new Dictamen_Granel();
-            $new->num_dictamen = $request->num_dictamen;
-            $new->id_inspeccion = $request->id_inspeccion;
-            $new->fecha_emision = $request->fecha_emision;
-            $new->fecha_vigencia = $request->fecha_vigencia;
-            $new->id_firmante = $request->id_firmante;
-            $new->estatus = 2;
-            $new->observaciones = json_encode([
-                'id_sustituye' => $request->id_dictamen,
-                ]);
-            $new->save();// Guardar
-
-            return response()->json(['message' => 'Registrado correctamente']);
-        }
-
-        return response()->json(['message' => 'Procesado correctamente']);
-    } catch (\Exception $e) {
-        Log::error($e);
-        return response()->json(['message' => 'Error al procesar.', 'error' => $e->getMessage()], 500);
     }
 }
 
