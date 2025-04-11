@@ -212,6 +212,7 @@ use App\Http\Controllers\insertar_datos_bd_dictamenes;
 use App\Http\Controllers\Tramite_impi\impiController;
 use App\Http\Controllers\dictamenes\DictamenExportacionController;
 use App\Http\Controllers\clientes\resumenController;
+use App\Http\Controllers\DocuSignController;
 use App\Http\Controllers\efirma\firmaController;
 use App\Http\Controllers\hologramas\hologramasACtivar;
 use App\Http\Controllers\insertar_datos_bd_actas;
@@ -224,6 +225,18 @@ use App\Http\Controllers\permisos\permisosController;
 Route::get('/', function () {
     return redirect('/login');
 });
+
+Route::get('/docusign/authenticate', [DocuSignController::class, 'authenticate'])->name('docusign');
+Route::get('/test-docusign', [DocuSignController::class, 'sendDocument'])->name('test-docusign');
+Route::get('/obtenerTokenDocuSign', [DocuSignController::class, 'obtenerTokenDocuSign'])->name('obtenerTokenDocuSign');
+Route::get('/docusign/enviar', [DocuSignController::class, 'sendDocument2'])->name('docusign.enviar'); 
+Route::get('/docusign/sendDocumentAuto', [DocuSignController::class, 'sendDocumentAuto'])->name('docusign.enviar'); 
+
+Route::get('/docusign/firma-completada', [DocuSignController::class, 'firmaCompletada'])->name('firma.completada');
+Route::get('/docusign/descargar/{envelopeId}', [DocuSignController::class, 'descargarDocumento'])->name('docusign.descargar');
+Route::get('/estadoSobre/{envelopeId}', [DocuSignController::class, 'estadoSobre'])->name('estadoSobre');
+
+
 
 //Para documentos
 Route::get('files/{filename}', [FileController::class, 'show'])
