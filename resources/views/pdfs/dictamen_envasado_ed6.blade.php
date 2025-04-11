@@ -535,8 +535,7 @@
     </div>  --}}
 
 
-    <br><br>
-
+<!--FIRMA DIGITAL-->
 <div style="margin-left: 15px;">
     <p class="sello">Sello de Unidad de Inspección</p>
     <div class="images-container">
@@ -546,7 +545,7 @@
     <p class="textx" style="font-size: 9px;">
         <strong>AUTORIZÓ</strong>
         <span style="margin-left: 50px;">
-            <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
+            <strong>{{ $data->inspectores->puesto ?? '' }} | {{ $data->inspectores->name ?? '' }}</strong>
         </span>
     </p>
 
@@ -563,6 +562,18 @@
 
     <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
         {{ $firmaDigital['firma'] }}
+    </p>
+
+
+    <div class="footer-bar">
+        <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
+        <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341.
+            Morelia Michoacán</p>
+    </div> 
+
+
+    <p class="pie">Entrada en vigor: 15-07-2024<br>
+        F-UV-04-17 Ver 6.
     </p>
 
 </div>

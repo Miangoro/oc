@@ -419,7 +419,7 @@ public function MostrarDictamenEnvasado($id_dictamen)
         'data' => $data,
         'lote_envasado' => $loteEnvasado,
         'marca' => $marca,
-        'lotesGranel' => $lotesGranel, // Pasamos los lotes a granel a la vista
+        'lotesGranel' => $lotesGranel,
         'fecha_emision' => $fecha_emision,
         'fecha_vigencia' => $fecha_vigencia,
         'watermarkText' => $watermarkText,
@@ -427,7 +427,7 @@ public function MostrarDictamenEnvasado($id_dictamen)
         'qrCodeBase64' => $qrCodeBase64
     ]);
 
-    return $pdf->stream('Dictamen de Cumplimiento NOM de Mezcal Envasado.pdf');
+    return $pdf->stream('F-UV-04-17 Ver 6 Dictamen de Cumplimiento NOM de Mezcal Envasado.pdf');
 }
 
     

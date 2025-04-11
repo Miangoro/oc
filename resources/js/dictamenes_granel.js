@@ -133,7 +133,7 @@ if (dt_user_table.length) {
             var $folio_solicitud = full['folio_solicitud'];
             var $id_solicitud = full['id_solicitud'];
             if(full['url_acta']=='Sin subir'){
-              var $acta = '';
+              var $acta = '<small><b>NA</b></small>';
             }else{
               var $acta = `<i style class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa" data-id="${full['numero_cliente']}/${full['url_acta']}" data-empresa="${full['razon_social']} " data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" ></i>`;
             }
@@ -749,7 +749,7 @@ $(function () {
     var dictamenid = $('#edit_id_dictamen').val();
 
     $.ajax({
-      url: '/dictamenes/productos/' + dictamenid + '/update',
+      url: '/dictamenes/granel/' + dictamenid + '/update',
       type: 'POST',
       data: formData,
       contentType: false,
@@ -801,7 +801,7 @@ $(function () {
     $('#edit_id_dictamen').val(id_dictamen);
 
     $.ajax({
-      url: '/dictamenes/productos/' + id_dictamen + '/edit',
+      url: '/dictamenes/granel/' + id_dictamen + '/edit',
       method: 'GET',
       success: function (data) {
         if (data.success) {
@@ -939,7 +939,7 @@ $(document).on('click', '.ver-folio-fq', function (e) {
   var idDictamen = $(this).data('id');
 
   $.ajax({
-    url: '/dictamenes/productos/' + idDictamen + '/foliofq',
+    url: '/dictamenes/granel/' + idDictamen + '/foliofq',
     method: 'GET',
     success: function (response) {
       console.log('Response:', response); // Verifica todo el objeto de respuesta
@@ -1080,7 +1080,7 @@ $(document).ready(function () {
       console.log('Cargando datos para la reexpedición con ID:', id_dictamen);
       clearFields();
   
-      $.get(`/dictamenes/productos/${id_dictamen}/edit`).done(function (data) {
+      $.get(`/dictamenes/granel/${id_dictamen}/edit`).done(function (data) {
       console.log('Respuesta completa:', data);
       var dictamen = data.id;
   

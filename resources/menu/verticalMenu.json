@@ -113,9 +113,9 @@
           "slug": "dictamenes-instalaciones"
         },
         {
-          "url": "dictamenes/productos",
+          "url": "dictamenes/granel",
           "name": "Granel",
-          "slug": "dictamenes-productos"
+          "slug": "dictamenes-granel"
         },
         {
           "url": "dictamenes/envasado",
