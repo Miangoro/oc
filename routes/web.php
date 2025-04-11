@@ -229,7 +229,7 @@ Route::get('/', function () {
 Route::get('/docusign/authenticate', [DocuSignController::class, 'authenticate'])->name('docusign');
 Route::get('/test-docusign', [DocuSignController::class, 'sendDocument'])->name('test-docusign');
 Route::get('/obtenerTokenDocuSign', [DocuSignController::class, 'obtenerTokenDocuSign'])->name('obtenerTokenDocuSign');
-Route::get('/docusign/enviar', [DocuSignController::class, 'sendDocument2'])->name('docusign.enviar'); 
+Route::get('/docusign/enviar', [DocuSignController::class, 'sendDocument2'])->name('docusign.enviar')->middleware('auth'); 
 Route::get('/docusign/sendDocumentAuto', [DocuSignController::class, 'sendDocumentAuto'])->name('docusign.enviar'); 
 
 Route::get('/docusign/firma-completada', [DocuSignController::class, 'firmaCompletada'])->name('firma.completada');
