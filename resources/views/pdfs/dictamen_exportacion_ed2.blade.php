@@ -377,7 +377,37 @@
 
 
 
+<!--FIRMA DIGITAL-->
+<div style="margin-left: 15px;">
+    <p class="sello">Sello de Unidad de Inspección</p>
+    <div class="images-container">
+        <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
+        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
+    </div>
+    <p class="textx" style="font-size: 9px;">
+        <strong>AUTORIZÓ</strong>
+        <span style="margin-left: 50px;">
+            <strong>{{ $data->inspectores->puesto ?? '' }} | {{ $data->inspectores->name ?? '' }}</strong>
+        </span>
+    </p>
 
+    <p class="textx" style="font-size: 9px;">
+        <strong>CADENA ORIGINAL</strong>
+        <span style="margin-left: 14px;">
+            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+        </span>
+    </p>
+
+    <p class="textx" style="font-size: 9px; ">
+        <strong>SELLO DIGITAL</strong>
+    </p>
+
+    <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
+        {{ $firmaDigital['firma'] }}
+    </p>
+
+
+</div>
 
 
 </body>

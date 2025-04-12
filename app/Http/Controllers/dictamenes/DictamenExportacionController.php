@@ -16,24 +16,31 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\GeneralNotification;
 use Faker\Extension\Helper;
+//firma electronica
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Logo\Logo;
 
 
 class DictamenExportacionController extends Controller
 {
 
-
     public function UserManagement()
     {
         $dictamenes = Dictamen_Exportacion::all(); // Obtener todos los datos
-        $users = User::where('tipo',2)->get(); //Solo inspectores 
         $inspeccion = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 11);
-        })
-        ->orderBy('id_inspeccion', 'desc')
-        ->get();
+            })->orderBy('id_inspeccion', 'desc')
+            ->get();
+        $users = User::where('tipo',2)->get(); //Solo inspectores 
         $empresa = empresa::all();
 
-        return view('dictamenes.dictamen_exportacion', compact('dictamenes', 'inspeccion', 'users', 'empresa'));
+        return view('dictamenes.find_dictamen_exportacion', compact('dictamenes', 'inspeccion', 'users', 'empresa'));
     }
 
 
@@ -41,16 +48,16 @@ public function index(Request $request)
 {
     $columns = [
     //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
-        1 => 'num_dictamen',
+        1 => 'id_dictamen_envasado',
         2 => 'id_inspeccion',
-        3 => 'razon_social',
-        4 => 'fecha_emision',
+        3 => '',
+        4 => '',
+        5 => 'fecha_emision',
+        6 => 'estatus',
     ];
 
     $search = [];
-    
     $totalData = Dictamen_Exportacion::count();
-
     $totalFiltered = $totalData;
 
     $limit = $request->input('length');
@@ -69,8 +76,6 @@ public function index(Request $request)
     } else {
         // BUSCADOR
         $search = $request->input('search.value');
-    
-    
         // Consulta con filtros
         $query = Dictamen_Exportacion::where('id_dictamen', 'LIKE', "%{$search}%")
         ->where("id_dictamen", 1)
@@ -90,27 +95,52 @@ public function index(Request $request)
 
     //MANDA LOS DATOS AL JS
     $data = [];
-
     if (!empty($users)) {
-        $ids = $start;
-        foreach ($users as $user) {
-            $nestedData['id_dictamen'] = $user->id_dictamen;
-            $nestedData['num_dictamen'] = $user->num_dictamen;
-            $nestedData['estatus'] = $user->estatus;
-            $nestedData['id_inspeccion'] = $user->inspeccione->num_servicio;
+        foreach ($users as $dictamen) {
+            $nestedData['id_dictamen'] = $dictamen->id_dictamen ?? 'No encontrado';
+            $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
+            $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
+            $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
+            $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
+            $nestedData['num_servicio'] = $dictamen->inspeccione->num_servicio ?? 'No encontrado';
+            $nestedData['folio_solicitud'] = $dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
             ///numero y nombre empresa
-            $empresa = $user->inspeccione->solicitud->empresa;
+            $empresa = $dictamen->inspeccione->solicitud->empresa ?? null;
             $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-            ? $empresa->empresaNumClientes
+                ? $empresa->empresaNumClientes
                 ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-            : 'N/A';
+                : 'N/A';
             $nestedData['numero_cliente'] = $numero_cliente;
-            $nestedData['razon_social'] = $user->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
-
-            $fecha_emision = Helpers::formatearFecha($user->fecha_emision);
-            $fecha_vigencia = Helpers::formatearFecha($user->fecha_vigencia);
-            $nestedData['fechas'] = '<b>Fecha Emisión: </b>' .$fecha_emision. '<br> <b>Fecha Vigencia: </b>' .$fecha_vigencia;
+            $nestedData['razon_social'] = $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
+            ///dias vigencia
+            $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
+            $nestedData['fecha_actual'] = $fechaActual;
+            $nestedData['vigencia'] = $dictamen->fecha_vigencia;
+            $fechaVigencia = Carbon::parse($dictamen->fecha_vigencia)->startOfDay();
+                if ($fechaActual->isSameDay($fechaVigencia)) {
+                    $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
+                } else {
+                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+                    if ($diasRestantes > 0) {
+                        if ($diasRestantes > 15) {
+                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
+                        } else {
+                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
+                        }
+                        $nestedData['diasRestantes'] = $res;
+                    } else {
+                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                    }
+                }
+            ///solicitud y acta
+            $nestedData['id_solicitud'] = $dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
+            $urls = isset($dictamen->inspeccione, $dictamen->inspeccione->solicitud) 
+                ? $dictamen->inspeccione->solicitud->documentacion(69)->pluck('url')->toArray()
+                : null;
+            $nestedData['url_acta'] = is_null($urls) ? 'No encontrado'//si no hay relacion
+                : (empty($urls) ? 'Sin subir' : implode(', ', $urls));//hay relacion pero no documentos
             
+                
             $data[] = $nestedData;
         }
     }
@@ -134,103 +164,220 @@ public function index(Request $request)
 
 
 
-
-//FUNCION PARA REGISTRAR
+///FUNCION REGISTRAR
 public function store(Request $request)
 {
     try {
-        // Crear y guardar el nuevo dictamen
-        $var = new Dictamen_Exportacion();
-        $var->num_dictamen = $request->num_dictamen;
-        $var->id_inspeccion = $request->id_inspeccion;
-        $var->fecha_emision = $request->fecha_emision;
-        $var->fecha_vigencia = $request->fecha_vigencia;
-        $var->id_firmante = $request->id_firmante;
-        $var->save(); // Guardar en BD
+    $validated = $request->validate([
+        'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
+        'num_dictamen' => 'required|string|max:40',
+        'fecha_emision' => 'required|date',
+        'fecha_vigencia' => 'required|date',
+        'id_firmante' => 'required|exists:users,id',
+    ]);
+        // Crear un registro
+        $new = new Dictamen_Exportacion();
+        $new->id_inspeccion = $validated['id_inspeccion'];
+        $new->num_dictamen = $validated['num_dictamen'];
+        $new->fecha_emision = $validated['fecha_emision'];
+        $new->fecha_vigencia = $validated['fecha_vigencia'];
+        $new->id_firmante = $validated['id_firmante'];
+        $new->save();
 
-        return response()->json(['success' => 'Registro agregado correctamente']);
+        return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Ocurrió un error al intentar agregar el registro'], 500);
+        Log::error('Error al registrar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al registrar.'], 500);
     }
 }
 
 
 
-
-//FUNCION PARA ELIMINAR
+///FUNCION ELIMINAR
 public function destroy($id_dictamen)
 {
     try {
         $eliminar = Dictamen_Exportacion::findOrFail($id_dictamen);
         $eliminar->delete();
 
-        return response()->json(['success' => 'Eliminado correctamente']);
+        return response()->json(['message' => 'Eliminado correctamente.']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al eliminar'], 500);
+        Log::error('Error al eliminar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al eliminar.'], 500);
     }
 }
 
 
 
-
-//FUNCION PARA LLENAR EL FORMULARIO
+///FUNCION PARA OBTENER LOS REGISTROS
 public function edit($id_dictamen)
 {
     try {
-        $var1 = Dictamen_Exportacion::findOrFail($id_dictamen);
+        $editar = Dictamen_Exportacion::findOrFail($id_dictamen);
 
         return response()->json([
-            'id_dictamen' => $var1->id_dictamen,
-            'num_dictamen' => $var1->num_dictamen,
-            'id_inspeccion' => $var1->id_inspeccion,
-            'fecha_emision' => $var1->fecha_emision,
-            'fecha_vigencia' => $var1->fecha_vigencia,
-            'id_firmante' => $var1->id_firmante,
+            'id_dictamen' => $editar->id_dictamen,
+            'num_dictamen' => $editar->num_dictamen,
+            'id_inspeccion' => $editar->id_inspeccion,
+            'fecha_emision' => $editar->fecha_emision,
+            'fecha_vigencia' => $editar->fecha_vigencia,
+            'id_firmante' => $editar->id_firmante,
         ]);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al obtener el dictamen'], 500);
+        Log::error('Error al obtener', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al obtener los datos.'], 500);
     }
 }
 
-//FUNCION PARA EDITAR
-    public function update(Request $request, $id_dictamen) 
+///FUNCION ACTUALIZAR
+public function update(Request $request, $id_dictamen) 
 {
-    $request->validate([
-        'num_dictamen' => 'required|string|max:255',
-        'id_inspeccion' => 'required|integer',
-        'fecha_emision' => 'nullable|date',
-        'fecha_vigencia' => 'nullable|date',
-        'id_firmante' => 'required|integer',
-    ]);
     try {
-        $var2 = Dictamen_Exportacion::findOrFail($id_dictamen);
-        $var2->num_dictamen = $request->num_dictamen;
-        $var2->id_inspeccion = $request->id_inspeccion;
-        $var2->fecha_emision = $request->fecha_emision;
-        $var2->fecha_vigencia = $request->fecha_vigencia;
-        $var2->id_firmante = $request->id_firmante;
-        $var2->save();
+        $validated = $request->validate([
+            'num_dictamen' => 'required|string|max:70',
+            'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
+            'fecha_emision' => 'required|date',
+            'fecha_vigencia' => 'required|date',
+            'id_firmante' => 'required|exists:users,id',
+        ]);
 
-        return response()->json(['success' => 'Editado correctamente']);
+        $actualizar = Dictamen_Exportacion::findOrFail($id_dictamen);
+        $actualizar->update([// Actualizar
+            'num_dictamen' => $validated['num_dictamen'],
+            'id_inspeccion' => $validated['id_inspeccion'],
+            'fecha_emision' => $validated['fecha_emision'],
+            'fecha_vigencia' => $validated['fecha_vigencia'],
+            'id_firmante' => $validated['id_firmante'],
+        ]);
+
+        return response()->json(['message' => 'Actualizado correctamente.']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al editar'], 500);
+        Log::error('Error al actualizar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al actualizar.'], 500);
     }
 }
 
 
 
+///FUNCION REEXPEDIR
+public function reexpedir(Request $request)
+{
+    try {
+        $request->validate([
+            'accion_reexpedir' => 'required|in:1,2',
+            'observaciones' => 'nullable|string',
+        ]);
 
-///FUNCION PDF DICTAMEN EXPORTACION
+        if ($request->accion_reexpedir == '2') {
+            $request->validate([
+                'id_dictamen' => 'required|exists:dictamenes_exportacion,id_dictamen',
+                'id_inspeccion' => 'required|integer',
+                'num_dictamen' => 'required|string|min:8',
+                'fecha_emision' => 'required|date',
+                'fecha_vigencia' => 'required|date',
+                'id_firmante' => 'required|integer',
+            ]);
+        }
+
+        $reexpedir = Dictamen_Exportacion::findOrFail($request->id_dictamen);
+
+        if ($request->accion_reexpedir == '1') {
+            $reexpedir->estatus = 1; 
+                $observacionesActuales = json_decode($reexpedir->observaciones, true);//Decodifica el JSON actual
+                $observacionesActuales['observaciones'] = $request->observaciones;//Actualiza solo 'observaciones'
+            $reexpedir->observaciones = json_encode($observacionesActuales); 
+            $reexpedir->save();
+
+            return response()->json(['message' => 'Cancelado correctamente.']);
+
+        } else if ($request->accion_reexpedir == '2') {
+            $reexpedir->estatus = 1;
+                $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales);
+            $reexpedir->save(); 
+
+            // Crear un nuevo registro de reexpedición
+            $new = new Dictamen_Exportacion();
+            $new->num_dictamen = $request->num_dictamen;
+            $new->id_inspeccion = $request->id_inspeccion;
+            $new->fecha_emision = $request->fecha_emision;
+            $new->fecha_vigencia = $request->fecha_vigencia;
+            $new->id_firmante = $request->id_firmante;
+            $new->estatus = 2;
+            $new->observaciones = json_encode(['id_sustituye' => $request->id_dictamen]);
+            $new->save();// Guardar
+
+            return response()->json(['message' => 'Registrado correctamente.']);
+        }
+
+        return response()->json(['message' => 'Procesado correctamente.']);
+    } catch (\Exception $e) {
+        Log::error('Error al reexpedir', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al procesar.'], 500);
+    }
+}
+
+
+
+///PDF DICTAMEN
 public function MostrarDictamenExportacion($id_dictamen) 
 {
-    // Obtener los datos del dictamen específico
+    // Obtener los datos del dictamen
     //$datos = Dictamen_Exportacion::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);    
     $data = Dictamen_Exportacion::find($id_dictamen);
 
     if (!$data) {
         return abort(404, 'Registro no encontrado');
+        return response()->json(['data']);
     }
+    //firma electronica
+    $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
+    $qrCode = new QrCode(
+        data: $url,
+        encoding: new Encoding('UTF-8'),
+        errorCorrectionLevel: ErrorCorrectionLevel::Low,
+        size: 300,
+        margin: 10,
+        roundBlockSizeMode: RoundBlockSizeMode::Margin,
+        foregroundColor: new Color(0, 0, 0),
+        backgroundColor: new Color(255, 255, 255)
+    );
+    // Escribir el QR en formato PNG
+    $writer = new PngWriter();
+    $result = $writer->write($qrCode);
+    // Convertirlo a Base64
+    $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
 
+    if($data->id_firmante == 9){ //Erik
+        $pass = 'Mejia2307';
+    }
+    if($data->id_firmante == 6){ //Karen velazquez
+        $pass = '890418jks';
+    }
+    if($data->id_firmante == 7){ //Zaida
+        $pass = 'ZA27CI09';
+    }
+    if($data->id_firmante == 14){ //Mario
+        $pass = 'v921009villa';
+    }
+    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccione->num_servicio, $pass, $data->id_firmante);
+    
     // Verifica qué valor tiene esta variable
     $fecha_emision2 = Helpers::formatearFecha($data->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
@@ -280,6 +427,8 @@ public function MostrarDictamenExportacion($id_dictamen)
         'pais' => $data->inspeccione->solicitud->direccion_destino->pais_destino ?? "No encontrada",
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
+        'firmaDigital' => $firmaDigital,
+        'qrCodeBase64' => $qrCodeBase64,
         ///caracteristicas
         'aduana' => $aduana_salida ?? "No encontrada",
         'n_pedido' => $no_pedido ?? "No encontrada",
@@ -293,70 +442,6 @@ public function MostrarDictamenExportacion($id_dictamen)
     ]);
     //nombre al descarga
     return $pdf->stream('F-UV-04-18 Ver 2. Dictamen de Cumplimiento para Producto de Exportación.pdf');
-}
-
-
-
-
-//FUNCION PARA REEXPEDIR 
-public function reexpedir(Request $request)
-{
-    try {
-        $request->validate([
-            'accion_reexpedir' => 'required|in:1,2',
-            'observaciones' => 'nullable|string',
-        ]);
-
-        if ($request->accion_reexpedir == '2') {
-            $request->validate([
-                'id_dictamen' => 'required|exists:dictamenes_exportacion,id_dictamen',
-                'num_dictamen' => 'required|string|max:25',
-                'id_inspeccion' => 'required|integer',
-                'fecha_emision' => 'required|date',
-                'fecha_vigencia' => 'required|date',
-                'id_firmante' => 'required|integer',
-            ]);
-        }
-
-        $dictamen = Dictamen_Exportacion::findOrFail($request->id_dictamen);
-
-        if ($request->accion_reexpedir == '1') {
-            $dictamen->estatus = 1; 
-            // Decodificar el JSON actual
-            $observacionesActuales = json_decode($dictamen->observaciones, true);
-            // Actualiza solo 'observaciones' sin modificar 'id_certificado_sustituye'
-            $observacionesActuales['observaciones'] = $request->observaciones;
-            // Volver a codificar el array y asignarlo a $certificado->observaciones
-            $dictamen->observaciones = json_encode($observacionesActuales); 
-            $dictamen->save();
-        } elseif ($request->accion_reexpedir == '2') {
-            $dictamen->estatus = 1;
-                $observacionesActuales = json_decode($dictamen->observaciones, true);
-                $observacionesActuales['observaciones'] = $request->observaciones;
-            $dictamen->observaciones = json_encode($observacionesActuales);
-            $dictamen->save(); 
-
-
-            // Crear un nuevo registro de reexpedición
-            $nuevoDictamen = new Dictamen_Exportacion();
-            $nuevoDictamen->num_dictamen = $request->num_dictamen;
-            $nuevoDictamen->id_inspeccion = $request->id_inspeccion;
-            $nuevoDictamen->fecha_emision = $request->fecha_emision;
-            $nuevoDictamen->fecha_vigencia = $request->fecha_vigencia;
-            $nuevoDictamen->id_firmante = $request->id_firmante;
-            $nuevoDictamen->estatus = 2;
-            $nuevoDictamen->observaciones = json_encode([
-                'id_sustituye' => $request->id_dictamen,
-                ]);
-            // Guardar
-            $nuevoDictamen->save();
-        }
-
-        return response()->json(['message' => 'Dictamen procesado correctamente.']);
-    } catch (\Exception $e) {
-        Log::error($e);
-        return response()->json(['message' => 'Error al procesar el dictamen.', 'error' => $e->getMessage()], 500);
-    }
 }
 
 

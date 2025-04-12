@@ -968,7 +968,7 @@ Route::middleware(['auth'])->controller(DictamenExportacionController::class)->g
     ///Obtener Editar
     Route::get('editar2/{id_dictamen}/edit', 'edit')->name('instalacion.edit');
     ///Editar
-    Route::put('editar2/{id_dictamen}', 'update')->name('tipos.update');
+    Route::post('editar2/{id_dictamen}', 'update')->name('tipos.update');
     // Ruta PDF con ID
     Route::get('/dictamen_exportacion/{id_dictamen}', 'MostrarDictamenExportacion')->name('PDF-dictamen-exportacion');
     //Reexpedir
