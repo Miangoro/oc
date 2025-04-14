@@ -145,6 +145,7 @@ if (dt_user_table.length) {
           }
         }, 
         {
+          //caracteristicas
           targets: 4,
           searchable: false,
           orderable: false, 
@@ -154,6 +155,7 @@ if (dt_user_table.length) {
           }     
         },
         {
+          //fechas
           targets: 5, 
           searchable: false,
           orderable: false,
