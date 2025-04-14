@@ -32,11 +32,10 @@ class DictamenGranelController extends Controller  {
 
     public function UserManagement() 
     {
-        // Obtener los datos necesarios
         $inspecciones = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 3);
             })->orderBy('id_inspeccion', 'desc')->get();
-        $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+        $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $inspectores = User::where('tipo', 2)->get(); // Obtener solo los usuarios con tipo '2' (inspectores)
         $lotesGranel = LotesGranel::all();
 

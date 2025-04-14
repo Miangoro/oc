@@ -507,7 +507,7 @@ FormValidation.formValidation(FormAgregar, {
     bootstrap5: new FormValidation.plugins.Bootstrap5({
       eleValidClass: '',
       eleInvalidClass: 'is-invalid',
-      rowSelector: '.form-floating'//clase
+      rowSelector: '.form-floating'//clases del formulario
     }),
     submitButton: new FormValidation.plugins.SubmitButton(),
     autoFocus: new FormValidation.plugins.AutoFocus()
@@ -528,7 +528,7 @@ FormValidation.formValidation(FormAgregar, {
         $('#FormAgregar')[0].reset();
         $('.select2').val(null).trigger('change');
         //$('.datatables-users').DataTable().ajax.reload();
-        dt_user.ajax.reload();
+        dt_user.ajax.reload();//misma funcion de arriba, Recarga los datos en el datatable
         
         // Mostrar alerta
         Swal.fire({
@@ -620,7 +620,7 @@ $(document).on('click', '.eliminar', function () {
 
     });
     } else if (result.dismiss === Swal.DismissReason.cancel) {
-      // Acción cancelada, mostrar mensaje informativo
+      // Acción cancelar, mostrar mensaje informativo
       Swal.fire({
         title: '¡Cancelado!',
         text: 'La eliminación ha sido cancelada',
@@ -672,7 +672,7 @@ $(function () {
       'fecha_emision': {
           validators: {
           notEmpty: {
-              message: 'La fecha de emisión es obligatoria.'
+            message: 'La fecha de emisión es obligatoria.'
           },
           date: {
             format: 'YYYY-MM-DD',
@@ -686,7 +686,7 @@ $(function () {
             message: 'La fecha de vigencia es obligatoria.'
           },
           date: {
-              format: 'YYYY-MM-DD',
+            format: 'YYYY-MM-DD',
             message: 'Ingresa una fecha válida (yyyy-mm-dd).'
           }
           }
@@ -705,42 +705,46 @@ $(function () {
   }).on('core.form.valid', function () {
       // Validar y enviar el formulario cuando pase la validación
       var formData = new FormData(form);
-      var dictamenid = $('#edit_id_dictamen').val();
+      var dictamen = $('#edit_id_dictamen').val();
   
       $.ajax({
-          url: '/editar2/' + dictamenid,
+          url: '/editar2/' + dictamen,
           type: 'POST',
           data: formData,
           contentType: false,
           processData: false,
           success: function (response) {
             dt_user.ajax.reload(); //Recarga los datos en el datatable
-            $('#ModalEditar').modal('hide');
+            //dt_user.ajax.reload(null, false); //"false" evita que vuelva al inicio de la tabla
+            $('#ModalEditar').modal('hide');//ocultar modal
             Swal.fire({
               icon: 'success',
               title: '¡Éxito!',
-              text: 'Actualizado correctamente',
+              text: response.message,
               customClass: {
                 confirmButton: 'btn btn-primary'
               }
             });
           },
           error: function (xhr) {
+            //error de validación del lado del servidor
             if (xhr.status === 422) {
               var errors = xhr.responseJSON.errors;
               var errorMessages = Object.keys(errors).map(function (key) {
                 return errors[key].join('<br>');
               }).join('<br>');
-    
+              /*var errorMessages = Object.values(errors).map(msgArray => 
+                msgArray.join('<br>')).join('<br><hr>');*/
+
               Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
-                html: 'Error al actualizar',
+                html: errorMessages,
                 customClass: {
                   confirmButton: 'btn btn-danger'
                 }
               });
-            } else {
+            } else {//otro tipo de error
               Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
@@ -754,7 +758,7 @@ $(function () {
       });
   });
 
-  // Función para cargar los datos del dictamen
+  // Función para cargar los datos
   $(document).on('click', '.editar', function () {
       var id_dictamen = $(this).data('id');
       $('#edit_id_dictamen').val(id_dictamen);
@@ -762,15 +766,13 @@ $(function () {
       $.ajax({
           url: '/editar2/' + id_dictamen + '/edit',
           method: 'GET',
-          success: function (data) {
-            //if (data.success) {
-              //var dictamen = data.id;//controller "funcion edit"
+          success: function (datos) {
               // Asignar valores a los campos del formulario
-              $('#edit_num_dictamen').val(data.num_dictamen);
-              $('#edit_id_inspeccion').val(data.id_inspeccion).trigger('change');
-              $('#edit_fecha_emision').val(data.fecha_emision);
-              $('#edit_fecha_vigencia').val(data.fecha_vigencia);
-              $('#edit_id_firmante').val(data.id_firmante).prop('selected', true).change();
+              $('#edit_num_dictamen').val(datos.num_dictamen);
+              $('#edit_id_inspeccion').val(datos.id_inspeccion).trigger('change');
+              $('#edit_fecha_emision').val(datos.fecha_emision);
+              $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
+              $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();
             //$('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');//funciona igual que arriba
             
               flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
@@ -781,17 +783,6 @@ $(function () {
               });
               // Mostrar el modal
               $('#ModalEditar').modal('show');
-    
-            /*} else {
-              Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'Error al cargar los datos',
-                customClass: {
-                  confirmButton: 'btn btn-danger'
-                }
-              });
-            }*/
           },
           error: function (error) {
             console.error('Error al cargar los datos:', error);
@@ -859,21 +850,21 @@ $(document).ready(function () {
   function cargarDatosReexpedicion(id_dictamen) {
       console.log('Cargando datos para la reexpedición con ID:', id_dictamen);
       clearFields();
+      
+      //cargar los datos
+      $.get(`/editar2/${id_dictamen}/edit`).done(function (datos) {
+      console.log('Respuesta completa:', datos);
   
-      //url: '/editar2/' + id_dictamen + '/edit',
-      $.get(`/editar2/${id_dictamen}/edit`).done(function (data) {
-      console.log('Respuesta completa:', data);
-  
-          if (data.error) {
-              showError(data.error);
+          if (datos.error) {
+              showError(datos.error);
               return;
           }
 
-          $('#rex_id_inspeccion').val(data.id_inspeccion).trigger('change');
-          $('#rex_numero_dictamen').val(data.num_dictamen);
-          $('#rex_id_firmante').val(data.id_firmante).trigger('change');
-          $('#rex_fecha_emision').val(data.fecha_emision);
-          $('#rex_fecha_vigencia').val(data.fecha_vigencia);
+          $('#rex_id_inspeccion').val(datos.id_inspeccion).trigger('change');
+          $('#rex_numero_dictamen').val(datos.num_dictamen);
+          $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
+          $('#rex_fecha_emision').val(datos.fecha_emision);
+          $('#rex_fecha_vigencia').val(datos.fecha_vigencia);
 
           $('#accion_reexpedir').trigger('change'); 
           isLoadingData = false;
@@ -885,11 +876,10 @@ $(document).ready(function () {
             locale: "es"
           });
 
-
       }).fail(function () {
               showError('Error al cargar los datos');
               isLoadingData = false;
-        });
+      });
   }
 
   function clearFields() {
@@ -919,7 +909,7 @@ $(document).ready(function () {
       fieldsValidated = []; 
   });
 
-
+  //validar formulario
   const formReexpedir = document.getElementById('FormReexpedir');
   const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
       fields: {

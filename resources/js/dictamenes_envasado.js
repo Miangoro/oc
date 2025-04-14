@@ -491,9 +491,6 @@ $(function () {
         validators: {
           notEmpty: {
             message: 'El nombre del firmante es obligatorio.',
-            enable: function (field) {
-              return !$(field).val();
-            }
           }
         }
       },
@@ -501,16 +498,10 @@ $(function () {
         validators: {
           notEmpty: {
             message: 'La fecha de emisión es obligatoria.',
-            enable: function (field) {
-              return !$(field).val();
-            }
           },
           date: {
             format: 'YYYY-MM-DD',
             message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-            enable: function (field) {
-              return !$(field).val();
-            }
           }
         }
       },
@@ -518,16 +509,10 @@ $(function () {
         validators: {
           notEmpty: {
             message: 'La fecha de vigencia es obligatoria.',
-            enable: function (field) {
-              return !$(field).val();
-            }
           },
           date: {
             format: 'YYYY-MM-DD',
             message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-            enable: function (field) {
-              return !$(field).val();
-            }
           }
         }
       },
@@ -625,14 +610,14 @@ $(document).on('click', '.eliminar', function () {
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-          success: function () {
+          success: function (response) {
             // Actualizar la tabla después de eliminar el registro
             dt_user.draw();
             // Mostrar SweetAlert de éxito
             Swal.fire({
               icon: 'success',
               title: '¡Exito!',
-              text: 'Eliminado correctamente',
+              text: response.message,
               customClass: {
                 confirmButton: 'btn btn-primary'
               }
@@ -653,7 +638,7 @@ $(document).on('click', '.eliminar', function () {
   
       });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // Acción cancelada
+        // Acción cancelar
         Swal.fire({
           title: '¡Cancelado!',
           text: 'La eliminación ha sido cancelada',
@@ -738,10 +723,10 @@ $(function () {
   }).on('core.form.valid', function () {
       // Validar y enviar el formulario cuando pase la validación
       var formData = new FormData(form);
-      var dictamenid = $('#edit_id_dictamen').val();
+      var dictamen = $('#edit_id_dictamen').val();
   
       $.ajax({
-          url: '/dictamenes/envasado/' + dictamenid + '/update',
+          url: '/dictamenes/envasado/' + dictamen + '/update',
           type: 'POST',
           data: formData,
           contentType: false,
@@ -752,13 +737,14 @@ $(function () {
             Swal.fire({
               icon: 'success',
               title: '¡Éxito!',
-              text: 'Actualizado correctamente',
+              text: response.message,
               customClass: {
                 confirmButton: 'btn btn-primary'
               }
             });
           },
           error: function (xhr) {
+            //error de validación
             if (xhr.status === 422) {
               var errors = xhr.responseJSON.errors;
               var errorMessages = Object.keys(errors).map(function (key) {
@@ -768,12 +754,12 @@ $(function () {
               Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
-                html: 'Error al actualizar',
+                html: errorMessages,
                 customClass: {
                   confirmButton: 'btn btn-danger'
                 }
               });
-            } else {
+            } else {//otro tipo de error
               Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
@@ -787,7 +773,7 @@ $(function () {
       });
   });
 
-  // Función para cargar los datos del dictamen
+  // Función para cargar los datos
   $(document).on('click', '.editar', function () {
       var id_dictamen = $(this).data('id');
       $('#edit_id_dictamen').val(id_dictamen);
@@ -795,15 +781,13 @@ $(function () {
       $.ajax({
           url: '/dictamenes/envasado/' + id_dictamen + '/edit',
           method: 'GET',
-          success: function (data) {
-            //if (data.success) {
-              //var dictamen = data.id;//controller "funcion edit"
+          success: function (datos) {
               // Asignar valores a los campos del formulario
-              $('#edit_num_dictamen').val(data.num_dictamen);
-              $('#edit_id_inspeccion').val(data.id_inspeccion).trigger('change');
-              $('#edit_fecha_emision').val(data.fecha_emision);
-              $('#edit_fecha_vigencia').val(data.fecha_vigencia);
-              $('#edit_id_firmante').val(data.id_firmante).prop('selected', true).change();
+              $('#edit_num_dictamen').val(datos.num_dictamen);
+              $('#edit_id_inspeccion').val(datos.id_inspeccion).trigger('change');
+              $('#edit_fecha_emision').val(datos.fecha_emision);
+              $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
+              $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();
             //$('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');//funciona igual que arriba
             
               flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
@@ -814,17 +798,6 @@ $(function () {
               });
               // Mostrar el modal
               $('#ModalEditar').modal('show');
-    
-            /*} else {
-              Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'Error al cargar los datos',
-                customClass: {
-                  confirmButton: 'btn btn-danger'
-                }
-              });
-            }*/
           },
           error: function (error) {
             console.error('Error al cargar los datos:', error);
@@ -853,7 +826,6 @@ $(function () {
 ///REEXPEDIR
 let isLoadingData = false;
 let fieldsValidated = []; 
-
 $(document).ready(function () {
 
   $(document).on('click', '.reexpedir', function () {
@@ -895,20 +867,20 @@ $(document).ready(function () {
       console.log('Cargando datos para la reexpedición con ID:', id_dictamen);
       clearFields();
   
-      //url: '/dictamenes/envasado/' + id_dictamen + '/edit',
-      $.get('/dictamenes/envasado/' + id_dictamen + '/edit').done(function (data) {
-      console.log('Respuesta completa:', data);
+      //cargar los datos
+      $.get('/dictamenes/envasado/' + id_dictamen + '/edit').done(function (datos) {
+      console.log('Respuesta completa:', datos);
   
-          if (data.error) {
-              showError(data.error);
+          if (datos.error) {
+              showError(datos.error);
               return;
           }
 
-          $('#rex_id_inspeccion').val(data.id_inspeccion).trigger('change');
-          $('#rex_numero_dictamen').val(data.num_dictamen);
-          $('#rex_id_firmante').val(data.id_firmante).trigger('change');
-          $('#rex_fecha_emision').val(data.fecha_emision);
-          $('#rex_fecha_vigencia').val(data.fecha_vigencia);
+          $('#rex_id_inspeccion').val(datos.id_inspeccion).trigger('change');
+          $('#rex_numero_dictamen').val(datos.num_dictamen);
+          $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
+          $('#rex_fecha_emision').val(datos.fecha_emision);
+          $('#rex_fecha_vigencia').val(datos.fecha_vigencia);
 
           $('#accion_reexpedir').trigger('change'); 
           isLoadingData = false;
@@ -920,11 +892,10 @@ $(document).ready(function () {
             locale: "es"
           });
 
-
       }).fail(function () {
               showError('Error al cargar los datos');
               isLoadingData = false;
-        });
+      });
   }
   
   function clearFields() {
@@ -940,7 +911,7 @@ $(document).ready(function () {
       Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Error al cargar los datos',
+          text: message,
           customClass: {
               confirmButton: 'btn btn-danger'
           }
@@ -954,7 +925,7 @@ $(document).ready(function () {
       fieldsValidated = []; 
   });
 
-
+  //validar formulario
   const formReexpedir = document.getElementById('FormReexpedir');
   const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
       fields: {
@@ -983,6 +954,10 @@ $(document).ready(function () {
             validators: {
                 notEmpty: {
                     message: 'El número de dictamen es obligatorio.'
+                },
+                stringLength: {
+                  min: 8,
+                  message: 'Debe tener al menos 8 caracteres.'
                 }
             }
         },

@@ -162,7 +162,7 @@ class empresa extends Model
     public function actividades()
     {
         // Relación con el modelo empresa_actividad
-        return $this->hasMany(EmpresaActividad::class, 'id_empresa');
+        return $this->hasMany(empresa_actividad::class, 'id_empresa');
     }
 
     public function catalogoActividades()

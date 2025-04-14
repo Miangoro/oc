@@ -34,11 +34,10 @@ class DictamenEnvasadoController extends Controller
     
     public function UserManagement()
     {
-        $inspecciones = Inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
+        $inspecciones = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 11);
-            })->orderBy('id_inspeccion', 'desc')
-            ->get();
-        $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+            })->orderBy('id_inspeccion', 'desc')->get();
+        $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $inspectores = User::where('tipo', 2)->get(); // Obtener solo los usuarios con tipo '2' (inspectores)
         $marcas = marcas::all(); // Obtener todas las marcas
         $lotes_granel = LotesGranel::all();
@@ -132,7 +131,8 @@ class DictamenEnvasadoController extends Controller
             ->orderBy($order, $dir)
             ->get();
     
-
+            
+        //MANDA LOS DATOS AL JS
         $data = [];
         if (!empty($res)) {
             foreach ($res as $dictamen) {
@@ -146,13 +146,13 @@ class DictamenEnvasadoController extends Controller
                 $nestedData['id_lote_envasado'] = $dictamen->lote_envasado->nombre_lote ?? 'No encontrado';
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha($dictamen->fecha_servicio);
                 ///numero y nombre empresa
-                $empresa = $dictamen->inspeccione->solicitud->empresa ?? null;
+                $empresa = $dictamen->inspeccion->solicitud->empresa ?? null;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
                     ? $empresa->empresaNumClientes
                     ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
                     : 'N/A';
                 $nestedData['numero_cliente'] = $numero_cliente;
-                $nestedData['razon_social'] = $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
+                $nestedData['razon_social'] = $dictamen->inspeccion->solicitud->empresa->razon_social ?? 'No encontrado';
                 ///dias vigencia
                 $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
                 $nestedData['fecha_actual'] = $fechaActual;
@@ -174,9 +174,9 @@ class DictamenEnvasadoController extends Controller
                         }
                     }
                 ///solicitud y acta
-                $nestedData['id_solicitud'] = $dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
-                $urls = isset($dictamen->inspeccione, $dictamen->inspeccione->solicitud) 
-                    ? $dictamen->inspeccione->solicitud->documentacion(69)->pluck('url')->toArray()
+                $nestedData['id_solicitud'] = $dictamen->inspeccion->solicitud->id_solicitud ?? 'No encontrado';
+                $urls = isset($dictamen->inspeccion, $dictamen->inspeccion->solicitud) 
+                    ? $dictamen->inspeccion->solicitud->documentacion(69)->pluck('url')->toArray()
                     : null;
                 $nestedData['url_acta'] = is_null($urls) ? 'No encontrado'//si no hay relacion
                     : (empty($urls) ? 'Sin subir' : implode(', ', $urls));//hay relacion pero no documentos
@@ -255,7 +255,7 @@ public function edit($id_dictamen_envasado)
         $editar = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
 
         return response()->json([
-            'id_dictamen' => $editar->id_dictamen,
+            'id_dictamen' => $editar->id_dictamen_envasado,
             'num_dictamen' => $editar->num_dictamen,
             'id_inspeccion' => $editar->id_inspeccion,
             'fecha_emision' => $editar->fecha_emision,
@@ -317,7 +317,7 @@ public function reexpedir(Request $request)
             $request->validate([
                 'id_dictamen_envasado' => 'required|exists:dictamenes_envasado,id_dictamen_envasado',
                 'id_inspeccion' => 'required|integer',
-                'num_dictamen' => 'required|string|max:40',
+                'num_dictamen' => 'required|string|min:8',
                 'fecha_emision' => 'required|date',
                 'fecha_vigencia' => 'required|date',
                 'id_firmante' => 'required|integer',
@@ -362,7 +362,7 @@ public function reexpedir(Request $request)
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
-        return response()->json(['message' => 'Error al procesar.'], 500);
+        return response()->json(['error' => 'Error al procesar.'], 500);
     }
 }
 

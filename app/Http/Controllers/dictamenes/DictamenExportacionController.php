@@ -35,11 +35,11 @@ class DictamenExportacionController extends Controller
         $dictamenes = Dictamen_Exportacion::all(); // Obtener todos los datos
         $inspeccion = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 11);
-            })->orderBy('id_inspeccion', 'desc')
-            ->get();
+            })->orderBy('id_inspeccion', 'desc')->get();
         $users = User::where('tipo',2)->get(); //Solo inspectores 
-        $empresa = empresa::all();
+        $empresa = empresa::where('tipo', 2)->get(); //solo empresas tipo '2'
 
+        // Pasar los datos a la vista
         return view('dictamenes.find_dictamen_exportacion', compact('dictamenes', 'inspeccion', 'users', 'empresa'));
     }
 
