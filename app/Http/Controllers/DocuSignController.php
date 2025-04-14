@@ -301,7 +301,7 @@ class DocuSignController extends Controller
         ];
 
        
-        $response = Http::get('http://127.0.0.1:8000/certificado_comercializador/1');
+        $response = Http::get('https://occidam.com/certificado_comercializador/1');
 
         if (!$response->successful()) {
             return response()->json(['error' => 'No se pudo obtener el PDF desde la URL'], 500);
