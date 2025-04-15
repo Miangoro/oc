@@ -318,7 +318,7 @@ class DocuSignController extends Controller
             ]);
         }*/
 
-
+        dd($token);
     
         $documents = [];
         $documentId = 1;
@@ -345,7 +345,7 @@ class DocuSignController extends Controller
             ]);
         }
 
-        dd($documents);
+        
     
         $signer = new Signer([
             'email' => $request->input('email'),
