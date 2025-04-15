@@ -321,10 +321,10 @@ class DocuSignController extends Controller
        
         $documents = [];
         $documentId = 1;
-        dd($request->id_certificado);
+        
         foreach ($request->id_certificado as $id_certificado) {
             // Llamada directa al método del controlador
-        
+            dd($id_certificado);
             $response = app(Certificado_ExportacionController::class)
                         ->MostrarCertificadoExportacion($id_certificado);
 
