@@ -326,6 +326,8 @@ class DocuSignController extends Controller
             // Llamada directa al método del controlador
             $response = app(Certificado_ExportacionController::class)
                         ->MostrarCertificadoExportacion($id_certificado);
+
+                        dd($response);
         
             // Validación básica del tipo de respuesta
             if (!$response instanceof \Symfony\Component\HttpFoundation\Response) {
@@ -344,7 +346,7 @@ class DocuSignController extends Controller
             ]);
         }
 
-        dd($token);
+        
     
     
         $signer = new Signer([
