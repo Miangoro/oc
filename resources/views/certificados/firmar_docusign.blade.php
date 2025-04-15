@@ -35,7 +35,7 @@
                         <div class="form-floating form-floating-outline mb-6">
                             <input type="text" class="form-control" id="nombre"
                                 placeholder="Introduce tu nombre completo" name="name" />
-                            <label for="nombre">Correo de docusign</label>
+                            <label for="nombre">Nombre completo</label>
                         </div>
                     </div>
 
@@ -58,7 +58,7 @@
                     </div>
 
                     <div class="d-flex justify-content-center mt-3">
-                        <button type="submit" class="btn btn-primary me-2 waves-effect waves-light">Registrar revisión</button>
+                        <button type="submit" class="btn btn-primary me-2 waves-effect waves-light">Firmar</button>
                         <a href="/certificados/exportacion" class="btn btn-outline-danger waves-effect">Cancelar</a>
                     </div>
                 </form>

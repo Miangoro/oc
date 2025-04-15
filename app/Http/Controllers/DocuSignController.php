@@ -279,8 +279,9 @@ class DocuSignController extends Controller
     }
 
     public function sendDocument2(Request $request)
-    {  
+    {   
         $token = Session::get('docusign_access_token');
+        dd($token);
         $tokenExpiry = Session::get('docusign_token_expiry');
     
         if (!$token || time() > $tokenExpiry) {
