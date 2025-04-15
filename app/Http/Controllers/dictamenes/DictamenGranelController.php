@@ -370,9 +370,9 @@ public function MostrarDictamenGranel($id_dictamen)
     $data = Dictamen_Granel::find($id_dictamen);
 
     if (!$data) {
-        return abort(404, 'Registro no encontrado');
-        return response()->json(['data']);
+        return abort(404, 'Registro no encontrado.');
     }
+
     $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
     $qrCode = new QrCode(
         data: $url,
@@ -407,8 +407,9 @@ public function MostrarDictamenGranel($id_dictamen)
     $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
     $fecha_servicio = Helpers::formatearFecha($data->inspeccione->fecha_servicio);
-    // Determinar si la marca de agua debe ser visible
     $watermarkText = $data->estatus == 1;
+    $id_sustituye = json_decode($data->observaciones, true)['id_sustituye'] ?? null;
+    $nombre_id_sustituye = $id_sustituye ? Dictamen_Granel::find($id_sustituye)->num_dictamen ?? '' : '';
 
     $pdf = Pdf::loadView('pdfs.dictamen_granel_ed7', [
         'data' => $data,
@@ -416,6 +417,7 @@ public function MostrarDictamenGranel($id_dictamen)
         'fecha_emision' => $fecha_emision,
         'fecha_vigencia' => $fecha_vigencia,
         'watermarkText' => $watermarkText,
+        'id_sustituye' => $nombre_id_sustituye,
         'firmaDigital' => $firmaDigital,
         'qrCodeBase64' => $qrCodeBase64
     ]);

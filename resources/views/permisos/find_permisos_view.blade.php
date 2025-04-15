@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Roles')
+@section('title', 'Permisos')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
@@ -24,7 +24,7 @@
 
 <!-- Page Scripts -->
 @section('page-script')
-    @vite(['resources/js/roles.js'])
+    @vite(['resources/js/permisos.js'])
 @endsection
 
 @section('content')
@@ -33,7 +33,7 @@
     <!-- Users List Table -->
     <div class="card">
         <div class="card-header pb-0">
-            <h3 class="card-title mb-0">Roles</h3>
+            <h3 class="card-title mb-0">Permisos</h3>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-users table">
@@ -41,7 +41,7 @@
                     <tr>
                         <th></th>
                         <th>Id</th>
-                        <th>Rol</th>
+                        <th>Permiso</th>
                         <th>Fecha de creación</th>
                         <th>Acciones</th>
                     </tr>
@@ -56,11 +56,11 @@
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0 h-100">
                 <form class="add-new-user pt-0" id="addNewRol">
-                    <input type="hidden" name="rol_id" id="rol_id">
+                    <input type="text" name="permiso_id" id="permiso_id">
                     <div class="form-floating form-floating-outline mb-5">
                         <input type="text" class="form-control" id="name" placeholder="Inspector" name="name"
                             aria-label="Inspector" />
-                        <label for="add-user-fullname">Nombre del rol</label>
+                        <label for="add-user-fullname">Nombre del permiso</label>
                     </div>
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" id="registrar-editar" class="btn btn-primary me-sm-3 me-1 data-submit"><i

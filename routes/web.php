@@ -219,6 +219,7 @@ use App\Http\Controllers\insertar_datos_bd_actas;
 use App\Http\Controllers\insertar_datos_bd_dictamenes_graneles;
 use App\Http\Controllers\insertar_datos_bd_lotes_envasado;
 use App\Http\Controllers\permisos\permisosController;
+use App\Http\Controllers\permisos\rolesController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -632,12 +633,11 @@ Route::resource('/consejo-list', UsuariosConsejoController::class)->middleware([
 
 Route::middleware(['auth'])->group(function () {
 
-    // Ruta específica para encontrar roles
-    Route::get('/find_roles', [permisosController::class, 'find_roles'])
-        ->name('usuarios-clientes');
+    Route::get('/find_roles', [rolesController::class, 'find_roles'])->name('find_roles');
+    Route::resource('/roles-list', rolesController::class);
 
-    // Rutas RESTful para permisosController
-    Route::resource('permisos', permisosController::class); // usa "permisos" como nombre base
+    Route::get('/find_permisos', [permisosController::class, 'find_permisos'])->name('find_permisos');
+    Route::resource('/permisos-list', permisosController::class);
 });
 
 //Documentacion

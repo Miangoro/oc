@@ -306,6 +306,12 @@
       "url": "find_roles",
       "icon": "menu-icon ri-user-settings-fill",
       "slug": "find_roles"
+    },
+    {
+      "name": "Permisos",
+      "url": "find_permisos",
+      "icon": "menu-icon ri-shield-keyhole-fill",
+      "slug": "find_permisos"
     }
     
  ]

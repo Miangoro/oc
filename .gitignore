@@ -53,3 +53,6 @@ yarn-error.log
 /public/storage/app/public/uploads/*
 /public/storage
 
+*.zip
+
+vendor.zip

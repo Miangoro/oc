@@ -151,7 +151,7 @@ class DocuSignController extends Controller
           
             // Reemplaza 'account_id' con tu ID de cuenta de DocuSign
             $envelopeSummary = $envelopeApi->createEnvelope('29412951', $envelopeDefinition);
-            dd( $envelopeSummary);
+          
             return response()->json($envelopeSummary);
         } catch (\Exception $e) {
             // Manejo de errores
@@ -324,11 +324,11 @@ class DocuSignController extends Controller
         
         foreach ($request->id_certificado as $id_certificado) {
             // Llamada directa al método del controlador
-        
+   
             $response = app(Certificado_ExportacionController::class)
                         ->MostrarCertificadoExportacion($id_certificado);
 
-                        dd($response);
+                      
         
             // Validación básica del tipo de respuesta
             if (!$response instanceof \Symfony\Component\HttpFoundation\Response) {

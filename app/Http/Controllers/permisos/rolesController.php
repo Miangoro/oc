@@ -16,7 +16,7 @@ use Spatie\Permission\Models\Permission;
 
 
 
-class permisosController extends Controller
+class rolesController extends Controller
 {
 
 
@@ -24,10 +24,10 @@ class permisosController extends Controller
    *Redirecciona a la vista de usuarios clientes.
    *
    */
-  public function find_permisos()
+  public function find_roles()
   {
 
-    return view('permisos.find_permisos_view');
+    return view('permisos.find_roles_view');
   }
 
 
@@ -41,7 +41,7 @@ class permisosController extends Controller
 
     $search = [];
 
-    $users_temp = Permission::query();
+    $users_temp = Role::query();
     $totalData = $users_temp->count();
 
     $totalFiltered = $totalData;
@@ -52,7 +52,7 @@ class permisosController extends Controller
     $dir = $request->input('order.0.dir');
 
     if (empty($request->input('search.value'))) {
-      $res = Permission::query()
+      $res = Role::query()
         ->offset($start)
         ->limit($limit)
 
@@ -60,7 +60,7 @@ class permisosController extends Controller
     } else {
       $search = $request->input('search.value');
 
-      $res = Permission::query()
+      $res = Role::query()
         ->where(function ($query) use ($search) {
           $query->where('name', 'LIKE', "%{$search}%");
         })
@@ -70,7 +70,7 @@ class permisosController extends Controller
         ->get();
 
 
-      $totalFiltered = Permission::query()
+      $totalFiltered = Role::query()
         ->where('name', 'LIKE', "%{$search}%")
         ->count();
     }
@@ -125,11 +125,11 @@ class permisosController extends Controller
    */
   public function store(Request $request)
   {
-    $id = $request->permiso_id;
+    $id = $request->rol_id;
 
     if ($id) {
       // update the value
-      $role = Permission::updateOrCreate(
+      $role = Role::updateOrCreate(
         ['id' => $id],
         ['name' => $request->name]
       );
@@ -137,11 +137,11 @@ class permisosController extends Controller
       return response()->json('Modificado');
     } else {
       // Verifica si el nombre ya existe
-      $existingRole = Permission::where('name', $request->name)->first();
+      $existingRole = Role::where('name', $request->name)->first();
 
       if (!$existingRole) {
         // crear nuevo rol
-        $role = Permission::create([
+        $role = Role::create([
           'name' => $request->name
         ]);
 
@@ -160,7 +160,7 @@ class permisosController extends Controller
 
   public function edit($id): JsonResponse
   {
-    $user = Permission::findOrFail($id);
+    $user = Role::findOrFail($id);
     return response()->json($user);
   }
 
@@ -169,6 +169,6 @@ class permisosController extends Controller
 
   public function destroy($id)
   {
-    $users = Permission::where('id', $id)->delete();
+    $users = Role::where('id', $id)->delete();
   }
 }

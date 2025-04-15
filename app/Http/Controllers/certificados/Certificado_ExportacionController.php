@@ -135,7 +135,7 @@ public function index(Request $request)
 
 
 
-//FUNCION PARA REGISTRAR
+///FUNCION REGISTRAR
 public function store(Request $request)
 {
     try {
@@ -156,8 +156,7 @@ public function store(Request $request)
 
 
 
-
-//FUNCION PARA ELIMINAR
+///FUNCION ELIMINAR
 public function destroy($id_certificado)
 {
     try {
@@ -172,8 +171,7 @@ public function destroy($id_certificado)
 
 
 
-
-//FUNCION PARA LLENAR EL FORMULARIO
+///FUNCION PARA OBTENER LOS REGISTROS
 public function edit($id_certificado)
 {
     try {
@@ -192,7 +190,7 @@ public function edit($id_certificado)
     }
 }
 
-//FUNCION PARA EDITAR
+///FUNCION ACTUALIZAR
 public function update(Request $request, $id_certificado) 
 {
     $request->validate([
@@ -217,167 +215,6 @@ public function update(Request $request, $id_certificado)
         return response()->json(['error' => 'Error al editar'], 500);
     }
 }
-
-
-
-
-///FUNCION PDF CERTIFICADO EXPORTACION
-public function MostrarCertificadoExportacion($id_certificado) 
-{
-    $data = Certificado_Exportacion::find($id_certificado);//Obtener datos del certificado
-
-    if (!$data) {
-        return abort(404, 'Registro no encontrado');
-        return response()->json(['data']);
-    }
-
-    //$fecha = Helpers::formatearFecha($data->fecha_emision);
-    //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
-    $fecha_emision = Carbon::parse($data->fecha_emision);
-        $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
-    $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
-        $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');
-    $empresa = $data->dictamen->inspeccione->solicitud->empresa;
-    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() ? $empresa
-        ->empresaNumClientes
-        ->first(fn($item) => $item->empresa_id === $empresa
-        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'N/A' : 'N/A';
-    //Determinar si la marca de agua debe ser visible
-    $watermarkText = $data->estatus == 1;
-    //Obtener un valor específico del JSON
-    $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON actual
-    ['id_certificado_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
-    $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado 
-    //Busca el registro del certificado que tiene el id igual a $id_sustituye
-    Certificado_Exportacion::find($id_sustituye)->num_certificado ?? '' : '';
-
-    $datos = $data->dictamen->inspeccione->solicitud->caracteristicas; //Obtener Características Solicitud
-    if ($datos) {
-        $caracteristicas = json_decode($datos, true); //Decodificar el JSON
-        $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
-        $no_pedido = $caracteristicas['no_pedido'] ?? '';
-        $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
-        // Acceder a los detalles
-        foreach ($detalles as $detalle) {
-            $botellas = $detalle['cantidad_botellas'] ?? '';
-            $cajas = $detalle['cantidad_cajas'] ?? '';
-            $presentacion = $detalle['presentacion'] ?? '';
-        }
-        // Obtener todos los IDs de los lotes
-        $loteIds = collect($detalles)->pluck('id_lote_envasado');
-        // Buscar los lotes envasados
-        $lotes = Lotes_Envasado::whereIn('id_lote_envasado', $loteIds)->get();
-        /*$lotes = collect();//mutliples lotes
-        foreach (json_decode($datos)->detalles as $detalle) {
-            $lote = Lotes_Envasado::find($detalle->id_lote_envasado);//compara el valor "id_lote_envasado" con "Lotes_Envasado"
-            if ($lote) {
-                $lotes->push($lote);//Agregar el lote a la colección
-            }
-        }*/
-    } else {
-        return abort(404, 'No se encontraron características');
-    }
-
-
-    $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
-        'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
-        'lotes' =>$lotes,
-        'expedicion' => $fecha1 ?? "",
-        'vigencia' => $fecha2 ?? "",
-        'n_cliente' => $numero_cliente,
-        'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
-        'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
-        'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? "",
-        'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? "",
-        'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? "",
-        'convenio' => $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA',
-        'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
-        'watermarkText' => $watermarkText,
-        'id_sustituye' => $nombre_id_sustituye,
-        'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? "",
-        'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? "",
-        'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? "",
-        ///caracteristicas
-        'aduana' => $aduana_salida ?? "",
-        'n_pedido' => $no_pedido ?? "",
-        'botellas' => $botellas ?? "",
-        'cajas' => $cajas ?? "",
-        'presentacion' => $presentacion ?? "",
-    ]);
-
-    //nombre al descargar
-    return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
-}
-
-
-///FUNCION PDF SOLICITUD CERTIFICADO
-public function MostrarSolicitudCertificadoExportacion($id_certificado) 
-{
-    $data = Certificado_Exportacion::find($id_certificado);
-    if (!$data) {
-        return abort(404, 'Certificado no encontrado');
-    }
-
-    $fecha = Helpers::formatearFecha($data->fecha_emision);
-    //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
-    /*$fecha_emision = Carbon::parse($data->fecha_emision);
-        $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
-    $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
-        $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');*/
-    $empresa = $data->dictamen->inspeccione->solicitud->empresa;
-    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() ? $empresa
-        ->empresaNumClientes
-        ->first(fn($item) => $item->empresa_id === $empresa
-        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'N/A' : 'N/A';
-    $watermarkText = $data->estatus == 1;//Determinar si marca de agua es visible
-
-    $datos = $data->dictamen->inspeccione->solicitud->caracteristicas; //Obtener Características Solicitud
-    if ($datos) {
-        $caracteristicas = json_decode($datos, true); //Decodificar el JSON
-        $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
-        $no_pedido = $caracteristicas['no_pedido'] ?? '';
-        $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
-        foreach ($detalles as $detalle) {// Acceder a los detalles
-            $botellas = $detalle['cantidad_botellas'] ?? '';
-            $cajas = $detalle['cantidad_cajas'] ?? '';
-            $presentacion = $detalle['presentacion'] ?? '';
-        }
-        $loteIds = collect($detalles)->pluck('id_lote_envasado');// Obtener todos los IDs de los lotes
-        $lotes = Lotes_Envasado::whereIn('id_lote_envasado', $loteIds)->get();// Buscar los lotes envasados
-    } else {
-        return abort(404, 'No se encontraron características');
-    }
-
-
-    $pdf = Pdf::loadView('pdfs.solicitud_certificado_exportacion_ed10', [//formato del PDF
-        'data' => $data,
-        'lotes' =>$lotes,
-        'expedicion' => $fecha ?? "",
-        'vigencia' => $fecha2 ?? "",
-        'n_cliente' => $numero_cliente,
-        'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
-        'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
-        'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? "",
-        'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? "",
-        'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? "",
-        'convenio' => $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA',
-        'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
-        'watermarkText' => $watermarkText,
-        'id_sustituye' => '',
-        'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? "",
-        'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? "",
-        'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? "",
-        ///caracteristicas
-        'aduana' => $aduana_salida ?? "",
-        'n_pedido' => $no_pedido ?? "",
-        'botellas' => $botellas ?? "",
-        'cajas' => $cajas ?? "",
-        'presentacion' => $presentacion ?? "",
-    ]);
-    //nombre al descargar
-    return $pdf->stream('F7.1-01-21 Ver 10. Solicitud de emisión de Certificado para Exportación.pdf');
-}
-
 
 
 
@@ -448,8 +285,7 @@ public function reexpedir(Request $request)
 
 
 
-
-///FUNCION PARA AGREGAR REVISOR
+///FUNCION AGREGAR REVISOR
 public function storeRevisor(Request $request)
 {
     try {
@@ -558,6 +394,169 @@ public function storeRevisor(Request $request)
     } catch (\Exception $e) {
         return response()->json(['message' => 'Ocurrió un error al asignar el revisor: ' . $e->getMessage()], 500);
     }
+}
+
+
+
+///PDF CERTIFICADO
+public function MostrarCertificadoExportacion($id_certificado) 
+{
+    $data = Certificado_Exportacion::find($id_certificado);//Obtener datos del certificado
+
+    if (!$data) {
+        return abort(404, 'Registro no encontrado.');
+        //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
+    }
+
+    //$fecha = Helpers::formatearFecha($data->fecha_emision);
+    //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
+    $fecha_emision = Carbon::parse($data->fecha_emision);
+        $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
+    $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
+        $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');
+    $empresa = $data->dictamen->inspeccione->solicitud->empresa;
+    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() ? $empresa
+        ->empresaNumClientes
+        ->first(fn($item) => $item->empresa_id === $empresa
+        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'N/A' : 'N/A';
+    //Determinar si la marca de agua debe ser visible
+    $watermarkText = $data->estatus == 1;
+    //Obtener un valor específico del JSON
+    $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON actual
+    ['id_certificado_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+    $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado 
+    //Busca el registro del certificado que tiene el id igual a $id_sustituye
+    Certificado_Exportacion::find($id_sustituye)->num_certificado ?? '' : '';
+
+    $datos = $data->dictamen->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
+        $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
+        $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
+        $no_pedido = $caracteristicas['no_pedido'] ?? '';
+        $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
+        // Acceder a los detalles
+        foreach ($detalles as $detalle) {
+            $botellas = $detalle['cantidad_botellas'] ?? '';
+            $cajas = $detalle['cantidad_cajas'] ?? '';
+            $presentacion = $detalle['presentacion'] ?? '';
+        }
+        // Obtener todos los IDs de los lotes
+        $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
+        // Buscar los lotes envasados
+        $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
+            : collect(); // Si no hay IDs, devolvemos una colección vacía
+        /*$lotes = collect();//mutliples lotes
+        foreach (json_decode($datos)->detalles as $detalle) {
+            $lote = Lotes_Envasado::find($detalle->id_lote_envasado);//compara el valor "id_lote_envasado" con "Lotes_Envasado"
+            if ($lote) {
+                $lotes->push($lote);//Agregar el lote a la colección
+            }
+        }*/
+       
+    //return response()->json(['message' => 'No se encontraron características.', $data], 404)
+
+
+    $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
+        'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
+        'lotes' =>$lotes,
+        'expedicion' => $fecha1 ?? "",
+        'vigencia' => $fecha2 ?? "",
+        'n_cliente' => $numero_cliente,
+        'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
+        'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'No encontrado',
+        'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? 'No encontrado',
+        'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
+        'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? 'No encontrado',
+        'convenio' => $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA',
+        'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
+        'watermarkText' => $watermarkText,
+        'id_sustituye' => $nombre_id_sustituye,
+        'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'No encontrado',
+        'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'No encontrado',
+        'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado',
+        ///caracteristicas
+        'aduana' => $aduana_salida ?? 'No encontrado',
+        'n_pedido' => $no_pedido ?? 'No encontrado',
+        'botellas' => $botellas ?? 'No encontrado',
+        'cajas' => $cajas ?? 'No encontrado',
+        'presentacion' => $presentacion ?? 'No encontrado',
+    ]);
+
+    //nombre al descargar
+    return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
+}
+
+
+///PDF SOLICITUD CERTIFICADO
+public function MostrarSolicitudCertificadoExportacion($id_certificado) 
+{
+    $data = Certificado_Exportacion::find($id_certificado);
+    if (!$data) {
+        return abort(404, 'Registro no encontrado.');
+        //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
+    }
+
+    $fecha = Helpers::formatearFecha($data->fecha_emision);
+    //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
+    /*$fecha_emision = Carbon::parse($data->fecha_emision);
+        $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
+    $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
+        $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');*/
+    $empresa = $data->dictamen->inspeccione->solicitud->empresa;
+    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() ? $empresa
+        ->empresaNumClientes
+        ->first(fn($item) => $item->empresa_id === $empresa
+        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'N/A' : 'N/A';
+    $watermarkText = $data->estatus == 1;//Determinar si marca de agua es visible
+    $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON
+        ['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+    $nombre_id_sustituye = $id_sustituye ?//verifica si $id_sustituye tiene valor  
+        //Busca el registro del certificado que tiene el id igual a $id_sustituye
+        Certificado_Exportacion::find($id_sustituye)->num_certificado ?? '' : '';
+
+    $datos = $data->dictamen->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
+        $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
+        $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
+        $no_pedido = $caracteristicas['no_pedido'] ?? '';
+        $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
+        foreach ($detalles as $detalle) {// Acceder a los detalles
+            $botellas = $detalle['cantidad_botellas'] ?? '';
+            $cajas = $detalle['cantidad_cajas'] ?? '';
+            $presentacion = $detalle['presentacion'] ?? '';
+        }
+        $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
+        $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
+            : collect(); // Si no hay IDs, devolvemos una colección vacía
+
+    //return response()->json(['message' => 'No se encontraron características.', $data], 404);
+
+
+    $pdf = Pdf::loadView('pdfs.solicitud_certificado_exportacion_ed10', [//formato del PDF
+        'data' => $data,
+        'lotes' =>$lotes,
+        'expedicion' => $fecha ?? "",
+        'vigencia' => $fecha2 ?? "",
+        'n_cliente' => $numero_cliente,
+        'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
+        'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'No encontrado',
+        'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? 'No encontrado',
+        'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
+        'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? 'No encontrado',
+        'convenio' => $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA',
+        'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
+        'watermarkText' => $watermarkText,
+        'id_sustituye' => $nombre_id_sustituye,
+        'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'No encontrado',
+        'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'No encontrado',
+        'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado',
+        ///caracteristicas
+        'aduana' => $aduana_salida ?? 'No encontrado',
+        'n_pedido' => $no_pedido ?? 'No encontrado',
+        'botellas' => $botellas ?? 'No encontrado',
+        'cajas' => $cajas ?? 'No encontrado',
+        'presentacion' => $presentacion ?? 'No encontrado',
+    ]);
+    //nombre al descargar
+    return $pdf->stream('F7.1-01-21 Ver 10. Solicitud de emisión de Certificado para Exportación.pdf');
 }
 
 

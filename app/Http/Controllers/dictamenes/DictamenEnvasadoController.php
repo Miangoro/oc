@@ -35,7 +35,7 @@ class DictamenEnvasadoController extends Controller
     public function UserManagement()
     {
         $inspecciones = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
-            $query->where('id_tipo', 11);
+            $query->where('id_tipo', 5);
             })->orderBy('id_inspeccion', 'desc')->get();
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $inspectores = User::where('tipo', 2)->get(); // Obtener solo los usuarios con tipo '2' (inspectores)
@@ -375,8 +375,8 @@ public function MostrarDictamenEnvasado($id_dictamen)
     $data = Dictamen_Envasado::with(['lote_envasado.lotesGranel'])->find($id_dictamen);
 
     if (!$data) {
-        return abort(404, 'Registro no encontrado');
-        return response()->json(['data']);
+        return abort(404, 'Registro no encontrado.');
+        //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
     }
     //firma electronica
     $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
@@ -410,12 +410,14 @@ public function MostrarDictamenEnvasado($id_dictamen)
     }
     $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccion->num_servicio, $pass, $data->id_firmante);
     
-    $loteEnvasado = $data->lote_envasado;
+    $loteEnvasado = $data->lote_envasado ?? null;
     $marca = $loteEnvasado ? $loteEnvasado->marca : null;
     $lotesGranel = $loteEnvasado ? $loteEnvasado->lotesGranel : collect(); // Si no hay, devuelve una colección vacía
     $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
-    $watermarkText = $data->estatus == 1;//marca de agua
+    $watermarkText = $data->estatus == 1;
+    $id_sustituye = json_decode($data->observaciones, true)['id_sustituye'] ?? null;
+    $nombre_id_sustituye = $id_sustituye ? Dictamen_Envasado::find($id_sustituye)->num_dictamen ?? '' : '';
 
     // Renderizar el PDF con los lotes a granel
     $pdf = Pdf::loadView('pdfs.dictamen_envasado_ed6', [
@@ -426,6 +428,7 @@ public function MostrarDictamenEnvasado($id_dictamen)
         'fecha_emision' => $fecha_emision,
         'fecha_vigencia' => $fecha_vigencia,
         'watermarkText' => $watermarkText,
+        'id_sustituye' => $nombre_id_sustituye,
         'firmaDigital' => $firmaDigital,
         'qrCodeBase64' => $qrCodeBase64
     ]);
