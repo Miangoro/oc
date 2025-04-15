@@ -386,6 +386,14 @@ if (dt_user_table.length) {
            ]
          },
          {
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Firmar Docusign</span>',
+          className: 'btn btn-info waves-effect waves-light me-2',
+          action: function (e, dt, node, config) {
+            window.location.href = '/add_firmar_docusign';
+          }
+        },
+        
+         {
            text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Certificado</span>',
            className: 'add-new btn btn-primary waves-effect waves-light',
            attr: {

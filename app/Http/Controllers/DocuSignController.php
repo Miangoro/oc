@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\certificados\Certificado_ExportacionController;
 use App\Http\Controllers\Controller;
+use App\Models\Certificado_Exportacion;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
@@ -27,7 +29,14 @@ use DocuSign\eSign\Model\RecipientViewRequest;
 use Illuminate\Support\Facades\Log;
 
 class DocuSignController extends Controller
-{
+{   
+
+    public function add_firmar_docusign(){
+
+        $certificados = Certificado_Exportacion::All();
+        return view('certificados.firmar_docusign', compact('certificados'));
+    }
+
     public function authenticate()
     {
         $config = config('docusign');
@@ -270,7 +279,7 @@ class DocuSignController extends Controller
     }
 
     public function sendDocument2(Request $request)
-    {
+    {  
         $token = Session::get('docusign_access_token');
         $tokenExpiry = Session::get('docusign_token_expiry');
     
@@ -292,38 +301,52 @@ class DocuSignController extends Controller
         $envelopeApi = new EnvelopesApi($apiClient);
     
         // 📄 Archivos a firmar (puedes agregar más aquí)
-        $files = [
+       /* $files = [
           
             storage_path('app/public/Pre-certificado_CIDAM_C-EXP25-167.pdf'),
             storage_path('app/public/Pre-certificado_CIDAM_C-EXP25-171.pdf'), 
-            // Agrega más rutas aquí si quieres más archivos
-            // storage_path('app/public/OtroDocumento.pdf'),
+      
         ];
 
-       
-        $response = Http::get('https://occidam.com/certificado_comercializador/1');
+        foreach ($files as $filePath) {
+            $documents[] = new Document([
+                'document_base64' =>base64_encode($filePath),
+                'name' => basename($filePath),
+                'file_extension' => 'pdf',
+                'document_id' => (string) $documentId++,
+            ]);
+        }*/
 
-        if (!$response->successful()) {
-            return response()->json(['error' => 'No se pudo obtener el PDF desde la URL'], 500);
-        }
 
-        $pdfContent = $response->body();
     
         $documents = [];
         $documentId = 1;
     
-        foreach ($files as $filePath) {
+        foreach ($request->id_certificado as $id_certificado) {
+            // Llamada directa al método del controlador
+            $response = app(Certificado_ExportacionController::class)
+                        ->MostrarCertificadoExportacion($id_certificado);
+        
+            // Validación básica del tipo de respuesta
+            if (!$response instanceof \Symfony\Component\HttpFoundation\Response) {
+                return response()->json([
+                    'error' => "No se pudo generar el PDF para el ID $id_certificado"
+                ], 500);
+            }
+        
+
+            // Crear documento
             $documents[] = new Document([
-                'document_base64' =>base64_encode($pdfContent),
-                'name' => basename($filePath),
+                'document_base64' => base64_encode($response),
+                'name' => 'Certificado ' . $id_certificado,
                 'file_extension' => 'pdf',
                 'document_id' => (string) $documentId++,
             ]);
         }
     
         $signer = new Signer([
-            'email' => $request->input('email', 'imendoza@erpcidam.com'),
-            'name' => $request->input('name', 'María Inés Mendoza Cisneros'),
+            'email' => $request->input('email'),
+            'name' => $request->input('name'),
             'recipient_id' => '1',
             'client_user_id' => '1234' // Necesario para firma embebida
         ]);

@@ -229,12 +229,13 @@ Route::get('/', function () {
 Route::get('/docusign/authenticate', [DocuSignController::class, 'authenticate'])->name('docusign');
 Route::get('/test-docusign', [DocuSignController::class, 'sendDocument'])->name('test-docusign');
 Route::get('/obtenerTokenDocuSign', [DocuSignController::class, 'obtenerTokenDocuSign'])->name('obtenerTokenDocuSign');
-Route::get('/docusign/enviar', [DocuSignController::class, 'sendDocument2'])->name('docusign.enviar')->middleware('auth'); 
-Route::get('/docusign/sendDocumentAuto', [DocuSignController::class, 'sendDocumentAuto'])->name('docusign.enviar'); 
+Route::post('/docusign/enviar', [DocuSignController::class, 'sendDocument2'])->name('docusign.enviar')->middleware('auth'); 
+Route::get('/docusign/sendDocumentAuto', [DocuSignController::class, 'sendDocumentAuto'])->name('docusign.enviar.auto'); 
 
 Route::get('/docusign/firma-completada', [DocuSignController::class, 'firmaCompletada'])->name('firma.completada');
 Route::get('/docusign/descargar/{envelopeId}', [DocuSignController::class, 'descargarDocumento'])->name('docusign.descargar');
 Route::get('/estadoSobre/{envelopeId}', [DocuSignController::class, 'estadoSobre'])->name('estadoSobre');
+Route::get('/add_firmar_docusign', [DocuSignController::class, 'add_firmar_docusign'])->name('add_firmar_docusign');
 
 
 
