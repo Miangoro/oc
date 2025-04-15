@@ -227,7 +227,8 @@ public function MostrarCertificadoExportacion($id_certificado)
     $data = Certificado_Exportacion::find($id_certificado);//Obtener datos del certificado
 
     if (!$data) {
-        return abort(404, 'Certificado no encontrado');
+        return abort(404, 'Registro no encontrado');
+        return response()->json(['data']);
     }
 
     //$fecha = Helpers::formatearFecha($data->fecha_emision);
@@ -380,7 +381,7 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
 
 
 
-//FUNCION PARA REEXPEDIR CERTIFICADO EXPOTACION
+///FUNCION REEXPEDIR 
 public function reexpedir(Request $request)
 {
     try {
@@ -420,7 +421,6 @@ public function reexpedir(Request $request)
                 $observacionesActuales['observaciones'] = $request->observaciones;
             $certificado->observaciones = json_encode($observacionesActuales);
             $certificado->save(); 
-
 
             // Crear un nuevo registro de certificado (reexpedición)
             $nuevoCertificado = new Certificado_Exportacion();

@@ -3,7 +3,6 @@
  */
  'use strict';
 
-
 $(document).ready(function () {
   flatpickr(".flatpickr-datetime", {
       dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
@@ -114,9 +113,9 @@ if (dt_user_table.length) {
         // For Responsive
         targets: 0,
         className: 'control',
-        searchable: false,
-        orderable: false,
-        responsivePriority: 1,//prioridad de menor a mayor, siempre visible
+        searchable: false,//No será buscable en el cuadro de búsqueda.
+        orderable: false,// No se podrá ordenar esta columna al hacer clic en el encabezado.
+        responsivePriority: 1, //Los valores mas altos se ocultan primero.
         render: function (data, type, full, meta) {
           return '';
         }
@@ -158,6 +157,7 @@ if (dt_user_table.length) {
         targets: 4,
         searchable: false,
         orderable: false,
+        responsivePriority: 4, 
         render: function (data, type, full, meta) {
           var $ = full[''];
           return '<span class="small"> Falta </span>';
@@ -454,7 +454,7 @@ if (dt_user_table.length) {
 
 ///AGREGAR
 // Validación del formulario
-/*const form = document.getElementById('FormAgregar');
+/*const form = document.getElementById('FormAgregar');//id del formulario
 const fv = FormValidation.formValidation(form, {*///se define el formulario
 FormValidation.formValidation(FormAgregar, {
   fields: {
@@ -530,7 +530,7 @@ FormValidation.formValidation(FormAgregar, {
         //$('.datatables-users').DataTable().ajax.reload();
         dt_user.ajax.reload();//misma funcion de arriba, Recarga los datos en el datatable
         
-        // Mostrar alerta
+        // Mostrar alerta de éxito
         Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -547,7 +547,7 @@ FormValidation.formValidation(FormAgregar, {
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Error al registrar',
+          text: 'Error al registrar.',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
@@ -610,20 +610,19 @@ $(document).on('click', '.eliminar', function () {
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al eliminar',
+            text: 'Error al eliminar.',
             //footer: `<pre>${error.responseText}</pre>`,
             customClass: {
               confirmButton: 'btn btn-danger'
             }
           });
         }
-
-    });
+      });
     } else if (result.dismiss === Swal.DismissReason.cancel) {
       // Acción cancelar, mostrar mensaje informativo
       Swal.fire({
         title: '¡Cancelado!',
-        text: 'La eliminación ha sido cancelada',
+        text: 'La eliminación ha sido cancelada.',
         icon: 'info',
         customClass: {
           confirmButton: 'btn btn-primary'
@@ -748,7 +747,7 @@ $(function () {
               Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
-                text: 'Error al actualizar',
+                text: 'Error al actualizar.',
                 customClass: {
                   confirmButton: 'btn btn-danger'
                 }
@@ -789,7 +788,7 @@ $(function () {
             Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              text: 'Error al cargar los datos',
+              text: 'Error al cargar los datos.',
               customClass: {
                 confirmButton: 'btn btn-danger'
               }
@@ -877,7 +876,7 @@ $(document).ready(function () {
           });
 
       }).fail(function () {
-              showError('Error al cargar los datos');
+              showError('Error al cargar los datos.');
               isLoadingData = false;
       });
   }
