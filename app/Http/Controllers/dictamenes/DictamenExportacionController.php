@@ -242,6 +242,7 @@ public function edit($id_dictamen)
 public function update(Request $request, $id_dictamen) 
 {
     try {
+        // Validar los datos del formulario
         $validated = $request->validate([
             'num_dictamen' => 'required|string|max:70',
             'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
@@ -295,8 +296,11 @@ public function reexpedir(Request $request)
 
         if ($request->accion_reexpedir == '1') {
             $reexpedir->estatus = 1; 
-                $observacionesActuales = json_decode($reexpedir->observaciones, true);//Decodifica el JSON actual
-                $observacionesActuales['observaciones'] = $request->observaciones;//Actualiza solo 'observaciones'
+            // Decodificar el JSON actual
+            $observacionesActuales = json_decode($reexpedir->observaciones, true);
+            // Actualiza solo 'observaciones' sin modificar 'id_certificado_sustituye'
+            $observacionesActuales['observaciones'] = $request->observaciones;
+            // Volver a codificar el array y asignarlo a $certificado->observaciones
             $reexpedir->observaciones = json_encode($observacionesActuales); 
             $reexpedir->save();
 

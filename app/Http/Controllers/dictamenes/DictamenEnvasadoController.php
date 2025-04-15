@@ -131,7 +131,7 @@ class DictamenEnvasadoController extends Controller
             ->orderBy($order, $dir)
             ->get();
     
-            
+
         //MANDA LOS DATOS AL JS
         $data = [];
         if (!empty($res)) {
@@ -186,7 +186,7 @@ class DictamenEnvasadoController extends Controller
             }
         }
     
-        return response()->json([
+        return response()->json([//Devuelve los datos y el total de registros filtrados
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
             'recordsFiltered' => intval($totalFiltered),

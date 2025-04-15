@@ -125,8 +125,9 @@ if (dt_user_table.length) {
             render: function (data, type, full, meta) {
               var $num_servicio = full['num_servicio'];
               var $folio_solicitud = full['folio_solicitud'];
-              var $id_solicitud = full['id_solicitud'];
-              if(full['url_acta']=='Sin subir'){
+              if (full['url_acta'] == 'No encontrado') {
+                var $acta = '<small><b>No encontrado</b></small>';
+              }else if (full['url_acta'] == 'Sin subir'){
                 var $acta = '<small><b>NA</b></small>';
               }else{
                 var $acta = `<i data-id="${full['numero_cliente']}/${full['url_acta']}" data-empresa="${full['razon_social']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
@@ -134,16 +135,17 @@ if (dt_user_table.length) {
   
               return '<span class="fw-bold">Servicio:</span> ' + $num_servicio +
                 '<span>'+$acta+'</span>'+
-                '<br><span class="fw-bold">Solicitud: </span>' + $folio_solicitud +
-                `<i data-id="` + $id_solicitud + `" data-folio="` + $folio_solicitud + `" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+                '<br><span class="fw-bold">Solicitud:</span> '+ $folio_solicitud +
+                `<i data-id="${full['id_solicitud']}" data-folio="` + $folio_solicitud + `" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
             }
           }, 
           {
             targets: 4,
             searchable: false,
             orderable: false, 
+            responsivePriority: 4, 
             render: function (data, type, full, meta) {
-              return `<b>Lote: </b><small></small><br><b>FQs: </b><small></small>`;
+              return '<span class="small"> Falta </span>';
             }     
           },
           {
@@ -153,21 +155,14 @@ if (dt_user_table.length) {
             orderable: false,
             className: 'text-center',//columna centrada
             render: function (data, type, full, meta) {
-                // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
-                var $fecha_emision = full['fecha_emision'] ?? 'N/A'; // Fecha de vigencia
-                var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A'; // Fecha de vencimiento
-        
-                // Definir los mensajes de fecha con formato
-                var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span>`;
-                var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span>`;
-  
-                // Retorna las fechas en formato de columnas
-                return `
-                    <div>
-                        <div>${fechaVigenciaMessage}</div>
-                        <div>${fechaVencimientoMessage}</div>
-                        <div style="text-aling: center" class="small">${full['diasRestantes']}</div>
-                    </div> `;
+              var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
+              var $fecha_vigencia = full['fecha_vigencia'] ?? 'No encontrado';
+              return `
+                  <div>
+                      <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span></div>
+                      <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span></div>
+                      <div class="small">${full['diasRestantes']}</div>
+                  </div> `;
             }
           }, 
           {
@@ -175,12 +170,13 @@ if (dt_user_table.length) {
             targets: 6,
             searchable: true,
             orderable: true,
+            className: 'text-center',
             render: function (data, type, full, meta) {
               var $estatus = full['estatus'];
-              var $emision = full['emision'];
+              var $fecha_actual = full['fecha_actual'];
               var $vigencia = full['vigencia'];
               let estatus;
-                if ($emision > $vigencia) {
+                if ($fecha_actual > $vigencia) {
                   estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
                 } else if ($estatus == 1) {
                     estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
@@ -423,36 +419,36 @@ if (dt_user_table.length) {
 
       ///PAGINA RESPONSIVA
       responsive: {
-          details: {
-              display: $.fn.dataTable.Responsive.display.modal({
-                  header: function (row) {
-                      var data = row.data();
-                      return 'Detalles de ' + data['num_dictamen'];
-                  }
-              }),
-              type: 'column',
-              renderer: function (api, rowIdx, columns) {
-                var data = $.map(columns, function (col, i) {
-                    return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
-                      ? '<tr data-dt-row="' +
-                      col.rowIndex +
-                      '" data-dt-column="' +
-                      col.columnIndex +
-                      '">' +
-                      '<td>' +
-                      col.title +
-                      ':' +
-                      '</td> ' +
-                      '<td>' +
-                      col.data +
-                      '</td>' +
-                      '</tr>'
-                      : '';
-                  }).join('');
-
-                  return data ? $('<table class="table"/><tbody />').append(data) : false;
+        details: {
+          display: $.fn.dataTable.Responsive.display.modal({
+              header: function (row) {
+                  var data = row.data();
+                  return 'Detalles de ' + data['num_dictamen'];
               }
+          }),
+          type: 'column',
+          renderer: function (api, rowIdx, columns) {
+            var data = $.map(columns, function (col, i) {
+                return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+                  ? '<tr data-dt-row="' +
+                  col.rowIndex +
+                  '" data-dt-column="' +
+                  col.columnIndex +
+                  '">' +
+                  '<td>' +
+                  col.title +
+                  ':' +
+                  '</td> ' +
+                  '<td>' +
+                  col.data +
+                  '</td>' +
+                  '</tr>'
+                  : '';
+              }).join('');
+
+              return data ? $('<table class="table"/><tbody />').append(data) : false;
           }
+        }
       }
 
   });
@@ -543,7 +539,7 @@ $(function () {
         $('.select2').val(null).trigger('change');
         $('.datatables-users').DataTable().ajax.reload();
 
-        // Mostrar alerta
+        // Mostrar alerta de éxito
         Swal.fire({
           icon: 'success',
           title: '¡Éxito!',
@@ -559,7 +555,7 @@ $(function () {
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Error al registrar',
+          text: 'Error al registrar.',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
@@ -629,25 +625,24 @@ $(document).on('click', '.eliminar', function () {
             Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              text: 'Error al eliminar',
+              text: 'Error al eliminar.',
               customClass: {
                 confirmButton: 'btn btn-danger'
               }
             });
           }
-  
       });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // Acción cancelar
-        Swal.fire({
-          title: '¡Cancelado!',
-          text: 'La eliminación ha sido cancelada',
-          icon: 'info',
-          customClass: {
-            confirmButton: 'btn btn-primary'
-          }
-        });
-      }
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      // Acción cancelar
+      Swal.fire({
+        title: '¡Cancelado!',
+        text: 'La eliminación ha sido cancelada.',
+        icon: 'info',
+        customClass: {
+          confirmButton: 'btn btn-primary'
+        }
+      });
+    }
     });
 
 });
@@ -763,7 +758,7 @@ $(function () {
               Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
-                text: 'Error al actualizar',
+                text: 'Error al actualizar.',
                 customClass: {
                   confirmButton: 'btn btn-danger'
                 }
@@ -804,7 +799,7 @@ $(function () {
             Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              text: 'Error al cargar los datos',
+              text: 'Error al cargar los datos.',
               customClass: {
                 confirmButton: 'btn btn-danger'
               }
@@ -844,7 +839,6 @@ $(document).ready(function () {
           $('#rex_fecha_vigencia').val(fecha_vigencia);
       }
   });
-
 
   $(document).on('change', '#accion_reexpedir', function () {
     var accionSeleccionada = $(this).val();
@@ -893,7 +887,7 @@ $(document).ready(function () {
           });
 
       }).fail(function () {
-              showError('Error al cargar los datos');
+              showError('Error al cargar los datos.');
               isLoadingData = false;
       });
   }
@@ -928,7 +922,7 @@ $(document).ready(function () {
   //validar formulario
   const formReexpedir = document.getElementById('FormReexpedir');
   const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
-      fields: {
+    fields: {
         'accion_reexpedir': {
             validators: {
                 notEmpty: {
@@ -990,17 +984,17 @@ $(document).ready(function () {
             }
           }
         },
-      },
-      plugins: {
-          trigger: new FormValidation.plugins.Trigger(),
-          bootstrap5: new FormValidation.plugins.Bootstrap5({
-              eleValidClass: '',
-              eleInvalidClass: 'is-invalid',
-              rowSelector: '.form-floating'
-          }),
-          submitButton: new FormValidation.plugins.SubmitButton(),
-          autoFocus: new FormValidation.plugins.AutoFocus()
-      }
+    },
+    plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+            eleValidClass: '',
+            eleInvalidClass: 'is-invalid',
+            rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+    }
   }).on('core.form.valid', function () {
       const formData = $(formReexpedir).serialize();
 
@@ -1034,7 +1028,7 @@ $(document).ready(function () {
               Swal.fire({
                   icon: 'error',
                   title: '¡Error!',
-                  text: 'Error al registrar',
+                  text: 'Error al registrar.',
                   customClass: {
                       confirmButton: 'btn btn-danger'
                   }
