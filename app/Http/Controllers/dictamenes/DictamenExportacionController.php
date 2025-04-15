@@ -343,12 +343,12 @@ public function reexpedir(Request $request)
 public function MostrarDictamenExportacion($id_dictamen) 
 {
     // Obtener los datos del dictamen
-    //$datos = Dictamen_Exportacion::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);    
+    //$data = Dictamen_Exportacion::with(['inspeccione','inspeccione.solicitud','inspeccione.inspector'])->find($id_dictamen);
     $data = Dictamen_Exportacion::find($id_dictamen);
 
     if (!$data) {
-        return abort(404, 'Registro no encontrado');
-        return response()->json(['data']);
+        return abort(404, 'Registro no encontrado.');
+        //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
     }
     //firma electronica
     $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
@@ -386,18 +386,16 @@ public function MostrarDictamenExportacion($id_dictamen)
     $fecha_emision2 = Helpers::formatearFecha($data->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
     $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
-    //Determinar si la marca de agua debe ser visible
-    $watermarkText = $data->estatus == 1;
+    $watermarkText = $data->estatus == 1;//Determinar si marca de agua es visible
     //Obtener un valor específico del JSON
     $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON actual
-    ['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+        ['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado 
-    //Busca el registro del certificado que tiene el id igual a $id_sustituye
-    Dictamen_Exportacion::find($id_sustituye)->num_dictamen ?? '' : '';
+        //Busca el registro del certificado que tiene el id igual a $id_sustituye
+        Dictamen_Exportacion::find($id_sustituye)->num_dictamen ?? '' : '';
 
-    $datos = $data->inspeccione->solicitud->caracteristicas; //Obtener Características Solicitud
-    if ($datos) {
-        $caracteristicas = json_decode($datos, true); //Decodificar el JSON
+    $datos = $data->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
+        $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
         $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
         $no_pedido = $caracteristicas['no_pedido'] ?? '';
         $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
@@ -408,13 +406,13 @@ public function MostrarDictamenExportacion($id_dictamen)
             $presentacion = $detalle['presentacion'] ?? '';
         }
         // Obtener todos los IDs de los lotes
-        $loteIds = collect($detalles)->pluck('id_lote_envasado');
+        $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
         // Buscar los lotes envasados
-        $lotes = Lotes_Envasado::whereIn('id_lote_envasado', $loteIds)->get();
+        $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
+            : collect(); // Si no hay IDs, devolvemos una colección vacía
 
-    } else {
-        return abort(404, 'No se encontraron características');
-    }
+    //return response()->json(['message' => 'No se encontraron características.', $data], 404);
+    
 
     $pdf = Pdf::loadView('pdfs.dictamen_exportacion_ed2', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
@@ -425,20 +423,20 @@ public function MostrarDictamenExportacion($id_dictamen)
         'domicilio' => $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
         'rfc' => $data->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'productor_autorizado' => $data->inspeccione->solicitud->empresa->registro_productor ?? '',
-        'importador' => $data->inspeccione->solicitud->direccion_destino->destinatario ?? "No encontrada",
-        //'direccion' => $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrada',
-        'direccion' => $data->inspeccione->solicitud->direccion_destino->direccion ?? "No encontrada",
-        'pais' => $data->inspeccione->solicitud->direccion_destino->pais_destino ?? "No encontrada",
+        'importador' => $data->inspeccione->solicitud->direccion_destino->destinatario ?? "No encontrado",
+        //'direccion' => $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrado',
+        'direccion' => $data->inspeccione->solicitud->direccion_destino->direccion ?? "No encontrado",
+        'pais' => $data->inspeccione->solicitud->direccion_destino->pais_destino ?? "No encontrado",
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
         'firmaDigital' => $firmaDigital,
         'qrCodeBase64' => $qrCodeBase64,
         ///caracteristicas
-        'aduana' => $aduana_salida ?? "No encontrada",
-        'n_pedido' => $no_pedido ?? "No encontrada",
-        'botellas' => $botellas ?? "No encontrada",
-        'cajas' => $cajas ?? "No encontrada",
-        'presentacion' => $presentacion ?? "No encontrada",
+        'aduana' => $aduana_salida ?? "No encontrado",
+        'n_pedido' => $no_pedido ?? "No encontrado",
+        'botellas' => $botellas ?? "No encontrado",
+        'cajas' => $cajas ?? "No encontrado",
+        'presentacion' => $presentacion ?? "No encontrado",
 
         'fecha_servicio' => $fecha_servicio,
         'fecha_vigencia' => $fecha_vigencia,
