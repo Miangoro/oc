@@ -344,6 +344,8 @@ class DocuSignController extends Controller
                 'document_id' => (string) $documentId++,
             ]);
         }
+
+        dd($documents);
     
         $signer = new Signer([
             'email' => $request->input('email'),
@@ -386,7 +388,7 @@ class DocuSignController extends Controller
             $viewUrl = $envelopeApi->createRecipientView($accountId, $envelopeSummary->getEnvelopeId(), $recipientViewRequest);
     
             // 👇 Redirigir automáticamente a la URL de firma
-            //return redirect()->away($viewUrl->getUrl());
+            return redirect()->away($viewUrl->getUrl());
     
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
