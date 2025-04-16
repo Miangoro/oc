@@ -107,9 +107,8 @@ public function index(Request $request)
             ///numero y nombre empresa
             $empresa = $dictamen->inspeccione->solicitud->empresa ?? null;
             $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                ? $empresa->empresaNumClientes
-                ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-                : 'N/A';
+                ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+                ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
             $nestedData['numero_cliente'] = $numero_cliente;
             $nestedData['razon_social'] = $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
             ///dias vigencia
@@ -134,11 +133,8 @@ public function index(Request $request)
                 }
             ///solicitud y acta
             $nestedData['id_solicitud'] = $dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
-            $urls = isset($dictamen->inspeccione, $dictamen->inspeccione->solicitud) 
-                ? $dictamen->inspeccione->solicitud->documentacion(69)->pluck('url')->toArray()
-                : null;
-            $nestedData['url_acta'] = is_null($urls) ? 'No encontrado'//si no hay relacion
-                : (empty($urls) ? 'Sin subir' : implode(', ', $urls));//hay relacion pero no documentos
+            $urls = $dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
+            $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
             
                 
             $data[] = $nestedData;
@@ -380,8 +376,9 @@ public function MostrarDictamenExportacion($id_dictamen)
     if($data->id_firmante == 14){ //Mario
         $pass = 'v921009villa';
     }
-    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccione->num_servicio, $pass, $data->id_firmante);
+    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccione?->num_servicio, $pass, $data->id_firmante);
     
+
     // Verifica qué valor tiene esta variable
     $fecha_emision2 = Helpers::formatearFecha($data->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);

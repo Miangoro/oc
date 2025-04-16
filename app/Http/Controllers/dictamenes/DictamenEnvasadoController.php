@@ -35,7 +35,7 @@ class DictamenEnvasadoController extends Controller
     public function UserManagement()
     {
         $inspecciones = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
-            $query->where('id_tipo', 5);
+            $query->where('id_tipo', 6);
             })->orderBy('id_inspeccion', 'desc')->get();
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $inspectores = User::where('tipo', 2)->get(); // Obtener solo los usuarios con tipo '2' (inspectores)
@@ -148,9 +148,8 @@ class DictamenEnvasadoController extends Controller
                 ///numero y nombre empresa
                 $empresa = $dictamen->inspeccion->solicitud->empresa ?? null;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                    ? $empresa->empresaNumClientes
-                    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-                    : 'N/A';
+                    ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+                    ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
                 $nestedData['numero_cliente'] = $numero_cliente;
                 $nestedData['razon_social'] = $dictamen->inspeccion->solicitud->empresa->razon_social ?? 'No encontrado';
                 ///dias vigencia
@@ -175,11 +174,8 @@ class DictamenEnvasadoController extends Controller
                     }
                 ///solicitud y acta
                 $nestedData['id_solicitud'] = $dictamen->inspeccion->solicitud->id_solicitud ?? 'No encontrado';
-                $urls = isset($dictamen->inspeccion, $dictamen->inspeccion->solicitud) 
-                    ? $dictamen->inspeccion->solicitud->documentacion(69)->pluck('url')->toArray()
-                    : null;
-                $nestedData['url_acta'] = is_null($urls) ? 'No encontrado'//si no hay relacion
-                    : (empty($urls) ? 'Sin subir' : implode(', ', $urls));//hay relacion pero no documentos
+                $urls = $dictamen->inspeccion?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
+                $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
                
 
                 $data[] = $nestedData;
@@ -408,7 +404,7 @@ public function MostrarDictamenEnvasado($id_dictamen)
     if($data->id_firmante == 14){ //Mario
         $pass = 'v921009villa';
     }
-    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccion->num_servicio, $pass, $data->id_firmante);
+    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccion?->num_servicio, $pass, $data->id_firmante);
     
     $loteEnvasado = $data->lote_envasado ?? null;
     $marca = $loteEnvasado ? $loteEnvasado->marca : null;

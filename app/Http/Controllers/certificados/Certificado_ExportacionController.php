@@ -88,19 +88,18 @@ public function index(Request $request)
     if (!empty($users)) {
         $ids = $start;
         foreach ($users as $user) {
-            $nestedData['id_certificado'] = $user->id_certificado;
-            $nestedData['dictamen'] = $user->dictamen->id_dictamen;
-            $nestedData['num_certificado'] = $user->num_certificado;
-            $nestedData['estatus'] = $user->estatus;
+            $nestedData['id_certificado'] = $user->id_certificado ?? 'No encontrado';
+            $nestedData['dictamen'] = $user->dictamen->id_dictamen ?? 'No encontrado';
+            $nestedData['num_certificado'] = $user->num_certificado ?? 'No encontrado';
+            $nestedData['estatus'] = $user->estatus ?? 'No encontrado';
             ///Folio y no. servicio
-            $nestedData['folio'] = $user->dictamen->inspeccione->solicitud->folio;
-            $nestedData['n_servicio'] = $user->dictamen->inspeccione->num_servicio;
+            $nestedData['folio'] = $user->dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
+            $nestedData['n_servicio'] = $user->dictamen->inspeccione->num_servicio ?? 'No encontrado';
             //Nombre y Numero empresa
-            $empresa = $user->dictamen->inspeccione->solicitud->empresa;
+            $empresa = $user->dictamen->inspeccione->solicitud->empresa ?? null;
             $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-            ? $empresa->empresaNumClientes
-                ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-            : 'N/A';
+                ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+                ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
             $nestedData['numero_cliente'] = $numero_cliente;
             $nestedData['razon_social'] = $user->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
             //Fecha emisión y vigencia
@@ -414,11 +413,10 @@ public function MostrarCertificadoExportacion($id_certificado)
         $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
     $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
         $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');
-    $empresa = $data->dictamen->inspeccione->solicitud->empresa;
-    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() ? $empresa
-        ->empresaNumClientes
-        ->first(fn($item) => $item->empresa_id === $empresa
-        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'N/A' : 'N/A';
+    $empresa = $data->dictamen->inspeccione->solicitud->empresa ?? null;
+    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() 
+        ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
     //Determinar si la marca de agua debe ser visible
     $watermarkText = $data->estatus == 1;
     //Obtener un valor específico del JSON
@@ -501,7 +499,7 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
     $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
         $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');*/
-    $empresa = $data->dictamen->inspeccione->solicitud->empresa;
+    $empresa = $data->dictamen->inspeccione->solicitud->empresa ?? null;
     $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() ? $empresa
         ->empresaNumClientes
         ->first(fn($item) => $item->empresa_id === $empresa
@@ -513,7 +511,7 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         //Busca el registro del certificado que tiene el id igual a $id_sustituye
         Certificado_Exportacion::find($id_sustituye)->num_certificado ?? '' : '';
 
-    $datos = $data->dictamen->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
+    $datos = $data->dictamen?->inspeccione?->solicitud?->caracteristicas; //Obtener Características Solicitud
         $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
         $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
         $no_pedido = $caracteristicas['no_pedido'] ?? '';

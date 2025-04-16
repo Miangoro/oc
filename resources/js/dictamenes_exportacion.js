@@ -84,7 +84,7 @@ $.ajaxSetup({
 
 //FUNCIONALIDAD DE LA VISTA datatable
 if (dt_user_table.length) {
-  var dt_user = dt_user_table.DataTable({
+  var dataTable = dt_user_table.DataTable({
     processing: true,
     serverSide: true,
     ajax: {
@@ -139,18 +139,32 @@ if (dt_user_table.length) {
         render: function (data, type, full, meta) {
           var $num_servicio = full['num_servicio'];
           var $folio_solicitud = full['folio_solicitud'];
-          if (full['url_acta'] == 'No encontrado') {
-            var $acta = '<small><b>No encontrado</b></small>';
-          }else if (full['url_acta'] == 'Sin subir'){
-            var $acta = '<small><b>NA</b></small>';
-          }else{
-            var $acta = `<i data-id="${full['numero_cliente']}/${full['url_acta']}" data-empresa="${full['razon_social']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+          /*if ( full['url_acta'] == 'No encontrado' ) {
+            var $acta = `<i class="ri-error-warning-line text-warning ri-28px"></i>`;
+          }else*/ if ( full['url_acta'] == 'Sin subir' ) {
+            var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
+          }else {
+            //var $acta = `<i data-id="${full['numero_cliente']}/${full['url_acta']}" data-empresa="${full['razon_social']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+            var $acta = full['url_acta'].map(url => `
+              <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
+                 class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
+                 data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+              </i>
+            `).join('');//concatena en un string.
           }
-
-          return '<span class="fw-bold">Servicio:</span> '+ $num_servicio +
+          /*return '<span class="fw-bold">Servicio:</span> '+ $num_servicio +
             '<span>'+$acta+'</span>'+
             '<br><span class="fw-bold">Solicitud:</span> '+ $folio_solicitud +
-            `<i data-id="${full['id_solicitud']}" data-folio="` + $folio_solicitud + `" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+            `<i data-id="${full['id_solicitud']}" data-folio="` + $folio_solicitud + `" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;*/
+          return `
+          <span class="fw-bold">Servicio:</span> ${$num_servicio}
+            <span>${$acta}</span>
+          <br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud}
+            <i data-id="${full['id_solicitud']}" data-folio="${$folio_solicitud}"
+              class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
+              data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+            </i> 
+          `;
         }
       }, 
       {
@@ -173,11 +187,11 @@ if (dt_user_table.length) {
           var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
           var $fecha_vigencia = full['fecha_vigencia'] ?? 'No encontrado';
           return `
-              <div>
-                  <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span></div>
-                  <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span></div>
-                  <div class="small">${full['diasRestantes']}</div>
-              </div> `;
+            <div>
+                <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span></div>
+                <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span></div>
+                <div class="small">${full['diasRestantes']}</div>
+            </div> `;
           }
       },
       {
@@ -527,8 +541,7 @@ FormValidation.formValidation(FormAgregar, {
         $('#ModalAgregar').modal('hide');
         $('#FormAgregar')[0].reset();
         $('.select2').val(null).trigger('change');
-        //$('.datatables-users').DataTable().ajax.reload();
-        dt_user.ajax.reload();//misma funcion de arriba, Recarga los datos en el datatable
+        dataTable.ajax.reload();//Recarga los datos del datatable
         
         // Mostrar alerta de éxito
         Swal.fire({
@@ -592,8 +605,7 @@ $(document).on('click', '.eliminar', function () {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
         success: function (response) {
-          // Actualizar la tabla después de eliminar el registro
-          dt_user.draw();
+          dataTable.draw(false);//Actualizar la tabla, "null,false" evita que vuelva al inicio
           // Mostrar SweetAlert de éxito
           Swal.fire({
             icon: 'success',
@@ -713,8 +725,7 @@ $(function () {
           contentType: false,
           processData: false,
           success: function (response) {
-            dt_user.ajax.reload(); //Recarga los datos en el datatable
-            //dt_user.ajax.reload(null, false); //"false" evita que vuelva al inicio de la tabla
+            dataTable.ajax.reload(null, false);//Recarga los datos del datatable, "null,false" evita que vuelva al inicio
             $('#ModalEditar').modal('hide');//ocultar modal
             Swal.fire({
               icon: 'success',
