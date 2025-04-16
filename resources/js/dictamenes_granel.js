@@ -73,7 +73,7 @@ $.ajaxSetup({
 
 //FUNCIONALIDAD DE LA VISTA datatable
 if (dt_user_table.length) {
-  var dt_user = dt_user_table.DataTable({
+  var dataTable = dt_user_table.DataTable({
     processing: true,
     serverSide: true,
     ajax: {
@@ -126,18 +126,26 @@ if (dt_user_table.length) {
           render: function (data, type, full, meta) {
             var $num_servicio = full['num_servicio'];
             var $folio_solicitud = full['folio_solicitud'];
-            if (full['url_acta'] == 'No encontrado') {
-              var $acta = '<small><b>No encontrado</b></small>';
-            }else if (full['url_acta'] == 'Sin subir'){
-              var $acta = '<small><b>NA</b></small>';
-            }else{
-              var $acta = `<i data-id="${full['numero_cliente']}/${full['url_acta']}" data-empresa="${full['razon_social']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+            if ( full['url_acta'] == 'Sin subir' ) {
+              var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
+            }else {
+              var $acta = full['url_acta'].map(url => `
+                <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
+                    class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
+                    data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+                </i>
+              `).join('');
             }
 
-            return '<span class="fw-bold">Servicio:</span> '+ $num_servicio +
-              '<span>'+$acta+'</span>'+
-              '<br><span class="fw-bold">Solicitud:</span> '+ $folio_solicitud +
-              `<i data-id="${full['id_solicitud']}" data-folio="` + $folio_solicitud + `" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+            return `
+            <span class="fw-bold">Servicio:</span> ${$num_servicio}
+              <span>${$acta}</span>
+            <br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud}
+              <i data-id="${full['id_solicitud']}" data-folio="${$folio_solicitud}"
+                class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
+                data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+              </i>
+              `;
           }
         }, 
         {
@@ -538,8 +546,7 @@ $(function () {
         $('#ModalAgregar').modal('hide');
         $('#FormAgregar')[0].reset();
         $('.select2').val(null).trigger('change');
-        $('.datatables-users').DataTable().ajax.reload();
-
+        dataTable.ajax.reload();
         // Mostrar mensaje de éxito
         Swal.fire({
           icon: 'success',
@@ -602,8 +609,7 @@ $(document).on('click', '.eliminar', function () {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         success: function (response) {
-          // Actualizar la tabla después de eliminar el registro
-          dt_user.draw();
+          dataTable.draw(false);
           // Mostrar SweetAlert de éxito
           Swal.fire({
             icon: 'success',
@@ -723,7 +729,7 @@ $(function () {
       contentType: false,
       processData: false,
       success: function (response) {
-        dt_user.ajax.reload(); //Recarga los datos en el datatable
+        dataTable.ajax.reload(null, false);
         $('#ModalEditar').modal('hide');
         Swal.fire({
           icon: 'success',

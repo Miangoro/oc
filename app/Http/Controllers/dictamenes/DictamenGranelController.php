@@ -132,9 +132,8 @@ class DictamenGranelController extends Controller  {
                 ///numero y nombre empresa
                 $empresa = $dictamen->inspeccione->solicitud->empresa ?? null;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                    ? $empresa->empresaNumClientes
-                    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-                    : 'N/A';
+                    ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+                    ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
                 $nestedData['numero_cliente'] = $numero_cliente;
                 $nestedData['razon_social'] = $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
                 ///dias vigencia
@@ -159,11 +158,8 @@ class DictamenGranelController extends Controller  {
                     }
                 ///solicitud y acta
                 $nestedData['id_solicitud'] = $dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
-                $urls = isset($dictamen->inspeccione, $dictamen->inspeccione->solicitud) 
-                    ? $dictamen->inspeccione->solicitud->documentacion(69)->pluck('url')->toArray()
-                    : null;
-                $nestedData['url_acta'] = is_null($urls) ? 'No encontrado'//si no hay relacion
-                    : (empty($urls) ? 'Sin subir' : implode(', ', $urls));//hay relacion pero no documentos
+                $urls = $dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray() ?? null;
+                $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
 
                 ///caractetisticas->id_lote_granel->nombre_lote
                 $nestedData['id_lote_granel'] = $dictamen->lote_granel->nombre_lote ?? 'N/A';
@@ -402,7 +398,7 @@ public function MostrarDictamenGranel($id_dictamen)
     if($data->id_firmante == 14){ //Mario
         $pass = 'v921009villa';
     }
-    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccione->num_servicio, $pass, $data->id_firmante);  // 9 es el ID del usuario en este ejemplo
+    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccione?->num_servicio, $pass, $data->id_firmante);  // 9 es el ID del usuario en este ejemplo
     
     $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
