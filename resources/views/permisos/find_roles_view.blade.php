@@ -62,6 +62,24 @@
                             aria-label="Inspector" />
                         <label for="add-user-fullname">Nombre del rol</label>
                     </div>
+
+                    <div class="form-group">
+                      <label for="permisos" class="form-label">Seleccionar Permisos</label>
+                      <div style="max-height: 200px; overflow-y: auto;">
+                          @foreach($permisos as $permiso)
+                              <div class="form-check form-check-sm">
+                                  <input class="form-check-input" type="checkbox" value="{{ $permiso->name }}" id="permiso{{ $permiso->id }}" name="permisos[]">
+                                  <label class="form-check-label" for="permiso{{ $permiso->id }}">
+                                      {{ $permiso->name }}
+                                  </label>
+                              </div>
+                          @endforeach
+                      </div>
+                  </div>
+                  
+
+
+
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" id="registrar-editar" class="btn btn-primary me-sm-3 me-1 data-submit"><i
                                 class="ri-add-line"></i> Registrar</button>

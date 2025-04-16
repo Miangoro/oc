@@ -167,6 +167,26 @@ public function clases_agave()
         return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_solicitud');
     }
 
+    public function etiqueta()
+    {
+        $caracteristicas = is_string($this->caracteristicas) 
+            ? json_decode($this->caracteristicas, true) 
+            : $this->caracteristicas;
+    
+        $idEtiqueta = is_array($caracteristicas) 
+            ? ($caracteristicas['id_etiqueta'] ?? null) 
+            : ($caracteristicas->id_etiqueta ?? null);
+        
+        if ($idEtiqueta) {
+            return Documentacion_url::where('id_relacion', $idEtiqueta)
+                ->where('id_documento', 60)
+                ->value('url'); // Devuelve directamente la URL si existe
+        }
+    
+        return null; // Retorna null si no hay etiqueta
+    }
+    
+
     
     public function ultima_validacion_oc()
     {
@@ -198,6 +218,20 @@ public function clases_agave()
         return $this->belongsTo(direcciones::class, 'id_direccion_destino', 'id_direccion');
     }
 
+  
+      // Accesor para obtener el id de la dirección destinataria desde el JSON
+      public function getIdInstalacionEnvasadoAttribute()
+      {
+          $caracteristicas = json_decode($this->caracteristicas, true);
+          
+          return $caracteristicas['id_instalacion_envasado'] ?? null;
+      }
+  
+      // Relación con el modelo Direcciones
+      public function instalacion_envasado()
+      {
+          return $this->belongsTo(instalaciones::class, 'id_instalacion_envasado', 'id_instalacion');
+      }
 
     
 

@@ -457,6 +457,7 @@ $(function () {
       $('#add-estatus').val(data.estatus).change();
       $('#id_empresa').val(data.id_empresa).prop('selected', true).change();
       $('#add-user-puesto').val(data.puesto);
+      $('#rol_id').val(data.rol).prop('selected', true).change();
     });
   });
 

@@ -51,7 +51,7 @@ class Certificado_GranelController extends Controller
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
 
         $query = CertificadosGranel::with([
-            'dictamen.empresa' 
+            'dictamen.inspeccione.solicitud.empresa' 
         ])
         ->when($search, function($q, $search) {
             $q->orWhere('id_firmante', 'LIKE', "%{$search}%")

@@ -122,6 +122,17 @@
                                         @elseif($pregunta->filtro == 'direccion_fiscal')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }}</b>
                                             </td>
+                                        @elseif($pregunta->filtro == 'solicitud_exportacion')
+                                            <td>
+                                                <a target="_blank"
+                                                    href="/solicitud_certificado_exportacion/{{ $datos->certificado->id_certificado ?? 'N/A' }}">
+                                                    <i
+                                                        class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>
+                                            </td>
+                                        @elseif($pregunta->filtro == 'domicilioEnvasado')
+                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa ?? 'N/A' }}</b>
+                                            </td>
                                         @elseif($pregunta->filtro == 'pais')
                                             <td><b>C.P.:
                                                     {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}
@@ -265,6 +276,30 @@
                                                                 )->numero_cliente .
                                                                 '/' .
                                                                 $datos->obtenerDocumentoActa($pregunta->id_documento, $datos->certificado->dictamen->inspeccione->id_solicitud)
+                                                            : 'NA' }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                @endif
+                                            </td>
+                                        @elseif($pregunta->filtro == 'etiqueta')
+                                            <td>
+                                                @if ($datos->certificado->dictamen->inspeccione->solicitud->etiqueta())
+                                                  
+                                                    <a target="_blank"
+                                                        href="{{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
+                                                            'numero_cliente',
+                                                            '!=',
+                                                            null,
+                                                        )?->numero_cliente
+                                                            ? '../files/' .
+                                                                $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
+                                                                    'numero_cliente',
+                                                                    '!=',
+                                                                    null,
+                                                                )->numero_cliente .
+                                                                '/' .
+                                                                $datos->certificado->dictamen->inspeccione->solicitud->etiqueta()
                                                             : 'NA' }}">
                                                         <i
                                                             class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>

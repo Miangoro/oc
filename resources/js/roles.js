@@ -379,7 +379,7 @@ $(function () {
 
 //EDIT record
   $(document).on('click', '.edit-record', function () {
-    var permiso_id = $(this).data('id'),
+    var rol_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
 
     // hide responsive modal in small screen
@@ -392,16 +392,24 @@ $(function () {
     $('#registrar-editar').html('Editar');
 
     // get data
-    $.get(`${baseUrl}roles-list\/${permiso_id}\/edit`, function (data) {
-      $('#permiso_id').val(data.id);
-      $('#name').val(data.name);
+    $.get(`${baseUrl}roles-list\/${rol_id}\/edit`, function (data) {
+      $('#rol_id').val(data.rol.id);
+      $('#name').val(data.rol.name);
+
+        // Primero, desmarcamos todos los permisos
+    $('input[name="permisos[]"]').prop('checked', false);
+
+    // Luego, marcamos los que tiene el rol
+    data.permisos.forEach(function (permiso) {
+        $(`input[name="permisos[]"][value="${permiso}"]`).prop('checked', true);
+    });
 
     });
   });
 
   // changing the title
   $('.add-new').on('click', function () {
-    $('#permiso_id').val(''); //reseting input field
+    $('#rol_id').val(''); //reseting input field
     $('#offcanvasAddUserLabel').html('Agregar rol');
     $('#registrar-editar').html('Registrar');
   });

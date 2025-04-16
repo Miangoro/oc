@@ -35,7 +35,7 @@ class Revisor extends Model
         return 'Revisor'; // Devuelve el nombre que desees
     }
 
-    public function certificado()
+    public function certificadoNormal()
     {
         return $this->belongsTo(Certificados::class, 'id_certificado', 'id_certificado');
     }
@@ -50,20 +50,20 @@ class Revisor extends Model
         return $this->belongsTo(Certificado_Exportacion::class, 'id_certificado', 'id_certificado');
     }
     
-    // Usar un accesor en lugar de un método de relación
     public function getCertificadoAttribute()
     {
         switch ($this->tipo_certificado) {
             case 1:
-                return $this->certificado()->first();
+                return $this->certificadoNormal;
             case 2:
-                return $this->certificadoGranel->first();
+                return $this->certificadoGranel;
             case 3:
-                return $this->certificadoExportacion->first();
+                return $this->certificadoExportacion;
             default:
                 return null;
         }
     }
+    
     
 
     public function user()

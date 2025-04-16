@@ -57,8 +57,8 @@ class empresa extends Model
     public function todos_lotes_granel()
     {
         // Obtener las empresas maquiladoras donde esta empresa es maquilador
-        $idsEmpresas = maquiladores_model::where('id_maquilador', $this->id_empresa)
-            ->pluck('id_maquiladora')
+        $idsEmpresas = maquiladores_model::where('id_maquiladora', $this->id_empresa)
+            ->pluck('id_maquilador')
             ->toArray(); // Convertir la colección en array
     
         // Agregar la empresa actual al array
@@ -71,7 +71,7 @@ class empresa extends Model
     public function lotes_envasado()
     {
     // Aquí deberías implementar la lógica para obtener los lotes envasados
-    return lotes_envasado::where('id_empresa', $this->id_empresa)->with('lotes_envasado_granel.lotes_granel')->get();
+    return lotes_envasado::where('id_empresa', $this->id_empresa)->with('lotes_envasado_granel.lotes_granel','dictamenEnvasado')->get();
     }
 
     public function todos_lotes_envasado()
@@ -82,7 +82,7 @@ class empresa extends Model
             ->toArray();
 
         // Buscar los lotes de envasado correspondientes, incluyendo relaciones anidadas
-        return lotes_envasado::whereIn('id_empresa', [38])
+        return lotes_envasado::whereIn('id_empresa', $idsMaquiladoras)->with('lotes_envasado_granel.lotes_granel','dictamenEnvasado')
             ->get();
     }
 
@@ -162,7 +162,7 @@ class empresa extends Model
     public function actividades()
     {
         // Relación con el modelo empresa_actividad
-        return $this->hasMany(empresa_actividad::class, 'id_empresa');
+        return $this->hasMany(EmpresaActividad::class, 'id_empresa');
     }
 
     public function catalogoActividades()

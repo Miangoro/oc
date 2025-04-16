@@ -9,6 +9,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Spatie\Permission\Models\Role;
 
 class UsuariosInspectoresController extends Controller
 {
@@ -18,9 +19,8 @@ class UsuariosInspectoresController extends Controller
    */
   public function inspectores()
   {
-
-
-    return view('usuarios.find_usuarios_inspectores_view');
+    $roles = Role::All();
+    return view('usuarios.find_usuarios_inspectores_view',compact('roles'));
   }
 
 
@@ -201,7 +201,7 @@ class UsuariosInspectoresController extends Controller
                   'puesto' => $request->puesto,
               ]
           );
-
+          $users->syncRoles($request->rol_id); 
           return response()->json('Modificado');
       } else {
           // Crear un nuevo inspector si el correo no existe
@@ -220,7 +220,7 @@ class UsuariosInspectoresController extends Controller
                   'firma' => $firmaPath,  // Guardar la ruta de la firma si existe
                   'puesto' => $request->puesto,
               ]);
-
+              $users->syncRoles($request->rol_id); 
               return response()->json('Registrado');
           } else {
               return response()->json(['message' => 'Ya existe'], 422);
@@ -249,6 +249,7 @@ class UsuariosInspectoresController extends Controller
   public function edit($id): JsonResponse
   {
     $user = User::findOrFail($id);
+    $user->rol = $user->getRoleNames()->first(); // o ->toArray() si quieres todos
     return response()->json($user);
   }
 

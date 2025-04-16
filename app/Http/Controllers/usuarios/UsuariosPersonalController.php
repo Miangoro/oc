@@ -9,6 +9,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Spatie\Permission\Models\Role;
 
 class UsuariosPersonalController extends Controller
 {
@@ -19,8 +20,8 @@ class UsuariosPersonalController extends Controller
   public function personal()
   {
 
-
-    return view('usuarios.find_usuarios_personal_view');
+    $roles = Role::All();
+    return view('usuarios.find_usuarios_personal_view', compact('roles'));
   }
 
 
@@ -185,7 +186,7 @@ class UsuariosPersonalController extends Controller
                   'firma' => $firmaPath, // Guardar la ruta de la firma
               ]
           );
-
+          $users->syncRoles($request->rol_id); 
           return response()->json('Modificado');
       } else {
           // Crear un nuevo usuario si el email no existe
@@ -204,7 +205,7 @@ class UsuariosPersonalController extends Controller
                   'tipo' => 1,
                   'firma' => $firmaPath, // Guardar la ruta de la firma si existe
               ]);
-
+              $users->syncRoles($request->rol_id); 
               return response()->json('Registrado');
           } else {
               return response()->json(['message' => "ya existe"], 422);
@@ -235,6 +236,7 @@ class UsuariosPersonalController extends Controller
   public function edit($id): JsonResponse
   {
     $user = User::findOrFail($id);
+    $user->rol = $user->getRoleNames()->first(); // o ->toArray() si quieres todos
     return response()->json($user);
   }
 

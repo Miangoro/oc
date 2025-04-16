@@ -24,17 +24,13 @@ class RevisionPersonalController extends Controller
         $EstadisticasInstalaciones = $this->calcularCertificados($userId, 1); // Estadisticas Instalaciones
         $EstadisticasGranel = $this->calcularCertificados($userId, 2); // Estadisticas Granel
 
-        $revisorQuery = Revisor::with('certificado');
+        $revisorQuery = Revisor::with('certificadoNormal','certificadoGranel','certificadoExportacion');
         if ($userId != 1) {
             $revisorQuery->where('id_revisor', $userId);
         }
         $revisor = $revisorQuery->first();
 
-        $revisoresGranelQuery = RevisorGranel::with('certificado');
-        if ($userId != 1) {
-            $revisoresGranelQuery->where('id_revisor', $userId);
-        }
-        $revisoresGranel = $revisoresGranelQuery->first();
+        
 
         //EXPORTACION
         $EstadisticasExportacion = $this->calcularCertificados($userId, 2);
@@ -43,9 +39,9 @@ class RevisionPersonalController extends Controller
         $users = User::where('tipo', 1)->get(); // Select Aprobacion
         $preguntasRevisor = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 1)->get(); // Preguntas Instalaciones
         $preguntasRevisorGranel = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 2)->get(); // Preguntas Granel
-        $noCertificados = (!$revisor || !$revisor->certificado) && (!$revisoresGranel || !$revisoresGranel->certificado) && (!$revisoresExportacion || !$revisoresExportacion->certificado); // Alerta si no hay Certificados Asignados al Revisor
+        $noCertificados = (!$revisor || !$revisor->certificado); // Alerta si no hay Certificados Asignados al Revisor
 
-        return view('revision.revision_certificados-personal_view', compact('revisor', 'revisoresGranel', 'preguntasRevisor', 'preguntasRevisorGranel', 'EstadisticasInstalaciones', 'EstadisticasGranel', 'users', 'noCertificados', 'EstadisticasExportacion'));
+        return view('revision.revision_certificados-personal_view', compact('revisor','preguntasRevisor', 'preguntasRevisorGranel', 'EstadisticasInstalaciones', 'EstadisticasGranel', 'users', 'noCertificados', 'EstadisticasExportacion'));
     }
 
     public function index(Request $request)
@@ -65,7 +61,11 @@ class RevisionPersonalController extends Controller
         $userId = auth()->id();
 
         // Inicializar la consulta para Revisor y RevisorGranel
-        $queryRevisor = Revisor::with(['certificado.dictamen']);
+        $queryRevisor = Revisor::with([
+            'certificadoNormal.dictamen',
+            'certificadoGranel.dictamen',
+            'certificadoExportacion.dictamen'
+        ]);
 
 
         // Filtrar por usuario si no es admin (ID 8)
@@ -595,10 +595,10 @@ class RevisionPersonalController extends Controller
     public function add_revision($id_revision)
     {
 
-        $datos = Revisor::with('certificado')->where("id_revision", $id_revision)->first();
+        $datos = Revisor::with('certificadoNormal','certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
         $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->get();
 
-        $id_dictamen = $datos->certificado->dictamen->tipo_dictamen;
+        $id_dictamen = $datos->certificado->dictamen->tipo_dictamen ?? '';
 
 
 
@@ -629,6 +629,9 @@ class RevisionPersonalController extends Controller
                 default:
                     $tipo = 'Desconocido';
             }
+        }elseif ($datos->tipo_certificado == 3){
+            $url = 'certificado_exportacion'. $datos->id_certificado;
+            $tipo = 'Exportación';
         }
         if ($datos->tipo_certificado == 2) { //Granel
             $url = "/Pre-certificado/" . $datos->id_certificado;

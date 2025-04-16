@@ -19,6 +19,7 @@ class Dictamen_Envasado extends Model
         'id_firmante',
         'estatus',
         'observaciones',
+        'id_lote_envasado',
     ];
 
     public function inspeccion()

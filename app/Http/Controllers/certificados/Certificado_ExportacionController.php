@@ -344,6 +344,7 @@ public function storeRevisor(Request $request)
         }
 
         // Guardar los datos del revisor
+        $revisor->tipo_certificado = 1;
         $revisor->numero_revision = $validatedData['numeroRevision'];
         $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
         $revisor->observaciones = $validatedData['observaciones'] ?? '';

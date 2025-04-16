@@ -97,6 +97,7 @@ class insertar_datos_bd_lotes_envasado extends Controller
 
                             if($inspecciones){
                                 Dictamen_Envasado::create([
+                                    'id_lote_envasado'   => $id_envasado->id_lote_envasado,
                                     'num_dictamen'   => $solicitud['n_dictamen'],
                                     'id_inspeccion'  => $inspecciones->id_inspeccion,
                                     'fecha_emision'    => $solicitud['fecha_emision'],

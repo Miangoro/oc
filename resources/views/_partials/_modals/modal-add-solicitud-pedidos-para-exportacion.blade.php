@@ -346,10 +346,13 @@
             var skuLimpio = (skuLimpiot === '{"inicial":""}') ? "SKU no definido" : skuLimpiot;
             var marcaEncontrada = marcas.find(marca => marca.id_marca === lotesEnvasado[index].id_marca);
             var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
+            var dictamenEnvasado = lotesEnvasado[index].dictamen_envasado?.num_dictamen 
+    ?? "Sin dictamen de envasado";
+
 
             contenidoLotes += `
             <option data-id-marca="${marcaEncontrada ? marcaEncontrada.id_marca : ''}" value="${lotesEnvasado[index].id_lote_envasado}">
-                ${skuLimpio} | ${lotesEnvasado[index].nombre} | ${nombreMarca}
+                ${skuLimpio} | ${lotesEnvasado[index].nombre} | ${nombreMarca} | ${dictamenEnvasado}
             </option>`;
         }
         if (lotesEnvasado.length === 0) {

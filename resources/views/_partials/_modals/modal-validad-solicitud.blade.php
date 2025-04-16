@@ -1674,7 +1674,7 @@
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Dictamen de Envasado:</th>
-                                            <td id="dictamenEnvasado"></td>
+                                            <td class="dictamenEnvasado"></td>
                                             <td><select name="dictamenEnvasado" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>

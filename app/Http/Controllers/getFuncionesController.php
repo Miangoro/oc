@@ -10,6 +10,7 @@ use App\Models\Instalaciones;
 use App\Models\LotesGranel;
 use App\Models\tipos;
 use App\Models\lotes_envasado;
+use App\Models\maquiladores_model;
 use App\Models\normas;
 use App\Models\solicitudesModel;
 use App\Models\User;
@@ -65,6 +66,11 @@ class getFuncionesController extends Controller
 
         // Depurar las marcas
 
+        $idsMaquiladoras = maquiladores_model::where('id_maquiladora', $empresa->id_empresa)
+            ->pluck('id_maquilador')
+            ->toArray();
+        $idsEmpresas = array_merge([$empresa->id_empresa], $idsMaquiladoras);
+
 
         return response()->json([
             'instalaciones' => $empresa->obtenerInstalaciones(),
@@ -78,7 +84,7 @@ class getFuncionesController extends Controller
             'direcciones_destino' => Destinos::where("id_empresa", $empresa->id_empresa)->where('tipo_direccion', 1)->get(),
             'instalaciones_produccion' => Instalaciones::where('tipo', 'like', '%Productora%')->where("id_empresa", $empresa->id_empresa)->get(),
             'instalaciones_comercializadora' => Instalaciones::where('tipo', 'like', '%Comercializadora%')->where("id_empresa", $empresa->id_empresa)->get(),
-            'instalaciones_envasadora' => Instalaciones::where('tipo', 'like', '%Envasadora%')->where("id_empresa", $empresa->id_empresa)->get(),
+            'instalaciones_envasadora' => Instalaciones::where('tipo', 'like', '%Envasadora%')->whereIn('id_empresa', $idsEmpresas)->get(),
         ]);
     }
 
@@ -192,6 +198,7 @@ $solicitudQuery = solicitudesModel::with([
      'lote_envasado.lotes_envasado_granel.lotes_granel.clase',
     'lote_envasado.lotes_envasado_granel.lotes_granel.categoria',
     'lote_envasado.marca',
+    'lote_envasado.dictamenEnvasado',
     
 ]);
 
@@ -240,6 +247,7 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
             ->where('id_documento', 60)
             ->value('url'); // Obtiene directamente el valor del campo 'url'
         }
+
     }
     
 

@@ -26,8 +26,8 @@ class rolesController extends Controller
    */
   public function find_roles()
   {
-
-    return view('permisos.find_roles_view');
+    $permisos = Permission::All();
+    return view('permisos.find_roles_view', compact('permisos'));
   }
 
 
@@ -133,7 +133,7 @@ class rolesController extends Controller
         ['id' => $id],
         ['name' => $request->name]
       );
-
+      $role->syncPermissions($request->permisos);
       return response()->json('Modificado');
     } else {
       // Verifica si el nombre ya existe
@@ -144,7 +144,7 @@ class rolesController extends Controller
         $role = Role::create([
           'name' => $request->name
         ]);
-
+        $role->syncPermissions($request->permisos);
         return response()->json('Registrado');
       } else {
         return response()->json(['message' => 'ya existe'], 422);
@@ -160,8 +160,13 @@ class rolesController extends Controller
 
   public function edit($id): JsonResponse
   {
-    $user = Role::findOrFail($id);
-    return response()->json($user);
+      $rol = Role::findOrFail($id);
+      $permisos = $rol->permissions()->pluck('name'); // Solo los nombres
+  
+      return response()->json([
+          'rol' => $rol,
+          'permisos' => $permisos,
+      ]);
   }
 
   public function update(Request $request, $id) {}

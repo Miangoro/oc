@@ -10,6 +10,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Spatie\Permission\Models\Role;
 
 
 class UsuariosController extends Controller
@@ -34,6 +35,7 @@ class UsuariosController extends Controller
     $notVerified = User::whereNull('email_verified_at')->get()->count();
     $usersUnique = $users->unique(['email']);
     $userDuplicates = $users->diff($usersUnique)->count();
+    $roles = Role::All();
 
     return view('usuarios.find_usuarios_clientes_view', [
       'totalUser' => $userCount,
@@ -43,6 +45,7 @@ class UsuariosController extends Controller
       'empresas' => $empresas,
       'users' => $users,
       'usuarios' => $usuarios,
+      'roles' => $roles
     ]);
   }
 

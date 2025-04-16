@@ -56,9 +56,9 @@
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0 h-100">
                 <form class="add-new-user pt-0" id="addNewRol">
-                    <input type="text" name="permiso_id" id="permiso_id">
+                    <input type="hidden" name="permiso_id" id="permiso_id">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="name" placeholder="Inspector" name="name"
+                        <input type="text" class="form-control" id="name" placeholder="Visualizar documentación" name="name"
                             aria-label="Inspector" />
                         <label for="add-user-fullname">Nombre del permiso</label>
                     </div>
