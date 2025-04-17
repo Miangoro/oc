@@ -132,14 +132,14 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control flatpickr-datetime" id="edit_fecha_emision" name="fecha_emision"
                                     placeholder="YYYY-MM-DD">
-                                <label for="">Fecha de Emisión</label>
+                                <label for="">Fecha de emisión</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" readonly
                                     placeholder="YYYY-MM-DD">
-                                <label for="">Fecha de Vigencia</label>
+                                <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
                     </div>

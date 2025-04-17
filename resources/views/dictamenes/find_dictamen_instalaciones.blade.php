@@ -63,6 +63,7 @@
                     <th>Cliente</th>
                     <th>Instalación</th>
                     <th>Fechas</th>
+                    <th>Estatus</th>
                     <th>ACCIONES</th>
                 </tr>
             </thead>

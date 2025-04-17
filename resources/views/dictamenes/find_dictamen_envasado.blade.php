@@ -59,7 +59,7 @@
                     <tr>
                         <th></th>
                         <th>No. dictamen</th>
-                        <th>No. Servicio/Solicitud</th>
+                        <th>No. Servicio / Solicitud</th>
                         <th>Cliente</th>
                         <th>Características</th>
                         <th>Fechas</th>
