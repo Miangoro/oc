@@ -325,7 +325,7 @@
                 @endphp
         
                 @if ($firma && Storage::disk('public')->exists($firmaPath))
-                    <img style="position: absolute; top: -45px; left: 150; right: 0; margin: 0 auto;" height="60px"
+                    <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
                         src="{{ asset('storage/' . $firmaPath) }}">
                 @endif
         
