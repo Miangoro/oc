@@ -316,7 +316,7 @@
         </div>
         <p class="textx" style="font-size: 9px; margin-bottom:-8px; position: relative;">
             <strong>AUTORIZÓ</strong>
-            <span style="margin-left: 20px; display: inline-block; text-align: center; position: relative;">
+            <span style="margin-left: 30px; display: inline-block; text-align: center; position: relative;">
                 @php
                     use Illuminate\Support\Facades\Storage;
         
@@ -325,7 +325,7 @@
                 @endphp
         
                 @if ($firma && Storage::disk('public')->exists($firmaPath))
-                    <img style="position: absolute; top: -45px; left: 0; right: 0; margin: 0 auto;" height="60px"
+                    <img style="position: absolute; top: -45px; left: 60; right: 0; margin: 0 auto;" height="60px"
                         src="{{ asset('storage/' . $firmaPath) }}">
                 @endif
         
