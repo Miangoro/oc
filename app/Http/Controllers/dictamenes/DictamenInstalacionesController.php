@@ -454,12 +454,33 @@ public function reexpedir(Request $request)
     public function dictamen_envasador($id_dictamen)
     {
         $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
+        // URL que quieres codificar en el QR
+        $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
+
+        $qrCode = new QrCode(
+            data: $url,
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::Low,
+            size: 300,
+            margin: 10,
+            roundBlockSizeMode: RoundBlockSizeMode::Margin,
+            foregroundColor: new Color(0, 0, 0),
+            backgroundColor: new Color(255, 255, 255)
+        );
+    
+        // Escribir el QR en formato PNG
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+    
+        // Convertirlo a Base64
+        $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
 
         $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
         $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-        $pdf = Pdf::loadView('pdfs.DictamenEnvasado', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia]);
-        return $pdf->stream('F-UV-02-11 Ver 5, Dictamen de cumplimiento de Instalaciones como envasador.pdf');
+        $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos->inspeccione->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
+        $pdf = Pdf::loadView('pdfs.DictamenEnvasado', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
+        return $pdf->stream($datos->num_dictamen.' Dictamen de cumplimiento de Instalaciones como envasador.pdf');
     }
 
     public function dictamen_comercializador($id_dictamen)

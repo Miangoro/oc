@@ -250,7 +250,7 @@
                     class="font-lucida-sans-seminegrita"><u>{{ $fecha_inspeccion }}</u></span> partiendo del acta
                 circunstanciada o número de inspección: <u><span
                         class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio }}</u></span></p>
-            <p class="textp">Nombre del productor/empresa:
+            <p class="textp">Nombre del comecializador/empresa:
                 <u>{{ $datos->inspeccione->solicitud->empresa->razon_social }}</u></p>
         </div>
         <table class="interlineado" >
@@ -314,13 +314,25 @@
             <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
             <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
         </div>
-        <p class="textx" style="font-size: 9px; margin-bottom:-8px">
+        <p class="textx" style="font-size: 9px; margin-bottom:-8px; position: relative;">
             <strong>AUTORIZÓ</strong>
-            <span style="margin-left: 50px;">
+            <span style="margin-left: 30px; display: inline-block; text-align: center; position: relative;">
+                @php
+                    use Illuminate\Support\Facades\Storage;
+        
+                    $firma = $datos->firmante->firma ?? null;
+                    $firmaPath = $firma ? 'firmas/' . $firma : null;
+                @endphp
+        
+                @if ($firma && Storage::disk('public')->exists($firmaPath))
+                    <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
+                        src="{{ asset('storage/' . $firmaPath) }}">
+                @endif
+        
                 <strong>{{ $datos->firmante->puesto }} | {{ $datos->firmante->name }}</strong>
             </span>
         </p>
-
+        
         <p class="textx" style="font-size: 9px; margin-bottom:-8px">
             <strong>CADENA ORIGINAL</strong>
             <span style="margin-left: 14px;">
