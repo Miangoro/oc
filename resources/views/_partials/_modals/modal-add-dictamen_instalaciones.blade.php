@@ -1,5 +1,5 @@
-<!-- AGREGAR DICTAMEN INSTALACIONES -->
-<div class="modal fade" id="addDictamen" tabindex="-1" aria-hidden="true">
+<!-- MODAL AGREGAR -->
+<div class="modal fade" id="ModalAgregar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
@@ -9,28 +9,25 @@
             </div>
 
             <div class="modal-body">
-                <form id="NuevoDictamen">
+                <form id="FormAgregar" method="POST">
                     <div class="row">
-
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_inspeccion" name="id_inspeccion"
-                                    data-placeholder="Elige un número de servicio" class="form-select select2"
-                                    aria-label="Default select example">
-                                    <option value="" disabled selected>NULL</option>
+                                <select id="id_inspeccion" name="id_inspeccion" class="select2 form-select" 
+                                    data-placeholder="Selecciona el número de servicio">
+                                    <option value="" disabled selected></option>
                                     @foreach ($inspeccion as $insp)
-                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->folio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}</option>
+                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->folio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <label for="">No. de servicio</label>
                             </div>
                         </div>
-
                     </div>
                     <div class="row">
-
                         <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-4">
+                            <div class="form-floating form-floating-outline mb-6">
                                 <select class="form-select" id="tipo_dictamen" name="tipo_dictamen"
                                     aria-label="Default select example">
                                     <option value="" disabled selected>Selecciona una opcion</option>
@@ -40,86 +37,54 @@
                                     <option value="4">Almacen y bodega</option>
                                     {{-- <option value="5">Área de maduración</option> --}}
                                 </select>
-                                <label for="">Tipo de Dictamen</label>
+                                <label for="">Tipo de dictamen</label>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" id="num_dictamen" placeholder="no. dictamen"
-                                    name="num_dictamen" aria-label="Nombre" required>
+                                <input type="text" class="form-control" id="num_dictamen" name="num_dictamen"
+                                    placeholder="No. de dictamen">
                                 <label for="">No. de dictamen</label>
                             </div>
                         </div>
-
-                       <!-- <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6 select2-primary">
-                                <select id="categorias" name="categorias[]" class="form-select select2"
-                                    data-placeholder="Seleccione una o más categorias" multiple>
-                                    @foreach ($categoria as $cate)
-                                        <option value="{{ $cate->id_categoria }}">{{ $cate->categoria }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="">Categorías de agave</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-4 select2-primary">
-                                <select name="clases[]" class="form-select select2"
-                                    data-placeholder="Seleccione una o más clases" multiple>
-                                    @foreach ($clases as $clase)
-                                        <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="">Clases de agave</label>
-                            </div>
-                        </div>-->
-
                     </div>
-                    <div class="row">
 
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control flatpickr-datetime" id="fecha_emision"
-                                    placeholder="YYYY-MM-DD" name="fecha_emision" aria-label="Nombre" required readonly>
+                                <input class="form-control flatpickr-datetime" id="fecha_emision" name="fecha_emision"
+                                    placeholder="YYYY-MM-DD">
                                 <label for="">Fecha de emisión</label>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="YYYY-MM-DD"
-                                    id="fecha_vigencia" name="fecha_vigencia" required readonly />
-                                <label for="">Vigencia hasta</label>
+                                <input class="form-control" id="fecha_vigencia" name="fecha_vigencia" readonly
+                                    placeholder="YYYY-MM-DD">
+                                <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="row">
-                        <!-- Firmante -->
                         <div class="form-floating form-floating-outline mb-4">
-                            <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
+                            <select  id="id_firmante" name="id_firmante" class="select2 form-select">
                                 <option value="" disabled selected>Seleccione un firmante</option>
                                 @foreach($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
-                            <label for="formValidationSelect2">Seleccione un firmante</label>
+                            <label for="">Seleccione un firmante</label>
                         </div>
                     </div>
 
-                    {{-- <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
-                    </div> --}}
+
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i> Registrar</button>
                         <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -128,35 +93,37 @@
 
 
 
-<!-- Offcanvas EDITAR -->
-<div class="modal fade" id="editDictamen" tabindex="-1" aria-hidden="true">
+<!-- MODAL EDITAR -->
+<div class="modal fade" id="ModalEditar" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-        
-             <div class="modal-header bg-primary pb-4">
+
+            <div class="modal-header bg-primary pb-4">
                 <h5 class="modal-title text-white">Editar dictamen de instalaciones</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div class="modal-body ">
-                <form id="EditarDictamen">
+            <div class="modal-body">
+                <form id="FormEditar" method="POST">
                     <div class="row">
-                        <input type="hidden" name="id_dictamen" id="edit_id_dictamen" value="">
+                        <input type="hidden" id="edit_id_dictamen" name="id_dictamen">
+                        <input type="hidden" id="edit_id_instalacion" name="id_instalacion">
 
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="edit_id_inspeccion" name="id_inspeccion" class="form-select select2"
-                                    aria-label="Default select example">
+                                <select id="edit_id_inspeccion" name="id_inspeccion" class="select2 form-select" 
+                                    data-placeholder="Selecciona el número de servicio">
                                     @foreach ($inspeccion as $insp)
-                                        {{-- <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option> --}}
-                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->folio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}</option>
+                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->folio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}
+                                        </option>
                                     @endforeach
                                 </select>
-                                {{-- <input class="form-control" type="text" id="edit_id_inspeccion" name="id_inspeccion"/> --}}
                                 <label for="">No. de servicio</label>
                             </div>
                         </div>
+                    </div>
 
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select class="form-select" id="edit_tipo_dictamen" name="tipo_dictamen"
@@ -167,93 +134,55 @@
                                     <option value="3">Comercializador</option>
                                     <option value="4">Almacen y bodega</option>
                                 </select>
-                                <label for="">Tipo de Dictamen</label>
+                                <label for="">Tipo de dictamen</label>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" id="edit_num_dictamen"
-                                    placeholder="no. dictamen" name="num_dictamen" aria-label="Nombre" required>
+                                <input type="text" class="form-control" id="edit_num_dictamen" name="num_dictamen"
+                                    placeholder="No. de dictamen">
                                 <label for="">No. de dictamen</label>
                             </div>
                         </div>
+                    </div>
 
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control flatpickr-datetime" id="edit_fecha_emision"
-                                    placeholder="YYYY-MM-DD" name="fecha_emision" aria-label="Nombre" required readonly>
+                                <input class="form-control flatpickr-datetime" id="edit_fecha_emision" name="fecha_emision"
+                                    placeholder="YYYY-MM-DD">
                                 <label for="">Fecha de emisión</label>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="YYYY-MM-DD"
-                                    id="edit_fecha_vigencia" name="fecha_vigencia" required readonly />
-                                <label for="">Vigencia hasta</label>
+                                <input class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" readonly
+                                    placeholder="YYYY-MM-DD">
+                                <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
-
                     </div>
-                    <!--<div class="row">
-
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6 select2-primary">
-                                <select id="edit_categorias" name="categorias[]" class="form-select select2"
-                                    data-placeholder="Seleccione una o más categorias"
-                                    data-error-message="Por favor selecciona una categoría de agave" multiple>
-                                    @foreach ($categoria as $cate)
-                                        <option value="{{ $cate->id_categoria }}">{{ $cate->categoria }}</option>
-                                    @endforeach
-                                </select>
-                                {{-- <input type="text" class="form-control" id="edit_categorias" name="categorias"> --}}
-                                <label for="edit_categorias">Categorías de agave</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-4 select2-primary">
-                                <select id="edit_clases" name="clases[]" class="form-select select2"
-                                    data-placeholder="Seleccione una o más clases"
-                                    data-error-message="Por favor selecciona una clase de agave" multiple>
-                                    @foreach ($clases as $clase)
-                                        <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
-                                    @endforeach
-                                </select>
-                                {{-- <input type="text" class="form-control" id="edit_clases" name="clases"> --}}
-                                <label for="edit_clases">Clases de agave</label>
-                            </div>
-                        </div>
-
-                    </div>-->
 
                     <div class="row">
-                        <!-- Firmante -->
                         <div class="form-floating form-floating-outline mb-4">
-                            <select class="select2 form-select" id="edit_id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
-                              
+                            <select  id="edit_id_firmante" name="id_firmante" class="select2 form-select">
                                 @foreach($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
-                            <label for="formValidationSelect2">Seleccione un firmante</label>
+                            <label for="">Seleccione un firmante</label>
                         </div>
                     </div>
 
-                    {{-- <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Editar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
-                    </div> --}}
+
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i> Editar</button>
                         <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
-                        aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
+                    
                 </form>
             </div>
         </div>
     </div>
 </div>
-

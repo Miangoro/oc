@@ -62,13 +62,13 @@
             <thead class="table-dark">
                 <tr>
                     <th></th>
-                        <th>No. dictamen</th>
-                        <th>No. Servicio / Solicitud</th>
-                        <th>Cliente</th>
-                        <th>Características</th>
-                        <th>Fechas</th>
-                        <th>Estatus</th>
-                        <th>ACCIONES</th>
+                    <th>No. dictamen</th>
+                    <th>No. Servicio / Solicitud</th>
+                    <th>Cliente</th>
+                    <th>Características</th>
+                    <th>Fechas</th>
+                    <th>Estatus</th>
+                    <th>ACCIONES</th>
                 </tr>
             </thead>
         </table>

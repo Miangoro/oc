@@ -185,7 +185,7 @@ use App\Http\Controllers\documentacion\DocumentosController;
 use App\Http\Controllers\solicitudes\SolicitudesTipoController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
-use App\Http\Controllers\dictamenes\InstalacionesController;
+use App\Http\Controllers\dictamenes\DictamenInstalacionesController;
 use App\Http\Controllers\dictamenes\DictamenGranelController;
 use App\Http\Controllers\dictamenes\DictamenEnvasadoController;
 use App\Http\Controllers\certificados\Certificado_InstalacionesController;
@@ -683,16 +683,15 @@ Route::get('/editGuias/{run_folio}', [GuiasController::class, 'editGuias']);
 
 /*-------------------Dictamenes de instalaciones-------------------*/
 /*mostrar*/
-Route::middleware(['auth'])->controller(InstalacionesController::class)->group(function () {
+Route::middleware(['auth'])->controller(DictamenInstalacionesController::class)->group(function () {
     // Rutas principales
     Route::get('dictamenes/instalaciones', 'UserManagement')->name('dictamenes-instalaciones');
-    Route::resource('insta', InstalacionesController::class);
-
+    Route::resource('insta', DictamenInstalacionesController::class);
     // Rutas específicas para eliminar, registrar y editar
     Route::delete('insta/{id_dictamen}', 'destroy')->name('instalacion.delete');
     Route::post('insta', 'store')->name('instalacion.store');
     Route::get('insta/{id_dictamen}/edit', 'edit')->name('instalacion.edit');
-    Route::put('insta/{id_dictamen}', 'update')->name('tipos.update');
+    Route::post('insta/{id_dictamen}', 'update')->name('tipos.update');
 
     // Rutas para generación de PDFs de dictámenes
     Route::get('/dictamen_productor/{id_dictamen}', 'dictamen_productor')->name('dictamen_productor');

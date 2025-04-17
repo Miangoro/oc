@@ -9,11 +9,10 @@ use App\Models\Dictamen_instalaciones;
 use App\Models\clases;
 use App\Models\categorias;
 use App\Models\inspecciones;
-use App\Models\Instalaciones;
-
 use App\Models\empresa;
 use App\Models\solicitudesModel;
 use App\Models\User;
+///Extensiones
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -29,7 +28,7 @@ use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ValidationException;
 
-class InstalacionesController extends Controller
+class DictamenInstalacionesController extends Controller
 {
 
     public function UserManagement()
@@ -45,7 +44,7 @@ class InstalacionesController extends Controller
         $empresa = empresa::all();
         $soli = solicitudesModel::all();
 
-        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'categoria', 'inspeccion', 'users'));
+        return view('dictamenes.find_dictamen_instalaciones', compact('dictamenes', 'clases', 'categoria', 'inspeccion', 'users'));
     }
 
 
@@ -54,13 +53,13 @@ class InstalacionesController extends Controller
         $columns = [
             //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
             1 => 'id_dictamen',
-            2 => 'tipo_dictamen',
-            3 => 'num_dictamen',
+            2 => 'num_dictamen',
+            3 => 'tipo_dictamen',
             4 => 'num_servicio',
             5 => 'fecha_emision',
             6 => 'razon_social', //este lugar lo ocupa fecha en find
             7 => 'direccion_completa',
-            8 => 'fecha_vigencia'
+            //8 => 'fecha_vigencia'
         ];
 
         $search = [];
@@ -172,56 +171,50 @@ class InstalacionesController extends Controller
 
         //MANDA LOS DATOS AL JS
         $data = [];
-
         if (!empty($users)) {
-            $ids = $start;
-
-            foreach ($users as $user) {
-                $nestedData['id_dictamen'] = $user->id_dictamen;
-                $nestedData['tipo_dictamen'] = $user->tipo_dictamen;
-                $empresa = $user->inspeccione->solicitud->empresa;
+            foreach ($users as $dictamen) {
+                $nestedData['id_dictamen'] = $dictamen->id_dictamen ?? 'No encontrado';
+                $nestedData['tipo_dictamen'] = $dictamen->tipo_dictamen ?? 'No encontrado';
+                $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
+                $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
+                $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
+                $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
+                $nestedData['num_servicio'] = $dictamen->inspeccione->num_servicio ?? 'No encontrado';
+                $nestedData['folio_solicitud'] = $dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
+                $nestedData['direccion_completa'] = $dictamen->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrada';
+                ///numero y nombre empresa
+                $empresa = $dictamen->inspeccione->solicitud->empresa ?? null;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                    ? $empresa->empresaNumClientes
-                    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-                    : 'N/A';
+                    ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+                    ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
                 $nestedData['numero_cliente'] = $numero_cliente;
-                $nestedData['razon_social'] = $user->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
-                $nestedData['num_dictamen'] = $user->num_dictamen;
-                $nestedData['num_servicio'] = $user->inspeccione->num_servicio;
-                $nestedData['folio_solicitud'] = $user->inspeccione->solicitud->folio;
-                /*$nestedData['fecha_emision'] = $user->fecha_emision;
-                $nestedData['fecha_vigencia'] = $user->fecha_vigencia;*/
-                //$fecha_emision= Helpers::formatearFecha($user->fecha_emision) ?? 'N/A';
-          
-                
-                $nestedData['fecha_emision'] = Helpers::formatearFecha($user->fecha_emision);
-                $nestedData['fecha_vigencia'] = Helpers::formatearFecha($user->fecha_vigencia);
-                $nestedData['direccion_completa'] = $user->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrada';
-
-
-
-                $fechaActual = Carbon::now()->startOfDay(); // Asegúrate de trabajar solo con fechas, sin horas
-                $fechaVigencia = Carbon::parse($user->fecha_vigencia)->startOfDay();
-
-                if ($fechaActual->isSameDay($fechaVigencia)) {
-                    $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
-                } else {
-                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
-
-                    if ($diasRestantes > 0) {
-                        if ($diasRestantes > 15) {
-                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
-                        } else {
-                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
-                        }
-                        $nestedData['diasRestantes'] = $res;
+                $nestedData['razon_social'] = $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
+                ///dias vigencia
+                $fechaActual = Carbon::now()->startOfDay(); //trabajar solo fechas, sin horas
+                $nestedData['fecha_actual'] = $fechaActual;
+                $nestedData['vigencia'] = $dictamen->fecha_vigencia;
+                $fechaVigencia = Carbon::parse($dictamen->fecha_vigencia)->startOfDay();
+                    if ($fechaActual->isSameDay($fechaVigencia)) {
+                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
                     } else {
-                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                        $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+                        if ($diasRestantes > 0) {
+                            if ($diasRestantes > 15) {
+                                $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
+                            } else {
+                                $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
+                            }
+                            $nestedData['diasRestantes'] = $res;
+                        } else {
+                            $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                        }
                     }
-                }
-
-
-
+                ///solicitud y acta
+                $nestedData['id_solicitud'] = $dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
+                $urls = $dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
+                $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
+                
+                    
                 $data[] = $nestedData;
             }
         }
@@ -245,8 +238,7 @@ class InstalacionesController extends Controller
 
 
 
-
-//FUNCION PARA REGISTRAR
+///FUNCION REGISTRAR
 public function store(Request $request)
 {
     try {
@@ -258,102 +250,127 @@ public function store(Request $request)
             return response()->json(['error' => 'No se encontró la instalación asociada a la inspección'], 404);
         }
 
-        // Crear y guardar el nuevo dictamen
-        $var = new Dictamen_instalaciones();
-        $var->id_inspeccion = $request->id_inspeccion;
-        $var->tipo_dictamen = $request->tipo_dictamen;
-        $var->id_instalacion = $instalaciones->solicitud->instalacion->id_instalacion;
-        $var->num_dictamen = $request->num_dictamen;
-        $var->fecha_emision = $request->fecha_emision;
-        $var->fecha_vigencia = $request->fecha_vigencia;
-        $var->id_firmante = $request->id_firmante;
-        // $var->categorias = json_encode($request->categorias);
-        // $var->clases = json_encode($request->clases);
-        $var->save(); // Guardar en BD
+        $validated = $request->validate([
+            //$var->id_instalacion = $instalaciones->solicitud->instalacion->id_instalacion;
+            'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
+            'tipo_dictamen' => 'required|int',
+            'num_dictamen' => 'required|string|max:40',
+            'fecha_emision' => 'required|date',
+            'fecha_vigencia' => 'required|date',
+            'id_firmante' => 'required|exists:users,id',
+        ]);
+        // Crear un registro
+        $new = new Dictamen_instalaciones();
+        $new->id_instalacion = $instalaciones->solicitud->instalacion->id_instalacion;
+        $new->id_inspeccion = $validated['id_inspeccion'];
+        $new->tipo_dictamen = $validated['tipo_dictamen'];
+        $new->num_dictamen = $validated['num_dictamen'];
+        $new->fecha_emision = $validated['fecha_emision'];
+        $new->fecha_vigencia = $validated['fecha_vigencia'];
+        $new->id_firmante = $validated['id_firmante'];
+        $new->save();
 
-        return response()->json(['success' => 'Registro agregado correctamente']);
+        return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
-        // Registrar el error en el log
-
-
-        return response()->json(['error' => 'Ocurrió un error al intentar agregar el registro'], 500);
+        Log::error('Error al registrar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al registrar.'], 500);
     }
 }
 
 
 
-    //FUNCION PARA ELIMINAR
-    public function destroy($id_dictamen)
-    {
-        try {
-            $eliminar = Dictamen_instalaciones::findOrFail($id_dictamen);
-            $eliminar->delete();
+///FUNCION ELIMINAR
+public function destroy($id_dictamen)
+{
+    try {
+        $eliminar = Dictamen_instalaciones::findOrFail($id_dictamen);
+        $eliminar->delete();
 
-            return response()->json(['success' => 'Eliminado correctamente']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al eliminar'], 500);
-        }
-    }
-
-
-
-    //FUNCION PARA LLENAR EL FORMULARIO
-    public function edit($id_dictamen)
-    {
-        try {
-            $var1 = Dictamen_instalaciones::findOrFail($id_dictamen);
-
-            $categorias = json_decode($var1->categorias);  //Convertir array
-            $clases = json_decode($var1->clases);  //Convertir array
-            //return response()->json($var1);
-            return response()->json([
-                'id_dictamen' => $var1->id_dictamen,
-                'tipo_dictamen' => $var1->tipo_dictamen,
-                'num_dictamen' => $var1->num_dictamen,
-                'fecha_emision' => $var1->fecha_emision,
-                'fecha_vigencia' => $var1->fecha_vigencia,
-                'id_inspeccion' => $var1->id_inspeccion,
-                'categorias' => $categorias,
-                'clases' => $clases,
-                'id_firmante' => $var1->id_firmante,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener el dictamen'], 500);
-        }
-    }
-
-
-
-    //FUNCION PARA EDITAR
-    public function update(Request $request, $id_dictamen)
-    {
-        $request->validate([
-            'tipo_dictamen' => 'required|integer',
-            'num_dictamen' => 'required|string|max:255',
-            'fecha_emision' => 'nullable|date',
-            'fecha_vigencia' => 'nullable|date',
-            //'categorias' => 'required|array',
-            //'clases' => 'required|array',  
-            'id_inspeccion' => 'required|integer',
-            'id_firmante' => 'required|integer',
+        return response()->json(['message' => 'Eliminado correctamente.']);
+    } catch (\Exception $e) {
+        Log::error('Error al eliminar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
         ]);
-        try {
-            $var2 = Dictamen_instalaciones::findOrFail($id_dictamen);
-            $var2->id_inspeccion = $request->id_inspeccion;
-            $var2->tipo_dictamen = $request->tipo_dictamen;
-            $var2->num_dictamen = $request->num_dictamen;
-            $var2->fecha_emision = $request->fecha_emision;
-            $var2->fecha_vigencia = $request->fecha_vigencia;
-            $var2->categorias = $request->categorias;
-            $var2->clases = $request->clases;
-            $var2->id_firmante = $request->id_firmante;
-            $var2->save();
-
-            return response()->json(['success' => 'Editado correctamente']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al editar'], 500);
-        }
+        return response()->json(['error' => 'Error al eliminar.'], 500);
     }
+}
+
+
+
+///FUNCION PARA OBTENER LOS REGISTROS
+public function edit($id_dictamen)
+{
+    try {
+        $editar = Dictamen_instalaciones::findOrFail($id_dictamen);
+
+        return response()->json([
+            'id_dictamen' => $editar->id_dictamen,
+            'id_instalacion' => $editar->id_instalacion,
+            'id_inspeccion' => $editar->id_inspeccion,
+            'tipo_dictamen' => $editar->tipo_dictamen,
+            'num_dictamen' => $editar->num_dictamen,
+            'fecha_emision' => $editar->fecha_emision,
+            'fecha_vigencia' => $editar->fecha_vigencia,
+            'id_firmante' => $editar->id_firmante,
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Error al obtener', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al obtener los datos.'], 500);
+    }
+}
+
+///FUNCION ACTUALIZAR
+public function update(Request $request, $id_dictamen) 
+{
+    try {
+        // Validar los datos del formulario
+        $validated = $request->validate([
+            'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
+            //'id_instalacion' => 'nullable',
+            'tipo_dictamen' => 'required|int',
+            'num_dictamen' => 'required|string|max:70',
+            'fecha_emision' => 'required|date',
+            'fecha_vigencia' => 'required|date',
+            'id_firmante' => 'required|exists:users,id',
+        ]);
+
+        //carga las relaciones
+        $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
+        // Verifica si la relacione existen
+        if (!$instalaciones || !$instalaciones->solicitud || !$instalaciones->solicitud->instalacion) {
+            return response()->json(['error' => 'No se encontró la instalación asociada a la inspección'], 404);
+        }
+        // Obtener id_instalacion automáticamente desde la relación
+        $id_instalacion = $instalaciones->solicitud->instalacion->id_instalacion ?? null;
+
+        $actualizar = Dictamen_instalaciones::findOrFail($id_dictamen);
+        $actualizar->update([// Actualizar
+            //$instalaciones->solicitud->instalacion->id_instalacion;
+            'id_instalacion' => $id_instalacion,
+            'id_inspeccion' => $validated['id_inspeccion'],
+            'tipo_dictamen' => $validated['tipo_dictamen'],
+            'num_dictamen' => $validated['num_dictamen'],
+            'fecha_emision' => $validated['fecha_emision'],
+            'fecha_vigencia' => $validated['fecha_vigencia'],
+            'id_firmante' => $validated['id_firmante'],
+        ]);
+
+        return response()->json(['message' => 'Actualizado correctamente.']);
+    } catch (\Exception $e) {
+        Log::error('Error al actualizar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al actualizar.'], 500);
+    }
+}
 
 
 
