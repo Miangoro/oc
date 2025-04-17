@@ -314,7 +314,7 @@
             <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
             <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
         </div>
-        <p class="textx" style="font-size: 9px; margin-bottom:-8px">
+        <p class="textx" style="font-size: 9px; margin-bottom:-50px">
             <strong>AUTORIZÓ</strong>
             <span style="margin-left: 50px; display: inline-block; text-align: center;">
                 @php
