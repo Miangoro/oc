@@ -127,7 +127,7 @@
             </td>
 
             <td class="con-negra" colspan="3">SKU:</td>
-            <td colspan="4">{{ $datos->lote_envasado->sku ?? '---------------' }}</td>
+            <td colspan="4">{{ optional(json_decode($datos->lote_envasado->sku))->inicial ?? '---------------' }}</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="padding-top: 1px; padding-bottom: 1px;">Domicilio Fiscal:</td>
@@ -721,7 +721,12 @@
                 Certificación:</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td rowspan="2" colspan="3">Validó solicitud y verificó la viabilidad del servicio:
+            <td rowspan="2" colspan="3"> 
+                @if($datos->ultima_validacion_oc) 
+                    {{ $datos->ultima_validacion_oc->responsable->name }} <br>{{ $datos->ultima_validacion_oc->responsable->puesto }} 
+                @else
+                    No se ha realizado la validación
+                @endif
             </td>
         </tr>
         <tr>
@@ -737,10 +742,24 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td colspan="3" rowspan="2" style="padding-top: 0; margin-top: 0; vertical-align: top">Nombre y
-                firma<br></td>
+                firma<br>
+                @php
+    use Illuminate\Support\Facades\Storage;
+
+            $firma = $datos->ultima_validacion_oc->responsable->firma ?? null;
+            $firmaPath = $firma ? 'firmas/' . $firma : null;
+        @endphp
+
+        @if ($firma && Storage::disk('public')->exists($firmaPath))
+            <img style="display: block; margin: 0 auto;" height="60px" src="{{ asset('storage/' . $firmaPath) }}">
+        @else
+            <p style="text-align: center;">Sin firma</p>
+        @endif
+
+            </td>
         </tr>
         <td class="sin-negrita" colspan="2">Comentarios:</td>
-        <td colspan="4"></td>
+        <td colspan="4">{{ $datos->ultima_validacion_oc->fecha_realizo ?? 'No se ha realizado la validación' }}</td>
         </tr>
     </table>
     <table>

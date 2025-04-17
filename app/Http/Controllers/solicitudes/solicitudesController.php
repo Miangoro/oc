@@ -1315,7 +1315,7 @@ class solicitudesController extends Controller
             'direccion_destinatario' => 'required|integer',
             'aduana_salida' => 'required|string|max:255',
             'no_pedido' => 'required|string|max:255',
-            'info_adicional' => 'nullable|string|max:500',
+            'info_adicional' => 'nullable|string|max:5000',
             'factura_proforma' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
             'factura_proforma_cont' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
             /*  */

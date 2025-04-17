@@ -19,7 +19,8 @@ class solicitudesValidacionesModel extends Model
         'tipo_validacion',
         'id_usuario',
         'fecha_realizo',
-        'validacion'
+        'validacion',
+        'puesto'
     ];
 
     // Método para obtener el nombre del registro que sirve para la trazabilidad
