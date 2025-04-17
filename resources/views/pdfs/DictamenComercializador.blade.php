@@ -314,9 +314,9 @@
             <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
             <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
         </div>
-        <p class="textx" style="font-size: 9px; margin-bottom:-50px">
+        <p class="textx" style="font-size: 9px; margin-bottom:-8px; position: relative;">
             <strong>AUTORIZÓ</strong>
-            <span style="margin-left: 50px; display: inline-block; text-align: center;">
+            <span style="margin-left: 80px; display: inline-block; text-align: center; position: relative;">
                 @php
                     use Illuminate\Support\Facades\Storage;
         
@@ -325,11 +325,10 @@
                 @endphp
         
                 @if ($firma && Storage::disk('public')->exists($firmaPath))
-                    <img style="display: block; margin: 0 auto;" height="60px"
+                    <img style="position: absolute; top: -45px; left: 0; right: 0; margin: 0 auto;" height="60px"
                         src="{{ asset('storage/' . $firmaPath) }}">
                 @endif
         
-                <br>
                 <strong>{{ $datos->firmante->puesto }} | {{ $datos->firmante->name }}</strong>
             </span>
         </p>
