@@ -851,6 +851,236 @@ $(function () {
 
 
 
+///REEXPEDIR
+let isLoadingData = false;
+let fieldsValidated = []; 
+$(document).ready(function () {
+
+  $(document).on('click', '.reexpedir', function () {
+      var id_dictamen = $(this).data('id');
+      console.log('ID Dictamen para reexpedir:', id_dictamen);
+      $('#rex_id_dictamen').val(id_dictamen);
+      $('#ModalReexpedir').modal('show');
+  });
+
+  //funcion fechas
+  $('#rex_fecha_emision').on('change', function () {
+      var fecha_emision = $(this).val();
+      if (fecha_emision) {
+          var fecha = moment(fecha_emision, 'YYYY-MM-DD');
+          var fecha_vigencia = fecha.add(1, 'years').format('YYYY-MM-DD');
+          $('#rex_fecha_vigencia').val(fecha_vigencia);
+      }
+  });
+
+  $(document).on('change', '#accion_reexpedir', function () {
+    var accionSeleccionada = $(this).val();
+    console.log('Acción seleccionada:', accionSeleccionada);
+    var id_dictamen = $('#rex_id_dictamen').val();
+
+      if (accionSeleccionada && !isLoadingData) {
+          isLoadingData = true;
+          cargarDatosReexpedicion(id_dictamen);
+      }
+
+      if (accionSeleccionada === '2') {
+        $('#campos_condicionales').slideDown();
+      }else {
+          $('#campos_condicionales').slideUp();
+      }
+  });
+
+  function cargarDatosReexpedicion(id_dictamen) {
+      console.log('Cargando datos para la reexpedición con ID:', id_dictamen);
+      clearFields();
+      
+      //cargar los datos
+      $.get(`/insta/${id_dictamen}/edit`).done(function (datos) {
+      console.log('Respuesta completa:', datos);
+  
+          if (datos.error) {
+              showError(datos.error);
+              return;
+          }
+
+          $('#rex_id_inspeccion').val(datos.id_inspeccion).trigger('change');
+          $('#rex_numero_dictamen').val(datos.num_dictamen);
+          $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
+          $('#rex_fecha_emision').val(datos.fecha_emision);
+          $('#rex_fecha_vigencia').val(datos.fecha_vigencia);
+
+          $('#accion_reexpedir').trigger('change'); 
+          isLoadingData = false;
+
+          flatpickr("#rex_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
+            dateFormat: "Y-m-d",
+            enableTime: false,
+            allowInput: true,
+            locale: "es"
+          });
+
+      }).fail(function () {
+              showError('Error al cargar los datos.');
+              isLoadingData = false;
+      });
+  }
+
+  function clearFields() {
+      $('#rex_id_inspeccion').val('');
+      $('#rex_numero_dictamen').val('');
+      $('#rex_id_firmante').val('');
+      $('#rex_fecha_emision').val('');
+      $('#rex_fecha_vigencia').val('');
+      $('#rex_observaciones').val('');
+  }
+
+  function showError(message) {
+      Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: message,
+          customClass: {
+              confirmButton: 'btn btn-danger'
+          }
+      });
+  }
+
+  $('#ModalReexpedir').on('hidden.bs.modal', function () {
+      $('#FormReexpedir')[0].reset();
+      clearFields();
+      $('#campos_condicionales').hide();
+      fieldsValidated = []; 
+  });
+
+  //validar formulario
+  const formReexpedir = document.getElementById('FormReexpedir');
+  const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
+      fields: {
+        'accion_reexpedir': {
+            validators: {
+                notEmpty: {
+                    message: 'Debes seleccionar una acción.'
+                }
+            }
+        },
+        'observaciones': {
+            validators: {
+                notEmpty: {
+                    message: 'El motivo de cancelación es obligatorio.'
+                }
+            }
+        },
+        'id_inspeccion': {
+            validators: {
+                notEmpty: {
+                    message: 'El número de servicio es obligatorio.'
+                }
+            }
+        },
+        'tipo_dictamen': {
+            validators: {
+                notEmpty: {
+                    message: 'El tipo de dictamen es obligatorio.'
+                }
+            }
+        },
+        'num_dictamen': {
+            validators: {
+                notEmpty: {
+                    message: 'El número de dictamen es obligatorio.'
+                },
+                stringLength: {
+                  min: 8,
+                  message: 'Debe tener al menos 8 caracteres.'
+                }
+            }
+        },
+        'id_firmante': {
+            validators: {
+                notEmpty: {
+                    message: 'El nombre del firmante es obligatorio.'
+                }
+            }
+        },
+        'fecha_emision': {
+          validators: {
+            notEmpty: {
+              message: 'La fecha de emisión es obligatoria.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+            }
+          }
+        },
+        'fecha_vigencia': {
+          validators: {
+            notEmpty: {
+              message: 'La fecha de vigencia es obligatoria.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+            }
+          }
+        },
+      },
+      plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+              eleValidClass: '',
+              eleInvalidClass: 'is-invalid',
+              rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+  }).on('core.form.valid', function () {
+      const formData = $(formReexpedir).serialize();
+
+      $.ajax({
+          url: $(formReexpedir).attr('action'),
+          method: 'POST',
+          data: formData,
+          success: function (response) {
+              $('#ModalReexpedir').modal('hide');
+              formReexpedir.reset();
+
+              dt_user_table.DataTable().ajax.reload();
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.message,
+                  customClass: {
+                      confirmButton: 'btn btn-primary'
+                  }
+              });
+          },
+          error: function (jqXHR) {
+              console.log('Error en la solicitud:', jqXHR);
+              let errorMessage = 'No se pudo registrar. Por favor, verifica los datos.';
+              try {
+                  let response = JSON.parse(jqXHR.responseText);
+                  errorMessage = response.message || errorMessage;
+              } catch (e) {
+                  console.error('Error al parsear la respuesta del servidor:', e);
+              }
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: errorMessage,
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+      });
+  });
+
+});
+
+
+
 
 //RECIBE LOS DATOS DEL PDF
 $(document).on('click', '.pdf', function () {

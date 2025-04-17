@@ -374,6 +374,71 @@ public function update(Request $request, $id_dictamen)
 
 
 
+///FUNCION REEXPEDIR 
+public function reexpedir(Request $request) 
+{
+    try {
+        $request->validate([
+            'accion_reexpedir' => 'required|in:1,2',
+            'observaciones' => 'nullable|string',
+        ]);
+
+        if ($request->accion_reexpedir == '2') {
+            $request->validate([
+                'id_dictamen' => 'required|exists:dictamenes_instalaciones,id_dictamen',
+                'id_inspeccion' => 'required|integer',
+                'num_dictamen' => 'required|string|min:8',
+                'fecha_emision' => 'required|date',
+                'fecha_vigencia' => 'required|date',
+                'id_firmante' => 'required|integer',
+            ]);
+        }
+
+        $reexpedir = Dictamen_instalaciones::findOrFail($request->id_dictamen);
+
+        if ($request->accion_reexpedir == '1') {
+            $reexpedir->estatus = 1; 
+                $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;//Actualiza solo 'observaciones'
+            $reexpedir->observaciones = json_encode($observacionesActuales); 
+            $reexpedir->save();
+
+            return response()->json(['message' => 'Cancelado correctamente.']);
+
+        } else if ($request->accion_reexpedir == '2') {
+            $reexpedir->estatus = 1;
+                $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales);
+            $reexpedir->save(); 
+
+            // Crear un nuevo registro de reexpedición
+            $new = new Dictamen_instalaciones();
+            $new->num_dictamen = $request->num_dictamen;
+            $new->id_inspeccion = $request->id_inspeccion;
+            $new->fecha_emision = $request->fecha_emision;
+            $new->fecha_vigencia = $request->fecha_vigencia;
+            $new->id_firmante = $request->id_firmante;
+            $new->estatus = 2;
+            $new->observaciones = json_encode(['id_sustituye' => $request->id_dictamen]);
+            $new->save();
+
+            return response()->json(['message' => 'Registrado correctamente.']);
+        }
+
+        return response()->json(['message' => 'Procesado correctamente.']);
+    } catch (\Exception $e) {
+        Log::error('Error al reexpedir', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al procesar.'], 500);
+    }
+}
+
+
+
+
     //PDF'S DICTAMEN DE INSTALACIONES
     public function dictamen_productor($id_dictamen)
     {

@@ -692,6 +692,7 @@ Route::middleware(['auth'])->controller(DictamenInstalacionesController::class)-
     Route::post('insta', 'store')->name('instalacion.store');
     Route::get('insta/{id_dictamen}/edit', 'edit')->name('instalacion.edit');
     Route::post('insta/{id_dictamen}', 'update')->name('tipos.update');
+    Route::post('/registrar/reexpedir-instalaciones', [DictamenInstalacionesController::class, 'reexpedir'])->name('dic-insta.reex');
 
     // Rutas para generación de PDFs de dictámenes
     Route::get('/dictamen_productor/{id_dictamen}', 'dictamen_productor')->name('dictamen_productor');
