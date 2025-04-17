@@ -250,7 +250,7 @@
                     class="font-lucida-sans-seminegrita"><u>{{ $fecha_inspeccion }}</u></span> partiendo del acta
                 circunstanciada o número de inspección: <u><span
                         class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio }}</u></span></p>
-            <p class="textp">Nombre del productor/empresa:
+            <p class="textp">Nombre del comecializador/empresa:
                 <u>{{ $datos->inspeccione->solicitud->empresa->razon_social }}</u></p>
         </div>
         <table class="interlineado" >
@@ -317,6 +317,17 @@
         <p class="textx" style="font-size: 9px; margin-bottom:-8px">
             <strong>AUTORIZÓ</strong>
             <span style="margin-left: 50px;">
+                @php
+                use Illuminate\Support\Facades\Storage;
+
+                $firma = $datos->firmante->firma ?? null;
+                $firmaPath = $firma ? 'firmas/' . $firma : null;
+            @endphp
+
+            @if ($firma && Storage::disk('public')->exists($firmaPath))
+                <img style="display: block; margin: 0 auto;" height="60px"
+                    src="{{ asset('storage/' . $firmaPath) }}">
+            @endif
                 <strong>{{ $datos->firmante->puesto }} | {{ $datos->firmante->name }}</strong>
             </span>
         </p>

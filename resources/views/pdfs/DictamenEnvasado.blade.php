@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>F-UV-02-11 Ver 5, Dictamen de cumplimiento de Instalaciones como envasador</title>
+    <title>{{ $datos->num_dictamen }} Dictamen de cumplimiento de Instalaciones como envasador</title>
     <style>
         body {
             font-family: 'Lucida Sans Unicode';
@@ -35,20 +35,20 @@
             font-size: 18px;
             color: #151442;
             font-family: 'Arial Negrita' !important;
-            top: 5px; 
+            top: 35px;
         }
 
         .description2 {
             color: #151442;
             font-family: 'Arial Negrita' !important;
             font-size: 9.5px;
-            top: 30px; 
+            top: 60px;
         }
 
         .description3 {
             font-size: 10px;
-            top: 42px; 
-            margin-right: 40px; 
+            top: 72px;
+            margin-right: 40px;
         }
 
         .textimg {
@@ -225,7 +225,7 @@
         funcionamiento de las Unidades de Inspección.</p>
         <p>Después de realizar la inspección de las instalaciones en fecha del <span class="font-lucida-sans-seminegrita"><u>{{ $fecha_inspeccion }}</u></span> partiendo del acta
         circunstanciada o número de inspección: <u><span  class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio }}</u></span></p>
-        <p class="textp">Nombre del productor/empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social }}</u></p>
+        <p class="textp">Nombre del envasador/empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social }}</u></p>
     </div>
     <table>
         <tbody>
@@ -250,6 +250,10 @@
                 <td class="font-lucida-sans-seminegrita">Fecha de emisión de dictamen:</td>
                 <td style="text-align: center; vertical-align: middle;">{{ $fecha_emision }}</td>
             </tr>
+            <tr>
+                <td class="font-lucida-sans-seminegrita">Fecha de vigencia de dictamen:</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $fecha_vigencia }}</td>
+            </tr>
         </tbody>
     </table>
     <p class="text">
@@ -264,41 +268,43 @@
     de 1994, así como sus modificaciones subsecuentes.</p>
     <br><br>
     <p class="sello">Sello de Unidad de Inspección</p>
-    <div class="images-container">
-    <img src="{{ public_path('img_pdf/qr_umc-074.png') }}" alt="Logo UVEM" width="90px">
-    <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
+        <div class="images-container">
+            <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
+            <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
+        </div>
+        <p class="textx" style="font-size: 9px; margin-bottom:-8px">
+            <strong>AUTORIZÓ</strong>
+            <span style="margin-left: 50px;">
+                <strong>{{ $datos->firmante->puesto }} | {{ $datos->firmante->name }}</strong>
+            </span>
+        </p>
+
+        <p class="textx" style="font-size: 9px; margin-bottom:-8px">
+            <strong>CADENA ORIGINAL</strong>
+            <span style="margin-left: 14px;">
+                <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+            </span>
+        </p>
+
+        <p class="textx" style="font-size: 9px; margin-bottom:1px">
+            <strong>SELLO DIGITAL</strong>
+        </p>
+
+        <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
+            {{ $firmaDigital['firma'] }}
+        </p>
+        
+
+        <div class="footer-bar">
+            <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
+            <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341.
+                Morelia Michoacán</p>
+        </div>
+
+        <p class="pie">Entrada en vigor: 15-07-2024<br>
+            F-UV-02-04 Ver 10.
+        </p>
     </div>
-    <p class="textx" style="font-size: 10px; margin: 1;">
-    <strong>AUTORIZÓ</strong>
-    <span style="margin-left: 50px;">
-        <strong>Gerente Técnico Sustituto de la Unidad de Inspección | BTG. Erik Antonio Mejía Vaca</strong>
-    </span>
-    </p>
-
-    <p class="textx" style="font-size: 10px; margin: 1;">
-    <strong>Cadena Origina</strong>
-    <span style="margin-left: 29px;">
-        <strong>UMG-159/2024|2024-06-26|UMS-1094/2024</strong>
-    </span>
-    </p>
-
-    <p class="textx" style="font-size: 10px; margin: 1;">
-    <strong>Sello Digital</strong>
-    </p>
-
-    <p class = "textsello">e2N1P+r+E79e0YxKzS/jMssKuASlmYXy2ppP+2PJN8vKUeFRxYTSY99MEWrgiHOnA N3pLUrdUBiD39v25Y648G4TK5qQ0LwZPLofRmjRQ2Ty5rHlDwnPRm37zaOkMjkRD<br>
-    xC0ikyHPD+T3EFhEc9sgAFI6bZUd88yevfS+ZFZ7j9f5EA44Sz76jsN3P4e7lyePHmNz Jxg5ZupHICg5xBZu5ygOniMZNbzG6w0ZDPL58yoMQK1JDi8lwwiGJBaCNHN6krn<br>
-    No5v5rvZPkbUthYT2r5M0sGP5Y+s97oLa8GA5hqyDAgE9P0d1u0uwU7Q8SF0GYfe lavijxvsWaZg5QA5og==
-    </p>
-
-    <div class="footer-bar">
-        <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
-        <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341. Morelia Michoacán</p>
-    </div>
-
-    <p class="pie">Entrada en vigor: 15-07-2024<br>
-    F-UV-02-11 Ver 5.
-    </p>
-</div>
 </body>
+
 </html>

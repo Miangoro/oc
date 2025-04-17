@@ -84,7 +84,8 @@
 
             <td class="con-negra" rowspan="2" colspan="5"
                 style="font-size: 14px; padding-left: 5px; padding-right: 5px;">SOLICITUD DE SERVICIOS</td>
-            <td colspan="5" style="text-align: right; font-size: 8px; padding-left: 0; padding-top: 0;">Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32<br>
+            <td colspan="5" style="text-align: right; font-size: 8px; padding-left: 0; padding-top: 0;">Solicitud de
+                servicios NOM-070-SCFI-2016 F7.1-01-32<br>
                 Edición 10 Entrada en vigor:
                 20/06/2024
             </td>
@@ -107,7 +108,9 @@
             <td class="con-negra" rowspan="2" colspan="2">Nombre del cliente/ o<br> Razon social:</td>
             <td rowspan="2" colspan="4">{{ $datos->empresa->razon_social }}</td>
             <td class="con-negra" colspan="3">N° de cliente:</td>
-            <td colspan="4">{{ $datos->empresa->empresaNumClientes->whereNotNull('numero_cliente')->where('numero_cliente', '!=', '')->pluck('numero_cliente')->implode(', ') }}</td>
+            <td colspan="4">
+                {{ $datos->empresa->empresaNumClientes->whereNotNull('numero_cliente')->where('numero_cliente', '!=', '')->pluck('numero_cliente')->implode(', ') }}
+            </td>
         </tr>
         <tr>
             <td class="con-negra" colspan="3">e-mail:</td>
@@ -130,7 +133,7 @@
             <td colspan="4">
                 {{ optional(json_decode(optional($datos->lote_envasado)->sku))->inicial ?? '---------------' }}
             </td>
-            
+
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="padding-top: 1px; padding-bottom: 1px;">Domicilio Fiscal:</td>
@@ -644,7 +647,8 @@
                 @elseif($geo === 'X')
                     @foreach ($datos->predios->predio_plantaciones as $plantacion)
                         <b>Especie de agave:</b> {{ $plantacion->tipo->nombre }}
-                        (<i>{{ $plantacion->tipo->cientifico }}</i>)<br>
+                        (<i>{{ $plantacion->tipo->cientifico }}</i>)
+                        <br>
                         <b>No. de Plantas:</b> {{ $plantacion->num_plantas }}<br>
                         <b>Edad de plantación:</b> {{ $plantacion->anio_plantacion }}<br>
                         <b>Tipo de plantación:</b> {{ $plantacion->tipo_plantacion }}<br>
@@ -658,11 +662,11 @@
                     {{ $caracteristicas['fecha_termino'] }}<br>
                     <b>Material de los recipientes:</b> {{ $caracteristicas['material'] }}<br>
                     <b>Capacidad de los recipientes:</b> {{ $caracteristicas['capacidad'] }}<br>
-                 
                 @elseif($muestreo_granel === 'X')
-                <b>Tipo:</b> {{ $caracteristicas['tipo_analisis'] == 1 ? 'Análisis completo' : ($caracteristicas['tipo_analisis'] == 2 ? 'Ajuste de grado alcohólico' : '') }}
-                <br>
-                
+                    <b>Tipo:</b>
+                    {{ $caracteristicas['tipo_analisis'] == 1 ? 'Análisis completo' : ($caracteristicas['tipo_analisis'] == 2 ? 'Ajuste de grado alcohólico' : '') }}
+                    <br>
+
 
                 @endif
                 {{ $datos->info_adicional ?? '------------------------' }}
@@ -724,9 +728,10 @@
                 Certificación:</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td rowspan="2" colspan="3"> 
-                @if($datos->ultima_validacion_oc) 
-                    {{ $datos->ultima_validacion_oc->responsable->name }} <br>{{ $datos->ultima_validacion_oc->responsable->puesto }} 
+            <td rowspan="2" colspan="3">
+                @if ($datos->ultima_validacion_oc)
+                    {{ $datos->ultima_validacion_oc->responsable->name }}
+                    <br>{{ $datos->ultima_validacion_oc->responsable->puesto }}
                 @else
                     No se ha realizado la validación
                 @endif
@@ -747,22 +752,24 @@
             <td colspan="3" rowspan="2" style="padding-top: 0; margin-top: 0; vertical-align: top">Nombre y
                 firma<br>
                 @php
-    use Illuminate\Support\Facades\Storage;
+                    use Illuminate\Support\Facades\Storage;
 
-            $firma = $datos->ultima_validacion_oc->responsable->firma ?? null;
-            $firmaPath = $firma ? 'firmas/' . $firma : null;
-        @endphp
+                    $firma = $datos->ultima_validacion_oc->responsable->firma ?? null;
+                    $firmaPath = $firma ? 'firmas/' . $firma : null;
+                @endphp
 
-        @if ($firma && Storage::disk('public')->exists($firmaPath))
-            <img style="display: block; margin: 0 auto;" height="60px" src="{{ asset('storage/' . $firmaPath) }}">
-        @else
-            <p style="text-align: center;">Sin firma</p>
-        @endif
+                @if ($firma && Storage::disk('public')->exists($firmaPath))
+                    <img style="display: block; margin: 0 auto;" height="60px"
+                        src="{{ asset('storage/' . $firmaPath) }}">
+                @else
+                    <p style="text-align: center;">Sin firma</p>
+                @endif
 
             </td>
         </tr>
         <td class="sin-negrita" colspan="2">Comentarios:</td>
-        <td colspan="4">{{ $datos->ultima_validacion_oc->fecha_realizo ?? 'No se ha realizado la validación' }}</td>
+        <td colspan="4">{{ $datos->ultima_validacion_oc->fecha_realizo ?? 'No se ha realizado la validación' }}
+        </td>
         </tr>
     </table>
     <table>
