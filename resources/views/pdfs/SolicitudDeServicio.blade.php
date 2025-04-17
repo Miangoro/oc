@@ -127,7 +127,10 @@
             </td>
 
             <td class="con-negra" colspan="3">SKU:</td>
-            <td colspan="4">{{ optional(json_decode($datos->lote_envasado->sku))->inicial ?? '---------------' }}</td>
+            <td colspan="4">
+                {{ optional(json_decode(optional($datos->lote_envasado)->sku))->inicial ?? '---------------' }}
+            </td>
+            
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="padding-top: 1px; padding-bottom: 1px;">Domicilio Fiscal:</td>
