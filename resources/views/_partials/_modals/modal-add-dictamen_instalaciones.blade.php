@@ -107,7 +107,6 @@
                 <form id="FormEditar" method="POST">
                     <div class="row">
                         <input type="hidden" id="edit_id_dictamen" name="id_dictamen">
-                        <input type="hidden" id="edit_id_instalacion" name="id_instalacion">
 
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">

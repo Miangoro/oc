@@ -452,7 +452,6 @@ $.ajaxSetup({
              header: function (row) {
                var data = row.data();
                return 'Detalles de ' + data['num_dictamen'];
-               //return 'Detalles del ' + 'Dictamen';
              }
            }),
            type: 'column',
@@ -904,6 +903,7 @@ $(document).ready(function () {
           }
 
           $('#rex_id_inspeccion').val(datos.id_inspeccion).trigger('change');
+          $('#rex_tipo_dictamen').val(datos.tipo_dictamen).trigger('change');
           $('#rex_numero_dictamen').val(datos.num_dictamen);
           $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
           $('#rex_fecha_emision').val(datos.fecha_emision);
@@ -927,6 +927,7 @@ $(document).ready(function () {
 
   function clearFields() {
       $('#rex_id_inspeccion').val('');
+      $('#rex_tipo_dictamen').val('');
       $('#rex_numero_dictamen').val('');
       $('#rex_id_firmante').val('');
       $('#rex_fecha_emision').val('');

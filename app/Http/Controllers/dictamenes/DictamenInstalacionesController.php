@@ -309,7 +309,6 @@ public function edit($id_dictamen)
 
         return response()->json([
             'id_dictamen' => $editar->id_dictamen,
-            'id_instalacion' => $editar->id_instalacion,
             'id_inspeccion' => $editar->id_inspeccion,
             'tipo_dictamen' => $editar->tipo_dictamen,
             'num_dictamen' => $editar->num_dictamen,
@@ -333,7 +332,6 @@ public function update(Request $request, $id_dictamen)
         // Validar los datos del formulario
         $validated = $request->validate([
             'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
-            //'id_instalacion' => 'nullable',
             'tipo_dictamen' => 'required|int',
             'num_dictamen' => 'required|string|max:70',
             'fecha_emision' => 'required|date',
@@ -352,7 +350,6 @@ public function update(Request $request, $id_dictamen)
 
         $actualizar = Dictamen_instalaciones::findOrFail($id_dictamen);
         $actualizar->update([// Actualizar
-            //$instalaciones->solicitud->instalacion->id_instalacion;
             'id_instalacion' => $id_instalacion,
             'id_inspeccion' => $validated['id_inspeccion'],
             'tipo_dictamen' => $validated['tipo_dictamen'],
@@ -387,6 +384,7 @@ public function reexpedir(Request $request)
             $request->validate([
                 'id_dictamen' => 'required|exists:dictamenes_instalaciones,id_dictamen',
                 'id_inspeccion' => 'required|integer',
+                'tipo_dictamen' => 'required|int',
                 'num_dictamen' => 'required|string|min:8',
                 'fecha_emision' => 'required|date',
                 'fecha_vigencia' => 'required|date',
@@ -394,6 +392,14 @@ public function reexpedir(Request $request)
             ]);
         }
 
+        //carga las relaciones
+        $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
+        // Verifica si la relacione existen
+        if (!$instalaciones || !$instalaciones->solicitud || !$instalaciones->solicitud->instalacion) {
+            return response()->json(['error' => 'No se encontró la instalación asociada a la inspección'], 404);
+        }
+        // Obtener id_instalacion automáticamente desde la relación
+        $id_instalacion = $instalaciones->solicitud->instalacion->id_instalacion ?? null;
         $reexpedir = Dictamen_instalaciones::findOrFail($request->id_dictamen);
 
         if ($request->accion_reexpedir == '1') {
@@ -410,12 +416,20 @@ public function reexpedir(Request $request)
                 $observacionesActuales = json_decode($reexpedir->observaciones, true);
                 $observacionesActuales['observaciones'] = $request->observaciones;
             $reexpedir->observaciones = json_encode($observacionesActuales);
+            // Validar que sea array, si no, inicializarlo
+            /*if (!is_array($observacionesActuales)) {
+                $observacionesActuales = [];
+            }
+            $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales);*/
             $reexpedir->save(); 
 
             // Crear un nuevo registro de reexpedición
             $new = new Dictamen_instalaciones();
-            $new->num_dictamen = $request->num_dictamen;
+            $new->id_instalacion = $id_instalacion;
             $new->id_inspeccion = $request->id_inspeccion;
+            $new->tipo_dictamen = $request->tipo_dictamen;
+            $new->num_dictamen = $request->num_dictamen;
             $new->fecha_emision = $request->fecha_emision;
             $new->fecha_vigencia = $request->fecha_vigencia;
             $new->id_firmante = $request->id_firmante;
