@@ -1090,56 +1090,51 @@ $(document).on('click', '.pdf', function () {
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
 
-    
-
-      if(tipo == 1){ // Productor
-        var tipo_dictamen = '../dictamen_productor/'+id;
-        var titulo = "Dictamen de productor";
-      }
-      if(tipo == 2){ // Envasador
-        var tipo_dictamen = '../dictamen_envasador/'+id;
-        var titulo = "Dictamen de envasador";
-      }
-      if(tipo == 3){ // Comercializador
-        var tipo_dictamen = '../dictamen_comercializador/'+id;
-        var titulo = "Dictamen de comercializador";
-      }
-      if(tipo == 4){ // Almacén y bodega
-        var tipo_dictamen = '../dictamen_almacen/'+id;
-        var titulo = "Dictamen de almacén y bodega";
-      }
-      if(tipo == 5){ // Área de maduración
-        var tipo_dictamen = '../dictamen_maduracion/'+id;
-        var titulo = "Dictamen de área de maduración de mezcal";
-      }
+    if(tipo == 1){ // Productor
+      var tipo_dictamen = '../dictamen_productor/'+id;
+      var titulo = "Dictamen de productor";
+    }
+    if(tipo == 2){ // Envasador
+      var tipo_dictamen = '../dictamen_envasador/'+id;
+      var titulo = "Dictamen de envasador";
+    }
+    if(tipo == 3){ // Comercializador
+      var tipo_dictamen = '../dictamen_comercializador/'+id;
+      var titulo = "Dictamen de comercializador";
+    }
+    if(tipo == 4){ // Almacén y bodega
+      var tipo_dictamen = '../dictamen_almacen/'+id;
+      var titulo = "Dictamen de almacén y bodega";
+    }
+    if(tipo == 5){ // Área de maduración
+      var tipo_dictamen = '../dictamen_maduracion/'+id;
+      var titulo = "Dictamen de área de maduración de mezcal";
+    }
       
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
     spinner.show();
     iframe.hide();
     
     //Cargar el PDF con el ID
-      iframe.attr('src', tipo_dictamen);
+    iframe.attr('src', tipo_dictamen);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-      $("#NewPestana").attr('href', tipo_dictamen).show();
+    $("#NewPestana").attr('href', tipo_dictamen).show();
 
-      $("#titulo_modal").text(titulo);
-      $("#subtitulo_modal").text(registro);  
+    $("#titulo_modal").text(titulo);
+    $("#subtitulo_modal").text(registro);  
 
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-      iframe.on('load', function () {
-        spinner.hide();
-        iframe.show();
-      });
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
 });
 
 
-
-
-
  
  
  
- });
+});
  
 
 

@@ -224,8 +224,8 @@
         en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la Calidad que establece el
         funcionamiento de las Unidades de Inspección.</p>
         <p>Después de realizar la inspección de las instalaciones en fecha del <span class="font-lucida-sans-seminegrita"><u>{{ $fecha_inspeccion }}</u></span> partiendo del acta
-        circunstanciada o número de inspección: <u><span  class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio }}</u></span></p>
-        <p class="textp">Nombre del envasador/empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social }}</u></p>
+        circunstanciada o número de inspección: <u><span  class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio ?? '' }}</u></span></p>
+        <p class="textp">Nombre del envasador/empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social ?? '' }}</u></p>
     </div>
     <table>
         <tbody>
@@ -233,7 +233,7 @@
             <td style="text-align: justify;">
             <span class="font-lucida-sans-seminegrita">Domicilio Fiscal:</span><br>
             </td>
-                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal }}</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal ?? '' }}</td>
             </tr>
             <tr>
             <td>
@@ -244,7 +244,7 @@
             </tr>
             <tr>
                 <td class="font-lucida-sans-seminegrita">Responsable de la inspección:</td>
-                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->inspector->name }}</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->inspector->name ?? '' }}</td>
             </tr>
             <tr>
                 <td class="font-lucida-sans-seminegrita">Fecha de emisión de dictamen:</td>
@@ -258,7 +258,7 @@
     </table>
     <p class="text">
     Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de envasado</span> cuenta con la infraestructura, el equipo y los procesos necesarios
-    para el envasado de <span class="font-lucida-sans-seminegrita"><u>{{ $datos->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', ') }}</u>, clase(s) <u>{{$datos->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', ') }}</u></span>, requisitos establecidos en la NOM-070-SCFI-2016,
+    para el envasado de <span class="font-lucida-sans-seminegrita"><u>{{ $datos->inspeccione?->solicitud->categorias_mezcal()->pluck('categoria')->implode(', ') }}</u>, clase(s) <u>{{$datos->inspeccione?->solicitud->clases_agave()->pluck('clase')->implode(', ') }}</u></span>, requisitos establecidos en la NOM-070-SCFI-2016,
     Bebidas alcohólicas-Mezcal-Especificaciones y por el Organismo de Certificación del Centro de Innovación y
     Desarrollo Agroalimentario de Michoacán A.C. (CIDAM)
    </p>
@@ -275,7 +275,7 @@
         <p class="textx" style="font-size: 9px; margin-bottom:-8px">
             <strong>AUTORIZÓ</strong>
             <span style="margin-left: 50px;">
-                <strong>{{ $datos->firmante->puesto }} | {{ $datos->firmante->name }}</strong>
+                <strong>{{ $datos->firmante->puesto  ?? '' }} | {{ $datos->firmante->name  ?? '' }}</strong>
             </span>
         </p>
 

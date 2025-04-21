@@ -268,8 +268,8 @@
         en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la Calidad que establece el
         funcionamiento de las Unidades de Inspección.</p>
         <p>Después de realizar la inspección de las instalaciones en fecha del <span class="font-lucida-sans-seminegrita"><u>{{ $fecha_inspeccion }}</u></span> partiendo del acta
-        circunstanciada o número de inspección: <u><span  class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio }}</u></span></p>
-        <p class="textp">Nombre de la empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social }}</u></p>
+        circunstanciada o número de inspección: <u><span  class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio ?? '' }}</u></span></p>
+        <p class="textp">Nombre de la empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social ?? '' }}</u></p>
     </div>
     <table>
         <tbody id="tabla">
@@ -277,14 +277,14 @@
             <td style="text-align: justify;">
             <span class="font-lucida-sans-seminegrita">Domicilio Fiscal: <br>&nbsp;</span>
             </td>
-                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal }}</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal ?? '' }}</td>
             </tr>
             <tr>
             <td>
             <span class="font-lucida-sans-seminegrita">Domicilio de almacén: <br>&nbsp;</span>
             </td>
 
-                <td style="text-align: center; vertical-align: middle;">{{ $datos->instalaciones->direccion_completa }}</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->instalaciones->direccion_completa ?? '' }}</td>
             </tr>
             <tr>
             <td>
