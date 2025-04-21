@@ -249,9 +249,9 @@
             <p>Después de realizar la inspección de las instalaciones en fecha del <span
                     class="font-lucida-sans-seminegrita"><u>{{ $fecha_inspeccion }}</u></span> partiendo del acta
                 circunstanciada o número de inspección: <u><span
-                        class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio }}</u></span></p>
+                        class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio ?? '' }}</u></span></p>
             <p class="textp">Nombre del comecializador/empresa:
-                <u>{{ $datos->inspeccione->solicitud->empresa->razon_social }}</u></p>
+                <u>{{ $datos->inspeccione->solicitud->empresa->razon_social ?? '' }}</u></p>
         </div>
         <table class="interlineado" >
             <tbody>
@@ -260,7 +260,7 @@
                         <span class="font-lucida-sans-seminegrita">Domicilio Fiscal:</span><br>
                     </td>
                     <td style="text-align: center; vertical-align: middle;">
-                        {{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal }}</td>
+                        {{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal ?? '' }}</td>
                 </tr>
                 <tr>
                     <td>
@@ -268,7 +268,7 @@
                             comercializador:</span>
                     </td>
                     <td style="text-align: center; vertical-align: middle;">
-                        {{ $datos->instalaciones->direccion_completa }}</td>
+                        {{ $datos->instalaciones->direccion_completa ?? '' }}</td>
                 </tr>
                 <tr>
                     <td>
@@ -278,7 +278,7 @@
                 </tr>
                 <tr>
                     <td class="font-lucida-sans-seminegrita">Responsable de la inspección:</td>
-                    <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->inspector->name }}
+                    <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->inspector->name ?? '' }}
                     </td>
                 </tr>
                 <tr>
@@ -295,9 +295,9 @@
             Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de comercialización y/almacén</span>
             cuenta con la infraestructura, el equipo y los procesos necesarios
             para el envasado de <span
-                class="font-lucida-sans-seminegrita"><u>{{ $datos->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', ') }}</u>,
+                class="font-lucida-sans-seminegrita"><u>{{ $datos->inspeccione?->solicitud?->categorias_mezcal()->pluck('categoria')->implode(', ') }}</u>,
                 clase(s)
-                <u>{{ $datos->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', ') }}</u></span>,
+                <u>{{ $datos->inspeccione?->solicitud?->clases_agave()->pluck('clase')->implode(', ') }}</u></span>,
             requisitos establecidos en la NOM-070-SCFI-2016,
             Bebidas alcohólicas-Mezcal-Especificaciones y por el Organismo de Certificación del Centro de Innovación y
             Desarrollo Agroalimentario de Michoacán A.C. (CIDAM)
@@ -329,7 +329,7 @@
                         src="{{ asset('storage/' . $firmaPath) }}">
                 @endif
         
-                <strong>{{ $datos->firmante->puesto }} | {{ $datos->firmante->name }}</strong>
+                <strong>{{ $datos->firmante->puesto ?? '' }} | {{ $datos->firmante->name ?? '' }}</strong>
             </span>
         </p>
         

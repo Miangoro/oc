@@ -118,7 +118,7 @@ $.ajaxSetup({
           render: function (data, type, full, meta) {
             var $num_dictamen = full['num_dictamen'];
             return `<small>`+ $num_dictamen + `</small>` +
-             `<i style class="ri-file-pdf-2-fill text-danger ri-28px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
+             `<i style class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
           }
         }, 
          {
@@ -1082,9 +1082,8 @@ $(document).ready(function () {
 
 
 
-
 //RECIBE LOS DATOS DEL PDF
-$(document).on('click', '.pdf', function () {
+$(document).on('click', '.pdfDictamen', function () {
   var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en opciones
   var registro = $(this).data('registro');//ID de razon social "data-registro"
   var tipo = $(this).data('tipo');
@@ -1132,7 +1131,60 @@ $(document).on('click', '.pdf', function () {
 });
 
 
- 
+///FORMATO PDF SOLICITUD
+$(document).on('click', '.pdfSolicitud', function ()  {
+  var id = $(this).data('id');
+  var folio = $(this).data('folio');
+  var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+      
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    
+    //Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
+
+    $("#titulo_modal").text("Solicitud de servicios");
+    $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
+
+
+///FORMATO PDF ACTA
+$(document).on('click', '.pdfActa', function () {
+  var id_acta = $(this).data('id');
+  var empresa = $(this).data('empresa');
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+  spinner.show();
+  iframe.hide();
+  
+    //Cargar el PDF con el ID
+    iframe.attr('src', '/files/' + id_acta);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', '/files/' + id_acta).show();
+
+    $("#titulo_modal").text("Acta de inspección");
+    $("#subtitulo_modal").text(empresa);
+
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
+
+
+
  
  
 });
