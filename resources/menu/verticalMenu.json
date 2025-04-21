@@ -10,6 +10,7 @@
       "name": "Usuarios",
       "icon": "menu-icon ri-group-fill",
       "slug": "usuarios",
+      "can" : "Visualizar usuarios",
       "submenu": [
         {
           "url": "/usuarios/personal",
@@ -37,6 +38,7 @@
       "name": "Clientes",
       "icon": "menu-icon ri-user-follow-fill",
       "slug": "clientes",
+      "can" : "Visualizar clientes",
       "submenu": [
         {
           "url": "clientes/prospecto",
@@ -305,13 +307,15 @@
       "name": "Roles",
       "url": "find_roles",
       "icon": "menu-icon ri-user-settings-fill",
-      "slug": "find_roles"
+      "slug": "find_roles",
+      "can" : "Visualizar roles"
     },
     {
       "name": "Permisos",
       "url": "find_permisos",
       "icon": "menu-icon ri-shield-keyhole-fill",
-      "slug": "find_permisos"
+      "slug": "find_permisos",
+      "can" : "Visualizar permisos"
     }
     
  ]

@@ -65,7 +65,14 @@
 
                     <div class="form-group">
                       <label for="permisos" class="form-label">Seleccionar Permisos</label>
-                      <div style="max-height: 200px; overflow-y: auto;">
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="checkAllPermisos">
+                        <label class="form-check-label" for="checkAllPermisos">
+                          Seleccionar todos
+                        </label>
+                      </div>
+                      
+                      <div style="max-height: 800px; overflow-y: auto;">
                           @foreach($permisos as $permiso)
                               <div class="form-check form-check-sm">
                                   <input class="form-check-input" type="checkbox" value="{{ $permiso->name }}" id="permiso{{ $permiso->id }}" name="permisos[]">

@@ -26,7 +26,7 @@ $configData = Helper::appClasses();
 
   <ul class="menu-inner py-1">
     @foreach ($menuData[0]->menu as $menu)
-
+        @if (!isset($menu->can) || auth()->user()->can($menu->can))
       {{-- adding active and open class if child is active --}}
 
       {{-- menu headers --}}
@@ -77,6 +77,7 @@ $configData = Helper::appClasses();
           @include('layouts.sections.menu.submenu',['menu' => $menu->submenu])
         @endisset
       </li>
+      @endif
       @endif
     @endforeach
   </ul>

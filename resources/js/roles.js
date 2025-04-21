@@ -484,3 +484,17 @@ $(function () {
 
 
 });
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const checkAll = document.getElementById('checkAllPermisos');
+  if (checkAll) {
+    checkAll.addEventListener('change', function () {
+      const checkboxes = document.querySelectorAll('input[name="permisos[]"]');
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = this.checked;
+      });
+    });
+  }
+});
+
