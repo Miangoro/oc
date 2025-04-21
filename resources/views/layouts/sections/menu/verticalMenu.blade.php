@@ -26,7 +26,21 @@ $configData = Helper::appClasses();
 
   <ul class="menu-inner py-1">
     @foreach ($menuData[0]->menu as $menu)
-        @if (!isset($menu->can) || auth()->user()->can($menu->can))
+    @php
+        $tienePermisoSubmenu = false;
+
+        if (isset($menu->submenu)) {
+            foreach ($menu->submenu as $submenu) {
+                if (isset($submenu->can) && auth()->user()->can($submenu->can)) {
+                    $tienePermisoSubmenu = true;
+                    break;
+                }
+            }
+        }
+    @endphp
+      @if (
+        (isset($menu->can) && auth()->user()->can($menu->can)) || $tienePermisoSubmenu)
+    
       {{-- adding active and open class if child is active --}}
 
       {{-- menu headers --}}

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 <ul class="menu-sub">
   @if (isset($menu))
     @foreach ($menu as $submenu)
-
+    @if (!isset($submenu->can) || auth()->user()->can($submenu->can))
     {{-- active menu method --}}
     @php
       $activeClass = null;
@@ -47,6 +47,8 @@ use Illuminate\Support\Facades\Route;
           @include('layouts.sections.menu.submenu',['menu' => $submenu->submenu])
         @endif
       </li>
+      @endif
     @endforeach
+
   @endif
 </ul>

@@ -10,7 +10,7 @@
       "name": "Usuarios",
       "icon": "menu-icon ri-group-fill",
       "slug": "usuarios",
-      
+      "can" : "Visualizar usuarios",
       "submenu": [
         {
           "url": "/usuarios/personal",
@@ -61,17 +61,20 @@
         {
           "url": "domicilios/predios",
           "name": "Predios",
-          "slug": "domicilios-predios"
+          "slug": "domicilios-predios",
+          "can" : "Visualizar predios"
         },
         {
           "url": "domicilios/instalaciones",
           "name": "Instalaciones",
-          "slug": "domicilio-instalaciones"
+          "slug": "domicilio-instalaciones",
+           "can" : "Visualizar instalaciones"
         },
         {
           "url": "domicilios/destinos",
           "name": "Destinos",
-          "slug": "domicilio-destinos"
+          "slug": "domicilio-destinos",
+           "can" : "Visualizar destinos"
         }
       ]
     },
@@ -79,7 +82,8 @@
       "name": "Documentación",
       "url": "documentacion",
       "icon": "menu-icon ri-folder-check-fill",
-      "slug": "documentacion"
+      "slug": "documentacion",
+       "can" : "Visualizar documentación"
     },
     {
       "name": "Solicitudes",
@@ -89,12 +93,14 @@
         {
           "url": "solicitudes-historial?abrirModal=nuevaSolicitud",
           "name": "Nueva solicitud",
-          "slug": "solicitudes-historial2"
+          "slug": "solicitudes-historial2",
+          "can" : "Registrar solicitud"
         },
         {
           "url": "solicitudes-historial",
           "name": "Historial",
-          "slug": "solicitudes-historial"
+          "slug": "solicitudes-historial",
+          "can" : "Visualizar solicitudes"
         }
       ]
     },
@@ -102,7 +108,8 @@
       "name": "Inspecciones",
       "url": "inspecciones",
       "icon": "menu-icon ri-user-search-fill",
-      "slug": "inspecciones"
+      "slug": "inspecciones",
+      "can" : "Visualizar inspecciones"
     },
     {
       "name": "Dictámenes de cumplimiento",
@@ -112,22 +119,26 @@
         {
           "url": "dictamenes/instalaciones",
           "name": "Instalaciones",
-          "slug": "dictamenes-instalaciones"
+          "slug": "dictamenes-instalaciones",
+          "can" : "Visualizar dictamen de instalaciones"
         },
         {
           "url": "dictamenes/granel",
           "name": "Granel",
-          "slug": "dictamenes-granel"
+          "slug": "dictamenes-granel",
+          "can" : "Visualizar dictamen de granel"
         },
         {
           "url": "dictamenes/envasado",
           "name": "Envasado",
-          "slug": "dictamenes-envasado"
+          "slug": "dictamenes-envasado",
+          "can" : "Visualizar dictamen de envasado"
         },
         {
           "url": "dictamenes/exportacion",
           "name": "Exportación",
-          "slug": "dictamenes-exportacion"
+          "slug": "dictamenes-exportacion",
+          "can" : "Visualizar dictamen de exportación"
         }
       ]
     },
@@ -139,18 +150,21 @@
         {
           "url": "certificados/instalaciones",
           "name": "Instalaciones",
-          "slug": "certificados-instalaciones"
+          "slug": "certificados-instalaciones",
+          "can" : "Visualizar certificado de instalaciones"
         },
         {
           "url": "certificados/granel",
           "name": "Granel",
-          "slug": "certificados-granel"
+          "slug": "certificados-granel",
+          "can" : "Visualizar certificado de granel"
         },
 
         {
           "url": "certificados/exportacion",
           "name": "Exportación",
-          "slug": "certificados-exportacion"
+          "slug": "certificados-exportacion",
+          "can" : "Visualizar certificado de instalaciones"
         }
       ]
     },
@@ -162,7 +176,8 @@
         {
           "url": "catalogo/lotes_granel",
           "name": "Lotes a granel",
-          "slug": "catalogo-lotes-granel"
+          "slug": "catalogo-lotes-granel",
+          "can" : "Visualizar usuarios"
         },
         {
           "url": "catalogo/lotes",
@@ -210,7 +225,8 @@
       "name": "Guías de traslado",
       "url": "guias/guias_de_agave",
       "icon": "menu-icon ri-truck-fill",
-      "slug": "traslado-guias"
+      "slug": "traslado-guias",
+      "can" : "Visualizar guías de traslado"
     },
     {
       "name": "Hologramas",
@@ -220,22 +236,14 @@
         {
           "url": "/hologramas/solicitud",
           "name": "Solicitudes",
-          "slug": "hologramas-solicitud"
+          "slug": "hologramas-solicitud",
+          "can" : "Visualizar solicitud de hologramas"
         },
         {
           "url": "/find_hologramas_activar",
           "name": "Activar",
-          "slug": "find_hologramas_activar"
-        },
-        {
-          "url": "#",
-          "name": "Inventario CIDAM",
-          "slug": "#"
-        },
-        {
-          "url": "#",
-          "name": "Inventario clientes",
-          "slug": "#"
+          "slug": "find_hologramas_activar",
+          "can" : "Visualizar activación de hologramas"
         }
       ]
     },
@@ -247,12 +255,14 @@
         {
           "url": "/revision/personal",
           "name": "Personal",
-          "slug": "revision-personal"
+          "slug": "revision-personal",
+          "can" : "Visualizar revisión del personal"
         },
         {
           "url": "/hologramas/",
           "name": "Consejo",
-          "slug": "hologramas-"
+          "slug": "hologramas-",
+          "can" : "Visualizar revisión del consejo"
         }
       ]
     },
@@ -264,7 +274,8 @@
         {
           "url": "/bitacoraMezcal",
           "name": "Mezcal a granel",
-          "slug": "bitacora-mezcal"
+          "slug": "bitacora-mezcal",
+          "can" : "Visualizar usuarios"
         },
         {
           "url": "/bitacoraProductoMaduracion",
