@@ -10,7 +10,7 @@
       "name": "Usuarios",
       "icon": "menu-icon ri-group-fill",
       "slug": "usuarios",
-      "can" : "Visualizar usuarios",
+      
       "submenu": [
         {
           "url": "/usuarios/personal",
