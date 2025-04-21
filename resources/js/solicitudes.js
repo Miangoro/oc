@@ -184,13 +184,17 @@ $(function () {
             case 11:
               return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
                       <br>
+                      <span class="fw-bold text-dark small">Lote granel:</span><span class="small"> ${data.lote_granel || 'N/A'}</span>
+                      <br>
                       <span class="fw-bold text-dark small">Marca:</span><span class="small"> ${data.marca || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Cont. Neto.:</span><span class="small"> ${data.presentacion || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Cajas:</span><span class="small"> ${data.cajas || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Botellas:</span><span class="small"> ${data.botellas || 'N/A'}</span>`;
+                      <span class="fw-bold text-dark small">Botellas:</span><span class="small"> ${data.botellas || 'N/A'}</span>
+                       <br>
+                      <span class="fw-bold text-dark small">Certificado:</span><span class="small"> ${data.certificado_exportacion || 'N/A'}</span>`;
             case 14:
               return `<span class="fw-bold text-dark small">
                   ${data.renovacion === 'si' ? 'Es renovación' : 'No es renovación'}

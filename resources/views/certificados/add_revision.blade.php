@@ -174,8 +174,18 @@
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc ?? 'N/A' }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'nbotellas')
-                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->detalles[0]['cantidad_botellas'] ?? 'N/A' }}</b>
-                                            </td>
+                                        @php
+                                            $caracteristicas = json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true);
+                                            $detalle = $caracteristicas['detalles'][0] ?? null;
+                                        @endphp
+                                        
+                                        <td>
+                                            <b>
+                                                {{ $detalle['cantidad_botellas'] ?? 'N/A' }} Botellas<br>
+                                                {{ $detalle['cantidad_cajas'] ?? 'N/A' }} Cajas
+                                            </b>
+                                        </td>
+                                        
                                         @elseif($pregunta->filtro == 'lotes')
                                             <td><b>GRANEL:
                                                     {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}</b><br>
@@ -237,6 +247,10 @@
                                                 @else
                                                     <span>Dictamen no disponible</span>
                                                 @endif
+                                            </td>
+                                        @elseif($pregunta->filtro == 'certificado_granel')
+                                            <td>Granel: <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}</b> <br>
+                                                Envasado: <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'N/A' }}</b></td>

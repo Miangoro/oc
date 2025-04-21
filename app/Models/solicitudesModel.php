@@ -233,6 +233,12 @@ public function clases_agave()
           return $this->belongsTo(instalaciones::class, 'id_instalacion_envasado', 'id_instalacion');
       }
 
+      public function certificadoExportacion()
+    {
+        return $this->inspeccion?->dictamenExportacion?->certificado;
+    }
+
+
     
 
 }

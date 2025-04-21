@@ -207,6 +207,7 @@ class solicitudesController extends Controller
 
                 $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
                 $nestedData['id_lote_envasado'] = $loteEnvasado ? $loteEnvasado->nombre : 'N/A';
+                $nestedData['lote_granel'] = $loteEnvasado ? $loteEnvasado->lotesGranel[0]->nombre_lote : 'N/A';
                 $nestedData['nombre_predio'] = $caracteristicas['nombre_predio'] ?? 'N/A';
                 $nestedData['art'] = $caracteristicas['art'] ?? 'N/A';
                 $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
@@ -262,6 +263,8 @@ class solicitudesController extends Controller
                 $nestedData['punto_reunion'] = $caracteristicas['punto_reunion'] ?? 'N/A';
                 $nestedData['renovacion'] = $caracteristicas['renovacion'] ?? 'N/A';
                 $nestedData['volumen_ingresado'] = $caracteristicas['volumen_ingresado'] ?? 'N/A';
+                $nestedData['certificado_exportacion'] = $solicitud->certificadoExportacion()?->num_certificado ?? '';
+
 
 
 

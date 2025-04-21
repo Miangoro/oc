@@ -55,5 +55,10 @@ class inspecciones extends Model
         return $this->belongsTo(actas_inspeccion::class, 'id_inspeccion', 'id_inspeccion');
     }
 
+    public function dictamenExportacion()
+    {
+        return $this->belongsTo(Dictamen_Exportacion::class, 'id_inspeccion', 'id_inspeccion');
+    }
+
 }
 
