@@ -294,7 +294,7 @@ public function reexpedir(Request $request)
             $reexpedir->estatus = 1; 
             // Decodificar el JSON actual
             $observacionesActuales = json_decode($reexpedir->observaciones, true);
-            // Actualiza solo 'observaciones' sin modificar 'id_certificado_sustituye'
+            // Actualiza solo 'observaciones' sin modificar 'id_sustituye'
             $observacionesActuales['observaciones'] = $request->observaciones;
             // Volver a codificar el array y asignarlo a $certificado->observaciones
             $reexpedir->observaciones = json_encode($observacionesActuales); 

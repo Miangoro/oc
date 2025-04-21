@@ -48,7 +48,19 @@
                     </div>
 
                     <div class="row mb-4">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select class="form-select" id="rex_tipo_dictamen" name="tipo_dictamen"
+                                    aria-label="Default select example">
+                                    <option value="1">Productor</option>
+                                    <option value="2">Envasador</option>
+                                    <option value="3">Comercializador</option>
+                                    <option value="4">Almacen y bodega</option>
+                                </select>
+                                <label for="">Tipo de dictamen</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
                                 <input type="text" class="form-control" id="rex_numero_dictamen"
                                     name="num_dictamen" placeholder="No. de dictamen">

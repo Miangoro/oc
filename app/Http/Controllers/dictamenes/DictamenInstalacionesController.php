@@ -309,7 +309,6 @@ public function edit($id_dictamen)
 
         return response()->json([
             'id_dictamen' => $editar->id_dictamen,
-            'id_instalacion' => $editar->id_instalacion,
             'id_inspeccion' => $editar->id_inspeccion,
             'tipo_dictamen' => $editar->tipo_dictamen,
             'num_dictamen' => $editar->num_dictamen,
@@ -333,7 +332,6 @@ public function update(Request $request, $id_dictamen)
         // Validar los datos del formulario
         $validated = $request->validate([
             'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
-            //'id_instalacion' => 'nullable',
             'tipo_dictamen' => 'required|int',
             'num_dictamen' => 'required|string|max:70',
             'fecha_emision' => 'required|date',
@@ -352,7 +350,6 @@ public function update(Request $request, $id_dictamen)
 
         $actualizar = Dictamen_instalaciones::findOrFail($id_dictamen);
         $actualizar->update([// Actualizar
-            //$instalaciones->solicitud->instalacion->id_instalacion;
             'id_instalacion' => $id_instalacion,
             'id_inspeccion' => $validated['id_inspeccion'],
             'tipo_dictamen' => $validated['tipo_dictamen'],
@@ -387,6 +384,7 @@ public function reexpedir(Request $request)
             $request->validate([
                 'id_dictamen' => 'required|exists:dictamenes_instalaciones,id_dictamen',
                 'id_inspeccion' => 'required|integer',
+                'tipo_dictamen' => 'required|int',
                 'num_dictamen' => 'required|string|min:8',
                 'fecha_emision' => 'required|date',
                 'fecha_vigencia' => 'required|date',
@@ -394,6 +392,14 @@ public function reexpedir(Request $request)
             ]);
         }
 
+        //carga las relaciones
+        $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
+        // Verifica si la relacione existen
+        if (!$instalaciones || !$instalaciones->solicitud || !$instalaciones->solicitud->instalacion) {
+            return response()->json(['error' => 'No se encontró la instalación asociada a la inspección'], 404);
+        }
+        // Obtener id_instalacion automáticamente desde la relación
+        $id_instalacion = $instalaciones->solicitud->instalacion->id_instalacion ?? null;
         $reexpedir = Dictamen_instalaciones::findOrFail($request->id_dictamen);
 
         if ($request->accion_reexpedir == '1') {
@@ -410,12 +416,20 @@ public function reexpedir(Request $request)
                 $observacionesActuales = json_decode($reexpedir->observaciones, true);
                 $observacionesActuales['observaciones'] = $request->observaciones;
             $reexpedir->observaciones = json_encode($observacionesActuales);
+            // Validar que sea array, si no, inicializarlo
+            /*if (!is_array($observacionesActuales)) {
+                $observacionesActuales = [];
+            }
+            $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales);*/
             $reexpedir->save(); 
 
             // Crear un nuevo registro de reexpedición
             $new = new Dictamen_instalaciones();
-            $new->num_dictamen = $request->num_dictamen;
+            $new->id_instalacion = $id_instalacion;
             $new->id_inspeccion = $request->id_inspeccion;
+            $new->tipo_dictamen = $request->tipo_dictamen;
+            $new->num_dictamen = $request->num_dictamen;
             $new->fecha_emision = $request->fecha_emision;
             $new->fecha_vigencia = $request->fecha_vigencia;
             $new->id_firmante = $request->id_firmante;
@@ -438,130 +452,129 @@ public function reexpedir(Request $request)
 
 
 
+//PDF'S DICTAMEN DE INSTALACIONES
+public function dictamen_productor($id_dictamen)
+{
+    $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
 
-    //PDF'S DICTAMEN DE INSTALACIONES
-    public function dictamen_productor($id_dictamen)
-    {
-        $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
+    $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
+    $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
+    $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+    $pdf = Pdf::loadView('pdfs.DictamenProductor', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia]);
+    return $pdf->stream('F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor.pdf');
+}
 
-        $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
-        $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
-        $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-        $pdf = Pdf::loadView('pdfs.DictamenProductor', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia]);
-        return $pdf->stream('F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor.pdf');
-    }
+public function dictamen_envasador($id_dictamen)
+{
+    $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
+    // URL que quieres codificar en el QR
+    $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
 
-    public function dictamen_envasador($id_dictamen)
-    {
-        $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
-        // URL que quieres codificar en el QR
-        $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
+    $qrCode = new QrCode(
+        data: $url,
+        encoding: new Encoding('UTF-8'),
+        errorCorrectionLevel: ErrorCorrectionLevel::Low,
+        size: 300,
+        margin: 10,
+        roundBlockSizeMode: RoundBlockSizeMode::Margin,
+        foregroundColor: new Color(0, 0, 0),
+        backgroundColor: new Color(255, 255, 255)
+    );
 
-        $qrCode = new QrCode(
-            data: $url,
-            encoding: new Encoding('UTF-8'),
-            errorCorrectionLevel: ErrorCorrectionLevel::Low,
-            size: 300,
-            margin: 10,
-            roundBlockSizeMode: RoundBlockSizeMode::Margin,
-            foregroundColor: new Color(0, 0, 0),
-            backgroundColor: new Color(255, 255, 255)
-        );
-    
-        // Escribir el QR en formato PNG
-        $writer = new PngWriter();
-        $result = $writer->write($qrCode);
-    
-        // Convertirlo a Base64
-        $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+    // Escribir el QR en formato PNG
+    $writer = new PngWriter();
+    $result = $writer->write($qrCode);
 
-        $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
-        $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
-        $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-        $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
-        $pdf = Pdf::loadView('pdfs.DictamenEnvasado', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
-        return $pdf->stream($datos->num_dictamen.' Dictamen de cumplimiento de Instalaciones como envasador.pdf');
-    }
+    // Convertirlo a Base64
+    $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
 
-    public function dictamen_comercializador($id_dictamen)
-    {
-        $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
-        // URL que quieres codificar en el QR
-        $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
+    $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
+    $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
+    $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+    $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
+    $pdf = Pdf::loadView('pdfs.DictamenEnvasado', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
+    return $pdf->stream($datos->num_dictamen.' Dictamen de cumplimiento de Instalaciones como envasador.pdf');
+}
 
-        $qrCode = new QrCode(
-            data: $url,
-            encoding: new Encoding('UTF-8'),
-            errorCorrectionLevel: ErrorCorrectionLevel::Low,
-            size: 300,
-            margin: 10,
-            roundBlockSizeMode: RoundBlockSizeMode::Margin,
-            foregroundColor: new Color(0, 0, 0),
-            backgroundColor: new Color(255, 255, 255)
-        );
-    
-        // Escribir el QR en formato PNG
-        $writer = new PngWriter();
-        $result = $writer->write($qrCode);
-    
-        // Convertirlo a Base64
-        $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+public function dictamen_comercializador($id_dictamen)
+{
+    $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
+    // URL que quieres codificar en el QR
+    $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
 
-        $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
-        $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
-        $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-        $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
-        $pdf = Pdf::loadView('pdfs.DictamenComercializador', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
-        return $pdf->stream($datos->num_dictamen . ' Dictamen de cumplimiento de instalaciones como comercializador.pdf');
-    }
+    $qrCode = new QrCode(
+        data: $url,
+        encoding: new Encoding('UTF-8'),
+        errorCorrectionLevel: ErrorCorrectionLevel::Low,
+        size: 300,
+        margin: 10,
+        roundBlockSizeMode: RoundBlockSizeMode::Margin,
+        foregroundColor: new Color(0, 0, 0),
+        backgroundColor: new Color(255, 255, 255)
+    );
 
-    public function dictamen_almacen($id_dictamen)
-    {
-        $datos = Dictamen_instalaciones::find($id_dictamen);
+    // Escribir el QR en formato PNG
+    $writer = new PngWriter();
+    $result = $writer->write($qrCode);
 
-        $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
-        $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
-        $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+    // Convertirlo a Base64
+    $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
 
-        // Solucion al problema de la cadena, como se guarda en la BD: ["Blanco o Joven","Reposado", "A\u00f1ejo"
-        $categorias = json_decode($datos->categorias, true);
-        $clases = json_decode($datos->clases, true);
+    $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
+    $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
+    $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+    $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
+    $pdf = Pdf::loadView('pdfs.DictamenComercializador', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
+    return $pdf->stream($datos->num_dictamen . ' Dictamen de cumplimiento de instalaciones como comercializador.pdf');
+}
 
-        $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_Instalaciones', [
-            'datos' => $datos,
-            'fecha_inspeccion' => $fecha_inspeccion ?? '',
-            'fecha_emision' => $fecha_emision ?? '',
-            'fecha_vigencia' => $fecha_vigencia ?? '',
-            'categorias' => $categorias ?? '',
-            'clases' => $clases ?? ''
-        ]);
+public function dictamen_almacen($id_dictamen)
+{
+    $datos = Dictamen_instalaciones::find($id_dictamen);
 
-        return $pdf->stream('F-UV-02-13 Ver 1, Dictamen de cumplimiento de Instalaciones almacén.pdf');
-    }
+    $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
+    $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
+    $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
 
-    public function dictamen_maduracion($id_dictamen)
-    {
-        $datos = Dictamen_instalaciones::find($id_dictamen);
+    // Solucion al problema de la cadena, como se guarda en la BD: ["Blanco o Joven","Reposado", "A\u00f1ejo"
+    $categorias = json_decode($datos->categorias, true);
+    $clases = json_decode($datos->clases, true);
 
-        $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
-        $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
-        $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+    $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_Instalaciones', [
+        'datos' => $datos,
+        'fecha_inspeccion' => $fecha_inspeccion ?? '',
+        'fecha_emision' => $fecha_emision ?? '',
+        'fecha_vigencia' => $fecha_vigencia ?? '',
+        'categorias' => $categorias ?? '',
+        'clases' => $clases ?? ''
+    ]);
 
-        // Solucion al problema de la cadena, como se guarda en la BD: ["Blanco o Joven","Reposado", "A\u00f1ejo"
-        $categorias = json_decode($datos->categorias, true);
-        $clases = json_decode($datos->clases, true);
+    return $pdf->stream('F-UV-02-13 Ver 1, Dictamen de cumplimiento de Instalaciones almacén.pdf');
+}
 
-        $pdf = Pdf::loadView('pdfs.Dictamen_Instalaciones_maduracion_mezcal', [
-            'datos' => $datos,
-            'fecha_inspeccion' => $fecha_inspeccion,
-            'fecha_emision' => $fecha_emision,
-            'fecha_vigencia' => $fecha_vigencia,
-            'categorias' => $categorias,
-            'clases' => $clases
-        ]);
+public function dictamen_maduracion($id_dictamen)
+{
+    $datos = Dictamen_instalaciones::find($id_dictamen);
 
-        return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones del área de maduración.pdf');
-    }
+    $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
+    $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
+    $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+
+    // Solucion al problema de la cadena, como se guarda en la BD: ["Blanco o Joven","Reposado", "A\u00f1ejo"
+    $categorias = json_decode($datos->categorias, true);
+    $clases = json_decode($datos->clases, true);
+
+    $pdf = Pdf::loadView('pdfs.Dictamen_Instalaciones_maduracion_mezcal', [
+        'datos' => $datos,
+        'fecha_inspeccion' => $fecha_inspeccion,
+        'fecha_emision' => $fecha_emision,
+        'fecha_vigencia' => $fecha_vigencia,
+        'categorias' => $categorias,
+        'clases' => $clases
+    ]);
+
+    return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones del área de maduración.pdf');
+}
 
 
 
