@@ -38,8 +38,7 @@ $configData = Helper::appClasses();
             }
         }
     @endphp
-      @if (
-        (isset($menu->can) && auth()->user()->can($menu->can)) || $tienePermisoSubmenu)
+      @if ((isset($menu->can) && auth()->user()->can($menu->can)) || $tienePermisoSubmenu || $menu->slug == 'dashboard')
     
       {{-- adding active and open class if child is active --}}
 

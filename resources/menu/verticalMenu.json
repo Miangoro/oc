@@ -4,7 +4,8 @@
       "name": "Inicio",
       "url": "dashboard",
       "icon": "menu-icon ri-home-2-fill",
-      "slug": "dashboard"
+      "slug": "dashboard",
+      "can" : "Visualizar usuarios"
     },
     {
       "name": "Usuarios",
