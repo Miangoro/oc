@@ -26,25 +26,30 @@ class Dictamen_Exportacion extends Model
       ];
 
       // Método para obtener el nombre del registro que sirve para la trazabilidad
-        public function getLogName2(): string
-        {
-            return 'dictamen de instalaciones'; // Devuelve el nombre que desees
-        }
+    public function getLogName2(): string
+    {
+        return 'dictamen de instalaciones'; // Devuelve el nombre que desees
+    }
 
-      public function inspeccione()
-        {
-            return $this->belongsTo(inspecciones::class, 'id_inspeccion', 'id_inspeccion');
-        }
+    public function inspeccione()
+    {
+        return $this->belongsTo(inspecciones::class, 'id_inspeccion', 'id_inspeccion');
+    }
 
-        public function instalaciones()
-        {
-            return $this->belongsTo(instalaciones::class, 'id_instalacion', 'id_instalacion');
-        }
+    public function instalaciones()
+    {
+        return $this->belongsTo(instalaciones::class, 'id_instalacion', 'id_instalacion');
+    }
 
-        public function certificado()
-        {
-            return $this->belongsTo(Certificado_Exportacion::class, 'id_dictamen', 'id_dictamen');
-        }
+    public function certificado()
+    {
+        return $this->belongsTo(Certificado_Exportacion::class, 'id_dictamen', 'id_dictamen');
+    }
+
+    public function firmante()
+    {
+        return $this->belongsTo(User::class, 'id_firmante', 'id');
+    }
 
 
 }

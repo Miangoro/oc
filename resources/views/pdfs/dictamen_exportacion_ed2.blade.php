@@ -130,8 +130,8 @@
             margin: 0;
             padding: 0;
             position: absolute;
-            right: 50px;
-            top: 825px;
+            right: 20px;
+            top: 605px;
             font-family: 'Arial Negrita' !important;
         }
         .textx, .textsello {
@@ -154,7 +154,7 @@
 
         .image-right {
             position: absolute; 
-            right: 10px; 
+            right: -20px; 
             top: -20px; 
             width: 240px;
         }
@@ -307,10 +307,6 @@
             <td style="font-size: 15px;"><b>No. Cajas</b></td>
             <td>{{$cajas}}</td>
         </tr>
-        {{-- <tr>
-            <td class="leftLetter" style="font-size: 15px;padding-bottom: 0; padding-top: 0;" colspan="6"><b>No. de
-                    Certificado</b></td>
-        </tr> --}}
         <tr>
             <td style="font-size: 15px;"><b>Lote de <br>Envasado</b></td>
             <td>{{ $lote->nombre ?? "No encontrada" }}</td>
@@ -335,38 +331,57 @@
         </tr>
     </table>
 
+
+
+@if($loop->last)<!--AL FINAL DE LA TABLA-->
     <div style="height: 15px"></div>
     <div>OBSERVACIONES:</div>
+    
+    <div style="height: 20%"></div><!--espacio alto-->
 
 
-@if($loop->last)
-    <div style="height: 20%"></div>
-
-    <div class="negrita" style="text-align: center; font-size: 10px ;line-height: 0.9">
-        _____________________________________________<br>
-        QFB. Mario Villanueva Flores <br>
-        Gerente Técnico Sustituto de la Unidad de Inspección
-    </div>
-
-    <div style="height: 30px"></div>
-
-    <p class="negrita" style="transform: translate(450px, 80px); font-size: 10px">Sello de Unidad de Inspección</p>
+    <!--FIRMA DIGITAL-->
+<div style="margin-left: -20px;">
+    <p class="sello">Sello de Unidad de Inspección</p>
         <div class="images-container">
-            <img src="{{ public_path('img_pdf/qr_umc-074.png') }}" alt="Logo UVEM" width="70px">
-            <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
+            <img src="{{ $qrCodeBase64 }}" alt="QR" width="90px">
+            <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Logo UI" class="image-right">
         </div>
-        <p class="textx" style="font-size: 12px; margin: 1;">
-        <span style="margin-left: -30px;">
-            <strong>Cadena Original UMG-159/2024|2024-06-26|UMS- <br><span style="margin-left: -30px;">1094/2024 Sello Digital</span></strong>
-        </span>
-    </p>
+        <p class="textx" style="font-size: 9px; margin-bottom:-8px; margin-top:-2px; position: relative;">
+            <strong>AUTORIZÓ</strong>
+            <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
+                {{-- @php
+                    use Illuminate\Support\Facades\Storage;
+        
+                    $firma = $datos->firmante->firma ?? null;
+                    $firmaPath = $firma ? 'firmas/' . $firma : null;
+                @endphp
+        
+                @if ($firma && Storage::disk('public')->exists($firmaPath))
+                    <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
+                        src="{{ asset('storage/' . $firmaPath) }}">
+                @endif --}}
+        
+                <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
+            </span>
+        </p>
+        
+        <p class="textx" style="font-size: 9px; margin-bottom:-8px">
+            <strong>CADENA ORIGINAL</strong>
+            <span style="margin-left: 14px;">
+                <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+            </span>
+        </p>
 
-    <div style="height: 15px"></div>
+        <p class="textx" style="font-size: 9px; margin-bottom:1px">
+            <strong>SELLO DIGITAL</strong>
+        </p>
 
-    <p class = "textsello" style="margin-left: -30px;">e2N1P+r+E79e0YxKzS/jMssKuASlmYXy2ppP+2PJN8vKUeFRxYTSY99MEWrgiHOnA N3pLUrdUBiD39v25Y648G4TK5qQ0LwZPLofRmjRQ2Ty5rHlDwnPRm37zaOkMjkRD<br>
-    xC0ikyHPD+T3EFhEc9sgAFI6bZUd88yevfS+ZFZ7j9f5EA44Sz76jsN3P4e7lyePHmNz Jxg5ZupHICg5xBZu5ygOniMZNbzG6w0ZDPL58yoMQK1JDi8lwwiGJBaCNHN6krn<br>
-    No5v5rvZPkbUthYT2r5M0sGP5Y+s97oLa8GA5hqyDAgE9P0d1u0uwU7Q8SF0GYfe lavijxvsWaZg5QA5og==
-    </p>
+        <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
+            {{ $firmaDigital['firma'] }}
+        </p>
+
+</div>
 @endif
 
 
@@ -377,37 +392,10 @@
 
 
 
-<!--FIRMA DIGITAL-->
-<div style="margin-left: 15px;">
-    <p class="sello">Sello de Unidad de Inspección</p>
-    <div class="images-container">
-        <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
-        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
-    </div>
-    <p class="textx" style="font-size: 9px;">
-        <strong>AUTORIZÓ</strong>
-        <span style="margin-left: 50px;">
-            <strong>{{ $data->inspectores->puesto ?? '' }} | {{ $data->inspectores->name ?? '' }}</strong>
-        </span>
-    </p>
-
-    <p class="textx" style="font-size: 9px;">
-        <strong>CADENA ORIGINAL</strong>
-        <span style="margin-left: 14px;">
-            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
-        </span>
-    </p>
-
-    <p class="textx" style="font-size: 9px; ">
-        <strong>SELLO DIGITAL</strong>
-    </p>
-
-    <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
-        {{ $firmaDigital['firma'] }}
-    </p>
 
 
-</div>
+
+
 
 
 </body>
