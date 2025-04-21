@@ -307,8 +307,7 @@
       "name": "Roles",
       "url": "find_roles",
       "icon": "menu-icon ri-user-settings-fill",
-      "slug": "find_roles",
-      "can" : "Visualizar roles"
+      "slug": "find_roles"
     },
     {
       "name": "Permisos",
