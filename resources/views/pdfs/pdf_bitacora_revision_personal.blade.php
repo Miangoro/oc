@@ -374,8 +374,8 @@
                 , FECHA Y CARGO <br>
                 DE QUIEN HACE LA REVISIÓN
             </td>
-            <td class="leftLetter" style="font-size: 8px;padding-top: 0"><b>{{ $id_revisor }}<b><br>
-                Revisión realizada el <b>{{ $fecha }}</b> el Certificado Revisión por el personal OC <b>{{ ucfirst($decision) }}</b> <div style="padding-top: 25px"></div>
+            <td class="leftLetter" style="font-size: 8px;padding-top: 0"><span class="negrita">{{ $id_revisor }}</span><br>
+                Revisión realizada el <span class="negrita">{{ $fecha }}</span> el Certificado Revisión por el personal OC <span class="negrita">{{ ucfirst($decision) }}</span> <div style="padding-top: 25px"></div>
             </td>
         </tr>
         <tr>
