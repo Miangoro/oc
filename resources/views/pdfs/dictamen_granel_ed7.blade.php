@@ -248,6 +248,7 @@
             text-align: right;
             font-size: 9px;
             line-height: 1;
+            padding-bottom: 8px;
         }
 
         .watermark {

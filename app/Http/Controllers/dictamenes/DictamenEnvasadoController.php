@@ -411,9 +411,10 @@ public function MostrarDictamenEnvasado($id_dictamen)
     $lotesGranel = $loteEnvasado ? $loteEnvasado->lotesGranel : collect(); // Si no hay, devuelve una colección vacía
     $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
+    $fecha_servicio = Helpers::formatearFecha($data->inspeccion?->fecha_servicio);
     $watermarkText = $data->estatus == 1;
     $id_sustituye = json_decode($data->observaciones, true)['id_sustituye'] ?? null;
-    $nombre_id_sustituye = $id_sustituye ? Dictamen_Envasado::find($id_sustituye)->num_dictamen ?? '' : '';
+    $nombre_id_sustituye = $id_sustituye ? Dictamen_Envasado::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
 
     // Renderizar el PDF con los lotes a granel
     $pdf = Pdf::loadView('pdfs.dictamen_envasado_ed6', [
@@ -423,6 +424,7 @@ public function MostrarDictamenEnvasado($id_dictamen)
         'lotesGranel' => $lotesGranel,
         'fecha_emision' => $fecha_emision,
         'fecha_vigencia' => $fecha_vigencia,
+        'fecha_servicio' => $fecha_servicio ?? '',
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
         'firmaDigital' => $firmaDigital,
