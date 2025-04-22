@@ -131,7 +131,7 @@
             padding: 0;
             position: absolute;
             right: 20px;
-            top: 605px;
+            top: 795px;
             font-family: 'Arial Negrita' !important;
         }
         .textx, .textsello {
@@ -311,7 +311,7 @@
             <td style="font-size: 15px;"><b>Lote de <br>Envasado</b></td>
             <td>{{ $lote->nombre ?? "No encontrada" }}</td>
             <td style="font-size: 15px;"><b>Estado <br>Productor</b></td>
-            <td></td>
+            <td>{{$envasado_en}}</td>
             <td style="font-size: 15px;"><b>Lote a <br>granel</b></td>
             <td>{{ $lote->lotesGranel->first()->nombre_lote ?? "No encontrada" }}</td>
         </tr>
@@ -321,7 +321,9 @@
             <td style="font-size: 15px;"><b>% Alc. Vol. <br>(No. análisis)</b></td>
             <td>{{ $lote->lotesGranel->first()->cont_alc ?? "No encontrada" }}% Alc. Vol.</td>
             <td style="font-size: 15px;" rowspan="2"><b>Especie de agave o maguey</b></td>
-            <td style="font-size: 15px;" rowspan="2"></td>
+            <td style="font-size: 12px;" rowspan="2">
+                {{ $lote->lotesGranel->first()->tiposRelacionados->pluck('nombre')->implode(', ') ?? 'No encontrado' }}
+            </td>
         </tr>
         <tr>
             <td style="font-size: 15px;"><b>Ingrediente</b></td>
@@ -337,8 +339,7 @@
     <div style="height: 15px"></div>
     <div>OBSERVACIONES:</div>
     
-    <div style="height: 20%"></div><!--espacio alto-->
-
+    <div style="height: 40%"></div><!--espacio alto-->
 
     <!--FIRMA DIGITAL-->
 <div style="margin-left: -20px;">
