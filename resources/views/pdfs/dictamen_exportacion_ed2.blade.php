@@ -361,7 +361,7 @@
             <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
            
         
-                @if ($firma && Storage::disk('public')->exists($firmaPath))
+                @if ($firma != null )
                     <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
                         src="{{ asset('storage/' . $firmaPath) }}">
                 @endif
