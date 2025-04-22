@@ -769,6 +769,7 @@ class RevisionPersonalController extends Controller
 
         $decision = $revisor->decision;
         $nameRevisor = $revisor->user->name ?? null;
+        $firmaRevisor = $revisor->user->firma ?? '';
         $fecha = $revisor->updated_at;
         $id_aprobador = $revisor->aprobador->name ?? 'Sin asignar';
         $aprobacion = $revisor->aprobacion ?? 'Pendiente de aprobar';
@@ -782,6 +783,7 @@ class RevisionPersonalController extends Controller
             'tipo_certificado' => $tipo_certificado,
             'decision' => $decision,
             'id_revisor' => $nameRevisor,
+            'firmaRevisor' => $firmaRevisor,
             'razon_social' => $razonSocial,
             'fecha' => Helpers::formatearFecha($fecha),
             'numero_cliente' => $numero_cliente,

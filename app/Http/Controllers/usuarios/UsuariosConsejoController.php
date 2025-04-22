@@ -116,6 +116,7 @@ class UsuariosConsejoController extends Controller
         $nestedData['firma'] = $user->firma ?? 'N/A';
         $nestedData['password_original'] = $user->password_original ;
         $nestedData['razon_social'] = 'No aplica';
+        $nestedData['estatus'] = $user->estatus;
 
         $data[] = $nestedData;
       }

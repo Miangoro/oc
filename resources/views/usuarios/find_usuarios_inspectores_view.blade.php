@@ -54,6 +54,7 @@
           <th>Contraseña</th>
           <th>Puesto</th>
           <th>Firma</th>
+          <th>Estatus</th>
           <th>Acciones</th>
         </tr>
       </thead>

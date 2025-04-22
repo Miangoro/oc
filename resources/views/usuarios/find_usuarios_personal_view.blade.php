@@ -32,6 +32,10 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+ window.puedeAgregarUsuario = @json(auth()->user()->can('Registrar usuarios'));
+</script>
+
 @vite(['resources/js/usuarios-personal.js'])
 @endsection
 
@@ -54,6 +58,7 @@
           <th>Contraseña</th>
           <th>Puesto</th>
           <th>firma</th>
+          <th>Estatus</th>
           <th>Acciones</th>
         </tr>
       </thead>

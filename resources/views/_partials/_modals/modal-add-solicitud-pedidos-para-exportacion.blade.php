@@ -129,7 +129,7 @@
                             <div class="card-body">
                                 <h6>Características del Producto</h6>
                                 <div class="row caracteristicas-row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select name="lote_envasado[0]"
                                                 class="select2 form-select evasado_export">
@@ -140,7 +140,7 @@
                                             <label for="lote_envasado">Selecciona el lote envasado</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <input type="text" disabled name="lote_granel[0]"
                                                 class="form-control lotes_granel_export">

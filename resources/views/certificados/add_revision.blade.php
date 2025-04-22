@@ -195,8 +195,9 @@
                                         @elseif($pregunta->filtro == 'lote_granel')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}</b></td>
                                         @elseif($pregunta->filtro == 'nanalisis')
-                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b><br>
-                                            </td>
+                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b></td>
+                                        @elseif($pregunta->filtro == 'nanalisis_ajuste')
+                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b></td>
                                         @elseif($pregunta->filtro == 'aduana')
                                             <td><b>
                                                     {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['aduana_salida'] ?? 'N/A' }}
@@ -254,12 +255,24 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'N/A' }}</b></td>
+                                        @elseif($pregunta->filtro == 'ingredientes')
+                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->ingredientes ?? 'N/A' }}</b></td>
+                                        @elseif($pregunta->filtro == 'edad')
+                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? 'N/A' }}</b></td>
                                         @elseif($pregunta->filtro == 'marca')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->marca->marca ?? 'N/A' }}</b></td>
                                         @elseif($pregunta->filtro == 'clase')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->clase->clase ?? 'N/A' }}</b></td>
                                         @elseif($pregunta->filtro == 'tipo_maguey')
-                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tipos ?? 'N/A' }}</b><br></td>
+                                        <td>
+                                            <b>
+                                              @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
+                                                {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
+                                              @empty
+                                                N/A
+                                              @endforelse
+                                            </b>
+                                          </td>
                                         @elseif($pregunta->filtro == 'responsable')
                                             <td><b>{{ $datos->certificado->firmante->name ?? 'N/A' }}</b></td>
                                         @elseif($pregunta->filtro == 'direccion_cidam')

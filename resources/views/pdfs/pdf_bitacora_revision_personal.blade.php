@@ -193,7 +193,7 @@
     <div style="margin-top: 15px" class="background-text">
             <table class="letra-fondo" style="width: 340px; table-layout: fixed; border-collapse: collapse;">
             <tr>
-                <td class="negrita" style="font-size: 9px; padding: 10px" colspan="4">REVISIÓN CERTIFICADO INSTALACIONES</td>
+                <td class="negrita" style="font-size: 9px; padding: 10px" colspan="4">REVISIÓN CERTIFICADO {{ $tipo_certificado }}</td>
             </tr>
             <tr>
                 <td class="negrita" style="font-size: 8px; width: 60%;">DOCUMENTO</td>
@@ -206,7 +206,7 @@
         <table style="width: 340px; table-layout: fixed; border-collapse: collapse;">
             
             @foreach ($preguntas as $pregunta)
-                @if ($pregunta['id_pregunta'] > 5)
+            @if ($pregunta['id_pregunta'] > 5 && !($pregunta['id_pregunta'] >= 18 && $pregunta['id_pregunta'] <= 22) && !($pregunta['id_pregunta'] >= 63 && $pregunta['id_pregunta'] <= 67))
                     <tr>
                         <td class="leftLetter" style="font-size: 8.5px; width: 60%;   white-space: normal;;">{{ $pregunta['pregunta'] }}</td>
                         <td style="font-size: 9.5px">{{ $pregunta['respuesta'] == 'C' ? 'C' : '------' }} </td>
@@ -265,7 +265,7 @@
             <td class="letra-fondoOPcional" style="font-size: 8.5px;">N/A</td>
         </tr>
         @foreach ($preguntas as $pregunta)
-            @if ($pregunta['id_pregunta'] >= 1 && $pregunta['id_pregunta'] <= 5)
+            @if (($pregunta['id_pregunta'] >= 1 && $pregunta['id_pregunta'] <= 5) || $pregunta['id_pregunta'] >= 18 && $pregunta['id_pregunta'] <= 22 || $pregunta['id_pregunta'] >= 63 && $pregunta['id_pregunta'] <= 67) 
                 <tr>
                     <td style="padding-top: 0; padding-bottom: 0; font-size: 8.5px;text-align: left">
                         {{ $pregunta['pregunta'] }}</td>
@@ -384,6 +384,12 @@
             <td class="letra-fondo negrita"
                 style="font-size:10px; padding-top: 0; vertical-align: top; padding-left: 0">NOMBRE, FIRMA , FECHA Y
                 CARGO <br>
+              
+    
+            @if ($firmaRevisor != '')
+                <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
+                    src="{{ asset('storage/firmas/' . $firmaRevisor) }}">
+            @endif
                 DE QUIEN TOMA LA APROBACIÓN</td>
             <td class="leftLetter" style="font-size: 8px;padding-top: 0">{{ $id_aprobador }} <br>
                 Gerente Técnico del Organismo <br>

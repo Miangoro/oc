@@ -53,6 +53,7 @@
           <th>Correo</th>
           <th>Contraseña</th>
           <th>Firma</th>
+          <th>Estatus</th>
           <th>Acciones</th>
         </tr>
       </thead>

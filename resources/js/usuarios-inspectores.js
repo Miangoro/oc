@@ -46,6 +46,8 @@ $(function () {
         { data: 'puesto' },
         {
           data: 'firma',
+          searchable: false,
+          orderable: false,
           render: function (data, type, row) {
               // Si no hay firma (N/A o vacío), muestra un mensaje de "Sin firma"
               if (data === 'N/A' || !data) {
@@ -55,6 +57,17 @@ $(function () {
               // Si hay firma, muestra la imagen con la ruta corregida
               return `<img src="/storage/firmas/${data}" alt="Firma" style="width: 100px; height: auto;" class="img-thumbnail">`;
           }
+      },
+      {
+        data: 'estatus',
+        render: function (data, type, row) {
+            if (data === 'Inactivo' || !data) {
+                return `<span class="badge rounded-pill badge text-bg-danger">${data}</span>`;
+            }else{
+              return `<span class="badge rounded-pill badge text-bg-success">${data}</span>`;
+            }
+           
+        }
       },
         { data: 'action' }
       ],

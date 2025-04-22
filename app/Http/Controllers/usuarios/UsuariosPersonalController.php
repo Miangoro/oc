@@ -70,7 +70,8 @@ class UsuariosPersonalController extends Controller
         ->where("tipo", 1)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
-
+        ->orWhere('puesto', 'LIKE', "%{$search}%")
+        ->orWhere('estatus', 'LIKE', "%{$search}%")
         ->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
@@ -80,7 +81,8 @@ class UsuariosPersonalController extends Controller
         ->where("tipo", 1)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
-
+        ->orWhere('puesto', 'LIKE', "%{$search}%")
+        ->orWhere('estatus', 'LIKE', "%{$search}%")
         ->count();
     }
 
@@ -100,8 +102,7 @@ class UsuariosPersonalController extends Controller
         $nestedData['password_original'] = $user->password_original;
         $nestedData['razon_social'] = 'No aplica';
         $nestedData['foto_usuario'] = $user->profile_photo_path ?? '';
-
-
+        $nestedData['estatus'] = $user->estatus;
         $data[] = $nestedData;
       }
     }

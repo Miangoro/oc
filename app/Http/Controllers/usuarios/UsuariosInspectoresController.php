@@ -82,7 +82,8 @@ class UsuariosInspectoresController extends Controller
         ->where("tipo",3)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
-
+        ->orWhere('puesto', 'LIKE', "%{$search}%")
+        ->orWhere('estatus', 'LIKE', "%{$search}%")
         ->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
@@ -92,7 +93,8 @@ class UsuariosInspectoresController extends Controller
         ->where("tipo",2)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
-
+        ->orWhere('puesto', 'LIKE', "%{$search}%")
+        ->orWhere('estatus', 'LIKE', "%{$search}%")
         ->count();
     }
 
@@ -112,7 +114,7 @@ class UsuariosInspectoresController extends Controller
         $nestedData['razon_social'] = 'No aplica';
         $nestedData['puesto'] = $user->puesto;
         $nestedData['foto_usuario'] = $user->profile_photo_path ?? '';
-
+        $nestedData['estatus'] = $user->estatus;
         $data[] = $nestedData;
       }
     }
