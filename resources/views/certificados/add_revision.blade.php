@@ -203,6 +203,17 @@
                                                     {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['aduana_salida'] ?? 'N/A' }}
                                                     2208.90.05.00
                                                     {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['no_pedido'] ?? 'N/A' }}
+
+                                                    @foreach ($datos->certificado->dictamen->inspeccione->solicitud->documentacion(55)->get() as $documento)
+                                                    <a target="_blank" href="/{{  $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
+                                                                'numero_cliente',
+                                                                '!=',
+                                                                null,
+                                                            )->numero_cliente}}/{{ $documento->url }}">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                    </a>
+                                                @endforeach
+                                                
                                                 </b><br></td>
                                         @elseif($pregunta->filtro == 'domicilio_insta')
                                             <td>
