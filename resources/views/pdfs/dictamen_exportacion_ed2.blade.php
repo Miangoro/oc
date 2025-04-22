@@ -334,7 +334,12 @@
         </tr>
     </table>
 
-
+     
+    @php
+    
+    $firma = $datos->firmante->firma ?? null;
+    $firmaPath = $firma ? 'firmas/' . $firma : null;
+@endphp
 
 @if($loop->last)<!--AL FINAL DE LA TABLA-->
     <div style="height: 15px"></div>
@@ -352,12 +357,7 @@
         <p class="textx" style="font-size: 9px; margin-bottom:-8px; margin-top:-2px; position: relative;">
             <strong>AUTORIZÓ</strong>
             <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
-                
-                @php
-                    use Illuminate\Support\Facades\Storage;
-                    $firma = $datos->firmante->firma ?? null;
-                    $firmaPath = $firma ? 'firmas/' . $firma : null;
-                @endphp
+           
         
                 @if ($firma && Storage::disk('public')->exists($firmaPath))
                     <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
