@@ -376,26 +376,22 @@
             </td>
             <td class="leftLetter" style="font-size: 8px;padding-top: 0"><span class="negrita">{{ $id_revisor }}</span><br>
                 {{ $puestoRevisor }}<br>
-                Revisión realizada el <span class="negrita">{{ $fecha }}</span> por el personal OC <span class="negrita">{{ ucfirst($decision) }}</span> <div style="padding-top: 25px"></div>
+                Revisión realizada el <span class="negrita">{{ $fecha }}</span> por el personal OC <span class="negrita">{{ ucfirst($decision) }}</span> <div style="padding-top: 10px"></div>
             </td>
         </tr>
         <tr>
             <td class="letra-fondo negrita"
                 style="font-size:10px; padding-top: 0; vertical-align: top; padding-left: 0">NOMBRE, FIRMA , FECHA Y
                 CARGO <br>
-              
     
                 @php
-                use Illuminate\Support\Facades\Storage;
-    
-      
-                $firmaPath = $firmaRevisor ? 'firmas/' . $firmaRevisor : null;
-            @endphp
-    
-            @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
-                <img style="position: absolute; top: 860px; left: 125; right: 0; margin: 0 auto;" height="50px"
-                    src="{{ asset('storage/' . $firmaPath) }}">
-            @endif
+                    use Illuminate\Support\Facades\Storage;
+                    $firmaPath = $firmaRevisor ? 'firmas/' . $firmaRevisor : null;
+                @endphp
+                @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
+                    <img style="position: absolute; top: 868px; left: 125; right: 0; margin: 0 auto;" height="50px"
+                        src="{{ asset('storage/' . $firmaPath) }}">
+                @endif
                 DE QUIEN TOMA LA APROBACIÓN</td>
             <td class="leftLetter" style="font-size: 8px;padding-top: 0">{{ $id_aprobador }} <br>
                 Gerente Técnico del Organismo <br>
