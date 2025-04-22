@@ -1,3 +1,9 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+    $firma = $data->firmante->firma ?? null;
+    $firmaPath = $firma ? 'firmas/' . $firma : null;
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -363,6 +369,11 @@
                     <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
                         src="{{ asset('storage/' . $firmaPath) }}">
                 @endif --}}
+
+                @if ($firma != null)
+                    <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
+                        src="{{ asset('storage/' . $firmaPath) }}">
+                @endif
 
                 <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
             </span>
