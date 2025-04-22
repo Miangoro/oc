@@ -46,7 +46,7 @@ use Illuminate\Support\Facades\Route;
               John Doe
             @endif!</span> 🎉</h4>
             <p class="mb-0">Personal del organismo certificador cidam</p><br>
-            <a href="javascript:;" class="btn btn-primary">Ver pendientes</a>
+            <!--<a href="javascript:;" class="btn btn-primary">Ver pendientes</a>-->
           </div>
         </div>
         <div class="col-md-6 text-center text-md-end order-1 order-md-2">
