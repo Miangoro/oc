@@ -1,3 +1,9 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+    $firma = $datos->firmante->firma ?? null;
+    $firmaPath = $firma ? 'firmas/' . $firma : null;
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -335,11 +341,7 @@
     </table>
 
      
-    @php
-    
-    $firma = $datos->firmante->firma ?? null;
-    $firmaPath = $firma ? 'firmas/' . $firma : null;
-@endphp
+
 
 @if($loop->last)<!--AL FINAL DE LA TABLA-->
     <div style="height: 15px"></div>
