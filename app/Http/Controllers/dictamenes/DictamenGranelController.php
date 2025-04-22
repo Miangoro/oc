@@ -405,7 +405,7 @@ public function MostrarDictamenGranel($id_dictamen)
     $fecha_servicio = Helpers::formatearFecha($data->inspeccione->fecha_servicio);
     $watermarkText = $data->estatus == 1;
     $id_sustituye = json_decode($data->observaciones, true)['id_sustituye'] ?? null;
-    $nombre_id_sustituye = $id_sustituye ? Dictamen_Granel::find($id_sustituye)->num_dictamen ?? '' : '';
+    $nombre_id_sustituye = $id_sustituye ? Dictamen_Granel::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
 
     $pdf = Pdf::loadView('pdfs.dictamen_granel_ed7', [
         'data' => $data,

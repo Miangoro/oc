@@ -26,6 +26,7 @@ use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Logo\Logo;
+use Illuminate\Support\Facades\Storage;
 
 
 class DictamenExportacionController extends Controller
@@ -390,15 +391,14 @@ public function MostrarDictamenExportacion($id_dictamen)
         ['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado 
         //Busca el registro del certificado que tiene el id igual a $id_sustituye
-        Dictamen_Exportacion::find($id_sustituye)->num_dictamen ?? '' : '';
+        Dictamen_Exportacion::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
 
     $datos = $data->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
         $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
         $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
         $no_pedido = $caracteristicas['no_pedido'] ?? '';
-        $envasado_en = $caracteristicas['id_instalacion_envasado'] ?? '';
-            $instalacion = Instalaciones::find($envasado_en);
-            $E_productor = $instalacion ? $instalacion->estados->nombre : 'No encontrado';
+        $envasado_en = $caracteristicas['id_instalacion_envasado'] ?? null;
+            $E_productor = $envasado_en ? (Instalaciones::find($envasado_en)?->estados?->nombre ?? 'No encontrado') : '';
         $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
         // Acceder a los detalles
         foreach ($detalles as $detalle) {
@@ -413,7 +413,7 @@ public function MostrarDictamenExportacion($id_dictamen)
             : collect(); // Si no hay IDs, devolvemos una colección vacía
 
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
-    
+        
 
     $pdf = Pdf::loadView('pdfs.dictamen_exportacion_ed2', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}

@@ -35,7 +35,7 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 12px;
-            padding-top: 11%;
+            padding-top: 13%;
             padding-right: 4px;
             padding-left: 4px;
         }
@@ -122,6 +122,7 @@
             background-color: #158F60;
             color: white;
             padding-bottom: 5px;
+            padding-top: 0.6px;
         }
 
         .sello {
@@ -131,7 +132,7 @@
             padding: 0;
             position: absolute;
             right: 20px;
-            top: 795px;
+            top: 800px;
             font-family: 'Arial Negrita' !important;
         }
         .textx, .textsello {
@@ -199,7 +200,7 @@
 </div>
 
 <div class="footer">
-    <p style="text-align: right; padding-right: 10%; margin-bottom: -2px;">
+    <p style="text-align: right; padding-right: 10%; padding-bottom:9px; margin-bottom: -2px;  font-family: Lucida Sans Unicode; font-size: 9px; line-height:1;">
         <!-- Aparece  solo si tiene valor -->
         @if ($id_sustituye)
         Este dictamen sustituye al: {{ $id_sustituye }}
@@ -351,9 +352,9 @@
         <p class="textx" style="font-size: 9px; margin-bottom:-8px; margin-top:-2px; position: relative;">
             <strong>AUTORIZÓ</strong>
             <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
-                {{-- @php
+                
+                @php
                     use Illuminate\Support\Facades\Storage;
-        
                     $firma = $datos->firmante->firma ?? null;
                     $firmaPath = $firma ? 'firmas/' . $firma : null;
                 @endphp
@@ -361,8 +362,8 @@
                 @if ($firma && Storage::disk('public')->exists($firmaPath))
                     <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
                         src="{{ asset('storage/' . $firmaPath) }}">
-                @endif --}}
-        
+                @endif
+
                 <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
             </span>
         </p>
@@ -390,10 +391,6 @@
     <div style="page-break-after: always;"></div>
 @endif
 @endforeach
-
-
-
-
 
 
 

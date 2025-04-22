@@ -127,7 +127,7 @@
         .images-container {
             position: relative;
             display: flex;
-            margin-top: 20px;
+            margin-top: 12px;
             margin-left: 30px;
             width: 100%;
         }
@@ -160,7 +160,7 @@
             padding: 0;
             position: absolute;
             right: 20px;
-            top: 835px;
+            top: 860px;
             font-family: 'Arial Negrita' !important;
         }
 
@@ -212,7 +212,7 @@
             font-size: 9px;
             line-height: 1;
             position: fixed;
-            bottom: -10;
+            bottom: -12;
             left: 0;
             right: 0;
             width: calc(100% - 40px);
@@ -281,7 +281,7 @@
         <div class="description1">Unidad de Inspección No. UVNOM-129</div>
         <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
         <div class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C.</div>
-        <div class="textimg font-lucida-sans-seminegrita">No.: UMC-00_/20</div><br>
+        {{-- <div class="textimg font-lucida-sans-seminegrita">No.: UMC-00_/20</div><br> --}}
 
         <div class="title">Dictamen de Cumplimiento NOM de Mezcal <br> Envasado</div><br>
 
@@ -296,31 +296,31 @@
             <tbody>
                 <tr>
                     <td class="column">Nombre de la empresa</td>
-                    <td colspan="3" style="text-align: center;">{{ $data->empresa->razon_social ?? ''}}</td>
+                    <td colspan="3" style="text-align: center;">{{ $data->inspeccion?->solicitud?->empresa?->razon_social ?? 'No encontrado' }}</td>
                 </tr>
                 <tr>
                     <td class="column">Representante legal</td>
-                    <td>{{ $data->empresa->representante ?? ''}}</td>
+                    <td>{{ $data->inspeccion?->solicitud?->empresa?->representante ?? 'No encontrado' }}</td>
                     <td class="column">Número de dictamen</td>
-                    <td>{{ $data->num_dictamen ?? ''}}</td>
+                    <td>{{ $data->num_dictamen ?? 'No encontrado'}}</td>
                 </tr>
                 <tr>
                     <td class="column">Dirección</td>
-                    <td> {{ $data->empresa->domicilio_fiscal ?? ''}}</td>
+                    <td> {{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado'}}</td>
                     <td class="column">Fecha de emisión</td>
                     <td> {{ $fecha_emision ?? ''}}</td>
                 </tr>
                 <tr>
                     <td class="column">RFC</td>
-                    <td> {{ $data->empresa->rfc ?? ''}}</td>
+                    <td> {{ $data->inspeccion?->solicitud?->empresa?->rfc ?? 'No encontrado' }}</td>
                     <td class="column">Fecha de vencimiento</td>
                     <td>{{ $fecha_vigencia ?? ''}}</td>
                 </tr>
                 <tr>
                     <td class="column">No. servicio</td>
-                    <td>{{ $data->inspeccion->num_servicio ?? 'N/A' }}</td>
+                    <td>{{ $data->inspeccion?->num_servicio ?? 'No encontrado' }}</td>
                     <td class="column">Fecha del servicio</td>
-                    <td>{{ $fecha_servicio ?? ''}}</td>
+                    <td>{{ $fecha_servicio}}</td>
                 </tr>
             </tbody>
         </table>
@@ -333,14 +333,14 @@
                     <td colspan="6" class="colum-title">PRODUCTO
                         @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->categoria->categoria ?? 'N/A' }}
+                                {{ $loteGranel->categoria->categoria ?? 'No encontrado' }}
                                 <!-- Añade una separación si es necesario -->
                                 @if (!$loop->last)
                                     ,
                                 @endif
                             @endforeach
                         @else
-                            N/A
+                            --
                         @endif
                         <br> ORIGEN
                         {{ $data->inspeccion->solicitud->instalacion->estados->nombre ?? 'N/A' }}
@@ -365,7 +365,7 @@
                         @endif
                     </td>{{-- aun no se de donde se jala --}}
                     <td rowspan="2" class="column2">No. de lote envasado</td>
-                    <td rowspan="2">{{ $data->lote_envasado->nombre_lote ?? 'N/A' }}</td>
+                    <td rowspan="2">{{ $data->lote_envasado->nombre ?? 'No encontrado' }}</td>
                     <td rowspan="2" class="column2">No. de botellas</td>
                     <td rowspan="2">{{ $data->lote_envasado->cant_botellas ?? 'N/A' }}</td>
                 </tr>
@@ -465,20 +465,27 @@
                 <tr>
                     <td class="column2">Tipo de maguey</td>
                     <td colspan="2">
-                        @if ($lotesGranel->isNotEmpty())
-                            @foreach ($lotesGranel as $loteGranel)
-                                <!-- Mostrar el nombre del tipo -->
-                                {{ $loteGranel->tipo->nombre ?? 'N/A' }}
-                                <i>{{ $loteGranel->tipo->cientifico ?? 'N/A' }}</i>
-
-                                <!-- Añade una separación si hay más elementos en el loop -->
-                                @if (!$loop->last)
-                                    ,
-                                @endif
-                            @endforeach
-                        @else
-                            N/A
-                        @endif
+                    @if ($lotesGranel->isNotEmpty())
+                        @foreach ($lotesGranel as $loteGranel)
+                            @php
+                                $tipos = $loteGranel->tiposRelacionados ?? collect();
+                            @endphp
+                
+                            @if ($tipos->isNotEmpty())
+                                @foreach ($tipos as $tipo)
+                                    {{ $tipo->nombre }} <i>({{ $tipo->cientifico }})</i>@if (!$loop->last), @endif
+                                @endforeach
+                            @else
+                                No encontrado
+                            @endif
+                
+                            @if (!$loop->last)
+                             ,
+                            @endif
+                        @endforeach
+                    @else
+                        N/A
+                    @endif
                     </td>
                     <td class="column2">Marca</td>
                     <td colspan="2">{{ $marca->marca ?? 'N/A' }}</td>
@@ -491,79 +498,45 @@
             especificaciones.</p>
 
 
-        {{-- <p class="sello">Sello de Unidad de Inspección</p>
-        <div class="images-container">
-            <img src="{{ public_path('img_pdf/qr_umc-074.png') }}" alt="Logo UVEM" width="90px">
-            <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
-        </div>
-        <p class="textx" style="font-size: 10px; margin: 1;">
-            <strong style="margin-left: 30px";>AUTORIZÓ</strong>
-            <span style="margin-left: 50px;">
-                <strong>Gerente Técnico Sustituto de la Unidad de Inspección |
-                    {{ $data->inspectores->name ?? 'N/A' }}</strong>
-            </span>
-        </p>
-
-        <p class="textx" style="font-size: 10px; margin: 1;">
-            <strong style="margin-left: 30px">Cadena Origina</strong>
-            <span style="margin-left: 29px;">
-                <strong>UMG-159/2024|2024-06-26|UMS-1094/2024</strong>
-            </span>
-        </p>
-
-        <p class="textx" style="font-size: 10px; margin: 1;">
-            <strong style="margin-left: 30px">Sello Digital</strong>
-        </p>
-
-        <p class = "textsello">e2N1P+r+E79e0YxKzS/jMssKuASlmYXy2ppP+2PJN8vKUeFRxYTSY99MEWrgiHOnA
-            N3pLUrdUBiD39v25Y648G4TK5qQ0LwZPLofRmjRQ2Ty5rHlDwnPRm37zaOkMjkRD<br>
-            xC0ikyHPD+T3EFhEc9sgAFI6bZUd88yevfS+ZFZ7j9f5EA44Sz76jsN3P4e7lyePHmNz
-            Jxg5ZupHICg5xBZu5ygOniMZNbzG6w0ZDPL58yoMQK1JDi8lwwiGJBaCNHN6krn<br>
-            No5v5rvZPkbUthYT2r5M0sGP5Y+s97oLa8GA5hqyDAgE9P0d1u0uwU7Q8SF0GYfe lavijxvsWaZg5QA5og==
-        </p>
-
-        <div class="footer-bar">
-            <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
-            <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341.
-                Morelia Michoacán</p>
-        </div> 
-
-
-        <p class="pie">Entrada en vigor: 15-07-2024<br>
-            F-UV-04-17 Ver 6.
-        </p>
-    </div>  --}}
-
-
 <!--FIRMA DIGITAL-->
-<div style="margin-left: 15px;">
+<div style="margin-left: -5px;">
     <p class="sello">Sello de Unidad de Inspección</p>
-    <div class="images-container">
-        <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
-        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
-    </div>
-    <p class="textx" style="font-size: 9px;">
-        <strong>AUTORIZÓ</strong>
-        <span style="margin-left: 50px;">
-            <strong>{{ $data->inspectores->puesto ?? '' }} | {{ $data->inspectores->name ?? '' }}</strong>
-        </span>
-    </p>
+        <div class="images-container">
+            <img src="{{ $qrCodeBase64 }}" alt="QR" width="90px">
+            <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Logo UI" class="image-right">
+        </div>
+        <p class="textx" style="font-size: 9px; margin-bottom:-8px; margin-top:-2px; position: relative;">
+            <strong>AUTORIZÓ</strong>
+            <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
+                @php
+                    use Illuminate\Support\Facades\Storage;
+                    $firma = $data->inspectores->firma ?? null;
+                    $firmaPath = $firma ? 'firmas/' . $firma : null;
+                @endphp
+        
+                @if ($firma && Storage::disk('public')->exists($firmaPath))
+                    <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
+                        src="{{ asset('storage/' . $firmaPath) }}">
+                @endif
+        
+                <strong>{{ $data->inspectores->puesto ?? '' }} | {{ $data->inspectores->name ?? '' }}</strong>
+            </span>
+        </p>
+        
+        <p class="textx" style="font-size: 9px; margin-bottom:-8px">
+            <strong>CADENA ORIGINAL</strong>
+            <span style="margin-left: 14px;">
+                <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+            </span>
+        </p>
 
-    <p class="textx" style="font-size: 9px;">
-        <strong>CADENA ORIGINAL</strong>
-        <span style="margin-left: 14px;">
-            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
-        </span>
-    </p>
+        <p class="textx" style="font-size: 9px; margin-bottom:1px">
+            <strong>SELLO DIGITAL</strong>
+        </p>
 
-    <p class="textx" style="font-size: 9px; ">
-        <strong>SELLO DIGITAL</strong>
-    </p>
-
-    <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
-        {{ $firmaDigital['firma'] }}
-    </p>
-
+        <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
+            {{ $firmaDigital['firma'] }}
+        </p>
 
     <div class="footer-bar">
         <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
@@ -571,13 +544,14 @@
             Morelia Michoacán</p>
     </div> 
 
-
     <p class="pie">Entrada en vigor: 15-07-2024<br>
         F-UV-04-17 Ver 6.
     </p>
-
+    
 </div>
 
-</body>
 
+
+
+</body>
 </html>
