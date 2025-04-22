@@ -450,6 +450,7 @@ $(function () {
       $('#add-user-email').val(data.email);
       $('#add-estatus').val(data.estatus).change();
       $('#id_empresa').val(data.id_empresa).prop('selected', true).change();
+      $('#rol_id').val(data.rol).prop('selected', true).change();
     });
   });
 

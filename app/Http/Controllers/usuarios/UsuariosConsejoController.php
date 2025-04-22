@@ -9,6 +9,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Spatie\Permission\Models\Role;
 
 class UsuariosConsejoController extends Controller
 {
@@ -38,6 +39,7 @@ class UsuariosConsejoController extends Controller
        $verified = 5;
        $notVerified = 10;
        $userDuplicates = 40;
+       $roles = Role::All();
 
        return view('usuarios.find_usuarios_consejo_view', [
            'totalUser' => $userCount,
@@ -45,6 +47,7 @@ class UsuariosConsejoController extends Controller
            'notVerified' => $notVerified,
            'userDuplicates' => $userDuplicates,
            'User' => $User,
+           'roles' => $roles
 
        ]);
    }
@@ -203,7 +206,7 @@ class UsuariosConsejoController extends Controller
                   'firma' => $firmaPath, // Guardar la firma nueva o existente
               ]
           );
-
+          $users->syncRoles($request->rol_id); 
           return response()->json('Modificado');
       } else {
           // Crear nuevo usuario si el correo no existe
@@ -221,7 +224,7 @@ class UsuariosConsejoController extends Controller
                   'tipo' => 4, // Tipo de usuario
                   'firma' => $firmaPath, // Guardar la firma si existe
               ]);
-
+              $users->syncRoles($request->rol_id); 
               return response()->json('Registrado');
           } else {
               return response()->json(['message' => 'Ya existe'], 422);
@@ -251,6 +254,7 @@ class UsuariosConsejoController extends Controller
   public function edit($id): JsonResponse
   {
     $user = User::findOrFail($id);
+    $user->rol = $user->getRoleNames()->first(); // o ->toArray() si quieres todos
     return response()->json($user);
   }
 

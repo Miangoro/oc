@@ -95,7 +95,7 @@
           "url": "solicitudes-historial?abrirModal=nuevaSolicitud",
           "name": "Nueva solicitud",
           "slug": "solicitudes-historial2",
-          "can" : "Registrar solicitud"
+          "can" : "Registrar solicitudes"
         },
         {
           "url": "solicitudes-historial",
