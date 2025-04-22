@@ -375,7 +375,8 @@
                 DE QUIEN HACE LA REVISIÓN
             </td>
             <td class="leftLetter" style="font-size: 8px;padding-top: 0"><span class="negrita">{{ $id_revisor }}</span><br>
-                Revisión realizada el <span class="negrita">{{ $fecha }}</span> el Certificado Revisión por el personal OC <span class="negrita">{{ ucfirst($decision) }}</span> <div style="padding-top: 25px"></div>
+                {{ $puestoRevisor }}<br>
+                Revisión realizada el <span class="negrita">{{ $fecha }}</span> por el personal OC <span class="negrita">{{ ucfirst($decision) }}</span> <div style="padding-top: 25px"></div>
             </td>
         </tr>
         <tr>
@@ -392,7 +393,7 @@
             @endphp
     
             @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
-                <img style="position: absolute; top: 845px; left: 125; right: 0; margin: 0 auto;" height="50px"
+                <img style="position: absolute; top: 860px; left: 125; right: 0; margin: 0 auto;" height="50px"
                     src="{{ asset('storage/' . $firmaPath) }}">
             @endif
                 DE QUIEN TOMA LA APROBACIÓN</td>
