@@ -38,31 +38,31 @@ $(document).ready(function () {///flatpickr
 //FUNCION FECHAS
 $('#fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+  fechaInicial.setDate(fechaInicial.getDate() + 90); // +90 días
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0];
   $('#fecha_vigencia').val(fechaVigencia);
   flatpickr("#fecha_vigencia", {
       dateFormat: "Y-m-d",
-      enableTime: false,  
-      allowInput: true,  
-      locale: "es",     
-      static: true,      
-      disable: true          
+      enableTime: false,
+      allowInput: true,
+      locale: "es",
+      static: true,
+      disable: true
   });
 });
-//FUNCION FECHAS EDIT
+// FUNCION FECHAS EDIT
 $('#edit_fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+  fechaInicial.setDate(fechaInicial.getDate() + 90); // +90 días
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0];
   $('#edit_fecha_vigencia').val(fechaVigencia);
   flatpickr("#edit_fecha_vigencia", {
-      dateFormat: "Y-m-d",  
-      enableTime: false,   
-      allowInput: true,  
-      locale: "es",  
-      static: true,   
-      disable: true  
+      dateFormat: "Y-m-d",
+      enableTime: false,
+      allowInput: true,
+      locale: "es",
+      static: true,
+      disable: true
   });
 });
 
@@ -101,7 +101,7 @@ initializeSelect2(select2Elements);
 
 ///FUNCIONALIDAD DE LA VISTA datatable
 if (dt_user_table.length) {
-  var dt_user = dt_user_table.DataTable({
+  var dataTable = dt_user_table.DataTable({
        processing: true,
        serverSide: true,
        ajax: {
@@ -110,11 +110,11 @@ if (dt_user_table.length) {
        columns: [
          { data: '' }, // (0)
          { data: 'num_certificado' },//(1)
-         { data: null, //soli y serv.
+         { data: '',/*null, //soli y serv.
             render: function(data, type, row) {
             return `<span style="font-size:14px"> <strong>${data.folio}</strong><br>
                 ${data.n_servicio}<span>`;
-            }
+            }*/
          },
          {data: null, // Se usará null porque combinaremos varios valores
           render: function(data, type, row) {
@@ -124,9 +124,8 @@ if (dt_user_table.length) {
               `;
             }
          },
-         { data: 'fechas' }, //
-         { data: '' },//solicitud
-         { data: 'dictamen' },
+         { data: '' },
+         { data: 'fechas' }, 
          { data: '' },//Revisores
          { data: 'action' }
        ],
@@ -147,63 +146,98 @@ if (dt_user_table.length) {
           render: function (data, type, full, meta) {
             var $num_certificado = full['num_certificado'];
             var $id = full['id_certificado'];
-            return '<span class="fw-bold">' + $num_certificado + '</span>' +
-                '<i data-id="' +$id+ '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+            return '<small class="fw-bold">' + $num_certificado + '</small>' +
+                '<i data-id="' +$id+ '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
+                `<br><span class="fw-bold">Solicitud:</span> <i data-id="${full['id_certificado']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+              }
+        }, 
+        {
+        //Tabla 2
+          targets: 2,
+          searchable: true,
+          orderable: true,
+          render: function (data, type, full, meta) {
+            var $num_servicio = full['num_servicio'];
+            var $folio_solicitud = full['folio_solicitud'];
+            if ( full['url_acta'] == 'Sin subir' ) {
+              var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
+            }else {
+              var $acta = full['url_acta'].map(url => `
+                <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
+                   class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
+                   data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+                </i>
+              `).join('');//concatena en un string.
+            }
+
+            return `
+            <span class="fw-bold">Servicio:</span> ${$num_servicio}
+              <span>${$acta}</span>
+            <br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud}
+              <i data-id="${full['id_solicitud']}" data-folio="${$folio_solicitud}"
+                class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
+                data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+              </i> 
+            `;
           }
         }, 
-        /*{
-        //Tabla 3
-          targets: 3,
-          render: function (data, type, full, meta) {
-            var $num_certificado = full['num_certificado'];
-            return '<span>' + $num_certificado + '</span>';
-          }
-        },*/ 
         {
-        targets: 4,
-        searchable: true,
-        render: function (data, type, full, meta) {
-          var $fech = full['fechas'];
-          return '<span class="small">' + $fech + '</span>';
-          }
+          targets: 4,
+          searchable: false,
+          orderable: false,
+          responsivePriority: 4, 
+          render: function (data, type, full, meta) {
+            var $ = full[''];
+            return '<span class="small">   </span>';
+            }
         },
         {
-          ///PDF SOLICITUDDD
           targets: 5,
           searchable: false,
           orderable: false,
           className: 'text-center',
           render: function (data, type, full, meta) {
-            var $id = full['id_certificado'];
-            return '<i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdfSolicitud" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+            var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
+            var $fecha_vigencia = full['fecha_vigencia'] ?? 'No encontrado';
+            return `
+                <div>
+                    <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span></div>
+                    <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span></div>
+                    <div class="small">${full['diasRestantes']}</div>
+                </div> `;
           }
         },
         {
         targets: 6,
+        searchable: true,
+        orderable: true,
+        className: 'text-center',
         render: function (data, type, full, meta) {
-          /*var $id_dictamen = full['no_dictamen'];
-          return '<span>' + $id_dictamen + '</span>';*/
-          var $id_dictamen = full['dictamen'];
-            return '<i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdfDictamen" data-id="' + $id_dictamen + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
-        }
-        }, 
-        {
-        targets: 7,
-        render: function (data, type, full, meta) {
-          //var $id_dictamen = full['no_dictamen'];
+          //estatus
+          var $estatus = full['estatus'];
+          var $fecha_actual = full['fecha_actual'];
+          var $vigencia = full['vigencia'];
+          let estatus;
+            if ($fecha_actual > $vigencia) {
+              estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
+            } else if ($estatus == 1) {
+                estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
+            } else if ($estatus == 2) {
+                estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+            } else {
+              estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
+            }
+          //revisores
           var id_revisor = full['id_revisor'];   // Obtener el id_revisor
           var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
-  
           // Mensajes para los revisores
           var revisorPersonal, revisorMiembro;
-  
           // Para el revisor personal
           if (id_revisor !== 'Sin asignar') {
               revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Revisión OC:</strong> ${id_revisor}</span>`;
           } else {
               revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Revisión OC:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
           }
-  
           // Para el revisor miembro
           if (id_revisor2 !== 'Sin asignar') {
               revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Revisión Consejo:</strong> ${id_revisor2}</span>`;
@@ -212,12 +246,12 @@ if (dt_user_table.length) {
           }
   
           // Retorna los revisores en formato HTML
-          return `
-              <div style="display: flex; flex-direction: column;">
+          return estatus+
+            ` <div style="display: flex; flex-direction: column; align-items: flex-start;">
                   <div style="display: inline;">${revisorPersonal}</div>
                   <div style="display: inline;">${revisorMiembro}</div>
               </div>
-          `;
+            `;
         }
         },
  
@@ -234,10 +268,10 @@ if (dt_user_table.length) {
                 (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
                 '</button>' +
                   '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                    `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#editCerExpor" href="javascript:;" class="dropdown-item edit-record text-dark"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+                    `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
                     `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-dark"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
                     `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor" class="dropdown-item waves-effect text-black reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
-                    `<a data-id="${full['id_certificado']}" class="dropdown-item delete-record  waves-effect text-black"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
+                    `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
                   '<div class="dropdown-menu dropdown-menu-end m-0">' +
                     '<a href="' + userView + '" class="dropdown-item">View</a>' +
                     '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
@@ -433,7 +467,7 @@ if (dt_user_table.length) {
            attr: {
             'data-bs-toggle': 'modal',
             'data-bs-dismiss': 'modal',
-            'data-bs-target': '#addCerExpor'
+            'data-bs-target': '#ModalAgregar'
            }
          }
        ],
@@ -444,7 +478,7 @@ if (dt_user_table.length) {
         display: $.fn.dataTable.Responsive.display.modal({
           header: function (row) {
             var data = row.data();
-            return 'Detalles de ' + data['id_dictamen'];
+            return 'Detalles de ' + data['num_certificado'];
             //return 'Detalles del ' + 'Dictamen';
           }
         }),
@@ -472,46 +506,51 @@ if (dt_user_table.length) {
         }
       }
     }
- 
+
        
   });
 }// end-datatable
 
  
  
-
 ///AGREGAR NUEVO REGISTRO
-// validating form and updating user's data
-//const NuevoDictamenExport = document.getElementById('NuevoDictamenExport');
-
+//const form = document.getElementById('FormAgregar');
 //Validación del formulario por "name"
-const fv = FormValidation.formValidation(NuevoCertificadoExport, {
+const fv = FormValidation.formValidation(FormAgregar, {
     fields: {
         num_certificado: {
             validators: {
                 notEmpty: {
-                    message: 'Introduzca el no. de certificado'
+                    message: 'El número de certificado es obligatorio.'
                 }
             }
         },
         id_dictamen: {
           validators: {
               notEmpty: {
-                  message: 'Seleccione una opcion'
+                  message: 'El número de dictamen es obligatorio.'
               }
           }
         },
         fecha_emision: {
             validators: {
                 notEmpty: {
-                    message: 'Seleccione una fecha'
+                  message: 'La fecha de emisión es obligatoria.',
+                },
+                date: {
+                  format: 'YYYY-MM-DD',
+                  message: 'Ingresa una fecha válida (yyyy-mm-dd).',
                 }
             }
         },
         fecha_vigencia: {
             validators: {
                 notEmpty: {
-                    message: 'Seleccione una fecha'
+                  message: 'La fecha de vigencia es obligatoria.',
+                },
+                date: {
+                  format: 'YYYY-MM-DD',
+                  message: 'Ingresa una fecha válida (yyyy-mm-dd).',
                 }
             }
         },
@@ -528,17 +567,16 @@ const fv = FormValidation.formValidation(NuevoCertificadoExport, {
     plugins: {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
-            eleValidClass: '',
-            rowSelector: function (field, ele) {
-                return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
-            }
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'//clases del formulario
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
     }
 }).on('core.form.valid', function (e) {
 
-  var formData = new FormData(NuevoCertificadoExport);
+  var formData = new FormData(FormAgregar);
     $.ajax({
         url: '/creaCerExp',
         type: 'POST',
@@ -547,32 +585,32 @@ const fv = FormValidation.formValidation(NuevoCertificadoExport, {
         contentType: false,
         success: function (response) {
           console.log('Error222:', response);
-            $('#addCerExpor').modal('hide');//modal
-            $('#NuevoCertificadoExport')[0].reset();//formulario
+            $('#ModalAgregar').modal('hide');//modal
+            $('#FormAgregar')[0].reset();//formulario
   
             // Actualizar la tabla sin reinicializar DataTables
-      //es lo mismo que abajo$('.datatables-users').DataTable().ajax.reload();
-            dt_user.ajax.reload();
+            dataTable.ajax.reload();
             // Mostrar alerta de éxito
             Swal.fire({
                 icon: 'success',
                 title: '¡Éxito!',
                 text: response.success,
                 customClass: {
-                    confirmButton: 'btn btn-success'
+                  confirmButton: 'btn btn-primary'
                 }
             });
         },
         error: function (xhr) {
           console.log('Error:', xhr);
+          console.log('Error2:', xhr.responseText);
             // Mostrar alerta de error
             Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: '¡Error al registrar!',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
-                }
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al registrar.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
             });
         }
     });
@@ -581,7 +619,7 @@ const fv = FormValidation.formValidation(NuevoCertificadoExport, {
 
 
 ///ELIMINAR REGISTRO
-$(document).on('click', '.delete-record', function () {//clase del boton "eliminar"
+$(document).on('click', '.eliminar', function () {//clase del boton "eliminar"
   var id_certificado = $(this).data('id'); //ID de la clase
   var dtrModal = $('.dtr-bs-modal.show');
 
@@ -596,16 +634,15 @@ $(document).on('click', '.delete-record', function () {//clase del boton "elimin
       text: 'No podrá revertir este evento',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
+      confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+      cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
       customClass: {
-          confirmButton: 'btn btn-primary me-3',
-          cancelButton: 'btn btn-label-secondary'
+        confirmButton: 'btn btn-primary me-2',
+        cancelButton: 'btn btn-danger'
       },
       buttonsStyling: false
   }).then(function (result) {
       if (result.isConfirmed) {
-        
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
@@ -614,43 +651,41 @@ $(document).on('click', '.delete-record', function () {//clase del boton "elimin
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           success: function () {
-              // Actualizar la tabla después de eliminar el registro
-              dt_user.draw();
-
+            dataTable.draw(false);//Actualizar la tabla, "null,false" evita que vuelva al inicio
               // Mostrar SweetAlert de éxito
               Swal.fire({
-                  icon: 'success',
-                  title: '¡Eliminado!',
-                  text: '¡El Certificado ha sido eliminado correctamente!',
-                  customClass: {
-                      confirmButton: 'btn btn-success'
-                  }
-              });
+              icon: 'success',
+              title: '¡Exito!',
+              text: response.message,
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              }
+            });
           },
           error: function (error) {
-              console.log(error);
-              // Mostrar SweetAlert de error
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: 'No se pudo eliminar el certificado. Inténtelo más tarde.',
-                  footer: `<pre>${error.responseText}</pre>`,
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
+            console.log('Error:', error);
+            // Mostrar SweetAlert de error
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al eliminar.',
+              //footer: `<pre>${error.responseText}</pre>`,
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
           }
         });
 
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         // Acción cancelada, mostrar mensaje informativo
         Swal.fire({
-            title: 'Cancelado',
-            text: 'La eliminación del Certificado ha sido cancelada',
-            icon: 'info',
-            customClass: {
-                confirmButton: 'btn btn-primary'
-            }
+          title: '¡Cancelado!',
+          text: 'La eliminación ha sido cancelada.',
+          icon: 'info',
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
         });
       }
   });
@@ -658,79 +693,106 @@ $(document).on('click', '.delete-record', function () {//clase del boton "elimin
 
 
 
-///EDITAR REGISTRO
+// Función para cargar los datos
 $(document).ready(function() {
   // Abrir el modal y cargar datos para editar
-  $('.datatables-users').on('click', '.edit-record', function() {//clase del boton "editar"
-      var id_certificado = $(this).data('id');//ID de la clase
+  $(document).on('click', '.editar', function () {//clase del boton "editar"
+      var id_certificado = $(this).data('id');
+      $('#edit_id_certificado').val(id_certificado);
 
-      // Realizar la solicitud AJAX para obtener los datos de la clase
-      $.get('/editCerExp/' + id_certificado + '/edit', function(data) {
-        
-          // Rellenar el formulario con los datos obtenidos
-          $('#id_certificado').val(data.id_certificado);
-          $('#edit_num_certificado').val(data.num_certificado);
-          $('#edit_id_dictamen').val(data.id_dictamen).prop('selected', true).change();
-          //$('#edit_id_dictamen').val(data.id_dictamen).trigger('change');
-          $('#edit_fecha_emision').val(data.fecha_emision);
-          $('#edit_fecha_vigencia').val(data.fecha_vigencia);
-          $('#edit_id_firmante').val(data.id_firmante).trigger('change');//funcion en select
-          //$('#edit_id_firmante').val(data.id_firmante).prop('selected', true).change();
-          
-          // Mostrar el modal de edición
-          $('#editCerExpor').modal('show');
-      }).fail(function() {
-          Swal.fire({
+      $.ajax({
+          url: '/editCerExp/' + id_certificado + '/edit',
+          method: 'GET',
+          success: function (datos) {
+              // Asignar valores a los campos del formulario
+              //$('#edit_id_certificado').val(datos.id_certificado).trigger('change');
+              $('#edit_num_certificado').val(datos.num_certificado);
+              $('#edit_id_dictamen').val(datos.id_dictamen).trigger('change');
+              $('#edit_fecha_emision').val(datos.fecha_emision);
+              $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
+              $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();
+            //$('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');//funciona igual que arriba
+            
+              flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
+                dateFormat: "Y-m-d",
+                enableTime: false,
+                allowInput: true,
+                locale: "es"
+              });
+              // Mostrar el modal
+              $('#ModalEditar').modal('show');
+          },
+          error: function (error) {
+            console.error('Error al cargar los datos:', error);
+            Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              text: 'Error al obtener los datos',
+              text: 'Error al cargar los datos.',
               customClass: {
                 confirmButton: 'btn btn-danger'
               }
-          });
+            });
+          }
       });
   });
 
   // Manejar el envío del formulario de edición
-  $('#EditarCertificadoExport').on('submit', function(e) {
+  $('#FormEditar').on('submit', function(e) {
       e.preventDefault();
-
       var formData = $(this).serialize();
-      var id_certificado = $('#id_certificado').val();//Obtener el ID del registro desde el campo oculto
+      var id_certificado = $('#edit_id_certificado').val();//Obtener el ID del registro desde el campo oculto
 
       $.ajax({
           url: '/editCerExp/' + id_certificado,
           type: 'PUT',
           data: formData,
           success: function(response) {
-              $('#editCerExpor').modal('hide'); // Ocultar el modal de edición
-              $('#EditarCertificadoExport')[0].reset(); // Limpiar el formulario
+              $('#ModalEditar').modal('hide'); // Ocultar el modal de edición
+              $('#FormEditar')[0].reset(); // Limpiar el formulario
               // Mostrar alerta de éxito
               Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: response.success,
-                  customClass: {
-                      confirmButton: 'btn btn-success'
-                  }
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.message,
+                customClass: {
+                  confirmButton: 'btn btn-primary'
+                }
               });
-              // Recargar los datos en la tabla sin reinicializar DataTables
-              $('.datatables-users').DataTable().ajax.reload();
+
+              dataTable.ajax.reload(null, false);//Recarga los datos del datatable, "null,false" evita que vuelva al inicio
           },
-          error: function(xhr) {
-            console.log('Error:', xhr.responseText);
-              // Mostrar alerta de error
+          error: function (xhr) {
+            //error de validación del lado del servidor
+            if (xhr.status === 422) {
+              var errors = xhr.responseJSON.errors;
+              var errorMessages = Object.keys(errors).map(function (key) {
+                return errors[key].join('<br>');
+              }).join('<br>');
+              /*var errorMessages = Object.values(errors).map(msgArray => 
+                msgArray.join('<br>')).join('<br><hr>');*/
+
               Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: '¡Error al actualizar el certificado!',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
+                icon: 'error',
+                title: '¡Error!',
+                html: errorMessages,
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
               });
+            } else {//otro tipo de error
+              Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al actualizar.',
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
+            }
           }
       });
   });
+
 });
 
 

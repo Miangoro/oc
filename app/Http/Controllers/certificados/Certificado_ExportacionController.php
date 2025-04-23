@@ -56,7 +56,7 @@ public function index(Request $request)
 
     if (empty($request->input('search.value'))) {
         // ORDENAR EL BUSCADOR "thead"
-        $users = Certificado_Exportacion::where('id_dictamen', 'LIKE', "%{$request->input('search.value')}%")
+        $users = Certificado_Exportacion::where('id_certificado', 'LIKE', "%{$request->input('search.value')}%")
         ->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
@@ -67,8 +67,8 @@ public function index(Request $request)
     $search = $request->input('search.value');
 
     // Consulta con filtros
-    $query = Certificado_Exportacion::where('id_dictamen', 'LIKE', "%{$search}%")
-    ->where("id_dictamen", 1)
+    $query = Certificado_Exportacion::where('id_certificado', 'LIKE', "%{$search}%")
+    ->where("id_certificado", 1)
     ->orWhere('num_certificado', 'LIKE', "%{$search}%");
 
     $users = $query->offset($start)
@@ -76,8 +76,8 @@ public function index(Request $request)
         ->orderBy($order, $dir)
         ->get();
 
-    $totalFiltered = Certificado_Exportacion::where('id_dictamen', 'LIKE', "%{$search}%")
-        ->where("id_dictamen", 1)
+    $totalFiltered = Certificado_Exportacion::where('id_certificado', 'LIKE', "%{$search}%")
+        ->where("id_certificado", 1)
         ->orWhere('num_certificado', 'LIKE', "%{$search}%")
         ->count();
     }
@@ -88,12 +88,14 @@ public function index(Request $request)
     if (!empty($users)) {
         foreach ($users as $certificado) {
             $nestedData['id_certificado'] = $certificado->id_certificado ?? 'No encontrado';
-            $nestedData['dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
             $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
+            $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
             $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
+            $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
+            $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
             ///Folio y no. servicio
-            $nestedData['folio'] = $certificado->dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
-            $nestedData['n_servicio'] = $certificado->dictamen->inspeccione->num_servicio ?? 'No encontrado';
+            $nestedData['num_servicio'] = $certificado->dictamen->inspeccione->num_servicio ?? 'No encontrado';
+            $nestedData['folio_solicitud'] = $certificado->dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
             //Nombre y Numero empresa
             $empresa = $certificado->dictamen->inspeccione->solicitud->empresa ?? null;
             $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
@@ -101,13 +103,34 @@ public function index(Request $request)
                 ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
             $nestedData['numero_cliente'] = $numero_cliente;
             $nestedData['razon_social'] = $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
-            //Fecha emisión y vigencia
-            $fecha_emision = Helpers::formatearFecha($certificado->fecha_emision);
-            $fecha_vigencia = Helpers::formatearFecha($certificado->fecha_vigencia);
-            $nestedData['fechas'] = '<b>Expedición: </b>' .$fecha_emision. '<br> <b>Vigencia: </b>' .$fecha_vigencia;
             //Revisiones
             $nestedData['id_revisor'] = $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar';
             $nestedData['id_revisor2'] = $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar';
+            ///dias vigencia
+            $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
+            $nestedData['fecha_actual'] = $fechaActual;
+            $nestedData['vigencia'] = $certificado->dictamen->fecha_vigencia;
+            $fechaVigencia = Carbon::parse($certificado->dictamen->fecha_vigencia)->startOfDay();
+                if ($fechaActual->isSameDay($fechaVigencia)) {
+                    $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este certificado</span>";
+                } else {
+                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+                    if ($diasRestantes > 0) {
+                        if ($diasRestantes > 15) {
+                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
+                        } else {
+                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
+                        }
+                        $nestedData['diasRestantes'] = $res;
+                    } else {
+                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                    }
+                }
+            ///solicitud y acta
+            $nestedData['id_solicitud'] = $certificado->dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
+            $urls = $certificado->dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
+            $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
+            
             
             $data[] = $nestedData;
         }

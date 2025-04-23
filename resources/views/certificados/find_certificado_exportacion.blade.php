@@ -12,9 +12,13 @@
   'resources/assets/vendor/libs/@form-validation/form-validation.scss',
   'resources/assets/vendor/libs/animate-css/animate.scss',
   'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
+  //Animacion "loading"
+  'resources/assets/vendor/libs/spinkit/spinkit.scss',
+  //calendario1
   'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss',
-//Animacion "loading"
-  'resources/assets/vendor/libs/spinkit/spinkit.scss'
+  //calendario2
+  'resources/assets/vendor/libs/flatpickr/flatpickr.scss',
+  'resources/assets/vendor/libs/pickr/pickr-themes.scss',
 ])
 @endsection
 
@@ -30,13 +34,18 @@
   'resources/assets/vendor/libs/cleavejs/cleave.js',
   'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
   'resources/assets/vendor/libs/sweetalert2/sweetalert2.js',
+  //calendario1
   'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js',
+  //calendario2
+  'resources/assets/vendor/libs/flatpickr/flatpickr.js',
+  'resources/assets/vendor/libs/pickr/pickr.js',
+  'resources/assets/vendor/libs/flatpickr/l10n/es.js' // Archivo local del idioma
 ])
 @endsection
 
 <!-- Page Scripts -->
 @section('page-script')
-@vite(['resources/js/certificados_exportacion.js'])
+  @vite(['resources/js/certificados_exportacion.js'])
 @endsection
 
 @section('content')
@@ -54,12 +63,11 @@
             <thead class="table-dark">
                 <tr>
                     <th></th>
-                    <th>No. certificado</th>
+                    <th>No. certificado / Solicitud</th>
                     <th>Solicitud /<br>no. servicio</th>
                     <th>Cliente</th>
+                    <th>Características</th>
                     <th>Fechas</th>
-                    <th>Solicitud</th>
-                    <th>Dictamen</th>
                     <th>Estatus</th>
                     <th>ACCIONES</th>
                 </tr>

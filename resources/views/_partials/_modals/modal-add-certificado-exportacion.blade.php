@@ -1,19 +1,19 @@
-<!-- Add New Certificado Exportación -->
-<div class="modal fade" id="addCerExpor" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-simple">
+<!-- MODAL AGREGAR -->
+<div class="modal fade" id="ModalAgregar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Crear nuevo Certificado de Exportación</h4>
-                </div>
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Nuevo certificado de exportación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-                <form id="NuevoCertificadoExport">
+            <div class="modal-body">
+                <form id="FormAgregar" method="POST">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="form-select select2" name="id_dictamen" data-placeholder="Seleccione un dictamen">
+                                <select class="form-select select2" name="id_dictamen" data-placeholder="Selecciona un dictamen">
                                     <option value="" disabled selected>NULL</option>
                                     @foreach ($dictamen as $dic)
                                         <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | </option>
@@ -27,19 +27,19 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" name="num_certificado" placeholder="no. certificado">
+                                <input type="text" class="form-control" name="num_certificado" placeholder="No. de certificado">
                                 <label for="">No. de certificado</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select class="select2 form-select" name="id_firmante">
-                                    <option value="" disabled selected>Seleccione un firmante</option>
+                                    <option value="" disabled selected>Selecciona un firmante</option>
                                     @foreach($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
                                 </select>
-                                <label for="">Seleccione un firmante</label>
+                                <label for="">Selecciona un firmante</label>
                             </div>
                         </div>
                     </div>
@@ -47,25 +47,25 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                            <input type="text" class="form-control datepicker" name="fecha_emision"
-                                id="fecha_emision">
+                                <input class="form-control flatpickr-datetime" id="fecha_emision" name="fecha_emision"
+                                placeholder="YYYY-MM-DD">
                                 <label for="">Fecha de emisión</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="date" class="form-control datepicker" name="fecha_vigencia"
-                                id="fecha_vigencia" readonly />
-                                <label for="">Vigencia hasta</label>
+                                <input class="form-control" id="fecha_vigencia" name="fecha_vigencia" readonly
+                                    placeholder="YYYY-MM-DD">
+                                <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
                     </div>
 
-
-            <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                <button type="submit" class="btn btn-primary">Registrar</button>
-                <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-            </div>
+                    <div class="d-flex mt-6 justify-content-center">
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -73,20 +73,21 @@
 </div>
 
 
-<!-- Editar Certificado Exportación  -->
-<div class="modal fade" id="editCerExpor" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+
+<!-- MODAL EDITAR -->
+<div class="modal fade" id="ModalEditar" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Editar Certificado de Exportación</h4>
-                </div>
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Editar certificado de exportación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-                <form id="EditarCertificadoExport">
+            <div class="modal-body">
+                <form id="FormEditar" method="POST">
                     <div class="row">
-                        <input type="hidden" name="id_certificado" id="id_certificado" value="">
+                        <input type="hidden" name="id_certificado" id="edit_id_certificado">
 
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
@@ -125,25 +126,25 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="date" class="form-control datepicker" name="fecha_emision"
-                                    id="edit_fecha_emision">
+                                <input class="form-control flatpickr-datetime" id="edit_fecha_emision" name="fecha_emision"
+                                    placeholder="YYYY-MM-DD">
                                 <label for="">Fecha de emisión</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="date" class="form-control datepicker" name="fecha_vigencia"
-                                    id="edit_fecha_vigencia" readonly />
+                                <input class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" readonly
+                                    placeholder="YYYY-MM-DD">
                                 <label for="">Vigencia hasta</label>
                             </div>
                         </div>
                     </div>
 
-
-            <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                <button type="submit" class="btn btn-primary">Editar</button>
-                <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-            </div>
+                    <div class="d-flex mt-6 justify-content-center">
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                    </div>
                 </form>
             </div>
         </div>
