@@ -234,15 +234,15 @@ if (dt_user_table.length) {
           var revisorPersonal, revisorMiembro;
           // Para el revisor personal
           if (id_revisor !== 'Sin asignar') {
-              revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Revisión OC:</strong> ${id_revisor}</span>`;
+              revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> ${id_revisor}</span>`;
           } else {
-              revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Revisión OC:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
+              revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
           }
           // Para el revisor miembro
           if (id_revisor2 !== 'Sin asignar') {
-              revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Revisión Consejo:</strong> ${id_revisor2}</span>`;
+              revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> ${id_revisor2}</span>`;
           } else {
-              revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Revisión Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
+              revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
           }
   
           // Retorna los revisores en formato HTML
@@ -693,6 +693,7 @@ $(document).on('click', '.eliminar', function () {//clase del boton "eliminar"
 
 
 
+///EDITAR
 // Función para cargar los datos
 $(document).ready(function() {
   // Abrir el modal y cargar datos para editar
@@ -797,7 +798,230 @@ $(document).ready(function() {
 
 
 
-///FORMATO PDF CERTIFICADO EXPORTACION
+///REEXPEDIR
+let isLoadingData = false;
+let fieldsValidated = []; 
+$(document).ready(function () {
+
+  $(document).on('click', '.reexpedir', function () {
+      var id_certificado = $(this).data('id');
+      console.log('ID para reexpedir:', id_certificado);
+      $('#rex_id_certificado').val(id_certificado);
+      $('#ModalReexpedir').modal('show');
+  });
+
+  //funcion fechas
+  $('#rex_fecha_emision').on('change', function () {
+    var fecha_emision = $(this).val();
+    if (fecha_emision) {
+        var fecha = moment(fecha_emision, 'YYYY-MM-DD');
+        var fecha_vigencia = fecha.add(90, 'days').format('YYYY-MM-DD');
+        $('#rex_fecha_vigencia').val(fecha_vigencia);
+    }
+  });
+
+  $(document).on('change', '#accion_reexpedir', function () {
+    var accionSeleccionada = $(this).val();
+    console.log('Acción seleccionada:', accionSeleccionada);
+    var id_certificado = $('#rex_id_certificado').val();
+
+      if (accionSeleccionada && !isLoadingData) {
+          isLoadingData = true;
+          cargarDatosReexpedicion(id_certificado);
+      }
+
+      if (accionSeleccionada === '2') {
+        $('#campos_condicionales').slideDown();
+      }else {
+          $('#campos_condicionales').slideUp();
+      }
+  });
+
+  function cargarDatosReexpedicion(id_certificado) {
+      console.log('Cargando datos para la reexpedición con ID:', id_certificado);
+      clearFields();
+      
+      //cargar los datos
+      $.get(`/editCerExp/${id_certificado}/edit`).done(function (datos) {
+      console.log('Respuesta completa:', datos);
+  
+          if (datos.error) {
+              showError(datos.error);
+              return;
+          }
+
+          $('#rex_id_dictamen').val(datos.id_dictamen).trigger('change');
+          $('#rex_numero_certificado').val(datos.num_certificado);
+          $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
+          $('#rex_fecha_emision').val(datos.fecha_emision);
+          $('#rex_fecha_vigencia').val(datos.fecha_vigencia);
+
+          $('#accion_reexpedir').trigger('change'); 
+          isLoadingData = false;
+
+          flatpickr("#rex_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
+            dateFormat: "Y-m-d",
+            enableTime: false,
+            allowInput: true,
+            locale: "es"
+          });
+
+      }).fail(function () {
+              showError('Error al cargar los datos.');
+              isLoadingData = false;
+      });
+  }
+
+  function clearFields() {
+      $('#rex_id_dictamen').val('');
+      $('#rex_numero_certificado').val('');
+      $('#rex_id_firmante').val('');
+      $('#rex_fecha_emision').val('');
+      $('#rex_fecha_vigencia').val('');
+      $('#rex_observaciones').val('');
+  }
+
+  function showError(message) {
+      Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: message,
+          customClass: {
+              confirmButton: 'btn btn-danger'
+          }
+      });
+  }
+
+  $('#ModalReexpedir').on('hidden.bs.modal', function () {
+      $('#FormReexpedir')[0].reset();
+      clearFields();
+      $('#campos_condicionales').hide();
+      fieldsValidated = []; 
+  });
+
+  //validar formulario
+  const formReexpedir = document.getElementById('FormReexpedir');
+  const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
+      fields: {
+        'accion_reexpedir': {
+            validators: {
+                notEmpty: {
+                    message: 'Debes seleccionar una acción.'
+                }
+            }
+        },
+        'observaciones': {
+            validators: {
+                notEmpty: {
+                    message: 'El motivo de cancelación es obligatorio.'
+                }
+            }
+        },
+        'id_dictamen': {
+            validators: {
+                notEmpty: {
+                    message: 'El número de dictamen es obligatorio.'
+                }
+            }
+        },
+        'num_certificado': {
+            validators: {
+                notEmpty: {
+                    message: 'El número de certificado es obligatorio.'
+                },
+                stringLength: {
+                  min: 8,
+                  message: 'Debe tener al menos 8 caracteres.'
+                }
+            }
+        },
+        'id_firmante': {
+            validators: {
+                notEmpty: {
+                    message: 'El nombre del firmante es obligatorio.'
+                }
+            }
+        },
+        'fecha_emision': {
+          validators: {
+            notEmpty: {
+              message: 'La fecha de emisión es obligatoria.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+            }
+          }
+        },
+        'fecha_vigencia': {
+          validators: {
+            notEmpty: {
+              message: 'La fecha de vigencia es obligatoria.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+            }
+          }
+        },
+      },
+      plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+              eleValidClass: '',
+              eleInvalidClass: 'is-invalid',
+              rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+  }).on('core.form.valid', function () {
+      const formData = $(formReexpedir).serialize();
+
+      $.ajax({
+          url: $(formReexpedir).attr('action'),
+          method: 'POST',
+          data: formData,
+          success: function (response) {
+              $('#ModalReexpedir').modal('hide');
+              formReexpedir.reset();
+
+              dt_user_table.DataTable().ajax.reload();
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.message,
+                  customClass: {
+                      confirmButton: 'btn btn-primary'
+                  }
+              });
+          },
+          error: function (jqXHR) {
+              console.log('Error en la solicitud:', jqXHR);
+              let errorMessage = 'No se pudo registrar. Por favor, verifica los datos.';
+              try {
+                  let response = JSON.parse(jqXHR.responseText);
+                  errorMessage = response.message || errorMessage;
+              } catch (e) {
+                  console.error('Error al parsear la respuesta del servidor:', e);
+              }
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: errorMessage,
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+      });
+  });
+
+});
+
+
+
+///FORMATO PDF CERTIFICADO
 $(document).on('click', '.pdfCertificado', function ()  {
   var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
   var pdfUrl = '/certificado_exportacion/' + id; //Ruta del PDF
@@ -866,283 +1090,6 @@ $(document).on('click', '.pdfDictamen', function ()  {
     iframe.on('load', function () {
       spinner.hide();
       iframe.show();
-    });
-});
-
-
-
-
-///REEXPEDIR CERTIFICADO
-//Evento para saber que certificado Reexpedir
-let isLoadingData = false;
-let fieldsValidated = []; 
-
-$(document).ready(function () {
-    $(document).on('click', '.reexpedir', function () {
-        var id_certificado = $(this).data('id');
-        console.log('ID Certificado para reexpedir:', id_certificado);
-        $('#reexpedir_id_certificado').val(id_certificado);
-        $('#modalAddReexCerExpor').modal('show');
-    });
-
-    $('#fecha_vigencia_rex').on('change', function () {
-        var fechaVigencia = $(this).val();
-        if (fechaVigencia) {
-            var fecha = moment(fechaVigencia, 'YYYY-MM-DD');
-            var fechaVencimiento = fecha.add(1, 'years').format('YYYY-MM-DD');
-            $('#fecha_vencimiento_rex').val(fechaVencimiento);
-        }
-    });
-
-    $(document).on('change', '#accion_reexpedir', function () {
-        var accionSeleccionada = $(this).val();
-        console.log('Acción seleccionada:', accionSeleccionada);
-        var id_certificado = $('#reexpedir_id_certificado').val();
-
-        if (accionSeleccionada && !isLoadingData) {
-            isLoadingData = true;
-            cargarDatosReexpedicion(id_certificado);
-        }
-
-        if (accionSeleccionada === '2') {
-            $('#campos_condicionales').slideDown();
-        }else {
-            $('#campos_condicionales').slideUp();
-        }
-    });
-
-    $(document).on('change', '#id_dictamen_rex', function () {
-      var tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');
-      console.log('Tipo de Dictamen seleccionado:', tipoDictamen);
-  
-      if (tipoDictamen === 1) {
-          $('#campos_productor').show();
-          addFieldValidation('maestro_mezcalero', 'El nombre del maestro mezcalero es obligatorio.');
-          addFieldValidation('num_autorizacion', 'El campo No. Autorización es obligatorio.', true);
-      } else {
-          $('#campos_productor').hide(); 
-          clearProductorFields();
-          removeFieldValidation('maestro_mezcalero');
-          removeFieldValidation('num_autorizacion');
-      }
-  
-      const shouldShowProductorFields = $('#accion_reexpedir').val() === '2' && tipoDictamen === 1;
-      if (shouldShowProductorFields) {
-          $('#campos_productor').show();
-      }
-
-  });
-
-  $(document).on('change', '#accion_reexpedir', function () {
-    var accionSeleccionada = $(this).val();
-    console.log('Acción seleccionada:', accionSeleccionada);
-    var id_certificado = $('#reexpedir_id_certificado').val();
-
-    let shouldShowProductorFields = false;
-
-    if (accionSeleccionada && !isLoadingData) {
-        isLoadingData = true;
-        cargarDatosReexpedicion(id_certificado);
-    }
-
-    $('#campos_productor').hide(); 
-
-    if (accionSeleccionada === '2') {
-      $('#campos_condicionales').slideDown();
-    }else {
-        $('#campos_condicionales').slideUp();
-    }
-
-    const tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');
-    if (tipoDictamen === 1) {
-        shouldShowProductorFields = true; 
-    }
-
-    if (shouldShowProductorFields) {
-        $('#campos_productor').show();
-    }
-});
-  
-  function cargarDatosReexpedicion(id_certificado) {
-      console.log('Cargando datos para la reexpedición con ID:', id_certificado);
-      clearFields();
-  
-      $.get(`/editCerExp/${id_certificado}/edit`)
-          .done(function (data) {
-              console.log('Respuesta completa:', data);
-  
-              if (data.error) {
-                  showError(data.error);
-                  return;
-              }
-  
-              $('#id_dictamen_rex').val(data.id_dictamen).trigger('change');
-  
-              $('#numero_certificado_rex').val(data.num_certificado);
-              $('#id_firmante_rex').val(data.id_firmante).trigger('change');
-              $('#fecha_vigencia_rex').val(data.fecha_vigencia);
-              $('#fecha_vencimiento_rex').val(data.fecha_vencimiento);
-              $('#observaciones_rex').val(data.observaciones);
-  
-              const tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');
-              console.log('Tipo de Dictamen seleccionado:', tipoDictamen);
-              if (Number(tipoDictamen) === 1) {
-                  $('#campos_productor').show(); 
-                  $('#maestro_mezcalero_rex').val(data.maestro_mezcalero || ''); 
-                  $('#no_autorizacion_rex').val(data.num_autorizacion || '');
-                  console.log('Campos de Productor cargados y mostrados.');
-              } else {
-                  $('#campos_productor').hide(); 
-                  clearProductorFields();
-                  console.log('Campos de Productor ocultos porque el tipo no es 1.');
-              }
-  
-              $('#accion_reexpedir').trigger('change'); 
-              isLoadingData = false;
-  
-              console.log('Campos de productor visibles:', $('#campos_productor').is(':visible'));
-          })
-          .fail(function () {
-              showError('No se pudieron cargar los datos para la reexpedición.');
-              isLoadingData = false;
-          });
-  }
-  
-    function clearFields() {
-        $('#maestro_mezcalero_rex').val('');
-        $('#no_autorizacion_rex').val('');
-        $('#numero_certificado_rex').val('');
-        $('#id_firmante_rex').val('');
-        $('#fecha_vigencia_rex').val('');
-        $('#fecha_vencimiento_rex').val('');
-        $('#observaciones_rex').val('');
-    }
-
-    function clearProductorFields() {
-        $('#maestro_mezcalero_rex').val(''); 
-        $('#no_autorizacion_rex').val(''); 
-    }
-
-    function showError(message) {
-        Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: message,
-            customClass: {
-                confirmButton: 'btn btn-danger'
-            }
-        });
-    }
-
-    function addFieldValidation(field, message, isNumeric = false) {
-        if (!fieldsValidated.includes(field)) {
-            const validators = {
-                notEmpty: {
-                    message: message
-                }
-            };
-            if (isNumeric) {
-                validators.numeric = {
-                    message: 'El campo debe contener solo números.'
-                };
-            }
-            validatorReexpedir.addField(field, {
-                validators: validators
-            });
-            fieldsValidated.push(field);
-        }
-    }
-
-    function removeFieldValidation(field) {
-        if (fieldsValidated.includes(field)) {
-            validatorReexpedir.removeField(field);
-            fieldsValidated = fieldsValidated.filter(f => f !== field);
-        }
-    }
-
-    $('#modalAddReexCerExpor').on('hidden.bs.modal', function () {
-        $('#formAddReexCerExpor')[0].reset();
-        clearFields();
-        $('#campos_condicionales').hide();
-        $('#campos_productor').hide();
-        fieldsValidated = []; 
-    });
-
-    const formReexpedir = document.getElementById('formAddReexCerExpor');
-    const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
-        fields: {
-            'accion_reexpedir': {
-                validators: {
-                    notEmpty: {
-                        message: 'Debes seleccionar una acción.'
-                    }
-                }
-            },
-            'observaciones': {
-                validators: {
-                    notEmpty: {
-                        message: 'El motivo de cancelación es obligatorio.'
-                    }
-                }
-            },
-            'num_certificado': {
-                validators: {
-                    notEmpty: {
-                        message: 'El número de certificado es obligatorio.'
-                    }
-                }
-            },
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: '.form-floating'
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-    }).on('core.form.valid', function () {
-        const formData = $(formReexpedir).serialize();
-
-        $.ajax({
-            url: $(formReexpedir).attr('action'),
-            method: 'POST',
-            data: formData,
-            success: function (response) {
-                $('#modalAddReexCerExpor').modal('hide');
-                formReexpedir.reset();
-
-                dt_user_table.DataTable().ajax.reload();
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.message,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
-            },
-            error: function (jqXHR) {
-                console.log('Error en la solicitud:', jqXHR);
-                let errorMessage = 'No se pudo registrar la reexpedición. Por favor, verifica los datos.';
-                try {
-                    let response = JSON.parse(jqXHR.responseText);
-                    errorMessage = response.message || errorMessage;
-                } catch (e) {
-                    console.error('Error al parsear la respuesta del servidor:', e);
-                }
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: errorMessage,
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
-            }
-        });
     });
 });
 

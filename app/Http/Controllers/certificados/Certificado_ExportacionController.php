@@ -273,8 +273,8 @@ public function reexpedir(Request $request)
         if ($request->accion_reexpedir == '2') {
             $request->validate([
                 'id_certificado' => 'required|exists:certificados_exportacion,id_certificado',
-                'num_certificado' => 'required|string|min:8',
                 'id_dictamen' => 'required|integer',
+                'num_certificado' => 'required|string|min:8',
                 'fecha_emision' => 'required|date',
                 'fecha_vigencia' => 'required|date',
                 'id_firmante' => 'required|integer',
