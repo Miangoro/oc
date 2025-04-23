@@ -216,6 +216,7 @@ use App\Http\Controllers\DocuSignController;
 use App\Http\Controllers\efirma\firmaController;
 use App\Http\Controllers\hologramas\hologramasACtivar;
 use App\Http\Controllers\insertar_datos_bd_actas;
+use App\Http\Controllers\insertar_datos_bd_certificados_granel;
 use App\Http\Controllers\insertar_datos_bd_dictamenes_graneles;
 use App\Http\Controllers\insertar_datos_bd_lotes_envasado;
 use App\Http\Controllers\permisos\permisosController;
@@ -899,7 +900,7 @@ Route::middleware(['auth'])->controller(RevisionPersonalController::class)->grou
     Route::post('/registrar-aprobacion', 'registrarAprobacion')->name('registrar.aprobacion');
     Route::get('/aprobacion/{id}', 'cargarAprobacion');
     Route::get('/obtener/historial/{id_revision}', 'cargarHistorial');
-    Route::post('/editar-respuestas', 'editarRespuestas');
+    Route::post('/editar-respuestas', 'editinsertarCertificadosGranelDesdeAPIarRespuestas');
     // -Granel-
     Route::get('/bitacora_revisionPersonal_Granel/{id}', 'Bitacora_revisionPersonal_Granel');
 
@@ -948,6 +949,7 @@ Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarS
 Route::get('/insertarDictamenesDesdeAPI', [insertar_datos_bd_dictamenes::class, 'insertarDictamenesDesdeAPI'])->name('insertarDictamenesDesdeAPI');
 Route::get('/insertarDictamenesGranelesDesdeAPI', [insertar_datos_bd_dictamenes_graneles::class, 'insertarDictamenesGranelesDesdeAPI'])->name('insertarDictamenesGranelesDesdeAPI');
 Route::get('/insertarCertificadosDesdeAPI', [insertar_datos_bd_certificados::class, 'insertarCertificadosDesdeAPI'])->name('insertarCertificadosDesdeAPI');
+Route::get('/insertarCertificadosGranelDesdeAPI', [insertar_datos_bd_certificados_granel::class, 'insertarCertificadosGranelDesdeAPI'])->name('insertarCertificadosGranelDesdeAPI');
 Route::get('/insertarActasDesdeAPI', [insertar_datos_bd_actas::class, 'insertarActasDesdeAPI'])->name('insertarActasDesdeAPI');
 Route::get('/insertarLotesEnvasadoDesdeAPI', [insertar_datos_bd_lotes_envasado::class, 'insertarLotesEnvasadoDesdeAPI'])->name('insertarLotesEnvasadoDesdeAPI');
 
