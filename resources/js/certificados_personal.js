@@ -181,6 +181,7 @@ $(function () {
               '</a>' +
               // Botón para editar revisión
               `<a class="dropdown-item waves-effect text-primary editar-revision" ` + 
+              `href="/edit_revision/${full['id_revision']}" ` +
               `data-id="${full['id_revision']}" ` +
               `data-tipo="${full['tipo_dictamen']}" ` +
               `data-tipo_revision="${full['tipo_revision']}" ` +
@@ -867,15 +868,16 @@ function cargarHistorial(id_revision) {
               return; 
           }
 
-          $.each(data.respuestas[0].respuestas, function(revisionKey, revisionData) {
-              botonesHTML += `
-                  <button class="btn btn-primary btn-lg mb-2" 
-                          data-revision="${revisionKey}" 
-                          data-respuestas='${JSON.stringify(revisionData)}'>
-                      <i class="fas fa-history"></i>${revisionKey} <!-- Icono de historial -->
-                  </button>
-              `;
-          });
+          data.respuestas[0].respuestas.forEach(function(revisionItem) {
+            botonesHTML += `
+                <button class="btn btn-primary btn-lg mb-2" 
+                        data-revision="${revisionItem.nombre_revision}" 
+                        data-respuestas='${JSON.stringify(revisionItem.respuestas)}'>
+                    <i class="fas fa-history"></i> ${revisionItem.nombre_revision}
+                </button>
+            `;
+        });
+        
 
           $('#historialRespuestasContainer').html(botonesHTML);
           $('.btn-primary').on('click', function() {
@@ -893,7 +895,7 @@ function cargarHistorial(id_revision) {
 
 function mostrarRespuestas(respuestas) {
   if (typeof respuestas === 'string') {
-      respuestas = JSON.parse(respuestas); 
+      respuestas = JSON.parse(respuestas);
   }
 
   let respuestasHTML = `
@@ -901,49 +903,29 @@ function mostrarRespuestas(respuestas) {
           <table class="table table-striped table-bordered">
               <thead class="table-light">
                   <tr>
-                      <th class="text-start">#</th> <!-- Nueva columna para el número de pregunta -->
-                      <th class="text-start">Pregunta</th> <!-- Alineación a la izquierda -->
+                      <th class="text-start">#</th>
+                      <th class="text-start">Pregunta</th>
                       <th class="text-center">C</th>
                       <th class="text-center">NC</th>
                       <th class="text-center">NA</th>
-                      <th class="text-start">Observaciones</th> <!-- Nueva columna de Observaciones -->
+                      <th class="text-start">Observaciones</th>
                   </tr>
               </thead>
               <tbody>
   `;
 
-  const preguntas = [
-      { key: 'pregunta1', label: 'CONTRATO DE PRESTACIÓN DE SERVICIOS' },
-      { key: 'pregunta2', label: 'CONSTANCIA SITUACIÓN FISCAL Y RFC' },
-      { key: 'pregunta3', label: 'CARTA NO. CLIENTE' },
-      { key: 'pregunta4', label: 'NOMBRE DE LA EMPRESA O PERSONA FÍSICA' },
-      { key: 'pregunta5', label: 'DIRECCIÓN FISCAL' },
-      { key: 'pregunta6', label: 'SOLICITUD DEL SERVICIO DE DICTAMINACIÓN DE INSTALACIONES' },
-      { key: 'pregunta7', label: 'NÚMERO DE CERTIFICADO DE INSTALACIONES' },
-      { key: 'pregunta8', label: 'NOMBRE DE LA EMPRESA O PERSONA FÍSICA' },
-      { key: 'pregunta9', label: 'DOMICILIO FISCAL DE LAS INSTALACIONES' },
-      { key: 'pregunta10', label: 'CORREO ELECTRÓNICO Y NÚMERO TELEFÓNICO' },
-      { key: 'pregunta11', label: 'FECHA DE VIGENCIA Y VENCIMIENTO DEL CERTIFICADO' },
-      { key: 'pregunta12', label: 'ALCANCE DE LA CERTIFICACIÓN' },
-      { key: 'pregunta13', label: 'NO. DE CLIENTE' },
-      { key: 'pregunta14', label: 'NÚMERO DE DICTAMEN EMITIDO POR LA UVEM' },
-      { key: 'pregunta15', label: 'ACTA DE LA UNIDAD DE INSPECCIÓN (FECHA DE INICIO, TÉRMINO Y FIRMAS)' },
-      { key: 'pregunta16', label: 'NOMBRE Y PUESTO DEL RESPONSABLE DE LA EMISIÓN DEL CERTIFICADO' },
-      { key: 'pregunta17', label: 'NOMBRE Y DIRECCIÓN DEL ORGANISMO CERTIFICADOR CIDAM' },
-  ];
-
-  preguntas.forEach((pregunta, index) => {
-      const respuesta = respuestas[pregunta.key]; 
-      const observacion = respuesta?.observacion ? respuesta.observacion : '---'; 
+  respuestas.forEach((item, index) => {
+      const respuesta = item.respuesta;
+      const observacion = item.observacion ? item.observacion : '---';
 
       respuestasHTML += `
           <tr>
-              <td class="text-start">${index + 1}</td> <!-- Número de pregunta -->
-              <td>${pregunta.label}</td>
-              <td class="text-center">${respuesta?.respuesta === 'C' ? 'C' : '---'}</td>
-              <td class="text-center ${respuesta?.respuesta === 'NC' ? 'text-danger' : ''}">${respuesta?.respuesta === 'NC' ? 'NC' : '---'}</td>
-              <td class="text-center">${respuesta?.respuesta === 'NA' ? 'NA' : '---'}</td>
-              <td class="text-start">${observacion}</td> <!-- Nueva celda para Observaciones -->
+              <td class="text-start">${index + 1}</td>
+              <td>${item.pregunta}</td>
+              <td class="text-center">${respuesta === 'C' ? 'C' : '---'}</td>
+              <td class="text-center ${respuesta === 'NC' ? 'text-danger' : ''}">${respuesta === 'NC' ? 'NC' : '---'}</td>
+              <td class="text-center">${respuesta === 'NA' ? 'NA' : '---'}</td>
+              <td class="text-start">${observacion}</td>
           </tr>
       `;
   });
@@ -953,8 +935,10 @@ function mostrarRespuestas(respuestas) {
           </table>
       </div>
   `;
+
   document.getElementById('respuestasContainer').innerHTML = respuestasHTML;
 }
+
 
 // Editar Respuestas
 let id_revision_edit;

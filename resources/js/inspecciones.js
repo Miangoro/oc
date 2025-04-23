@@ -127,7 +127,7 @@ $(function () {
           const acta = full['url_acta'];
           const dictamen = full['url_dictamen'];
           const razon = full['razon_social'];
-          const cliente = full['num_cliente'];
+          const cliente = full['numero_cliente'];
       
           let html = '';
       
