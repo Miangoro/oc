@@ -40,11 +40,13 @@
 @endsection
 
 @section('content')
-{{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
+
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 <!-- Users List Table -->
 <div class="card">
     <div class="card-header pb-0">
-        <h3 class="card-title mb-0">Certificados de Exportación</h3>
+        <h3 class="card-title mb-0">Certificados de exportación</h3>
     </div>
 
     <div class="card-datatable table-responsive">
@@ -52,12 +54,11 @@
             <thead class="table-dark">
                 <tr>
                     <th></th>
+                    <th>No. certificado</th>
                     <th>Solicitud /<br>no. servicio</th>
                     <th>Cliente</th>
-                    <th>No. certificado</th>
                     <th>Fechas</th>
                     <th>Solicitud</th>
-                    <th>certificado</th>
                     <th>Dictamen</th>
                     <th>Estatus</th>
                     <th>ACCIONES</th>

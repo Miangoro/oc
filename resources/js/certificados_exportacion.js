@@ -2,6 +2,7 @@
  Page User List
  */
 'use strict';
+/*
 $(document).ready(function () {
   $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
@@ -23,6 +24,46 @@ $('#edit_fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
   fechaInicial.setDate(fechaInicial.getDate() + 91);
   $('#edit_fecha_vigencia').datepicker("setDate", fechaInicial);
+});
+*/
+
+$(document).ready(function () {///flatpickr
+  flatpickr(".flatpickr-datetime", {
+      dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
+      enableTime: false,   // Desactiva la  hora
+      allowInput: true,    // Permite al usuario escribir la fecha manualmente
+      locale: "es",        // idioma a español
+  });
+});
+//FUNCION FECHAS
+$('#fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+  $('#fecha_vigencia').val(fechaVigencia);
+  flatpickr("#fecha_vigencia", {
+      dateFormat: "Y-m-d",
+      enableTime: false,  
+      allowInput: true,  
+      locale: "es",     
+      static: true,      
+      disable: true          
+  });
+});
+//FUNCION FECHAS EDIT
+$('#edit_fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+  $('#edit_fecha_vigencia').val(fechaVigencia);
+  flatpickr("#edit_fecha_vigencia", {
+      dateFormat: "Y-m-d",  
+      enableTime: false,   
+      allowInput: true,  
+      locale: "es",  
+      static: true,   
+      disable: true  
+  });
 });
 
 
@@ -55,8 +96,9 @@ initializeSelect2(select2Elements);
        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
      }
   });
- 
- 
+
+
+
 ///FUNCIONALIDAD DE LA VISTA datatable
 if (dt_user_table.length) {
   var dt_user = dt_user_table.DataTable({
@@ -66,9 +108,9 @@ if (dt_user_table.length) {
          url: baseUrl + 'CerExpo-list'
        },
        columns: [
-
          { data: '' }, // (0)
-         { data: null, //soli y serv. (1)
+         { data: 'num_certificado' },//(1)
+         { data: null, //soli y serv.
             render: function(data, type, row) {
             return `<span style="font-size:14px"> <strong>${data.folio}</strong><br>
                 ${data.n_servicio}<span>`;
@@ -82,42 +124,48 @@ if (dt_user_table.length) {
               `;
             }
          },
-         { data: 'num_certificado' },
-         { data: 'fechas' }, //(4)
+         { data: 'fechas' }, //
          { data: '' },//solicitud
-         { data: '' },
          { data: 'dictamen' },
          { data: '' },//Revisores
          { data: 'action' }
        ],
 
        columnDefs: [
-         {
-           className: 'control',
-           searchable: false,
-           orderable: false,
-           responsivePriority: 2,
-           targets: 0,
-           render: function (data, type, full, meta) {
-             return '';
-           }
-         },
-
-          {
-          //Tabla 3
-           targets: 3,
-           render: function (data, type, full, meta) {
-             var $num_certificado = full['num_certificado'];
-             return '<span>' + $num_certificado + '</span>';
-           }
-         }, 
-         {
-          targets: 4,
-          searchable: true,
+        {
+          className: 'control',
+          searchable: false,
+          orderable: false,
+          responsivePriority: 2,
+          targets: 0,
           render: function (data, type, full, meta) {
-            var $fech = full['fechas'];
-            return '<span class="small">' + $fech + '</span>';
-            }
+            return '';
+          }
+        },
+        {
+          targets: 1,
+          render: function (data, type, full, meta) {
+            var $num_certificado = full['num_certificado'];
+            var $id = full['id_certificado'];
+            return '<span class="fw-bold">' + $num_certificado + '</span>' +
+                '<i data-id="' +$id+ '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+          }
+        }, 
+        /*{
+        //Tabla 3
+          targets: 3,
+          render: function (data, type, full, meta) {
+            var $num_certificado = full['num_certificado'];
+            return '<span>' + $num_certificado + '</span>';
+          }
+        },*/ 
+        {
+        targets: 4,
+        searchable: true,
+        render: function (data, type, full, meta) {
+          var $fech = full['fechas'];
+          return '<span class="small">' + $fech + '</span>';
+          }
         },
         {
           ///PDF SOLICITUDDD
@@ -130,20 +178,8 @@ if (dt_user_table.length) {
             return '<i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdfSolicitud" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
           }
         },
-
         {
-          ///PDF CERTIFICADO
-          targets: 6,
-          searchable: false,
-          orderable: false,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $id = full['id_certificado'];
-            return '<i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdfCertificado" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
-          }
-        },
-        {
-        targets: 7,
+        targets: 6,
         render: function (data, type, full, meta) {
           /*var $id_dictamen = full['no_dictamen'];
           return '<span>' + $id_dictamen + '</span>';*/
@@ -152,7 +188,7 @@ if (dt_user_table.length) {
         }
         }, 
         {
-        targets: 8,
+        targets: 7,
         render: function (data, type, full, meta) {
           //var $id_dictamen = full['no_dictamen'];
           var id_revisor = full['id_revisor'];   // Obtener el id_revisor
@@ -194,20 +230,18 @@ if (dt_user_table.length) {
            render: function (data, type, full, meta) {
              return (
               '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info') + `" data-bs-toggle="dropdown">` +
-              (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
-              '</button>' +
-                '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                  `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#editCerExpor" href="javascript:;" class="dropdown-item edit-record text-info"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item delete-record  waves-effect text-danger"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
-                  //Botón Asignar revisor
-                  `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-warning"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
-                  //Botón Reexpedir Certificado
-                  `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor" class="dropdown-item waves-effect text-info reexpedir"> <i class="ri-file-edit-fill"></i> Reexpedir/Cancelar</a>` +
-                 /* '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                 '<a href="' + userView + '" class="dropdown-item">View</a>' +
-                 '<a href="javascript:;" class="dropdown-item">Suspend</a>' + */
-                '</div>' +
+                `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info') + `" data-bs-toggle="dropdown">` +
+                (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
+                '</button>' +
+                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                    `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#editCerExpor" href="javascript:;" class="dropdown-item edit-record text-dark"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+                    `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-dark"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
+                    `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor" class="dropdown-item waves-effect text-black reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
+                    `<a data-id="${full['id_certificado']}" class="dropdown-item delete-record  waves-effect text-black"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
+                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                    '<a href="' + userView + '" class="dropdown-item">View</a>' +
+                    '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+                  '</div>' +
                '</div>'
              );
            }

@@ -20,16 +20,15 @@ use Illuminate\Support\Facades\Log;
 class Certificado_ExportacionController extends Controller
 {
 
-    
     public function UserManagement()
     {
         $certificado = Certificado_Exportacion::all(); // Obtener todos los datos
-        $dictamen = Dictamen_Exportacion::all();
+        $dictamen = Dictamen_Exportacion::where('estatus','!=',1)->get();
         $users = User::where('tipo',1)->get(); //Solo inspectores 
-        $empresa = empresa::all();
+        $empresa = empresa::where('tipo', 2)->get();
         $revisores = Revisor::all(); 
 
-        return view('certificados.certificado_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores'));
+        return view('certificados.find_certificado_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores'));
     }
 
 
@@ -37,10 +36,12 @@ public function index(Request $request)
 {
     $columns = [
     //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
-        1 => 'num_certificado',
+        1 => 'id_certificado',
         2 => 'id_dictamen',
-        3 => 'razon_social',
-        4 => 'fecha_emision',
+        3 => '',
+        4 => '',
+        5 => 'fechas',
+        6 => 'estatus',
     ];
 
     $search = [];
@@ -84,31 +85,29 @@ public function index(Request $request)
 
     //MANDA LOS DATOS AL JS
     $data = [];
-
     if (!empty($users)) {
-        $ids = $start;
-        foreach ($users as $user) {
-            $nestedData['id_certificado'] = $user->id_certificado ?? 'No encontrado';
-            $nestedData['dictamen'] = $user->dictamen->id_dictamen ?? 'No encontrado';
-            $nestedData['num_certificado'] = $user->num_certificado ?? 'No encontrado';
-            $nestedData['estatus'] = $user->estatus ?? 'No encontrado';
+        foreach ($users as $certificado) {
+            $nestedData['id_certificado'] = $certificado->id_certificado ?? 'No encontrado';
+            $nestedData['dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
+            $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
+            $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
             ///Folio y no. servicio
-            $nestedData['folio'] = $user->dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
-            $nestedData['n_servicio'] = $user->dictamen->inspeccione->num_servicio ?? 'No encontrado';
+            $nestedData['folio'] = $certificado->dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
+            $nestedData['n_servicio'] = $certificado->dictamen->inspeccione->num_servicio ?? 'No encontrado';
             //Nombre y Numero empresa
-            $empresa = $user->dictamen->inspeccione->solicitud->empresa ?? null;
+            $empresa = $certificado->dictamen->inspeccione->solicitud->empresa ?? null;
             $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
                 ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
                 ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
             $nestedData['numero_cliente'] = $numero_cliente;
-            $nestedData['razon_social'] = $user->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
+            $nestedData['razon_social'] = $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
             //Fecha emisión y vigencia
-            $fecha_emision = Helpers::formatearFecha($user->fecha_emision);
-            $fecha_vigencia = Helpers::formatearFecha($user->fecha_vigencia);
+            $fecha_emision = Helpers::formatearFecha($certificado->fecha_emision);
+            $fecha_vigencia = Helpers::formatearFecha($certificado->fecha_vigencia);
             $nestedData['fechas'] = '<b>Expedición: </b>' .$fecha_emision. '<br> <b>Vigencia: </b>' .$fecha_vigencia;
             //Revisiones
-            $nestedData['id_revisor'] = $user->revisor && $user->revisor->user ? $user->revisor->user->name : 'Sin asignar';
-            $nestedData['id_revisor2'] = $user->revisor && $user->revisor->user2 ? $user->revisor->user2->name : 'Sin asignar';
+            $nestedData['id_revisor'] = $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar';
+            $nestedData['id_revisor2'] = $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar';
             
             $data[] = $nestedData;
         }
@@ -133,23 +132,33 @@ public function index(Request $request)
 
 
 
-
 ///FUNCION REGISTRAR
 public function store(Request $request)
 {
     try {
-        // Crear y guardar
-        $var = new Certificado_Exportacion();
-        $var->num_certificado = $request->num_certificado;
-        $var->id_dictamen = $request->id_dictamen;
-        $var->fecha_emision = $request->fecha_emision;
-        $var->fecha_vigencia = $request->fecha_vigencia;
-        $var->id_firmante = $request->id_firmante;
-        $var->save(); // Guardar en BD
-
-        return response()->json(['success' => 'Registro agregado correctamente']);
+    $validated = $request->validate([
+        'id_dictamen' => 'required|exists:dictamenes_exportacion,id_dictamen',
+        'num_certificado' => 'required|string|max:40',
+        'fecha_emision' => 'required|date',
+        'fecha_vigencia' => 'required|date',
+        'id_firmante' => 'required|exists:users,id',
+    ]);
+        // Crear un registro
+        $new = new Certificado_Exportacion();
+        $new->id_dictamen = $validated['id_dictamen'];
+        $new->num_certificado = $validated['num_certificado'];
+        $new->fecha_emision = $validated['fecha_emision'];
+        $new->fecha_vigencia = $validated['fecha_vigencia'];
+        $new->id_firmante = $validated['id_firmante'];
+        $new->save();
+    
+        return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Ocurrió un error al agregar'], 500);
+        Log::error('Error al registrar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al registrar.'], 500);
     }
 }
 
@@ -162,9 +171,13 @@ public function destroy($id_certificado)
         $eliminar = Certificado_Exportacion::findOrFail($id_certificado);
         $eliminar->delete();
 
-        return response()->json(['success' => 'Eliminado correctamente']);
+        return response()->json(['message' => 'Eliminado correctamente.']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al eliminar'], 500);
+        Log::error('Error al eliminar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al eliminar.'], 500);
     }
 }
 
@@ -174,18 +187,22 @@ public function destroy($id_certificado)
 public function edit($id_certificado)
 {
     try {
-        $var1 = Certificado_Exportacion::findOrFail($id_certificado);
+        $editar = Certificado_Exportacion::findOrFail($id_certificado);
 
         return response()->json([
-            'id_certificado' => $var1->id_certificado,
-            'id_dictamen' => $var1->id_dictamen,
-            'num_certificado' => $var1->num_certificado,
-            'fecha_emision' => $var1->fecha_emision,
-            'fecha_vigencia' => $var1->fecha_vigencia,
-            'id_firmante' => $var1->id_firmante,
+            'id_certificado' => $editar->id_certificado,
+            'id_dictamen' => $editar->id_dictamen,
+            'num_certificado' => $editar->num_certificado,
+            'fecha_emision' => $editar->fecha_emision,
+            'fecha_vigencia' => $editar->fecha_vigencia,
+            'id_firmante' => $editar->id_firmante,
         ]);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al obtener'], 500);
+        Log::error('Error al obtener', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al obtener los datos.'], 500);
     }
 }
 
@@ -193,7 +210,7 @@ public function edit($id_certificado)
 public function update(Request $request, $id_certificado) 
 {
     $request->validate([
-        'num_certificado' => 'required|string|max:255',
+        'num_certificado' => 'required|string|max:40',
         'id_dictamen' => 'required|integer',
         'fecha_emision' => 'nullable|date',
         'fecha_vigencia' => 'nullable|date',
@@ -201,17 +218,21 @@ public function update(Request $request, $id_certificado)
     ]);
 
     try {
-        $var2 = Certificado_Exportacion::findOrFail($id_certificado);
-        $var2->num_certificado = $request->num_certificado;
-        $var2->id_dictamen = $request->id_dictamen;
-        $var2->fecha_emision = $request->fecha_emision;
-        $var2->fecha_vigencia = $request->fecha_vigencia;
-        $var2->id_firmante = $request->id_firmante;
-        $var2->save();
+        $actualizar = Certificado_Exportacion::findOrFail($id_certificado);
+        $actualizar->num_certificado = $request->num_certificado;
+        $actualizar->id_dictamen = $request->id_dictamen;
+        $actualizar->fecha_emision = $request->fecha_emision;
+        $actualizar->fecha_vigencia = $request->fecha_vigencia;
+        $actualizar->id_firmante = $request->id_firmante;
+        $actualizar->save();
 
-        return response()->json(['success' => 'Registro editado correctamente']);
+        return response()->json(['message' => 'Actualizado correctamente.']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al editar'], 500);
+        Log::error('Error al actualizar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al actualizar.'], 500);
     }
 }
 
@@ -228,57 +249,57 @@ public function reexpedir(Request $request)
 
         if ($request->accion_reexpedir == '2') {
             $request->validate([
-                'id_certificado' => 'required|exists:certificados,id_certificado',
-                'num_certificado' => 'required|string|max:25',
+                'id_certificado' => 'required|exists:certificados_exportacion,id_certificado',
+                'num_certificado' => 'required|string|min:8',
                 'id_dictamen' => 'required|integer',
                 'fecha_emision' => 'required|date',
                 'fecha_vigencia' => 'required|date',
                 'id_firmante' => 'required|integer',
-                /*'maestro_mezcalero' => 'nullable|string|max:60',
-                'num_autorizacion' => 'nullable|integer',*/
             ]);
         }
 
-        $certificado = Certificado_Exportacion::findOrFail($request->id_certificado);
+        $reexpedir = Certificado_Exportacion::findOrFail($request->id_certificado);
 
         if ($request->accion_reexpedir == '1') {
-            $certificado->estatus = 1; 
+            $reexpedir->estatus = 1; 
             //$certificado->observaciones = $request->observaciones;
                 // Decodificar el JSON actual
-                $observacionesActuales = json_decode($certificado->observaciones, true);
+                $observacionesActuales = json_decode($reexpedir->observaciones, true);
                 // Actualiza solo 'observaciones' sin modificar 'id_certificado_sustituye'
                 $observacionesActuales['observaciones'] = $request->observaciones;
                 // Volver a codificar el array y asignarlo a $certificado->observaciones
-            $certificado->observaciones = json_encode($observacionesActuales); 
-            $certificado->save();
-        } elseif ($request->accion_reexpedir == '2') {
-            $certificado->estatus = 1;
-                $observacionesActuales = json_decode($certificado->observaciones, true);
-                $observacionesActuales['observaciones'] = $request->observaciones;
-            $certificado->observaciones = json_encode($observacionesActuales);
-            $certificado->save(); 
+            $reexpedir->observaciones = json_encode($observacionesActuales); 
+            $reexpedir->save();
+            return response()->json(['message' => 'Cancelado correctamente.']);
 
-            // Crear un nuevo registro de certificado (reexpedición)
-            $nuevoCertificado = new Certificado_Exportacion();
-            $nuevoCertificado->num_certificado = $request->num_certificado;
-            $nuevoCertificado->id_dictamen = $request->id_dictamen;
-            $nuevoCertificado->fecha_emision = $request->fecha_emision;
-            $nuevoCertificado->fecha_vigencia = $request->fecha_vigencia;
-            $nuevoCertificado->id_firmante = $request->id_firmante;
-            $nuevoCertificado->estatus = 2;
-            $nuevoCertificado->observaciones = json_encode([
-                'id_certificado_sustituye' => $request->id_certificado,
-                ]);
-            /*$nuevoCertificado->maestro_mezcalero = $request->maestro_mezcalero ?: null;
-            $nuevoCertificado->num_autorizacion = $request->num_autorizacion ?: null;*/
-            // Guarda el nuevo certificado
-            $nuevoCertificado->save();
+        } elseif ($request->accion_reexpedir == '2') {
+            $reexpedir->estatus = 1;
+                $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales);
+            $reexpedir->save(); 
+
+            // Crear un nuevo registro de reexpedición
+            $new = new Certificado_Exportacion();
+            $new->num_certificado = $request->num_certificado;
+            $new->id_dictamen = $request->id_dictamen;
+            $new->fecha_emision = $request->fecha_emision;
+            $new->fecha_vigencia = $request->fecha_vigencia;
+            $new->id_firmante = $request->id_firmante;
+            $new->estatus = 2;
+            $new->observaciones = json_encode(['id_sustituye' => $request->id_certificado]);
+            $new->save();
+
+            return response()->json(['message' => 'Registrado correctamente.']);
         }
 
-        return response()->json(['message' => 'Certificado procesado correctamente.']);
+        return response()->json(['message' => 'Procesado correctamente.']);
     } catch (\Exception $e) {
-        Log::error($e);
-        return response()->json(['message' => 'Error al procesar el certificado.', 'error' => $e->getMessage()], 500);
+        Log::error('Error al reexpedir', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al procesar.'], 500);
     }
 }
 
