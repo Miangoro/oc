@@ -158,7 +158,7 @@
             padding: 0;
             position: absolute;
             right: 50px;
-            top: 815px;
+            top: 820px;
             font-family: 'Arial Negrita' !important;
         }
 
@@ -328,7 +328,7 @@
     <p class="text1">Las instalaciones se encuentran en región de los estados y municipios que contempla la resolución mediante el cual se otorga la protección
     prevista a la denominación de origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre, publicada el 28 de noviembre
     de 1994, así como sus modificaciones subsecuentes.</p>
-    <br><br><br>
+    <br><br>
     <p class="sello">Sello de Unidad de Inspección</p>
     <div class="images-container">
         <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
@@ -336,7 +336,7 @@
     </div>
     <p class="textx" style="font-size: 9px; margin-bottom:-8px; position: relative;">
         <strong>AUTORIZÓ</strong>
-        <span style="margin-left: -30px; display: inline-block; text-align: center; position: relative;">
+        <span style="margin-left: -33px; display: inline-block; text-align: center; position: relative;">
             @php
                 use Illuminate\Support\Facades\Storage;
     
