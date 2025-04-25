@@ -42,7 +42,7 @@ class Analytics extends Controller
 
   public function estadisticasCertificados()
   {
-      $year = now()->year;
+      $year = 2024;
   
       // Helper para contar por mes
       $contarPorMes = function ($query) use ($year) {

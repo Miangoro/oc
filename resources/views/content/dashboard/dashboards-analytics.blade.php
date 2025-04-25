@@ -187,8 +187,8 @@ use Illuminate\Support\Facades\Route;
         </div>
       </div>
     </div>
-
-    
+    @endcan
+    @can('Estadísticas oc')  
   <!-- Line Chart -->
   <div class="col-12 mb-6">
     <div class="card">
