@@ -261,13 +261,13 @@
         <p class="textp">Nombre del productor/empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social ?? '' }}</u></p>
     </div>
     <table class="interlineado">
-        <tbody id="tabla">
+        <tbody>
             <tr>
             <td style="text-align: justify;">
             <span class="negrita">Número de cliente:</span><br>
             (Otorgado por el Organismo Certificador del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C.) (CIDAM)
             </td>
-                <td style="text-align: center; vertical-align: middle; negrita">
+                <td style="text-align: center; vertical-align: middle;" class="negrita">
                     @php
                         // Encuentra el primer número de cliente válido
                         $numeroCliente = null;
@@ -328,7 +328,7 @@
     <p class="text1">Las instalaciones se encuentran en región de los estados y municipios que contempla la resolución mediante el cual se otorga la protección
     prevista a la denominación de origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre, publicada el 28 de noviembre
     de 1994, así como sus modificaciones subsecuentes.</p>
-    <br><br>
+    <br><br><br>
     <p class="sello">Sello de Unidad de Inspección</p>
     <div class="images-container">
         <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
@@ -336,7 +336,7 @@
     </div>
     <p class="textx" style="font-size: 9px; margin-bottom:-8px; position: relative;">
         <strong>AUTORIZÓ</strong>
-        <span style="margin-left: -20px; display: inline-block; text-align: center; position: relative;">
+        <span style="margin-left: -30px; display: inline-block; text-align: center; position: relative;">
             @php
                 use Illuminate\Support\Facades\Storage;
     
