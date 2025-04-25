@@ -67,8 +67,8 @@ class Analytics extends Controller
 
     // Helper para contar por mes
     $contarPorMes = function ($query) use ($year) {
-      return $query->whereYear('fecha_vigencia', $year)
-        ->selectRaw('MONTH(fecha_vigencia) as mes, COUNT(*) as total')
+      return $query->whereYear('fecha_emision', $year)
+        ->selectRaw('MONTH(fecha_emision) as mes, COUNT(*) as total')
         ->groupBy('mes')
         ->pluck('total', 'mes')
         ->toArray();
