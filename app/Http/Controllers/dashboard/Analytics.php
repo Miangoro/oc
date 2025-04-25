@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Certificado_Exportacion;
 use App\Models\Certificados;
 use App\Models\CertificadosGranel;
+use App\Models\Dictamen_Envasado;
 use App\Models\Dictamen_Exportacion;
 use App\Models\Dictamen_Granel;
 use App\Models\Dictamen_instalaciones;
@@ -39,9 +40,11 @@ class Analytics extends Controller
 
     $dictamenesInstalacion = Dictamen_instalaciones::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $dictamenesGranel = Dictamen_granel::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
+    //$dictamenesEnvasado = Dictamen_Envasado::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $dictamenesExportacion = Dictamen_Exportacion::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $dictamenesPorVencer = $dictamenesInstalacion
       ->merge($dictamenesGranel)
+      //->merge($dictamenesEnvasado)
       ->merge($dictamenesExportacion);
 
     $certificadosInstalacion = Certificados::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();

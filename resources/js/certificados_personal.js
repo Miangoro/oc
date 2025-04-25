@@ -108,7 +108,7 @@ $(function () {
                   // Si existe la decisión, el ícono es funcional (activo)
                   return `
                       <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"
-                         data-bs-target="#PdfDictamenIntalaciones"
+                         data-bs-target="#mostrarPdf"
                          data-bs-toggle="modal"
                          data-bs-dismiss="modal"
                          data-num-certificado="${full['num_certificado']}"
@@ -438,7 +438,7 @@ $(document).on('click', '.cuest', function () {
   console.log('ID de Revisión:', id_revision);
   console.log('Tipo:', tipo);
   $('#modal-loading-spinner').show();
-  $('#pdfViewerDictamenFrame').hide();
+  $('#pdfViewerFrame').hide();
 
   $('#Registrar').show();
   $('#Editar').hide(); 
@@ -460,11 +460,11 @@ $(document).on('click', '.cuest', function () {
       type: 'GET',
       success: function (response) {
           if (tipoRevision === 'RevisorGranel') {
-              $('#pdfViewerDictamenFrame').attr('src', url + '#zoom=80');
+              $('#pdfViewerFrame').attr('src', url + '#zoom=80');
               console.log('PDF cargado (Granel): ' + url);
           } else if (response.certificado_url) {
               let uniqueUrl = response.certificado_url + '?t=' + timestamp;
-              $('#pdfViewerDictamenFrame').attr('src', uniqueUrl + '#zoom=80');
+              $('#pdfViewerFrame').attr('src', uniqueUrl + '#zoom=80');
               console.log('PDF cargado: ' + uniqueUrl);
           } else {
               console.log('No se encontró el certificado para la revisión ' + id_revision);
@@ -474,7 +474,7 @@ $(document).on('click', '.cuest', function () {
           console.error('Error al obtener la URL del certificado: ', xhr.responseText);
       },
       complete: function () {
-          $('#pdfViewerDictamenFrame').on('load', function () {
+          $('#pdfViewerFrame').on('load', function () {
               $('#modal-loading-spinner').hide();
               $(this).show();
           });
@@ -682,18 +682,18 @@ $(document).on('click', '.pdf', function () {
   openPdfBtn.show();
 
   // Mostrar modal de PDF
-  $('#PdfDictamenIntalaciones').modal('show');
+  $('#mostrarPdf').modal('show');
   $('#loading-spinner').show();
-  $('#pdfViewerDictamen').hide();
+  $('#pdfViewer').hide();
 
   // Cargar PDF en iframe
-  $('#pdfViewerDictamen').attr('src', url_pdf);
+  $('#pdfViewer').attr('src', url_pdf);
 });
 
 // Ocultar spinner y mostrar PDF cuando el iframe se haya cargado
-$('#pdfViewerDictamen').on('load', function () {
+$('#pdfViewer').on('load', function () {
   $('#loading-spinner').hide();
-  $('#pdfViewerDictamen').show();
+  $('#pdfViewer').show();
 });
 
 // Abrir modal Aprobacion
@@ -975,7 +975,7 @@ $(document).on('click', '.editar-revision', function () {
   $('#Editar').show(); 
   $('#Registrar').hide();
   $('#modal-loading-spinner').show();
-  $('#pdfViewerDictamenFrame').hide();
+  $('#pdfViewerFrame').hide();
 
   // Genera un parámetro único para evitar el caché
   let timestamp = new Date().getTime();
@@ -996,7 +996,7 @@ $(document).on('click', '.editar-revision', function () {
               let uniqueUrl = response.certificado_url 
                 ? response.certificado_url + '?t=' + timestamp 
                 : url;
-              $('#pdfViewerDictamenFrame').attr('src', uniqueUrl + '#zoom=80');
+              $('#pdfViewerFrame').attr('src', uniqueUrl + '#zoom=80');
               console.log('PDF cargado: ' + uniqueUrl);
           } else {
               console.log('No se encontró el certificado para la revisión ' + id_revision_edit);
@@ -1006,7 +1006,7 @@ $(document).on('click', '.editar-revision', function () {
           console.error('Error al obtener la URL del certificado: ', xhr.responseText);
       },
       complete: function () {
-          $('#pdfViewerDictamenFrame').on('load', function () {
+          $('#pdfViewerFrame').on('load', function () {
               $('#modal-loading-spinner').hide();
               $(this).show();
           });
