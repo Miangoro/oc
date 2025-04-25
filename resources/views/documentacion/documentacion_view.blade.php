@@ -55,7 +55,7 @@
             <form id="uploadForm" enctype="multipart/form-data">
               <div class="form-floating form-floating-outline m-5 col-md-6">
                 <select name="id_empresa" id="id_empresa" class="select2 form-select">
-                  
+                  <option value="">Seleccione un cliente</option>
                   @foreach ($empresas as $cliente)
                   <option value="{{ $cliente->id_empresa }}">{{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }} | {{ $cliente->razon_social }}</option>
               @endforeach
@@ -100,19 +100,39 @@ $(document).ready(function() {
   initializeSelect2($('.select2'));
     // Función para cargar los datos de la normativa
     function cargarNormas(clienteId) {
-        if (clienteId) {
-            $.ajax({
-                url: '{{ route('documentacion.getNormas') }}',
-                method: 'GET',
-                data: { cliente_id: clienteId },
-                success: function(data) {
-                    $('#contenido').html(data.tabs); // Insertar pestañas
-                }
-            });
-        } else {
-            $('#contenido').empty(); // Limpiar pestañas anteriores
-        }
+
+      if (clienteId === "") {
+        // Si seleccionó "Seleccione un cliente"
+        $('#contenido').html(`
+          <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+            <div class="text-center">
+              <i class="fas fa-info-circle fa-2x text-info mb-3"></i>
+              <h2 class="text-secondary">Por favor seleccione un cliente.</h2>
+            </div>
+          </div>
+        `);
+
+        return; // Salir de la función, no hace falta hacer la petición AJAX
     }
+
+    if (clienteId) {
+        $.ajax({
+            url: '{{ route('documentacion.getNormas') }}',
+            method: 'GET',
+            data: { cliente_id: clienteId },
+            success: function(data) {
+                $('#contenido').html(data.tabs); // Mostrar contenido si se recibe correctamente
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al cargar las normas:', error);
+                $('#contenido').html('Hubo un error al cargar las normas.');
+            }
+        });
+    } 
+}
+
+
+
 
     // Cargar datos cuando el valor de #id_empresa cambia
     $('#id_empresa').change(function() {
