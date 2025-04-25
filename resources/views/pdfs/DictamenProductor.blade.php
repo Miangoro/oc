@@ -158,7 +158,7 @@
             padding: 0;
             position: absolute;
             right: 50px;
-            top: 820px;
+            top: 835px;
             font-family: 'Arial Negrita' !important;
         }
 
