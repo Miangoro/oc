@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Certificado_Exportacion;
 use App\Models\Certificados;
 use App\Models\CertificadosGranel;
+use App\Models\Dictamen_Exportacion;
 use App\Models\Dictamen_Granel;
 use App\Models\Dictamen_instalaciones;
 use App\Models\solicitudesModel;
@@ -30,7 +31,13 @@ class Analytics extends Controller
     $hoy = Carbon::today(); // Solo la fecha, sin hora.
     $fechaLimite = $hoy->copy()->addDays(15); // Fecha límite en 15 días.
     
-    $dictamenesPorVencer = Dictamen_instalaciones::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
+
+    $dictamenesInstalacion = Dictamen_instalaciones::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
+    $dictamenesGranel = Dictamen_granel::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
+    $dictamenesExportacion = Dictamen_Exportacion::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
+    $dictamenesPorVencer = $dictamenesInstalacion
+        ->merge($dictamenesGranel)
+        ->merge($dictamenesExportacion);
 
     $certificadosInstalacion = Certificados::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $certificadosGranel = CertificadosGranel::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
