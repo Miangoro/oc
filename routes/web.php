@@ -454,6 +454,7 @@ Route::middleware([
     'verified',
 ])->group(function () {
      Route::get('/dashboard', [Analytics::class, 'index'])->name('dashboard');
+     Route::get('/estadisticas/certificados', [Analytics::class, 'estadisticasCertificados'])->name('estadisticasCertificados');
 });
 
 //Solicitud de Cliente

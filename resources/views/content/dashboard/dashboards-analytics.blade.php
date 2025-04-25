@@ -187,6 +187,29 @@ use Illuminate\Support\Facades\Route;
         </div>
       </div>
     </div>
+
+    
+  <!-- Line Chart -->
+  <div class="col-12 mb-6">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <div>
+          <h5 class="card-title mb-0">Certificados emitidos por mes</h5>
+          <small class="text-muted">Organismo Certificador CIDAM</small>
+        </div>
+        <div class="d-sm-flex d-none align-items-center">
+          <h5 class="mb-0 me-4">$ 100,000</h5>
+          <span class="badge bg-label-secondary rounded-pill">
+            <i class='ri-arrow-down-line ri-14px text-danger'></i>
+            <span class="align-middle">20%</span>
+          </span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="lineChart"></div>
+      </div>
+    </div>
+  </div>
     @endcan
   </div>
 
