@@ -121,9 +121,39 @@
           orderable: false,
           responsivePriority: 4, 
           render: function (data, type, full, meta) {
-            var $ = full[''];
-            return '<span class="small">   </span>';
+            var $tipoDictamen = parseInt(full['tipo_dictamen']);
+            var $colorDictamen;
+            var $nombreDictamen;
+        
+            switch ($tipoDictamen) {
+              case 1:
+                $nombreDictamen = 'Productor';
+                $colorDictamen = 'primary'; // Azul
+                break;
+              case 2:
+                $nombreDictamen = 'Envasador';
+                $colorDictamen = 'success'; // Verde
+                break;
+              case 3:
+                $nombreDictamen = 'Comercializador';
+                $colorDictamen = 'info'; // Celeste
+                break;
+              case 4:
+                $nombreDictamen = 'Almacén y bodega';
+                $colorDictamen = 'danger'; // Rojo
+                break;
+              case 5:
+                $nombreDictamen = 'Área de maduración';
+                $colorDictamen = 'warning'; // Amarillo
+                break;
+              default:
+                $nombreDictamen = 'Desconocido';
+                $colorDictamen = 'secondary'; // Gris, color por defecto
             }
+        
+            // Retorna el badge con el texto y color apropiado
+            return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span><br><small>${full['direccion_completa']}</small>`;
+          }  
         },
         {
           targets: 5,
