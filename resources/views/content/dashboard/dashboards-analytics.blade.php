@@ -103,6 +103,7 @@ use Illuminate\Support\Facades\Route;
   <!--/ Sessions line chart -->
 
   <div class="row g-6">
+    @can('Estadísticas ui')
     <div class="col-sm-6 col-lg-3">
       <div class="card card-border-shadow-primary h-100">
         <div class="card-body">
@@ -120,6 +121,8 @@ use Illuminate\Support\Facades\Route;
         </div>
       </div>
     </div>
+    @endcan
+    @can('Estadísticas ui')
     <div class="col-sm-6 col-lg-3">
       <div class="card card-border-shadow-warning h-100">
         <div class="card-body">
@@ -137,6 +140,9 @@ use Illuminate\Support\Facades\Route;
         </div>
       </div>
     </div>
+    @endcan
+    
+    @can('Estadísticas ui')
     <div class="col-sm-6 col-lg-3">
       <div class="card card-border-shadow-danger h-100">
         <div class="card-body">
@@ -155,6 +161,9 @@ use Illuminate\Support\Facades\Route;
         </div>
       </div>
     </div>
+    @endcan
+
+    @can('Estadísticas oc')
     <div class="col-sm-6 col-lg-3">
       <div class="card card-border-shadow-info h-100">
         <div class="card-body">
@@ -178,6 +187,7 @@ use Illuminate\Support\Facades\Route;
         </div>
       </div>
     </div>
+    @endcan
   </div>
 
 
