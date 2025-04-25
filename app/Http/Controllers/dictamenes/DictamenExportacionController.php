@@ -10,7 +10,7 @@ use App\Models\inspecciones;
 use App\Models\User;
 use App\Models\empresa; 
 use App\Models\lotes_envasado;
-use App\Models\Instalaciones;
+use App\Models\instalaciones;
 //Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -398,7 +398,7 @@ public function MostrarDictamenExportacion($id_dictamen)
         $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
         $no_pedido = $caracteristicas['no_pedido'] ?? '';
         $envasado_en = $caracteristicas['id_instalacion_envasado'] ?? null;
-            $E_productor = $envasado_en ? (Instalaciones::find($envasado_en)?->estados?->nombre ?? 'No encontrado') : '';
+            $E_productor = $envasado_en ? (instalaciones::find($envasado_en)?->estados?->nombre ?? 'No encontrado') : '';
         $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
         // Acceder a los detalles
         foreach ($detalles as $detalle) {

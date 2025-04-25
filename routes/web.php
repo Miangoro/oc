@@ -877,13 +877,15 @@ Route::get('/certificado_comercializador/{id_certificado}', [Certificado_Instala
 Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
 Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
 
-//Certificado Granel
+//-------------------CERTIFICADO GRANEL-------------------
 Route::get('certificados/granel', [Certificado_GranelController::class, 'UserManagement'])->name('certificados-granel');
 Route::resource('certificados/granel-list',Certificado_GranelController::class);
 Route::post('/certificados/granel', [Certificado_GranelController::class, 'store']);
 Route::get('/edit-certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'edit']);
 Route::delete('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'destroy'])->name('certificados.destroy');
-Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');
+
+Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'CertificadoGranel'])->name('PDF-cer-exportacion');
+
 Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
 Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
 Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::class, 'reexpedir'])->name('certificados.reexpedir.granel');
@@ -912,7 +914,6 @@ Route::middleware(['auth'])->controller(RevisionPersonalController::class)->grou
 });
 
 
-Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');
 
 // Pdfs Bitacoras
 

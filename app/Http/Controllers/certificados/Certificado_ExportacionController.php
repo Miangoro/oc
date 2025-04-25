@@ -90,6 +90,7 @@ public function index(Request $request)
             $nestedData['id_certificado'] = $certificado->id_certificado ?? 'No encontrado';
             $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
             $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
+            $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
             $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
             $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
             $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
@@ -109,8 +110,8 @@ public function index(Request $request)
             ///dias vigencia
             $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
             $nestedData['fecha_actual'] = $fechaActual;
-            $nestedData['vigencia'] = $certificado->dictamen->fecha_vigencia;
-            $fechaVigencia = Carbon::parse($certificado->dictamen->fecha_vigencia)->startOfDay();
+            $nestedData['vigencia'] = $certificado->fecha_vigencia;
+            $fechaVigencia = Carbon::parse($certificado->fecha_vigencia)->startOfDay();
                 if ($fechaActual->isSameDay($fechaVigencia)) {
                     $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este certificado</span>";
                 } else {

@@ -46,18 +46,14 @@
         <table class="datatables-users table">
             <thead class="table-dark">
                 <tr>
-                    <th>#</th>
-                    <th>ID</th>
+                    <th></th>
+                    <th>No. certificado / Solicitud</th>
+                    <th>Solicitud /<br>no. servicio</th>
                     <th>Cliente</th>
-                    <th>No. Certificado</th>
-                    <th>No. Dictamen</th>
-                    <th>Datos del Certificado</th> 
-                    <th>Firmante</th>
+                    <th>Características</th>
                     <th>Fechas</th>
-                    <th>Revisor Asignado</th>
-                    <th>Certificado</th>
                     <th>Estatus</th>
-                    <th>Acciones</th>
+                    <th>ACCIONES</th>
                 </tr>
             </thead>
         </table>
@@ -66,7 +62,7 @@
 </div>
 
 <!-- Modal -->
-@include('_partials/_modals/modal-pdfs-certificados')
+@include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-certificado-granel')
 @include('_partials/_modals/modal-edit-certificado-granel')
 @include('_partials/_modals/modal-add-asignar-revisor')
