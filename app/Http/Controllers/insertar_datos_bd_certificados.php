@@ -52,8 +52,8 @@ class insertar_datos_bd_certificados extends Controller
                             $id_solicitud = Certificados::create([
                                 'id_dictamen'             => $dictamenes->id_dictamen,
                                 'num_certificado'             => $solicitud['n_certificado'],
-                                'fecha_vigencia'   => $solicitud['fecha_expedicion'],
-                                'fecha_vencimiento'   => $solicitud['fecha_vigencia'],
+                                'fecha_emision'   => $solicitud['fecha_expedicion'],
+                                'fecha_vigencia'   => $solicitud['fecha_vigencia'],
                                 'id_firmante' => 3,
                                'maestro_mezcalero' => $solicitud['maestro_mezcalero'] == 0 ? '' : $solicitud['maestro_mezcalero'],
                                'num_autorizacion' => $solicitud['n_autorizacion'] == 0 ? '' : $solicitud['n_autorizacion'],
