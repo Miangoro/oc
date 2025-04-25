@@ -216,11 +216,11 @@ $.ajaxSetup({
                 '</a>'+
                 // Botón adicional: Asignar revisor
                 `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-info">` +
-                '<i class="text-warning ri-user-search-fill"></i> <span class="text-warning">Asignar revisor</span>' +
+                '<i class="text-warning ri-user-search-fill"></i> <span class="text-warning"> Asignar revisor</span>' +
                 '</a>' +
                 // Botón para reexpedir certificado de instalaciones
                 `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalReexpedirCertificadoGranel" class="dropdown-item reexpedir-record waves-effect text-info">` +
-                '<i class="ri-file-edit-fill"></i>Reexpedir certificado' +
+                '<i class="ri-file-edit-fill"></i> Reexpedir certificado' +
                 '</a>' +
                 '</div>' +
               '</div>'

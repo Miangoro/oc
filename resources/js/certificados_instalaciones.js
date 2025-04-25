@@ -80,9 +80,9 @@
           render: function (data, type, full, meta) {
             var $num_certificado = full['num_certificado'];
             var $id = full['id_certificado'];
-            return '<small class="fw-bold">' + $num_certificado + '</small>' +
+            return '<small class="fw-bold">' +$num_certificado+ '</small>' +
                 '<i data-id="' +$id+ '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
-                `<br><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']} <i data-id="${full['id_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+                `<br><small><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']}</small> <i data-id="${full['id_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
               }
         }, 
         {
@@ -105,9 +105,9 @@
             }
 
             return `
-            <span class="fw-bold">Servicio:</span> ${$num_servicio}
+            <small><b>Servicio:</b> ${$num_servicio}</small>
               <span>${$acta}</span>
-            <br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud}
+            <br><small><b>Solicitud:</b> ${$folio_solicitud}</small>
               <i data-id="${full['id_solicitud']}" data-folio="${$folio_solicitud}"
                 class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
                 data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
@@ -231,23 +231,11 @@
                   '<i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>' +
                 '</button>' +
                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                  // Botón para editar
-                  `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#editCertificadoModal" class="dropdown-item edit-record waves-effect text-info">` +
-                    '<i class="ri-edit-box-line ri-20px text-info"></i> Editar' +
-                  '</a>' +
-                  // Botón para eliminar
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item delete-record waves-effect text-danger">` +
-                    '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar' +
-                  '</a>' +
-                  // Botón adicional: Asignar revisor
-                  `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-info">` +
-                    '<i class="text-warning ri-user-search-fill"></i> <span class="text-warning">Asignar revisor</span>' +
-                  '</a>' +
-                  // Botón para reexpedir certificado de instalaciones
-                  `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalReexpedirCertificadoInstalaciones" class="dropdown-item reexpedir-record waves-effect text-info">` +
-                    '<i class="ri-file-edit-fill"></i>Reexpedir certificado' +
-                  '</a>' +
-                '</div>' +
+                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark edit-record" data-bs-toggle="modal" data-bs-target="#editCertificadoModal">` + '<i class="ri-edit-box-line ri-20px text-info"></i> Editar </a>' +
+                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">` + '<i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>' +
+                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir-record" data-bs-toggle="modal" data-bs-target="#modalReexpedirCertificadoInstalaciones">` + '<i class="ri-file-edit-fill text-success"></i> Reexpedir certificado </a>' +
+                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black delete-record">` + '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar </a>' +
+                  '</div>' +
               '</div>'
             );                                   
            }
