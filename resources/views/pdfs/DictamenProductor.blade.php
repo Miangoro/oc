@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor</title>
+    <title>{{ $datos->num_dictamen }} Dictamen de cumplimiento de Instalaciones como productor</title>
     <style>
       
     @font-face {
@@ -336,7 +336,7 @@
     </div>
     <p class="textx" style="font-size: 9px; margin-bottom:-8px; position: relative;">
         <strong>AUTORIZÓ</strong>
-        <span style="margin-left: 30px; display: inline-block; text-align: center; position: relative;">
+        <span style="margin-left: 0px; display: inline-block; text-align: center; position: relative;">
             @php
                 use Illuminate\Support\Facades\Storage;
     
