@@ -79,10 +79,11 @@
           targets: 1,
           render: function (data, type, full, meta) {
             var $num_certificado = full['num_certificado'];
+            var $tipo =full['tipo_dictamen'];
             var $id = full['id_certificado'];
             return '<small class="fw-bold">' +$num_certificado+ '</small>' +
-                '<i data-id="' +$id+ '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
-                `<br><small><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']}</small> <i data-id="${full['id_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+                '<i data-id="'+$id+'" data-tipo="'+$tipo+'" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
+                `<br><small><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']}</small> <i data-id="${full['id_dictamen']}" data-tipo="${full['tipo_dictamen']}"class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
               }
         }, 
         {
@@ -883,7 +884,6 @@ $(document).ready(function() {
     }
 }
 
-
   $(document).on('click', '.edit-record', function() {
       var id_certificado = $(this).data('id');
 
@@ -956,59 +956,8 @@ $(document).ready(function() {
 });
 });
 
-$(document).on('click', '.pdf', function () {
-  var id = $(this).data('id');
-  var registro = $(this).data('registro');
-  var tipo = $(this).data('tipo');
-  var es = $(this).data('es');
-
-  var tipo_dictamen = '';
-  var titulo = '';
-
-  if(es==2){
-    if (tipo == 1 || tipo == 5) { // Productor
-      tipo_dictamen = '../certificado_productor_mezcal/' + id;
-      titulo = "Certificado de productor";
-    } else if (tipo == 2) { // Envasador
-      tipo_dictamen = '../certificado_envasador_mezcal/' + id;
-      titulo = "Certificado de envasador";
-    } else if (tipo == 3 || tipo == 4) { // Comercializador
-      tipo_dictamen = '../certificado_comercializador/' + id;
-      titulo = "Certificado de comercializador";
-    }
-  }else{
-    if (tipo == 1 || tipo == 5) { // Productor
-      tipo_dictamen = '../dictamen_productor/' + id;
-      titulo = "Dictamen de productor";
-    } else if (tipo == 2) { // Envasador
-      tipo_dictamen = '../dictamen_envasador/' + id;
-      titulo = "Dictamen de envasador";
-    } else if (tipo == 3 || tipo == 4) { // Comercializador
-      tipo_dictamen = '../dictamen_comercializador/' + id;
-      titulo = "Dictamen de comercializador";
-    }
-  }
 
 
-
-  $('#loading-spinner').show();
-  $('#pdfViewerDictamen').hide();
-
-  $('#titulo_modal_Dictamen').text(titulo);
-  $('#subtitulo_modal_Dictamen').text(registro);
-
-  var openPdfBtn = $('#openPdfBtnDictamen');
-  openPdfBtn.attr('href', tipo_dictamen);
-  openPdfBtn.show();
-
-  $('#PdfDictamenIntalaciones').modal('show');
-  $('#pdfViewerDictamen').attr('src', tipo_dictamen);
-});
-
-$('#pdfViewerDictamen').on('load', function () {
-  $('#loading-spinner').hide();
-  $('#pdfViewerDictamen').show();
-});
 
 
 $(document).ready(function() {
@@ -1171,8 +1120,9 @@ $('#asignarRevisorModal').on('show.bs.modal', function (event) {
 });
 
 
-//Reexpedicion y Cancelacion
 
+
+//Reexpedicion y Cancelacion
 //Evento para saber que certificado Reexpedir
 let isLoadingData = false;
 let fieldsValidated = []; 
@@ -1446,8 +1396,165 @@ $(document).ready(function () {
     });
 });
 
-//end
+
+
+
+///FORMATO PDF CERTIFICADO
+$(document).on('click', '.pdfCertificado', function ()  {
+  var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
+  var tipo = $(this).data('tipo');
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+  let titulo;
+  let url;
+
+    switch (tipo) {
+      case 1:
+        titulo = 'Certificado Productor';
+        url = '../certificado_productor_mezcal/' + id;
+        break;
+      case 2:
+        titulo = 'Certificado Envasador';
+        url = '../certificado_envasador_mezcal/' + id;
+        break;
+      case 3:
+        titulo = 'Certificado Comercializador';
+        url = '../certificado_comercializador/' + id;
+        break;
+      case 4:
+        titulo = 'Certificado Almacén y bodega';
+        url = '';
+        break;
+      case 5:
+        titulo = 'Certificado Área de maduración';
+        url ='';
+        break;
+      default:
+        titulo = 'Desconocido';
+        url ='';
+    }
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    
+    //Cargar el PDF con el ID
+    iframe.attr('src', url);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', url).show();
+
+    $("#titulo_modal").text(titulo);
+    $("#subtitulo_modal").text("PDF del Certificado");
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
+
+///FORMATO PDF DICTAMEN
+$(document).on('click', '.pdfDictamen', function ()  {
+  var id = $(this).data('id');
+  var tipo = $(this).data('tipo');
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+  let titulo;
+  let url;
+
+    switch (tipo) {
+      case 1:
+        titulo = 'Dictamen Productor';
+        url = '../dictamen_productor/' + id;
+        break;
+      case 2:
+        titulo = 'Dictamen Envasador';
+        url = '../dictamen_envasador/' + id;
+        break;
+      case 3:
+        titulo = 'Dictamen Comercializador';
+        url = '../dictamen_comercializador/' + id;
+        break;
+      case 4:
+        titulo = 'Dictamen Almacén y bodega';
+        url = '../dictamen_almacen/'+id;
+        break;
+      case 5:
+        titulo = 'Dictamen Área de maduración';
+        url = '../dictamen_maduracion/'+id;
+        break;
+      default:
+        titulo = 'Desconocido';
+        url ='';
+    }
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    //Cargar el PDF con el ID
+    iframe.attr('src', url);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', url).show();
+    $("#titulo_modal").text(titulo);
+    $("#subtitulo_modal").text("PDF del Dictamen");
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
+
+///FORMATO PDF SOLICITUD SERVICIOS
+$(document).on('click', '.pdfSolicitud', function ()  {
+  var id = $(this).data('id');
+  var folio = $(this).data('folio');
+  var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+      
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    
+    //Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
+
+    $("#titulo_modal").text("Solicitud de servicios");
+    $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
+
+///FORMATO PDF ACTA
+$(document).on('click', '.pdfActa', function () {
+  var id_acta = $(this).data('id');
+  var empresa = $(this).data('empresa');
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+  spinner.show();
+  iframe.hide();
+  
+    //Cargar el PDF con el ID
+    iframe.attr('src', '/files/' + id_acta);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', '/files/' + id_acta).show();
+
+    $("#titulo_modal").text("Acta de inspección");
+    $("#subtitulo_modal").text(empresa);
+
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
 });
 
 
 
+
+
+
+});

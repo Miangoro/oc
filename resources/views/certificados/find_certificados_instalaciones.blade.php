@@ -62,7 +62,7 @@
 </div>
 
 <!-- Modal -->
-@include('_partials/_modals/modal-pdfs-certificados')
+@include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-certificado-instalaciones')
 @include('_partials/_modals/modal-add-asignar-revisor')
 @include('_partials/_modals/modal-reexpedir-certificado-instalaciones')
