@@ -39,7 +39,7 @@ class Dictamen_Granel extends Model
 
     Public function certificado()
         {
-            return $this->belongsTo(Certificados::class, 'id_dictamen', 'id_dictamen');   
+            return $this->belongsTo(CertificadosGranel::class, 'id_dictamen', 'id_dictamen');   
         }  
 
     public function inspectores()
