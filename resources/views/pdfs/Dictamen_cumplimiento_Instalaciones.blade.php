@@ -234,7 +234,7 @@
     <div class="description1">Unidad de Inspección No. UVNOM-129</div>
     <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
     <div class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C</div>
-    <div class="textimg negrita">No.: UMC-00__/20___</div>
+    <div class="textimg negrita">No.: <u>{{ $datos->inspeccione->num_servicio ?? '' }}</u></div>
     <div class="title">Dictamen de cumplimiento de Instalaciones como <br> <span class="blue-text">ALMACÉN DE MEZCAL</span></div>
     <div class="text">
         <p>De acuerdo a lo establecido en los procedimientos internos de la Unidad de Inspección No. UVNOM 129 para
@@ -264,12 +264,12 @@
             <td>
             <span class="negrita">Categorías del mezcal: <br>&nbsp;</span>
             </td>
-            <td style="text-align: center; vertical-align: middle;">{{ !empty($categorias) && is_array($categorias) ? implode(', ', $categorias) : '' }}
+            <td style="text-align: center; vertical-align: middle;"><u>{{ $datos->inspeccione?->solicitud?->categorias_mezcal()->pluck('categoria')->implode(', ') }}</u>
             </td>
             </tr>
             <tr>
                 <td class="negrita">Clases de mezcal que almacena: <br>&nbsp;</td>
-                <td style="text-align: center; vertical-align: middle;">{{ !empty($clases) && is_array($clases) ? implode(', ', $clases) : '' }}</td>
+                <td style="text-align: center; vertical-align: middle;"><u>{{ $datos->inspeccione?->solicitud?->clases_agave()->pluck('clase')->implode(', ') }}</u></td>
             </tr>
             <tr>
                 <td class="negrita">Fecha de emisión de dictamen: <br>&nbsp;</td>
@@ -282,11 +282,16 @@
         </tbody>
     </table>
     <p class="text">
-    Se dictamina que la <span class="negrita">Unidad de comercialización y/almacén</span> cuenta con la infraestructura, el equipo y los procesos necesarios
-    para para el envasado de <span class="negrita"> Mezcal_______, clase (s)________,</span> requisitos establecidos en la NOM-070-SCFI-2016,
-    Bebidas alcohólicas-Mezcal-Especificaciones y por el Organismo de Certificación del Centro de Innovación y
-    Desarrollo Agroalimentario de Michoacán A.C. (CIDAM)
-   </p>
+        Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de comercialización y/almacén</span>
+        cuenta con la infraestructura, el equipo y los procesos necesarios
+        para el almacenado de <span
+            class="font-lucida-sans-seminegrita"><u>{{ $datos->inspeccione?->solicitud?->categorias_mezcal()->pluck('categoria')->implode(', ') }}</u>,
+            clase(s)
+            <u>{{ $datos->inspeccione?->solicitud?->clases_agave()->pluck('clase')->implode(', ') }}</u></span>,
+        requisitos establecidos en la NOM-070-SCFI-2016,
+        Bebidas alcohólicas-Mezcal-Especificaciones y por el Organismo de Certificación del Centro de Innovación y
+        Desarrollo Agroalimentario de Michoacán A.C. (CIDAM)
+    </p>
 
     <p class="text1">Las instalaciones se encuentran en región de los estados y municipios que contempla la resolución mediante el cual se otorga la protección
     prevista a la denominación de origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre, publicada el 28 de noviembre
@@ -299,7 +304,7 @@
     </div>
     <p class="textx" style="font-size: 9px; margin-bottom:-8px; position: relative;">
         <strong>AUTORIZÓ</strong>
-        <span style="margin-left: 30px; display: inline-block; text-align: center; position: relative;">
+        <span style="margin-left: -33px; display: inline-block; text-align: center; position: relative;">
             @php
                 use Illuminate\Support\Facades\Storage;
     

@@ -294,7 +294,7 @@
         <p class="text">
             Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de comercialización y/almacén</span>
             cuenta con la infraestructura, el equipo y los procesos necesarios
-            para el envasado de <span
+            para la comercialización de <span
                 class="font-lucida-sans-seminegrita"><u>{{ $datos->inspeccione?->solicitud?->categorias_mezcal()->pluck('categoria')->implode(', ') }}</u>,
                 clase(s)
                 <u>{{ $datos->inspeccione?->solicitud?->clases_agave()->pluck('clase')->implode(', ') }}</u></span>,
