@@ -6,35 +6,30 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor</title>
     <style>
-        @font-face {
-            font-family: 'Lucida Sans Unicode';
-            src: url('fonts/lsansuni.ttf') format('truetype');
-        }
+      
+    @font-face {
+        font-family: 'fuenteNormal';
+        src: url('{{ storage_path('fonts/lsansuni.ttf') }}');
+    }
 
-        /*@font-face {
-            font-family: 'Lucida Sans Seminegrita';
-            src: url('fonts/LSANSD.ttf') format('truetype');
-        }*/
-
-        @font-face {
-            font-family: 'Arial Negrita';
-            src: url('fonts/arial-negrita.ttf') format('truetype');
-        }
-
+    @font-face {
+        font-family: 'fuenteNegrita';
+        src: url('{{ storage_path('fonts/LSANSD.ttf') }}');
+    }
         body {
-            font-family: 'Lucida Sans Unicode';
-            margin-left: 20px; 
-            margin-right: 20px; 
+            font-family: 'fuenteNormal';
+            margin-left: 20px;
+            margin-right: 20px;
         }
 
         .header {
-            margin-top: -30px; 
+            margin-top: -30px;
             width: 100%;
         }
 
         .header img {
             display: block;
-            width: 275px; 
+            width: 275px;
         }
 
         .description1,
@@ -46,51 +41,31 @@
             text-align: right;
         }
 
-        #encabezado #titulos {
-            margin-top: 40px; /* Ajusta el espacio entre los párrafos */
-          
-        }
-
-        #encabezado p {
-            margin-bottom: 1px; /* Ajusta el espacio entre los párrafos */
-        }
-
-        #encabezado p:last-child {
-            margin-bottom: 0; /* Elimina el margen inferior del último párrafo */
-        }
-
-
-        #encabezado #logo{
-            
-            text-align: left;
-            float: left;
-        }
-
         .description1 {
             font-size: 18px;
             color: #151442;
             font-family: 'Arial Negrita' !important;
-            top: 5px; 
+            top: 35px;
         }
 
         .description2 {
             color: #151442;
             font-family: 'Arial Negrita' !important;
             font-size: 9.5px;
-            top: 30px; 
+            top: 60px;
         }
 
         .description3 {
             font-size: 10px;
-            top: 42px; 
-            margin-right: 40px; 
+            top: 72px;
+            margin-right: 40px;
         }
 
         .textimg {
             font-weight: bold;
-            position: absolute; 
+            position: absolute;
             top: 100px;
-            left: 10px; 
+            left: 10px;
             text-align: left;
             font-size: 13px;
         }
@@ -101,7 +76,7 @@
             line-height: 0.7;
             margin-right: 10px;
         }
-        
+
         .text1 {
             text-align: justify;
             font-size: 11px;
@@ -114,6 +89,7 @@
             line-height: 0.7;
             margin-right: 10px;
             font-family: 'Lucida Sans Seminegrita';
+            margin-top: 20px;
         }
 
         .title {
@@ -121,7 +97,7 @@
             font-size: 22px;
             font-family: 'Arial Negrita', Gadget, sans-serif;
             line-height: 20px;
-            margin-top: 10px; 
+            margin-top: 10px;
         }
 
         table {
@@ -132,10 +108,11 @@
             font-size: 12px;
             line-height: 1;
             vertical-align: top;
-            font-family: Arial, Helvetica, Verdana;
+            font-family: 'fuenteNormal';
         }
 
-        td, th {
+        td,
+        th {
             border: 2px solid #1E4678;
             padding: 5px;
             vertical-align: top;
@@ -181,7 +158,7 @@
             padding: 0;
             position: absolute;
             right: 50px;
-            top: 775px;
+            top: 815px;
             font-family: 'Arial Negrita' !important;
         }
 
@@ -190,15 +167,16 @@
             position: relative;
         }
 
-        .textx, .textsello {
+        .textx,
+        .textsello {
             line-height: 1.2;
             font-family: Arial, Helvetica, Verdana;
         }
 
         .image-right {
-            position: absolute; 
-            right: 10px; 
-            top: -20px; 
+            position: absolute;
+            right: 10px;
+            top: -20px;
             width: 240px;
         }
 
