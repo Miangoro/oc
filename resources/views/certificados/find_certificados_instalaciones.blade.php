@@ -50,7 +50,7 @@
                     <th>No. certificado / Solicitud</th>
                     <th>Solicitud /<br>no. servicio</th>
                     <th>Cliente</th>
-                    <th>Características</th>
+                    <th>Instalación</th>
                     <th>Fechas</th>
                     <th>Estatus</th>
                     <th>ACCIONES</th>
