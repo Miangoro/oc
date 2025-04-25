@@ -37,7 +37,10 @@ class Dictamen_Granel extends Model
         return 'dictamen de granel'; // Devuelve el nombre que desees
     }
 
-  
+    Public function certificado()
+        {
+            return $this->belongsTo(Certificados::class, 'id_dictamen', 'id_dictamen');   
+        }  
 
     public function inspectores()
     {

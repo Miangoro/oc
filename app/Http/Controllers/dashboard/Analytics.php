@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Certificado_Exportacion;
 use App\Models\Certificados;
 use App\Models\CertificadosGranel;
+use App\Models\Dictamen_Granel;
 use App\Models\Dictamen_instalaciones;
 use App\Models\solicitudesModel;
 use Carbon\Carbon;
@@ -33,11 +34,13 @@ class Analytics extends Controller
     $certificadosPorVencer = Certificados::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     
 
+    $dictamenesInstalacionesSinCertificado = Dictamen_instalaciones::whereDoesntHave('certificado')->count();
+    $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->count();
     
 
    
 
-    return view('content.dashboard.dashboards-analytics',compact('solicitudesSinInspeccion','solicitudesSinActa','dictamenesPorVencer','certificadosPorVencer'));
+    return view('content.dashboard.dashboards-analytics',compact('solicitudesSinInspeccion','solicitudesSinActa','dictamenesPorVencer','certificadosPorVencer','dictamenesInstalacionesSinCertificado','dictamenesGranelesSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)

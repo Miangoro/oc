@@ -114,33 +114,21 @@ use Illuminate\Support\Facades\Route;
             <h4 class="mb-0">{{ $solicitudesSinInspeccion }}</h4>
           </div>
           <h6 class="mb-0 fw-normal">Pendiente de asignar inspector</h6>
-          <p class="mb-0">
-            <!--<span class="me-1 fw-medium">+18.2%</span>
-            <small class="text-muted">than last week</small>-->
-          </p>
-        </div>
-      </div>
-    </div>
-    @endcan
-    @can('Estadísticas ui')
-    <div class="col-sm-6 col-lg-3">
-      <div class="card card-border-shadow-warning h-100">
-        <div class="card-body">
+          <hr>
           <div class="d-flex align-items-center mb-2">
             <div class="avatar me-4">
-              <span class="avatar-initial rounded-3 bg-label-warning"><i class="ri-file-list-fill"></i></span>
+              <span class="avatar-initial rounded-3 bg-label-warning"><i class="ri-file-list-fill ri-24px"></i></span>
             </div>
             <h4 class="mb-0">{{ $solicitudesSinActa }}</h4>
           </div>
           <h6 class="mb-0 fw-normal">Pendiente de subir acta</h6>
-          <!--<p class="mb-0">
-            <span class="me-1 fw-medium">-8.7%</span>
-            <small class="text-muted">than last week</small>
-          </p>-->
         </div>
       </div>
     </div>
     @endcan
+
+    
+
     
     @can('Estadísticas ui')
     <div class="col-sm-6 col-lg-3">
@@ -148,16 +136,40 @@ use Illuminate\Support\Facades\Route;
         <div class="card-body">
           <div class="d-flex align-items-center mb-2">
             <div class="avatar me-4">
-              <span class="avatar-initial rounded-3 bg-label-danger"><i class="ri-close-circle-fill"></i></span>
+              <span class="avatar-initial rounded-3 bg-label-danger"><i class="ri-close-circle-fill ri-24px"></i></span>
             </div>
-            <h4 class="mb-0"> 
+            <h5 class="mb-0"> 
 
             @foreach($dictamenesPorVencer AS $dictamen)
               {{ $dictamen->num_dictamen }}   <small class="text-muted">{{ $dictamen->fecha_vigencia }}</small> <br>
             @endforeach
-          </h4>
+          </h5>
           </div>
           <h6 class="mb-0 fw-normal">Dictámenes por vencer</h6>
+        </div>
+      </div>
+    </div>
+    @endcan
+
+    @can('Estadísticas oc')
+    <div class="col-sm-6 col-lg-3">
+      <div class="card card-border-shadow-primary h-100">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-2">
+            <div class="avatar me-4">
+              <span class="avatar-initial rounded-3 bg-label-primary"><i class="ri-home-gear-line ri-24px"></i></span>
+            </div>
+            <h4 class="mb-0">{{ $dictamenesInstalacionesSinCertificado }}</h4>
+          </div>
+          <h6 class="mb-0 fw-normal">Pendiente de crear certificado de instalaciones</h6>
+          <hr>
+          <div class="d-flex align-items-center mb-2">
+            <div class="avatar me-4">
+              <span class="avatar-initial rounded-3 bg-label-warning"><i class="ri-paint-fill ri-24px"></i></span>
+            </div>
+            <h4 class="mb-0">{{ $dictamenesGranelesSinCertificado }}</h4>
+          </div>
+          <h6 class="mb-0 fw-normal">Pendiente de crear certificado de graneles</h6>
         </div>
       </div>
     </div>
@@ -169,15 +181,15 @@ use Illuminate\Support\Facades\Route;
         <div class="card-body">
           <div class="d-flex align-items-center mb-2">
             <div class="avatar me-4">
-              <span class="avatar-initial rounded-3 bg-label-info"><i class='ri-time-line ri-24px'></i></span>
+              <span class="avatar-initial rounded-3 bg-label-danger"><i class='ri-close-circle-fill ri-24px'></i></span>
             </div>
-            <h4 class="mb-0">
+            <h5 class="mb-0">
 
               @foreach($certificadosPorVencer AS $certificado)
-              {{ $certificado->num_certificado }}   <small class="text-muted">{{ $certificado->fecha_vencimiento }}</small> <br>
+              {{ $certificado->num_certificado }}   <small class="text-muted">{{ $certificado->fecha_vigencia }}</small> <br>
             @endforeach
 
-            </h4>
+            </h5>
           </div>
           <h6 class="mb-0 fw-normal">Certificados por vencer</h6>
           <p class="mb-0">
