@@ -9,84 +9,124 @@ use App\Models\CertificadosGranel;
 use App\Models\Dictamen_Exportacion;
 use App\Models\Dictamen_Granel;
 use App\Models\Dictamen_instalaciones;
+use App\Models\inspecciones;
 use App\Models\solicitudesModel;
+use App\Models\solicitudTipo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class Analytics extends Controller
 {
   public function index()
-  { 
+  {
     //$datos = solicitudesModel::All();
     $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')->count();
-    $solicitudesSinActa = solicitudesModel::doesntHave('documentacion_completa')
-    ->orWhereHas('documentacion_completa', function ($query) {
-        $query->where('id_documento', '!=', 69);
-    })
-    ->count();
+    $solicitudesSinActa = solicitudesModel::whereNot('id_tipo', 15)
+      ->where(function ($query) {
+        $query->doesntHave('documentacion_completa')
+          ->orWhereHas('documentacion_completa', function ($q) {
+            $q->where('id_documento', '!=', 69);
+          });
+      })->count();
 
-    
-   
+
+
+
 
     $hoy = Carbon::today(); // Solo la fecha, sin hora.
     $fechaLimite = $hoy->copy()->addDays(15); // Fecha límite en 15 días.
-    
+
 
     $dictamenesInstalacion = Dictamen_instalaciones::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $dictamenesGranel = Dictamen_granel::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $dictamenesExportacion = Dictamen_Exportacion::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $dictamenesPorVencer = $dictamenesInstalacion
-        ->merge($dictamenesGranel)
-        ->merge($dictamenesExportacion);
+      ->merge($dictamenesGranel)
+      ->merge($dictamenesExportacion);
 
     $certificadosInstalacion = Certificados::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $certificadosGranel = CertificadosGranel::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $certificadosExportacion = Certificado_Exportacion::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $certificadosPorVencer = $certificadosInstalacion
-    ->merge($certificadosGranel)
-    ->merge($certificadosExportacion);
-    
+      ->merge($certificadosGranel)
+      ->merge($certificadosExportacion);
+
 
     $dictamenesInstalacionesSinCertificado = Dictamen_instalaciones::whereDoesntHave('certificado')->count();
     $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->count();
-    
 
-   
 
-    return view('content.dashboard.dashboards-analytics',compact('solicitudesSinInspeccion','solicitudesSinActa','dictamenesPorVencer','certificadosPorVencer','dictamenesInstalacionesSinCertificado','dictamenesGranelesSinCertificado'));
+
+
+    return view('content.dashboard.dashboards-analytics', compact('solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)
   {
+    $year = $request->input('year', now()->year);
+
+    // Helper para contar por mes
+    $contarPorMes = function ($query) use ($year) {
+      return $query->whereYear('fecha_vigencia', $year)
+        ->selectRaw('MONTH(fecha_vigencia) as mes, COUNT(*) as total')
+        ->groupBy('mes')
+        ->pluck('total', 'mes')
+        ->toArray();
+    };
+
+    $instalaciones = $contarPorMes(Certificados::query());
+    $granel = $contarPorMes(CertificadosGranel::query());
+    $exportacion = $contarPorMes(Certificado_Exportacion::query());
+
+    // Asegura que haya un valor para cada mes (1-12), aunque sea 0
+    $formatearDatos = function ($datos) {
+      $meses = array_fill(1, 12, 0); // meses del 1 al 12
+      foreach ($datos as $mes => $total) {
+        $meses[$mes] = $total;
+      }
+      return array_values($meses); // ordenados por mes
+    };
+
+    return response()->json([
+      'instalaciones' => $formatearDatos($instalaciones),
+      'granel' => $formatearDatos($granel),
+      'exportacion' => $formatearDatos($exportacion),
+    ]);
+  }
+
+  public function estadisticasServicios(Request $request)
+  {
       $year = $request->input('year', now()->year);
   
-      // Helper para contar por mes
-      $contarPorMes = function ($query) use ($year) {
-          return $query->whereYear('fecha_vigencia', $year)
-              ->selectRaw('MONTH(fecha_vigencia) as mes, COUNT(*) as total')
-              ->groupBy('mes')
-              ->pluck('total', 'mes')
-              ->toArray();
-      };
+      // Trae todos los tipos de servicio con su ID y nombre
+      $tipos = solicitudTipo::pluck('tipo', 'id_tipo'); // [1 => 'Instalaciones', 2 => 'Granel', ...]
   
-      $instalaciones = $contarPorMes(Certificados::query());
-      $granel = $contarPorMes(CertificadosGranel::query());
-      $exportacion = $contarPorMes(Certificado_Exportacion::query());
-  
-      // Asegura que haya un valor para cada mes (1-12), aunque sea 0
       $formatearDatos = function ($datos) {
-          $meses = array_fill(1, 12, 0); // meses del 1 al 12
+          $meses = array_fill(1, 12, 0);
           foreach ($datos as $mes => $total) {
               $meses[$mes] = $total;
           }
-          return array_values($meses); // ordenados por mes
+          return array_values($meses);
       };
   
+      $inspecciones = [];
+  
+      foreach ($tipos as $id => $nombre) {
+          $datos = inspecciones::whereHas('solicitud', function ($query) use ($id) {
+                  $query->where('id_tipo', $id);
+              })
+              ->whereYear('fecha_servicio', $year)
+              ->selectRaw('MONTH(fecha_servicio) as mes, COUNT(*) as total')
+              ->groupBy('mes')
+              ->pluck('total', 'mes')
+              ->toArray();
+  
+          $inspecciones[$nombre] = $formatearDatos($datos);
+      }
+  
       return response()->json([
-          'instalaciones' => $formatearDatos($instalaciones),
-          'granel' => $formatearDatos($granel),
-          'exportacion' => $formatearDatos($exportacion),
+          'inspecciones' => $inspecciones
       ]);
   }
-
+  
 }
