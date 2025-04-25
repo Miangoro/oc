@@ -819,19 +819,13 @@
 
   // Line Chart
   // --------------------------------------------------------------------
-  const lineChartEl = document.querySelector('#lineChart');
-
-if (lineChartEl) {
-  fetch('/estadisticas/certificados')
-    .then(response => response.json())
-    .then(data => {
-      const lineChart = new ApexCharts(lineChartEl, {
+  function cargarDatosCertificados(anioSeleccionado) {
+    $.get('/estadisticas/certificados', { year: anioSeleccionado }, function(data) {
+      const lineChart = new ApexCharts(document.querySelector('#lineChart'), {
         chart: {
-          height: 400,
-          fontFamily: 'Inter',
           type: 'line',
-          zoom: { enabled: false },
-          toolbar: { show: false }
+          height: 400,
+          fontFamily: 'Inter'
         },
         series: [
           {
@@ -847,55 +841,28 @@ if (lineChartEl) {
             data: data.exportacion
           }
         ],
-        stroke: { curve: 'smooth' },
-        colors: [config.colors.warning, config.colors.success, config.colors.info],
-        markers: {
-          strokeWidth: 7,
-          strokeOpacity: 1,
-          strokeColors: [cardColor],
-          colors: [config.colors.warning, config.colors.success, config.colors.info]
-        },
-        dataLabels: { enabled: false },
-        grid: {
-          borderColor: borderColor,
-          xaxis: { lines: { show: true } },
-          padding: { top: -20 }
-        },
-        tooltip: {
-          shared: true,
-          y: {
-            formatter: val => `${val} certificados`
-          }
-        },
         xaxis: {
-          categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-          axisBorder: { show: false },
-          axisTicks: { show: false },
-          labels: {
-            style: {
-              colors: labelColor,
-              fontSize: '13px'
-            }
-          }
-        },
-        yaxis: {
-          labels: {
-            style: {
-              colors: labelColor,
-              fontSize: '13px'
-            }
-          }
+          categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
         }
       });
-
+  
       lineChart.render();
-    })
-    .catch(error => {
-      console.error('Error al cargar datos del gráfico:', error);
-      lineChartEl.innerHTML = '<p class="text-danger">No se pudieron cargar los datos.</p>';
     });
-}
-
+  }
+  
+  // Al cambiar el año en el select
+  $('#selectAnio').on('change', function() {
+    const anio = $(this).val();
+    $('#lineChart').html(''); // Limpia el gráfico anterior
+    cargarDatosCertificados(anio);
+  });
+  
+  // Llamada inicial con el año actual
+  $(document).ready(function () {
+    const anioActual = $('#selectAnio').val();
+    cargarDatosCertificados(anioActual);
+  });
+  
 
 
 

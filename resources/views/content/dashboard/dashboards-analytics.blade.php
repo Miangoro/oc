@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Route;
 @section('content')
 <div class="row g-6">
   <!-- Gamification Card -->
-  <div class="col-md-12 col-xxl-8">
+ <!-- <div class="col-md-12 col-xxl-8">
     <div class="card">
       <div class="d-flex align-items-end row">
         <div class="col-md-6 order-2 order-md-1">
@@ -46,7 +46,7 @@ use Illuminate\Support\Facades\Route;
               John Doe
             @endif!</span> 🎉</h4>
             <p class="mb-0">Personal del organismo certificador cidam</p><br>
-            <!--<a href="javascript:;" class="btn btn-primary">Ver pendientes</a>-->
+            <a href="javascript:;" class="btn btn-primary">Ver pendientes</a>
           </div>
         </div>
         <div class="col-md-6 text-center text-md-end order-1 order-md-2">
@@ -57,11 +57,11 @@ use Illuminate\Support\Facades\Route;
         </div>
       </div>
     </div>
-  </div>
+  </div>-->
   <!--/ Gamification Card -->
 
   <!-- Statistics Total Order -->
-  <div class="col-xxl-2 col-sm-6">
+ <!--  <div class="col-xxl-2 col-sm-6">
     <div class="card h-100">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
@@ -82,11 +82,11 @@ use Illuminate\Support\Facades\Route;
         </div>
       </div>
     </div>
-  </div>
+  </div>-->
   <!--/ Statistics Total Order -->
 
   <!-- Sessions line chart -->
-  <div class="col-xxl-2 col-sm-6">
+  <!--<div class="col-xxl-2 col-sm-6">
     <div class="card h-100">
       <div class="card-header pb-0">
         <div class="d-flex align-items-center mb-1 flex-wrap">
@@ -99,7 +99,7 @@ use Illuminate\Support\Facades\Route;
         <div id="sessions"></div>
       </div>
     </div>
-  </div>
+  </div>-->
   <!--/ Sessions line chart -->
 
   <div class="row g-6">
@@ -115,8 +115,8 @@ use Illuminate\Support\Facades\Route;
           </div>
           <h6 class="mb-0 fw-normal">Pendiente de asignar inspector</h6>
           <p class="mb-0">
-            <span class="me-1 fw-medium">+18.2%</span>
-            <small class="text-muted">than last week</small>
+            <!--<span class="me-1 fw-medium">+18.2%</span>
+            <small class="text-muted">than last week</small>-->
           </p>
         </div>
       </div>
@@ -191,19 +191,28 @@ use Illuminate\Support\Facades\Route;
     @can('Estadísticas oc')  
   <!-- Line Chart -->
   <div class="col-12 mb-6">
+    
+    
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <div>
           <h5 class="card-title mb-0">Certificados emitidos por mes</h5>
-          <small class="text-muted">Organismo Certificador CIDAM</small>
+          <div class="mb-0">
+            <label for="selectAnio" class="form-label">Selecciona un año:</label>
+            <select id="selectAnio" class="form-select w-auto">
+              @for ($i = now()->year; $i >= 2022; $i--)
+                <option value="{{ $i }}">{{ $i }}</option>
+              @endfor
+            </select>
+          </div>
         </div>
-        <div class="d-sm-flex d-none align-items-center">
+        <!--<div class="d-sm-flex d-none align-items-center">
           <h5 class="mb-0 me-4">$ 100,000</h5>
           <span class="badge bg-label-secondary rounded-pill">
             <i class='ri-arrow-down-line ri-14px text-danger'></i>
             <span class="align-middle">20%</span>
           </span>
-        </div>
+        </div>-->
       </div>
       <div class="card-body">
         <div id="lineChart"></div>

@@ -40,9 +40,9 @@ class Analytics extends Controller
     return view('content.dashboard.dashboards-analytics',compact('solicitudesSinInspeccion','solicitudesSinActa','dictamenesPorVencer','certificadosPorVencer'));
   }
 
-  public function estadisticasCertificados()
+  public function estadisticasCertificados(Request $request)
   {
-      $year = 2024;
+      $year = $request->input('year', now()->year);
   
       // Helper para contar por mes
       $contarPorMes = function ($query) use ($year) {
