@@ -83,7 +83,7 @@
             var $id = full['id_certificado'];
             return '<small class="fw-bold">' +$num_certificado+ '</small>' +
                 '<i data-id="'+$id+'" data-tipo="'+$tipo+'" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
-                `<br><small><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']}</small> <i data-id="${full['id_dictamen']}" data-tipo="${full['tipo_dictamen']}"class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+                `<br><small><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']}</small> <i data-id="${full['id_dictamen']}" data-tipo="${full['tipo_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
               }
         }, 
         {
@@ -1457,34 +1457,28 @@ $(document).on('click', '.pdfDictamen', function ()  {
   var tipo = $(this).data('tipo');
   var iframe = $('#pdfViewer');
   var spinner = $('#cargando');
-  let titulo;
-  let url;
-
-    switch (tipo) {
-      case 1:
-        titulo = 'Dictamen Productor';
-        url = '../dictamen_productor/' + id;
-        break;
-      case 2:
-        titulo = 'Dictamen Envasador';
-        url = '../dictamen_envasador/' + id;
-        break;
-      case 3:
-        titulo = 'Dictamen Comercializador';
-        url = '../dictamen_comercializador/' + id;
-        break;
-      case 4:
-        titulo = 'Dictamen Almacén y bodega';
-        url = '../dictamen_almacen/'+id;
-        break;
-      case 5:
-        titulo = 'Dictamen Área de maduración';
-        url = '../dictamen_maduracion/'+id;
-        break;
-      default:
-        titulo = 'Desconocido';
-        url ='';
+ 
+    if(tipo == 1){ // Productor
+      var url = '../dictamen_productor/'+id;
+      var titulo = "Dictamen de productor";
     }
+    if(tipo == 2){ // Envasador
+      var url = '../dictamen_envasador/'+id;
+      var titulo = "Dictamen de envasador";
+    }
+    if(tipo == 3){ // Comercializador
+      var url = '../dictamen_comercializador/'+id;
+      var titulo = "Dictamen de comercializador";
+    }
+    if(tipo == 4){ // Almacén y bodega
+      var url = '../dictamen_almacen/'+id;
+      var titulo = "Dictamen de almacén y bodega";
+    }
+    if(tipo == 5){ // Área de maduración
+      var url = '../dictamen_maduracion/'+id;
+      var titulo = "Dictamen de área de maduración de mezcal";
+    }
+
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
     spinner.show();
     iframe.hide();
