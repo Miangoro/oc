@@ -195,13 +195,27 @@
             padding: 10px 0px;
         }
 
+        .footer-bar {
+            position: fixed;
+            bottom: -55px;
+            left: -70px;
+            right: -70px;
+            width: calc(100% - 40px);
+            height: 45px;
+            background-color: #158F60;
+            color: white;
+            font-size: 10px;
+            text-align: center;
+            padding: 10px 0px;
+        }
+
         .footer-bar p {
-            margin: 0; 
+            margin: 0;
             line-height: 1;
         }
 
         .font-lucida-sans-seminegrita {
-            font-family: 'Lucida Sans Seminegrita', sans-serif;
+            font-family: 'fuenteNegrita', sans-serif;
         }
 
         .pie {
@@ -210,19 +224,20 @@
             line-height: 1;
             position: fixed;
             bottom: -10;
-            left: 0;   
-            right: 0;  
-            width: calc(100% - 40px); 
+            left: 0;
+            right: 0;
+            width: calc(100% - 40px);
             height: 45px;
-            margin-right: 30px; 
+            margin-right: 30px;
             padding: 10px 0px;
             font-family: 'Lucida Sans Unicode';
         }
 
-        .negrita{
-            font-family: 'Lucida Sans Unicode Negrita' !important;
+        
+        .interlineado{
+            line-height: 10px;
         }
-       
+        
     </style>
 </head>
 <body>
@@ -245,7 +260,7 @@
         circunstanciada o número de inspección: <u><span  class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio ?? '' }}</u></span></p>
         <p class="textp">Nombre del productor/empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social ?? '' }}</u></p>
     </div>
-    <table>
+    <table class="interlineado">
         <tbody id="tabla">
             <tr>
             <td style="text-align: justify;">

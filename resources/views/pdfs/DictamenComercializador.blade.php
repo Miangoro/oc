@@ -221,10 +221,10 @@
         }
 
         
-            .interlineado{
-                line-height: 10px;
-            }
+        .interlineado{
+            line-height: 10px;
         }
+        
     </style>
 </head>
 
