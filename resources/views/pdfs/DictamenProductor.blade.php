@@ -214,7 +214,7 @@
             line-height: 1;
         }
 
-        .font-lucida-sans-seminegrita {
+        .negrita {
             font-family: 'fuenteNegrita', sans-serif;
         }
 
@@ -249,25 +249,25 @@
     <div class="description1">Unidad de Inspección No. UVNOM-129</div>
     <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
     <div class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C</div>
-    <div class="textimg font-lucida-sans-seminegrita">No.: <u>{{ $datos->num_dictamen ?? '' }}</u></div>
+    <div class="textimg negrita">No.: <u>{{ $datos->num_dictamen ?? '' }}</u></div>
     <div class="title">Dictamen de cumplimiento de Instalaciones como <br> productor</div>
     <div class="text">
         <p>De acuerdo a lo establecido en los procedimientos internos de la Unidad de Inspección No. UVNOM 129 para
         la revisión de procesos de producción del producto Mezcal, su envasado y comercialización; y con fundamento
         en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la Calidad que establece el
         funcionamiento de las Unidades de Inspección.</p>
-        <p>Después de realizar la inspección de las instalaciones en fecha del <u><span  class="font-lucida-sans-seminegrita">{{ $fecha_inspeccion }}</span></u> partiendo del acta
-        circunstanciada o número de inspección: <u><span  class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio ?? '' }}</u></span></p>
+        <p>Después de realizar la inspección de las instalaciones en fecha del <u><span  class="negrita">{{ $fecha_inspeccion }}</span></u> partiendo del acta
+        circunstanciada o número de inspección: <u><span  class="negrita">{{ $datos->inspeccione->num_servicio ?? '' }}</u></span></p>
         <p class="textp">Nombre del productor/empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social ?? '' }}</u></p>
     </div>
     <table class="interlineado">
         <tbody id="tabla">
             <tr>
             <td style="text-align: justify;">
-            <span class="font-lucida-sans-seminegrita">Número de cliente:</span><br>
+            <span class="negrita">Número de cliente:</span><br>
             (Otorgado por el Organismo Certificador del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C.) (CIDAM)
             </td>
-                <td style="text-align: center; vertical-align: middle;">
+                <td style="text-align: center; vertical-align: middle; negrita">
                     @php
                         // Encuentra el primer número de cliente válido
                         $numeroCliente = null;
@@ -293,34 +293,34 @@
             </tr>
             <tr>
             <td>
-            <span class="font-lucida-sans-seminegrita">Domicilio Fiscal:</span>
+            <span class="negrita">Domicilio Fiscal:</span>
             </td>
 
                 <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal ?? '' }}</td>
             </tr>
             <tr>
             <td>
-            <span class="font-lucida-sans-seminegrita">Domicilio de la unidad de producción:</span>
+            <span class="negrita">Domicilio de la unidad de producción:</span>
             </td>
                 <td style="text-align: center; vertical-align: middle;">{{ $datos->instalaciones->direccion_completa ?? '' }}</td>
             </tr>
             <tr>
-                <td class="font-lucida-sans-seminegrita">Responsable de la inspección:</td>
+                <td class="negrita">Responsable de la inspección:</td>
                 <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->inspector->name ?? '' }}</td>
             </tr>
             <tr>
-                <td class="font-lucida-sans-seminegrita">Fecha de emisión de dictamen:</td>
+                <td class="negrita">Fecha de emisión de dictamen:</td>
                 <td style="text-align: center; vertical-align: middle;">{{ $fecha_emision }}</td>
             </tr>
             <tr>
-                <td class="font-lucida-sans-seminegrita">Periodo de vigencia hasta:</td>
+                <td class="negrita">Periodo de vigencia hasta:</td>
                 <td style="text-align: center; vertical-align: middle;">{{ $fecha_vigencia }}</td>
             </tr>
         </tbody>
     </table>
     <p class="text">
-    Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de producción</span> cuenta con la infraestructura, el equipo y los procesos necesarios
-    para la producción de <span class="font-lucida-sans-seminegrita"><u>{{ $datos->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', ') }}</u>, clase(s) <u>{{$datos->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', ') }}</u></span>, requisitos establecidos en la NOM-070-SCFI-2016,
+    Se dictamina que la <span class="negrita">Unidad de producción</span> cuenta con la infraestructura, el equipo y los procesos necesarios
+    para la producción de <span class="negrita"><u>{{ $datos->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', ') }}</u>, clase(s) <u>{{$datos->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', ') }}</u></span>, requisitos establecidos en la NOM-070-SCFI-2016,
     Bebidas alcohólicas-Mezcal-Especificaciones y por el Organismo de Certificación del Centro de Innovación y
     Desarrollo Agroalimentario de Michoacán A.C. (CIDAM).
    </p>
@@ -336,7 +336,7 @@
     </div>
     <p class="textx" style="font-size: 9px; margin-bottom:-8px; position: relative;">
         <strong>AUTORIZÓ</strong>
-        <span style="margin-left: 0px; display: inline-block; text-align: center; position: relative;">
+        <span style="margin-left: -20px; display: inline-block; text-align: center; position: relative;">
             @php
                 use Illuminate\Support\Facades\Storage;
     
@@ -370,7 +370,7 @@
     
 
     <div class="footer-bar">
-        <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
+        <p class="negrita">www.cidam.org . unidadverificacion@cidam.org</p>
         <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341.
             Morelia Michoacán</p>
     </div>
