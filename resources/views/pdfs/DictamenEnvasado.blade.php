@@ -146,7 +146,7 @@
             padding: 0;
             position: absolute;
             right: 50px;
-            top: 700px;
+            top: 720px;
             font-family: 'Arial Negrita' !important;
         }
 
