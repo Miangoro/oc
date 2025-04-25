@@ -507,10 +507,11 @@
         </div>
         <p class="textx" style="font-size: 9px; margin-bottom:-8px; margin-top:-2px; position: relative;">
             <strong>AUTORIZÓ</strong>
-            <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
+            <span style="margin-left: 30px; display: inline-block; text-align: center; position: relative;">
                 @php
                     use Illuminate\Support\Facades\Storage;
-                    $firma = $data->inspectores->firma ?? null;
+        
+                    $firma = $datos->firmante->firma ?? null;
                     $firmaPath = $firma ? 'firmas/' . $firma : null;
                 @endphp
         
@@ -519,7 +520,7 @@
                         src="{{ asset('storage/' . $firmaPath) }}">
                 @endif
         
-                <strong>{{ $data->inspectores->puesto ?? '' }} | {{ $data->inspectores->name ?? '' }}</strong>
+                <strong>{{ $datos->firmante->puesto ?? '' }} | {{ $datos->firmante->name ?? '' }}</strong>
             </span>
         </p>
         
