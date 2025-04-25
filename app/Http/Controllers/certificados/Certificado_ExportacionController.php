@@ -24,11 +24,11 @@ class Certificado_ExportacionController extends Controller
     {
         $certificado = Certificado_Exportacion::all(); // Obtener todos los datos
         $dictamen = Dictamen_Exportacion::where('estatus','!=',1)->get();
-        $users = User::where('tipo',1)->get(); //Solo inspectores 
+        $users = User::where('tipo',1)->get(); //Solo PErsonal OC 
         $empresa = empresa::where('tipo', 2)->get();
         $revisores = Revisor::all(); 
 
-        return view('certificados.find_certificado_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores'));
+        return view('certificados.find_certificados_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores'));
     }
 
 

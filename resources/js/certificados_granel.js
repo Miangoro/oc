@@ -55,12 +55,7 @@ $.ajaxSetup({
        columns: [
         { data: '' }, // (0)
         { data: 'num_certificado' },//(1)
-        { data: '',/*null, //soli y serv.
-           render: function(data, type, row) {
-           return `<span style="font-size:14px"> <strong>${data.folio}</strong><br>
-               ${data.n_servicio}<span>`;
-           }*/
-        },
+        { data: ''},
         {data: null, // Se usará null porque combinaremos varios valores
          render: function(data, type, row) {
              return `

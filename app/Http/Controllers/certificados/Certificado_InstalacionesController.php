@@ -9,141 +9,196 @@ use App\Models\Certificados;
 use App\Models\Dictamen_instalaciones;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\User;
-use App\Models\Revisor; 
+use App\Models\Revisor;
+use App\Models\Documentacion_url;
+use App\Models\instalaciones;
 //Notificacion
 use App\Notifications\GeneralNotification;
 //Enviar Correo
 use App\Mail\CorreoCertificado;
-use App\Models\Documentacion_url;
-use App\Models\instalaciones;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail; 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
+
 class Certificado_InstalacionesController extends Controller
 {
+
     public function UserManagement()
     {
-        $dictamenes = Dictamen_instalaciones::all();
-        $users = User::all(); 
+        $dictamenes = Dictamen_instalaciones::where('estatus','!=',1)->get();
+        $users = User::where('tipo',1)->get(); 
         $revisores = Revisor::all(); 
-        return view('certificados.certificados_instalaciones_view', compact('dictamenes', 'users', 'revisores'));
+        return view('certificados.find_certificados_instalaciones', compact('dictamenes', 'users', 'revisores'));
     }
     
-    public function index(Request $request)
-    {
-        $columns = [
-            1 => 'num_dictamen',
-            2 => 'num_certificado',
-            3 => 'id_firmante',
-            4 => 'maestro_mezcalero',
-            5 => 'num_autorizacion',
-            6 => 'fecha_vigencia',
-            7 => 'fecha_vencimiento',
-        ];
-        
-        $search = $request->input('search.value');
-        $totalData = Certificados::count();
-        
-        $orderIndex = $request->input('order.0.column');
-        $orderDir = $request->input('order.0.dir');
-        $order = $columns[$orderIndex] ?? 'num_certificado';
-        $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
-        
-        // Base query with eager loading
-        $query = Certificados::with([
-            'dictamen.inspeccione.solicitud.instalaciones.empresa.empresaNumClientes',
-            'dictamen.instalaciones',
-            'dictamen.inspeccione.inspector',
-            'firmante'
-        ]);
-        
-        // Apply search filter if present
-        if ($search) {
-            $query->where('num_certificado', 'LIKE', "%{$search}%")
-                ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
-                ->orWhereHas('firmante', function ($q) use ($search) {
-                    $q->where('name', 'LIKE', "%{$search}%");
-                })->orWhereHas('dictamen.instalaciones', function ($q) use ($search) {
-                    $q->where('direccion_completa', 'LIKE', "%{$search}%");
-                });
-        }
-        
-        // Calculate filtered records
-        $totalFiltered = $query->count();
-        
-        // Apply sorting and pagination
-        $query->offset($request->input('start'))
-            ->limit($request->input('length'))
-            ->orderByRaw("
-                CAST(SUBSTRING_INDEX(num_certificado, '/', -1) AS UNSIGNED) {$dir}, -- Ordena el año
-                CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_certificado, '-', -1), '/', 1) AS UNSIGNED) {$dir} -- Ordena el consecutivo
-            ");
-        
-        $certificados = $query->get();
-        
-        // Map data for DataTables
-        $data = $certificados->map(function ($certificado, $index) use ($request) {
-            $empresa = $certificado->dictamen->instalaciones->empresa ?? null;
-            $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                ? $empresa->empresaNumClientes
-                    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-                : 'N/A';
 
-                $fechaActual = Carbon::now()->startOfDay(); // Asegúrate de trabajar solo con fechas, sin horas
-                $fechaVigencia = Carbon::parse($certificado->fecha_vencimiento)->startOfDay();
-                
+public function index(Request $request)
+{
+    $columns = [
+        1 => 'id_certificado',
+        2 => 'id_dictamen',
+        3 => '',
+        4 => '',
+        5 => 'fechas',
+        6 => 'estatus',
+    ];
+    
+    $search = $request->input('search.value');
+    $totalData = Certificados::count();
+    
+    $orderIndex = $request->input('order.0.column');
+    $orderDir = $request->input('order.0.dir');
+    $order = $columns[$orderIndex] ?? 'num_certificado';
+    $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
+    
+    // Base query with eager loading
+    $query = Certificados::with([
+        'dictamen.inspeccione.solicitud.instalaciones.empresa.empresaNumClientes',
+        'dictamen.instalaciones',
+        'dictamen.inspeccione.inspector',
+        'firmante'
+    ]);
+    
+    // Apply search filter if present
+    if ($search) {
+        $query->where('num_certificado', 'LIKE', "%{$search}%")
+            ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
+            ->orWhereHas('firmante', function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%");
+            })->orWhereHas('dictamen.instalaciones', function ($q) use ($search) {
+                $q->where('direccion_completa', 'LIKE', "%{$search}%");
+            });
+    }
+    
+    // Calculate filtered records
+    $totalFiltered = $query->count();
+    
+    // Apply sorting and pagination
+    $query->offset($request->input('start'))
+        ->limit($request->input('length'))
+        ->orderByRaw("
+            CAST(SUBSTRING_INDEX(num_certificado, '/', -1) AS UNSIGNED) {$dir}, -- Ordena el año
+            CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_certificado, '-', -1), '/', 1) AS UNSIGNED) {$dir} -- Ordena el consecutivo
+        ");
+    
+    $certificados = $query->get();
+    
+    // Map data for DataTables
+    /*$data = $certificados->map(function ($certificado, $index) use ($request) {
+        $empresa = $certificado->dictamen->instalaciones->empresa ?? null;
+        $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+            ? $empresa->empresaNumClientes
+                ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
+            : 'N/A';
+
+            $fechaActual = Carbon::now()->startOfDay(); // Asegúrate de trabajar solo con fechas, sin horas
+            $fechaVigencia = Carbon::parse($certificado->fecha_vencimiento)->startOfDay();
+            
+            if ($fechaActual->isSameDay($fechaVigencia)) {
+                $restantes = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
+            } else {
+                $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+            
+                if ($diasRestantes > 0) {
+                    if($diasRestantes > 15){
+                        $res = "<span class='badge bg-label-success'>$diasRestantes días de vigencia.</span>";
+                    }else{
+                        $res = "<span class='badge bgl-label-warning'>$diasRestantes días de vigencia.</span>";
+                    }
+                    $restantes = $res;
+                } else {
+                    $restantes = "<span class='badge bg-label-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                }
+            }
+    
+        return [
+            'id_certificado' => $certificado->id_certificado,
+            'id_dictamen' => $certificado->id_dictamen,
+            'fake_id' => $request->input('start') + $index + 1,
+            'num_certificado' => $certificado->num_certificado,
+            'razon_social' => $empresa->razon_social ?? 'N/A',
+            'domicilio_instalacion' => $certificado->dictamen->instalaciones->direccion_completa ?? "N/A",
+            'numero_cliente' => $numero_cliente,
+            'num_autorizacion' => $certificado->num_autorizacion ?? 'N/A',
+            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+            'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
+            'maestro_mezcalero' => $certificado->maestro_mezcalero ?? 'N/A',
+            'num_dictamen' => $certificado->dictamen->num_dictamen,
+            'num_servicio' => $certificado->dictamen->inspeccione->num_servicio ?? 'Sin definir',
+            'tipo_dictamen' => $certificado->dictamen->tipo_dictamen,
+            'id_revisor' => $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar',
+            'id_revisor2' => $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar',
+            'id_firmante' => $certificado->firmante->name ?? 'Sin asignar',
+            'estatus' => $certificado->estatus,
+            'diasRestantes' => $restantes,
+
+        ];
+    });*/
+    $data = [];
+    if (!empty($certificados)) {
+        foreach ($certificados as $certificado) {
+            $nestedData['id_certificado'] = $certificado->id_certificado ?? 'No encontrado';
+            $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
+            $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
+            $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
+            $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
+            $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
+            $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
+            ///Folio y no. servicio
+            $nestedData['num_servicio'] = $certificado->dictamen->inspeccione->num_servicio ?? 'No encontrado';
+            $nestedData['folio_solicitud'] = $certificado->dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
+            //Nombre y Numero empresa
+            $empresa = $certificado->dictamen->inspeccione->solicitud->empresa ?? null;
+            $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+                ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+            $nestedData['numero_cliente'] = $numero_cliente;
+            $nestedData['razon_social'] = $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
+            //Revisiones
+            $nestedData['id_revisor'] = $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar';
+            $nestedData['id_revisor2'] = $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar';
+            ///dias vigencia
+            $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
+            $nestedData['fecha_actual'] = $fechaActual;
+            $nestedData['vigencia'] = $certificado->fecha_vigencia;
+            $fechaVigencia = Carbon::parse($certificado->fecha_vigencia)->startOfDay();
                 if ($fechaActual->isSameDay($fechaVigencia)) {
-                   $restantes = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
+                    $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este certificado</span>";
                 } else {
                     $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
-                
                     if ($diasRestantes > 0) {
-                        if($diasRestantes > 15){
-                            $res = "<span class='badge bg-label-success'>$diasRestantes días de vigencia.</span>";
-                        }else{
-                            $res = "<span class='badge bgl-label-warning'>$diasRestantes días de vigencia.</span>";
+                        if ($diasRestantes > 15) {
+                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
+                        } else {
+                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
                         }
-                        $restantes = $res;
+                        $nestedData['diasRestantes'] = $res;
                     } else {
-                        $restantes = "<span class='badge bg-label-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
                     }
                 }
-        
-            return [
-                'id_certificado' => $certificado->id_certificado,
-                'id_dictamen' => $certificado->id_dictamen,
-                'fake_id' => $request->input('start') + $index + 1,
-                'num_certificado' => $certificado->num_certificado,
-                'razon_social' => $empresa->razon_social ?? 'N/A',
-                'domicilio_instalacion' => $certificado->dictamen->instalaciones->direccion_completa ?? "N/A",
-                'numero_cliente' => $numero_cliente,
-                'num_autorizacion' => $certificado->num_autorizacion ?? 'N/A',
-                'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-                'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
-                'maestro_mezcalero' => $certificado->maestro_mezcalero ?? 'N/A',
-                'num_dictamen' => $certificado->dictamen->num_dictamen,
-                'num_servicio' => $certificado->dictamen->inspeccione->num_servicio ?? 'Sin definir',
-                'tipo_dictamen' => $certificado->dictamen->tipo_dictamen,
-                'id_revisor' => $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar',
-                'id_revisor2' => $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar',
-                'id_firmante' => $certificado->firmante->name ?? 'Sin asignar',
-                'estatus' => $certificado->estatus,
-                'diasRestantes' => $restantes,
-
-                
-            ];
-        });
-        
-        return response()->json([
-            'draw' => intval($request->input('draw')),
-            'recordsTotal' => intval($totalData),
-            'recordsFiltered' => intval($totalFiltered),
-            'data' => $data,
-        ]);
-        
+            ///solicitud y acta
+            $nestedData['id_solicitud'] = $certificado->dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
+            $urls = $certificado->dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
+            $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
+            
+            
+            $data[] = $nestedData;
+        }
     }
+    
+    return response()->json([
+        'draw' => intval($request->input('draw')),
+        'recordsTotal' => intval($totalData),
+        'recordsFiltered' => intval($totalFiltered),
+        'data' => $data,
+    ]);
+    
+}
+
+
     
     // Funcion de eliminar
     public function destroy($id_certificado)

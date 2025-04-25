@@ -1,6 +1,6 @@
 @extends('layouts.layoutMaster')
 
-@section('title', 'Certificados Granel')
+@section('title', 'Certificados Instalaciones')
 
 @section('vendor-style')
 @vite([
@@ -33,14 +33,14 @@
 @endsection
 
 @section('page-script')
-@vite(['resources/js/certificados_granel.js'])
+@vite(['resources/js/certificados_instalaciones.js'])
 @endsection
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- Users List Table -->
 <div class="card">
     <div class="card-header pb-0">
-        <h3 class="card-title mb-0">Certificados Granel</h3>
+        <h3 class="card-title mb-0">Certificados de instalaciones</h3>
     </div>
     <div class="card-datatable table-responsive">
         <table class="datatables-users table">
@@ -62,11 +62,11 @@
 </div>
 
 <!-- Modal -->
-@include('_partials/_modals/modal-pdfs-frames')
-@include('_partials/_modals/modal-add-certificado-granel')
-@include('_partials/_modals/modal-edit-certificado-granel')
+@include('_partials/_modals/modal-pdfs-certificados')
+@include('_partials/_modals/modal-add-certificado-instalaciones')
 @include('_partials/_modals/modal-add-asignar-revisor')
-@include('_partials/_modals/modal-reexpedir-certificado-granel')
+@include('_partials/_modals/modal-reexpedir-certificado-instalaciones')
 <!-- /Modal -->
 
 @endsection
+

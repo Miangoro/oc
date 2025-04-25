@@ -36,7 +36,10 @@
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
   });
- 
+
+
+
+///FUNCIONALIDAD DE LA VISTA datatable
    if (dt_user_table.length) {
      var dt_user = dt_user_table.DataTable({
        processing: true,
@@ -45,20 +48,21 @@
          url: baseUrl + 'certificados-list',
        },
        columns: [
-         { data: '' },                //0
-         //{ data: 'fake_id' },          //1
-         { data: 'Cliente' },          //2  
-         { data: 'domicilio_instalacion' },          //3
-   
-         { data: 'num_certificado' }, //4
-         { data: 'num_dictamen' },    //5
-         { data: 'num_servicio' },    //6
-         { data: 'fechas' },           //7
-         { data: 'id_revisor' },       //8
-         //{ data: 'Certificado' },
-         //{ data: 'diasRestantes' }, //
-         { data: 'estatus' },          //9
-         { data: 'actions'},           //10
+        { data: '' }, // (0)
+        { data: 'num_certificado' },//(1)
+        { data: ''},
+        {data: null, // Se usará null porque combinaremos varios valores
+         render: function(data, type, row) {
+             return `
+             <strong>${data.numero_cliente}</strong><br>
+                 <span style="font-size:12px">${data.razon_social}<span>
+             `;
+           }
+        },
+        { data: '' },
+        { data: 'fechas' }, 
+        { data: '' },//Revisores
+        { data: 'action' }
        ],
        columnDefs: [
          {
@@ -71,194 +75,122 @@
              return '';
            }
          },
-         /*{
-           searchable: false,
-           orderable: false,
-           targets: 1,
-           render: function (data, type, full, meta) {
-             return `<span>${full.fake_id}</span>`;
-           }
-         },*/
          {
           targets: 1,
           render: function (data, type, full, meta) {
-            var $numero_cliente = full['numero_cliente'];
-            var $razon_social = full['razon_social'];
+            var $num_certificado = full['num_certificado'];
+            var $id = full['id_certificado'];
+            return '<small class="fw-bold">' + $num_certificado + '</small>' +
+                '<i data-id="' +$id+ '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
+                `<br><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']} <i data-id="${full['id_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+              }
+        }, 
+        {
+        //Tabla 2
+          targets: 2,
+          searchable: true,
+          orderable: true,
+          render: function (data, type, full, meta) {
+            var $num_servicio = full['num_servicio'];
+            var $folio_solicitud = full['folio_solicitud'];
+            if ( full['url_acta'] == 'Sin subir' ) {
+              var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
+            }else {
+              var $acta = full['url_acta'].map(url => `
+                <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
+                   class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
+                   data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+                </i>
+              `).join('');//concatena en un string.
+            }
+
             return `
-              <div>
-                <span class="fw-bold">${$numero_cliente}</span><br>
-                <small>${$razon_social}</small>
-              </div>
+            <span class="fw-bold">Servicio:</span> ${$num_servicio}
+              <span>${$acta}</span>
+            <br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud}
+              <i data-id="${full['id_solicitud']}" data-folio="${$folio_solicitud}"
+                class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
+                data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+              </i> 
             `;
           }
-        },
-         {
-          targets: 2,
-          responsivePriority: 4,
+        }, 
+        {
+          targets: 4,
+          searchable: false,
+          orderable: false,
+          responsivePriority: 4, 
           render: function (data, type, full, meta) {
-            var $tipoDictamen = parseInt(full['tipo_dictamen']);
-            var $colorDictamen;
-            var $nombreDictamen;
-        
-            switch ($tipoDictamen) {
-              case 1:
-                $nombreDictamen = 'Productor';
-                $colorDictamen = 'primary'; // Azul
-                break;
-              case 2:
-                $nombreDictamen = 'Envasador';
-                $colorDictamen = 'success'; // Verde
-                break;
-              case 3:
-                $nombreDictamen = 'Comercializador';
-                $colorDictamen = 'info'; // Celeste
-                break;
-              case 4:
-                $nombreDictamen = 'Almacén y bodega';
-                $colorDictamen = 'danger'; // Rojo
-                break;
-              case 5:
-                $nombreDictamen = 'Área de maduración';
-                $colorDictamen = 'warning'; // Amarillo
-                break;
-              default:
-                $nombreDictamen = 'Desconocido';
-                $colorDictamen = 'secondary'; // Gris, color por defecto
+            var $ = full[''];
+            return '<span class="small">   </span>';
             }
-        
-            // Retorna el badge con el texto y color apropiado
-            return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span><br><small>${full['domicilio_instalacion']}</small>`;
-          }     
         },
         {
-          targets: 3,
-          render: function (data, type, full, meta) {
-            var $num_certificado = full['num_certificado'];
-            return '<span class="fw-bold">' + $num_certificado + '</span>' +
-              `<i style class="ri-file-pdf-2-fill text-danger ri-28px pdf cursor-pointer" data-es="2" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
-          }
-        },
-          {
-           targets: 4,
-           render: function (data, type, full, meta) {
-             var $num_dictamen = full['num_dictamen'];
-             return `<small>`+ $num_dictamen + `</small>` +
-              `<i style class="ri-file-pdf-2-fill text-danger ri-28px pdf cursor-pointer" data-es="1" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['num_dictamen']} "></i>`;
-           }
-         }, 
-         {
           targets: 5,
+          searchable: false,
+          orderable: false,
+          className: 'text-center',
           render: function (data, type, full, meta) {
-            var $num_servicio = full['num_servicio'] ?? 'N/A';
-            return '<small>' + $num_servicio + '</small>';
+            var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
+            var $fecha_vigencia = full['fecha_vigencia'] ?? 'No encontrado';
+            return `
+                <div>
+                    <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span></div>
+                    <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span></div>
+                    <div class="small">${full['diasRestantes']}</div>
+                </div> `;
           }
         },
-         
-          {
-            targets: 6, // Suponiendo que este es el índice de la columna que quieres actualizar
-            render: function (data, type, full, meta) {
-        
-                // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
-                var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A'; // Fecha de vigencia
-                var $fecha_vencimiento = full['fecha_vencimiento'] ?? 'N/A'; // Fecha de vencimiento
-                
-        
-                // Definir los mensajes de fecha con formato
-                var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span>`;
-                var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vencimiento:<br></strong> ${$fecha_vencimiento}</span>`;
-        
-                // Retorna las fechas en formato de columnas
-                return `
-                    <div>
-                        <div>${fechaVigenciaMessage}</div>
-                        <div>${fechaVencimientoMessage}</div>
-                        <div style="text-aling: center">${full['diasRestantes']}</div>
-                    </div>
-                `;
+        {
+          targets: 6,
+          searchable: true,
+          orderable: true,
+          className: 'text-center',
+          render: function (data, type, full, meta) {
+            //estatus
+            var $estatus = full['estatus'];
+            var $fecha_actual = full['fecha_actual'];
+            var $vigencia = full['vigencia'];
+            let estatus;
+              if ($fecha_actual > $vigencia) {
+                estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
+              } else if ($estatus == 1) {
+                  estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
+              } else if ($estatus == 2) {
+                  estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+              } else {
+                estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
+              }
+            //revisores
+            var id_revisor = full['id_revisor'];   // Obtener el id_revisor
+            var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
+            // Mensajes para los revisores
+            var revisorPersonal, revisorMiembro;
+            // Para el revisor personal
+            if (id_revisor !== 'Sin asignar') {
+                revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> ${id_revisor}</span>`;
+            } else {
+                revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
             }
-          },   
-          {
-            targets: 7,
-            render: function (data, type, full, meta) {
-                var $revisor_oc = full['id_revisor'];   // Obtener el id_revisor
-                var $revisor_consejo = full['id_revisor2']; // Obtener el id_revisor2
-                return '<span class="small"> <b>OC:</b> <strong style="color: red;">' + $revisor_oc + '</strong></span> <br> <span class="small"><b>Consejo:</b> <strong style="color: red;">' + $revisor_consejo + '</strong></span>';
-              /*
-                // Mensajes para los revisores
-                var revisorPersonal, revisorMiembro;
-                // Para el revisor personal
-                if (id_revisor !== 'Sin asignar') {
-                    revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>OC:</strong> ${id_revisor}</span>`;
-                } else {
-                    revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>OC:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
-                }
-                // Para el revisor miembro
-                if (id_revisor2 !== 'Sin asignar') {
-                    revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> ${id_revisor2}</span>`;
-                } else {
-                    revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
-                }
-                // Retorna los revisores en formato HTML
-                return ` <div style="display: flex; flex-direction: column;">
-                        <div style="display: inline;">${revisorPersonal}</div>
-                        <div style="display: inline;">${revisorMiembro}</div>
-                    </div> `;
-              */
+            // Para el revisor miembro
+            if (id_revisor2 !== 'Sin asignar') {
+                revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> ${id_revisor2}</span>`;
+            } else {
+                revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
             }
-          },
-          /*{
-            // Abre el pdf del DICTAMEN
-            targets: 9,
-            className: 'text-center',
-            render: function (data, type, full, meta) {
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-es="1" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['num_dictamen']} "></i>`;
-            }
-          },
-          {
-            // Abre el pdf del certificado
-            targets: 9,
-            className: 'text-center',
-            render: function (data, type, full, meta) {
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-es="2" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
-            }
-          },
-          {
-            targets: 9,
-            render: function (data, type, full, meta) {
-              return full['diasRestantes'];
-            }
-          },*/
-          {
-            target: 8, // Suponiendo que este es el índice de la columna que quieres actualizar
-            render: function (data, type, full, meta) {
-                var estatus = full['estatus']; // Obtener el estatus del certificado
-                
-                // Determinar el texto y el color del badge según el estatus
-                var badgeText = '';
-                var colorEstatus = '';
-        
-                if (estatus == 1) {
-                    badgeText = 'Cancelado'; // Si el estatus es 1
-                    colorEstatus = 'danger'; // Cambia a color rojo
-                } else if (estatus == 2) {
-                    badgeText = 'Reexpedido'; // Si el estatus es 2
-                    colorEstatus = 'success'; // Cambia a color verde
-                } else {
-                    var id_revisor = full['id_revisor'];
-                    var id_revisor2 = full['id_revisor2'];
-        
-                    // Verificar si ambos revisores están vacíos o son nulos
-                    var isActive = (id_revisor && id_revisor !== 'Sin asignar') || (id_revisor2 && id_revisor2 !== 'Sin asignar'); 
-                    badgeText = isActive ? 'Vigente' : 'Sin asignar'; // Establecer el estatus
-                    colorEstatus = isActive ? 'success' : 'secondary'; // Color según el estatus
-                }
-        
-                return `<span class="badge rounded-pill bg-${colorEstatus}">${badgeText}</span>`;
-            }
-        },  
+    
+            // Retorna los revisores en formato HTML
+            return estatus+
+              ` <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                    <div style="display: inline;">${revisorPersonal}</div>
+                    <div style="display: inline;">${revisorMiembro}</div>
+                </div>
+              `;
+          }
+        },
          {
            // Actions
-           targets: 9,
+           targets: 7,
            title: 'Acciones',
            searchable: false,
            orderable: false,

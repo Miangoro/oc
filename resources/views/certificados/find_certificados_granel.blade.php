@@ -1,6 +1,6 @@
 @extends('layouts.layoutMaster')
 
-@section('title', 'Certificados Instalaciones')
+@section('title', 'Certificados Granel')
 
 @section('vendor-style')
 @vite([
@@ -33,34 +33,27 @@
 @endsection
 
 @section('page-script')
-@vite(['resources/js/certificados_instalaciones.js'])
+@vite(['resources/js/certificados_granel.js'])
 @endsection
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- Users List Table -->
 <div class="card">
     <div class="card-header pb-0">
-        <h3 class="card-title mb-0">Certificados de instalaciones</h3>
+        <h3 class="card-title mb-0">Certificados granel</h3>
     </div>
     <div class="card-datatable table-responsive">
         <table class="datatables-users table">
             <thead class="table-dark">
                 <tr>
-                     <th></th>
-                    {{--<th>ID</th> --}}
+                    <th></th>
+                    <th>No. certificado / Solicitud</th>
+                    <th>Solicitud /<br>no. servicio</th>
                     <th>Cliente</th>
-                    <th>Instalación</th>
-                    <!--<th>Tipo</th>-->
-                    <th>No. Certificado</th>
-                    <th>No. Dictamen</th>
-                    <th>No. Servicio</th>
+                    <th>Características</th>
                     <th>Fechas</th>
-                    <th>Revisor Asignado</th>
-                    {{--<th>Dictamen</th>
-                    <th>Certificado</th>
-                    <th>Vigencia</th>--}}
                     <th>Estatus</th>
-                    <th>Acciones</th>
+                    <th>ACCIONES</th>
                 </tr>
             </thead>
         </table>
@@ -69,12 +62,10 @@
 </div>
 
 <!-- Modal -->
-@include('_partials/_modals/modal-pdfs-certificados')
-@include('_partials/_modals/modal-add-certificado-instalaciones')
-@include('_partials/_modals/modal-edit-certificado-instalaciones')
+@include('_partials/_modals/modal-pdfs-frames')
+@include('_partials/_modals/modal-add-certificado-granel')
 @include('_partials/_modals/modal-add-asignar-revisor')
-@include('_partials/_modals/modal-reexpedir-certificado-instalaciones')
+@include('_partials/_modals/modal-reexpedir-certificado-granel')
 <!-- /Modal -->
 
 @endsection
-

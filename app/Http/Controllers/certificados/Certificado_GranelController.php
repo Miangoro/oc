@@ -28,9 +28,10 @@ class Certificado_GranelController extends Controller
         $dictamenes = Dictamen_Granel::where('estatus','!=',1)->get();
         $users = User::where('tipo',1)->get();
         $revisores = Revisor::all(); 
-        return view('certificados.certificados_granel_view', compact('certificados' , 'dictamenes' , 'users', 'revisores'));
+        return view('certificados.find_certificados_granel', compact('certificados' , 'dictamenes' , 'users', 'revisores'));
     }
 
+    
 public function index(Request $request)
 {
     $columns = [
