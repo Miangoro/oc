@@ -457,10 +457,31 @@ public function dictamen_productor($id_dictamen)
 {
     $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
 
+    $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
+
+    $qrCode = new QrCode(
+        data: $url,
+        encoding: new Encoding('UTF-8'),
+        errorCorrectionLevel: ErrorCorrectionLevel::Low,
+        size: 300,
+        margin: 10,
+        roundBlockSizeMode: RoundBlockSizeMode::Margin,
+        foregroundColor: new Color(0, 0, 0),
+        backgroundColor: new Color(255, 255, 255)
+    );
+
+    // Escribir el QR en formato PNG
+    $writer = new PngWriter();
+    $result = $writer->write($qrCode);
+
+    // Convertirlo a Base64
+    $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+
     $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
     $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-    $pdf = Pdf::loadView('pdfs.DictamenProductor', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia]);
+    $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
+    $pdf = Pdf::loadView('pdfs.DictamenProductor', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
     return $pdf->stream('F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor.pdf');
 }
 

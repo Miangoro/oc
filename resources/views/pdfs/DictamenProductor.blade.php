@@ -338,40 +338,54 @@
     <br><br>
     <p class="sello">Sello de Unidad de Inspección</p>
     <div class="images-container">
-    <img src="{{ public_path('img_pdf/qr_umc-074.png') }}" alt="Logo UVEM" width="90px">
-    <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
+        <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
+        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
     </div>
-    <p class="textx" style="font-size: 10px; margin: 1;">
-    <strong>AUTORIZÓ</strong>
-    <span style="margin-left: 50px;">
-        <strong>{{ $datos->firmante->puesto ?? '' }} | {{ $datos->firmante->name ?? '' }}</strong>
-    </span>
+    <p class="textx" style="font-size: 9px; margin-bottom:-8px; position: relative;">
+        <strong>AUTORIZÓ</strong>
+        <span style="margin-left: 30px; display: inline-block; text-align: center; position: relative;">
+            @php
+                use Illuminate\Support\Facades\Storage;
+    
+                $firma = $datos->firmante->firma ?? null;
+                $firmaPath = $firma ? 'firmas/' . $firma : null;
+            @endphp
+    
+            @if ($firma && Storage::disk('public')->exists($firmaPath))
+                <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
+                    src="{{ asset('storage/' . $firmaPath) }}">
+            @endif
+    
+            <strong>{{ $datos->firmante->puesto ?? '' }} | {{ $datos->firmante->name ?? '' }}</strong>
+        </span>
+    </p>
+    
+    <p class="textx" style="font-size: 9px; margin-bottom:-8px">
+        <strong>CADENA ORIGINAL</strong>
+        <span style="margin-left: 14px;">
+            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+        </span>
     </p>
 
-    <p class="textx" style="font-size: 10px; margin: 1;">
-    <strong>Cadena Original</strong>
-    <span style="margin-left: 29px;">
-        <strong>{{ $datos->num_dictamen ?? '' }}|{{ $datos->fecha_emision }}|{{ $datos->inspeccione->num_servicio ?? '' }}</strong>
-    </span>
+    <p class="textx" style="font-size: 9px; margin-bottom:1px">
+        <strong>SELLO DIGITAL</strong>
     </p>
 
-    <p class="textx" style="font-size: 10px; margin: 1;">
-    <strong>Sello Digital</strong>
+    <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
+        {{ $firmaDigital['firma'] }}
     </p>
-
-    <p class = "textsello">e2N1P+r+E79e0YxKzS/jMssKuASlmYXy2ppP+2PJN8vKUeFRxYTSY99MEWrgiHOnA N3pLUrdUBiD39v25Y648G4TK5qQ0LwZPLofRmjRQ2Ty5rHlDwnPRm37zaOkMjkRD<br>
-    xC0ikyHPD+T3EFhEc9sgAFI6bZUd88yevfS+ZFZ7j9f5EA44Sz76jsN3P4e7lyePHmNz Jxg5ZupHICg5xBZu5ygOniMZNbzG6w0ZDPL58yoMQK1JDi8lwwiGJBaCNHN6krn<br>
-    No5v5rvZPkbUthYT2r5M0sGP5Y+s97oLa8GA5hqyDAgE9P0d1u0uwU7Q8SF0GYfe lavijxvsWaZg5QA5og==
-    </p>
+    
 
     <div class="footer-bar">
         <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
-        <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341. Morelia Michoacán</p>
+        <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341.
+            Morelia Michoacán</p>
     </div>
 
-    <p class="pie">Entrada en vigor: 15-07-2024 <br>
-    F-UV-02-04 Ver 10
+    <p class="pie">Entrada en vigor: 15-07-2024<br>
+        F-UV-02-04 Ver 10.
     </p>
 </div>
 </body>
+
 </html>
