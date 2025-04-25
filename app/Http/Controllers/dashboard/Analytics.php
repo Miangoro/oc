@@ -31,7 +31,13 @@ class Analytics extends Controller
     $fechaLimite = $hoy->copy()->addDays(15); // Fecha límite en 15 días.
     
     $dictamenesPorVencer = Dictamen_instalaciones::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
-    $certificadosPorVencer = Certificados::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
+
+    $certificadosInstalacion = Certificados::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
+    $certificadosGranel = CertificadosGranel::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
+    $certificadosExportacion = Certificado_Exportacion::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
+    $certificadosPorVencer = $certificadosInstalacion
+    ->merge($certificadosGranel)
+    ->merge($certificadosExportacion);
     
 
     $dictamenesInstalacionesSinCertificado = Dictamen_instalaciones::whereDoesntHave('certificado')->count();
