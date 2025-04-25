@@ -160,7 +160,7 @@
             padding: 0;
             position: absolute;
             right: 20px;
-            top: 885px;
+            top: 1000px;
             font-family: 'Arial Negrita' !important;
         }
 
@@ -518,6 +518,8 @@
                 @if ($firma && Storage::disk('public')->exists($firmaPath))
                     <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
                         src="{{ asset('storage/' . $firmaPath) }}">
+                @else
+                    Sin firma registrada
                 @endif
         
                 <strong>{{ $datos->firmante->puesto ?? '' }} | {{ $datos->firmante->name ?? '' }}</strong>
