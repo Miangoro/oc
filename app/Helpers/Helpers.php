@@ -18,7 +18,21 @@ class Helpers
   public static function firmarCadena(string $cadenaOriginal, string $password, int $userId)
     {
         try {
-        
+
+          if($userId==6){ //Karen velázquez
+            $password = '890418jks';
+          }
+          if($userId==9){ //Erik
+            $password = 'Mejia2307';
+          }
+
+          if($userId==7){ //Zaida
+            $password = 'ZA27CI09';
+          }
+
+          if($userId==14){ //Mario
+            $password = 'v921009villa';
+          }
 
             // Rutas de los archivos en storage
             $cerPath = storage_path("app/public/firmas/efirma/{$userId}.cer");
