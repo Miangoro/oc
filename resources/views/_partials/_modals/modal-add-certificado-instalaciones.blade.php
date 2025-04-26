@@ -60,14 +60,14 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <input type="date" class="form-control datepicker" id="fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Inicio Vigencia" readonly>
-                                <label for="fecha_vigencia">Fecha de Inicio Vigencia</label>
+                                <input class="form-control flatpickr-datetime" id="fecha_emision" name="fecha_emision" placeholder="YYYY-MM-DD">
+                                <label for="">Fecha de emisión</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <input type="date" class="form-control datepicker" id="fecha_vencimiento" name="fecha_vencimiento" aria-label="Fecha de Vencimiento" readonly>
-                                <label for="fecha_vencimiento">Fecha de Vencimiento</label>
+                                <input class="form-control flatpickr-datetime" id="fecha_vigencia" name="fecha_vigencia" placeholder="YYYY-MM-DD" readonly>
+                                <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
                     </div>
@@ -95,7 +95,7 @@
 </div>
 
 
-<!--EDITARRR-->
+
 <!-- Modal para editar certificado -->
 <div class="modal fade" id="editCertificadoModal" tabindex="-1" aria-labelledby="editCertificadoModalLabel">
     <div class="modal-dialog modal-lg">
@@ -160,12 +160,12 @@
                     <!-- Fechas -->
                     <div class="d-flex justify-content-between mb-3">
                         <div class="form-floating form-floating-outline flex-fill me-2">
-                            <input type="text" class="form-control datepicker" id="edit_fecha_vigencia" readonly placeholder="yyyy-mm-dd" name="fecha_vigencia" aria-label="Fecha de Vigencia" autocomplete="off" required>
-                            <label for="edit_fecha_vigencia">Fecha de Inicio Vigencia</label>
+                            <input class="form-control flatpickr-datetime" id="edit_fecha_emision" placeholder="YYYY-MM-DD" name="fecha_emision" required>
+                            <label for="">Fecha de emisión</label>
                         </div>
                         <div class="form-floating form-floating-outline flex-fill ms-2">
-                            <input type="text" class="form-control datepicker" id="edit_fecha_vencimiento" readonly placeholder="yyyy-mm-dd" name="fecha_vencimiento" aria-label="Fecha de Vencimiento" autocomplete="off" required>
-                            <label for="edit_fecha_vencimiento">Fecha de Vencimiento</label>
+                            <input class="form-control" id="edit_fecha_vigencia" placeholder="YYYY-MM-DD" name="fecha_vigencia" readonly>
+                            <label for="">Fecha de vigencia</label>
                         </div>
                     </div>
 

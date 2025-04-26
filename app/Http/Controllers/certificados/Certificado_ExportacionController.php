@@ -131,6 +131,9 @@ public function index(Request $request)
             $nestedData['id_solicitud'] = $certificado->dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
             $urls = $certificado->dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
             $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
+            //Lote envasado
+            $lotes = $certificado->dictamen->inspeccione->solicitud?->lotesEnvasadoDesdeJson();
+            $nestedData['nombre_lote'] = $lotes?->pluck('nombre')->implode(', ') ?? 'No encontrado';
             
             
             $data[] = $nestedData;

@@ -127,7 +127,9 @@ $.ajaxSetup({
           responsivePriority: 4, 
           render: function (data, type, full, meta) {
             var $ = full[''];
-            return '<span class="small">   </span>';
+            return `<div class="small">
+                <b>Lote granel:</b> ${full['nombre_lote']}  
+              </div>`;
             }
         },
         {

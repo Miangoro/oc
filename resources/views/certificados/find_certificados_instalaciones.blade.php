@@ -12,8 +12,9 @@
     'resources/assets/vendor/libs/animate-css/animate.scss',
     'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
     'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss',
-    'resources/assets/vendor/libs/spinkit/spinkit.scss'
-    
+    'resources/assets/vendor/libs/spinkit/spinkit.scss',
+    'resources/assets/vendor/libs/flatpickr/flatpickr.scss',
+    'resources/assets/vendor/libs/pickr/pickr-themes.scss',
 ])
 @endsection
 
@@ -28,7 +29,10 @@
     'resources/assets/vendor/libs/cleavejs/cleave.js',
     'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
     'resources/assets/vendor/libs/sweetalert2/sweetalert2.js',
-    'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js'
+    'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js',
+    'resources/assets/vendor/libs/flatpickr/flatpickr.js',
+    'resources/assets/vendor/libs/pickr/pickr.js',
+    'resources/assets/vendor/libs/flatpickr/l10n/es.js'
 ])
 @endsection
 

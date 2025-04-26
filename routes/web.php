@@ -651,18 +651,21 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/eliminar-documento/{id}', [documentacionController::class, 'eliminarDocumento'])->name('eliminarDocumento');
 });
 
-/*-------------------Tipos de maguey/agave-------------------*/
-/*mostrar*/
-Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('catalogo-tipos');
-Route::resource('/tipos-list', tiposController::class);
-/*eliminar*/
-Route::delete('/tipos-list/{id_tipo}', [tiposController::class, 'destroy'])->name('tipos.destroy');
-/*registrar*/
-Route::post('/tipos-list', [tiposController::class, 'store'])->name('tipo.store');
-/*obtener el editar*/
-Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name('tipos.edit');
-/*editar*/
-Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
+//-------------------TIPOS DE MAGUEY/AGAVE-------------------
+Route::middleware(['auth'])->controller(tiposController::class)->group(function () {
+    /*mostrar*/
+    Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('catalogo-tipos');
+    Route::resource('/tipos-list', tiposController::class);
+    /*eliminar*/
+    Route::delete('/tipos-list/{id_tipo}', [tiposController::class, 'destroy'])->name('tipos.destroy');
+    /*registrar*/
+    Route::post('/tipos-list', [tiposController::class, 'store'])->name('tipo.store');
+    /*obtener el editar*/
+    Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name('tipos.edit');
+    /*editar*/
+    Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
+});
+
 
 Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
 Route::get('/getDatosLoteEnvasado/{idLoteEnvasado}', [getFuncionesController::class, 'getDatosLoteEnvasado']);
@@ -683,51 +686,6 @@ Route::get('/editGuias/{run_folio}', [GuiasController::class, 'editGuias']);
 
 //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
 
-/*-------------------Dictamenes de instalaciones-------------------*/
-/*mostrar*/
-Route::middleware(['auth'])->controller(DictamenInstalacionesController::class)->group(function () {
-    // Rutas principales
-    Route::get('dictamenes/instalaciones', 'UserManagement')->name('dictamenes-instalaciones');
-    Route::resource('insta', DictamenInstalacionesController::class);
-    // Rutas específicas para eliminar, registrar y editar
-    Route::delete('insta/{id_dictamen}', 'destroy')->name('instalacion.delete');
-    Route::post('insta', 'store')->name('instalacion.store');
-    Route::get('insta/{id_dictamen}/edit', 'edit')->name('instalacion.edit');
-    Route::post('insta/{id_dictamen}', 'update')->name('tipos.update');
-    Route::post('/registrar/reexpedir-instalaciones', [DictamenInstalacionesController::class, 'reexpedir'])->name('dic-insta.reex');
-
-    // Rutas para generación de PDFs de dictámenes
-    Route::get('/dictamen_productor/{id_dictamen}', 'dictamen_productor')->name('dictamen_productor');
-    Route::get('/dictamen_envasador/{id_dictamen}', 'dictamen_envasador')->name('dictamen_envasador');
-    Route::get('/dictamen_comercializador/{id_dictamen}', 'dictamen_comercializador')->name('dictamen_comercializador');
-    Route::get('/dictamen_almacen/{id_dictamen}', 'dictamen_almacen')->name('dictamen_almacen');
-    Route::get('/dictamen_maduracion/{id_dictamen}', 'dictamen_maduracion')->name('dictamen_maduracion');
-});
-
-/*------------------- DICTAMENES A GRANEL -------------------*/
-Route::middleware(['auth'])->controller(DictamenGranelController::class)->group(function () {
-    Route::get('/dictamenes/granel', [DictamenGranelController::class, 'UserManagement'])->name('dictamenes-granel');
-    Route::resource('/dictamen-granel-list', DictamenGranelController::class);
-    Route::delete('dictamen/granel/{id_dictamen}', [DictamenGranelController::class, 'destroy'])->name('dictamen.delete');
-    Route::post('dictamenes-granel',[DictamenGranelController::class, 'store'])->name('dictamen.store');
-    route::get('/dictamenes/granel/{id_dictamen}/edit', [DictamenGranelController::class, 'edit'])->name('dictamenes.edit');
-    Route::post('/dictamenes/granel/{id_dictamen}/update', [DictamenGranelController::class, 'update'])->name('dictamen.update');
-    Route::get('/dictamenes/granel/{id_dictamen}/foliofq', [DictamenGranelController::class, 'foliofq'])->name('dictamenes.foliofq');
-    Route::post('/registrar/reexpedir-granel', [DictamenGranelController::class, 'reexpedir'])->name('dic-granel.reex');
-    Route::get('/dictamen_granel/{id_dictamen}', [DictamenGranelController::class, 'MostrarDictamenGranel'])->name('formato-dictamen-granel');
-});
-
-/*------------------- DICTAMENES ENVASADO -------------------*/
-Route::middleware(['auth'])->controller(DictamenEnvasadoController::class)->group(function () {
-    Route::get('/dictamenes/envasado', [DictamenEnvasadoController::class, 'UserManagement'])->name('dictamenes-envasado');
-    Route::resource('/dictamen-envasado-list', DictamenEnvasadoController::class);
-    Route::delete('dictamen/envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'destroy'])->name('dictamen.delete');
-    Route::post('dictamenes-envasado',[DictamenEnvasadoController::class, 'store'])->name('dictamen.store');
-    route::get('/dictamenes/envasado/{id_dictamen}/edit', [DictamenEnvasadoController::class, 'edit'])->name('dictamenes.edit');
-    Route::post('/dictamenes/envasado/{id_dictamen}/update', [DictamenEnvasadoController::class, 'update'])->name('dictamen.update');
-    Route::post('/registrar/reexpedir-envasado', [DictamenEnvasadoController::class, 'reexpedir'])->name('dic-envasado.reex');
-    Route::get('/dictamen_envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'MostrarDictamenEnvasado'])->name('formato-dictamen-envasado');
-});
 
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
@@ -741,7 +699,7 @@ Route::get('/documentos/{id}/edit', [DocumentosController::class, 'edit']);
 // Ruta para actualizar el documento
 Route::put('/documentos/{id}', [DocumentosController::class, 'update']);
 
-//Inspecciones
+//-------------------INSPECCIONES-------------------
 Route::middleware(['auth'])->controller(inspeccionesController::class)->group(function () {
     Route::get('/inspecciones', 'UserManagement')->name('inspecciones');
     Route::resource('inspecciones-list', inspeccionesController::class);
@@ -751,90 +709,43 @@ Route::middleware(['auth'])->controller(inspeccionesController::class)->group(fu
     Route::post('/agregar-resultados', 'agregarResultados');
     Route::get('/acta-solicitud/edit/{id_acta}', 'editActa');
     Route::get('/getInspeccion/{id_solicitud}', 'getInspeccion');
-
+    //pdf rutas
+    Route::post('/acta-unidades', [inspeccionesController::class, 'store'])->name('acta.unidades.store');
+    Route::get('/acta_circunstanciada_unidades_produccion/{id_inspeccion}', [inspeccionesController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');
 });
 
+//-------------------HOLOGRAMAS - SOLICITUD DE HOLOGRAMAS-------------------
+Route::middleware(['auth'])->controller(solicitudHolograma::class)->group(function () {
+    Route::get('/hologramas/solicitud', [solicitudHolograma::class, 'UserManagement'])->name('hologramas-solicitud');
+    Route::resource('/hologramas-list', solicitudHolograma::class);
+    Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
+    Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
+    Route::post('/solicitud_holograma/update/', [solicitudHolograma::class, 'update']);
+    Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');
+    Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2']);
+    Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
+    Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
+    Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
 
-//pdf rutas
-Route::post('/acta-unidades', [inspeccionesController::class, 'store'])->name('acta.unidades.store');
-Route::get('/acta_circunstanciada_unidades_produccion/{id_inspeccion}', [inspeccionesController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');
+    Route::get('/solicitud_holograma/editActivos/{id}', [solicitudHolograma::class, 'editActivos']);
+    Route::get('/solicitud_holograma/editActivados/{id}', [solicitudHolograma::class, 'editActivados']);
 
-//Hologramas - solicitud hologramas
-Route::get('/hologramas/solicitud', [solicitudHolograma::class, 'UserManagement'])->name('hologramas-solicitud');
-Route::resource('/hologramas-list', solicitudHolograma::class);
-Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
-Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
-Route::post('/solicitud_holograma/update/', [solicitudHolograma::class, 'update']);
-Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');
-Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2']);
-Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
-Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
-Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
+    //solicitud hologrammas
+    Route::post('/solicitud_holograma/update/updateActivar', [solicitudHolograma::class, 'updateActivar']);
+});
 
-Route::get('/solicitud_holograma/editActivos/{id}', [solicitudHolograma::class, 'editActivos']);
-Route::get('/solicitud_holograma/editActivados/{id}', [solicitudHolograma::class, 'editActivados']);
-
-//solicitud hologrammas
-
-
-Route::post('/solicitud_holograma/update/updateActivar', [solicitudHolograma::class, 'updateActivar']);
-
-
-//Activación de hologramas
-Route::get('/find_hologramas_activar', [hologramasACtivar::class, 'find_hologramas_activar'])->name('find_hologramas_activar')->middleware('auth');
-
+//-------------------ACTIVACION DE HOLOGRAMAS-------------------
 Route::middleware(['auth'])->controller(hologramasACtivar::class)->group(function () {
+    Route::get('/find_hologramas_activar', [hologramasACtivar::class, 'find_hologramas_activar'])->name('find_hologramas_activar');
     Route::resource('/find_hologramas_activar-list', hologramasACtivar::class);
     Route::get('/getDatosInpeccion/{id_inspeccion}','getDatosInpeccion');
     Route::post('/verificar-folios', 'verificarFolios');
     Route::post('/solicitud_holograma/storeActivar', 'storeActivar');
-
 });
-
-
-//Módulo de solicitudes
-Route::middleware(['auth'])->controller(solicitudesController::class)->group(function () {
-    Route::get('/solicitudes-historial', 'UserManagement')->name('solicitudes-historial');
-    Route::resource('/solicitudes-list', solicitudesController::class);
-    Route::get('/solicitud_de_servicio/{id_solicitud}', 'pdf_solicitud_servicios_070')->name('solicitudservi');
-    Route::post('/registrar-solicitud-georeferenciacion', 'registrarSolicitudGeoreferenciacion')->name('registrarSolicitudGeoreferenciacion');
-    Route::post('/registrar-solicitud-muestreo-agave', 'registrarSolicitudMuestreoAgave')->name('registrarSolicitudMuestreoAgave');
-    Route::post('/hologramas/storeVigilanciaProduccion', 'storeVigilanciaProduccion');
-    Route::post('/hologramas/storeMuestreoLote', 'storeMuestreoLote');
-    Route::post('/hologramas/storeVigilanciaTraslado', 'storeVigilanciaTraslado');
-    Route::post('/hologramas/storeInspeccionBarricada', 'storeInspeccionBarricada');
-    Route::post('/hologramas/storeInspeccionBarricadaLiberacion', 'storeInspeccionBarricadaLiberacion');
-    Route::post('/hologramas/storeInspeccionEnvasado', 'storeInspeccionEnvasado');
-    Route::get('/getDetalleLoteTipo/{id_tipo}', 'getDetalleLoteTipo');
-    Route::delete('/solicitudes-lista/{id_solicitud}', 'destroy')->name('solicitudes-list.destroy');
-    Route::get('/getDetalleLoteEnvasado/{id_lote_envasado}', 'getDetalleLoteEnvasado');
-    Route::get('/verificar-solicitud', 'verificarSolicitud')->name('verificarSolicitud');
-    Route::get('/datos-solicitud/{id_solicitud}',  'obtenerDatosSolicitud')->name('datos.solicitud');
-    Route::post('/actualizar-solicitudes/{id_solicitud}', 'actualizarSolicitudes');
-    Route::post('/exportaciones/storePedidoExportacion', 'storePedidoExportacion')->name('exportaciones.storePedidoExportacion');
-    Route::get('/marcas/{id_marca}/{id_direccion}', 'obtenerMarcasPorEmpresa');
-    Route::get('/solicitudes/exportar', 'exportar')->name('solicitudes.exportar');
-    Route::post('/registrar-solicitud-lib-prod-term','storeSolicitudLibProdTerm');
-    Route::get('/Etiqueta-2401ESPTOB/{id_solicitud}', 'Etiqueta_240');
-    Route::post('/registrarValidarSolicitud', 'registrarValidarSolicitud');
-    Route::get('/pdf_validar_solicitud/{id_validacion}', 'pdf_validar_solicitud');
-    
-});
-
-
-
-
-
 
 
 Route::get('/marcas/{id_empresa}', [lotesEnvasadoController::class, 'obtenerMarcasPorEmpresa']);
 
-//catalago equipos
-Route::get('/catalogo/equipos', [catalogoEquiposController::class, 'UserManagement'])->name('catalogo-equipos');
-Route::resource('/equipos-list', catalogoEquiposController::class);
-Route::post('/equipos/store', [catalogoEquiposController::class, 'store'])->name('equipos.store');
-Route::get('/equipos-list/{id_equipo}/edit', [catalogoEquiposController::class, 'edit'])->name('equipos.edit');
-Route::post('/equipos-list/update', [catalogoEquiposController::class, 'update'])->name('equipos.update');
 
 //Tipo
 Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
@@ -863,35 +774,45 @@ Route::post('/editar_cliente_confirmado', [clientesConfirmadosController::class,
 Route::delete('clientes-list/{id_empresa}', [clientesConfirmadosController::class, 'destroy'])->name('');
 Route::post('/registrar-clientes', [ClientesConfirmadosController::class, 'registrarClientes'])->name('clientes.registrar');
 
-//Certificados Instalaciones
-Route::get('certificados/instalaciones', [Certificado_InstalacionesController::class, 'UserManagement'])->name('certificados-instalaciones');
-Route::resource('certificados-list',Certificado_InstalacionesController::class);
-Route::post('certificados-list', [Certificado_InstalacionesController::class, 'store'])->name('certificados.store');
-Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::class, 'edit']);
-Route::put('certificados-list/{id}', [Certificado_InstalacionesController::class, 'update']);
-Route::get('/ruta-para-obtener-revisores', [Certificado_InstalacionesController::class, 'obtenerRevisores']);
-Route::post('/asignar-revisor', [Certificado_InstalacionesController::class, 'storeRevisor'])->name('asignarRevisor'); //Agregar
-Route::post('/certificados/reexpedir', [Certificado_InstalacionesController::class, 'reexpedir'])->name('certificados.reexpedir');
 
-//Pdfs de certificados de instalaciones
-Route::get('/certificado_comercializador/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_comercializador'])->name('certificado_comercializador');
-Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
-Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
-
-//-------------------CERTIFICADO GRANEL-------------------
-Route::middleware(['auth'])->controller(Certificado_GranelController::class)->group(function () {
-    Route::get('certificados/granel', [Certificado_GranelController::class, 'UserManagement'])->name('certificados-granel');
-    Route::resource('certificados/granel-list',Certificado_GranelController::class);
-    Route::post('/certificados/granel', [Certificado_GranelController::class, 'store']);
-    Route::get('/edit-certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'edit']);
-    Route::delete('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'destroy'])->name('certificados.destroy');
-    Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'CertificadoGranel'])->name('PDF-cer-granel');
-    Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
-    Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
-    Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::class, 'reexpedir'])->name('certificados.reexpedir.granel');
+//-------------------MODULO DE SOLICITUDES-------------------
+Route::middleware(['auth'])->controller(solicitudesController::class)->group(function () {
+    Route::get('/solicitudes-historial', 'UserManagement')->name('solicitudes-historial');
+    Route::resource('/solicitudes-list', solicitudesController::class);
+    Route::get('/solicitud_de_servicio/{id_solicitud}', 'pdf_solicitud_servicios_070')->name('solicitudservi');
+    Route::post('/registrar-solicitud-georeferenciacion', 'registrarSolicitudGeoreferenciacion')->name('registrarSolicitudGeoreferenciacion');
+    Route::post('/registrar-solicitud-muestreo-agave', 'registrarSolicitudMuestreoAgave')->name('registrarSolicitudMuestreoAgave');
+    Route::post('/hologramas/storeVigilanciaProduccion', 'storeVigilanciaProduccion');
+    Route::post('/hologramas/storeMuestreoLote', 'storeMuestreoLote');
+    Route::post('/hologramas/storeVigilanciaTraslado', 'storeVigilanciaTraslado');
+    Route::post('/hologramas/storeInspeccionBarricada', 'storeInspeccionBarricada');
+    Route::post('/hologramas/storeInspeccionBarricadaLiberacion', 'storeInspeccionBarricadaLiberacion');
+    Route::post('/hologramas/storeInspeccionEnvasado', 'storeInspeccionEnvasado');
+    Route::get('/getDetalleLoteTipo/{id_tipo}', 'getDetalleLoteTipo');
+    Route::delete('/solicitudes-lista/{id_solicitud}', 'destroy')->name('solicitudes-list.destroy');
+    Route::get('/getDetalleLoteEnvasado/{id_lote_envasado}', 'getDetalleLoteEnvasado');
+    Route::get('/verificar-solicitud', 'verificarSolicitud')->name('verificarSolicitud');
+    Route::get('/datos-solicitud/{id_solicitud}',  'obtenerDatosSolicitud')->name('datos.solicitud');
+    Route::post('/actualizar-solicitudes/{id_solicitud}', 'actualizarSolicitudes');
+    Route::post('/exportaciones/storePedidoExportacion', 'storePedidoExportacion')->name('exportaciones.storePedidoExportacion');
+    Route::get('/marcas/{id_marca}/{id_direccion}', 'obtenerMarcasPorEmpresa');
+    Route::get('/solicitudes/exportar', 'exportar')->name('solicitudes.exportar');
+    Route::post('/registrar-solicitud-lib-prod-term','storeSolicitudLibProdTerm');
+    Route::get('/Etiqueta-2401ESPTOB/{id_solicitud}', 'Etiqueta_240');
+    Route::post('/registrarValidarSolicitud', 'registrarValidarSolicitud');
+    Route::get('/pdf_validar_solicitud/{id_validacion}', 'pdf_validar_solicitud');
 });
 
-//Revision Personal
+//-------------------CATALOGO EQUIPOS-------------------
+Route::middleware(['auth'])->controller(catalogoEquiposController::class)->group(function () {
+    Route::get('/catalogo/equipos', [catalogoEquiposController::class, 'UserManagement'])->name('catalogo-equipos');
+    Route::resource('/equipos-list', catalogoEquiposController::class);
+    Route::post('/equipos/store', [catalogoEquiposController::class, 'store'])->name('equipos.store');
+    Route::get('/equipos-list/{id_equipo}/edit', [catalogoEquiposController::class, 'edit'])->name('equipos.edit');
+    Route::post('/equipos-list/update', [catalogoEquiposController::class, 'update'])->name('equipos.update');
+});
+
+//-------------------REVISION PERSONAL-------------------
 Route::middleware(['auth'])->controller(RevisionPersonalController::class)->group(function () {
     Route::get('/revision/personal', 'UserManagement')->name('revision-personal');
     Route::resource('/revision-personal-list', RevisionPersonalController::class);
@@ -906,7 +827,6 @@ Route::middleware(['auth'])->controller(RevisionPersonalController::class)->grou
     // -Granel-
     Route::get('/bitacora_revisionPersonal_Granel/{id}', 'Bitacora_revisionPersonal_Granel');
 
-
     Route::get('/add_revision/{id_revision}', 'add_revision');
     Route::post('registrar_revision', 'registrar_revision')->name('registrar_revision');
     Route::get('/edit_revision/{id_revision}', 'edit_revision');
@@ -916,7 +836,6 @@ Route::middleware(['auth'])->controller(RevisionPersonalController::class)->grou
 
 
 // Pdfs Bitacoras
-
 Route::get('/bitacora_maduracion', [CartaAsignacionController::class, 'BitacoraMaduracion'])->name('bitacora_maduracion');
 Route::get('/bitacora_productor', [CartaAsignacionController::class, 'BitacoraProductor'])->name('bitacora_productor');
 Route::get('/bitacora_terminado', [CartaAsignacionController::class, 'BitacoraTerminado'])->name('bitacora_terminado');
@@ -931,11 +850,9 @@ Route::get('/bitacora_mezcal/{id}', [BitacoraMezcalController::class, 'PDFBitaco
 Route::get('/bitacoraProductoMaduracion', [BitacoraProductoMaduracionController::class, 'UserManagement'])->name('bitacoraProductoMaduracion');
 Route::resource('/bitacoraProductoMaduracion-list', BitacoraProductoMaduracionController::class);
 
-
 // BitacoraProcesoElaboracion
 Route::get('/bitacoraProcesoElaboracion', [BitacoraProcesoElaboracionController::class, 'UserManagement'])->name('bitacoraProcesoElaboracion');
 Route::resource('/bitacoraProcesoElaboracion-list', BitacoraProcesoElaboracionController::class);
-
 
 // BitacorProductoTerminado
 Route::get('/bitacoraProductoTerminado', [BitacoraProductoTerminadoController::class, 'UserManagement'])->name('bitacoraProductoTerminado');
@@ -956,24 +873,49 @@ Route::get('/insertarLotesEnvasadoDesdeAPI', [insertar_datos_bd_lotes_envasado::
 
 
 
-
-
-//-------------------Tramite IMPI-------------------
-Route::middleware(['auth'])->controller(impiController::class)->group(function () {
-    Route::get('tramiteIMPI', [impiController::class, 'UserManagement'])->name('IMPI');
-    Route::resource('tramite-list', impiController::class);
-    Route::post('registrar', [impiController::class, 'store'])->name('tramite-create');
-    ///eliminar
-    Route::delete('eliminar/{id_impi}', [impiController::class, 'destroy'])->name('instalacion.delete');
-    ///obtener el editar
-    Route::get('insta2/{id_impi}/edit', [impiController::class, 'edit'])->name('instalacion.edit');
-    ///editar
-    Route::put('insta2/{id_impi}', [impiController::class, 'update'])->name('tipos.update');
-
-    //Registrar evento
-    Route::post('crearEvento', [impiController::class, 'store'])->name('evento-create');
+//-------------------DICTAMEN INSTALACIONES-------------------
+Route::middleware(['auth'])->controller(DictamenInstalacionesController::class)->group(function () {
+    // Rutas principales
+    Route::get('dictamenes/instalaciones', 'UserManagement')->name('dictamenes-instalaciones');
+    Route::resource('insta', DictamenInstalacionesController::class);
+    // Rutas específicas para eliminar, registrar y editar
+    Route::delete('insta/{id_dictamen}', 'destroy')->name('instalacion.delete');
+    Route::post('insta', 'store')->name('instalacion.store');
+    Route::get('insta/{id_dictamen}/edit', 'edit')->name('instalacion.edit');
+    Route::post('insta/{id_dictamen}', 'update')->name('tipos.update');
+    Route::post('/registrar/reexpedir-instalaciones', [DictamenInstalacionesController::class, 'reexpedir'])->name('dic-insta.reex');
+    // Rutas para generación de PDFs de dictámenes
+    Route::get('/dictamen_productor/{id_dictamen}', 'dictamen_productor')->name('dictamen_productor');
+    Route::get('/dictamen_envasador/{id_dictamen}', 'dictamen_envasador')->name('dictamen_envasador');
+    Route::get('/dictamen_comercializador/{id_dictamen}', 'dictamen_comercializador')->name('dictamen_comercializador');
+    Route::get('/dictamen_almacen/{id_dictamen}', 'dictamen_almacen')->name('dictamen_almacen');
+    Route::get('/dictamen_maduracion/{id_dictamen}', 'dictamen_maduracion')->name('dictamen_maduracion');
 });
 
+//-------------------DICTAMEN GRANEL-------------------
+Route::middleware(['auth'])->group(function () {//agrupa distintos controladores
+    Route::get('/dictamenes/granel', [DictamenGranelController::class, 'UserManagement'])->name('dictamenes-granel');
+    Route::resource('/dictamen-granel-list', DictamenGranelController::class);
+    Route::delete('dictamen/granel/{id_dictamen}', [DictamenGranelController::class, 'destroy'])->name('dictamen.delete');
+    Route::post('dictamenes-granel',[DictamenGranelController::class, 'store'])->name('dictamen.store');
+    route::get('/dictamenes/granel/{id_dictamen}/edit', [DictamenGranelController::class, 'edit'])->name('dictamenes.edit');
+    Route::post('/dictamenes/granel/{id_dictamen}/update', [DictamenGranelController::class, 'update'])->name('dictamen.update');
+    Route::get('/dictamenes/granel/{id_dictamen}/foliofq', [DictamenGranelController::class, 'foliofq'])->name('dictamenes.foliofq');
+    Route::post('/registrar/reexpedir-granel', [DictamenGranelController::class, 'reexpedir'])->name('dic-granel.reex');
+    Route::get('/dictamen_granel/{id_dictamen}', [DictamenGranelController::class, 'MostrarDictamenGranel'])->name('formato-dictamen-granel');
+});
+
+//-------------------DICTAMEN ENVASADO-------------------
+Route::middleware(['auth'])->group(function () {//agrupa distintos controladores
+    Route::get('/dictamenes/envasado', [DictamenEnvasadoController::class, 'UserManagement'])->name('dictamenes-envasado');
+    Route::resource('/dictamen-envasado-list', DictamenEnvasadoController::class);
+    Route::delete('dictamen/envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'destroy'])->name('dictamen.delete');
+    Route::post('dictamenes-envasado',[DictamenEnvasadoController::class, 'store'])->name('dictamen.store');
+    route::get('/dictamenes/envasado/{id_dictamen}/edit', [DictamenEnvasadoController::class, 'edit'])->name('dictamenes.edit');
+    Route::post('/dictamenes/envasado/{id_dictamen}/update', [DictamenEnvasadoController::class, 'update'])->name('dictamen.update');
+    Route::post('/registrar/reexpedir-envasado', [DictamenEnvasadoController::class, 'reexpedir'])->name('dic-envasado.reex');
+    Route::get('/dictamen_envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'MostrarDictamenEnvasado'])->name('formato-dictamen-envasado');
+});
 
 //-------------------DICTAMEN EXPORTACION-------------------
 Route::middleware(['auth'])->controller(DictamenExportacionController::class)->group(function () {
@@ -991,6 +933,35 @@ Route::middleware(['auth'])->controller(DictamenExportacionController::class)->g
     Route::get('/dictamen_exportacion/{id_dictamen}', 'MostrarDictamenExportacion')->name('PDF-dictamen-exportacion');
     //Reexpedir
     Route::post('/registrar/reexpedir', 'reexpedir')->name('dic-expor.reex');
+});
+
+//-------------------CERTIFICADO INSTALACIONES-------------------
+Route::middleware(['auth'])->controller(Certificado_InstalacionesController::class)->group(function () {
+    Route::get('certificados/instalaciones', [Certificado_InstalacionesController::class, 'UserManagement'])->name('certificados-instalaciones');
+    Route::resource('certificados-list',Certificado_InstalacionesController::class);
+    Route::post('certificados-list', [Certificado_InstalacionesController::class, 'store'])->name('certificados.store');
+    Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::class, 'edit']);
+    Route::put('certificados-list/{id}', [Certificado_InstalacionesController::class, 'update']);
+    Route::get('/ruta-para-obtener-revisores', [Certificado_InstalacionesController::class, 'obtenerRevisores']);
+    Route::post('/asignar-revisor', [Certificado_InstalacionesController::class, 'storeRevisor'])->name('asignarRevisor'); //Agregar
+    Route::post('/certificados/reexpedir', [Certificado_InstalacionesController::class, 'reexpedir'])->name('certificados.reexpedir');
+    //Pdfs de certificados instalaciones
+    Route::get('/certificado_comercializador/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_comercializador'])->name('certificado_comercializador');
+    Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
+    Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
+});
+
+//-------------------CERTIFICADO GRANEL-------------------
+Route::middleware(['auth'])->controller(Certificado_GranelController::class)->group(function () {
+    Route::get('certificados/granel', [Certificado_GranelController::class, 'UserManagement'])->name('certificados-granel');
+    Route::resource('certificados/granel-list',Certificado_GranelController::class);
+    Route::post('/certificados/granel', [Certificado_GranelController::class, 'store']);
+    Route::get('/edit-certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'edit']);
+    Route::delete('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'destroy'])->name('certificados.destroy');
+    Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'CertificadoGranel'])->name('PDF-cer-granel');
+    Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
+    Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
+    Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::class, 'reexpedir'])->name('certificados.reexpedir.granel');
 });
 
 //-------------------CERTIFICADO EXPORTACION-------------------
@@ -1014,6 +985,22 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::post('/creaCerExp/reexpedir', [Certificado_ExportacionController::class, 'reexpedir'])->name('cer-expor.reex');
     //Asignar revisor
     Route::post('asignar_revisor_exportacion', [Certificado_ExportacionController::class, 'storeRevisor'])->name('cer-expor.asignarRevisor');
+});
+
+//-------------------TRAMITE IMPI-------------------
+Route::middleware(['auth'])->controller(impiController::class)->group(function () {
+    Route::get('tramiteIMPI', [impiController::class, 'UserManagement'])->name('IMPI');
+    Route::resource('tramite-list', impiController::class);
+    Route::post('registrar', [impiController::class, 'store'])->name('tramite-create');
+    ///eliminar
+    Route::delete('eliminar/{id_impi}', [impiController::class, 'destroy'])->name('instalacion.delete');
+    ///obtener el editar
+    Route::get('insta2/{id_impi}/edit', [impiController::class, 'edit'])->name('instalacion.edit');
+    ///editar
+    Route::put('insta2/{id_impi}', [impiController::class, 'update'])->name('tipos.update');
+
+    //Registrar evento
+    Route::post('crearEvento', [impiController::class, 'store'])->name('evento-create');
 });
 
 //-------------------RESUMEN DE INFORMACION DEL CLIENTE-------------------

@@ -239,6 +239,20 @@ public function clases_agave()
     }
 
 
+    ///MULTIPLES LOTES ENVASADO
+    public function lotesEnvasadoDesdeJson()
+    {
+        $caracteristicas = json_decode($this->caracteristicas, true);
+
+        $ids = collect($caracteristicas['detalles'] ?? [])
+            ->pluck('id_lote_envasado')
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        return lotes_envasado::whereIn('id_lote_envasado', $ids)->get();
+    }
     
 
 }

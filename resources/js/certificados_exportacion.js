@@ -192,7 +192,9 @@ if (dt_user_table.length) {
           responsivePriority: 4, 
           render: function (data, type, full, meta) {
             var $ = full[''];
-            return '<span class="small">   </span>';
+            return `<div class="small">
+                <b>Lote envasado:</b> ${full['nombre_lote']}  
+              </div>`;
             }
         },
         {

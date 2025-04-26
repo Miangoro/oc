@@ -12,6 +12,7 @@ use App\Models\Dictamen_Granel;
 use App\Models\User;
 use App\Models\tipos;
 use App\Models\Revisor;
+use App\Models\LotesGranel;
 //Notificacion
 use App\Notifications\GeneralNotification;
 //Enviar Correo
@@ -161,8 +162,12 @@ public function index(Request $request)
             $nestedData['id_solicitud'] = $certificado->dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
             $urls = $certificado->dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
             $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
-            
-            
+            //Lote granel
+            $caracteristicas = json_decode($certificado->dictamen->inspeccione->solicitud->caracteristicas, true);
+                $idLote = $caracteristicas['id_lote_granel'] ?? null;
+            $nestedData['nombre_lote'] = LotesGranel::find($idLote)?->nombre_lote ?? 'No encontrado';
+
+
             $data[] = $nestedData;
         }
     }
