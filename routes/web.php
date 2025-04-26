@@ -455,6 +455,7 @@ Route::middleware([
 ])->group(function () {
      Route::get('/dashboard', [Analytics::class, 'index'])->name('dashboard');
      Route::get('/estadisticas/certificados', [Analytics::class, 'estadisticasCertificados'])->name('estadisticasCertificados');
+     Route::get('/estadisticas/servicios', [Analytics::class, 'estadisticasServicios'])->name('estadisticasServicios');
 });
 
 //Solicitud de Cliente
