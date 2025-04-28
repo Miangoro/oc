@@ -962,7 +962,6 @@ Route::middleware(['auth'])->controller(Certificado_GranelController::class)->gr
     Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'CertificadoGranel'])->name('PDF-cer-granel');
     Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
     Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
-    //Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::class, 'reexpedir'])->name('certificados.reexpedir.granel');
     Route::post('/granel/reexpedir', [Certificado_GranelController::class, 'reexpedir'])->name('cer-granel.reex');
 });
 

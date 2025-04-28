@@ -129,10 +129,10 @@ public function index(Request $request)
                 }
             ///solicitud y acta
             $nestedData['id_solicitud'] = $certificado->dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
-            $urls = $certificado->dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
+            $urls = $certificado->dictamen?->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
             $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
             //Lote envasado
-            $lotes = $certificado->dictamen->inspeccione->solicitud?->lotesEnvasadoDesdeJson();
+            $lotes = $certificado->dictamen?->inspeccione?->solicitud?->lotesEnvasadoDesdeJson();
             $nestedData['nombre_lote'] = $lotes?->pluck('nombre')->implode(', ') ?? 'No encontrado';
             
             
