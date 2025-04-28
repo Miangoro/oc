@@ -285,14 +285,14 @@
             </td>
 
             <td class="columna">Fecha de emisión </td>
-			<td class="columna-norm">{{ $fecha_vigencia }}</td>
+			<td class="columna-norm">{{ $fecha_emision }}</td>
 		</tr>
 
 		<tr>
 			<td class="columna">RFC</td>
 			<td class="columna">{{ $rfc }}</td>
 			<td class="columna">Fecha de Vencimiento </td>
-			<td class="columna-norm">{{ $fecha_vencimiento }}</td>
+			<td class="columna-norm">{{ $fecha_vigencia }}</td>
 		</tr>
 	</tbody>
 </table>

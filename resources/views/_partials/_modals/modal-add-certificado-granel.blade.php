@@ -1,154 +1,151 @@
-<!-- Modal para agregar un nuevo certificado -->
-<div class="modal fade" id="addCertificadoGrenelModal" tabindex="-1" aria-labelledby="addCertificadoGrenelModalLabel" aria-hidden="true">
+<!-- MODAL AGREGAR -->
+<div class="modal fade" id="ModalAgregar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addCertificadoGrenelModalLabel">Agregar certificado de lote a granel</h5>
+
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Nuevo certificado granel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
             <div class="modal-body">
-                <form id="addCertificadoForm">
-                    <!-- Select para el dictamen -->
-                    <div class="form-floating form-floating-outline mb-4">
-                        <select class="form-select select2" id="num_dictamen" name="num_dictamen" required>
-                            <option value="" disabled selected>Seleccione un dictamen</option>
-                        @foreach($dictamenes as $dictamen)
-                            <option value="{{ $dictamen->id_dictamen }}">
-                                {{ $dictamen->num_dictamen }}
-                                @if($dictamen->lote_granel && $dictamen->lote_granel->nombre_lote)
-                                    | {{ $dictamen->lote_granel->nombre_lote }}
-                                @else
-                                    | (sin nombre de lote)
-                                @endif
-                        
-                                @if($dictamen->inspeccion && $dictamen->inspeccion->num_servicio)
-                                    | {{ $dictamen->inspeccion->num_servicio }}
-                                @else
-                                    | (sin número de servicio)
-                                @endif
-                            </option>
-                        @endforeach
-                        </select>
-                        <label for="formValidationSelect2">Seleccione un dictamen</label>
-                    </div>
-                    
-                    <!-- Select para el firmante -->
-                    <div class="form-floating form-floating-outline mb-4">
-                        <select class="form-select select2" id="id_firmante" name="id_firmante" required>
-                            <option value="" disabled selected>Seleccione un firmante</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                        <label for="formValidationSelect2">Selecciona un firmante</label>
+                <form id="FormAgregar" method="POST">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select class="form-select select2" name="id_dictamen" data-placeholder="Selecciona un dictamen">
+                                    <option value="" disabled selected>NULL</option>
+                                    @foreach ($dictamenes as $dic)
+                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | </option>
+                                    @endforeach
+                                </select>
+                                <label for="">No. de dictamen</label>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Campo de texto para num_dictamen -->
-                    <div class="form-floating form-floating-outline mb-4">
-                        <input type="text" class="form-control" id="num_certificado" name="num_certificado" placeholder="Número de Dictamen" required>
-                        <label for="num_dictamen_text">Número de Certificado</label>
-                    </div>
-
-                    <!-- Campos de fecha -->
-                    <div class="row mb-3">
+                    <div class="row">
                         <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <input type="date" class="form-control datepicker" id="fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Vigencia" readonly>
-                                <label for="fecha_vigencia">Fecha de Vigencia</label>
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="text" class="form-control" name="num_certificado" placeholder="No. de certificado">
+                                <label for="">No. de certificado</label>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <input type="date" class="form-control datepicker" id="fecha_vencimiento" name="fecha_vencimiento" aria-label="Fecha de Vencimiento" readonly>
-                                <label for="fecha_vencimiento">Fecha de Vencimiento</label>
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select class="select2 form-select" name="id_firmante">
+                                    <option value="" disabled selected>Selecciona un firmante</option>
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="">Selecciona un firmante</label>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control flatpickr-datetime" id="fecha_emision" name="fecha_emision"
+                                placeholder="YYYY-MM-DD">
+                                <label for="">Fecha de emisión</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" id="fecha_vigencia" name="fecha_vigencia" readonly
+                                    placeholder="YYYY-MM-DD">
+                                <label for="">Fecha de vigencia</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex mt-6 justify-content-center">
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
-
-                <div class="d-flex justify-content-end mt-3">
-                    <button id="btnRegistrarCertidicado" type="submit" class="btn btn-primary me-2">Registrar</button>
-                    <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
 
-<!--EDITARRR-->
-<!-- Modal para editar un certificado -->
-<div class="modal fade" id="editCertificadoGranelModal" tabindex="-1" aria-labelledby="editCertificadoGranelModalLabel" aria-hidden="true">
+
+<!-- MODAL EDITAR -->
+<div class="modal fade" id="ModalEditar" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editCertificadoGranelModalLabel">Editar certificado a granel</h5>
+
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Editar certificado granel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
             <div class="modal-body">
-                <form id="editCertificadoForm">
-                    <!-- Select para el dictamen -->
-                    <div class="form-floating form-floating-outline mb-4">
-                        <select class="form-select select2" id="edit_num_dictamen" name="id_dictamen" required>
-                            <option value="" disabled selected>Seleccione un dictamen</option>
-                        @foreach($dictamenes as $dictamen)
-                            <option value="{{ $dictamen->id_dictamen }}">
-                                {{ $dictamen->num_dictamen }}
-                                @if($dictamen->lote_granel && $dictamen->lote_granel->nombre_lote)
-                                    | {{ $dictamen->lote_granel->nombre_lote }}
-                                @else
-                                    | (sin nombre de lote)
-                                @endif
-                        
-                                @if($dictamen->inspeccion && $dictamen->inspeccion->num_servicio)
-                                    | {{ $dictamen->inspeccion->num_servicio }}
-                                @else
-                                    | (sin número de servicio)
-                                @endif
-                            </option>
-                        @endforeach
-                        </select>
-                        <label for="formValidationSelect2">Seleccione un dictamen</label>
-                    </div>
+                <form id="FormEditar" method="POST">
+                    <div class="row">
+                        <input type="hidden" name="id_certificado" id="edit_id_certificado">
 
-                    <!-- Select para el firmante -->
-                    <div class="form-floating form-floating-outline mb-4">
-                        <select class="form-select select2" id="edit_id_firmante" name="id_firmante" required>
-                            <option value="" disabled selected>Seleccione un firmante</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                        <label for="formValidationSelect2">Selecciona un firmante</label>
-                    </div>
-
-                    <!-- Campo de texto para num_certificado -->
-                    <div class="form-floating form-floating-outline mb-4">
-                        <input type="text" class="form-control" id="edit_num_certificado" name="num_certificado" placeholder="Número de Dictamen" required>
-                        <label for="edit_num_certificado">Número de Certificado</label>
-                    </div>
-
-                    <!-- Campos de fecha -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <input type="date" class="form-control datepicker" id="edit_fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Vigencia" readonly>
-                                <label for="edit_fecha_vigencia">Fecha de Vigencia</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <input type="date" class="form-control datepicker" id="edit_fecha_vencimiento" name="fecha_vencimiento" aria-label="Fecha de Vencimiento" readonly>
-                                <label for="edit_fecha_vencimiento">Fecha de Vencimiento</label>
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select class="form-select select2" name="id_dictamen" 
+                                    id="edit_id_dictamen">
+                                    @foreach ($dictamenes as $dic)
+                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | </option>
+                                    @endforeach
+                                </select>
+                                <label for="">No. de dictamen</label>
                             </div>
                         </div>
                     </div>
-               
-                <div class="d-flex justify-content-end mt-3">
-                    <button id="btnEditarCertificado" type="submit" class="btn btn-primary me-2">Guardar Cambios</button>
-                    <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                </div>
-            </form>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="text" class="form-control" name="num_certificado" 
+                                    id="edit_num_certificado"  placeholder="no. certificado">
+                                <label for="">No. de certificado</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select class="select2 form-select" name="id_firmante"
+                                    id="edit_id_firmante">
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="">Seleccione un firmante</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control flatpickr-datetime" id="edit_fecha_emision" name="fecha_emision"
+                                    placeholder="YYYY-MM-DD">
+                                <label for="">Fecha de emisión</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" readonly
+                                    placeholder="YYYY-MM-DD">
+                                <label for="">Vigencia hasta</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex mt-6 justify-content-center">
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

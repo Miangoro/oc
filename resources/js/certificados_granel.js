@@ -1,5 +1,47 @@
 'use strict';
 
+///flatpickr
+$(document).ready(function () {
+  flatpickr(".flatpickr-datetime", {
+      dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
+      enableTime: false,   // Desactiva la  hora
+      allowInput: true,    // Permite al usuario escribir la fecha manualmente
+      locale: "es",        // idioma a español
+  });
+});
+//FUNCION FECHAS
+$('#fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+  $('#fecha_vigencia').val(fechaVigencia);
+  flatpickr("#fecha_vigencia", {
+      dateFormat: "Y-m-d",
+      enableTime: false,  
+      allowInput: true,  
+      locale: "es",     
+      static: true,      
+      disable: true          
+  });
+});
+//FUNCION FECHAS EDIT
+$('#edit_fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+  $('#edit_fecha_vigencia').val(fechaVigencia);
+  flatpickr("#edit_fecha_vigencia", {
+      dateFormat: "Y-m-d",  
+      enableTime: false,   
+      allowInput: true,  
+      locale: "es",  
+      static: true,   
+      disable: true  
+  });
+});
+
+
+/* 
 $('#addCertificadoForm .select2').each(function () {
   var $this = $(this);
   $this.select2({
@@ -27,727 +69,694 @@ $('#addCertificadoForm .select2').each(function () {
         todayHighlight: true
     });
 
+ */
 
 
+$(function () {// Datatable (jquery)
+  var dt_user_table = $('.datatables-users');
 
- $(function () {
-
-var dt_user_table = $('.datatables-users');
-
-
-// AJAX setup
-$.ajaxSetup({
-  headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  }
-});
+// ajax setup
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
  
-
-
-  ///FUNCIONALIDAD DE LA VISTA datatable
-   if (dt_user_table.length) {
-    var dt_instalaciones_table = $('.datatables-users').DataTable({
-       processing: true,
-       serverSide: true,
-       ajax: {
-         url: baseUrl + 'certificados/granel-list',
-       },
-       columns: [
-        { data: '' }, // (0)
-        { data: 'num_certificado' },//(1)
-        { data: ''},
-        {data: null, // Se usará null porque combinaremos varios valores
-         render: function(data, type, row) {
-             return `
-             <strong>${data.numero_cliente}</strong><br>
-                 <span style="font-size:12px">${data.razon_social}<span>
-             `;
-           }
-        },
-        { data: '' },
-        { data: 'fechas' }, 
-        { data: '' },//Revisores
-        { data: 'action' }
-       ],
-       columnDefs: [
-         {
-           className: 'control',
-           searchable: false,
-           orderable: false,
-           responsivePriority: 2,
-           targets: 0,
-           render: function (data, type, full, meta) {
-             return '';
-           }
-         },
-         {
-          targets: 1,
-          render: function (data, type, full, meta) {
-            var $num_certificado = full['num_certificado'];
-            var $id = full['id_certificado'];
-            return '<small class="fw-bold">' + $num_certificado + '</small>' +
-                '<i data-id="' +$id+ '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
-                `<br><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']} <i data-id="${full['id_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
-              }
-        }, 
-        {
-        //Tabla 2
-          targets: 2,
-          searchable: true,
-          orderable: true,
-          render: function (data, type, full, meta) {
-            var $num_servicio = full['num_servicio'];
-            var $folio_solicitud = full['folio_solicitud'];
-            if ( full['url_acta'] == 'Sin subir' ) {
-              var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
-            }else {
-              var $acta = full['url_acta'].map(url => `
-                <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
-                   class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
-                   data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
-                </i>
-              `).join('');//concatena en un string.
-            }
-
-            return `
-            <span class="fw-bold">Servicio:</span> ${$num_servicio}
-              <span>${$acta}</span>
-            <br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud}
-              <i data-id="${full['id_solicitud']}" data-folio="${$folio_solicitud}"
-                class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
-                data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
-              </i> 
-            `;
-          }
-        }, 
-        {
-          targets: 4,
-          searchable: false,
-          orderable: false,
-          responsivePriority: 4, 
-          render: function (data, type, full, meta) {
-            var $ = full[''];
-            return `<div class="small">
-                <b>Lote granel:</b> ${full['nombre_lote']}  
-              </div>`;
-            }
-        },
-        {
-          targets: 5,
-          searchable: false,
-          orderable: false,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
-            var $fecha_vigencia = full['fecha_vigencia'] ?? 'No encontrado';
-            return `
-                <div>
-                    <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span></div>
-                    <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span></div>
-                    <div class="small">${full['diasRestantes']}</div>
-                </div> `;
-          }
-        },
-        {
-        targets: 6,
-        searchable: true,
-        orderable: true,
-        className: 'text-center',
-        render: function (data, type, full, meta) {
-          //estatus
-          var $estatus = full['estatus'];
-          var $fecha_actual = full['fecha_actual'];
-          var $vigencia = full['vigencia'];
-          let estatus;
-            if ($fecha_actual > $vigencia) {
-              estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
-            } else if ($estatus == 1) {
-                estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
-            } else if ($estatus == 2) {
-                estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
-            } else {
-              estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
-            }
-          //revisores
-          var id_revisor = full['id_revisor'];   // Obtener el id_revisor
-          var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
-          // Mensajes para los revisores
-          var revisorPersonal, revisorMiembro;
-          // Para el revisor personal
-          if (id_revisor !== 'Sin asignar') {
-              revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> ${id_revisor}</span>`;
-          } else {
-              revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
-          }
-          // Para el revisor miembro
-          if (id_revisor2 !== 'Sin asignar') {
-              revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> ${id_revisor2}</span>`;
-          } else {
-              revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
-          }
-  
-          // Retorna los revisores en formato HTML
-          return estatus+
-            ` <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                  <div style="display: inline;">${revisorPersonal}</div>
-                  <div style="display: inline;">${revisorMiembro}</div>
-              </div>
-            `;
+///FUNCIONALIDAD DE LA VISTA datatable
+if (dt_user_table.length) {
+var dataTable = $('.datatables-users').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: {
+      url: baseUrl + 'certificados/granel-list',
+    },
+    columns: [
+    { data: '' }, // (0)
+    { data: 'num_certificado' },//(1)
+    { data: ''},
+    {data: null, // Se usará null porque combinaremos varios valores
+      render: function(data, type, row) {
+          return `
+          <strong>${data.numero_cliente}</strong><br>
+              <span style="font-size:12px">${data.razon_social}<span>
+          `;
         }
-        },
-         {
-           // Actions
-           targets: -1,
-           title: 'Acciones',
-           searchable: false,
-           orderable: false,
-           render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-                '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">' +
-                  '<i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>' +
-                '</button>' +
+    },
+    { data: '' },
+    { data: 'fechas' }, 
+    { data: '' },//Revisores
+    { data: 'action' }
+    ],
+    columnDefs: [
+      {
+        className: 'control',
+        searchable: false,
+        orderable: false,
+        responsivePriority: 2,
+        targets: 0,
+        render: function (data, type, full, meta) {
+          return '';
+        }
+      },
+      {
+      targets: 1,
+      render: function (data, type, full, meta) {
+        var $num_certificado = full['num_certificado'];
+        var $id = full['id_certificado'];
+        return '<small class="fw-bold">' + $num_certificado + '</small>' +
+            '<i data-id="' +$id+ '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
+            `<br><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']} <i data-id="${full['id_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+          }
+    }, 
+    {
+    //Tabla 2
+      targets: 2,
+      searchable: true,
+      orderable: true,
+      render: function (data, type, full, meta) {
+        var $num_servicio = full['num_servicio'];
+        var $folio_solicitud = full['folio_solicitud'];
+        if ( full['url_acta'] == 'Sin subir' ) {
+          var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
+        }else {
+          var $acta = full['url_acta'].map(url => `
+            <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
+                class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
+                data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+            </i>
+          `).join('');//concatena en un string.
+        }
+
+        return `
+        <span class="fw-bold">Servicio:</span> ${$num_servicio}
+          <span>${$acta}</span>
+        <br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud}
+          <i data-id="${full['id_solicitud']}" data-folio="${$folio_solicitud}"
+            class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
+            data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+          </i> 
+        `;
+      }
+    }, 
+    {
+      targets: 4,
+      searchable: false,
+      orderable: false,
+      responsivePriority: 4, 
+      render: function (data, type, full, meta) {
+        var $ = full[''];
+        return `<div class="small">
+            <b>Lote granel:</b> ${full['nombre_lote']}  
+          </div>`;
+        }
+    },
+    {
+      targets: 5,
+      searchable: false,
+      orderable: false,
+      className: 'text-center',
+      render: function (data, type, full, meta) {
+        var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
+        var $fecha_vigencia = full['fecha_vigencia'] ?? 'No encontrado';
+        return `
+            <div>
+                <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span></div>
+                <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span></div>
+                <div class="small">${full['diasRestantes']}</div>
+            </div> `;
+      }
+    },
+    {
+    targets: 6,
+    searchable: true,
+    orderable: true,
+    className: 'text-center',
+    render: function (data, type, full, meta) {
+      //estatus
+      var $estatus = full['estatus'];
+      var $fecha_actual = full['fecha_actual'];
+      var $vigencia = full['vigencia'];
+      let estatus;
+        if ($fecha_actual > $vigencia) {
+          estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
+        } else if ($estatus == 1) {
+            estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
+        } else if ($estatus == 2) {
+            estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+        } else {
+          estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
+        }
+      //revisores
+      var id_revisor = full['id_revisor'];   // Obtener el id_revisor
+      var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
+      // Mensajes para los revisores
+      var revisorPersonal, revisorMiembro;
+      // Para el revisor personal
+      if (id_revisor !== 'Sin asignar') {
+          revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> ${id_revisor}</span>`;
+      } else {
+          revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
+      }
+      // Para el revisor miembro
+      if (id_revisor2 !== 'Sin asignar') {
+          revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> ${id_revisor2}</span>`;
+      } else {
+          revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
+      }
+
+      // Retorna los revisores en formato HTML
+      return estatus+
+        ` <div style="display: flex; flex-direction: column; align-items: flex-start;">
+              <div style="display: inline;">${revisorPersonal}</div>
+              <div style="display: inline;">${revisorMiembro}</div>
+          </div>
+        `;
+    }
+    },
+      {
+        // Actions
+        targets: -1,
+        title: 'Acciones',
+        searchable: false,
+        orderable: false,
+        render: function (data, type, full, meta) {
+        return (
+          '<div class="d-flex align-items-center gap-50">' +
+            `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info') + `" data-bs-toggle="dropdown">` +
+                (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
+            '</button>' +
                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
                 // Botón para Editar
-                `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#editCertificadoGranelModal" class="dropdown-item edit-record waves-effect text-info">` +
+                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar" data-bs-toggle="modal" data-bs-target="#ModalEditar">` +
                 '<i class="ri-edit-box-line ri-20px text-info"></i> Editar' +
-               '</a>' +
-                // Botón para eliminar
-                `<a data-id="${full['id_certificado']}" class="dropdown-item delete-record waves-effect text-danger">` +
-                '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar' +
-                '</a>'+
+                '</a>' +
                 // Botón adicional: Asignar revisor
-                `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-info">` +
-                '<i class="text-warning ri-user-search-fill"></i> <span class="text-warning"> Asignar revisor</span>' +
+                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">` +
+                '<i class="ri-user-search-fill text-warning"></i> Asignar revisor' +
                 '</a>' +
                 // Botón para reexpedir certificado de instalaciones
-                `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalReexpedirCertificadoGranel" class="dropdown-item reexpedir-record waves-effect text-info">` +
-                '<i class="ri-file-edit-fill"></i> Reexpedir certificado' +
+                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir" data-bs-toggle="modal" data-bs-target="#ModalReexpedir">` +
+                '<i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar' +
                 '</a>' +
+                // Botón para eliminar
+                `<a data-id="${full['id_certificado']}" class="dropdown-item  waves-effect text-dark eliminar">` +
+                '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar' +
+                '</a>'+
                 '</div>' +
-              '</div>'
-            );                                   
-           }
-         }
-       ],
-       order: [[2, 'desc']],
-       dom:
-         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
-         '<"me-5 ms-n2"f>' +
-         '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
-         '>t' +
-         '<"row mx-1"' +
-         '<"col-sm-12 col-md-6"i>' +
-         '<"col-sm-12 col-md-6"p>' +
-         '>',
-       lengthMenu: [10, 20, 50, 70, 100], 
-       language: {
-         sLengthMenu: '_MENU_',
-         search: '',
-         searchPlaceholder: 'Buscar',
-         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
-         paginate: {
-                 "sFirst":    "Primero",
-                 "sLast":     "Último",
-                 "sNext":     "Siguiente",
-                 "sPrevious": "Anterior"
-               }
-       },
- 
-       // Opciones Exportar Documentos
-       buttons: [
-         {
-           extend: 'collection',
-           className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-           text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-           buttons: [
-             {
-               extend: 'print',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-printer-line me-1" ></i>Print',
-               className: 'dropdown-item',
-               exportOptions: {
-                 columns: [1, 2, 3, 4, 5, 6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               },
-               customize: function (win) {
-                 $(win.document.body)
-                   .css('color', config.colors.headingColor)
-                   .css('border-color', config.colors.borderColor)
-                   .css('background-color', config.colors.body);
-                 $(win.document.body)
-                   .find('table')
-                   .addClass('compact')
-                   .css('color', 'inherit')
-                   .css('border-color', 'inherit')
-                   .css('background-color', 'inherit');
-               }
-             },
-             {
-               extend: 'csv',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-file-text-line me-1" ></i>Csv',
-               className: 'dropdown-item',
-               exportOptions: {
-                 columns: [1, 2, 3, 4, 5 ,6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             },
-             {
-               extend: 'excel',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-file-excel-line me-1"></i>Excel',
-               className: 'dropdown-item',
-               exportOptions: {
-                columns: [1, 2, 3, 4, 5 ,6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             },
-             {
-               extend: 'pdf',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
-               className: 'dropdown-item',
-               exportOptions: {
-                columns: [1, 2, 3, 4, 5 ,6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             },
-             {
-               extend: 'copy',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-file-copy-line me-1"></i>Copy',
-               className: 'dropdown-item',
-               exportOptions: {
-                columns: [1, 2, 3, 4, 5 ,6],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             }
-           ]
-         },
-         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Certificado</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'modal',
-            'data-bs-target': '#addCertificadoGrenelModal'
-          }
+          '</div>'
+        );                                   
         }
-       ],
-        responsive: {
-         details: {
-           display: $.fn.dataTable.Responsive.display.modal({
-             header: function (row) {
-               var data = row.data();
-               return 'Detalles de Cerificados de Instalaciones';
-             }
-           }),
-           type: 'column',
-           renderer: function (api, rowIdx, columns) {
-             var data = $.map(columns, function (col, i) {
-               return col.title !== '' 
-                 ? '<tr data-dt-row="' +
-                     col.rowIndex +
-                     '" data-dt-column="' +
-                     col.columnIndex +
-                     '">' +
-                     '<td>' +
-                     col.title +
-                     ':' +
-                     '</td> ' +
-                     '<td>' +
-                     col.data +
-                     '</td>' +
-                     '</tr>'
-                 : '';
-             }).join('');
-             
-             return data ? $('<table class="table"/><tbody />').append(data) : false;
-           }
-         }
-       } 
-     });
-   } 
+      }
+    ],
+    order: [[2, 'desc']],
+    dom:
+      '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
+      '<"me-5 ms-n2"f>' +
+      '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
+      '>t' +
+      '<"row mx-1"' +
+      '<"col-sm-12 col-md-6"i>' +
+      '<"col-sm-12 col-md-6"p>' +
+      '>',
+    lengthMenu: [10, 20, 50, 70, 100], 
+    language: {
+      sLengthMenu: '_MENU_',
+      search: '',
+      searchPlaceholder: 'Buscar',
+      info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
+      paginate: {
+              "sFirst":    "Primero",
+              "sLast":     "Último",
+              "sNext":     "Siguiente",
+              "sPrevious": "Anterior"
+            }
+    },
 
-//FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
-
-  // Eliminar registro
-  $(document).on('click', '.delete-record', function () {
-    var id_certificado = $(this).data('id'),
-      dtrModal = $('.dtr-bs-modal.show');
-    if (dtrModal.length) {
-      dtrModal.modal('hide');
+    // Opciones Exportar Documentos
+    buttons: [
+      {
+        extend: 'collection',
+        className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
+        text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
+        buttons: [
+          {
+            extend: 'print',
+            title: 'Certificados Instalaciones',
+            text: '<i class="ri-printer-line me-1" ></i>Print',
+            className: 'dropdown-item',
+            exportOptions: {
+              columns: [1, 2, 3, 4, 5, 6, 7],
+              format: {
+                body: function (inner, coldex, rowdex) {
+                  if (inner.length <= 0) return inner;
+                  var el = $.parseHTML(inner);
+                  var result = '';
+                  $.each(el, function (index, item) {
+                    if (item.classList !== undefined && item.classList.contains('user-name')) {
+                      result = result + item.lastChild.firstChild.textContent;
+                    } else if (item.innerText === undefined) {
+                      result = result + item.textContent;
+                    } else result = result + item.innerText;
+                  });
+                  return result;
+                }
+              }
+            },
+            customize: function (win) {
+              $(win.document.body)
+                .css('color', config.colors.headingColor)
+                .css('border-color', config.colors.borderColor)
+                .css('background-color', config.colors.body);
+              $(win.document.body)
+                .find('table')
+                .addClass('compact')
+                .css('color', 'inherit')
+                .css('border-color', 'inherit')
+                .css('background-color', 'inherit');
+            }
+          },
+          {
+            extend: 'csv',
+            title: 'Certificados Instalaciones',
+            text: '<i class="ri-file-text-line me-1" ></i>Csv',
+            className: 'dropdown-item',
+            exportOptions: {
+              columns: [1, 2, 3, 4, 5 ,6, 7],
+              format: {
+                body: function (inner, coldex, rowdex) {
+                  if (inner.length <= 0) return inner;
+                  var el = $.parseHTML(inner);
+                  var result = '';
+                  $.each(el, function (index, item) {
+                    if (item.classList !== undefined && item.classList.contains('user-name')) {
+                      result = result + item.lastChild.firstChild.textContent;
+                    } else if (item.innerText === undefined) {
+                      result = result + item.textContent;
+                    } else result = result + item.innerText;
+                  });
+                  return result;
+                }
+              }
+            }
+          },
+          {
+            extend: 'excel',
+            title: 'Certificados Instalaciones',
+            text: '<i class="ri-file-excel-line me-1"></i>Excel',
+            className: 'dropdown-item',
+            exportOptions: {
+            columns: [1, 2, 3, 4, 5 ,6, 7],
+              format: {
+                body: function (inner, coldex, rowdex) {
+                  if (inner.length <= 0) return inner;
+                  var el = $.parseHTML(inner);
+                  var result = '';
+                  $.each(el, function (index, item) {
+                    if (item.classList !== undefined && item.classList.contains('user-name')) {
+                      result = result + item.lastChild.firstChild.textContent;
+                    } else if (item.innerText === undefined) {
+                      result = result + item.textContent;
+                    } else result = result + item.innerText;
+                  });
+                  return result;
+                }
+              }
+            }
+          },
+          {
+            extend: 'pdf',
+            title: 'Certificados Instalaciones',
+            text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
+            className: 'dropdown-item',
+            exportOptions: {
+            columns: [1, 2, 3, 4, 5 ,6, 7],
+              format: {
+                body: function (inner, coldex, rowdex) {
+                  if (inner.length <= 0) return inner;
+                  var el = $.parseHTML(inner);
+                  var result = '';
+                  $.each(el, function (index, item) {
+                    if (item.classList !== undefined && item.classList.contains('user-name')) {
+                      result = result + item.lastChild.firstChild.textContent;
+                    } else if (item.innerText === undefined) {
+                      result = result + item.textContent;
+                    } else result = result + item.innerText;
+                  });
+                  return result;
+                }
+              }
+            }
+          },
+          {
+            extend: 'copy',
+            title: 'Certificados Instalaciones',
+            text: '<i class="ri-file-copy-line me-1"></i>Copy',
+            className: 'dropdown-item',
+            exportOptions: {
+            columns: [1, 2, 3, 4, 5 ,6],
+              format: {
+                body: function (inner, coldex, rowdex) {
+                  if (inner.length <= 0) return inner;
+                  var el = $.parseHTML(inner);
+                  var result = '';
+                  $.each(el, function (index, item) {
+                    if (item.classList !== undefined && item.classList.contains('user-name')) {
+                      result = result + item.lastChild.firstChild.textContent;
+                    } else if (item.innerText === undefined) {
+                      result = result + item.textContent;
+                    } else result = result + item.innerText;
+                  });
+                  return result;
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+      text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Certificado</span>',
+      className: 'add-new btn btn-primary waves-effect waves-light',
+      attr: {
+        'data-bs-toggle': 'modal',
+        'data-bs-dismiss': 'modal',
+        'data-bs-target': '#ModalAgregar'
+      }
     }
-    Swal.fire({
+    ],
+    responsive: {
+      details: {
+        display: $.fn.dataTable.Responsive.display.modal({
+          header: function (row) {
+            var data = row.data();
+            return 'Detalles de ' + data['num_certificado'];
+          }
+        }),
+        type: 'column',
+        renderer: function (api, rowIdx, columns) {
+          var data = $.map(columns, function (col, i) {
+            return col.title !== '' 
+              ? '<tr data-dt-row="' +
+                  col.rowIndex +
+                  '" data-dt-column="' +
+                  col.columnIndex +
+                  '">' +
+                  '<td>' +
+                  col.title +
+                  ':' +
+                  '</td> ' +
+                  '<td>' +
+                  col.data +
+                  '</td>' +
+                  '</tr>'
+              : '';
+          }).join('');
+          
+          return data ? $('<table class="table"/><tbody />').append(data) : false;
+        }
+      }
+    } 
+  });
+} 
+
+
+
+///AGREGAR NUEVO REGISTRO
+$(function () {
+  $.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+  });
+
+  //Validación del formulario por "name"
+  const form = document.getElementById('FormAgregar'); 
+  const fv = FormValidation.formValidation(FormAgregar, {
+    fields: {
+        num_certificado: {
+            validators: {
+                notEmpty: {
+                    message: 'El número de certificado es obligatorio.'
+                }
+            }
+        },
+        id_dictamen: {
+          validators: {
+              notEmpty: {
+                  message: 'El número de dictamen es obligatorio.'
+              }
+          }
+        },
+        fecha_emision: {
+            validators: {
+                notEmpty: {
+                  message: 'La fecha de emisión es obligatoria.',
+                },
+                date: {
+                  format: 'YYYY-MM-DD',
+                  message: 'Ingresa una fecha válida (yyyy-mm-dd).',
+                }
+            }
+        },
+        fecha_vigencia: {
+            validators: {
+                notEmpty: {
+                  message: 'La fecha de vigencia es obligatoria.',
+                },
+                date: {
+                  format: 'YYYY-MM-DD',
+                  message: 'Ingresa una fecha válida (yyyy-mm-dd).',
+                }
+            }
+        },
+        id_firmante: {
+          validators: {
+              notEmpty: {
+                  message: 'Seleccione una opcion'
+              }
+          }
+      },
+    },
+    plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'//clases del formulario
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+
+  }).on('core.form.valid', function (e) {
+
+  var formData = new FormData(form);
+    $.ajax({
+        url: '/certificados/granel',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          console.log('Data:', response);
+            $('#ModalAgregar').modal('hide');//modal
+            $('#FormAgregar')[0].reset();//formulario
+
+            // Actualizar la tabla sin reinicializar DataTables
+            dataTable.ajax.reload();
+            // Mostrar alerta de éxito
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.success,
+                customClass: {
+                  confirmButton: 'btn btn-primary'
+                }
+            });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr);
+          console.log('Error2:', xhr.responseText);
+            // Mostrar alerta de error
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al registrar.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+        }
+    });
+  });
+
+});
+
+
+
+///ELIMINAR REGISTRO
+$(document).on('click', '.eliminar', function () {//clase del boton "eliminar"
+  var id_certificado = $(this).data('id'); //ID de la clase
+  var dtrModal = $('.dtr-bs-modal.show');
+
+  // Ocultar modal responsivo en pantalla pequeña si está abierto
+  if (dtrModal.length) {
+      dtrModal.modal('hide');
+  }
+
+  // SweetAlert para confirmar la eliminación
+  Swal.fire({
       title: '¿Está seguro?',
-      text: "No podrá revertir este evento",
+      text: 'No podrá revertir este evento',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si, eliminar',
+      confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+      cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
       customClass: {
-        confirmButton: 'btn btn-primary me-3',
-        cancelButton: 'btn btn-label-secondary'
+        confirmButton: 'btn btn-primary me-2',
+        cancelButton: 'btn btn-danger'
       },
       buttonsStyling: false
-    }).then(function (result) {
-      if (result.value) {
+  }).then(function (result) {
+      if (result.isConfirmed) {
+        // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
           url:`/certificados/granel/${id_certificado}`,
-          success: function () {
-            dt_instalaciones_table.ajax.reload();
-          },
-          error: function (error) {
-            console.log(error);
-          }
-        });
-        Swal.fire({
-          icon: 'success',
-          title: '¡Eliminado!',
-          text: '¡Certificado eliminado correctamente!',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: 'Cancelado',
-          text: 'La solicitud no ha sido eliminada',
-          icon: 'error',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      }
-    });
-  });  
-
-//Agregar
-$(function () {
-    $.ajaxSetup({
-        headers: {
+          headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    function setFechaVencimiento() {
-        let fechaVigencia = $('#fecha_vigencia').val();
-        if (fechaVigencia) {
-            let fecha = new Date(fechaVigencia);
-            fecha.setFullYear(fecha.getFullYear() + 1);
-            let year = fecha.getFullYear();
-            let month = String(fecha.getMonth() + 1).padStart(2, '0');
-            let day = String(fecha.getDate()).padStart(2, '0');
-            let fechaVencimiento = `${year}-${month}-${day}`;
-            $('#fecha_vencimiento').val(fechaVencimiento);
-            fv.revalidateField('fecha_vencimiento'); 
-        }
-    }
-
-    $('#fecha_vigencia').on('change', function () {
-        setFechaVencimiento();
-    });
-
-    const form = document.getElementById('addCertificadoForm'); 
-    const fv = FormValidation.formValidation(form, {
-        fields: {
-            'id_firmante': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona un firmante.'
-                    }
-                }
-            },
-            'num_dictamen': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona un dictamen.'
-                    }
-                }
-            },
-            'num_certificado': {
-                validators: {
-                    notEmpty: {
-                        message: 'El número de certificado es obligatorio.'
-                    }
-                }
-            },
-            'fecha_vigencia': {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha de vigencia es obligatoria.'
-                    },
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'Introduce una fecha de vigencia válida (YYYY-MM-DD).'
-                    }
-                }
-            },
-            'fecha_vencimiento': {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha de vencimiento es obligatoria.'
-                    },
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'Introduce una fecha de vencimiento válida (YYYY-MM-DD).'
-                    }
-                }
-            },
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: '.form-floating'
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-    });
-
-    $('#btnRegistrarCertidicado').on('click', function (event) {
-        event.preventDefault();
-
-        fv.validate().then(function (status) {
-            if (status === 'Valid') {
-                var formData = {
-                    id_firmante: $('#id_firmante').val(),
-                    id_dictamen: $('#num_dictamen').val(),
-                    num_certificado: $('#num_certificado').val(),
-                    fecha_vigencia: $('#fecha_vigencia').val(),
-                    fecha_vencimiento: $('#fecha_vencimiento').val(),
-                };
-
-                $.ajax({
-                  url: '/certificados/granel',
-                  type: 'POST',
-                  data: formData,
-                  beforeSend: function () {
-                      $('#btnRegistrarCertidicado').prop('disabled', true).text('Registrando...');
-                  },
-                  success: function () {
-                      $('#addCertificadoGrenelModal').modal('hide');
-                      dt_instalaciones_table.ajax.reload();
-                      $('#addCertificadoForm')[0].reset();
-              
-                      fv.removeField('id_firmante');
-                      fv.removeField('num_dictamen');
-                      $('#num_dictamen').val(null).trigger('change');
-                      $('#id_firmante').val(null).trigger('change');
-                      fv.addField('id_firmante', {
-                          validators: {
-                              notEmpty: {
-                                  message: 'Selecciona un firmante.'
-                              }
-                          }
-                      });
-                      fv.addField('num_dictamen', {
-                          validators: {
-                              notEmpty: {
-                                  message: 'Selecciona un dictamen.'
-                              }
-                          }
-                      });
-            
-                      $('#btnRegistrarCertidicado').prop('disabled', false).text('Registrar');
-              
-                      Swal.fire({
-                          icon: 'success',
-                          title: '¡Registrado!',
-                          text: '¡El certificado ha sido registrado correctamente!',
-                          customClass: {
-                              confirmButton: 'btn btn-success'
-                          }
-                      });
-                  },
-                  error: function (xhr, textStatus, errorThrown) {
-                      console.error('Error al registrar:', textStatus, errorThrown);
-              
-                      // Restablecer el botón
-                      $('#btnRegistrarCertidicado').prop('disabled', false).text('Registrar');
-              
-                      Swal.fire({
-                          icon: 'error',
-                          title: 'Error',
-                          text: 'Hubo un problema al registrar el certificado.',
-                      });
-                  }
-              });              
-            }
-        });
-    });
-    // Revalidar los campos al cambiar su valor
-    $('#id_firmante, #num_dictamen, #fecha_vigencia, #fecha_vencimiento').on('change', function() {
-        fv.revalidateField($(this).attr('name'));
-    });
-});
-
-function setFechaVencimiento() {
-  let fechaVigencia = $('#edit_fecha_vigencia').val();
-  if (fechaVigencia) {
-      let fecha = new Date(fechaVigencia);
-      fecha.setFullYear(fecha.getFullYear() + 1);
-      let year = fecha.getFullYear();
-      let month = String(fecha.getMonth() + 1).padStart(2, '0');
-      let day = String(fecha.getDate()).padStart(2, '0');
-      let fechaVencimiento = `${year}-${month}-${day}`;
-      $('#edit_fecha_vencimiento').val(fechaVencimiento);
-      fvEdit.revalidateField('edit_fecha_vencimiento'); 
-  }
-}
-
-
-
-
-$('#edit_fecha_vigencia').on('change', function () {
-  setFechaVencimiento();
-});
-
-var globalIdCertificado = null;
-
-$(document).on('click', '.edit-record', function () {
-  globalIdCertificado = $(this).data('id');
-  var modal = $('#editCertificadoGrenelModal');
-
-  $.ajax({
-      url: `/edit-certificados/granel/${globalIdCertificado}`,
-      type: 'GET',
-      success: function (response) {
-          $('#edit_num_dictamen').val(response.id_dictamen).trigger('change');
-          $('#edit_id_firmante').val(response.id_firmante).trigger('change');
-          $('#edit_num_certificado').val(response.num_certificado);
-          $('#edit_fecha_vigencia').val(response.fecha_vigencia);
-          $('#edit_fecha_vencimiento').val(response.fecha_vencimiento);
-      },
-      error: function (error) {
-          console.log(error);
-          Swal.fire({
+          },
+          success: function () {
+            dataTable.draw(false);//Actualizar la tabla, "null,false" evita que vuelva al inicio
+              // Mostrar SweetAlert de éxito
+              Swal.fire({
+              icon: 'success',
+              title: '¡Exito!',
+              text: response.message,
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              }
+            });
+          },
+          error: function (xhr) {
+            console.log('Error:', xhr.responseText);
+            // Mostrar SweetAlert de error
+            Swal.fire({
               icon: 'error',
-              title: 'Error',
-              text: 'Hubo un problema al cargar los datos del certificado.'
-          });
+              title: '¡Error!',
+              text: 'Error al eliminar.',
+              //footer: `<pre>${error.responseText}</pre>`,
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
+
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Acción cancelada, mostrar mensaje informativo
+        Swal.fire({
+          title: '¡Cancelado!',
+          text: 'La eliminación ha sido cancelada.',
+          icon: 'info',
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
       }
   });
 });
 
-const editForm = document.getElementById('editCertificadoForm');
+
+
+
+
+
+
+//editar
+var id_certificado = null;
+// Función para cargar los datos
+$(document).on('click', '.editar', function () {
+  id_certificado = $(this).data('id');
+
+  $.ajax({
+      url: `/edit-certificados/granel/${id_certificado}`,
+      type: 'GET',
+      success: function (response) {
+          $('#edit_id_dictamen').val(response.id_dictamen).trigger('change');
+          $('#edit_id_firmante').val(response.id_firmante).trigger('change');
+          $('#edit_num_certificado').val(response.num_certificado);
+          $('#edit_fecha_emision').val(response.fecha_emision);
+          $('#edit_fecha_vigencia').val(response.fecha_vigencia);
+
+          flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
+            dateFormat: "Y-m-d",
+            enableTime: false,
+            allowInput: true,
+            locale: "es"
+          });
+      },
+      error: function (error) {
+        console.error('Error al cargar los datos:', error);
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al cargar los datos.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+  });
+});
+
+
+ // Manejar el envío del formulario de edición
+const editForm = document.getElementById('FormEditar');
 const fvEdit = FormValidation.formValidation(editForm, {
   fields: {
-      'num_certificado': {
-          validators: {
-              notEmpty: {
-                  message: 'El número de certificado es obligatorio.'
-              }
-          }
-      },
-      'id_firmante': {
-          validators: {
-              notEmpty: {
-                  message: 'El firmante es obligatorio.'
-              }
-          }
-      },
-      'num_dictamen': {
-          validators: {
-              notEmpty: {
-                  message: 'El dictamen es obligatorio.'
-              }
-          }
-      },
-      'fecha_vigencia': {
-          validators: {
-              notEmpty: {
-                  message: 'La fecha de vigencia es obligatoria.'
-              },
-              date: {
-                  format: 'YYYY-MM-DD',
-                  message: 'Introduce una fecha válida (YYYY-MM-DD).'
-              }
-          }
-      },
-      'fecha_vencimiento': {
-          validators: {
-              notEmpty: {
-                  message: 'La fecha de vencimiento es obligatoria.'
-              },
-              date: {
-                  format: 'YYYY-MM-DD',
-                  message: 'Introduce una fecha válida (YYYY-MM-DD).'
-              }
-          }
-      }
+    'num_certificado': {
+        validators: {
+            notEmpty: {
+                message: 'El número de certificado es obligatorio.'
+            }
+        }
+    },
+    'id_firmante': {
+        validators: {
+            notEmpty: {
+                message: 'El firmante es obligatorio.'
+            }
+        }
+    },
+    'num_dictamen': {
+        validators: {
+            notEmpty: {
+                message: 'El dictamen es obligatorio.'
+            }
+        }
+    },
+    'fecha_vigencia': {
+        validators: {
+            notEmpty: {
+                message: 'La fecha de vigencia es obligatoria.'
+            },
+            date: {
+                format: 'YYYY-MM-DD',
+                message: 'Introduce una fecha válida (YYYY-MM-DD).'
+            }
+        }
+    },
+    'fecha_vencimiento': {
+        validators: {
+            notEmpty: {
+                message: 'La fecha de vencimiento es obligatoria.'
+            },
+            date: {
+                format: 'YYYY-MM-DD',
+                message: 'Introduce una fecha válida (YYYY-MM-DD).'
+            }
+        }
+    }
   },
   plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -759,46 +768,40 @@ const fvEdit = FormValidation.formValidation(editForm, {
       submitButton: new FormValidation.plugins.SubmitButton(),
       autoFocus: new FormValidation.plugins.AutoFocus()
   }
-})
-.on('core.form.valid', function () {
-  if (!globalIdCertificado) {
-      console.log("No se encontró el id del certificado.");
-      return;
-  }
-  var formData = $('#editCertificadoForm').serialize();
+}).on('core.form.valid', function () {
 
+  var formData = $('#FormEditar').serialize();
   $.ajax({
+      url: `/certificados/granel/${id_certificado}`,
       type: 'PUT',
-      url: `/certificados/granel/${globalIdCertificado}`,
       data: formData,
       success: function (response) {
           Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.message,
-              customClass: {
-                  confirmButton: 'btn btn-success'
-              }
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
           });
-          $('#editCertificadoGranelModal').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
+          $('#ModalEditar').modal('hide');
+          //$('.datatables-users').DataTable().ajax.reload();
+          dataTable.ajax.reload(null, false);
       },
-      error: function (error) {
-          console.log(error);
+      error: function (xhr) {
+          //console.log(xhr);
+          console.log('Error2:', xhr.responseText);
           Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Hubo un problema al actualizar el certificado.',
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
           });
       }
   });
 });
-
-// Revalidar campos dinámicamente al cambiar su valor
-$('#edit_num_dictamen, #edit_id_firmante, #edit_fecha_vigencia, #edit_fecha_vencimiento').on('change', function () {
-  fvEdit.revalidateField($(this).attr('name'));
-});
-
 
 
 
@@ -946,148 +949,9 @@ const fv = FormValidation.formValidation(form, {
   });
 });
 
+
 $('#nombreRevisor').on('change', function () {
   fv.revalidateField($(this).attr('name'));
-});
-
-//Reexpedicion y Cancelacion
-$(document).on('click', '.reexpedir-record', function () {
-  var idCertificado = $(this).data('id');
-  console.log("ID del certificado para reexpedir:", idCertificado); 
-  $('#reexpedir_id_certificado').val(idCertificado);
-});
-
-$('#accion_reexpedir').on('change', function () {
-  var selectedValue = $(this).val();
-  var idCertificado = $('#reexpedir_id_certificado').val();
-  cargarDatos(idCertificado);
-
-  if (selectedValue == '2') { 
-      $('#campos_condicionales').slideDown();
-
-      formValidation.addField('num_certificado', {
-          validators: {
-              notEmpty: {
-                  message: 'El número de certificado es obligatorio.'
-              }
-          }
-      });
-
-  } else {
-      // Ocultar los campos condicionales
-      $('#campos_condicionales').slideUp();
-
-      // Eliminar la validación para el campo
-      formValidation.removeField('num_certificado');
-  }
-});
-
-const formularioReexpedir = document.getElementById('addReexpedirCertificadoGranelForm');
-const formValidation = FormValidation.formValidation(formularioReexpedir, {
-  fields: {
-    'accion_reexpedir': {
-        validators: {
-            notEmpty: {
-                message: 'Debe seleccionar una opción para la revisión.'
-            }
-        }
-    },
-    'observaciones': {
-      validators: {
-          notEmpty: {
-              message: 'Debe ingresar observaciones.'
-          }
-      }
-  },
-},
-plugins: {
-  trigger: new FormValidation.plugins.Trigger(),
-  bootstrap5: new FormValidation.plugins.Bootstrap5({
-      eleValidClass: '',
-      eleInvalidClass: 'is-invalid',
-      rowSelector: '.form-floating'
-  }),
-  submitButton: new FormValidation.plugins.SubmitButton(),
-  autoFocus: new FormValidation.plugins.AutoFocus()
-}
-}).on('core.form.valid', function (e) {
-  var formData = new FormData(formularioReexpedir);
-  var accionReexpedir = $('#accion_reexpedir').val();
-  console.log('Acción de reexpedir:', accionReexpedir);
-  formData.append('accion_reexpedir', accionReexpedir);
-
-  $.ajax({
-      url: '/certificados/reexpedir/granel', 
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-          console.log('Respuesta del servidor:', response);
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.message,
-            customClass: {
-                confirmButton: 'btn btn-success'
-            }
-        });
-          $('#modalReexpedirCertificadoGranel').modal('hide');
-          $('#addReexpedirCertificadoGranelForm')[0].reset();
-          $('#campos_condicionales').slideUp();
-          dt_instalaciones_table.ajax.reload();
-      },
-      error: function (error) {
-          console.log(error);
-          Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: error.responseJSON.message || 'Hubo un problema al procesar el formulario.'
-          });
-      }
-  });
-});
-
-// Validar el campo "accion_reexpedir" cuando cambie
-$('#accion_reexpedir, #observaciones').on('change', function () {
-  formValidation.revalidateField($(this).attr('name'));
-});
-
-function cargarDatos(idCertificado) {
-  if (!idCertificado) {
-      console.warn("No se proporcionó un ID de certificado válido.");
-      return;
-  }
-
-  $.ajax({
-      url: `/edit-certificados/granel/${idCertificado}`,
-      type: 'GET',
-      success: function (response) {
-          console.log('Datos recibidos del servidor:', response);
-
-          // Llenar los campos con los datos obtenidos
-          $('#num_dictamen_rex').val(response.id_dictamen).trigger('change');
-          $('#id_firmante_rex').val(response.id_firmante).trigger('change');
-          $('#num_certificado_rex').val(response.num_certificado);
-          $('#fecha_vigencia_rex').val(response.fecha_vigencia);
-          $('#fecha_vencimiento_rex').val(response.fecha_vencimiento);
-          $('#observaciones_rex').val(response.observaciones);
-      },
-      error: function (error) {
-          console.log(error);
-          Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Hubo un problema al cargar los datos del certificado.'
-          });
-      }
-  });
-}
-
-// Reiniciar campos al cerrar el modal
-$('#modalReexpedirCertificadoGranel').on('hidden.bs.modal', function () {
-  $('#addReexpedirCertificadoGranelForm')[0].reset(); 
-  $('#campos_condicionales').slideUp();
 });
 
 $('#asignarRevisorModal').on('show.bs.modal', function (event) {
@@ -1101,28 +965,229 @@ $('#asignarRevisorModal').on('show.bs.modal', function (event) {
   $('#asignarRevisorForm').show();
 });
 
-$(document).on('click', '.pdf', function () {
-  var id = $(this).data('id');
-  var dictamen = $(this).data('dictamen');
 
-  $('#loading-spinner').show();
-  $('#pdfViewerDictamen').hide();
 
-  $('#titulo_modal_Dictamen').text("Certificado Granel");
-  $('#subtitulo_modal_Dictamen').text(dictamen);
 
-  var pdfUrl = '/Pre-certificado/' + id;
-  $('#openPdfBtnDictamen').attr('href', pdfUrl).show();
-  $('#pdfViewerDictamen').attr('src', pdfUrl);
+///REEXPEDIR
+let isLoadingData = false;
+let fieldsValidated = []; 
+$(document).ready(function () {
 
-  $('#PdfDictamenIntalaciones').modal('show');
+  $(document).on('click', '.reexpedir', function () {
+      var id_certificado = $(this).data('id');
+      console.log('ID para reexpedir:', id_certificado);
+      $('#rex_id_certificado').val(id_certificado);
+      $('#ModalReexpedir').modal('show');
+  });
+
+  //funcion fechas
+  $('#rex_fecha_emision').on('change', function () {
+    var fecha_emision = $(this).val();
+    if (fecha_emision) {
+        var fecha = moment(fecha_emision, 'YYYY-MM-DD');
+        var fecha_vigencia = fecha.add(1, 'years').format('YYYY-MM-DD');
+        $('#rex_fecha_vigencia').val(fecha_vigencia);
+    }
 });
 
-$('#pdfViewerDictamen').on('load', function () {
-  $('#loading-spinner').hide();
-  $('#pdfViewerDictamen').show();
-});
+  $(document).on('change', '#accion_reexpedir', function () {
+    var accionSeleccionada = $(this).val();
+    console.log('Acción seleccionada:', accionSeleccionada);
+    var id_certificado = $('#rex_id_certificado').val();
 
+      if (accionSeleccionada && !isLoadingData) {
+          isLoadingData = true;
+          cargarDatosReexpedicion(id_certificado);
+      }
+
+      if (accionSeleccionada === '2') {
+        $('#campos_condicionales').slideDown();
+      }else {
+          $('#campos_condicionales').slideUp();
+      }
+  });
+
+  function cargarDatosReexpedicion(id_certificado) {
+      console.log('Cargando datos para la reexpedición con ID:', id_certificado);
+      clearFields();
+      
+      //cargar los datos
+      $.get(`/edit-certificados/granel/${id_certificado}`).done(function (datos) {
+      console.log('Respuesta completa:', datos);
+  
+          if (datos.error) {
+              showError(datos.error);
+              return;
+          }
+
+          $('#rex_id_dictamen').val(datos.id_dictamen).trigger('change');
+          $('#rex_numero_certificado').val(datos.num_certificado);
+          $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
+          $('#rex_fecha_emision').val(datos.fecha_emision);
+          $('#rex_fecha_vigencia').val(datos.fecha_vigencia);
+
+          $('#accion_reexpedir').trigger('change'); 
+          isLoadingData = false;
+
+          flatpickr("#rex_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
+            dateFormat: "Y-m-d",
+            enableTime: false,
+            allowInput: true,
+            locale: "es"
+          });
+
+      }).fail(function () {
+              showError('Error al cargar los datos.');
+              isLoadingData = false;
+      });
+  }
+
+  function clearFields() {
+      $('#rex_id_dictamen').val('');
+      $('#rex_numero_certificado').val('');
+      $('#rex_id_firmante').val('');
+      $('#rex_fecha_emision').val('');
+      $('#rex_fecha_vigencia').val('');
+      $('#rex_observaciones').val('');
+  }
+
+  function showError(message) {
+      Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: message,
+          customClass: {
+              confirmButton: 'btn btn-danger'
+          }
+      });
+  }
+
+  $('#ModalReexpedir').on('hidden.bs.modal', function () {
+      $('#FormReexpedir')[0].reset();
+      clearFields();
+      $('#campos_condicionales').hide();
+      fieldsValidated = []; 
+  });
+
+  //validar formulario
+  const formReexpedir = document.getElementById('FormReexpedir');
+  const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
+      fields: {
+        'accion_reexpedir': {
+            validators: {
+                notEmpty: {
+                    message: 'Debes seleccionar una acción.'
+                }
+            }
+        },
+        'observaciones': {
+            validators: {
+                notEmpty: {
+                    message: 'El motivo de cancelación es obligatorio.'
+                }
+            }
+        },
+        'id_dictamen': {
+            validators: {
+                notEmpty: {
+                    message: 'El número de dictamen es obligatorio.'
+                }
+            }
+        },
+        'num_certificado': {
+            validators: {
+                notEmpty: {
+                    message: 'El número de certificado es obligatorio.'
+                },
+                stringLength: {
+                  min: 8,
+                  message: 'Debe tener al menos 8 caracteres.'
+                }
+            }
+        },
+        'id_firmante': {
+            validators: {
+                notEmpty: {
+                    message: 'El nombre del firmante es obligatorio.'
+                }
+            }
+        },
+        'fecha_emision': {
+          validators: {
+            notEmpty: {
+              message: 'La fecha de emisión es obligatoria.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+            }
+          }
+        },
+        'fecha_vigencia': {
+          validators: {
+            notEmpty: {
+              message: 'La fecha de vigencia es obligatoria.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+            }
+          }
+        },
+      },
+      plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+              eleValidClass: '',
+              eleInvalidClass: 'is-invalid',
+              rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+  }).on('core.form.valid', function () {
+      const formData = $(formReexpedir).serialize();
+
+      $.ajax({
+          url: $(formReexpedir).attr('action'),
+          method: 'POST',
+          data: formData,
+          success: function (response) {
+              $('#ModalReexpedir').modal('hide');
+              formReexpedir.reset();
+
+              dt_user_table.DataTable().ajax.reload();
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.message,
+                  customClass: {
+                      confirmButton: 'btn btn-primary'
+                  }
+              });
+          },
+          error: function (jqXHR) {
+              console.log('Error en la solicitud:', jqXHR);
+              let errorMessage = 'No se pudo registrar. Por favor, verifica los datos.';
+              try {
+                  let response = JSON.parse(jqXHR.responseText);
+                  errorMessage = response.message || errorMessage;
+              } catch (e) {
+                  console.error('Error al parsear la respuesta del servidor:', e);
+              }
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: errorMessage,
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+      });
+  });
+
+});
 
 
 
@@ -1223,7 +1288,6 @@ $(document).on('click', '.pdfActa', function () {
       iframe.show();
     });
 });
-
 
 
 

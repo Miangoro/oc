@@ -700,9 +700,8 @@ $(document).on('click', '.eliminar', function () {//clase del boton "eliminar"
 
 
 ///EDITAR
-// Función para cargar los datos
 $(document).ready(function() {
-  // Abrir el modal y cargar datos para editar
+  // Función para cargar los datos
   $(document).on('click', '.editar', function () {//clase del boton "editar"
       var id_certificado = $(this).data('id');
       $('#edit_id_certificado').val(id_certificado);

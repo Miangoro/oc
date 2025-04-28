@@ -58,8 +58,8 @@ public function index(Request $request)
     $query = CertificadosGranel::with(['dictamen.inspeccione.solicitud.empresa'])
         ->when($search, function($q, $search) {
         $q->orWhere('id_firmante', 'LIKE', "%{$search}%")
-            ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%")
-            ->orWhere('fecha_vencimiento', 'LIKE', "%{$search}%");
+            ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
+            ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%");
     })
             ->offset($start)
             ->limit($limit)
@@ -69,8 +69,8 @@ public function index(Request $request)
 
     if ($search) {
         $totalFiltered = CertificadosGranel::where('id_firmante', 'LIKE', "%{$search}%")
+            ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
             ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%")
-            ->orWhere('fecha_vencimiento', 'LIKE', "%{$search}%")
             ->count();
     }
 
@@ -95,8 +95,8 @@ public function index(Request $request)
         'id_certificado' => $certificado->id_certificado,
         'id_dictamen' => $certificado->dictamen->num_dictamen ?? 'N/A',
         'id_firmante' => $certificado->user->name ?? 'N/A',
+        'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
         'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-        'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
         'num_certificado' => $certificado->num_certificado,
         'razon_social' => $empresa->razon_social ?? 'N/A',
         'numero_cliente' => $numero_cliente,
@@ -186,26 +186,31 @@ public function index(Request $request)
 ///FUNCION REGISTRAR
 public function store(Request $request)
 {
-    $validatedData = $request->validate([
-        'id_firmante' => 'required|integer',
+    try {
+    $validated = $request->validate([
         'id_dictamen' => 'required|integer',
         'num_certificado' => 'required|string',
+        'fecha_emision' => 'required|date',
         'fecha_vigencia' => 'required|date',
-        'fecha_vencimiento' => 'required|date',
+        'id_firmante' => 'required|integer',
     ]);
 
-    $certificado = CertificadosGranel::create([
-        'id_firmante' => $validatedData['id_firmante'],
-        'id_dictamen' => $validatedData['id_dictamen'],
-        'num_certificado' => $validatedData['num_certificado'],
-        'fecha_vigencia' => $validatedData['fecha_vigencia'],
-        'fecha_vencimiento' => $validatedData['fecha_vencimiento'],
+    $new = CertificadosGranel::create([
+        'id_dictamen' => $validated['id_dictamen'],
+        'num_certificado' => $validated['num_certificado'],
+        'fecha_emision' => $validated['fecha_emision'],
+        'fecha_vigencia' => $validated['fecha_vigencia'],
+        'id_firmante' => $validated['id_firmante']
     ]);
-
-    return response()->json([
-        'message' => 'Certificado registrado exitosamente',
-        'certificado' => $certificado
-    ]);
+    
+        return response()->json(['message' => 'Registrado correctamente.']);
+    } catch (\Exception $e) {
+        Log::error('Error al registrar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al registrar.'], 500);
+    }
 }
 
 
@@ -215,17 +220,21 @@ public function destroy($id_certificado)
 {
     try {
         // Buscar el certificado
-        $certificado = CertificadosGranel::findOrFail($id_certificado);
+        $eliminar = CertificadosGranel::findOrFail($id_certificado);
 
         // Eliminar todos los revisores asociados al certificado en la tabla certificados_revision
         Revisor::where('id_certificado', $id_certificado)->delete();
 
         // Luego, eliminar el certificado
-        $certificado->delete();
+        $eliminar->delete();
 
-        return response()->json(['success' => 'Certificado y revisores eliminados correctamente']);
+        return response()->json(['message' => 'Eliminado correctamente.']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Ocurrió un error al eliminar el certificado y los revisores: ' . $e->getMessage()], 500);
+        Log::error('Error al eliminar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al eliminar.'], 500);
     }
 }
 
@@ -240,42 +249,40 @@ public function edit($id)
         return response()->json($certificado);
     }
 
-    return response()->json(['error' => 'Certificado no encontrado'], 404);
+    return response()->json(['error' => 'Error al obtener los datos.'], 500);
 }
     
 ///FUNCION ACTUALIZAR
 public function update(Request $request, $id_certificado)
 {
-    $validatedData = $request->validate([
+    $validated = $request->validate([
         'id_firmante' => 'required|integer',
         'id_dictamen' => 'required|integer',
         'num_certificado' => 'required|string',
+        'fecha_emision' => 'required|date',
         'fecha_vigencia' => 'required|date',
-        'fecha_vencimiento' => 'required|date',
     ]);
 
     try {
-        $certificado = CertificadosGranel::findOrFail($id_certificado);
+        $actualizar = CertificadosGranel::findOrFail($id_certificado);
         
-        $certificado->update([
-            'id_firmante' => $validatedData['id_firmante'],
-            'id_dictamen' => $validatedData['id_dictamen'],
-            'num_certificado' => $validatedData['num_certificado'],
-            'fecha_vigencia' => $validatedData['fecha_vigencia'],
-            'fecha_vencimiento' => $validatedData['fecha_vencimiento'],
+        $actualizar->update([
+            'id_firmante' => $validated['id_firmante'],
+            'id_dictamen' => $validated['id_dictamen'],
+            'num_certificado' => $validated['num_certificado'],
+            'fecha_emision' => $validated['fecha_emision'],
+            'fecha_vigencia' => $validated['fecha_vigencia'],
         ]);
 
-        return response()->json([
-            'message' => 'Certificado actualizado exitosamente',
-            'certificado' => $certificado
-        ]);
+        return response()->json(['message' => 'Actualizado correctamente.']);
     } catch (\Exception $e) {
-        return response()->json([
-            'error' => 'Ocurrió un error al actualizar el certificado: ' . $e->getMessage()
-        ], 500);
+        Log::error('Error al actualizar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al actualizar.'], 500);
     }
 }
-
 
 
 
@@ -352,8 +359,8 @@ public function storeRevisor(Request $request)
             'nombreRevisor' => $user->name,
             'emailRevisor' => $user->email,
             'num_certificado' => $certificado->num_certificado,
-            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-            'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento), 
+            'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
+            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia), 
             'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar',
             'numero_cliente' => $certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar',
             'tipo_certificado' => $certificado->id_dictamen
@@ -398,52 +405,74 @@ public function reexpedir(Request $request)
 {
     try {
         $request->validate([
-        'id_firmante' => 'required|integer',
-        'id_dictamen' => 'required|integer',
-        'num_certificado' => 'required|string',
-        'fecha_vigencia' => 'required|date',
-        'fecha_vencimiento' => 'required|date',
-        'observaciones' => 'nullable|string',
+            'accion_reexpedir' => 'required|in:1,2',
+            'observaciones' => 'nullable|string',
         ]);
 
-        $certificado = CertificadosGranel::findOrFail($request->id_certificado);
-
-        if ($request->accion_reexpedir == '1') {
-            $certificado->estatus = 1; 
-            $certificado->observaciones = $request->observaciones; 
-            $certificado->save();
-        } elseif ($request->accion_reexpedir == '2') {
-            $certificado->estatus = 1;
-            $certificado->observaciones = $request->observaciones; 
-            $certificado->save(); 
-
-            // Crear un nuevo registro de certificado (reexpedición)
-            $nuevoCertificado = new CertificadosGranel();
-            $nuevoCertificado->id_dictamen = $request->id_dictamen;
-            $nuevoCertificado->num_certificado = $request->num_certificado;
-            $nuevoCertificado->fecha_vigencia = $request->fecha_vigencia;
-            $nuevoCertificado->fecha_vencimiento = $request->fecha_vencimiento;
-            $nuevoCertificado->id_firmante = $request->id_firmante;
-            $nuevoCertificado->estatus = 2;
-            
-            // Guarda el nuevo certificado
-            $nuevoCertificado->save();
+        if ($request->accion_reexpedir == '2') {
+            $request->validate([
+            'id_firmante' => 'required|integer',
+            'id_dictamen' => 'required|integer',
+            'num_certificado' => 'required|string',
+            'fecha_emision' => 'required|date',
+            'fecha_vigencia' => 'required|date',
+            'observaciones' => 'nullable|string',
+            ]);
         }
 
-        return response()->json(['message' => 'Certificado procesado correctamente.']);
+        $reexpedir = CertificadosGranel::findOrFail($request->id_certificado);
+
+        if ($request->accion_reexpedir == '1') {
+            $reexpedir->estatus = 1; 
+            $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales); 
+            $reexpedir->save();
+            return response()->json(['message' => 'Cancelado correctamente.']);
+
+        } elseif ($request->accion_reexpedir == '2') {
+            $reexpedir->estatus = 1;
+                $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales);
+            $reexpedir->save(); 
+
+            // Crear un nuevo registro de certificado (reexpedición)
+            $new = new CertificadosGranel();
+            $new->id_dictamen = $request->id_dictamen;
+            $new->num_certificado = $request->num_certificado;
+            $new->fecha_emision = $request->fecha_emision;
+            $new->fecha_vigencia = $request->fecha_vigencia;
+            $new->id_firmante = $request->id_firmante;
+            $new->estatus = 2;
+            $new->observaciones = json_encode(['id_sustituye' => $request->id_certificado]);
+            // Guarda el nuevo certificado
+            $new->save();
+
+            return response()->json(['message' => 'Registrado correctamente.']);
+        }
+
+        return response()->json(['message' => 'Procesado correctamente.']);
     } catch (\Exception $e) {
-        Log::error($e);
-        return response()->json(['message' => 'Error al procesar el certificado.', 'error' => $e->getMessage()], 500);
+        Log::error('Error al reexpedir', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al procesar.'], 500);
     }
 }
 
 
 
-
-
+///PDF CERTIFICADO
 public function CertificadoGranel($id_certificado)
 {
     $certificado = CertificadosGranel::find($id_certificado);
+
+    if (!$certificado) {
+        return abort(404, 'Registro no encontrado.');
+        //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
+    }
 
     $direccionCompleta = $certificado->dictamen->inspeccione->solicitud->empresa->instalaciones->first()->direccion_completa ?? 'N/A';
     $clase = $certificado->dictamen->lote_granel->clase->clase ?? 'N/A';
@@ -476,8 +505,8 @@ public function CertificadoGranel($id_certificado)
         'domicilio_fiscal' => $certificado->dictamen->empresa->domicilio_fiscal ?? '',
         'rfc' => $certificado->dictamen->empresa->rfc ?? '',
         'direccion_completa' => $direccionCompleta ?? '',
+        'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
         'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-        'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
         'watermarkText' => $watermarkText,
         'leyenda' => $leyenda ?? '',
 
@@ -494,11 +523,11 @@ public function CertificadoGranel($id_certificado)
     ];
 
     // Generar y mostrar el PDF
-    return Pdf::loadView('pdfs.pre-certificado', $pdfData)->stream("Pre-certificado.pdf");
+    return Pdf::loadView('pdfs.certificado_granel_ed7', $pdfData)->stream("F7.1-01-07 Certificado NOM de Mezcal a Granel.pdf");
 }
 
 
 
 
 
-}
+}//end-classController

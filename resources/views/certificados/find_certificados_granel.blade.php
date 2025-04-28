@@ -11,9 +11,13 @@
     'resources/assets/vendor/libs/@form-validation/form-validation.scss',
     'resources/assets/vendor/libs/animate-css/animate.scss',
     'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
+    //Animacion "loading"
+    'resources/assets/vendor/libs/spinkit/spinkit.scss',
+    //calendario1
     'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss',
-    'resources/assets/vendor/libs/spinkit/spinkit.scss'
-    
+    //calendario2
+    'resources/assets/vendor/libs/flatpickr/flatpickr.scss',
+    'resources/assets/vendor/libs/pickr/pickr-themes.scss',
 ])
 @endsection
 
@@ -28,15 +32,23 @@
     'resources/assets/vendor/libs/cleavejs/cleave.js',
     'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
     'resources/assets/vendor/libs/sweetalert2/sweetalert2.js',
-    'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js'
+    //calendario1
+    'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js',
+    //calendario2
+    'resources/assets/vendor/libs/flatpickr/flatpickr.js',
+    'resources/assets/vendor/libs/pickr/pickr.js',
+    'resources/assets/vendor/libs/flatpickr/l10n/es.js' // Archivo local del idioma
 ])
 @endsection
 
 @section('page-script')
-@vite(['resources/js/certificados_granel.js'])
+    @vite(['resources/js/certificados_granel.js'])
 @endsection
+
 @section('content')
-<meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 <!-- Users List Table -->
 <div class="card">
     <div class="card-header pb-0">

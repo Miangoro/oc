@@ -16,8 +16,8 @@ class CertificadosGranel extends Model
         'id_firmante',
         'id_dictamen',
         'num_certificado',
+        'fecha_emision',
         'fecha_vigencia',
-        'fecha_vencimiento',
     ];
 
     public function dictamen()
