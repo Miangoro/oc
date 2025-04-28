@@ -1,29 +1,5 @@
 'use strict';
 
- $(function () {
-  var dt_user_table = $('.datatables-users');
-
-  $('#asignarRevisorForm .select2').each(function () {
-    var $this = $(this);
-    $this.select2({
-      dropdownParent: $this.closest('.form-floating')
-    });
-  });
-
-  $('#addCertificadoModal .select2').each(function () {
-    var $this = $(this);
-    $this.select2({
-      dropdownParent: $this.closest('.form-floating')
-    });
-  });
-
-  $('#editCertificadoModal .select2').each(function () {
-    var $this = $(this);
-    $this.select2({
-      dropdownParent: $this.closest('.form-floating')
-    });
-  });
-
 ///flatpickr
 $(document).ready(function () {
   flatpickr(".flatpickr-datetime", {
@@ -34,8 +10,63 @@ $(document).ready(function () {
   });
 });
 
-   // AJAX setup
-   $.ajaxSetup({
+//FUNCION FECHAS
+$('#fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+  $('#fecha_vigencia').val(fechaVigencia);
+  flatpickr("#fecha_vigencia", {
+      dateFormat: "Y-m-d",
+      enableTime: false,  
+      allowInput: true,  
+      locale: "es",     
+      static: true,      
+      disable: true          
+  });
+});
+//FUNCION FECHAS EDIT
+$('#edit_fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+  $('#edit_fecha_vigencia').val(fechaVigencia);
+  flatpickr("#edit_fecha_vigencia", {
+      dateFormat: "Y-m-d",  
+      enableTime: false,   
+      allowInput: true,  
+      locale: "es",  
+      static: true,   
+      disable: true  
+  });
+});
+
+
+
+
+ $(function () {
+  // Variable declaration for table
+  var dt_user_table = $('.datatables-users'),
+  select2 = $('.select2'),
+  userView = baseUrl + 'app/user/view/account',
+  offCanvasForm = $('#offcanvasAddUser');
+
+var select2Elements = $('.select2');
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+initializeSelect2(select2Elements);
+
+
+// ajax setup
+  $.ajaxSetup({
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
@@ -489,30 +520,24 @@ $(document).ready(function () {
               }
           },
           'fecha_emision': {
-              validators: {
-                  notEmpty: {
-                      message: 'La fecha de vigencia es obligatoria.'
-                  },
-                  date: {
-                      format: 'YYYY-MM-DD',
-                      message: 'La fecha no es válida.'
-                  }
-              }
+            validators: {
+                notEmpty: {
+                  message: 'La fecha de emisión es obligatoria.',
+                },
+                date: {
+                  format: 'YYYY-MM-DD',
+                  message: 'Ingresa una fecha válida (yyyy-mm-dd).',
+                }
+            }
           },
           'fecha_vigencia': {
               validators: {
                   notEmpty: {
-                      message: 'La fecha de vencimiento es obligatoria.',
-                      enable: function (field) {
-                          return !$(field).val();
-                      }
+                    message: 'La fecha de vigencia es obligatoria.',
                   },
                   date: {
-                      format: 'YYYY-MM-DD',
-                      message: 'La fecha no es válida.',
-                      enable: function (field) {
-                          return !$(field).val(); 
-                      }
+                    format: 'YYYY-MM-DD',
+                    message: 'Ingresa una fecha válida (yyyy-mm-dd).',
                   }
               }
           },
@@ -597,7 +622,7 @@ $(document).ready(function () {
       }
   }
 
-  function updateDatepickerValidation() {
+/*   function updateDatepickerValidation() {
     //FUNCION FECHAS
     $('#fecha_emision').on('change', function() {
       var fechaInicial = new Date($(this).val());
@@ -621,7 +646,7 @@ $(document).ready(function () {
         validator.revalidateField('fecha_emision');
     });
   }
-
+ */
   validator.on('core.form.valid', function () {
       /*var fecha_emision = $('#fecha_emision').val();
       var fecha_vigencia = $('#fecha_vigencia').val();

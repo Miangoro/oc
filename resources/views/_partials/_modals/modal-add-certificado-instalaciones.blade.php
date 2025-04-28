@@ -2,18 +2,20 @@
 <div class="modal fade" id="addCertificadoModal" tabindex="-1" aria-labelledby="addCertificadoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addCertificadoModalLabel">Agregar certificado de instalaciones</h5>
+
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Nuevo certificado de instalaciones</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
             <div class="modal-body">
                 <form id="addCertificadoForm">
                     @csrf
 
                     <!-- Selección de Dictamen -->
                     <div class="form-floating form-floating-outline mb-3">
-                        <select class="select2 form-select" id="id_dictamen" name="id_dictamen" aria-label="No. Dictamen" required>
-                            <option value="" disabled selected>Seleccione un dictamen</option>
+                        <select class="select2 form-select" id="id_dictamen" name="id_dictamen" data-placeholder="Selecciona un dictamen" required>
+                            <option value="" disabled selected></option>
                             @foreach($dictamenes as $dictamen)
                                 <option value="{{ $dictamen->id_dictamen }}" data-tipo-dictamen="{{ $dictamen->tipo_dictamen }}">
                                     {{ $dictamen->num_dictamen }} | 
@@ -60,13 +62,13 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <input class="form-control flatpickr-datetime" id="fecha_emision" name="fecha_emision" placeholder="YYYY-MM-DD">
+                                <input class="form-control flatpickr-datetime" name="fecha_emision" placeholder="YYYY-MM-DD">
                                 <label for="">Fecha de emisión</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <input class="form-control flatpickr-datetime" id="fecha_vigencia" name="fecha_vigencia" placeholder="YYYY-MM-DD" readonly>
+                                <input class="form-control flatpickr-datetime" name="fecha_vigencia" placeholder="YYYY-MM-DD" readonly>
                                 <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
@@ -75,19 +77,21 @@
                     <!-- Firmante -->
                     <div class="form-floating form-floating-outline mb-3">
                         <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
-                            <option value="" disabled selected>Seleccione un firmante</option>
+                            <option value="" disabled selected>Selecciona un firmante</option>
                             @foreach($users as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
-                        <label for="formValidationSelect2">Seleccione un firmante</label>
+                        <label for="formValidationSelect2">Selecciona un firmante</label>
                     </div>
         
-                    <!-- Botones -->
-                    <div class="d-flex justify-content-end mt-3">
-                        <button type="submit" class="btn btn-primary me-2">Registrar</button>
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    
+                    <div class="d-flex mt-6 justify-content-center">
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -100,10 +104,12 @@
 <div class="modal fade" id="editCertificadoModal" tabindex="-1" aria-labelledby="editCertificadoModalLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editCertificadoModalLabel">Editar Certificado de Instalaciones</h5>
+
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Editar certificado de instalaciones</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
             <div class="modal-body">
                 <form id="editCertificadoForm">
                     @csrf
@@ -114,7 +120,6 @@
                     <!-- Selección de Dictamen -->
                     <div class="form-floating form-floating-outline mb-3">
                         <select class="select2 form-select" id="edit_id_dictamen" name="id_dictamen" aria-label="No. Dictamen" required>
-                            <option value="" disabled selected>Seleccione un dictamen</option>
                             @foreach($dictamenes as $dictamen)
                                 <option value="{{ $dictamen->id_dictamen }}" data-tipo-dictamen="{{ $dictamen->tipo_dictamen }}">
                                     {{ $dictamen->num_dictamen }} | 
@@ -171,8 +176,7 @@
 
                     <!-- Firmante -->
                     <div class="form-floating form-floating-outline mb-3">
-                        <select class="select2 form-select" id="edit_id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
-                            <option value="" disabled selected>Seleccione un firmante</option>
+                        <select class="select2 form-select" id="edit_id_firmante" name="id_firmante"  required>
                             @foreach($users as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
@@ -181,10 +185,12 @@
                     </div>
 
                     <!-- Botones -->
-                    <div class="d-flex justify-content-end mt-3">
-                        <button type="submit" class="btn btn-primary me-2">Actualizar</button>
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <div class="d-flex mt-6 justify-content-center">
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
+                    
                 </form>
             </div>
         </div>

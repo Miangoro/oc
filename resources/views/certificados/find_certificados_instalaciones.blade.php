@@ -37,10 +37,12 @@
 @endsection
 
 @section('page-script')
-@vite(['resources/js/certificados_instalaciones.js'])
+    @vite(['resources/js/certificados_instalaciones.js'])
 @endsection
+
 @section('content')
-<meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
 <!-- Users List Table -->
 <div class="card">
     <div class="card-header pb-0">

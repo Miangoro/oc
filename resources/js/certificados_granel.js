@@ -41,39 +41,27 @@ $('#edit_fecha_emision').on('change', function() {
 });
 
 
-/* 
-$('#addCertificadoForm .select2').each(function () {
-  var $this = $(this);
-  $this.select2({
-      dropdownParent: $this.closest('.form-floating')
-  });
-  });
-  
-  $('#asignarRevisorForm .select2').each(function () {
-  var $this = $(this);
-  $this.select2({
-    dropdownParent: $this.closest('.form-floating')
-  });
-  });
-  
-  $('#editCertificadoForm .select2').each(function () {
-    var $this = $(this);
-    $this.select2({
-      dropdownParent: $this.closest('.form-floating')
-    });
-    });
-  
-    $('.datepicker').datepicker({
-        format: 'yyyy-mm-dd',
-        autoclose: true,
-        todayHighlight: true
-    });
-
- */
 
 
 $(function () {// Datatable (jquery)
-  var dt_user_table = $('.datatables-users');
+  // Variable declaration for table
+  var dt_user_table = $('.datatables-users'),
+  select2 = $('.select2'),
+  userView = baseUrl + 'app/user/view/account',
+  offCanvasForm = $('#offcanvasAddUser');
+
+var select2Elements = $('.select2');
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+initializeSelect2(select2Elements);
 
 // ajax setup
   $.ajaxSetup({
