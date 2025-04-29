@@ -38,7 +38,22 @@
                             <select class="select2 form-select" id="rex_id_dictamen" name="id_dictamen" 
                                 data-placeholder="Selecciona un dictamen">
                                 @foreach($dictamenes as $dictamen)
-                                <option value="{{ $dictamen->id_dictamen }}">{{ $dictamen->num_dictamen }}</option>
+                                <option value="{{ $dictamen->id_dictamen }}" data-tipo-dictamen="{{ $dictamen->tipo_dictamen }}">
+                                    {{ $dictamen->num_dictamen }} | 
+                                    @if((string) $dictamen->tipo_dictamen === '1')
+                                                Productor
+                                    @elseif((string) $dictamen->tipo_dictamen === '2')
+                                                Envasador
+                                    @elseif((string) $dictamen->tipo_dictamen === '3')
+                                                Comercializador
+                                    @elseif((string) $dictamen->tipo_dictamen === '4')
+                                                Almacén y bodega
+                                    @elseif((string) $dictamen->tipo_dictamen === '5')
+                                                Área de maduración
+                                    @else
+                                        {{ $dictamen->tipo_dictamen }}
+                                    @endif
+                                </option>
                                 @endforeach
                             </select>
                                 <label for="">No. de dictamen</label>
@@ -65,6 +80,22 @@
                                     @endforeach
                                 </select>
                                 <label for="">Selecciona un firmante</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CAMPOS CONDICIONALES POR TIPO DE DICTAMEN -->
+                    <div class="row" id="rex_CamposCondicionales_tipo" style="display: none;">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input type="text" class="form-control" id="rex_maestro_mezcalero" name="maestro_mezcalero" placeholder="Maestro Mezcalero">
+                                <label for="">Maestro Mezcalero</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input type="text" class="form-control" id="rex_num_autorizacion" name="num_autorizacion" placeholder="No. de Autorización">
+                                <label for="">No. de Autorización</label>
                             </div>
                         </div>
                     </div>

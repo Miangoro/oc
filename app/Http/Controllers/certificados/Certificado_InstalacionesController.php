@@ -304,7 +304,18 @@ public function edit($id)
         $certificado = Certificados::find($id);
 
         if ($certificado) {
-            return response()->json($certificado);
+            //return response()->json($certificado);
+            return response()->json([
+                'id_certificado'      => $certificado->id_certificado,
+                'id_dictamen'         => $certificado->id_dictamen,
+                'tipo_dictamen'       => $certificado->dictamen->tipo_dictamen ?? null,
+                'num_certificado'     => $certificado->num_certificado,
+                'fecha_emision'       => $certificado->fecha_emision,
+                'fecha_vigencia'      => $certificado->fecha_vigencia,
+                'id_firmante'         => $certificado->id_firmante,
+                'maestro_mezcalero'   => $certificado->maestro_mezcalero,
+                'num_autorizacion'    => $certificado->num_autorizacion,
+            ]);
         }
 
     } catch (\Exception $e) {
@@ -432,8 +443,8 @@ public function reexpedir(Request $request)
                 'num_certificado' => 'required|string|max:25',
                 'fecha_emision' => 'required|date',
                 'fecha_vigencia' => 'required|date',
-                //'maestro_mezcalero' => 'nullable|string|max:60',
-                //'num_autorizacion' => 'nullable|integer',
+                'maestro_mezcalero' => 'nullable|string|max:60',
+                'num_autorizacion' => 'nullable|integer',
                 'id_firmante' => 'required|integer',
             ]);
         }
@@ -465,6 +476,8 @@ public function reexpedir(Request $request)
             $new->id_firmante = $request->id_firmante;
             $new->estatus = 2;
             $new->observaciones = json_encode(['id_sustituye' => $request->id_certificado]);
+            $new->maestro_mezcalero = $request->maestro_mezcalero ?: null;
+            $new->num_autorizacion = $request->num_autorizacion ?: null;
             $new->save();
 
             return response()->json(['message' => 'Registrado correctamente.']);

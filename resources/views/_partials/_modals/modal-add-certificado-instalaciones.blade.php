@@ -58,15 +58,15 @@
                     </div>
 
                 <!-- CAMPOS CONDICIONALES -->
-                    <div class="row">
+                    <div class="row" id="CamposCondicionales_tipo" style="display: none;">
                         <div class="col-md-6"><!-- Maestro Mezcalero -->
-                            <div class="form-floating form-floating-outline mb-6" id="maestroMezcaleroContainer" style="display: none;">
+                            <div class="form-floating form-floating-outline mb-6" >
                                 <input type="text" class="form-control" id="maestro_mezcalero" placeholder="Maestro Mezcalero" name="maestro_mezcalero">
                                 <label for="">Maestro mezcalero</label>
                             </div>
                         </div>
                         <div class="col-md-6"><!-- Número de Autorización -->
-                            <div class="form-floating form-floating-outline mb-6" id="noAutorizacionContainer" style="display: none;">
+                            <div class="form-floating form-floating-outline mb-6">
                                 <input type="text" class="form-control" id="no_autorizacion" placeholder="No. de Autorización" name="num_autorizacion">
                                 <label for="">No. de autorización</label>
                             </div>
@@ -167,15 +167,15 @@
                     </div>
 
                     <!-- CAMPOS CONDICIONALES -->
-                    <div class="row">
+                    <div class="row" id="Edit_CamposCondicionales_tipo" style="display: none;">
                         <div class="col-md-6"><!-- Maestro Mezcalero -->
-                            <div id="edit_maestroMezcaleroContainer" class="form-floating form-floating-outline mb-6" style="display: none;">
+                            <div class="form-floating form-floating-outline mb-6">
                                 <input type="text" class="form-control" id="edit_maestro_mezcalero" placeholder="Maestro Mezcalero" name="maestro_mezcalero">
                                 <label for="">Maestro Mezcalero</label>
                             </div>
                         </div>
                         <div class="col-md-6"><!-- Número de Autorización -->
-                            <div id="edit_autorizacionContainer" class="form-floating form-floating-outline mb-6" style="display: none;">
+                            <div class="form-floating form-floating-outline mb-6">
                                 <input type="text" class="form-control" id="edit_num_autorizacion" placeholder="No. de Autorización" name="num_autorizacion">
                                 <label for="">No. de Autorización</label>
                             </div>

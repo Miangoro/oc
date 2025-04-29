@@ -500,6 +500,19 @@ $(function () {
     }
   });
 
+  // Mostrar/ocultar campos condicionales según el tipo de dictamen
+  $('select[name="id_dictamen"]').on('change', function () {
+    const tipoDictamen = $(this).find('option:selected').data('tipo-dictamen');
+
+    if (tipoDictamen == 1) {
+        $('#CamposCondicionales_tipo').show();
+    } else {
+        $('#CamposCondicionales_tipo').hide();
+        $('#maestro_mezcalero').val('');
+        $('#no_autorizacion').val('');
+    }
+  });
+
 //Validación del formulario por "name"
   const form = document.getElementById('FormAgregar');
   const fv = FormValidation.formValidation(form, {
@@ -544,6 +557,22 @@ $(function () {
         date: {
           format: 'YYYY-MM-DD',
           message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+        }
+      }
+    },
+    /*'maestro_mezcalero': {
+      validators: {
+        stringLength: {
+          max: 60,
+          message: 'Máximo 60 caracteres.'
+        }
+      }
+    },*/
+    'num_autorizacion': {
+      validators: {
+        regexp: {
+          regexp: /^[0-9]*$/,
+          message: 'Solo se permiten números.'
         }
       }
     },
@@ -685,6 +714,20 @@ $(function () {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
   });
+
+  // Mostrar/ocultar campos condicionales según el tipo de dictamen
+  $('#edit_id_dictamen').on('change', function () {
+    const tipoDictamen = $(this).find('option:selected').data('tipo-dictamen');
+
+    if (tipoDictamen == 1) {
+        $('#Edit_CamposCondicionales_tipo').show();
+    } else {
+        $('#Edit_CamposCondicionales_tipo').hide();
+        $('#edit_maestro_mezcalero').val('');
+        $('#edit_num_autorizacion').val('');
+    }
+  });
+
   // Inicializar FormValidation para el formulario
   const form = document.getElementById('FormEditar');
   const fv = FormValidation.formValidation(form, {
@@ -729,6 +772,22 @@ $(function () {
           date: {
             format: 'YYYY-MM-DD',
             message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+          }
+        }
+      },
+      /*'maestro_mezcalero': {
+        validators: {
+          stringLength: {
+            max: 60,
+            message: 'Máximo 60 caracteres.'
+          }
+        }
+      },*/
+      'num_autorizacion': {
+        validators: {
+          regexp: {
+            regexp: /^[0-9]*$/,
+            message: 'Solo se permiten números.'
           }
         }
       },
@@ -813,8 +872,10 @@ $(function () {
               $('#edit_fecha_emision').val(datos.fecha_emision);
               $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
               $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();
+              $('#edit_maestro_mezcalero').val(datos.maestro_mezcalero || '');
+              $('#edit_num_autorizacion').val(datos.num_autorizacion || '');
             //$('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');//funciona igual que arriba
-            
+
               flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
                 dateFormat: "Y-m-d",
                 enableTime: false,
@@ -864,6 +925,19 @@ $(document).ready(function () {
     }
   });
 
+  // Mostrar/ocultar campos según el tipo de dictamen
+  $('#rex_id_dictamen').on('change', function () {
+    const tipoDictamen = $(this).find('option:selected').data('tipo-dictamen');
+
+    if (tipoDictamen == 1) {
+      $('#rex_CamposCondicionales_tipo').slideDown();
+    } else {
+      $('#rex_CamposCondicionales_tipo').slideUp();
+      $('#rex_maestro_mezcalero').val('');
+      $('#rex_num_autorizacion').val('');
+    }
+  });
+
   $(document).on('change', '#accion_reexpedir', function () {
     var accionSeleccionada = $(this).val();
     console.log('Acción seleccionada:', accionSeleccionada);
@@ -880,6 +954,7 @@ $(document).ready(function () {
           $('#campos_condicionales').slideUp();
       }
   });
+
 
   function cargarDatosReexpedicion(id_certificado) {
       console.log('Cargando datos para la reexpedición con ID:', id_certificado);
@@ -899,6 +974,18 @@ $(document).ready(function () {
           $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
           $('#rex_fecha_emision').val(datos.fecha_emision);
           $('#rex_fecha_vigencia').val(datos.fecha_vigencia);
+          
+          // Mostrar campos adicionales si tipo_dictamen es 1
+          if (parseInt(datos.tipo_dictamen) === 1) {
+            $('#rex_CamposCondicionales_tipo').stop(true, true).slideDown('fast');
+            $('#rex_maestro_mezcalero').val(datos.maestro_mezcalero || '');
+            $('#rex_num_autorizacion').val(datos.num_autorizacion || '');
+          } else {
+            $('#rex_CamposCondicionales_tipo').stop(true, true).slideUp('fast', function () {
+                $('#rex_maestro_mezcalero').val('');
+                $('#rex_num_autorizacion').val('');
+            });
+          }
 
           $('#accion_reexpedir').trigger('change'); 
           isLoadingData = false;
@@ -923,6 +1010,9 @@ $(document).ready(function () {
       $('#rex_fecha_emision').val('');
       $('#rex_fecha_vigencia').val('');
       $('#rex_observaciones').val('');
+      $('#rex_maestro_mezcalero').val('');
+      $('#rex_num_autorizacion').val('');
+      $('#rex_campos_condicionales_tipo').hide();
   }
 
   function showError(message) {
@@ -1005,6 +1095,22 @@ $(document).ready(function () {
             date: {
               format: 'YYYY-MM-DD',
               message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+            }
+          }
+        },
+        /*'maestro_mezcalero': {
+          validators: {
+            stringLength: {
+              max: 60,
+              message: 'Máximo 60 caracteres.'
+            }
+          }
+        },*/
+        'num_autorizacion': {
+          validators: {
+            regexp: {
+              regexp: /^[0-9]*$/,
+              message: 'Solo se permiten números.'
             }
           }
         },
