@@ -183,7 +183,7 @@ public function index(Request $request)
                 }
             ///solicitud y acta
             $nestedData['id_solicitud'] = $certificado->dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
-            $urls = $certificado->dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
+            $urls = $certificado->dictamen?->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
             $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
             
             
@@ -319,11 +319,11 @@ public function edit($id)
 ///FUNCION ACTUALIZAR
 public function update(Request $request, $id)
 {
-    $validatedData = $request->validate([
+    $validated = $request->validate([
         'id_dictamen' => 'required|integer',
         'num_certificado' => 'required|string|max:25',
-        'fecha_emision' => 'required|date_format:Y-m-d',
-        'fecha_vigencia' => 'nullable|date_format:Y-m-d',
+        'fecha_emision' => 'required|date',
+        'fecha_vigencia' => 'nullable|date',
         'maestro_mezcalero' => 'nullable|string|max:60',
         'num_autorizacion' => 'nullable|integer',
         'id_firmante' => 'required|integer',
@@ -332,6 +332,7 @@ public function update(Request $request, $id)
     try {
         $certificado = Certificados::findOrFail($id);
 
+        /*
         // Obtener información de la empresa
         $numeroCliente = $certificado->dictamen->instalaciones->empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
                 return !empty($numero);
@@ -357,16 +358,18 @@ public function update(Request $request, $id)
             // Elimina el registro de la base de datos
             $certificado_actual->delete();
         }
+        */
 
-        $certificado->id_dictamen = $validatedData['id_dictamen'];
-        $certificado->num_certificado = $validatedData['num_certificado'];
-        $certificado->fecha_emision = $validatedData['fecha_emision'];
-        $certificado->fecha_vigencia = $validatedData['fecha_vigencia'];
-        $certificado->maestro_mezcalero = $validatedData['maestro_mezcalero'] ?: null;
-        $certificado->num_autorizacion = $validatedData['num_autorizacion'] ?: null;
-        $certificado->id_firmante = $validatedData['id_firmante']; 
+        $certificado->id_dictamen = $validated['id_dictamen'];
+        $certificado->num_certificado = $validated['num_certificado'];
+        $certificado->fecha_emision = $validated['fecha_emision'];
+        $certificado->fecha_vigencia = $validated['fecha_vigencia'];
+        $certificado->maestro_mezcalero = $validated['maestro_mezcalero'] ?: null;
+        $certificado->num_autorizacion = $validated['num_autorizacion'] ?: null;
+        $certificado->id_firmante = $validated['id_firmante']; 
         $certificado->save();
 
+        /*
         $id_instalacion = $certificado->dictamen->id_instalacion;
         $instalaciones = instalaciones::find($id_instalacion);
         $instalaciones->folio = $certificado->num_certificado;
@@ -399,6 +402,7 @@ public function update(Request $request, $id)
             $documentacion_url->url = $filename;  
             $documentacion_url->id_empresa =  $certificado->dictamen->instalaciones->id_empresa;
             $documentacion_url->save();
+        */
 
         return response()->json(['message' => 'Actualizado correctamente.']);
     } catch (\Exception $e) {
@@ -417,48 +421,62 @@ public function reexpedir(Request $request)
 {
     try {
         $request->validate([
-            'id_certificado' => 'required|exists:certificados,id_certificado',
-            'accion_reexpedir' => 'required|in:1,2', 
-            'observaciones' => 'nullable|string',
-            'id_dictamen' => 'required|integer',
-            'num_certificado' => 'required|string|max:25',
-            'fecha_emision' => 'required|date',
-            'fecha_vigencia' => 'required|date',
-            'maestro_mezcalero' => 'nullable|string|max:60',
-            'num_autorizacion' => 'nullable|integer',
-            'id_firmante' => 'required|integer',
+            'accion_reexpedir' => 'required|in:1,2',
+            'observaciones' => 'nullable|string', 
         ]);
 
-        $certificado = Certificados::findOrFail($request->id_certificado);
-
-        if ($request->accion_reexpedir == '1') {
-            $certificado->estatus = 1; 
-            $certificado->observaciones = $request->observaciones; 
-            $certificado->save();
-        } elseif ($request->accion_reexpedir == '2') {
-            $certificado->estatus = 1;
-            $certificado->observaciones = $request->observaciones; 
-            $certificado->save(); 
-
-            // Crear un nuevo registro de certificado (reexpedición)
-            $nuevoCertificado = new Certificados();
-            $nuevoCertificado->id_dictamen = $request->id_dictamen;
-            $nuevoCertificado->num_certificado = $request->num_certificado;
-            $nuevoCertificado->fecha_emision = $request->fecha_emision;
-            $nuevoCertificado->fecha_vigencia = $request->fecha_vigencia;
-            $nuevoCertificado->maestro_mezcalero = $request->maestro_mezcalero ?: null;
-            $nuevoCertificado->num_autorizacion = $request->num_autorizacion ?: null;
-            $nuevoCertificado->id_firmante = $request->id_firmante;
-            $nuevoCertificado->estatus = 2;
-            
-            // Guarda el nuevo certificado
-            $nuevoCertificado->save();
+        if ($request->accion_reexpedir == '2') {
+            $request->validate([
+                'id_certificado' => 'required|exists:certificados,id_certificado',
+                'id_dictamen' => 'required|integer',
+                'num_certificado' => 'required|string|max:25',
+                'fecha_emision' => 'required|date',
+                'fecha_vigencia' => 'required|date',
+                //'maestro_mezcalero' => 'nullable|string|max:60',
+                //'num_autorizacion' => 'nullable|integer',
+                'id_firmante' => 'required|integer',
+            ]);
         }
 
-        return response()->json(['message' => 'Certificado procesado correctamente.']);
+        $reexpedir = Certificados::findOrFail($request->id_certificado);
+
+        if ($request->accion_reexpedir == '1') {
+            $reexpedir->estatus = 1; 
+                $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;//Actualiza solo 'observaciones'
+            $reexpedir->observaciones = json_encode($observacionesActuales); 
+            $reexpedir->save();
+
+            return response()->json(['message' => 'Cancelado correctamente.']);
+
+        } else if ($request->accion_reexpedir == '2') {
+            $reexpedir->estatus = 1;
+                $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales);
+            $reexpedir->save(); 
+
+            // Crear un nuevo registro de reexpedición
+            $new = new Certificados();
+            $new->id_dictamen = $request->id_dictamen;
+            $new->num_certificado = $request->num_certificado;
+            $new->fecha_emision = $request->fecha_emision;
+            $new->fecha_vigencia = $request->fecha_vigencia;
+            $new->id_firmante = $request->id_firmante;
+            $new->estatus = 2;
+            $new->observaciones = json_encode(['id_sustituye' => $request->id_certificado]);
+            $new->save();
+
+            return response()->json(['message' => 'Registrado correctamente.']);
+        }
+
+        return response()->json(['message' => 'Procesado correctamente.']);
     } catch (\Exception $e) {
-        Log::error($e);
-        return response()->json(['message' => 'Error al procesar el certificado.', 'error' => $e->getMessage()], 500);
+        Log::error('Error al reexpedir', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al procesar.'], 500);
     }
 }
 

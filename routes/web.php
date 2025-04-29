@@ -942,7 +942,7 @@ Route::middleware(['auth'])->controller(Certificado_InstalacionesController::cla
     Route::resource('certificados-list',Certificado_InstalacionesController::class);
     Route::post('certificados-list', [Certificado_InstalacionesController::class, 'store'])->name('certificados.store');
     Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::class, 'edit']);
-    Route::put('certificados-list/{id}', [Certificado_InstalacionesController::class, 'update']);
+    Route::post('certificados-list/{id}', [Certificado_InstalacionesController::class, 'update']);
     Route::get('/ruta-para-obtener-revisores', [Certificado_InstalacionesController::class, 'obtenerRevisores']);
     Route::post('/asignar-revisor', [Certificado_InstalacionesController::class, 'storeRevisor'])->name('asignarRevisor'); //Agregar
     Route::post('/certificados/reexpedir', [Certificado_InstalacionesController::class, 'reexpedir'])->name('certificados.reexpedir');

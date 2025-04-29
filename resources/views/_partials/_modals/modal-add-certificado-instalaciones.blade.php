@@ -1,5 +1,5 @@
-<!-- Modal para agregar nuevo certificado -->
-<div class="modal fade" id="addCertificadoModal" tabindex="-1" aria-labelledby="addCertificadoModalLabel" aria-hidden="true">
+<!-- MODAL AGREGAR -->
+<div class="modal fade" id="ModalAgregar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
@@ -9,12 +9,11 @@
             </div>
 
             <div class="modal-body">
-                <form id="addCertificadoForm">
-                    @csrf
+                <form id="FormAgregar">
 
                     <!-- Selección de Dictamen -->
-                    <div class="form-floating form-floating-outline mb-3">
-                        <select class="select2 form-select" id="id_dictamen" name="id_dictamen" data-placeholder="Selecciona un dictamen" required>
+                    <div class="form-floating form-floating-outline mb-6">
+                        <select class="select2 form-select" name="id_dictamen" data-placeholder="Selecciona un dictamen">
                             <option value="" disabled selected></option>
                             @foreach($dictamenes as $dictamen)
                                 <option value="{{ $dictamen->id_dictamen }}" data-tipo-dictamen="{{ $dictamen->tipo_dictamen }}">
@@ -35,54 +34,60 @@
                                 </option>
                             @endforeach
                         </select>
-                        <label for="formValidationSelect2">Seleccione un dictamen</label>
+                        <label for="">Selecciona un dictamen</label>
                     </div>
 
-                    
-
-                    <!-- Número de Certificado -->
-                    <div class="form-floating form-floating-outline mb-3">
-                        <input type="text" class="form-control" id="numero_certificado" placeholder="No. de Certificado" name="num_certificado" aria-label="No. de Certificado" required>
-                        <label for="numero_certificado">No. de Certificado</label>
-                    </div>
-
-                    <!-- Maestro Mezcalero -->
-                    <div class="form-floating form-floating-outline mb-3" id="maestroMezcaleroContainer" style="display: none;">
-                        <input type="text" class="form-control" id="maestro_mezcalero" placeholder="Maestro Mezcalero" name="maestro_mezcalero" aria-label="Maestro Mezcalero">
-                        <label for="maestro_mezcalero">Maestro Mezcalero</label>
-                    </div>
-
-                    <!-- Número de Autorización -->
-                    <div class="form-floating form-floating-outline mb-3" id="noAutorizacionContainer" style="display: none;">
-                        <input type="text" class="form-control" id="no_autorizacion" placeholder="No. de Autorización" name="num_autorizacion" aria-label="No. de Autorización">
-                        <label for="no_autorizacion">No. de Autorización</label>
-                    </div>
-
-                    <!-- Fechas -->
-                    <div class="row mb-3">
+                    <div class="row">
                         <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <input class="form-control flatpickr-datetime" name="fecha_emision" placeholder="YYYY-MM-DD">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="text" class="form-control" name="num_certificado" placeholder="No. de certificado">
+                                <label for="">No. de certificado</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select class="select2 form-select" name="id_firmante">
+                                    <option value="" disabled selected>Selecciona un firmante</option>
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="">Selecciona un firmante</label>
+                            </div>
+                        </div>
+                    </div>
+
+                <!-- CAMPOS CONDICIONALES -->
+                    <div class="row">
+                        <div class="col-md-6"><!-- Maestro Mezcalero -->
+                            <div class="form-floating form-floating-outline mb-6" id="maestroMezcaleroContainer" style="display: none;">
+                                <input type="text" class="form-control" id="maestro_mezcalero" placeholder="Maestro Mezcalero" name="maestro_mezcalero">
+                                <label for="">Maestro mezcalero</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6"><!-- Número de Autorización -->
+                            <div class="form-floating form-floating-outline mb-6" id="noAutorizacionContainer" style="display: none;">
+                                <input type="text" class="form-control" id="no_autorizacion" placeholder="No. de Autorización" name="num_autorizacion">
+                                <label for="">No. de autorización</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control flatpickr-datetime" id="fecha_emision" name="fecha_emision"
+                                placeholder="YYYY-MM-DD">
                                 <label for="">Fecha de emisión</label>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <input class="form-control flatpickr-datetime" name="fecha_vigencia" placeholder="YYYY-MM-DD" readonly>
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" id="fecha_vigencia" name="fecha_vigencia" readonly
+                                    placeholder="YYYY-MM-DD">
                                 <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Firmante -->
-                    <div class="form-floating form-floating-outline mb-3">
-                        <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
-                            <option value="" disabled selected>Selecciona un firmante</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                        <label for="formValidationSelect2">Selecciona un firmante</label>
                     </div>
         
                     
@@ -100,8 +105,8 @@
 
 
 
-<!-- Modal para editar certificado -->
-<div class="modal fade" id="editCertificadoModal" tabindex="-1" aria-labelledby="editCertificadoModalLabel">
+<!-- MODAL EDITAR -->
+<div class="modal fade" id="ModalEditar" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
@@ -111,15 +116,13 @@
             </div>
 
             <div class="modal-body">
-                <form id="editCertificadoForm">
-                    @csrf
-                    @method('PUT')
+                <form id="FormEditar" method="POST">
 
                     <input type="hidden" id="edit_id_certificado" name="id_certificado">
 
                     <!-- Selección de Dictamen -->
-                    <div class="form-floating form-floating-outline mb-3">
-                        <select class="select2 form-select" id="edit_id_dictamen" name="id_dictamen" aria-label="No. Dictamen" required>
+                    <div class="form-floating form-floating-outline mb-6">
+                        <select class="select2 form-select" id="edit_id_dictamen" name="id_dictamen" >
                             @foreach($dictamenes as $dictamen)
                                 <option value="{{ $dictamen->id_dictamen }}" data-tipo-dictamen="{{ $dictamen->tipo_dictamen }}">
                                     {{ $dictamen->num_dictamen }} | 
@@ -139,49 +142,61 @@
                                 </option>
                             @endforeach
                         </select>
-                        <label for="formValidationSelect2">Seleccione un dictamen</label>
+                        <label for="">Seleccione un dictamen</label>
                     </div>
 
-                    
-
-                    <!-- Número de Certificado -->
-                    <div class="form-floating form-floating-outline mb-3">
-                        <input type="text" class="form-control" id="edit_numero_certificado" placeholder="No. de Certificado" name="num_certificado" aria-label="No. de Certificado" required>
-                        <label for="edit_numero_certificado">No. de Certificado</label>
-                    </div>
-
-                    <!-- Maestro Mezcalero -->
-                    <div id="edit_maestroMezcaleroContainer" class="form-floating form-floating-outline mb-3">
-                        <input type="text" class="form-control" id="edit_maestro_mezcalero" placeholder="Maestro Mezcalero" name="maestro_mezcalero" aria-label="Maestro Mezcalero">
-                        <label for="edit_maestro_mezcalero">Maestro Mezcalero</label>
-                    </div>
-
-                    <!-- Número de Autorización -->
-                    <div id="edit_autorizacionContainer" class="form-floating form-floating-outline mb-3" style="display: none;">
-                        <input type="text" class="form-control" id="edit_num_autorizacion" placeholder="No. de Autorización" name="num_autorizacion" aria-label="No. de Autorización">
-                        <label for="edit_num_autorizacion">No. de Autorización</label>
-                    </div>
-
-                    <!-- Fechas -->
-                    <div class="d-flex justify-content-between mb-3">
-                        <div class="form-floating form-floating-outline flex-fill me-2">
-                            <input class="form-control flatpickr-datetime" id="edit_fecha_emision" placeholder="YYYY-MM-DD" name="fecha_emision" required>
-                            <label for="">Fecha de emisión</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="text" class="form-control" name="num_certificado" 
+                                    id="edit_num_certificado"  placeholder="no. certificado">
+                                <label for="">No. de certificado</label>
+                            </div>
                         </div>
-                        <div class="form-floating form-floating-outline flex-fill ms-2">
-                            <input class="form-control" id="edit_fecha_vigencia" placeholder="YYYY-MM-DD" name="fecha_vigencia" readonly>
-                            <label for="">Fecha de vigencia</label>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select class="select2 form-select" name="id_firmante"
+                                    id="edit_id_firmante">
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="">Seleccione un firmante</label>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Firmante -->
-                    <div class="form-floating form-floating-outline mb-3">
-                        <select class="select2 form-select" id="edit_id_firmante" name="id_firmante"  required>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                        <label for="formValidationSelect2">Seleccione un firmante</label>
+                    <!-- CAMPOS CONDICIONALES -->
+                    <div class="row">
+                        <div class="col-md-6"><!-- Maestro Mezcalero -->
+                            <div id="edit_maestroMezcaleroContainer" class="form-floating form-floating-outline mb-6" style="display: none;">
+                                <input type="text" class="form-control" id="edit_maestro_mezcalero" placeholder="Maestro Mezcalero" name="maestro_mezcalero">
+                                <label for="">Maestro Mezcalero</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6"><!-- Número de Autorización -->
+                            <div id="edit_autorizacionContainer" class="form-floating form-floating-outline mb-6" style="display: none;">
+                                <input type="text" class="form-control" id="edit_num_autorizacion" placeholder="No. de Autorización" name="num_autorizacion">
+                                <label for="">No. de Autorización</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control flatpickr-datetime" id="edit_fecha_emision" name="fecha_emision"
+                                    placeholder="YYYY-MM-DD">
+                                <label for="">Fecha de emisión</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" readonly
+                                    placeholder="YYYY-MM-DD">
+                                <label for="">Fecha de vigencia</label>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Botones -->

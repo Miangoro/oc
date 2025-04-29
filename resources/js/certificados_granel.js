@@ -519,7 +519,7 @@ $(function () {
         id_firmante: {
           validators: {
               notEmpty: {
-                  message: 'Seleccione una opcion'
+                  message: 'El nombre del firmante es obligatorio.'
               }
           }
       },

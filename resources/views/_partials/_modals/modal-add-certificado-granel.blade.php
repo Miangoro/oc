@@ -135,7 +135,7 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" readonly
                                     placeholder="YYYY-MM-DD">
-                                <label for="">Vigencia hasta</label>
+                                <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
                     </div>
