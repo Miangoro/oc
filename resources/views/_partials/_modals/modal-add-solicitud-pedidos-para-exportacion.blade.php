@@ -14,7 +14,7 @@
                                 <select id="tipo_solicitud" class="form-select" name="tipo_solicitud">
                                     <option value="1">Inspección y certificado de exportación</option>
                                     <!--<option value="2">Inspección</option>-->
-                                    <option value="3">Inspección y certificado de exportación (Combinado)</option>
+                                    <option value="2">Inspección y certificado de exportación (Combinado)</option>
                                     <!--<option value="4">Certificado de exportación</option>
                                     <option value="5">Certificado de exportación (combinado)</option>-->
                                 </select>
@@ -258,8 +258,9 @@
 
 
 <script>
-    function cargarDatosCliente() {
+    function cargarDatosCliente() { 
         var empresa = $("#id_empresa_solicitud_exportacion").val();
+       
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
 
             $.ajax({

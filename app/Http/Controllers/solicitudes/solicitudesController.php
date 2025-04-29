@@ -1239,6 +1239,121 @@ class solicitudesController extends Controller
                   ]);
                   break;
 
+                  case 'pedidosExportacion':
+                         // Validación de datos del formulario
+                        $validated = $request->validate([
+                            'id_empresa' => 'required|integer',
+                            'fecha_visita' => 'required|date',
+                            'id_instalacion' => 'required|integer',
+                            'id_instalacion_envasado_2' => 'required|integer',
+                            'direccion_destinatario' => 'required|integer',
+                            'aduana_salida' => 'required|string|max:255',
+                            'no_pedido' => 'required|string|max:255',
+                            'info_adicional' => 'nullable|string|max:5000',
+                            'factura_proforma' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+                            'factura_proforma_cont' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+                            /*  */
+                            'lote_envasado' => 'array',  // Asegurarse de que los lotes sean arrays
+                            'cantidad_botellas' => 'array',  // Asegurarse de que las cantidades sean arrays
+                            'cantidad_cajas' => 'array',  // Asegurarse de que las cantidades sean arrays
+                            'presentacion' => 'array',  // Asegurarse de que las presentaciones sean arrays
+                            'id_etiqueta' => 'nullable|integer',
+                        ]);
+
+                        // Procesar características
+                        $data = json_decode($request->input('caracteristicas'), true);
+
+                        // Incluir los demás campos dentro del JSON de 'caracteristicas'
+                        $data['tipo_solicitud'] = $validated['tipo_solicitud'] ?? $data['tipo_solicitud'];  // Solo si es enviado
+                        $data['no_pedido'] = $validated['no_pedido'];  // Solo si es enviado
+                        $data['aduana_salida'] = $validated['aduana_salida'];  // Solo si es enviado
+                        $data['direccion_destinatario'] = $validated['direccion_destinatario'];  // Solo si es enviado
+                        $data['id_etiqueta'] = $validated['id_etiqueta'];  // Solo si es enviado
+                        $data['id_instalacion_envasado'] = $validated['id_instalacion_envasado_2'];  // Solo si es enviado
+                        // Preparar los detalles
+                        $detalles = [];
+                        $totalLotes = count($validated['lote_envasado']);  // Suponiendo que todos los arrays tienen el mismo tamaño
+
+                        for ($i = 0; $i < $totalLotes; $i++) {
+                            // Crear el detalle para cada conjunto de datos de lote
+                            $detalles[] = [
+                                'id_lote_envasado' => (int)$validated['lote_envasado'][$i],
+                                //'lote_granel' => (int)$validated['lote_granel'][$i],
+                                'cantidad_botellas' => (int)$validated['cantidad_botellas'][$i],
+                                'cantidad_cajas' => (int)$validated['cantidad_cajas'][$i],
+                                'presentacion' => (int)$validated['presentacion'][$i],
+                            ];
+                        }
+                        // Incluir los detalles dentro de las características
+                        $data['detalles'] = $detalles;
+
+
+                        // Obtener el número del cliente desde la tabla empresa_num_cliente
+                        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $validated['id_empresa'])->first();
+                        $empresaNumCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                            return !empty($numero);
+                        });
+
+
+                        // Guardar la solicitud
+                  
+                
+                        $solicitud->id_empresa = $validated['id_empresa'];
+                        $solicitud->fecha_visita = $validated['fecha_visita'];
+                        $solicitud->id_instalacion = $validated['id_instalacion'];
+                        $solicitud->info_adicional = $validated['info_adicional'];
+                        $solicitud->caracteristicas = json_encode($data);  // Guardar el JSON completo con las características (incluyendo facturas)
+                        $solicitud->save();
+
+                        // Almacenar archivos si se enviaron
+                        if ($request->hasFile('factura_proforma')) {
+                            $file = $request->file('factura_proforma');
+                            $uniqueId = uniqid();
+                            $filename = 'FacturaProforma_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+                            $directory = $empresaNumCliente;
+                            $path = storage_path('app/public/uploads/' . $directory);
+
+                            if (!file_exists($path)) {
+                                mkdir($path, 0777, true);
+                            }
+
+                            $filePath = $file->storeAs($directory, $filename, 'public_uploads');
+                            Documentacion_url::create([
+                                'id_empresa' => $validated['id_empresa'],
+                                'url' => basename($filePath),
+                                'id_relacion' => $solicitud->id_solicitud,
+                                'id_documento' => 55, // ID de factura
+                                'nombre_documento' => 'Factura Proforma',
+                            ]);
+                            $data['factura_proforma'] = $filename;
+                        }
+
+                        if ($request->hasFile('factura_proforma_cont')) {
+                            $file = $request->file('factura_proforma_cont');
+                            $uniqueId = uniqid();
+                            $filename = 'FacturaProformaCont_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+                            $directory = $empresaNumCliente;
+                            $path = storage_path('app/public/uploads/' . $directory);
+
+                            if (!file_exists($path)) {
+                                mkdir($path, 0777, true);
+                            }
+
+                            $filePath = $file->storeAs($directory, $filename, 'public_uploads');
+                            Documentacion_url::create([
+                                'id_empresa' => $validated['id_empresa'],
+                                'url' => basename($filePath),
+                                'id_relacion' => $solicitud->id_solicitud,
+                                'id_documento' => 55, // ID de factura
+                                'nombre_documento' => 'Factura Proforma (Continuación)',
+                            ]);
+                            $data['factura_proforma_cont'] = $filename;
+                        }
+
+                        $solicitud->caracteristicas = json_encode($data); // Ahora incluye las rutas de los archivos
+                        $solicitud->save();
+                    break;
+
 
             default:
                 return response()->json(['success' => false, 'message' => 'Tipo de solicitud no reconocido'], 400);
