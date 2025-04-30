@@ -176,7 +176,7 @@
         <tr>
             <td colspan="2" class="td-no-border" style="width: 380px">&nbsp;</td>
             <td class="no-padding"> <p class="negrita" style="margin: 0"> Folio de solicitud:</p> </td>
-            <td class="no-padding"> INV-423/2024</td>
+            <td class="no-padding"> {{ $datos->folio }}</td>
         </tr>
     </table>
 
@@ -228,9 +228,9 @@
 </tr>
 <tr>
     <td class="rightLetter negrita" >Folio inicial:</td>
-    <td class="letra-up">{{ $datos->empresanumcliente->numero_cliente }}</td>
+    <td class="letra-up">{{ $datos->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}{{ $datos->id_marca }}-{{ str_pad($datos->folio_inicial, 6, '0', STR_PAD_LEFT) }}</td>
     <td class="rightLetter negrita">Folio final:</td>
-    <td class="letra-up"></td>
+    <td class="letra-up">{{ $datos->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}{{ $datos->id_marca }}-{{ str_pad($datos->folio_final, 6, '0', STR_PAD_LEFT) }}</td>
 </tr>
 <tr>
     <td class="rightLetter negrita" >Total de hologramas <br>
@@ -239,12 +239,12 @@
 </tr>
 <tr >
     <td class="rightLetter negrita" style="height: 60px">Comentarios</td>
-    <td colspan="3">{{$datos->comentarios}}</td>
+    <td colspan="3">{{$datos->comentarios}} <span class="negrita">Marca:</span> {{ $datos->marcas->marca }}</td>
 </tr>
 <tr>
     <td colspan="4">NOTA: Se solicita reenviar vía electrónica este acuse firmado para confirmar la llegada de hologramas. <div style="height: 50px"></div>
         _____________________________________________ <br>
-        <p class="negrita">Nazareth Camacho </p>
+        <p class="negrita">{{ $datos->direcciones->nombre_recibe }}</p>
         <div style="height: 10px"></div>
     </td>
 </tr>
