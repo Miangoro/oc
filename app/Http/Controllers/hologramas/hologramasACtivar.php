@@ -70,7 +70,7 @@ class hologramasActivar extends Controller
 
         $searchValue = $request->input('search.value');
 
-        $query = activarHologramasModelo::with(['inspeccion', 'solicitudHolograma.marcas']);
+        $query = activarHologramasModelo::with(['inspeccion', 'solicitudHolograma.marcas','solicitudHolograma.empresa']);
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
@@ -102,11 +102,26 @@ class hologramasActivar extends Controller
 
             foreach ($datos as $dato) {
 
+                $numero_cliente = optional(
+                    $dato->solicitudHolograma->empresa->empresaNumClientes
+                        ->firstWhere('numero_cliente', '!=', null)
+                )->numero_cliente;
+                
+                $marca = $dato->solicitudHolograma->marcas->marca;
+                $folioMarca = $dato->solicitudHolograma->marcas->folio;
                 $folios = $dato->folios; 
                 $folios = json_decode($folios, true);
                 $rangoFolios = [];
+                
                 for ($i = 0; $i < count($folios['folio_inicial']); $i++) {
-                    $rangoFolios[] = $folios['folio_inicial'][$i] . " - " . $folios['folio_final'][$i];
+                    $rangoFolios[] = 
+                    '<a target="_blank" href="/pages/hologramas-validacion/' . $numero_cliente . $folioMarca . '-' . str_pad($folios['folio_inicial'][$i], 6, '0', STR_PAD_LEFT) . '">' . 
+                    $numero_cliente . $folioMarca . '-' . str_pad($folios['folio_inicial'][$i], 6, '0', STR_PAD_LEFT) . 
+                    '</a> a ' .
+                    '<a target="_blank" href="/pages/hologramas-validacion/' . $numero_cliente . $folioMarca . '-' . str_pad($folios['folio_final'][$i], 6, '0', STR_PAD_LEFT) . '">' . 
+                    $numero_cliente . $folioMarca . '-' . str_pad($folios['folio_final'][$i], 6, '0', STR_PAD_LEFT) . 
+                    '</a>';
+                
                 }
                 $mensaje = implode('<br>', $rangoFolios);
 
@@ -117,7 +132,7 @@ class hologramasActivar extends Controller
                     'folio_activacion' => $dato->folio_activacion,
                     'folio_solicitud' => $dato->solicitudHolograma->folio,
                     'num_servicio' => $dato->inspeccion->num_servicio,
-                    'marca' => $dato->solicitudHolograma->marcas->marca,
+                    'marca' => $marca,
                     'lote_granel' => $dato->no_lote_agranel,
                     'lote_envasado' => $dato->no_lote_envasado,
                     'folios' => $mensaje,
@@ -247,4 +262,25 @@ class hologramasActivar extends Controller
         $loteEnvasado->save();
         return response()->json(['message' => 'Hologramas activados exitosamente']);
     }
+
+      //Editar activos
+      public function editActivados($id)
+      {
+          try {
+              // Obtener el registro
+              $activo = activarHologramasModelo::find($id);
+              // Decodificar el JSON de los folios
+              $folios = json_decode($activo->folios, true);
+              // Añadir los valores de folio inicial y folio final
+              $activo->folio_inicial = $folios['folio_inicial'] ?? null;
+              $activo->folio_final = $folios['folio_final'] ?? null;
+              $mermas = json_decode($activo->mermas, true);
+              $activo->mermas = $mermas['mermas'] ?? null;
+  
+              return response()->json($activo); // Devolver el registro con los datos decodificados
+          } catch (\Exception $e) {
+              return response()->json(['error' => 'Error al obtener los hologramas activos'], 500);
+          }
+      }
+  
 }

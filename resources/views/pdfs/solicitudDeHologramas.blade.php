@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Solicitud de Hologramas</title>
+    <title>Solicitud de Hologramas {{ $datos->folio }}</title>
     <style>
 
         body{
@@ -176,7 +176,7 @@
         <tr>
             <td colspan="2" class="td-no-border" style="width: 380px">&nbsp;</td>
             <td class="no-padding"> <p class="negrita" style="margin: 0"> Folio de solicitud:</p> </td>
-            <td class="no-padding"> {{ $datos->folio }}</td>
+            <td class="no-padding">{{ $datos->folio }}</td>
         </tr>
     </table>
 
@@ -228,9 +228,9 @@
 </tr>
 <tr>
     <td class="rightLetter negrita" >Folio inicial:</td>
-    <td class="letra-up">{{ $datos->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}{{ $datos->id_marca }}-{{ str_pad($datos->folio_inicial, 6, '0', STR_PAD_LEFT) }}</td>
+    <td class="letra-up">{{ $datos->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}{{ $datos->marcas->folio }}-{{ str_pad($datos->folio_inicial, 6, '0', STR_PAD_LEFT) }}</td>
     <td class="rightLetter negrita">Folio final:</td>
-    <td class="letra-up">{{ $datos->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}{{ $datos->id_marca }}-{{ str_pad($datos->folio_final, 6, '0', STR_PAD_LEFT) }}</td>
+    <td class="letra-up">{{ $datos->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}{{ $datos->marcas->folio }}-{{ str_pad($datos->folio_final, 6, '0', STR_PAD_LEFT) }}</td>
 </tr>
 <tr>
     <td class="rightLetter negrita" >Total de hologramas <br>

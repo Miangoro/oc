@@ -40,6 +40,8 @@
             <div class="col-lg-8" style="float:none;margin:auto;">
                 <div style=" border-radius: 40px !important; background-color: #062e6163  !important;"
                     class="panel panel-default">
+
+                    @if($ya_activado == true)
                     <div id="trazabilidad" class="panel-heading">Trazabilidad</div>
                     <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;"class="alert">
                         <strong>CERTIFICADO
@@ -49,10 +51,7 @@
                     </div>
 
                     <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;" class="alert">
-                        <strong>FOLIO
-                            DE
-                            HOLOGRAMA:
-                            NOM-070-040CA000199</strong>
+                        <strong>FOLIO DE HOLOGRAMA: {{ $folio }}</strong>
                     </div>
 
                     <div
@@ -64,51 +63,52 @@
                         <tbody>
                             <tr>
                                 <td class="td"><b>CERTIFICADO DE LOTE A GRANEL</b></td>
-                                <td class="td">CIDAM C-GRA-057/2024
-                                </td>
+                                <td class="td">Pendiente</td>
                             </tr>
                             <tr>
                                 <td class="td"><b>CATEGORÍA</b></td>
-                                <td class="td">Mezcal Ancestral</td>
+                                <td class="td">{{ $datosHolograma->categorias->categoria }}</td>
                             </tr>
                             <tr>
                                 <td class="td"><b>CLASE</b></td>
-                                <td class="td">Blanco O Joven</td>
+                                <td class="td">{{ $datosHolograma->clases->clase }}</td>
                             </tr>
                             <tr>
                                 <td class="td"><b>MARCA</b></td>
-                                <td class="td">Envido 29
-                                </td>
+                                <td class="td">{{ $marca->marca }}</td>
                             </tr>
                             <tr>
                                 <td class="td"><b>LOTE A GRANEL</b></td>
-                                <td class="td">ES-0224
-                                </td>
+                                <td class="td">{{ $datosHolograma->no_lote_agranel }}</td>
                             </tr>
                             <tr>
                                 <td class="td"><b>LOTE ENVASADO</b></td>
-                                <td class="td">ES-0224
-                                </td>
+                                <td class="td">{{ $datosHolograma->no_lote_envasado }}</td>
                             </tr>
                             <tr>
                                 <td class="td"><b>TIPO DE AGAVE</b></td>
-                                <td class="td">Maguey Espadín (a. Angustifolia)
+                                <td class="td">
+                                    {{ optional($datosHolograma->tipos)->pluck('nombre')->implode(', ') }}
                                 </td>
+                                
                             </tr>
                             <tr>
                                 <td class="td"><b>PRODUCIDO EN</b></td>
-                                <td class="td">Oaxaca</td>
+                                <td class="td">{{ $datosHolograma->lugar_produccion }}</td>
                             </tr>
                             <tr>
                                 <td class="td"><b>ENVASADO EN</b></td>
-                                <td class="td">Oaxaca</td>
+                                <td class="td">{{ $datosHolograma->lugar_envasado}}</td>
                             </tr>
                             <tr>
                                 <td class="td"><b>CONTENIDO ALCOHÓLICO</b></td>
-                                <td class="td">50 % Alc. Vol</td>
+                                <td class="td">{{ $datosHolograma->contenido}} % Alc. Vol</td>
                             </tr>
                         </tbody>
                     </table>
+                    @else
+                        HOLOGRAMA NO ACTIVADO
+                    @endif
                     <table class="table">
                         <thead>
                             <tr>
@@ -121,13 +121,15 @@
                         <tbody>
                             <tr>
                                 <td class="tdd"><b>NOMBRE / EMPRESA </b></td>
-                                <td class="tdd">PEDRO RODRÍGUEZ DÍAZ
-                                </td>
+                                <td class="tdd">{{ $cliente->empresa->razon_social }}</td>
+                            </tr>
+                            <tr>
+                                <td class="tdd"><b>Marca</b></td>
+                                <td class="tdd">{{ $marca->marca }}</td>
                             </tr>
                             <tr>
                                 <td class="tdd"><b>RFC</b></td>
-                                <td class="tdd">RODP830905D51
-                                </td>
+                                <td class="tdd">{{ $cliente->empresa->rfc }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -141,7 +143,7 @@
                     <div class="col-sm-12 contenedor-imagenes">
                         <img src="{{ asset('assets/img/illustrations/holograma_cidam.png') }}"
                             alt="Holograma de organismo certificador de cidam" id="holograma" class="imagen-holograma" />
-                        <div class="centrado"> 040CA000199 </div>
+                        <div class="centrado"> {{ $folio }} </div>
 
                     </div>
                 </div>

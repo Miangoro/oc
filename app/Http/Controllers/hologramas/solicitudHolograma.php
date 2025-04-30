@@ -120,7 +120,7 @@ class solicitudHolograma extends Controller
 
             foreach ($users as $user) {
                 $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
-                $marca = \App\Models\marcas::where('id_marca', $user->id_marca)->value('marca');
+                
                 $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
                 $name = \App\Models\User::where('id', $user->id_solicitante)->value('name');
 
@@ -135,7 +135,7 @@ class solicitudHolograma extends Controller
                     'folio' => $user->folio,
                     'id_empresa' => $user->id_empresa,
                     'id_solicitante' => $name,
-                    'id_marca' => $marca,
+                    'id_marca' => $user->marcas->marca ?? '',
                     'cantidad_hologramas' => $user->cantidad_hologramas,
                     'id_direccion' => $direccion,
                     'comentarios' => $user->comentarios,
@@ -144,8 +144,9 @@ class solicitudHolograma extends Controller
                     'costo_envio' => $user->costo_envio,
                     'no_guia' => $user->no_guia,
                     'estatus' => $user->estatus,
-                    'folio_inicial' => $user->folio_inicial,
-                    'folio_final' => $user->folio_final,
+                    'folio_inicial' => '<a target="_blank" href="' . url('/pages/hologramas-validacion/'.$numero_cliente.$user->marcas->folio.'-'.str_pad($user->folio_inicial, 6, '0', STR_PAD_LEFT)) . '">' . $numero_cliente.$user->marcas->folio.'-'.str_pad($user->folio_inicial, 6, '0', STR_PAD_LEFT) . '</a>',
+
+                    'folio_final' => '<a target="_Blank" href="'.url('http://localhost:8000/pages/hologramas-validacion/'.$numero_cliente.$user->marcas->folio.'-'.str_pad($user->folio_final, 6, '0', STR_PAD_LEFT)).'">'.$numero_cliente.$user->marcas->folio.'-'.str_pad($user->folio_inicial, 6, '0', STR_PAD_LEFT).'</a>',
                     'activados' => $user->cantidadActivados($user->id_solicitud),
                     'restantes' => max(0, ($user->cantidad_hologramas - $user->cantidadActivados($user->id_solicitud) - $user->cantidadMermas($user->id_solicitud))),
                     'mermas' => $user->cantidadMermas($user->id_solicitud),
@@ -444,7 +445,7 @@ class solicitudHolograma extends Controller
         $pdf = Pdf::loadView('pdfs.solicitudDeHologramas', ['datos' => $datos]);
 
         // Generar y devolver el PDF
-        return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
+        return $pdf->stream($datos->folio.'.pdf');
     }
 
     
