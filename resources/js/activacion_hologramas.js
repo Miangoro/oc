@@ -30,7 +30,12 @@ $(function () {
         { data: 'marca' },
         { data: 'lote_granel' },
         { data: 'lote_envasado' },
-        { data: 'folios' },
+        { 
+          data: 'folios', 
+          render: function (data, type, row) {
+            return '<span style="font-size:10px">' + data + '</span>';
+          }
+        },
         { data: 'action' }
       ],
       columnDefs: [
@@ -993,7 +998,7 @@ $('#addHologramas').on('hidden.bs.modal', function () {
         var folioFinal = row.find('.folio_final').val();
         var id_solicitud = $('#id_solicitudActivacion').val();
         var subtotal = folioFinal - folioInicial;
-        alert(subtotal)
+        
         
         // Actualizar el subtotal en la fila correspondiente
         row.find(".subtotal").text(subtotal+1); 
@@ -1303,7 +1308,7 @@ $('#addHologramas').on('hidden.bs.modal', function () {
     var formData = new FormData(edit_activarHologramasForm);
 
     $.ajax({
-      url: '/solicitud_holograma/update/updateActivar', // URL de la acción de actualización
+      url: '/solicitud_holograma/update/updateActivados', // URL de la acción de actualización
       type: 'POST',
       data: formData,
       processData: false,

@@ -743,6 +743,7 @@ Route::middleware(['auth'])->controller(hologramasACtivar::class)->group(functio
     Route::post('/verificar-folios', 'verificarFolios');
     Route::post('/solicitud_holograma/storeActivar', 'storeActivar');
     Route::get('/activacion_holograma/edit/{id}', [hologramasACtivar::class, 'editActivados']);
+    Route::post('/solicitud_holograma/update/updateActivados', [hologramasACtivar::class, 'updateActivados']);
 });
 
 

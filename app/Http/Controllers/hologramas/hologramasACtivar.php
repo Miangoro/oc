@@ -282,5 +282,42 @@ class hologramasActivar extends Controller
               return response()->json(['error' => 'Error al obtener los hologramas activos'], 500);
           }
       }
+
+          //Actualizar activos
+    public function updateActivados(Request $request)
+    {
+        // Buscar el registro existente usando el ID
+        try {
+            $loteEnvasado = activarHologramasModelo::findOrFail($request->input('id'));
+            $loteEnvasado->folio_activacion = $request->edit_folio_activacion;
+            $loteEnvasado->id_solicitud = $request->edit_id_solicitudActivacion;
+            $loteEnvasado->id_inspeccion = $request->edit_id_inspeccion;
+            $loteEnvasado->no_lote_agranel = $request->edit_no_lote_agranel;
+            $loteEnvasado->categoria = $request->edit_categoria;
+            $loteEnvasado->no_analisis = $request->edit_no_analisis;
+            $loteEnvasado->cont_neto = $request->edit_cont_neto;
+            $loteEnvasado->unidad = $request->edit_unidad;
+            $loteEnvasado->clase = $request->edit_clase;
+            $loteEnvasado->contenido = $request->edit_contenido;
+            $loteEnvasado->no_lote_envasado = $request->edit_no_lote_envasado;
+            $loteEnvasado->id_tipo = $request->edit_id_tipo;
+            $loteEnvasado->lugar_produccion = $request->edit_lugar_produccion;
+            $loteEnvasado->lugar_envasado = $request->edit_lugar_envasado;
+            // Actualizar los rangos de folios
+            $loteEnvasado->folios = json_encode([
+                'folio_inicial' => $request->edit_rango_inicial,
+                'folio_final' => $request->edit_rango_final, // Puedes agregar otros valores también
+            ]);
+            $loteEnvasado->mermas = json_encode([
+                'mermas' => $request->edit_mermas,
+            ]);
+            // Guardar los cambios en la base de datos
+            $loteEnvasado->save();
+
+            return response()->json(['success' => 'Hologramas activos actualizado correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al actualizar los hologramas activossiiiiii'], 500);
+        }
+    }
   
 }
