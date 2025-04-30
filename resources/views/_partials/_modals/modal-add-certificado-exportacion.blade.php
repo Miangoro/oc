@@ -71,7 +71,7 @@
 
                                     <option value="" disabled selected>NULL</option>
                                     @foreach ($hologramas as $ho)
-                                        <option value="{{ $ho->id_solicitud }}">{{ $ho->folio_inicial }} | {{ $ho->folio_final }}</option>
+                                        <option value="{{ $ho->id_solicitud }}">Inicial: {{ $ho->folio_inicial }} | Final:  {{ $ho->folio_final }}</option>
                                     @endforeach
                                 </select>
                                 <label for="">Hologramas</label>
