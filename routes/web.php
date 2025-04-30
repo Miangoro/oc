@@ -963,6 +963,13 @@ Route::middleware(['auth'])->controller(Certificado_GranelController::class)->gr
     Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
     Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
     Route::post('/granel/reexpedir', [Certificado_GranelController::class, 'reexpedir'])->name('cer-granel.reex');
+
+Route::post('/certificados/granel/documento', [Certificado_GranelController::class, 'subirCertificado']);
+Route::get('/certificados/granel/documento/{id}', [Certificado_GranelController::class, 'CertificadoFirmado']);
+
+Route::post('/certificados/instalacion/documento', [Certificado_InstalacionesController::class, 'subirCertificado']);
+Route::get('/certificados/instalacion/documento/{id}', [Certificado_InstalacionesController::class, 'CertificadoFirmado']);
+
 });
 
 //-------------------CERTIFICADO EXPORTACION-------------------

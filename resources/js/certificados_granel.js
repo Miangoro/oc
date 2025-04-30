@@ -233,24 +233,18 @@ var dataTable = $('.datatables-users').DataTable({
             `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info') + `" data-bs-toggle="dropdown">` +
                 (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
             '</button>' +
-                '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                // Botón para Editar
-                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar" data-bs-toggle="modal" data-bs-target="#ModalEditar">` +
-                '<i class="ri-edit-box-line ri-20px text-info"></i> Editar' +
-                '</a>' +
-                // Botón adicional: Asignar revisor
-                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">` +
-                '<i class="ri-user-search-fill text-warning"></i> Asignar revisor' +
-                '</a>' +
-                // Botón para reexpedir certificado de instalaciones
-                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir" data-bs-toggle="modal" data-bs-target="#ModalReexpedir">` +
-                '<i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar' +
-                '</a>' +
-                // Botón para eliminar
-                `<a data-id="${full['id_certificado']}" class="dropdown-item  waves-effect text-dark eliminar">` +
-                '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar' +
-                '</a>'+
-                '</div>' +
+            '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                // Botón Editar
+                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar" data-bs-toggle="modal" data-bs-target="#ModalEditar">` + '<i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>' +
+                // Botón subir certificado firmado
+                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
+                // Botón Asignar revisor
+                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">` + '<i class="ri-user-search-fill text-warning"></i> Asignar revisor</a>' +
+                // Botón reexpedir
+                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir" data-bs-toggle="modal" data-bs-target="#ModalReexpedir">` + '<i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>' +
+                // Botón eliminar
+                `<a data-id="${full['id_certificado']}" class="dropdown-item  waves-effect text-black eliminar">` + '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>'+
+            '</div>' +
           '</div>'
         );                                   
         }
@@ -660,7 +654,7 @@ $(document).on('click', '.eliminar', function () {//clase del boton "eliminar"
 
 
 
-//editar
+///EDITAR
 var id_certificado = null;
 // Función para cargar los datos
 $(document).on('click', '.editar', function () {
@@ -696,7 +690,6 @@ $(document).on('click', '.editar', function () {
       }
   });
 });
-
 
  // Manejar el envío del formulario de edición
 const editForm = document.getElementById('FormEditar');
@@ -1179,6 +1172,7 @@ $(document).ready(function () {
 
 
 
+
 ///FORMATO PDF CERTIFICADO
 $(document).on('click', '.pdfCertificado', function ()  {
   var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
@@ -1276,6 +1270,77 @@ $(document).on('click', '.pdfActa', function () {
       iframe.show();
     });
 });
+
+
+
+
+///SUBIR CERTIFICADO FIRMADO
+$('#FormCertificadoFirmado').on('submit', function (e) {
+  e.preventDefault();
+  var formData = new FormData(this);
+
+  $.ajax({
+    url: '/certificados/granel/documento',
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.message,
+        customClass: {
+            confirmButton: 'btn btn-primary'
+        }
+      });
+      $('#ModalCertificadoFirmado').modal('hide');
+      $('#FormCertificadoFirmado')[0].reset();
+      $('#documentoActual').empty();
+      dataTable.ajax.reload(null, false); // Si usas datatables
+    },
+    error: function (xhr) {
+      console.log(xhr.responseText);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al subir el documento.',
+        //footer: `<pre>${xhr.responseText}</pre>`,
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
+  });
+});
+
+///OBTENER CERTIFICADO FIRMADO
+$(document).on('click', '.subirPDF', function () {
+  var id = $(this).data('id');
+  $('#doc_id_certificado').val(id);
+  $('#documentoActual').html('Cargando documento...');
+  $('#modalTitulo').text('Certificado granel firmado');//Titulo
+
+  $.ajax({
+    url: `/certificados/granel/documento/${id}`,
+    type: 'GET',
+    success: function (response) {
+      if (response.documento_url && response.nombre_archivo) {
+        $('#documentoActual').html(
+          `<p>Documento actual: 
+            <a href="${response.documento_url}" target="_blank">${response.nombre_archivo}</a>
+          </p>`);
+      } else {
+        $('#documentoActual').html('<p>No hay documento cargado.</p>');
+      }
+    },
+    error: function () {
+      $('#documentoActual').html('<p class="text-danger">Error al cargar el documento.</p>');
+    }
+  });
+
+});
+
 
 
 

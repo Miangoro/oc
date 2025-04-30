@@ -269,7 +269,8 @@ initializeSelect2(select2Elements);
                 '</button>' +
                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
                   `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar" data-bs-toggle="modal" data-bs-target="#ModalEditar">` + '<i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>' +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">` + '<i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>' +
+                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
+                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">` + '<i class="text-warning ri-user-search-fill"></i> Asignar revisor</a>' +
                   `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir" data-bs-toggle="modal" data-bs-target="#ModalReexpedir">` + '<i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>' +
                   `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar">` + '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>' +
                 '</div>' +
@@ -706,6 +707,7 @@ $(document).on('click', '.eliminar', function () {
 
 
 
+
 ///EDITAR
 $(function () {
   // Configuración CSRF para Laravel
@@ -868,7 +870,6 @@ $(function () {
               $('#edit_id_certificado').val(datos.id_certificado);
               $('#edit_id_dictamen').val(datos.id_dictamen).trigger('change');
               $('#edit_num_certificado').val(datos.num_certificado);
-              //$('#edit_no_autorizacion').val(data.num_autorizacion);
               $('#edit_fecha_emision').val(datos.fecha_emision);
               $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
               $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();
@@ -900,6 +901,7 @@ $(function () {
   });
 
 });
+
 
 
 
@@ -1171,6 +1173,7 @@ $(document).ready(function () {
 
 
 
+
 ///OBTENER REVISORES
 $(document).ready(function() {
   $('#tipoRevisor').on('change', function() {
@@ -1210,10 +1213,8 @@ $.ajaxSetup({
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
   }
 });
-
 ///ASIGNAR REVISOR
 $('#asignarRevisorForm').hide();
-
 const form = document.getElementById('asignarRevisorForm');
 const fv = FormValidation.formValidation(form, {
   fields: {
@@ -1481,6 +1482,77 @@ $(document).on('click', '.pdfActa', function () {
       iframe.show();
     });
 });
+
+
+
+
+///SUBIR CERTIFICADO FIRMADO
+$('#FormCertificadoFirmado').on('submit', function (e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+
+  $.ajax({
+    url: '/certificados/instalacion/documento',
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.message,
+        customClass: {
+            confirmButton: 'btn btn-primary'
+        }
+      });
+      $('#ModalCertificadoFirmado').modal('hide');
+      $('#FormCertificadoFirmado')[0].reset();
+      $('#documentoActual').empty();
+      dataTable.ajax.reload(null, false); // Si usas datatables
+    },
+    error: function (xhr) {
+      console.log(xhr.responseText);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al subir el documento.',
+        //footer: `<pre>${xhr.responseText}</pre>`,
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
+  });
+});
+
+///OBTENER CERTIFICADO FIRMADO
+$(document).on('click', '.subirPDF', function () {
+  var id = $(this).data('id');
+  $('#doc_id_certificado').val(id);
+  $('#documentoActual').html('Cargando documento...');
+  $('#modalTitulo').text('Certificado de instalaciones firmado');//Titulo
+
+  $.ajax({
+    url: `/certificados/instalacion/documento/${id}`,
+    type: 'GET',
+    success: function (response) {
+      if (response.documento_url && response.nombre_archivo) {
+        $('#documentoActual').html(
+          `<p>Documento actual: 
+            <a href="${response.documento_url}" target="_blank">${response.nombre_archivo}</a>
+          </p>`);
+      } else {
+        $('#documentoActual').html('<p>No hay documento cargado.</p>');
+      }
+    },
+    error: function () {
+      $('#documentoActual').html('<p class="text-danger">Error al cargar el documento.</p>');
+    }
+  });
+});
+
+
 
 
 
