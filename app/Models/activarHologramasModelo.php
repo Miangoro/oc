@@ -38,10 +38,25 @@ class activarHologramasModelo extends Model
         return $this->belongsTo(inspecciones::class, 'id_inspeccion');
     }
 
+    public function categorias()
+    {
+        return $this->belongsTo(categorias::class, 'categoria','id_categoria');
+    }
+
+    public function clases()
+    {
+        return $this->belongsTo(clases::class, 'clase','id_clase');
+    }
+
     public function solicitudHolograma()
-{
-    return $this->belongsTo(SolicitudHolograma::class, 'id_solicitud');
-}
+    {
+        return $this->belongsTo(SolicitudHolograma::class, 'id_solicitud');
+    }
+
+    public function tipos()
+    {
+        return $this->hasMany(tipos::class, 'id_tipo','id_tipo');
+    }
 
 public function activarHologramasDesdeVariasSolicitudes($solicitudes, $folios)
 {

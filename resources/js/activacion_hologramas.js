@@ -65,8 +65,8 @@ $(function () {
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
             
-              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#editHologramas" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar activación</a>` +
-              `<a data-id="${full['id_solicitud']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar activación</a>` +
+              `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#edit_activarHologramas" href="javascript:;" class="dropdown-item edit-activos "><i class="ri-edit-box-line ri-20px text-info"></i> Editar activación</a>` +
+              `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar activación</a>` +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
               userView +
@@ -993,6 +993,7 @@ $('#addHologramas').on('hidden.bs.modal', function () {
         var folioFinal = row.find('.folio_final').val();
         var id_solicitud = $('#id_solicitudActivacion').val();
         var subtotal = folioFinal - folioInicial;
+        alert(subtotal)
         
         // Actualizar el subtotal en la fila correspondiente
         row.find(".subtotal").text(subtotal+1); 
@@ -1013,7 +1014,8 @@ $('#addHologramas').on('hidden.bs.modal', function () {
                               .removeClass('alert-danger alert-warning')
                               .addClass('alert alert-success')
                               .show();
-                    console.log(response);
+                              $("#btnRegistrar").prop("disabled", false);
+                  
                 },
                 error: function (xhr) {
                     var mensajeDiv = row.find('.mensaje'); // Obtener el mensaje en la fila actual
@@ -1021,7 +1023,8 @@ $('#addHologramas').on('hidden.bs.modal', function () {
                               .removeClass('alert-success alert-warning')
                               .addClass('alert alert-danger')
                               .show();
-                    console.log(xhr.responseText);
+                              $("#btnRegistrar").prop("disabled", true);
+
                 }
             });
         }
@@ -1409,10 +1412,11 @@ $('#addHologramas').on('hidden.bs.modal', function () {
   // Editar Registro Activados y validacion
   $(document).on('click', '.edit-activos', function () {
     var id = $(this).data('id');
-    $.get('/solicitud_holograma/editActivados/' + id, function (data) {
+    $.get('/activacion_holograma/edit/' + id, function (data) {
       console.log(data);
       $('#edit_id').val(data.id);
-      $('#edit_id_solicitud').val(data.id_solicitud);
+      $('#edit_folio_activacion').val(data.folio_activacion);
+      $('#edit_id_solicitudActivacion').val(data.id_solicitud).trigger('change');
       $('#edit_id_inspeccion').val(data.id_inspeccion).trigger('change');
       $('#edit_no_lote_agranel').val(data.no_lote_agranel);
       $('#edit_categoria').val(data.categoria).trigger('change');
@@ -1429,7 +1433,7 @@ $('#addHologramas').on('hidden.bs.modal', function () {
       data.folio_inicial.forEach(function (folioInicial, index) {
         var folioFinal = data.folio_final[index];
         var newRow = `
-          <tr>
+         <tr class="folio-row">
               <th>
                   <button type="button" class="btn btn-danger remove-row">
                       <i class="ri-delete-bin-5-fill"></i>
@@ -1437,13 +1441,20 @@ $('#addHologramas').on('hidden.bs.modal', function () {
               </th>
               <td><input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]"  min="0" value="${folioInicial}"></td>
               <td><input type="number" class="form-control form-control-sm" name="edit_rango_final[]"  min="0"  value="${folioFinal}"></td>
+              <td class="subtotal"></td>
+                                <td>
+                                    <div class="mensaje alert" style="display:none;"></div>
+                                </td>
 
           </tr>`;
         $('#edit_contenidoRango').append(newRow);
       });
 
+ 
+    
+
       $('#edit_contenidoMermas').empty();
-      data.mermas.forEach(function (mermasHolo) {
+      /*data.mermas.forEach(function (mermasHolo) {
         var newRow = `
           <tr>
               <th>
@@ -1455,8 +1466,12 @@ $('#addHologramas').on('hidden.bs.modal', function () {
 
           </tr>`;
         $('#edit_contenidoMermas').append(newRow);
-      });
+      });*/
       $('#edit_activarHologramas').modal('show');
+      $('.folio_inicial, .folio_final').each(function () {
+        $(this).trigger('input'); // Dispara manualmente el evento para ejecutar la validación
+       
+    });
     }).fail(function (jqXHR, textStatus, errorThrown) {
       console.error('Error: ' + textStatus + ' - ' + errorThrown);
       Swal.fire({

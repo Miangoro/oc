@@ -1,48 +1,124 @@
 <!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="edit_activarHologramas" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-xl ">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="btnCloseModal"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Modificar Hologramas Activos</h4>
-                    <p class="address-subtitle"></p>
-                </div>
-                <form id="edit_activarHologramasForm" method="POST" enctype="multipart/form-data"
-                    onsubmit="return false">
+
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Editar activación de hologramas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="edit_activarHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
-                        <input type="hidden" id="edit_id" name="id">
-                        <input type="hidden" id="edit_id_solicitud" name="edit_id_solicitud">
-                        <div class="form-floating form-floating-outline mb-6">
-                            <select id="edit_id_inspeccion" name="edit_id_inspeccion" class="form-select select2"
-                                aria-label="Default select example">
-                                <option value="" disabled selected>Elige un numero de inspección</option>
-                                @foreach ($inspeccion as $insp)
-                                    <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option>
-                                @endforeach
-                            </select>
-                            <label for="edit_id_inspeccion">No. de servicio</label>
+
+                        <div class="col-md-8">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select id="edit_id_solicitudActivacion" name="edit_id_solicitudActivacion"
+                                    class="form-select select2" aria-label="Default select example">
+                                    <option value="" disabled selected>Elige la solicitud de entrega</option>
+                                    @foreach ($ModelsSolicitudHolograma as $solicitud)
+                                        <option value="{{ $solicitud->id_solicitud }}">{{ $solicitud->folio }} |
+                                            {{ $solicitud->marcas->marca }} |
+                                            {{ number_format($solicitud->folio_inicial) }} -
+                                            {{ number_format($solicitud->folio_final) }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_solicitud">Solicitud de entrega</label>
+                            </div>
+                        </div>
+
+                        
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control" id="edit_folio_activacion"
+                                    placeholder="Introduce el folio" name="edit_folio_activacion"
+                                    aria-label="Nombre del lote" />
+                                <label for="edit_folio_activacion">Folio de activación:</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-10">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select onchange="cargarInfoServicio();" id="edit_id_inspeccion" name="edit_id_inspeccion"
+                                    class="form-select select2" aria-label="Default select example">
+                                    <option value="" disabled selected>Elige un numero de inspección</option>
+                                    @foreach ($inspeccion as $insp)
+                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} |
+                                            {{ $insp->solicitud->folio }} | {{ $insp->solicitud->tipo_solicitud->tipo }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label for="edit_id_inspeccion">No. de servicio</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div id="contenedorActa"></div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_no_lote_agranel"
                                     placeholder="Introduce el nombre del lote" name="edit_no_lote_agranel"
                                     aria-label="Nombre del lote" />
-                                <label for="edit_no_lote_agranel">No de lote granel:</label>
+                                <label for="edit_no_lote_agranel">No. de lote granel:</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select class=" form-select select2" id="edit_categoria" name="edit_categoria"
-                                    aria-label="categoría">
+                                <select class=" form-select" id="edit_categoria" name="edit_categoria" aria-label="categoría">
                                     <option value="" disabled selected>Elige una categoría</option>
                                     @foreach ($categorias as $cate)
-                                        <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
+                                        <option value="{{ $cate->id_categoria }}">{{ $cate->categoria }}</option>
                                     @endforeach
                                 </select>
-                                <label for="edit_categoria">Categoría Mezcal</label>
+                                <label for="categoria">Categoría Mezcal</label>
                             </div>
                         </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select class=" form-select" id="edit_clase" name="edit_clase" aria-label="edit_clase">
+                                    @foreach ($clases as $clase)
+                                        <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="clase">Clase</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <select multiple class=" form-select select2" id="edit_id_tipo" name="edit_id_tipo"
+                                    aria-label="tipo">
+                                    <option value="" disabled>Elige un tipo</option>
+                                    @foreach ($tipos as $tipo)
+                                        <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="edit_id_tipo">Tipo Agave</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" type="number" step="0.01"
+                                    placeholder="Contenido neto por botellas (ml/L):" id="edit_cont_neto" name="edit_cont_neto" />
+                                <label for="edit_cont_neto">Contenido neto por botellas (ml/L):</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select class=" form-select" id="unidad" name="unidad" aria-label="Unidad">
+                                    <option value="Litros">Litros</option>
+                                    <option value="Mililitros">Mililitros</option>
+                                    <option value="Centilitros">Centilitros</option>
+                                </select>
+                                <label for="unidad">Unidad</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="text" placeholder="No de análisis de laboratorio:"
@@ -50,50 +126,14 @@
                                 <label for="edit_no_analisis">No de análisis de laboratorio:</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="number" step="0.01"
-                                    placeholder="Contenido neto por botellas (ml/L):" id="edit_cont_neto"
-                                    name="edit_cont_neto" />
-                                <label for="edit_cont_neto">Contenido neto por botellas (ml/L):</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select" id="edit_unidad" name="edit_unidad" aria-label="Unidad">
-                                    <option value="Litros">Litros</option>
-                                    <option value="Mililitros">Mililitros</option>
-                                    <option value="Centilitros">Centilitros</option>
-                                </select>
-                                <label for="edit_unidad">Unidad</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select" id="edit_clase" name="edit_clase" aria-label="Clase">
-                                    <option value="Blanco o Joven">Blanco o Joven</option>
-                                    <option value="Maduro en Vidrio">Maduro en Vidrio</option>
-                                    <option value="Reposado">Reposado</option>
-                                    <option value="Añejo">Añejo</option>
-                                    <option value="Abocado con">Abocado con</option>
-                                    <option value="Destilado con">Destilado con</option>
-                                    <option value="No aplica">No aplica</option>
-                                </select>
-                                <label for="edit_clase">Clase</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="text" placeholder="Contenido Alcohólico:"
                                     id="edit_contenido" name="edit_contenido" />
                                 <label for="edit_contenido">Contenido Alcohólico:</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="text" placeholder="No. de lote de envasado:"
                                     id="edit_no_lote_envasado" name="edit_no_lote_envasado" />
@@ -102,30 +142,17 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <select class=" form-select select2" id="edit_id_tipo" name="edit_id_tipo"
-                                    aria-label="categoría">
-                                    <option value="" disabled selected>Elige una categoría</option>
-                                    @foreach ($tipos as $tipo)
-                                        <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="edit_id_tipo">Categoría Agave</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="text" placeholder="Lugar de producción:"
                                     id="edit_lugar_produccion" name="edit_lugar_produccion" />
                                 <label for="edit_lugar_produccion">Lugar de producción: </label>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="text" step="0.01"
-                                    placeholder="Lugar de envasado:" id="edit_lugar_envasado"
-                                    name="edit_lugar_envasado" />
+                                    placeholder="Lugar de envasado:" id="edit_lugar_envasado" name="edit_lugar_envasado" />
                                 <label for="edit_lugar_envasado">Lugar de envasado:</label>
                             </div>
                         </div>
@@ -135,36 +162,43 @@
                         <h4 class="address-title mb-2">Activar</h4>
                         <p class="address-subtitle"></p>
                     </div>
-                    {{--                     <div style="display: none;" id="mensaje" role="alert"></div>
- --}}
+                    <div style="display: none;" id="mensaje" role="alert"></div>
+
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th><button type="button" class="btn btn-primary add-row-edit"> <i
+                                <th><button type="button" class="btn btn-primary add-row-add"> <i
                                             class="ri-add-line"></i>
                                     </button></th>
                                 <th>Rango inicial</th>
                                 <th>Rango final</th>
+                                <th>Total</th>
+                                <th></th>
+
                             </tr>
                         </thead>
                         <tbody id="edit_contenidoRango">
-                            <tr>
-                                <th>
-                                    <button type="button" class="btn btn-danger remove-row" disabled> <i
-                                            class="ri-delete-bin-5-fill"></i> </button>
-                                </th>
+                            <tr class="folio-row">
                                 <td>
-                                    <input type="number" class="form-control form-control-sm"
-                                        name="edit_rango_inicial[]" id="folio_inicial" placeholder="Rango inicial"
-                                        min="0">
+                                    <button type="button" class="btn btn-danger remove-row" disabled>
+                                        <i class="ri-delete-bin-5-fill"></i>
+                                    </button>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm"
-                                        name="edit_rango_final[]" id="folio_final" placeholder="Rango final"
-                                        min="0">
+                                    <input type="number" class="form-control form-control-sm folio_inicial"
+                                        name="rango_inicial[]" min="0" placeholder="Rango inicial">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm folio_final"
+                                        name="rango_final[]" min="0" placeholder="Rango final">
+                                </td>
+                                <td class="subtotal"></td>
+                                <td>
+                                    <div class="mensaje alert" style="display:none;"></div>
                                 </td>
                             </tr>
                         </tbody>
+
                     </table>
 
                     <div class="text-center mb-6">
@@ -176,29 +210,21 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th><button type="button" class="btn btn-primary add-row-editMermas"> <i
+                                <th><button type="button" class="btn btn-primary add-row-addmermas"> <i
                                             class="ri-add-line"></i>
                                     </button></th>
                                 <th>Mermas</th>
                             </tr>
                         </thead>
-                        <tbody id="edit_contenidoMermas">
+                        <tbody id="contenidoMermas">
                             <tr>
-                                <th>
-                                    <button type="button" class="btn btn-danger remove-row" disabled> <i
-                                            class="ri-delete-bin-5-fill"></i> </button>
-                                </th>
-                                <td>
-                                    <input type="number" class="form-control form-control-sm" name="edit_mermas[]"
-                                        id="mermas" min="0" placeholder="Mermas">
-                                </td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                        <button id="btnRegistrar" type="submit" class="btn btn-primary">Editar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close" id="btnCancelModal">Cancelar</button>
+                            aria-label="Close">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -207,29 +233,39 @@
 </div>
 
 <script>
-    //funcion para reditrigir a otra vista
-    document.addEventListener("DOMContentLoaded", function() {
-        // Selecciona los botones por su id
-        const closeModalButtons = [document.getElementById("btnCloseModal"), document.getElementById(
-            "btnCancelModal")];
+    function cargarInfoServicio() {
+        var id_inspeccion = $('#id_inspeccion').val();
+        if (id_inspeccion) {
+            $.ajax({
+                url: '/getDatosInpeccion/' + id_inspeccion,
+                method: 'GET',
+                dataType: 'json', // Especificar que la respuesta es JSON
+                success: function(response) {
+                    // Agregar el enlace dentro de un contenedor específico
+                    $('#contenedorActa').html(`
+            <a id="url_acta" target="_blank" href="/files/${response.numero_cliente}/${response.url_acta[0]}">
+                <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+            </a>
+            `);
 
-        closeModalButtons.forEach(button => {
-            button.addEventListener("click", function(event) {
-                // Encuentra el modal padre del botón de cierre
-                const modalElement = button.closest('.modal');
+                    // $('#no_lote_agranel').val(response.solicitud.lote_granel.nombre_lote || '').val();
+                    // $('#categoria').val(response.solicitud.lote_granel.id_categoria).trigger('change');
+                    // $('#clase').val(response.solicitud.lote_granel.id_clase).trigger('change');
+                    // $('#id_tipo').val(response.solicitud.lote_granel.tipo_lote).trigger('change');
+                    $('#cont_neto').val(response.solicitud.lote_envasado.presentacion).val();
+                    $('#unidad').val(response.solicitud.lote_envasado.unidad).val();
+                    //$('#no_analisis').val(response.solicitud.lote_granel.folio_fq).val();
+                    //$('#contenido').val(response.solicitud.lote_granel.cont_alc).val();
+                    $('#no_lote_envasado').val(response.solicitud.lote_envasado.nombre).val();
+                    $('#lugar_envasado').val(response.solicitud.instalacion.direccion_completa).val();
 
-                // Asegúrate de que no sea el modal #verGuiasRegistardas
-                if (modalElement && modalElement.id !== "activosHologramas") {
-                    // Espera a que el modal actual se cierre antes de abrir el nuevo modal
-                    setTimeout(() => {
-                        // Abre el modal de guías registradas
-                        const activosHologramasModal = new bootstrap.Modal(document
-                            .getElementById("activosHologramas"));
-                        activosHologramasModal.show();
-                    },
-                    300); // Ajusta el tiempo para asegurar que el modal anterior se cierre completamente
+                },
+                error: function(xhr) {
+                    console.error('Error al obtener marcas:', xhr);
+                    $('#tabla_marcas tbody').html(
+                    '<tr><td colspan="8">Error al cargar los datos</td></tr>');
                 }
             });
-        });
-    });
+        }
+    }
 </script>

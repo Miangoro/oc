@@ -91,7 +91,7 @@
                             <div class="form-floating form-floating-outline mb-5">
                                 <select multiple class=" form-select select2" id="id_tipo" name="id_tipo"
                                     aria-label="tipo">
-                                    <option value="" disabled selected>Elige un tipo</option>
+                                    <option value="" disabled>Elige un tipo</option>
                                     @foreach ($tipos as $tipo)
                                         <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
                                     @endforeach
@@ -223,7 +223,7 @@
                         </tbody>
                     </table>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
+                        <button id="btnRegistrar" type="submit" class="btn btn-primary">Registrar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
                             aria-label="Close">Cancelar</button>
                     </div>

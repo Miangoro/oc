@@ -737,11 +737,12 @@ Route::middleware(['auth'])->controller(solicitudHolograma::class)->group(functi
 
 //-------------------ACTIVACION DE HOLOGRAMAS-------------------
 Route::middleware(['auth'])->controller(hologramasACtivar::class)->group(function () {
-    Route::get('/find_hologramas_activar', [hologramasACtivar::class, 'find_hologramas_activar'])->name('find_hologramas_activar');
+    Route::get('/find_hologramas_activar', [hologramasACtivar::class, 'find_hologramas_activar'])->name('hologramas-activar');
     Route::resource('/find_hologramas_activar-list', hologramasACtivar::class);
     Route::get('/getDatosInpeccion/{id_inspeccion}','getDatosInpeccion');
     Route::post('/verificar-folios', 'verificarFolios');
     Route::post('/solicitud_holograma/storeActivar', 'storeActivar');
+    Route::get('/activacion_holograma/edit/{id}', [hologramasACtivar::class, 'editActivados']);
 });
 
 

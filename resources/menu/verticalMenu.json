@@ -242,8 +242,8 @@
         },
         {
           "url": "/find_hologramas_activar",
-          "name": "Activar",
-          "slug": "find_hologramas_activar",
+          "name": "Activaciones",
+          "slug": "hologramas-activar",
           "can" : "Visualizar activación de hologramas"
         }
       ]
