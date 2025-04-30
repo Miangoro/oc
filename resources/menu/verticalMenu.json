@@ -178,7 +178,7 @@
           "url": "catalogo/lotes_granel",
           "name": "Lotes a granel",
           "slug": "catalogo-lotes-granel",
-         
+          "can" : "Visualizar usuarios"
         },
         {
           "url": "catalogo/lotes",
