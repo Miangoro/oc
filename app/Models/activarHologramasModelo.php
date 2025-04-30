@@ -50,7 +50,7 @@ class activarHologramasModelo extends Model
 
     public function solicitudHolograma()
     {
-        return $this->belongsTo(SolicitudHolograma::class, 'id_solicitud');
+        return $this->belongsTo(solicitudHolograma::class, 'id_solicitud');
     }
 
     public function tipos()
