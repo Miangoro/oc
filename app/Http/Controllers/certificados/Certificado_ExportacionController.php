@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\empresa; 
 use App\Models\Revisor; 
 use App\Models\lotes_envasado;
+use App\Models\solicitudHolograma;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -27,8 +28,9 @@ class Certificado_ExportacionController extends Controller
         $users = User::where('tipo',1)->get(); //Solo PErsonal OC 
         $empresa = empresa::where('tipo', 2)->get();
         $revisores = Revisor::all(); 
+        $hologramas = solicitudHolograma::with(['empresa', 'marcas'])->get();
 
-        return view('certificados.find_certificados_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores'));
+        return view('certificados.find_certificados_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores', 'hologramas'));
     }
 
 

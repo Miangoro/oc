@@ -19,6 +19,7 @@ use App\Notifications\GeneralNotification;
 use App\Mail\CorreoCertificado;
 use Illuminate\Support\Facades\Mail; 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 
 class Certificado_GranelController extends Controller
@@ -525,6 +526,80 @@ public function CertificadoGranel($id_certificado)
     // Generar y mostrar el PDF
     return Pdf::loadView('pdfs.certificado_granel_ed7', $pdfData)->stream("F7.1-01-07 Certificado NOM de Mezcal a Granel.pdf");
 }
+
+
+
+
+///SUBIR CERTIFICADO FIRMADO
+public function subirCertificado(Request $request)
+{
+    $request->validate([
+        'id_certificado' => 'required|exists:certificados_granel,id_certificado',
+        'documento' => 'required|mimes:pdf|max:3072',
+    ]);
+
+    $certificado = CertificadosGranel::findOrFail($request->id_certificado);
+
+    $anio = now()->year;// Obtener año actual
+    // Limpiar num_certificado para evitar crear carpetas por error
+    $nombreCertificado = preg_replace('/[^A-Za-z0-9_\-]/', '_', $certificado->num_certificado ?? 'No encontrado');
+    // Generar nombre de archivo con num_certificado + cadena aleatoria
+    $nombreArchivo = $nombreCertificado.'_'. uniqid() .'.pdf'; //uniqid() para asegurar nombre único
+
+    // Ruta de carpeta física donde se guardará
+    $rutaCarpeta = "public/certificados_granel_pdf/{$anio}";
+
+    // Eliminar archivo anterior si existe
+    if ($certificado->url_pdf_firmado) {
+        $rutaAnterior = "{$rutaCarpeta}/{$certificado->url_pdf_firmado}";
+        if (Storage::exists($rutaAnterior)) {
+            Storage::delete($rutaAnterior);
+        }
+    }
+
+    // Guardar nuevo archivo
+    Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
+
+    // Guardar solo el nombre del archivo en la BD
+    $certificado->url_pdf_firmado = $nombreArchivo;
+    $certificado->save();
+
+    return response()->json(['message' => 'Documento actualizado correctamente.']);
+}
+
+///OBTENER CERTIFICADO FIRMADO
+public function CertificadoFirmado($id)
+{
+    $certificado = CertificadosGranel::findOrFail($id);
+
+    if ($certificado->url_pdf_firmado) {
+        // Obtener año actual desde el archivo
+        $anio = now()->year;
+
+        // Construir la ruta completa dentro del storage
+        $rutaArchivo = "certificados_granel_pdf/{$anio}/" . $certificado->url_pdf_firmado;
+
+        // Comprobar si el archivo existe
+        if (Storage::exists("public/{$rutaArchivo}")) {
+            return response()->json([
+                'documento_url' => Storage::url($rutaArchivo),  // URL correcta
+                'nombre_archivo' => $certificado->url_pdf_firmado, // Nombre del archivo
+            ]);
+        } else {
+            return response()->json([
+                'documento_url' => null,
+                'nombre_archivo' => null,
+            ], 404);
+        }
+    }
+
+    return response()->json([
+        'documento_url' => null,
+        'nombre_archivo' => null,
+    ]);
+}
+
+
 
 
 

@@ -61,6 +61,26 @@
                         </div>
                     </div>
 
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline mb-6">
+                                {{-- <select class="form-select select2" name="id_dictamen" data-placeholder="Selecciona un dictamen"> --}}
+                                <select class="form-select select2" name="hologramas[]" multiple data-placeholder="Selecciona hologramas">
+
+                                    <option value="" disabled selected>NULL</option>
+                                    @foreach ($hologramas as $ho)
+                                        <option value="{{ $ho->id_solicitud }}">Inicial: {{ $ho->folio_inicial }} | Final:  {{ $ho->folio_final }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="">Hologramas</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i> Registrar</button>
                         <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"

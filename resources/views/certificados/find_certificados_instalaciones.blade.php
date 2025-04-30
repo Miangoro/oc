@@ -72,6 +72,7 @@
 @include('_partials/_modals/modal-add-certificado-instalaciones')
 @include('_partials/_modals/modal-add-asignar-revisor')
 @include('_partials/_modals/modal-reexpedir-certificado-instalaciones')
+@include('_partials/_modals/modal-add-certificado-firmado')
 <!-- /Modal -->
 
 @endsection
