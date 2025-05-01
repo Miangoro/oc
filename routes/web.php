@@ -1001,7 +1001,7 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
 Route::middleware(['auth'])->controller(impiController::class)->group(function () {
     Route::get('tramiteIMPI', [impiController::class, 'UserManagement'])->name('IMPI');
     Route::resource('tramite-list', impiController::class);
-    Route::post('registrar', [impiController::class, 'store'])->name('tramite-create');
+    Route::post('registrarImpi', [impiController::class, 'store'])->name('tramite-create');
     ///eliminar
     Route::delete('eliminar/{id_impi}', [impiController::class, 'destroy'])->name('instalacion.delete');
     ///obtener el editar

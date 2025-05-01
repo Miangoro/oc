@@ -2339,7 +2339,7 @@ $(document).on('click', '.expediente-record', function () {
       $('#tabla-marcas tbody tr').each(function () {
         const row = $(this);
         caracteristicas.detalles.push({
-          lote_envasado: row.find('.lote-envasado').val(),
+          lote_envasado: row.find('.evasado_export').val(),
           cantidad_botellas: row.find('.cantidad-botellas').val(),
           cantidad_cajas: row.find('.cantidad-cajas').val(),
           presentacion: row.find('.presentacion').val()
@@ -2356,8 +2356,8 @@ $(document).on('click', '.expediente-record', function () {
           processData: false,
           contentType: false,
           success: function (response) {
-            $('#editSolicitudMuestreoAgave').modal('hide');
-            $('#editRegistrarSolicitudMuestreoAgave')[0].reset();
+            $('#editPedidoExportacion').modal('hide');
+            $('#editPedidoExportacion')[0].reset();
             $('.select2').val(null).trigger('change');
             $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
             console.log(response);

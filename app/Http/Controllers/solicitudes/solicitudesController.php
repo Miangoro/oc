@@ -1245,7 +1245,7 @@ class solicitudesController extends Controller
                             'id_empresa' => 'required|integer',
                             'fecha_visita' => 'required|date',
                             'id_instalacion' => 'required|integer',
-                            'id_instalacion_envasado_2' => 'required|integer',
+                            'id_nstalaciones_envasado_2_edit' => 'required|integer',
                             'direccion_destinatario' => 'required|integer',
                             'aduana_salida' => 'required|string|max:255',
                             'no_pedido' => 'required|string|max:255',
@@ -1269,7 +1269,7 @@ class solicitudesController extends Controller
                         $data['aduana_salida'] = $validated['aduana_salida'];  // Solo si es enviado
                         $data['direccion_destinatario'] = $validated['direccion_destinatario'];  // Solo si es enviado
                         $data['id_etiqueta'] = $validated['id_etiqueta'];  // Solo si es enviado
-                        $data['id_instalacion_envasado'] = $validated['id_instalacion_envasado_2'];  // Solo si es enviado
+                        $data['id_nstalaciones_envasado_2_edit'] = $validated['id_nstalaciones_envasado_2_edit'];  // Solo si es enviado
                         // Preparar los detalles
                         $detalles = [];
                         $totalLotes = count($validated['lote_envasado']);  // Suponiendo que todos los arrays tienen el mismo tamaño
