@@ -278,7 +278,7 @@
         }
     }
 
-    // Limpiar campos al cerrar el modal de Inspección Ingreso Barricada
+    /* Limpiar campos al cerrar el modal de Inspección Ingreso Barricada
     $('#addInspeccionIngresoBarricada').on('hidden.bs.modal', function() {
         $('#id_empresa_barricada').val('');
         $('#id_instalacion_barricada').html(
@@ -300,5 +300,5 @@
         $('#id_certificado_barricada').val('');
         $('#info_adicional').val('');
         formValidator.resetForm(true);
-    });
+    });*/
 </script>

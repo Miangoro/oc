@@ -297,7 +297,7 @@
         }
     }
 
-    // Limpiar campos al cerrar el modal
+    /* Limpiar campos al cerrar el modal
     $('#addVigilanciaProduccion').on('hidden.bs.modal', function() {
         $('#id_empresa_vigilancia').val('').trigger('change');
         $('#id_instalacion').html('<option value="" disabled selected>Lista de instalaciones</option>');
@@ -317,5 +317,5 @@
         $('#nombre_predio').val('');
         $('#info_adicional').val('');
         $('#addVigilanciaProduccionForm').trigger('reset');
-    });
+    });*/
 </script>

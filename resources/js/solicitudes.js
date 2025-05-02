@@ -2357,10 +2357,10 @@ $(document).on('click', '.expediente-record', function () {
           contentType: false,
           success: function (response) {
             $('#editPedidoExportacion').modal('hide');
-            $('#editPedidoExportacion')[0].reset();
+            $('#editPedidoExportacionForm')[0].reset();
             $('.select2').val(null).trigger('change');
             $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
-            console.log(response);
+           
   
             Swal.fire({
               icon: 'success',
@@ -4251,31 +4251,7 @@ $(document).on('click', '.expediente-record', function () {
       });
     }
 
-    $(document).on('change', '.evasado_export', function () {
-      var sectionId = $(this).closest('.card').attr('id').split('_')[2]; // Cambiado a split('_')[2]
-      var loteEnvasadoSeleccionado = $(this).val(); // Obtener el valor del lote envasado seleccionado
 
-      // Obtener los lotes a granel correspondientes a este lote envasado desde el servidor
-      $.ajax({
-        url: '/getDetalleLoteEnvasado/' + loteEnvasadoSeleccionado, // Asegúrate de que esta URL sea la correcta
-        method: 'GET',
-        success: function (response) {
-          console.log(response); // Para depuración, asegúrate de que la respuesta esté correcta
-
-          // Comprobar si 'detalle' tiene datos
-          if (response.detalle && response.detalle.length > 0) {
-            // Convertir el array de lotes a granel en una cadena separada por comas
-            var lotesGranelNombres = response.detalle.join(', '); // Convierte el array en una cadena separada por comas
-            $('#caracteristicas_Ex_' + sectionId + ' #lote_granel_' + sectionId).val(lotesGranelNombres); // Actualiza el campo de lote a granel
-          } else {
-            $('#caracteristicas_Ex_' + sectionId + ' #lote_granel_' + sectionId).val(''); // Si no hay lotes, limpia el campo
-          }
-        },
-        error: function () {
-          console.error('Error al cargar los lotes a granel.');
-        }
-      });
-    });
 
     // Eliminar la última sección
     $('#delete-characteristics').click(function () {

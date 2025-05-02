@@ -264,7 +264,7 @@
         }
     }
 
-    // Limpiar campos al cerrar el modal
+    /* Limpiar campos al cerrar el modal
     $('#addInspeccionEnvasado').on('hidden.bs.modal', function() {
         $('#id_empresa_inspeccion').val('');
         $('#id_instalacion_inspeccion').html('<option value="" selected>Lista de instalaciones</option>');
@@ -285,5 +285,5 @@
         $('#info_adicional').val('');
         var formValidator = $('#addInspeccionEnvasadoForm').validate();
         formValidator.resetForm(true);
-    });
+    });*/
 </script>

@@ -268,7 +268,7 @@
     }
 
 
-    // Limpiar campos al cerrar el modal
+    /* Limpiar campos al cerrar el modal
     $('#addMuestreoLoteAgranel').on('hidden.bs.modal', function() {
         $('#id_empresa_muestreo').val('');
         $('#id_instalacion_muestreo').html('<option value="" selected>Lista de instalaciones</option>');
@@ -284,5 +284,5 @@
         if (typeof formValidator !== 'undefined') {
             formValidator.resetForm(true);
         }
-    });
+    });*/
 </script>

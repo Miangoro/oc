@@ -293,7 +293,7 @@
         }
     }
 
-    // Limpiar campos al cerrar el modal
+    /* Limpiar campos al cerrar el modal
     $('#addInspeccionLiberacion').on('hidden.bs.modal', function() {
         $('#id_empresa_liberacion').val('').trigger('change');
         $('#id_instalacion_liberacion').html(
@@ -315,5 +315,5 @@
         $('#id_certificado_liberacion').val('');
         $('#info_adicional').val('');
         formValidator.resetForm(true);
-    });
+    });*/
 </script>

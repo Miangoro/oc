@@ -8,7 +8,7 @@
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="editPedidoExportacionForm">
-                    <input type="text" name="id_solicitud" class="id_solicitud" id="solicitud_id_pedidos">
+                    <input type="hidden" name="id_solicitud" class="id_solicitud" id="solicitud_id_pedidos">
                     <input type="hidden" name="form_type" value="pedidosExportacion">
                     <div class="row">
                         <div class="col-md-6">
@@ -252,7 +252,7 @@
                     <input type="text" class="lote_envasado_id"> 
                     <input type="hidden" class="etiqueta_id"> 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
+                        <button type="submit" class="btn btn-primary">Editar</button>
                         <button type="reset" class="btn btn-outline-secondary btnCancelar" data-bs-dismiss="modal"
                             aria-label="Close">Cancelar</button>
                     </div>
@@ -403,13 +403,7 @@
         cargarMarcasEdit();
         cargarDetallesLoteEnvasado($(".evasado_export").val());
 
-        // Añadir evento change a los select de lotes envasados
-        $('.evasado_export').on('change', function() {
-            var idLoteEnvasado = $(this).val(); // Obtén el id seleccionado
-            cargarDetallesLoteEnvasado(idLoteEnvasado); // Llamar a la función con el id seleccionado
-
-            cargarMarcasEdit();
-        });
+     
     }
 
     function compararLotesConSelects() {
@@ -427,7 +421,7 @@
             if (idsLotes.includes(valorOption)) {
                 $(this).prop('selected', true); // <<< Aquí hacemos que se seleccione automáticamente
                 encontrado = true;
-                console.log('Seleccionado lote envasado:', valorOption);
+                //console.log('Seleccionado lote envasado:', valorOption);
                 return false; // Ya encontró, no sigue revisando
             }
         });
@@ -464,6 +458,7 @@
             method: 'GET',
             success: function(response) {
                 console.log(response); // Verifica la respuesta en la consola
+                console.log("Entro en el de modal edit");
 
                 let tbody = $('#tablaLotes tbody');
                 tbody.empty(); // Limpia los datos anteriores
