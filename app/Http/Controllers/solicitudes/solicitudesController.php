@@ -144,7 +144,9 @@ class solicitudesController extends Controller
 
         if (!empty($solicitudes)) {
             $ids = $start;
-
+            $cajas = '';
+            $botellas = '';
+            $presentacion = '';
             foreach ($solicitudes as $solicitud) {
                 $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids ?? 'N/A';
@@ -240,6 +242,7 @@ class solicitudesController extends Controller
                 $nestedData['id_clase'] = isset($caracteristicas['id_clase']) ? clases::find($caracteristicas['id_clase'])->clase : 'N/A';
                 $nestedData['cont_alc'] = $caracteristicas['cont_alc'] ?? 'N/A';
                 $nestedData['id_certificado_muestreo'] = $caracteristicas['id_certificado_muestreo'] ?? 'N/A';
+                $nestedData['no_pedido'] = $caracteristicas['no_pedido'] ?? 'N/A';
                 $nestedData['id_categoria_traslado'] = $caracteristicas['id_categoria_traslado'] ?? 'N/A';
                 $nestedData['id_clase_traslado'] = $caracteristicas['id_clase_traslado'] ?? 'N/A';
                 $nestedData['id_tipo_maguey_traslado'] = $caracteristicas['id_tipo_maguey_traslado'] ?? 'N/A';

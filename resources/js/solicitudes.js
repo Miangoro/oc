@@ -194,6 +194,8 @@ $(function () {
                       <br>
                       <span class="fw-bold text-dark small">Botellas:</span><span class="small"> ${data.botellas || 'N/A'}</span>
                        <br>
+                       <span class="fw-bold text-dark small">Proforma:</span><span class="small"> ${data.no_pedido || 'N/A'}</span>
+                       <br>
                       <span class="fw-bold text-dark small">Certificado:</span><span class="small"> ${data.certificado_exportacion || 'N/A'}</span>`;
             case 14:
               return `<span class="fw-bold text-dark small">
@@ -1162,7 +1164,6 @@ $(document).on('click', '.expediente-record', function () {
                   modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
                   modal.find('#fecha_visita_edit').val(response.data.fecha_visita);
                   modal.find('.instalacion_id').val(response.data.id_instalacion);
-    
                   if (response.caracteristicas) { 
                     modal.find('#tipo_solicitud_edit').val(response.caracteristicas.tipo_solicitud).trigger('change');
                     modal.find('.direccion_id').val(response.caracteristicas.direccion_destinatario);
@@ -1203,6 +1204,7 @@ $(document).on('click', '.expediente-record', function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion').val(response.data.id_instalacion).trigger('change');
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
+              modal.find('#instalacion_id').val(response.data.id_instalacion);
               modal.find('#instalacion_id').val(response.data.id_instalacion);
 
               // Aquí vamos a manejar las características (clases, categorías, renovacion)
