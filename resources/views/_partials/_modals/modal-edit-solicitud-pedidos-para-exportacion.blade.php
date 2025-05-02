@@ -400,8 +400,9 @@
         }
         $('.evasado_export').html(contenidoLotes);
 
-        cargarMarcasEdit();
+       
         cargarDetallesLoteEnvasado($(".evasado_export").val());
+        cargarMarcasEdit();
 
      
     }
@@ -548,7 +549,7 @@
     let seleccionado = "";
     var etiqueta_id = $(".etiqueta_id").val();
     if (id_empresa) {
-        alert('/marcas/' + id_marca + '/' + id_direccion);
+      
         $.ajax({
             url: '/marcas/' + id_marca + '/' + id_direccion,
             method: 'GET',
