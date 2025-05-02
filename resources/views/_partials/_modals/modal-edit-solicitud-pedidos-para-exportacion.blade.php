@@ -278,6 +278,7 @@
                     cargarInstalacionesEnvasadoEdit(response.instalaciones_envasadora);
                     cargarDireccionesEdit(response.direcciones);
                     cargarLotesEnvasado(response.lotes_envasado, response.marcas);
+                    cargarMarcasEdit();
                     compararLotesConSelects();
                     cargarLotesGranel(response.lotes_granel);
                    
@@ -402,7 +403,7 @@
 
        
         cargarDetallesLoteEnvasado($(".evasado_export").val());
-        cargarMarcasEdit();
+       
 
      
     }
