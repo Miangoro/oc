@@ -427,7 +427,7 @@
                         let filaGranel = `
                             <tr>
                                 <td>${index + 2}</td>
-                                <td>${lote.nombre_lote}<br><b>Certificado: </b>${lote.folio_certificado}</td>
+                                 <td>${lote.nombre_lote}<br><b>Certificado: </b>${lote.certificado_granel.num_certificado}</td>
                                 <td>${lote.folio_fq || 'N/A'}</td>
                                 <td>${lote.cont_alc || 'N/A'}</td>
                                <td>

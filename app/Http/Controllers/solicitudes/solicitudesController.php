@@ -1620,7 +1620,7 @@ class solicitudesController extends Controller
     }
     public function getDetalleLoteEnvasado($id_lote_envasado)
     {
-        $lote = lotes_envasado::with('lotesGranel.categoria','lotesGranel.clase')->find($id_lote_envasado); // Cargar relación
+        $lote = lotes_envasado::with('lotesGranel.categoria','lotesGranel.clase','lotesGranel.certificadoGranel')->find($id_lote_envasado); // Cargar relación
         
         if (!$lote) {
             return response()->json(['error' => 'Lote no encontrado'], 404);
