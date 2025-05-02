@@ -20,7 +20,7 @@ class HologramasValidacion extends Controller
       ->where('numero_cliente', $numero_cliente)
       ->first();
 
-    $folio_marca = substr($folio, 12, 1);
+    $folio_marca = substr($folio, 13, 1);
     $marca = marcas::where('folio', $folio_marca)->where('id_empresa', $cliente->id_empresa)->first();
 
 

@@ -115,11 +115,11 @@ class hologramasActivar extends Controller
                 
                 for ($i = 0; $i < count($folios['folio_inicial']); $i++) {
                     $rangoFolios[] = 
-                    '<a target="_blank" href="/pages/hologramas-validacion/' . $numero_cliente . $folioMarca . '-' . str_pad($folios['folio_inicial'][$i], 6, '0', STR_PAD_LEFT) . '">' . 
-                    $numero_cliente . $folioMarca . '-' . str_pad($folios['folio_inicial'][$i], 6, '0', STR_PAD_LEFT) . 
+                    '<a target="_blank" href="/pages/hologramas-validacion/' . $numero_cliente . '-' . $folioMarca . str_pad($folios['folio_inicial'][$i], 6, '0', STR_PAD_LEFT) . '">' . 
+                    $numero_cliente . '-' . $folioMarca . str_pad($folios['folio_inicial'][$i], 6, '0', STR_PAD_LEFT) . 
                     '</a> a ' .
                     '<a target="_blank" href="/pages/hologramas-validacion/' . $numero_cliente . $folioMarca . '-' . str_pad($folios['folio_final'][$i], 6, '0', STR_PAD_LEFT) . '">' . 
-                    $numero_cliente . $folioMarca . '-' . str_pad($folios['folio_final'][$i], 6, '0', STR_PAD_LEFT) . 
+                    $numero_cliente . '-' . $folioMarca . str_pad($folios['folio_final'][$i], 6, '0', STR_PAD_LEFT) . 
                     '</a>';
                 
                 }

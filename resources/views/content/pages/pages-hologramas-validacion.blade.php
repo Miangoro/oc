@@ -43,12 +43,7 @@
 
                     @if($ya_activado == true)
                     <div id="trazabilidad" class="panel-heading">Trazabilidad</div>
-                    <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;"class="alert">
-                        <strong>CERTIFICADO
-                            VENTA
-                            NACIONAL Y/O EXPORTACIÓN: <br>
-                            CIDAM C-EXP-497/2024</strong>
-                    </div>
+                   
 
                     <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;" class="alert">
                         <strong>FOLIO DE HOLOGRAMA: {{ $folio }}</strong>
@@ -65,6 +60,14 @@
                                 <td class="td"><b>CERTIFICADO DE LOTE A GRANEL</b></td>
                                 <td class="td">Pendiente</td>
                             </tr>
+                            
+                            <tr>
+                                <td class="td"><b>TIPO DE AGAVE</b></td>
+                                <td class="td">
+                                    {{ optional($datosHolograma->tipos)->pluck('nombre')->implode(', ') }}
+                                </td>
+                                
+                            </tr>
                             <tr>
                                 <td class="td"><b>CATEGORÍA</b></td>
                                 <td class="td">{{ $datosHolograma->categorias->categoria }}</td>
@@ -72,6 +75,10 @@
                             <tr>
                                 <td class="td"><b>CLASE</b></td>
                                 <td class="td">{{ $datosHolograma->clases->clase }}</td>
+                            </tr>
+                            <tr>
+                                <td class="td"><b>Edad</b></td>
+                                <td class="td">Pendiente</td>
                             </tr>
                             <tr>
                                 <td class="td"><b>MARCA</b></td>
@@ -84,13 +91,6 @@
                             <tr>
                                 <td class="td"><b>LOTE ENVASADO</b></td>
                                 <td class="td">{{ $datosHolograma->no_lote_envasado }}</td>
-                            </tr>
-                            <tr>
-                                <td class="td"><b>TIPO DE AGAVE</b></td>
-                                <td class="td">
-                                    {{ optional($datosHolograma->tipos)->pluck('nombre')->implode(', ') }}
-                                </td>
-                                
                             </tr>
                             <tr>
                                 <td class="td"><b>PRODUCIDO EN</b></td>
@@ -106,6 +106,12 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;"class="alert">
+                        <strong>CERTIFICADO
+                            VENTA
+                            NACIONAL Y/O EXPORTACIÓN: <br>
+                            CIDAM C-EXP-497/2024</strong>
+                    </div>
                     @else
                         HOLOGRAMA NO ACTIVADO
                     @endif
@@ -139,14 +145,14 @@
                 <div class="row">
                     <div class="col-sm-12" style="text-align: center"></div>
                 </div>
-                <div class="row">
+                <!--<div class="row">
                     <div class="col-sm-12 contenedor-imagenes">
                         <img src="{{ asset('assets/img/illustrations/holograma_cidam.png') }}"
                             alt="Holograma de organismo certificador de cidam" id="holograma" class="imagen-holograma" />
                         <div class="centrado"> {{ $folio }} </div>
 
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
 

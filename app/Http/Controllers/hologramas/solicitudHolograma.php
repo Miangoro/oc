@@ -144,9 +144,9 @@ class solicitudHolograma extends Controller
                     'costo_envio' => $user->costo_envio,
                     'no_guia' => $user->no_guia,
                     'estatus' => $user->estatus,
-                    'folio_inicial' => '<a target="_blank" href="' . url('/pages/hologramas-validacion/'.$numero_cliente.$user->marcas->folio.'-'.str_pad($user->folio_inicial, 6, '0', STR_PAD_LEFT)) . '">' . $numero_cliente.$user->marcas->folio.'-'.str_pad($user->folio_inicial, 6, '0', STR_PAD_LEFT) . '</a>',
+                    'folio_inicial' => '<a target="_blank" href="' . url('/pages/hologramas-validacion/'.$numero_cliente.'-'.$user->marcas->folio.str_pad($user->folio_inicial, 7, '0', STR_PAD_LEFT)) . '">' . $numero_cliente.'-'.$user->marcas->folio.str_pad($user->folio_inicial, 7, '0', STR_PAD_LEFT) . '</a>',
 
-                    'folio_final' => '<a target="_Blank" href="'.url('http://localhost:8000/pages/hologramas-validacion/'.$numero_cliente.$user->marcas->folio.'-'.str_pad($user->folio_final, 6, '0', STR_PAD_LEFT)).'">'.$numero_cliente.$user->marcas->folio.'-'.str_pad($user->folio_final, 6, '0', STR_PAD_LEFT).'</a>',
+                    'folio_final' => '<a target="_Blank" href="'.url('http://localhost:8000/pages/hologramas-validacion/'.$numero_cliente.'-'.$user->marcas->folio.str_pad($user->folio_final, 7, '0', STR_PAD_LEFT)).'">'.$numero_cliente.'-'.$user->marcas->folio.str_pad($user->folio_final, 7, '0', STR_PAD_LEFT).'</a>',
                     'activados' => $user->cantidadActivados($user->id_solicitud),
                     'restantes' => max(0, ($user->cantidad_hologramas - $user->cantidadActivados($user->id_solicitud) - $user->cantidadMermas($user->id_solicitud))),
                     'mermas' => $user->cantidadMermas($user->id_solicitud),

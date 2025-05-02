@@ -1269,7 +1269,7 @@ class solicitudesController extends Controller
                         $data['aduana_salida'] = $validated['aduana_salida'];  // Solo si es enviado
                         $data['direccion_destinatario'] = $validated['direccion_destinatario'];  // Solo si es enviado
                         $data['id_etiqueta'] = $validated['id_etiqueta'];  // Solo si es enviado
-                        $data['id_nstalaciones_envasado_2_edit'] = $validated['id_nstalaciones_envasado_2_edit'];  // Solo si es enviado
+                        $data['id_instalacion_envasado'] = $validated['id_nstalaciones_envasado_2_edit'];  // Solo si es enviado
                         // Preparar los detalles
                         $detalles = [];
                         $totalLotes = count($validated['lote_envasado']);  // Suponiendo que todos los arrays tienen el mismo tamaño
