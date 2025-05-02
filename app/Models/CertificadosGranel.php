@@ -18,6 +18,7 @@ class CertificadosGranel extends Model
         'num_certificado',
         'fecha_emision',
         'fecha_vigencia',
+        'id_lote_granel'
     ];
 
     public function dictamen()
