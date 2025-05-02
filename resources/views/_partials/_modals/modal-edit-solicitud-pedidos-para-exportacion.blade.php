@@ -133,7 +133,7 @@
                                 <div class="row caracteristicas-row">
                                     <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select  onchange="cargarMarcasEdit();" name="lote_envasado[0]"
+                                            <select onchange="cargarDetallesLoteEnvasadoEdit(this.value)"  name="lote_envasado[0]"
                                                 class="select2 form-select evasado_export evasado_export_edit">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
@@ -402,7 +402,7 @@
         $('.evasado_export').html(contenidoLotes);
 
        
-        cargarDetallesLoteEnvasado($(".evasado_export").val());
+        cargarDetallesLoteEnvasadoEdit($(".evasado_export").val());
        
 
      
@@ -453,7 +453,7 @@
             $('.lotes_granel_export').html(contenidoLotesGraneles);
         }
     }
-    function cargarDetallesLoteEnvasado(idLoteEnvasado) {
+    function cargarDetallesLoteEnvasadoEdit(idLoteEnvasado) {
     if (idLoteEnvasado) {
         $.ajax({
             url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
