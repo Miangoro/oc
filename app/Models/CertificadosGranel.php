@@ -34,4 +34,9 @@ class CertificadosGranel extends Model
     {
         return $this->belongsTo(Revisor::class, 'id_certificado', 'id_certificado')->where('tipo_certificado',2);
     }
+
+    public function loteGranel()
+    {
+        return $this->hasOne(LotesGranel::class, 'id_lote_granel','id_lote_granel');
+    }
 }

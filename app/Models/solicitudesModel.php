@@ -253,6 +253,7 @@ public function clases_agave()
 
         return lotes_envasado::whereIn('id_lote_envasado', $ids)->get();
     }
-    
+
+  
 
 }

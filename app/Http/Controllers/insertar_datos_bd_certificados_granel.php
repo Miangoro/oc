@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\empresaNumCliente;
 use App\Models\inspecciones;
+use App\Models\LotesGranel;
 
 class insertar_datos_bd_certificados_granel extends Controller
 {
@@ -40,6 +41,7 @@ class insertar_datos_bd_certificados_granel extends Controller
                    
                     if (!empty($solicitud['n_dictamen'])) {
                         $dictamenes = Dictamen_Granel::where('num_dictamen', $solicitud['n_dictamen'])->first();
+                        $id_lote = LotesGranel::where('lote_granel', $solicitud['n_lote'])->first();
                         
                     } else {
                         $dictamenes = null; // O maneja este caso según corresponda
@@ -57,6 +59,7 @@ class insertar_datos_bd_certificados_granel extends Controller
                                 'fecha_vigencia'   => $solicitud['fecha_expedicion'],
                                 'fecha_vencimiento'   => $solicitud['fecha_vigencia'],
                                 'id_firmante' => ($solicitud['firma_oc'] ?? 0) != 0 ? $solicitud['firma_oc'] : 3,
+                                'id_lote_granel'   => $id_lote,
                             ]);
                            
                         //}
