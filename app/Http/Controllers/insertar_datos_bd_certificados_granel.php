@@ -59,7 +59,7 @@ class insertar_datos_bd_certificados_granel extends Controller
                                 'fecha_vigencia'   => $solicitud['fecha_expedicion'],
                                 'fecha_vencimiento'   => $solicitud['fecha_vigencia'],
                                 'id_firmante' => ($solicitud['firma_oc'] ?? 0) != 0 ? $solicitud['firma_oc'] : 3,
-                                'id_lote_granel'   => $id_lote,
+                                'id_lote_granel'   => $id_lote ?? 0,
                             ]);
                            
                         //}
