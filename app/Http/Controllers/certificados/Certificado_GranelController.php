@@ -60,6 +60,37 @@ public function index(Request $request)
         ->when($search, function($q, $search) {
         $q->orWhere('id_firmante', 'LIKE', "%{$search}%")
             ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
+             //empresa
+             ->orWhereHas('dictamen.inspeccione.solicitud.empresa', function ($q) use ($search) {
+                $q->where('razon_social', 'LIKE', "%{$search}%");
+            })
+             //empresa
+             ->orWhereHas('dictamen', function ($q) use ($search) {
+                $q->where('num_dictamen', 'LIKE', "%{$search}%");
+            })
+            //inspecciones
+            ->orWhereHas('dictamen.inspeccione', function ($q) use ($search) {
+                $q->where('num_servicio', 'LIKE', "%{$search}%");
+            })
+            //num-cliente
+            ->orWhereHas('dictamen.inspeccione.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
+                $q->where('numero_cliente', 'LIKE', "%{$search}%");
+            })
+            //solicitudes
+            ->orWhereHas('dictamen.inspeccione.solicitud', function ($q) use ($search) {
+                $q->where('folio', 'LIKE', "%{$search}%")
+                ->orWhere('caracteristicas', 'LIKE', "%{$search}%");
+            })
+            //Lote a granel
+            ->orWhereHas('dictamen.inspeccione.solicitud', function ($q) use ($search) {
+                $q->whereRaw("
+                    EXISTS (
+                        SELECT 1 FROM lotes_granel lg
+                        WHERE lg.id_lote_granel = JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, '$.id_lote_granel'))
+                          AND lg.nombre_lote LIKE ?
+                    )
+                ", ["%{$search}%"]);
+            })
             ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%");
     })
             ->offset($start)
@@ -72,6 +103,37 @@ public function index(Request $request)
         $totalFiltered = CertificadosGranel::where('id_firmante', 'LIKE', "%{$search}%")
             ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
             ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%")
+            //empresa
+            ->orWhereHas('dictamen.inspeccione.solicitud.empresa', function ($q) use ($search) {
+                $q->where('razon_social', 'LIKE', "%{$search}%");
+            })
+             //empresa
+             ->orWhereHas('dictamen', function ($q) use ($search) {
+                $q->where('num_dictamen', 'LIKE', "%{$search}%");
+            })
+            //inspecciones
+            ->orWhereHas('dictamen.inspeccione', function ($q) use ($search) {
+                $q->where('num_servicio', 'LIKE', "%{$search}%");
+            })
+            //num-cliente
+            ->orWhereHas('dictamen.inspeccione.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
+                $q->where('numero_cliente', 'LIKE', "%{$search}%");
+            })
+            //solicitudes
+            ->orWhereHas('dictamen.inspeccione.solicitud', function ($q) use ($search) {
+                $q->where('folio', 'LIKE', "%{$search}%")
+                ->orWhere('caracteristicas', 'LIKE', "%{$search}%");
+            })
+            //Lote a granel
+            ->orWhereHas('dictamen.inspeccione.solicitud', function ($q) use ($search) {
+                $q->whereRaw("
+                    EXISTS (
+                        SELECT 1 FROM lotes_granel lg
+                        WHERE lg.id_lote_granel = JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, '$.id_lote_granel'))
+                          AND lg.nombre_lote LIKE ?
+                    )
+                ", ["%{$search}%"]);
+            })
             ->count();
     }
 
