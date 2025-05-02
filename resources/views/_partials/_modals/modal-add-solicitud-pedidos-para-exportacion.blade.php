@@ -66,8 +66,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select onchange="cargarMarcas();" class="form-select select2" name="direccion_destinatario"
-                                            id="direccion_destinatario_ex">
+                                        <select onchange="cargarMarcas();" class="form-select select2"
+                                            name="direccion_destinatario" id="direccion_destinatario_ex">
                                             <option value="" disabled selected>Seleccione una dirección</option>
                                         </select>
                                         <label for="direccion_destinatario">Domicilio del destinatario</label>
@@ -110,17 +110,18 @@
 
                             </div>
                             <div class="row mt-2">
-                               <div class="col-md-12">
-                                   <div class="form-floating form-floating-outline mb-4">
-                                       <select class="select2 form-select" id="id_instalacion_envasado_2"
-                                           name="id_instalacion_envasado_2" aria-label="id_instalacion_envasado_2"
-                                           required>
-                                           <option value="" disabled selected>Lista de instalaciones de envasado</option>
-                                       </select>
-                                       <label for="id_instalacion_envasado_2">Domicilio de envasado</label>
-                                   </div>
-                               </div>
-                           </div>
+                                <div class="col-md-12">
+                                    <div class="form-floating form-floating-outline mb-4">
+                                        <select class="select2 form-select" id="id_instalacion_envasado_2"
+                                            name="id_instalacion_envasado_2" aria-label="id_instalacion_envasado_2"
+                                            required>
+                                            <option value="" disabled selected>Lista de instalaciones de envasado
+                                            </option>
+                                        </select>
+                                        <label for="id_instalacion_envasado_2">Domicilio de envasado</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div id="sections-container">
@@ -164,8 +165,8 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" class="form-control presentacion" name="presentacion[0]"
-                                                placeholder="Ej. 750ml">
+                                            <input type="text" class="form-control presentacion"
+                                                name="presentacion[0]" placeholder="Ej. 750ml">
                                             <label for="presentacion">Presentación</label>
                                         </div>
                                     </div>
@@ -192,7 +193,8 @@
                         <div class="card-body">
                             <h6>Información del lote envasado</h6>
                             <div class="row">
-                                <table id="tablaLotes" class="table table-bordered mb-2 table-sm" style="width: 100%; border-collapse: collapse;">
+                                <table id="tablaLotes" class="table table-bordered mb-2 table-sm"
+                                    style="width: 100%; border-collapse: collapse;">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -206,7 +208,7 @@
                                         <!-- Aquí se insertarán dinámicamente los datos -->
                                     </tbody>
                                 </table>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -258,9 +260,9 @@
 
 
 <script>
-    function cargarDatosCliente() { 
+    function cargarDatosCliente() {
         var empresa = $("#id_empresa_solicitud_exportacion").val();
-       
+
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
 
             $.ajax({
@@ -272,7 +274,7 @@
                     cargarDirecciones(response.direcciones);
                     cargarLotesEnvasado(response.lotes_envasado, response.marcas);
                     cargarLotesGranel(response.lotes_granel);
-                   
+
                 },
                 error: function() {
                     console.error('Error al cargar los datos.');
@@ -295,7 +297,9 @@
             if (instalaciones.length === 0) {
                 contenidoInstalaciones = '<option value="" disabled selected>Sin instalaciones registradas</option>';
             }
-            contenidoInstalaciones='<option value="" disabled selected>Seleccione un domicilio de inspección</option>'+contenidoInstalaciones;
+            contenidoInstalaciones =
+                '<option value="" disabled selected>Seleccione un domicilio de inspección</option>' +
+                contenidoInstalaciones;
             $('#id_instalacion_exportacion').html(contenidoInstalaciones);
         }
     }
@@ -313,7 +317,8 @@
             if (instalaciones.length === 0) {
                 contenidoInstalaciones = '<option value="" disabled selected>Sin instalaciones registradas</option>';
             }
-            contenidoInstalaciones = '<option value="" disabled selected>Seleccione un domicilio de envasado</option>'+contenidoInstalaciones;
+            contenidoInstalaciones = '<option value="" disabled selected>Seleccione un domicilio de envasado</option>' +
+                contenidoInstalaciones;
             $('#id_instalacion_envasado_2').html(contenidoInstalaciones);
         }
     }
@@ -332,7 +337,9 @@
             if (direcciones.length === 0) {
                 contenidoDirecciones = '<option value="" disabled selected>Sin direcciones registradas</option>';
             }
-            contenidoDirecciones = '<option value="" disabled selected>Seleccione un domicililio del destinatario</option>'+contenidoDirecciones;
+            contenidoDirecciones =
+                '<option value="" disabled selected>Seleccione un domicililio del destinatario</option>' +
+                contenidoDirecciones;
             $('#direccion_destinatario_ex').html(contenidoDirecciones);
             //cargarMarcas();
         }
@@ -347,8 +354,8 @@
             var skuLimpio = (skuLimpiot === '{"inicial":""}') ? "SKU no definido" : skuLimpiot;
             var marcaEncontrada = marcas.find(marca => marca.id_marca === lotesEnvasado[index].id_marca);
             var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
-            var dictamenEnvasado = lotesEnvasado[index].dictamen_envasado?.num_dictamen 
-    ?? "Sin dictamen de envasado";
+            var dictamenEnvasado = lotesEnvasado[index].dictamen_envasado?.num_dictamen ??
+                "Sin dictamen de envasado";
 
 
             contenidoLotes += `
@@ -389,22 +396,24 @@
             $('.lotes_granel_export').html(contenidoLotesGraneles);
         }
     }
+
     function cargarDetallesLoteEnvasado(idLoteEnvasado) {
-    if (idLoteEnvasado) {
-        $.ajax({
-            url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
-            method: 'GET',
-            success: function(response) {
-                console.log(response); // Verifica la respuesta en la consola
+        if (idLoteEnvasado) {
+            $.ajax({
+                url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+                method: 'GET',
+                success: function(response) {
+                    console.log(response); // Verifica la respuesta en la consola
 
-                let tbody = $('#tablaLotes tbody');
-                tbody.empty(); // Limpia los datos anteriores
+                    let tbody = $('#tablaLotes tbody');
+                    tbody.empty(); // Limpia los datos anteriores
 
-                // Verifica si existe lote_envasado y lo muestra en la tabla
-                if (response.lote_envasado) {
-                    $(".presentacion").val(response.lote_envasado.presentacion + " "+response.lote_envasado.unidad);
+                    // Verifica si existe lote_envasado y lo muestra en la tabla
+                    if (response.lote_envasado) {
+                        $(".presentacion").val(response.lote_envasado.presentacion + " " + response
+                            .lote_envasado.unidad);
 
-                    let filaEnvasado = `
+                        let filaEnvasado = `
                         <tr>
                             <td>1</td>
                             <td>${response.lote_envasado.nombre}</td>
@@ -413,21 +422,26 @@
                             
                             <td>Botellas: ${response.lote_envasado.cant_botellas}<br>Cajas: Sin definir</td>
                         </tr>`;
-                    tbody.append(filaEnvasado);
-                }
+                        tbody.append(filaEnvasado);
+                    }
 
-                // Verifica si hay lotes a granel asociados y los muestra
-                if (response.detalle && response.detalle.length > 0) {
-                    tbody.append(`
+                    // Verifica si hay lotes a granel asociados y los muestra
+                    if (response.detalle && response.detalle.length > 0) {
+                        tbody.append(`
                         <tr>
                             <td style='background-color: #f5f5f7' colspan="5" class="text-center font-weight-bold fw-bold">Lotes a granel asociados</td>
                         </tr>`);
-                    let nombre_lote_granel = "";
-                    response.detalle.forEach((lote, index) => {
-                        let filaGranel = `
+                        let nombre_lote_granel = "";
+                        response.detalle.forEach((lote, index) => {
+                            let filaGranel = `
                             <tr>
                                 <td>${index + 2}</td>
-                                 <td>${lote.nombre_lote}<br><b>Certificado: </b>${lote.certificado_granel.num_certificado}</td>
+                                 <td>
+                                ${lote.nombre_lote}<br>
+                                <b>Certificado: </b>
+                                ${lote.certificado_granel ? lote.certificado_granel.num_certificado : 'Sin definir'}
+                                </td>
+
                                 <td>${lote.folio_fq || 'N/A'}</td>
                                 <td>${lote.cont_alc || 'N/A'}</td>
                                <td>
@@ -437,21 +451,23 @@
                             </td>
 
                             </tr>`;
-                        tbody.append(filaGranel);
-                        nombre_lote_granel += lote.nombre_lote;
-                    });
+                            tbody.append(filaGranel);
+                            nombre_lote_granel += lote.nombre_lote;
+                        });
 
-                    $('.lotes_granel_export').val(nombre_lote_granel);
-                } else {
-                    tbody.append(`<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`);
+                        $('.lotes_granel_export').val(nombre_lote_granel);
+                    } else {
+                        tbody.append(
+                            `<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`
+                            );
+                    }
+                },
+                error: function() {
+                    console.error('Error al cargar el detalle del lote envasado.');
                 }
-            },
-            error: function() {
-                console.error('Error al cargar el detalle del lote envasado.');
-            }
-        });
+            });
+        }
     }
-}
 
 
 
@@ -478,27 +494,27 @@
 
 
     function cargarMarcas() {
-    var id_empresa = $('#id_empresa_solicitud_exportacion').val();
-    var id_marca = $('.evasado_export').find(':selected').data('id-marca');
-    var id_direccion = $('#direccion_destinatario_ex').val();
+        var id_empresa = $('#id_empresa_solicitud_exportacion').val();
+        var id_marca = $('.evasado_export').find(':selected').data('id-marca');
+        var id_direccion = $('#direccion_destinatario_ex').val();
         //alert('/marcas/' + id_marca + '/' + id_direccion)
-    if (id_empresa) {
-        $.ajax({
-            url: '/marcas/' + id_marca + '/' + id_direccion,
-            method: 'GET',
-            success: function(marcas) {
-                var tbody = '';
+        if (id_empresa) {
+            $.ajax({
+                url: '/marcas/' + id_marca + '/' + id_direccion,
+                method: 'GET',
+                success: function(marcas) {
+                    var tbody = '';
 
-                // Verificar si hay datos disponibles
-                if (marcas.length > 0 && marcas[0].destinos.length > 0) {
-                    $("#encabezado_etiquetas").text(marcas[0].destinos[0].direccion);
-                }
+                    // Verificar si hay datos disponibles
+                    if (marcas.length > 0 && marcas[0].destinos.length > 0) {
+                        $("#encabezado_etiquetas").text(marcas[0].destinos[0].direccion);
+                    }
 
-                tbody = "";
-                
+                    tbody = "";
+
                     // Asegurar que 'etiquetado' es un objeto
-                 
-                    
+
+
 
                     // Iterar sobre los SKU en 'etiquetado'
                     for (var i = 0; i < marcas.length; i++) {
@@ -531,7 +547,8 @@
                         // Función para generar enlace de documentos
                         function generarEnlaceDocumento(documento, nombre) {
                             if (documento && documento.url) {
-                                let url = `/files/${marcas[i].marca.empresa.empresa_num_clientes[0].numero_cliente}/${documento.url}`;
+                                let url =
+                                    `/files/${marcas[i].marca.empresa.empresa_num_clientes[0].numero_cliente}/${documento.url}`;
                                 return `<td><a href="${url}" target="_blank"><i class="ri-file-pdf-2-line ri-20px"></i></a></td>`;
                             }
                             return `<td>--</td>`;
@@ -543,24 +560,25 @@
 
                         tbody += '</tr>';
                     }
-                
 
-                // Si no hay datos, mostrar mensaje
-                if (!tbody) {
-                    tbody = '<tr><td colspan="8" class="text-center">No hay datos disponibles.</td></tr>';
+
+                    // Si no hay datos, mostrar mensaje
+                    if (!tbody) {
+                        tbody =
+                            '<tr><td colspan="8" class="text-center">No hay datos disponibles.</td></tr>';
+                    }
+
+                    // Insertar las filas en la tabla
+                    $('#tabla_marcas tbody').html(tbody);
+                },
+                error: function(xhr) {
+                    console.error('Error al obtener marcas:', xhr);
+                    $('#tabla_marcas tbody').html(
+                    '<tr><td colspan="8">Error al cargar los datos</td></tr>');
                 }
-
-                // Insertar las filas en la tabla
-                $('#tabla_marcas tbody').html(tbody);
-            },
-            error: function(xhr) {
-                console.error('Error al obtener marcas:', xhr);
-                $('#tabla_marcas tbody').html('<tr><td colspan="8">Error al cargar los datos</td></tr>');
-            }
-        });
-    } else {
-        $('#tabla_marcas tbody').html('<tr><td colspan="8">Seleccione una empresa para ver los datos</td></tr>');
+            });
+        } else {
+            $('#tabla_marcas tbody').html('<tr><td colspan="8">Seleccione una empresa para ver los datos</td></tr>');
+        }
     }
-}
-
 </script>
