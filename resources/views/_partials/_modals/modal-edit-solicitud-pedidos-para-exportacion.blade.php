@@ -134,7 +134,7 @@
                                     <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select name="lote_envasado[0]"
-                                                class="select2 form-select evasado_export">
+                                                class="select2 form-select evasado_export evasado_export_edit">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
                                                 <!-- Opciones dinámicas -->
@@ -391,7 +391,7 @@
 
 
             contenidoLotes += `
-            <option data-id-marca="${marcaEncontrada ? marcaEncontrada.id_marca : ''}" value="${lotesEnvasado[index].id_lote_envasado}">
+            <option data-id-marca-edit="${marcaEncontrada ? marcaEncontrada.id_marca : ''}" value="${lotesEnvasado[index].id_lote_envasado}">
                 ${skuLimpio} | ${lotesEnvasado[index].nombre} | ${nombreMarca} | ${dictamenEnvasado}
             </option>`;
         }
@@ -542,12 +542,13 @@
 
     function cargarMarcasEdit() {
     var id_empresa = $('#id_empresa_solicitud_exportacion_edit').val();
-    var id_marca = $('.evasado_export').find(':selected').data('id-marca');
+    var id_marca = $('.evasado_export_edit').find(':selected').data('id-marca-edit');
     var id_direccion = $('#direccion_destinatario_ex_edit').val();
         //alert('/marcas/' + id_marca + '/' + id_direccion)
     let seleccionado = "";
     var etiqueta_id = $(".etiqueta_id").val();
     if (id_empresa) {
+        alert('/marcas/' + id_marca + '/' + id_direccion);
         $.ajax({
             url: '/marcas/' + id_marca + '/' + id_direccion,
             method: 'GET',
