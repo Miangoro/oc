@@ -42,6 +42,7 @@ class insertar_datos_bd_certificados_granel extends Controller
                     if (!empty($solicitud['n_dictamen'])) {
                         $dictamenes = Dictamen_Granel::where('num_dictamen', $solicitud['n_dictamen'])->first();
                         $id_lote = LotesGranel::where('nombre_lote', $solicitud['n_lote'])->first();
+                        echo  $id_lote->id_lote_granel;
                         
                     } else {
                         $dictamenes = null; // O maneja este caso según corresponda
@@ -66,7 +67,7 @@ class insertar_datos_bd_certificados_granel extends Controller
                     }
                 }
 
-                return response()->json(['message' => 'Solicitudes insertadas correctamente']);
+                return response()->json(['message' => 'Solicitudes insertadas correctamente sss']);
             } else {
                 return response()->json(['message' => 'No se encontraron datos en la API'], 404);
             }
