@@ -538,7 +538,7 @@
             <td colspan="3">{{ $datos->lote_granel->nombre_lote ?? '---------------' }}</td>
             <td class="con-negra" colspan="4" style="text-align: left">6) No. de certificado NOM de Mezcal <br> a
                 granel vigente:</td>
-            <td colspan="4">{{ $datos->lote_granel ?? '---------------' }}</td>
+            <td colspan="4">{{ $datos->lote_granel->certificadoGranel->num_certificado ?? '---------------' }}</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">2) Categoria:</td>

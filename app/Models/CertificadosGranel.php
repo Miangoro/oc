@@ -38,6 +38,6 @@ class CertificadosGranel extends Model
 
     public function loteGranel()
     {
-        return $this->hasOne(LotesGranel::class, 'id_lote_granel','id_lote_granel');
+        return $this->belongsTo(LotesGranel::class, 'id_lote_granel','id_lote_granel');
     }
 }
