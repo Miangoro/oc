@@ -250,9 +250,9 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
         </tr>
         <tr>
             <td class="cell1"><strong>Fecha de inicio vigencia:</strong></td>
-            <td>{{$fecha_vigencia}}</td>
+            <td>{{$fecha_emision}}</td>
             <td class="cell1"><strong>Fecha de Vencimiento:</strong></td>
-            <td>{{$fecha_vencimiento}}</td>
+            <td>{{$fecha_vigencia}}</td>
         </tr>
     </tbody>
 </table>
