@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificado de mezcal a granel</title>
     <style>
+        @page {
+            size: 227mm 292mm;/*tamaño carta*/
+            /*margin-top: 30;
+            margin-left: 80px;
+            margin-right: 25px;
+            margin-bottom: 1px;*/
+        }
         body {
             margin: 0;
             padding: 0;
@@ -316,16 +323,16 @@
 			<td class="columna">Ingredientes</td>
 			<td class="columna-norm">{{ $ingredientes }}</td>
 			<td class="columna" style="white-space: nowrap;">Volumen de lote</td>
-			<td class="columna-norm">{{ $volumen }}</td>
+			<td class="columna-norm">{{ $volumen }} L</td>
 			<td class="columna">Contenido Alcohólico</td>
-			<td class="columna-norm" style="white-space: nowrap;">{{ $cont_alc }}</td>
+			<td class="columna-norm" style="white-space: nowrap;">{{ $cont_alc }}% Alc. Vol.</td>
 		</tr>
 		<tr>
 			<td class="columna">Tipo de maguey</td>
 			<td class="columna-norm">
-                {{ $tipo_maguey->tiposRelacionados->map(function ($tipo) {
-                    return $tipo->nombre . ' (' . $tipo->cientifico . ')';
-                    })->implode(', ') }}</td>
+                {!! $tipo_maguey->tiposRelacionados->map(function ($tipo) {
+                    return $tipo->nombre . ' (<i>' . trim($tipo->cientifico) . '</i>)';
+                })->implode(', ') !!}</td>
 			<td class="columna">Edad</td>
 			<td class="columna-norm">{{ $edad }}</td>
 			<td class="columna">No. de dictamen</td>
