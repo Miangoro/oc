@@ -60,6 +60,7 @@ public function index(Request $request)
         ->when($search, function($q, $search) {
         $q->orWhere('id_firmante', 'LIKE', "%{$search}%")
             ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
+            ->orWhere('num_certificado', 'LIKE', "%{$search}%")
              //empresa
              ->orWhereHas('dictamen.inspeccione.solicitud.empresa', function ($q) use ($search) {
                 $q->where('razon_social', 'LIKE', "%{$search}%");
@@ -103,6 +104,7 @@ public function index(Request $request)
         $totalFiltered = CertificadosGranel::where('id_firmante', 'LIKE', "%{$search}%")
             ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
             ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%")
+            ->orWhere('num_certificado', 'LIKE', "%{$search}%")
             //empresa
             ->orWhereHas('dictamen.inspeccione.solicitud.empresa', function ($q) use ($search) {
                 $q->where('razon_social', 'LIKE', "%{$search}%");
@@ -258,13 +260,22 @@ public function store(Request $request)
         'id_firmante' => 'required|integer',
     ]);
 
+    $dictamen = Dictamen_Granel::with('inspeccione.solicitud')->find($validated['id_dictamen']);
+    $idLoteGranel = $dictamen->inspeccione->solicitud->id_lote_granel ?? null;
+
+
     $new = CertificadosGranel::create([
         'id_dictamen' => $validated['id_dictamen'],
         'num_certificado' => $validated['num_certificado'],
         'fecha_emision' => $validated['fecha_emision'],
         'fecha_vigencia' => $validated['fecha_vigencia'],
-        'id_firmante' => $validated['id_firmante']
+        'id_firmante' => $validated['id_firmante'],
+        'id_lote_granel' => $idLoteGranel
     ]);
+
+    $lote = LotesGranel::find($idLoteGranel);
+    $lote->folio_certificado = $validated['num_certificado'];
+    $lote->update();
     
         return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
@@ -328,6 +339,10 @@ public function update(Request $request, $id_certificado)
 
     try {
         $actualizar = CertificadosGranel::findOrFail($id_certificado);
+
+        $dictamen = Dictamen_Granel::with('inspeccione.solicitud')->find($validated['id_dictamen']);
+        $idLoteGranel = $dictamen->inspeccione->solicitud->id_lote_granel ?? null;
+    
         
         $actualizar->update([
             'id_firmante' => $validated['id_firmante'],
@@ -335,7 +350,12 @@ public function update(Request $request, $id_certificado)
             'num_certificado' => $validated['num_certificado'],
             'fecha_emision' => $validated['fecha_emision'],
             'fecha_vigencia' => $validated['fecha_vigencia'],
+            'id_lote_granel' => $idLoteGranel
         ]);
+
+        $lote = LotesGranel::find($idLoteGranel);
+        $lote->folio_certificado = $validated['num_certificado'];
+        $lote->update();
 
         return response()->json(['message' => 'Actualizado correctamente.']);
     } catch (\Exception $e) {

@@ -68,16 +68,16 @@ class inspeccionesController extends Controller
             12 => 'id_inspeccion',
             13 => 'id_empresa',
         ];
-        
+
         $limit = $request->input('length');
         $start = $request->input('start');
         $orderIndex = $request->input('order.0.column');
         $orderColumn = $columns[$orderIndex] ?? 'id_solicitud';
         $dir = $request->input('order.0.dir', 'asc');
         $search = $request->input('search.value');
-        
+
         $query = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion');
-        
+
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('id_solicitud', 'LIKE', "%{$search}%")
@@ -96,13 +96,13 @@ class inspeccionesController extends Controller
                     });
             });
         }
-        
+
         $totalData = solicitudesModel::count();
         $totalFiltered = $query->count();
-        
+
         // Obtener datos paginados sin orden
         $solicitudes = $query->get();
-        
+
         // Ordenar manualmente si es un campo de relación
         if (in_array($orderColumn, ['num_servicio', 'razon_social', 'tipo', 'name'])) {
             $solicitudes = $solicitudes->sortBy(function ($item) use ($orderColumn) {
@@ -121,10 +121,10 @@ class inspeccionesController extends Controller
             // Ordenar campos propios del modelo
             $solicitudes = $solicitudes->sortBy($orderColumn, SORT_REGULAR, $dir === 'desc');
         }
-        
+
         // Paginar manualmente
         $solicitudes = $solicitudes->slice($start, $limit)->values();
-        
+
 
         $data = [];
 
@@ -153,10 +153,12 @@ class inspeccionesController extends Controller
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</span>'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? '';
+                $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo ?? 'N/A';
+
                 $nestedData['fecha_servicio'] = $nestedData['fecha_servicio'] = $solicitud->inspeccion && $solicitud->inspeccion->fecha_servicio
                 ? Helpers::formatearFechaHora($solicitud->inspeccion->fecha_servicio)
                 : '<span class="badge bg-danger">Sin asignar</span>';
-            
+
                 $urls = $solicitud->documentacion(69)->pluck('url')->toArray();
                 switch ($solicitud->inspeccion?->dictamen?->tipo_dictamen) {
                     case 1:
@@ -165,7 +167,7 @@ class inspeccionesController extends Controller
                     case 2:
                         $tipo_dictamen = 'dictamen_envasador';
                         break;
-                
+
                     case 3:
                         $tipo_dictamen = 'dictamen_comercializador';
                         break;
@@ -176,11 +178,11 @@ class inspeccionesController extends Controller
                         $tipo_dictamen = 'Sin tipo';
                         break;
                 }
-                
-                $nestedData['url_dictamen'] = $solicitud->inspeccion?->dictamen?->id_dictamen 
-                    ? $tipo_dictamen . '/' . $solicitud->inspeccion->dictamen->id_dictamen 
+
+                $nestedData['url_dictamen'] = $solicitud->inspeccion?->dictamen?->id_dictamen
+                    ? $tipo_dictamen . '/' . $solicitud->inspeccion->dictamen->id_dictamen
                     : 'Sin subir';
-                
+
 
             // Comprobamos si $urls está vacío
             if (empty($urls)) {
@@ -274,7 +276,10 @@ class inspeccionesController extends Controller
 
         $datos = inspecciones::with(['inspector', 'solicitud.instalacion', 'solicitud.tipo_solicitud'])->find($id_inspeccion);
 
-        $fecha_servicio = Helpers::formatearFecha($datos->fecha_servicio);
+        $fecha_servicio = !empty($datos->fecha_servicio)
+        ? Helpers::formatearFecha($datos->fecha_servicio)
+        : null;
+
         $pdf = Pdf::loadView('pdfs.oficioDeComision', ['datos' => $datos, 'fecha_servicio' => $fecha_servicio]);
         return $pdf->stream('F-UV-02-09 Oficio de Comisión Ed.5, Vigente.pdf');
     }
@@ -282,8 +287,9 @@ class inspeccionesController extends Controller
     public function pdf_orden_servicio($id_inspeccion)
     {
         $datos = inspecciones::with(['inspector', 'solicitud.instalacion', 'solicitud.empresa.empresaNumClientes'])->find($id_inspeccion);
-
-        $fecha_servicio = Helpers::formatearFecha($datos->fecha_servicio);
+        $fecha_servicio = !empty($datos->fecha_servicio)
+        ? Helpers::formatearFecha($datos->fecha_servicio)
+        : null;
         $pdf = Pdf::loadView('pdfs.ordenDeServicio', ['datos' => $datos, 'fecha_servicio' => $fecha_servicio]);
         return $pdf->stream('F-UV-02-01 Orden de servicio Ed. 5, Vigente.pdf');
     }
@@ -307,7 +313,7 @@ class inspeccionesController extends Controller
                     $documentacion_url = Documentacion_url::where('id_relacion', $request->id_solicitud)
                         ->where('id_documento', $request->id_documento[$index])
                         ->first();
-        
+
                     // Si existe un registro, elimina el archivo anterior
                     if ($documentacion_url) {
                         $existingFilePath = 'uploads/' . $numeroCliente . '/' . $documentacion_url->url;
@@ -321,23 +327,23 @@ class inspeccionesController extends Controller
                         $documentacion_url->id_documento = $request->id_documento[$index];
                         $documentacion_url->id_empresa = $sol->id_empresa;
                     }
-        
+
                     // Procesar el nuevo archivo
                     $filename = str_replace('/', '-', $request->nombre_documento[$index]) . '_' . time() . '.' . $file->getClientOriginalExtension();
                     $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-        
+
                     // Actualizar los datos del registro
                     $documentacion_url->nombre_documento = str_replace('/', '-', $request->nombre_documento[$index]);
                     $documentacion_url->url = $filename; // Guardar solo el nombre del archivo
                     $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null; // Usa null si no hay fecha
                     $documentacion_url->save();
-        
+
                     // Construir el mensaje
                     $mensaje = str_replace('/', '-', $request->nombre_documento[$index]) . ", " . $mensaje;
                 }
             }
         }
-        
+
 
         // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
         $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
@@ -362,7 +368,7 @@ class inspeccionesController extends Controller
             // Aquí obtienes el acta de inspección junto con sus testigos
             $acta = actas_inspeccion::with('actas_testigo', 'acta_produccion_mezcal', 'actas_equipo_mezcal', 'actas_unidad_envasado', 'actas_unidad_comercializacion',
              'actas_equipo_envasado','actas_produccion')->findOrFail($id_acta);
-    
+
             return response()->json($acta);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener el acta por ID'], 500);
@@ -379,7 +385,7 @@ class inspeccionesController extends Controller
             return response()->json(['error' => 'Error al obtener los datos de la inspección'], 500);
         }
     }
-    
+
     // Método para insertar el formulario de Acta de Inspección
     public function store(Request $request)
     {
@@ -549,5 +555,39 @@ class inspeccionesController extends Controller
         $hora_llenado_fin = Helpers::extraerHora($datos->actas_inspeccion->fecha_fin);
         $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion', compact('datos', 'hora_llenado', 'fecha_llenado', 'fecha_llenado_fin', 'hora_llenado_fin'));
         return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
+    }
+    public function Etiqueta_muestra($id_inspeccion)
+    {
+        $pdf = Pdf::loadView('pdfs.Etiqueta_tapa_muestra');
+        return $pdf->stream('Etiqueta_para_tapa_de_la_muestra.pdf');
+    }
+
+    public function Etiqueta_Granel($id_inspeccion)
+    {
+        // Renderizar el PDF por primera vez para obtener el total de páginas
+        $pdf = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel');
+        $dompdf = $pdf->getDomPDF();
+        $dompdf->render();
+
+        // Obtener el total de páginas
+        $totalPaginas = $dompdf->get_canvas()->get_page_count();
+
+        // Pasar el total de páginas a la vista para la segunda renderización
+        $pdfFinal = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', [
+            'totalPaginas' => $totalPaginas
+        ]);
+
+        // Retornar el PDF final
+        return $pdfFinal->stream('Etiqueta para lotes de mezcal a granel.pdf');
+    }
+    public function Etiqueta_Barrica($id_inspeccion)
+    {
+        $pdf = Pdf::loadView('pdfs.Etiqueta_Barrica');
+        return $pdf->stream('Etiqueta_ingreso_a_barrica.pdf');
+    }
+    public function Etiqueta($id_inspeccion)
+    {
+      $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
+      return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
 }

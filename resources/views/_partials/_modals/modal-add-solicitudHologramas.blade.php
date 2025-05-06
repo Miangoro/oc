@@ -33,12 +33,22 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-8">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number" id="cantidad_hologramas"
                                     name="cantidad_hologramas" placeholder="Número de hologramas solicitados"
                                     required />
                                 <label for="cantidad_hologramas">Número de hologramas solicitados</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <select class="form-select" name="tipo" >
+                                    <option value="A">A - Por imprimir</option>
+                                    <option value="B">B - Impresos</option>
+                                    
+                                </select>
+                                <label for="cantidad_hologramas">Tipo</label>
                             </div>
                         </div>
                     </div>

@@ -268,10 +268,14 @@ $navbarDetached = ($navbarDetached ?? '');
                         @if (Auth::check())
                           {{ Auth::user()->name }}
                         @else
-                          John Doe
+                          Sin usuario logeado
                         @endif
                       </span>
-                      <small class="text-muted">Admin</small>
+                      <small class="text-muted"> @if (Auth::check())
+                        {{ Auth::user()->puesto }}
+                      @else
+                        Admin
+                      @endif</small>
                     </div>
                   </div>
                 </a>
@@ -292,16 +296,7 @@ $navbarDetached = ($navbarDetached ?? '');
                   </a>
                 </li>
               @endif
-              <li>
-                <a class="dropdown-item" href="{{url('pages/account-settings-billing')}}">
-                  <span class="d-flex align-items-center align-middle">
-                    <i class="flex-shrink-0 ri-file-text-line ri-22px me-3"></i>
-                    <span class="flex-grow-1 align-middle">Billing</span>
-                    <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger">4</span>
-                  </span>
-                </a>
-              </li>
-
+              
               @if (Auth::User() && Laravel\Jetstream\Jetstream::hasTeamFeatures())
                 <li>
                   <div class="dropdown-divider"></div>
