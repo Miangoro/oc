@@ -143,12 +143,12 @@
             </td>
             <td colspan="4" rowspan="2">
                 @if ($vigilancia_traslado === 'X')
-                    {{ $datos->instalacion_destino->direccion_completa }}
+                    {{ $datos->instalacion_destino->direccion_completa ?? ''}}
                 @else
                     ------------------------
                 @endif <br><br>
                 @if ($vigilancia_traslado === 'X')
-                    {{ $datos->instalacion_destino->empresa->razon_social }}
+                    {{ $datos->instalacion_destino->empresa->razon_social ?? '' }}
                 @else
                     ------------------------
                 @endif
@@ -638,12 +638,12 @@
             <td class="con-negra" colspan="3" rowspan="3">INFORMACIÓN ADICIONAL SOBRE LA <br> ACTIVIDAD:</td>
             <td class="td-margins" colspan="6">
                 @if ($vigilancia_traslado === 'X')
-                    <b>Identificador de contenedor de salida:</b> {{ $caracteristicas['id_salida'] }}<br>
-                    <b>Identificador de contenedor de recepción:</b> {{ $caracteristicas['id_contenedor'] }}<br>
-                    <b>Sobrante en contenedor de salida:</b> {{ $caracteristicas['id_vol_res'] }}<br>
-                    <b>Volumen actual del lote:</b> {{ $caracteristicas['id_vol_actual'] }}<br>
-                    <b>Volumen trasladado</b> {{ $caracteristicas['id_vol_traslado'] }}<br>
-                    <b>Volumen sobrante del lote:</b> {{ $caracteristicas['id_sobrante'] }}<br>
+                    <b>Identificador de contenedor de salida:</b> {{ $caracteristicas['id_salida'] ?? ''}}<br>
+                    <b>Identificador de contenedor de recepción:</b> {{ $caracteristicas['id_contenedor'] ?? ''}}<br>
+                    <b>Sobrante en contenedor de salida:</b> {{ $caracteristicas['id_vol_res'] ?? ''}}<br>
+                    <b>Volumen actual del lote:</b> {{ $caracteristicas['id_vol_actual'] ?? ''}}<br>
+                    <b>Volumen trasladado</b> {{ $caracteristicas['id_vol_traslado'] ?? ''}}<br>
+                    <b>Volumen sobrante del lote:</b> {{ $caracteristicas['id_sobrante']?? '' }}<br>
                 @elseif($geo === 'X')
                     @foreach ($datos->predios->predio_plantaciones as $plantacion)
                         <b>Especie de agave:</b> {{ $plantacion->tipo->nombre }}
@@ -652,7 +652,7 @@
                         <b>No. de Plantas:</b> {{ $plantacion->num_plantas }}<br>
                         <b>Edad de plantación:</b> {{ $plantacion->anio_plantacion }}<br>
                         <b>Tipo de plantación:</b> {{ $plantacion->tipo_plantacion }}<br>
-                        <b>Dirección del punto de reunión: </b> {{ $caracteristicas['punto_reunion'] }}<br>
+                        <b>Dirección del punto de reunión: </b> {{ $caracteristicas['punto_reunion'] ?? ''}}<br>
                         <hr>
                     @endforeach
                 @elseif($ingreso_barrica === 'X')

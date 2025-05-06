@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Etiqueta para tapa de la muestra</title>
+    <title>Etiqueta para agave (%ART)</title>
     <style>
         @page {
             size: 292mm 227mm;
@@ -45,7 +45,7 @@
         }
 
         .custom-title {
-            font-size: 23px !important; 
+            font-size: 23px !important;
             font-weight: bold;
             background-color: #3C8A69;
             color: white;
@@ -91,22 +91,22 @@
         }
 
         .image-cell {
-            width: 200px; 
-            height: 120px; 
+            width: 200px;
+            height: 120px;
         }
 
         .logo-small {
             max-width: 100%;
-            max-height: 100%; 
-            height: auto; 
-            width: auto; 
+            max-height: 100%;
+            height: auto;
+            width: auto;
         }
 
         .logo-smallx {
-            max-width: 120%; 
-            max-height: 100%; 
-            height: auto; 
-            width: auto; 
+            max-width: 120%;
+            max-height: 100%;
+            height: auto;
+            width: auto;
         }
     </style>
 </head>
@@ -243,7 +243,7 @@
 
     <div class="footer-bar-left">
     <p class="text-center vertical-center" style="bottom: 4px;">
-        Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michpacán A.C. y no puede ser 
+        Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michpacán A.C. y no puede ser
         <br>
         <span class="offset-text">distribuido externamente sin la autorización escrita del Director Ejecutivo.</span>
     </p>

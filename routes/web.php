@@ -231,8 +231,8 @@ Route::get('/', function () {
 Route::get('/docusign/authenticate', [DocuSignController::class, 'authenticate'])->name('docusign');
 Route::get('/test-docusign', [DocuSignController::class, 'sendDocument'])->name('test-docusign');
 Route::get('/obtenerTokenDocuSign', [DocuSignController::class, 'obtenerTokenDocuSign'])->name('obtenerTokenDocuSign');
-Route::post('/docusign/enviar', [DocuSignController::class, 'sendDocument2'])->name('docusign.enviar')->middleware('auth'); 
-Route::get('/docusign/sendDocumentAuto', [DocuSignController::class, 'sendDocumentAuto'])->name('docusign.enviar.auto'); 
+Route::post('/docusign/enviar', [DocuSignController::class, 'sendDocument2'])->name('docusign.enviar')->middleware('auth');
+Route::get('/docusign/sendDocumentAuto', [DocuSignController::class, 'sendDocumentAuto'])->name('docusign.enviar.auto');
 
 Route::get('/docusign/firma-completada', [DocuSignController::class, 'firmaCompletada'])->name('firma.completada');
 Route::get('/docusign/descargar/{envelopeId}', [DocuSignController::class, 'descargarDocumento'])->name('docusign.descargar');
@@ -706,7 +706,11 @@ Route::middleware(['auth'])->controller(inspeccionesController::class)->group(fu
     Route::resource('inspecciones-list', inspeccionesController::class);
     Route::post('/asignar-inspector', 'asignarInspector');
     Route::get('/oficio_de_comision/{id_inspeccion}', 'pdf_oficio_comision')->name('oficioDeComision');
+    Route::get('/Etiqueta-Muestra/{id_inspeccion}', 'Etiqueta_muestra')->name('Etiqueta-Muestra');
     Route::get('/orden_de_servicio/{id_inspeccion}', 'pdf_orden_servicio')->name('ordenDeServicio');
+    Route::get('/Etiqueta_lotes_mezcal_granel/{id_inspeccion}', 'Etiqueta_Granel')->name('etiquetaLoteGranel');
+    Route::get('/Etiqueta-Barrica/{id_inspeccion}',  'Etiqueta_Barrica')->name('EtiquetaBarrica');
+    Route::get('/Etiqueta-2401ESPTOB/{id_inspeccion}', 'Etiqueta')->name('Etiqueta-2401ESPTOB');
     Route::post('/agregar-resultados', 'agregarResultados');
     Route::get('/acta-solicitud/edit/{id_acta}', 'editActa');
     Route::get('/getInspeccion/{id_solicitud}', 'getInspeccion');

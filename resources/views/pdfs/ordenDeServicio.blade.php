@@ -131,23 +131,23 @@
             <td class="leftLetter" style="background-color: #93cddc">Datos del cliente(Nombre, <br> teléfono, correo)
             </td>
             <td class="leftLetter">
-                <span class="negrita">{{ $datos->solicitud->empresa->razon_social }}</span><br>
-                <span class="negrita">{{ $datos->solicitud->empresa->telefono }}</span><br>
-                <span class="negrita">{{ $datos->solicitud->empresa->correo }}</span>
+                <span class="negrita">{{ $datos->solicitud->empresa->razon_social ?? '' }}</span><br>
+                <span class="negrita">{{ $datos->solicitud->empresa->telefono ?? ''}}</span><br>
+                <span class="negrita">{{ $datos->solicitud->empresa->correo ?? '' }}</span>
             </td>
             <td class="leftLetter" style="background-color: #93cddc">No. de orden de <br> servicio:</td>
-            <td class="leftLetter"><span class="negrita">{{ $datos->num_servicio }}</span></td>
+            <td class="leftLetter"><span class="negrita">{{ $datos->num_servicio ?? ''}}</span></td>
 
         </tr>
         <tr>
             <td class="leftLetter" style="background-color: #93cddc">Número de cliente:</td>
-            <td class="leftLetter"> <span class="negrita">{{ $datos->solicitud->empresa->empresaNumClientes[0]->numero_cliente }}</span></td>
+            <td class="leftLetter"> <span class="negrita">{{ $datos->solicitud->empresa->empresaNumClientes[0]->numero_cliente ?? ''}}</span></td>
             <td class="leftLetter" style="background-color: #93cddc">Hora del servicio:</td>
             <td class="leftLetter">1231231</td>
         </tr>
         <tr>
             <td class="leftLetter" style="background-color: #93cddc">Inspector asignado:</td>
-            <td class="leftLetter"><span class="negrita">{{ $datos->inspector->name }}</span></td>
+            <td class="leftLetter"><span class="negrita">{{ $datos->inspector->name ?? ''}}</span></td>
             <td class="leftLetter" style="background-color: #93cddc">Fecha de servicio:</td>
             <td class="leftLetter"><span class="negrita">{{ $fecha_servicio }}</span></td>
         </tr>
@@ -160,7 +160,7 @@
         </tr>
         <tr>
             <td class="leftLetter" style="background-color: #93cddc" >Dirección del servicio: <br> &nbsp;</td>
-            <td class="leftLetter" colspan="3" ><span class="negrita">{{ $datos->solicitud->instalacion->direccion_completa }}</span>.</td>
+            <td class="leftLetter" colspan="3" ><span class="negrita">{{ $datos->solicitud->instalacion->direccion_completa ?? ''}}</span>.</td>
         </tr>
 
 

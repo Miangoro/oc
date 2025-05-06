@@ -107,7 +107,7 @@ $(function () {
         }
       },
       /*       {
-     
+
         targets: 11,
         className: 'text-center',
         render: function (data, type, full, meta) {
@@ -128,9 +128,9 @@ $(function () {
           const dictamen = full['url_dictamen'];
           const razon = full['razon_social'];
           const cliente = full['numero_cliente'];
-      
+
           let html = '';
-      
+
           // ACTA
           if (acta && acta !== 'Sin subir') {
             html += `<i class="ri-file-pdf-2-fill text-danger ri-30px me-2 pdf cursor-pointer"
@@ -144,7 +144,7 @@ $(function () {
           } else {
             html += '<span class="badge bg-danger me-1">Sin acta</span>';
           }
-      
+
           // DICTAMEN
           if (dictamen && dictamen !== 'Sin subir') {
             html += `<i class="ri-file-pdf-2-fill text-primary ri-30px pdf cursor-pointer"
@@ -158,12 +158,12 @@ $(function () {
           } else {
             html += '<span class="badge bg-warning">Sin dictamen</span>';
           }
-      
+
           return html;
         }
       },
-      
-      
+
+
       {
         // Acciones
         targets: -1,
@@ -182,7 +182,7 @@ $(function () {
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Trazabilidad</a>` +
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalAsignarInspector(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
-            `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
+            `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}','${full['id_tipo']}' )" href="javascript:;" class="dropdown-item"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
           //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['tipo_instalacion']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
           //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="editModalActaProduccion('${full['id_acta']}')" href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px textStatus"></i>Editar Acta</a>` +
 
@@ -1040,22 +1040,22 @@ $(function () {
       var registro = $(this).data('registro');
           var iframe = $('#pdfViewer');
           iframe.attr('src', '../files/'+url);
-    
+
           $("#titulo_modal").text("Certificado de instalaciones");
           $("#subtitulo_modal").text(registro);
     }); */
   $(document).on('click', '.pdf', function () {
     var id_inspeccion = $(this).data('id');
     var registro = $(this).data('registro');
-    
 
-    
+
+
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
     spinner.show();
     iframe.hide();
-    
+
     //Cargar el PDF con el ID
       iframe.attr('src', id_inspeccion);
     //Configurar el botón para abrir el PDF en una nueva pestaña
@@ -1151,8 +1151,8 @@ $(function () {
         var newRow = `
               <tr>
                   <th>
-                      <button type="button" class="btn btn-danger remove-row"> 
-                          <i class="ri-delete-bin-5-fill"></i> 
+                      <button type="button" class="btn btn-danger remove-row">
+                          <i class="ri-delete-bin-5-fill"></i>
                       </button>
                   </th>
                   <td>
@@ -1178,8 +1178,8 @@ $(function () {
           var newRow = `
               <tr>
                   <th>
-                      <button type="button" class="btn btn-danger remove-row"> 
-                          <i class="ri-delete-bin-5-fill"></i> 
+                      <button type="button" class="btn btn-danger remove-row">
+                          <i class="ri-delete-bin-5-fill"></i>
                       </button>
                   </th>
                   <td>
@@ -1370,8 +1370,8 @@ $(function () {
       var newRow = `
           <tr>
               <th>
-                  <button type="button" class="btn btn-danger remove-row"> 
-                      <i class="ri-delete-bin-5-fill"></i> 
+                  <button type="button" class="btn btn-danger remove-row">
+                      <i class="ri-delete-bin-5-fill"></i>
                   </button>
               </th>
               <td>
@@ -1517,8 +1517,8 @@ $(function () {
       var newRow = `
           <tr>
               <th>
-                  <button type="button" class="btn btn-danger remove-row"> 
-                      <i class="ri-delete-bin-5-fill"></i> 
+                  <button type="button" class="btn btn-danger remove-row">
+                      <i class="ri-delete-bin-5-fill"></i>
                   </button>
               </th>
               <td>
@@ -1638,9 +1638,9 @@ $(function () {
   /* // Añadir método para agregar acta
   $('#ActaUnidadesForm').on('submit', function (e) {
     e.preventDefault();
-    
+
     var formData = $(this).serialize(); // Serializar los datos del formulario
-  
+
     $.ajax({
       url: '/acta-unidades', // Asegúrate que esta URL sea la correcta en tus rutas
       type: 'POST',
@@ -1675,7 +1675,7 @@ $(function () {
 
 
 
-  // Añadir método para agregar acta con validación 
+  // Añadir método para agregar acta con validación
   const actaUnidadesForm = document.getElementById('ActaUnidadesForm');
 
   // Validación del formulario

@@ -133,7 +133,7 @@
             <h3 class="card-title mb-0 fw-bold">Inspecciones de la Unidad de Inspección</h3>
         </div>
         <div class="card-datatable table-responsive">
-            <table style="font-size: 14px"  class="datatables-users table table-bordered  table-hover">
+            <table style="font-size: 14px" class="datatables-users table table-bordered  table-hover">
                 <thead class="table-dark">
                     <tr>
                         <th></th>
@@ -167,14 +167,14 @@
         @include('_partials._modals.modal-acta-unidades-produccion')
         @include('_partials._modals.modal-acta-edit-unidades')
 
-        
+
         <!-- /Modal -->
 
     </div>
 @endsection
 
 <script>
-    function abrirModal(id_solicitud, tipo, nombre_empresa) {
+    function abrirModal(id_solicitud, tipo, nombre_empresa, id_tipo) {
 
         /* $.ajax({
              url: '/lista_empresas/' + id_empresa,
@@ -182,51 +182,79 @@
              success: function(response) {
                  // Cargar los detalles en el modal
                  var contenido = "";
-
                for (let index = 0; index < response.normas.length; index++) {
                  contenido = '<input value="'+response.normas[index].id_norma+'" type="hidden" name="id_norma[]"/><div class="col-12 col-md-12 col-sm-12"><div class="form-floating form-floating-outline"><input type="text" id="numero_cliente'+response.normas[index].id_norma+'" name="numero_cliente[]" class="form-control" placeholder="Introducir el número de cliente" /><label for="modalAddressFirstName">Número de cliente para la norma '+response.normas[index].norma+'</label></div></div><br>' + contenido;
                  console.log(response.normas[index].norma);
                }
-                
                  $('#expedienteServicio').modal('show');
              },
              error: function() {
                  alert('Error al cargar los detalles de la empresa.');
              }
          });*/
+        $('.id_soli').text(id_solicitud);
         $('.solicitud').text(tipo);
         $('.nombre_empresa').text(nombre_empresa);
+        $('.numero_tipo').text(id_tipo);
+        // Asignar URLs
+        $('#link_solicitud_servicio').attr('href', '{{ url('solicitud_de_servicio') }}/' + id_solicitud);
+        $('#link_oficio_comision').attr('href', '{{ url('oficio_de_comision') }}/' + id_solicitud);
+        $('#link_orden_servicio').attr('href', '{{ url('orden_de_servicio') }}/' + id_solicitud);
+
+        switch (parseInt(id_tipo)) {
+            case 1:
+            $('#links_etiquetas').attr('href', '{{ url('Etiqueta-Muestra') }}/' + id_solicitud);
+                break;
+            case 2:
+                // Acciones para tipo 2
+                break;
+            case 3:
+            $('#links_etiquetas').attr('href', '{{ url('Etiqueta-2401ESPTOB') }}/' + id_solicitud);
+              break;
+            case 4:
+            case 5:
+            $('#links_etiquetas').attr('href', '{{ url('Etiqueta_lotes_mezcal_granel') }}/' + id_solicitud);
+                break;
+
+            case 7:
+              $('#links_etiquetas').attr('href', '{{ url('Etiqueta-Barrica') }}/' + id_solicitud);
+            break;
+            default:
+                // Acciones por defecto
+                break;
+        }
+
         $('#expedienteServicio').modal('show');
 
     }
 
     function abrirModalAsignarInspector(id_solicitud, tipo, nombre_empresa) {
-    // Asignar valores iniciales
-    $("#id_solicitud").val(id_solicitud);
-    $('.solicitud').text(tipo);
-    $('#nombre_empresa').text(nombre_empresa); // Mostrar nombre de la empresa en el modal
-    $('#asignarInspector').modal('show');
+        // Asignar valores iniciales
+        $("#id_solicitud").val(id_solicitud);
+        $('.solicitud').text(tipo);
+        $('#nombre_empresa').text(nombre_empresa); // Mostrar nombre de la empresa en el modal
+        $('#asignarInspector').modal('show');
 
-    $.ajax({
-        url: '/getInspeccion/'+id_solicitud, 
-        method: 'GET', 
-        success: function(response) {
-            if (response.success) {
-                const data = response.data;
-                $("#id_inspector").val(data.id_inspector).change();
-                $("#num_servicio").val(data.num_servicio || '');
-                $("#fecha_servicio").val(data.fecha_servicio || '');
-                $("#observaciones").text(data.observaciones || '');
-            } else {
-                alert('No se pudieron obtener los datos de la solicitud.');
+        $.ajax({
+            url: '/getInspeccion/' + id_solicitud,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    const data = response.data;
+                    $("#id_inspector").val(data.id_inspector).change();
+                    $("#num_servicio").val(data.num_servicio || '');
+                    $("#fecha_servicio").val(data.fecha_servicio || '');
+                    $("#observaciones").text(data.observaciones || '');
+                } else {
+                    alert('No se pudieron obtener los datos de la solicitud.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error en la solicitud:', error);
+                alert('Hubo un error al obtener los datos.');
             }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error en la solicitud:', error);
-            alert('Hubo un error al obtener los datos.');
-        }
-    });
-}
+        });
+    }
 
 
     function abrirModalActaProduccion(id_inspeccion, tipo, nombre_empresa, id_empresa, direccion_completa,
@@ -282,12 +310,12 @@
                 $('#edit_testigoss').append(newRow);
             });
 
-    // EDIT PRODUCCION AGAVE
-    $('#edit_unidadProduccion').empty();
+            // EDIT PRODUCCION AGAVE
+            $('#edit_unidadProduccion').empty();
 
-    // Iterar sobre los testigos y agregar filas a la tabla
-    data.actas_produccion.forEach(function(plantacion, index) {
-        var newRow = `
+            // Iterar sobre los testigos y agregar filas a la tabla
+            data.actas_produccion.forEach(function(plantacion, index) {
+                var newRow = `
         <tr>
             <th>
                 <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
@@ -302,16 +330,16 @@
             </td>
         </tr>
     `;
-        $('#edit_unidadProduccion').append(newRow);
-    });
+                $('#edit_unidadProduccion').append(newRow);
+            });
 
-                //EQUIPO MEZCAL
-    //EQUIPO MEZCAL
-    $('#edit_equipoMezcal').empty();
+            //EQUIPO MEZCAL
+            //EQUIPO MEZCAL
+            $('#edit_equipoMezcal').empty();
 
-    // Iterar sobre los testigos y agregar filas a la tabla
-    data.actas_equipo_mezcal.forEach(function(equipoMezcal, index) {
-        var newRow = `
+            // Iterar sobre los testigos y agregar filas a la tabla
+            data.actas_equipo_mezcal.forEach(function(equipoMezcal, index) {
+                var newRow = `
         <tr>
             <th>
                 <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
@@ -340,8 +368,8 @@
             </td>
         </tr>
     `;
-        $('#edit_equipoMezcal').append(newRow);
-    });
+                $('#edit_equipoMezcal').append(newRow);
+            });
 
             //EQUIPO ENVASADO
             $('#edit_equipoEnvasado').empty();
@@ -505,8 +533,9 @@
             $('#editActaUnidades').modal('show');
         });
         // Cualquier otra lógica adicional
-/*         edit_obtenerNombrePredio();
- */        edit_Testigos();
+        /*         edit_obtenerNombrePredio();
+         */
+        edit_Testigos();
         iniciarCategorias();
     }
 
@@ -516,7 +545,7 @@
 
 
 
-//modal resulatdos
+    //modal resulatdos
     function abrirModalSubirResultados(id_solicitud, num_servicio) {
 
         $(".id_solicitud").val(id_solicitud);
@@ -545,7 +574,7 @@
                 // Iterar sobre los logs y agregarlos al contenedor
                 logs.forEach(function(log) {
                     logsContainer.append(`
-                    
+
                 <li class="timeline-item timeline-item-transparent">
                     <span class="timeline-point timeline-point-primary"></span>
                     <div class="timeline-event">
@@ -555,7 +584,7 @@
                         </div>
                         <p class="mb-2">  ${log.contenido}</p>
                         <div class="d-flex align-items-center mb-1">
-                        
+
                         </div>
                     </div>
                     </li><hr>
