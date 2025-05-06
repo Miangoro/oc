@@ -11,7 +11,8 @@ use App\Models\User;
 use App\Models\empresa; 
 use App\Models\Revisor; 
 use App\Models\lotes_envasado;
-use App\Models\solicitudHolograma;
+use App\Models\activarHologramasModelo;
+use App\Models\solicitudesModel;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -24,13 +25,15 @@ class Certificado_ExportacionController extends Controller
     public function UserManagement()
     {
         $certificado = Certificado_Exportacion::all(); // Obtener todos los datos
-        $dictamen = Dictamen_Exportacion::where('estatus','!=',1)->get();
-        $users = User::where('tipo',1)->get(); //Solo PErsonal OC 
+        //$dictamen = Dictamen_Exportacion::where('estatus','!=',1)->get();
+        $dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')->get();
+        $users = User::where('tipo',1)->get(); //Solo Prrsonal OC 
         $empresa = empresa::where('tipo', 2)->get();
         $revisores = Revisor::all(); 
-        $hologramas = solicitudHolograma::with(['empresa', 'marcas'])->get();
-
-        return view('certificados.find_certificados_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores', 'hologramas'));
+        $hologramas = activarHologramasModelo::all(); 
+        
+        return view('certificados.find_certificados_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores', 'hologramas'))
+        ->with('dictamenes', $dictamen); // Pasamos el dictamen como un JSON;
     }
 
 
@@ -168,8 +171,8 @@ public function store(Request $request)
     $validated = $request->validate([
         'id_dictamen' => 'required|exists:dictamenes_exportacion,id_dictamen',
         'num_certificado' => 'required|string|max:40',
-        'fecha_emision' => 'required|date',
-        'fecha_vigencia' => 'required|date',
+        'fecha_emision' => 'nullable|date',
+        'fecha_vigencia' => 'nullable|date',
         'id_firmante' => 'required|exists:users,id',
     ]);
         // Crear un registro
@@ -248,6 +251,7 @@ public function update(Request $request, $id_certificado)
 
     try {
         $actualizar = Certificado_Exportacion::findOrFail($id_certificado);
+
         $actualizar->num_certificado = $request->num_certificado;
         $actualizar->id_dictamen = $request->id_dictamen;
         $actualizar->fecha_emision = $request->fecha_emision;
@@ -522,12 +526,14 @@ public function MostrarCertificadoExportacion($id_certificado)
         'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'No encontrado',
         'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'No encontrado',
         'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado',
+        'envasadoEN' => $data->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa?? 'No encontrado',
         ///caracteristicas
         'aduana' => $aduana_salida ?? 'No encontrado',
         'n_pedido' => $no_pedido ?? 'No encontrado',
         'botellas' => $botellas ?? 'No encontrado',
         'cajas' => $cajas ?? 'No encontrado',
         'presentacion' => $presentacion ?? 'No encontrado',
+        
     ]);
 
     //nombre al descargar

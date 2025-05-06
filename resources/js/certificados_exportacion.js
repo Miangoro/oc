@@ -68,8 +68,10 @@ $('#edit_fecha_emision').on('change', function() {
 
 
 
+
 ///Datatable (jquery)
 $(function () {
+
  
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
@@ -519,44 +521,23 @@ if (dt_user_table.length) {
 
  
  
+
 ///AGREGAR NUEVO REGISTRO
 //const form = document.getElementById('FormAgregar');
 //Validación del formulario por "name"
 const fv = FormValidation.formValidation(FormAgregar, {
     fields: {
+      id_dictamen: {
+        validators: {
+            notEmpty: {
+                message: 'El número de dictamen es obligatorio.'
+            }
+        }
+      },
         num_certificado: {
             validators: {
                 notEmpty: {
                     message: 'El número de certificado es obligatorio.'
-                }
-            }
-        },
-        id_dictamen: {
-          validators: {
-              notEmpty: {
-                  message: 'El número de dictamen es obligatorio.'
-              }
-          }
-        },
-        fecha_emision: {
-            validators: {
-                notEmpty: {
-                  message: 'La fecha de emisión es obligatoria.',
-                },
-                date: {
-                  format: 'YYYY-MM-DD',
-                  message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-                }
-            }
-        },
-        fecha_vigencia: {
-            validators: {
-                notEmpty: {
-                  message: 'La fecha de vigencia es obligatoria.',
-                },
-                date: {
-                  format: 'YYYY-MM-DD',
-                  message: 'Ingresa una fecha válida (yyyy-mm-dd).',
                 }
             }
         },
@@ -566,9 +547,23 @@ const fv = FormValidation.formValidation(FormAgregar, {
                   message: 'Seleccione una opcion'
               }
           }
-      },
-        
-        
+        },
+        fecha_emision: {
+            validators: {
+              date: {
+                format: 'YYYY-MM-DD',
+                message: 'Ingresa una fecha válida (yyyy-mm-dd).',
+              }
+            }
+        },
+        fecha_vigencia: {
+            validators: {
+              date: {
+                format: 'YYYY-MM-DD',
+                message: 'Ingresa una fecha válida (yyyy-mm-dd).',
+              }
+            }
+        },
     },
     plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -600,7 +595,7 @@ const fv = FormValidation.formValidation(FormAgregar, {
             Swal.fire({
                 icon: 'success',
                 title: '¡Éxito!',
-                text: response.success,
+                text: response.message,
                 customClass: {
                   confirmButton: 'btn btn-primary'
                 }
@@ -717,8 +712,8 @@ $(document).ready(function() {
               $('#edit_fecha_emision').val(datos.fecha_emision);
               $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
               $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();
-            //$('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');//funciona igual que arriba
-            
+  
+
               flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
                 dateFormat: "Y-m-d",
                 enableTime: false,

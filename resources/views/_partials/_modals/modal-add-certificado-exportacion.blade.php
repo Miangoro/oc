@@ -13,7 +13,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="form-select select2" name="id_dictamen" data-placeholder="Selecciona un dictamen">
+                                <select class="form-select select2" id="id_dictamen" name="id_dictamen" data-placeholder="Selecciona un dictamen">
                                     <option value="" disabled selected>NULL</option>
                                     @foreach ($dictamen as $dic)
                                         <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | </option>
@@ -23,7 +23,7 @@
                             </div>
                         </div>
                     </div>
-
+                
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
@@ -62,22 +62,29 @@
                     </div>
 
 
-
-                    <div class="row">
+                    
+                    {{-- <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                {{-- <select class="form-select select2" name="id_dictamen" data-placeholder="Selecciona un dictamen"> --}}
-                                <select class="form-select select2" name="hologramas[]" multiple data-placeholder="Selecciona hologramas">
-
-                                    <option value="" disabled selected>NULL</option>
-                                    @foreach ($hologramas as $ho)
-                                        <option value="{{ $ho->id_solicitud }}">Inicial: {{ $ho->folio_inicial }} | Final:  {{ $ho->folio_final }}</option>
+                                <select class="form-select select2" multiple name="hologramas" data-placeholder="Selecciona un holograma">
+                                    @foreach ($hologramas as $hol)
+                                        <option value="{{ $hol->id }}">{{ $hol->folio_activacion }} </option>
                                     @endforeach
                                 </select>
                                 <label for="">Hologramas</label>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
+                    <div class="row">
+                        <div class="col-md-12">
+                    <select class="form-select select2" multiple name="hologramas" data-placeholder="Selecciona un holograma">
+                        @foreach ($hologramas as $hol)
+                            <option value="{{ $hol->id }}">{{ $hol->folio_activacion }} </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+                    
 
 
 
@@ -160,6 +167,7 @@
                         </div>
                     </div>
 
+
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i> Editar</button>
                         <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
@@ -170,3 +178,4 @@
         </div>
     </div>
 </div>
+
