@@ -120,15 +120,15 @@
                     return direccion.tipo_direccion == 3;
                 });
                 var contenido = "";
-                for (let index = 0; index < response.direcciones.length; index++) {
-                    contenido += '<option value="' + response.direcciones[index].id_direccion + '">' +
-                        'Nombre de detinatario: ' + response.direcciones[index].nombre_recibe +
-                        ' - Dirección: ' + response.direcciones[index].direccion +
-                        ' - Correo: ' + response.direcciones[index].correo_recibe +
-                        ' - Celular: ' + response.direcciones[index].celular_recibe +
+                for (let index = 0; index < response.direccionesFiltradas.length; index++) {
+                    contenido += '<option value="' + response.direccionesFiltradas[index].id_direccion + '">' +
+                        'Nombre de detinatario: ' + response.direccionesFiltradas[index].nombre_recibe +
+                        ' - Dirección: ' + response.direccionesFiltradas[index].direccion +
+                        ' - Correo: ' + response.direccionesFiltradas[index].correo_recibe +
+                        ' - Celular: ' + response.direccionesFiltradas[index].celular_recibe +
                         '</option>';
                 }
-                if (response.direcciones.length == 0) {
+                if (response.direccionesFiltradas.length == 0) {
                     contenido = '<option value="">Sin lotes a granel registrados</option>';
                 }
                 $('.edit_id_direccion').html(contenido);
