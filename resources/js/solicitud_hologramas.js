@@ -722,6 +722,7 @@ $('#addHologramas').on('hidden.bs.modal', function () {
       $('#edit_folio').val(data.folio);
       $('#edit_id_empresa').val(data.id_empresa).trigger('change');
       $('#edit_id_marca').val(data.id_marca).trigger('change');
+      $('#tipo').val(data.tipo).trigger('change');
       $('#edit_id_solicitante').val(data.id_solicitante);
       $('#edit_cantidad_hologramas').val(data.cantidad_hologramas);
       $('#edit_id_direccion').val(data.id_direccion).trigger('change');
