@@ -249,13 +249,13 @@
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Edad (solo aplica en Añejo):</td>
             <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->edad ?? "NA"}}  
+                {{ $lote->lotesGranel->first()->edad ?? "-----"}}  
             </td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px;">Certificado <br> NOM a <br>Granel:</td>
             <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->folio_certificado ?? "N" }}&nbsp; 
+                {{ $lote->lotesGranel->first()->folio_certificado ?? "NA" }}&nbsp; 
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Volumen:</td>
             <td style="text-align: left; padding-left: 4px;"> 
@@ -266,10 +266,15 @@
                 {{ $lote->lotesGranel->first()->cont_alc ?? "N" }}% 
             </td>
         </tr>
+@php
+$folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
+$folio1 = trim($folios[0] ?? '');
+$folio2 = trim($folios[1] ?? '');
+@endphp
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de análisis:</td>
             <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->folio_fq ?? "N" }} 
+                {{ $folio1 }} 
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. lote granel:</td>
             <td style="text-align: left; padding-left: 4px;"> 
@@ -282,10 +287,13 @@
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px">No. de análisis ajuste:</td>
-            <td style="text-align: left; padding-left: 4px;">&nbsp;</td>
+            <td style="text-align: left; padding-left: 4px;">
+                {{ $folio2 }} &nbsp;</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Tipo de Maguey:</td>
             <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->tipos }} 
+                {{ $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
+                    return $tipo->nombre . ' (' . $tipo->cientifico . ')';
+                    })->implode(', ') }}
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Folio Hologramas:</td>
             <td style="text-align: left; font-size: 9px; padding-left: 4px;"></td>
@@ -323,7 +331,7 @@
     <table>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">Envasado en:</td>
-            <td style="text-align: justify; font-size: 9px; padding-left: 4px; width: 22%;">&nbsp;</td>
+            <td style="text-align: justify; font-size: 9px; padding-left: 4px; width: 22%;">{{$envasadoEN}}&nbsp;</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Cajas:</td>
             <td style="text-align: left; padding-left: 4px; width: 22%;">{{$cajas}}</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Botellas:</td>

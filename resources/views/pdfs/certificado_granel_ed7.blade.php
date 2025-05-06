@@ -302,15 +302,15 @@
 <table>
 	<tbody>
 		<tr>
-			<td colspan="6" class="columna"  style="font-size: 15px;">PRODUCTO: MEZCAL ARTESANAL<br>ORIGEN: OAXACA</td>
+			<td colspan="6" class="columna"  style="font-size: 15px;">PRODUCTO: {{ $categoria }}<br>ORIGEN: {{ $estado }}</td>
 		</tr>
 		<tr>
 			<td class="columna" style="white-space: nowrap;">Categoría y clase</td>
-			<td class="columna-norm">{{ $lote }}</td>
+			<td class="columna-norm">{{ $categoria }} {{ $clase }}</td>
 			<td class="columna">No. de lote</td>
 			<td class="columna-norm">{{ $nombre_lote }}</td>
 			<td class="columna">No. de análisis</td>
-            <td class="columna-norm" style="white-space: nowrap;">{{ $folio_fq }}</td>
+            <td class="columna-norm" style="white-space: nowrap;">{{ $n_analisis }}</td>
 		</tr>
 		<tr>
 			<td class="columna">Ingredientes</td>
@@ -322,7 +322,10 @@
 		</tr>
 		<tr>
 			<td class="columna">Tipo de maguey</td>
-			<td class="columna-norm">{{ $tipo }}</td>
+			<td class="columna-norm">
+                {{ $tipo_maguey->tiposRelacionados->map(function ($tipo) {
+                    return $tipo->nombre . ' (' . $tipo->cientifico . ')';
+                    })->implode(', ') }}</td>
 			<td class="columna">Edad</td>
 			<td class="columna-norm">{{ $edad }}</td>
 			<td class="columna">No. de dictamen</td>

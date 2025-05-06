@@ -60,6 +60,7 @@ public function index(Request $request)
         ->when($search, function($q, $search) {
         $q->orWhere('id_firmante', 'LIKE', "%{$search}%")
             ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
+            ->orWhere('num_certificado', 'LIKE', "%{$search}%")
              //empresa
              ->orWhereHas('dictamen.inspeccione.solicitud.empresa', function ($q) use ($search) {
                 $q->where('razon_social', 'LIKE', "%{$search}%");
@@ -103,6 +104,7 @@ public function index(Request $request)
         $totalFiltered = CertificadosGranel::where('id_firmante', 'LIKE', "%{$search}%")
             ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
             ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%")
+            ->orWhere('num_certificado', 'LIKE', "%{$search}%")
             //empresa
             ->orWhereHas('dictamen.inspeccione.solicitud.empresa', function ($q) use ($search) {
                 $q->where('razon_social', 'LIKE', "%{$search}%");
@@ -258,13 +260,22 @@ public function store(Request $request)
         'id_firmante' => 'required|integer',
     ]);
 
+    $dictamen = Dictamen_Granel::with('inspeccione.solicitud')->find($validated['id_dictamen']);
+    $idLoteGranel = $dictamen->inspeccione->solicitud->id_lote_granel ?? null;
+
+
     $new = CertificadosGranel::create([
         'id_dictamen' => $validated['id_dictamen'],
         'num_certificado' => $validated['num_certificado'],
         'fecha_emision' => $validated['fecha_emision'],
         'fecha_vigencia' => $validated['fecha_vigencia'],
-        'id_firmante' => $validated['id_firmante']
+        'id_firmante' => $validated['id_firmante'],
+        'id_lote_granel' => $idLoteGranel
     ]);
+
+    $lote = LotesGranel::find($idLoteGranel);
+    $lote->folio_certificado = $validated['num_certificado'];
+    $lote->update();
     
         return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
@@ -328,6 +339,10 @@ public function update(Request $request, $id_certificado)
 
     try {
         $actualizar = CertificadosGranel::findOrFail($id_certificado);
+
+        $dictamen = Dictamen_Granel::with('inspeccione.solicitud')->find($validated['id_dictamen']);
+        $idLoteGranel = $dictamen->inspeccione->solicitud->id_lote_granel ?? null;
+    
         
         $actualizar->update([
             'id_firmante' => $validated['id_firmante'],
@@ -335,7 +350,12 @@ public function update(Request $request, $id_certificado)
             'num_certificado' => $validated['num_certificado'],
             'fecha_emision' => $validated['fecha_emision'],
             'fecha_vigencia' => $validated['fecha_vigencia'],
+            'id_lote_granel' => $idLoteGranel
         ]);
+
+        $lote = LotesGranel::find($idLoteGranel);
+        $lote->folio_certificado = $validated['num_certificado'];
+        $lote->update();
 
         return response()->json(['message' => 'Actualizado correctamente.']);
     } catch (\Exception $e) {
@@ -537,15 +557,10 @@ public function CertificadoGranel($id_certificado)
         //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
     }
 
-    $direccionCompleta = $certificado->dictamen->inspeccione->solicitud->empresa->instalaciones->first()->direccion_completa ?? 'N/A';
-    $clase = $certificado->dictamen->lote_granel->clase->clase ?? 'N/A';
+    $direccionCompleta = $certificado->dictamen->inspeccione->solicitud->empresa->instalaciones->first()->direccion_completa ?? 'No encontrado';
     $ingredientes = $certificado->dictamen->lote_granel->ingredientes ?? 'N/A';
-    $volumen = $certificado->dictamen->lote_granel->volumen ?? 'N/A';
-    $nombre_lote = $certificado->dictamen->lote_granel->nombre_lote ?? 'N/A';
     $edad = $certificado->dictamen->lote_granel->edad ?? 'N/A';
-    $cont_alc = $certificado->dictamen->lote_granel->cont_alc ?? 'N/A';
-    $folio_fq = $certificado->dictamen->lote_granel->folio_fq ?? 'N/A';
-    $num_dictamen = $certificado->dictamen->num_dictamen ?? 'N/A';
+    $num_dictamen = $certificado->dictamen->num_dictamen ?? 'No encontrado';
     $watermarkText = $certificado->estatus === 1;
     $leyenda = $certificado->estatus === 2;
 
@@ -562,27 +577,33 @@ public function CertificadoGranel($id_certificado)
     // Datos para el PDF
     $pdfData = [
         // Tabla #1
-        'num_certificado' => $certificado->num_certificado ?? '',
-        'razon_social' => $certificado->dictamen->empresa->razon_social ?? '',
-        'representante' => $certificado->dictamen->empresa->representante ?? '',
-        'domicilio_fiscal' => $certificado->dictamen->empresa->domicilio_fiscal ?? '',
-        'rfc' => $certificado->dictamen->empresa->rfc ?? '',
-        'direccion_completa' => $direccionCompleta ?? '',
+        'data' => $certificado,
+        'num_certificado' => $certificado->num_certificado ?? 'No encontrado',
+        'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
+        'representante' => $certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'No encontrado',
+        'domicilio_fiscal' => $certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'No encontrado',
+        'rfc' => $certificado->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
+        'direccion_completa' => $direccionCompleta ?? 'No encontrado',
         'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
         'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
         'watermarkText' => $watermarkText,
         'leyenda' => $leyenda ?? '',
+        //lote
+        'estado' => $certificado->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado',
+        'categoria' => $certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'No encontrado',
+        'clase' => $certificado->dictamen->inspeccione->solicitud->lote_granel->clase->clase ?? 'No encontrado',
+        'nombre_lote' => $certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote?? 'No encontrado',
+        'n_analisis' => $certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'No encontrado',
+        'volumen' => $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen_restante ?? 'No encontrado',
+        'cont_alc' => $certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc?? 'No encontrado',
 
-        // Tabla #2
-        'lote' => $clase ?? '',
-        'ingredientes' => $ingredientes ?? '',
-        'volumen' => $volumen ?? '',
-        'nombre_lote' => $nombre_lote ?? '',
-        'edad' => $edad ?? '',
-        'cont_alc' => $cont_alc ?? '',
-        'folio_fq' => $folio_fq ?? '',
-        'num_dictamen' => $num_dictamen ?? '',
-        'tipo' => $tipoNombres ?? '',
+        'tipo_maguey' => $certificado->dictamen->inspeccione->solicitud->lote_granel ?? 'No encontrado',
+
+        'edad' => $certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? '-----',
+        'ingredientes' => $certificado->dictamen->inspeccione->solicitud->lote_granel->ingredientes ?? '-----',
+
+        'num_dictamen' => $certificado->dictamen->num_dictamen ?? 'No encontrado',
+        //'tipo' => $tipoNombres,
     ];
 
     // Generar y mostrar el PDF

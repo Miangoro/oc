@@ -549,7 +549,7 @@ $(function () {
             Swal.fire({
                 icon: 'success',
                 title: '¡Éxito!',
-                text: response.success,
+                text: response.message,
                 customClass: {
                   confirmButton: 'btn btn-primary'
                 }
