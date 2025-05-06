@@ -249,7 +249,7 @@
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Edad (solo aplica en Añejo):</td>
             <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->edad ?? "NA"}}  
+                {{ $lote->lotesGranel->first()->edad ?? "-----"}}  
             </td>
         </tr>
         <tr>
