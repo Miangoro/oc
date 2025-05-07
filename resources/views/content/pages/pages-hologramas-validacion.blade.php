@@ -113,7 +113,10 @@
                             CIDAM C-EXP-497/2024</strong>
                     </div>
                     @else
+                    <div class="alert alert-danger text-center fw-bold fs-4">
                         HOLOGRAMA NO ACTIVADO
+                    </div>
+                    
                     @endif
                     <table class="table">
                         <thead>
