@@ -22,10 +22,27 @@
               <tbody class="table-border-bottom-0">
                 <p class="id_soli"></p>
                 <p class="numero_tipo"></p>
-
+                <p class="id_deinspeccion"></p>
+                
                 <tr class="table-success">
                   <td><i class="ri-bank-fill ri-22px text-primary me-4"></i><span class="fw-medium">1. Solicitud de servicio</span></td>
                   <td><a  id="link_solicitud_servicio"  target="_Blank" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                </tr>
+                <tr class="table-danger">
+                  <td><i class="ri-palette-line ri-22px text-danger me-4"></i><span class="fw-medium">2. Oficio de comisión</span></td>
+                  <td><a id="link_oficio_comision" target="_blank" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                </tr>
+                <tr class="table-warning">
+                  <td><i class="ri-shield-user-line ri-22px text-info me-4"></i><span class="fw-medium">3. Orden de servicio</span></td>
+                  <td><a id="link_orden_servicio" target="_blank" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                </tr>
+                <tr class="table-light">
+                  <td><i class="ri-angularjs-line ri-22px text-danger me-4"></i><span class="fw-medium">Etiquetas para muestra</span></td>
+                  <td><a  id="links_etiquetas" target="_blank" href="#">
+                    <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                  </a>
+                  </td>
+                </tr>
 
                  <!-- <td><span class="badge rounded-pill bg-label-warning me-1">Pending</span></td>
                   <td>
@@ -37,26 +54,11 @@
                       </div>
                     </div>
                   </td>-->
-                </tr>
-                <tr class="table-danger">
-                  <td><i class="ri-palette-line ri-22px text-danger me-4"></i><span class="fw-medium">2. Oficio de comisión</span></td>
-                  <td><a id="link_oficio_comision" target="_blank" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
-                </tr>
-                <tr class="table-warning">
-                  <td><i class="ri-shield-user-line ri-22px text-info me-4"></i><span class="fw-medium">3. Orden de servicio</span></td>
-                  <td><a id="link_orden_servicio" target="_blank" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
-                </tr>
-{{--             <tr class="table-info">
+
+                {{--             <tr class="table-info">
                   <td><i class="ri-lifebuoy-line ri-22px text-primary me-4"></i><span class="fw-medium">Acta de inspección</span></td>
                   <td><a target="_blank" href="/acta_circunstanciada_unidades_produccion"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
                 </tr> --}}
-                <tr class="table-light">
-                  <td><i class="ri-angularjs-line ri-22px text-danger me-4"></i><span class="fw-medium">Etiquetas para muestra</span></td>
-                  <td><a  id="links_etiquetas" target="_blank" href="#">
-                    <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
-                  </a>
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>

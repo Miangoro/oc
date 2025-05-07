@@ -126,7 +126,7 @@
                 <td class="custom">Fecha de muestreo:</td>
                 <td>10/06/2024</td>
                 <td class="custom">Folio / No. de servicio:</td>
-                <td>UMS-01002/2024</td>
+                <td>{{ $datos->num_servicio ?? 'NA'}} </td>
             </tr>
             <tr>
                 <td class="customx">No. de lote o tapada:</td>
@@ -136,7 +136,7 @@
             </tr>
             <tr>
                 <td colspan="2" class="custom">Razón Social / Productor:</td>
-                <td colspan="2">Amantes del Mezcal S.A. de C.V.</td>
+                <td colspan="2">{{ $datos->empresa_num_cliente ?? 'xd'}}</td>
                 <td class="custom">No. de piñas anterior:</td>
                 <td colspan="3">3012</td>
             </tr>

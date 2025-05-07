@@ -103,11 +103,11 @@
 
         .footer-right {
             text-align: right;
-            width: 35%; 
+            width: 35%;
             margin-top: -60px;
             white-space: nowrap;
-            font-size: 10px; 
-            padding-left: 650px; 
+            font-size: 10px;
+            padding-left: 650px;
         }
     </style>
 </head>
@@ -126,15 +126,15 @@
             <td class="section-title-cell border-left-white">Producto:</td>
         </tr>
         <tr>
-            <td class="highlight-white-cell border-right-white">01/08/2024</td>
-            <td class="highlight-white-cell border-left-white">Mezcal Artesanal - Blanco o Joven</td>
+            <td class="highlight-white-cell border-right-white">{{$datos->solicitud->fecha_solicitud}}</td>
+            <td class="highlight-white-cell border-left-white">{{$datos->solicitud->lote_granel->categoria->categoria}} - {{$datos->solicitud->lote_granel->clase->clase}}</td>
         </tr>
         <tr>
             <td class="section-title-cell border-right-white">No. de lote:</td>
             <td class="section-title-cell border-left-white">Folio o No.</td>
         </tr>
         <tr>
-            <td class="highlight-white-cell border-right-white border-green">2401ESPTOB</td>
+            <td class="highlight-white-cell border-right-white border-green">{{$datos->solicitud->lote_granel->nombre_lote}}</td>
             <td class="highlight-white-cell border-left-white border-green">UMS-1300/2024</td>
         </tr>
     </table>
@@ -212,12 +212,12 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    margin-top: -20; 
+    margin-top: -20;
 }
 
 .etiqueta-table {
     width: 100%;
-    margin: 10px 0; 
+    margin: 10px 0;
 }
 
 .etiqueta-table td,
