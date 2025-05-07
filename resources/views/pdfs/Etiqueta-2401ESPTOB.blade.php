@@ -126,7 +126,7 @@
             <td class="section-title-cell border-left-white">Producto:</td>
         </tr>
         <tr>
-            <td class="highlight-white-cell border-right-white">{{$datos->solicitud->fecha_solicitud}}</td>
+            <td class="highlight-white-cell border-right-white">{{$datos->solicitud->lote_granel->fecha_emision}}</td>
             <td class="highlight-white-cell border-left-white">{{$datos->solicitud->lote_granel->categoria->categoria}} - {{$datos->solicitud->lote_granel->clase->clase}}</td>
         </tr>
         <tr>
@@ -135,7 +135,7 @@
         </tr>
         <tr>
             <td class="highlight-white-cell border-right-white border-green">{{$datos->solicitud->lote_granel->nombre_lote}}</td>
-            <td class="highlight-white-cell border-left-white border-green">UMS-1300/2024</td>
+            <td class="highlight-white-cell border-left-white border-green">{{$datos->solicitud->inspeccion->num_servicio}}</td>
         </tr>
     </table>
     <!-- #2 tabla -->
@@ -150,16 +150,16 @@
             <td class="section-title-cell border-left-white">Producto:</td>
         </tr>
         <tr>
-            <td class="highlight-white-cell border-right-white">01/08/2024</td>
-            <td class="highlight-white-cell border-left-white">Mezcal Artesanal - Blanco o Joven</td>
+            <td class="highlight-white-cell border-right-white">{{$datos->solicitud->lote_granel->fecha_emision}}</td>
+            <td class="highlight-white-cell border-left-white">{{$datos->solicitud->lote_granel->categoria->categoria}} - {{$datos->solicitud->lote_granel->clase->clase}}</td>
         </tr>
         <tr>
             <td class="section-title-cell border-right-white">No. de lote:</td>
             <td class="section-title-cell border-left-white">Folio o No.</td>
         </tr>
         <tr>
-            <td class="highlight-white-cell border-right-white border-green">2401ESPTOB</td>
-            <td class="highlight-white-cell border-left-white border-green">UMS-1300/2024</td>
+            <td class="highlight-white-cell border-right-white border-green">{{$datos->solicitud->lote_granel->nombre_lote}}</td>
+            <td class="highlight-white-cell border-left-white border-green">{{$datos->solicitud->inspeccion->num_servicio}}</td>
         </tr>
     </table>
     <!-- #3 tabla -->
@@ -174,16 +174,16 @@
             <td class="section-title-cell border-left-white">Producto:</td>
         </tr>
         <tr>
-            <td class="highlight-white-cell border-right-white">01/08/2024</td>
-            <td class="highlight-white-cell border-left-white">Mezcal Artesanal - Blanco o Joven</td>
+            <td class="highlight-white-cell border-right-white">{{$datos->solicitud->lote_granel->fecha_emision}}</td>
+            <td class="highlight-white-cell border-left-white">{{$datos->solicitud->lote_granel->categoria->categoria}} - {{$datos->solicitud->lote_granel->clase->clase}}</td>
         </tr>
         <tr>
             <td class="section-title-cell border-right-white">No. de lote:</td>
             <td class="section-title-cell border-left-white">Folio o No.</td>
         </tr>
         <tr>
-            <td class="highlight-white-cell border-right-white border-green">2401ESPTOB</td>
-            <td class="highlight-white-cell border-left-white border-green">UMS-1300/2024</td>
+            <td class="highlight-white-cell border-right-white border-green">{{$datos->solicitud->lote_granel->nombre_lote}}</td>
+            <td class="highlight-white-cell border-left-white border-green">{{$datos->solicitud->inspeccion->num_servicio}}</td>
         </tr>
     </table>
     <!-- Footer sin tablas -->
@@ -312,29 +312,29 @@ table {
             </tr>
             <tr>
                 <td class="custom-title">Fecha:</td>
-                <td colspan="2" class="white-background-custom"><strong>01/08/2024</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->fecha_emision}}</strong></td>
                 <td class="custom-title">Folio / No. de servicio:</td>
-                <td colspan="2" class="white-background-custom"><strong>UMS-1300/2024</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->inspeccion->num_servicio}}</strong></td>
             </tr>
             <tr>
                 <td class="custom-title">No. de lote:</td>
-                <td colspan="2" class="white-background-custom"><strong>2401ESPTOB</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->nombre_lote}}</strong></td>
                 <td class="custom-title">Volumen del lote:</td>
-                <td colspan="2" class="white-background-custom"><strong>25363 L</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->volumen}} L</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left;">Maguey Empleado:</td>
                 <td colspan="3" class="white-background-custom"><strong>Maguey Espadín, Maguey Tobalá (A. angustifolia), (A. potatorum)</strong></td>
                 <td colspan="2" class="custom-title">Categoría y clase de mezcal:</td>
-                <td colspan="2" class="white-background-custom"><strong>Mezcal Artesanal, Blanco o Joven</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->categoria->categoria}}, {{$datos->solicitud->lote_granel->clase->clase}}</strong></td>
             </tr>
             <tr>
                 <td class="custom-title"  style="text-align: left;">Edad:</td>
-                <td class="white-background-custom"><strong>1998</strong></td>
+                <td class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->edad}}</strong></td>
                 <td class="custom-title">Ingredientes:</td>
-                <td colspan="2" class="white-background-custom"><strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->ingredientes}}</strong></td>
                 <td class="custom-title">Estado del productor</td>
-                <td colspan="2" class="white-background-custom"><strong>Oaxaca</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>Oaxaca??</strong></td>
             </tr>
             <tr>
                 <td colspan="1" class="custom-title"  style="text-align: left;">Marca:</td>
@@ -344,14 +344,14 @@ table {
             </tr>
             <tr>
                 <td class="custom-title"  style="text-align: left;">Lote de procedencia:</td>
-                <td class="white-background-custom"><strong>NA</strong></td>
+                <td class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->lote_original_id ?? 'N/A'}}</strong></td>
                 <td class="custom-title">No. de Fisicoquímico:</td>
-                <td colspan="2" class="white-background-custom"><strong>NNMZ-46335-S1</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->folio_fq}}</strong></td>
                 <td colspan="3" class="custom-title">Tipo de análisis:</td>
             </tr>
             <tr>
                 <td rowspan="2" class="custom-title"  style="text-align: left;">Razón Social/ Productor:</td>
-                <td rowspan="2" class="white-background-custom"><strong>AMANTES DEL MEZCAL S.A. DE C.V.</strong></td>
+                <td rowspan="2" class="white-background-custom"><strong>{{$datos->solicitud->empresa->razon_social}}</strong></td>
                 <td rowspan="2" class="custom-title">Domicilio:</td>
                 <td colspan="2" rowspan="2" class="white-background-custom"><strong>Paraje Salina Grande S/N Tlacolula de Matamoros, Oaxaca. C.P. 70400</strong></td>
                 <td class="custom-title">Análisis Completo:</td>
@@ -365,7 +365,7 @@ table {
             </tr>
             <tr>
                 <td colspan="2" class="custom-title">Nombre y firma del inspector:</td>
-                <td colspan="2" class="white-background-custom"><strong>Idalia González Zarate</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->inspector->name}}</strong></td>
                 <td colspan="2" class="custom-title">Nombre y firma del responsable:</td>
                 <td colspan="2" class="white-background-custom"><strong>Juan Carlos López Hernández</strong></td>
             </tr>
@@ -382,27 +382,27 @@ table {
             </tr>
             <tr>
                 <td class="custom-title">Fecha:</td>
-                <td colspan="2" class="white-background-custom"><strong>01/08/2024</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->fecha_emision}}</strong></td>
                 <td class="custom-title">Folio / No. de servicio:</td>
-                <td colspan="2" class="white-background-custom"><strong>UMS-1300/2024</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->inspeccion->num_servicio}}</strong></td>
             </tr>
             <tr>
                 <td class="custom-title">No. de lote:</td>
-                <td colspan="2" class="white-background-custom"><strong>2401ESPTOB</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->nombre_lote}}</strong></td>
                 <td class="custom-title">Volumen del lote:</td>
-                <td colspan="2" class="white-background-custom"><strong>25363 L</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->volumen}} L</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left;">Maguey Empleado:</td>
                 <td colspan="3" class="white-background-custom"><strong>Maguey Espadín, Maguey Tobalá (A. angustifolia), (A. potatorum)</strong></td>
                 <td colspan="2" class="custom-title">Categoría y clase de mezcal:</td>
-                <td colspan="2" class="white-background-custom"><strong>Mezcal Artesanal, Blanco o Joven</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->categoria->categoria}}, {{$datos->solicitud->lote_granel->clase->clase}}</strong></td>
             </tr>
             <tr>
                 <td class="custom-title"  style="text-align: left;">Edad:</td>
-                <td class="white-background-custom"><strong>1998</strong></td>
+                <td class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->edad}}</strong></td>
                 <td class="custom-title">Ingredientes:</td>
-                <td colspan="2" class="white-background-custom"><strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->ingredientes}}</strong></td>
                 <td class="custom-title">Estado del productor</td>
                 <td colspan="2" class="white-background-custom"><strong>Oaxaca</strong></td>
             </tr>
@@ -414,14 +414,14 @@ table {
             </tr>
             <tr>
                 <td class="custom-title"  style="text-align: left;">Lote de procedencia:</td>
-                <td class="white-background-custom"><strong>NA</strong></td>
+                <td class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->lote_original_id ?? ''}}</strong></td>
                 <td class="custom-title">No. de Fisicoquímico:</td>
-                <td colspan="2" class="white-background-custom"><strong>NNMZ-46335-S1</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->folio_fq}}</strong></td>
                 <td colspan="3" class="custom-title">Tipo de análisis:</td>
             </tr>
             <tr>
                 <td rowspan="2" class="custom-title"  style="text-align: left;">Razón Social/ Productor:</td>
-                <td rowspan="2" class="white-background-custom"><strong>AMANTES DEL MEZCAL S.A. DE C.V.</strong></td>
+                <td rowspan="2" class="white-background-custom"><strong>{{$datos->solicitud->empresa->razon_social}}</strong></td>
                 <td rowspan="2" class="custom-title">Domicilio:</td>
                 <td colspan="2" rowspan="2" class="white-background-custom"><strong>Paraje Salina Grande S/N Tlacolula de Matamoros, Oaxaca. C.P. 70400</strong></td>
                 <td class="custom-title">Análisis Completo:</td>
@@ -435,7 +435,7 @@ table {
             </tr>
             <tr>
                 <td colspan="2" class="custom-title">Nombre y firma del inspector:</td>
-                <td colspan="2" class="white-background-custom"><strong>Idalia González Zarate</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->inspector->name}}</strong></td>
                 <td colspan="2" class="custom-title">Nombre y firma del responsable:</td>
                 <td colspan="2" class="white-background-custom"><strong>Juan Carlos López Hernández</strong></td>
             </tr>
@@ -484,14 +484,14 @@ table {
             </tr>
             <tr>
                 <td class="custom-title"  style="text-align: left;">Lote de procedencia:</td>
-                <td class="white-background-custom"><strong>NA</strong></td>
+                <td class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->lote_original_id ?? 'N/A'}}</strong></td>
                 <td class="custom-title">No. de Fisicoquímico:</td>
-                <td colspan="2" class="white-background-custom"><strong>NNMZ-46335-S1</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->folio_fq}}</strong></td>
                 <td colspan="3" class="custom-title">Tipo de análisis:</td>
             </tr>
             <tr>
                 <td rowspan="2" class="custom-title"  style="text-align: left;">Razón Social/ Productor:</td>
-                <td rowspan="2" class="white-background-custom"><strong>AMANTES DEL MEZCAL S.A. DE C.V.</strong></td>
+                <td rowspan="2" class="white-background-custom"><strong>{{$datos->solicitud->empresa->razon_social}}</strong></td>
                 <td rowspan="2" class="custom-title">Domicilio:</td>
                 <td colspan="2" rowspan="2" class="white-background-custom"><strong>Paraje Salina Grande S/N Tlacolula de Matamoros, Oaxaca. C.P. 70400</strong></td>
                 <td class="custom-title">Análisis Completo:</td>
@@ -505,7 +505,7 @@ table {
             </tr>
             <tr>
                 <td colspan="2" class="custom-title">Nombre y firma del inspector:</td>
-                <td colspan="2" class="white-background-custom"><strong>Idalia González Zarate</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->inspector->name}}</strong></td>
                 <td colspan="2" class="custom-title">Nombre y firma del responsable:</td>
                 <td colspan="2" class="white-background-custom"><strong>Juan Carlos López Hernández</strong></td>
             </tr>
