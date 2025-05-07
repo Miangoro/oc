@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class HologramasValidacion extends Controller
 {
-  public function index($folio)
+  public function index2($folio)
   {
     $pageConfigs = ['myLayout' => 'blank'];
 
