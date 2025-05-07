@@ -235,7 +235,8 @@
 <tr>
     <td class="rightLetter negrita" >Total de hologramas <br>
         enviados:</td>
-    <td colspan="3" class="letra-up">{{ $datos->cantidad_hologramas }} Hologramas</td>
+        <td colspan="3" class="letra-up">{{ number_format($datos->cantidad_hologramas) }} Hologramas</td>
+
 </tr>
 <tr >
     <td class="rightLetter negrita" style="height: 60px">Comentarios</td>
