@@ -56,7 +56,7 @@
                             <div class="form-floating form-floating-outline mb-5">
                                 <select class="form-select" name="tipo" id="tipo">
                                     <option value="A">A - Por imprimir</option>
-                                    <option value="B">B - Impresos</option>
+                                    <option value="J">J - Impresos</option>
                                     
                                 </select>
                                 <label for="cantidad_hologramas">Tipo</label>
@@ -96,6 +96,7 @@
                 var contenido = "";
                 for (let index = 0; index < response.marcas.length; index++) {
                     contenido = '<option value="' + response.marcas[index].id_marca + '">' + response
+                        .marcas[index].folio + ' - ' + response
                         .marcas[index].marca + '</option>' + contenido;
                 }
 

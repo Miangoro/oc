@@ -187,15 +187,15 @@
         </tr>
         <tr>
             <td class="rightLetter negrita" style="width: 250px">Nombre:</td>
-            <td class="letra-up">{{ $datos->user->name }}</td>
+            <td class="letra-up">{{ $datos->direcciones->nombre_recibe }}</td>
         </tr>
         <tr>
             <td class="rightLetter negrita">Puesto: </td>
-            <td class="letra-up">representante legal</td>
+            <td class="letra-up">Responsable de recibir hologramas</td>
         </tr>
         <tr>
             <td class="rightLetter negrita">Email: </td>
-            <td class="letra-up">{{$datos->user->email}}</td>
+            <td class="letra-up">{{ $datos->direcciones->correo_recibe }}</td>
         </tr>
         <tr>
             <td style="border-bottom: 0;" colspan="2" class="letra-fondo negrita"> Dirección de envío</td>
@@ -228,14 +228,15 @@
 </tr>
 <tr>
     <td class="rightLetter negrita" >Folio inicial:</td>
-    <td class="letra-up">{{ $datos->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}{{ $datos->marcas->folio }}-{{ str_pad($datos->folio_inicial, 6, '0', STR_PAD_LEFT) }}</td>
+    <td class="letra-up">{{ $datos->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_inicial, 6, '0', STR_PAD_LEFT) }}</td>
     <td class="rightLetter negrita">Folio final:</td>
-    <td class="letra-up">{{ $datos->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}{{ $datos->marcas->folio }}-{{ str_pad($datos->folio_final, 6, '0', STR_PAD_LEFT) }}</td>
+    <td class="letra-up">{{ $datos->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_final, 6, '0', STR_PAD_LEFT) }}</td>
 </tr>
 <tr>
     <td class="rightLetter negrita" >Total de hologramas <br>
         enviados:</td>
-    <td colspan="3" class="letra-up">{{ $datos->cantidad_hologramas }} Hologramas</td>
+        <td colspan="3" class="letra-up">{{ number_format($datos->cantidad_hologramas) }} Hologramas</td>
+
 </tr>
 <tr >
     <td class="rightLetter negrita" style="height: 60px">Comentarios</td>

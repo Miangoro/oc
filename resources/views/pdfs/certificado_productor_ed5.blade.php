@@ -174,29 +174,15 @@
             line-height: 0.5;
         }
 
-        .down {
-            text-align: right;
-            font-size: 11px;
-            margin-top: -40px; 
-            margin-right: 20px;
-        }
 
-        .foother {
+        .footer {
             position: fixed;
-            bottom: -30; 
-            left: 0; 
+            bottom: -22; 
             width: 100%; 
             text-align: center; 
-            margin: 0;
-            padding: 10px 0; 
         }
 
-        .foother img {
-            margin-top: 20px;
-            width: 700px; 
-            height: auto;
-            display: inline-block;
-        }
+        
 
         #tabla-principal td{
         line-height: 9px; /* Asegura que el contenido se ajuste a la altura */
@@ -205,6 +191,7 @@
         }
     </style>
 </head>
+
 <body>
 
     @if ($watermarkText)
@@ -213,11 +200,12 @@
         </div>
     @endif
 
-<img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Marca de Agua" class="watermark">
+<img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Fondo CIDAM" class="watermark">
 
 <div class="header">
-    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" width="300px">
+    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo Organismo" width="300px">
 </div>
+
 
 <div class="description1">ORGANISMO CERTIFICADOR</div>
 <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C</div>
@@ -283,16 +271,17 @@ de Noviembre de 1994, así como sus subsecuentes modificaciones.</p>
     <div class="signature-name">{{ $puesto_firmante }}</div>
 </div>
 
-<div class="down">Este cert¡ficado sustituye al: No aplica<br>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35<br>Edición 5 Entrada en vigor 08/03/2023 <br>
 
- @if ($leyenda)
-    Cancela y sustituye al certificado con clave: CIDAM C-GRA-057/2023
- @endif
 
-</div>
-
-<div class="foother">
-    <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="300px">
+<div class="footer">
+    <p style="text-align: right; font-size: 9px; line-height: 1; margin-bottom: 1px;">
+        @if ($id_sustituye)
+            Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
+        @endif
+        <br>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35<br>
+        Entrada en vigor: 
+    </p>
+    <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705px">
 </div>
 
 </body>

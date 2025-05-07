@@ -29,7 +29,7 @@
         <li class="nav-item">
           <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#payment">
             <i class="ri-bank-card-line me-2"></i>
-            <span class="align-middle">Payment</span>
+            <span class="align-middle">Quienes somos</span>
           </button>
         </li>
         <li class="nav-item">
@@ -78,7 +78,7 @@
           </div>
           <div>
             <h5 class="mb-0">
-              <span class="align-middle">Payment</span>
+              <span class="align-middle">Aqui</span>
             </h5>
             <span>Get help with payment</span>
           </div>
@@ -87,7 +87,7 @@
           <div class="accordion-item active">
             <h2 class="accordion-header">
               <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionPayment-1" aria-controls="accordionPayment-1">
-                When is payment taken for my order?
+                2do menu
               </button>
             </h2>
 

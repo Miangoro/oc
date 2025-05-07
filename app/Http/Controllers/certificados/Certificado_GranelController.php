@@ -557,10 +557,7 @@ public function CertificadoGranel($id_certificado)
         //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
     }
 
-    $direccionCompleta = $certificado->dictamen->inspeccione->solicitud->empresa->instalaciones->first()->direccion_completa ?? 'No encontrado';
-    $ingredientes = $certificado->dictamen->lote_granel->ingredientes ?? 'N/A';
-    $edad = $certificado->dictamen->lote_granel->edad ?? 'N/A';
-    $num_dictamen = $certificado->dictamen->num_dictamen ?? 'No encontrado';
+    $direccionCompleta = $certificado->dictamen->inspeccione->solicitud->instalaciones->direccion_completa ?? 'No encontrado';
     $watermarkText = $certificado->estatus === 1;
     $leyenda = $certificado->estatus === 2;
 
@@ -576,7 +573,6 @@ public function CertificadoGranel($id_certificado)
 
     // Datos para el PDF
     $pdfData = [
-        // Tabla #1
         'data' => $certificado,
         'num_certificado' => $certificado->num_certificado ?? 'No encontrado',
         'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
@@ -596,14 +592,10 @@ public function CertificadoGranel($id_certificado)
         'n_analisis' => $certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'No encontrado',
         'volumen' => $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen_restante ?? 'No encontrado',
         'cont_alc' => $certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc?? 'No encontrado',
-
         'tipo_maguey' => $certificado->dictamen->inspeccione->solicitud->lote_granel ?? 'No encontrado',
-
         'edad' => $certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? '-----',
         'ingredientes' => $certificado->dictamen->inspeccione->solicitud->lote_granel->ingredientes ?? '-----',
-
         'num_dictamen' => $certificado->dictamen->num_dictamen ?? 'No encontrado',
-        //'tipo' => $tipoNombres,
     ];
 
     // Generar y mostrar el PDF
