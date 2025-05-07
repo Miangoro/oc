@@ -106,11 +106,11 @@
             /*padding-bottom: 2px; /*espacio al fondo si es necesario */
         }
         .img-footer {
-            background-image: url("{{ public_path('img_pdf/pie_certificado.png') }}");
+            /*background-image: url("{{ public_path('img_pdf/pie_certificado.png') }}");*/
             background-size: cover; /* ajusta img al contenedor */
             background-position: center; /* Centra la imagen en el contenedor */
             height: 45px; 
-            width: 95%; /* Hace que la imagen ocupe todo el ancho del contenedor */
+            /*width: 95%; /* Hace que la imagen ocupe todo el ancho del contenedor */
         }
 
         .watermark-cancelado {
@@ -142,16 +142,16 @@
 <div class="img-exportacion"></div>
 
 <div class="footer">
-    <p style="text-align: right; font-size: 8px; margin-bottom: 1px;">
+    <p style="text-align: right; font-size: 8px; margin-bottom: 1px; line-height: 1.3;">
         @if ($id_sustituye)<!-- Aparece solo si tiene valor -->
             Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
         @endif
         <br>Certificado de Exportación NOM-070-SCFI-2016 F7.1-01-23 Ed 12<br>
         Entrada en vigor: 26-08-2024
     </p>
-    {{-- <img src="{{ public_path('img_pdf/pie_certificado.png') }}" style="height: 40px; width: 710px; position: absolute; margin-top: 0;"
-        alt="pie de certificado"> --}}
-    <div class="img-footer"></div>
+    <div class="img-footer">
+        <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705">
+    </div>
 </div>
     
 <div class="encabezado">

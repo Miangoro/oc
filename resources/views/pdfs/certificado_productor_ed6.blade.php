@@ -13,100 +13,31 @@
             margin-bottom: 1px;*/
         }
         body {
-        font-family: 'Calibri', sans-serif;
+            font-family: 'Calibri', sans-serif;
+            font-size: 13.5px;
         }
 
-        .watermark {
-            position: absolute;
-            top: 43%;
-            left: 55%;
-            width: 50%;
-            height: auto; 
-            transform: translate(-50%, -50%);
-            opacity: 0.3;
-            z-index: -1; 
-        }
-        
-        .watermark-cancelado {
-            font-family: Arial;
-            color: red;
+        .img-fondo {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
-            opacity: 0.5;
-            /* Opacidad predeterminada */
-            letter-spacing: 3px;
-            font-size: 150px;
-            white-space: nowrap;
-            z-index:-1;
+            top: 250px;
+            left: 100px;
+            width: 530px;
+            height: 444px;
+            z-index: -1;
+            opacity: 0.1;
         }
 
-        .header img {
-            float: left; 
-            margin-left: -10px;
-            margin-top: -30px; 
+        .encabezado {
+            /*position: fixed;*/
+            width: 100%; 
+            color: #2f2b5a;
         }
 
-        .description1 {
-            font-size: 25px;
-            font-weight: bold;
-            text-align: right;
-        }
 
-        .description2 {
-            font-weight: bold;
-            font-size: 14px;
-            color: #5A5768;
-            white-space: nowrap;
-            position: relative;
-            top: -64px;
-            left: 295px; 
-        }
-
-        .description3 {
-            font-weight: bold;
-            margin-right: 30px;
-            text-align: right;
-            font-size: 13px;
-            position: relative;
-            top: -30px;
-        }
-
-        .text {
-            font-size: 13.5px;
-            line-height: 1;
-            text-align: justify;
-            margin: 10 20px;
-        }
-
-        .text1 {
-            font-size: 13.5px;
-            line-height: 1;
-            text-align: justify;
-            margin: -5 20px;
-        }
-
-        .title {
-            font-size: 25px;
-            text-align: center;
-            font-weight: bold;
-            letter-spacing: 9px;
-            line-height: 0.5;
-        }
-
-        .title2 {
-            font-size: 25px;
-            text-align: center;
-            font-weight: bold;
-            line-height: 0.5;
-        }
-
-        .title3 {
-            font-size: 20px;
-            text-align: center;
-            font-weight: bold;
-            color: #0C1444;
+        #tabla-principal td{
+        line-height: 9px; /* Asegura que el contenido se ajuste a la altura */
+        overflow: hidden; /* Evita desbordamientos del contenido */
+        border: solid 2.5px;
         }
 
         table {
@@ -158,59 +89,33 @@
             white-space: normal; 
         }
 
-        .signature {
-            margin: 50px 20px; 
-            text-align: center; 
-            margin-top: 20px; 
-        }
+ 
 
-        .signature-line {
-            line-height: 10;
-            border-top: 1px solid #000; 
-            width: 240px; 
-            margin: 0 auto; 
-            padding-top: 5px; 
-        }
 
-        .signature-name {
-            font-family: Arial;
-            margin: 10px 0 0; 
-            font-size: 13px; 
-            font-weight: bold;
-            line-height: 0.5;
-        }
-
-        .down {
-            text-align: right;
-            font-size: 11px;
-            margin-top: -40px; 
-            margin-right: 20px;
-        }
-
-        .foother {
+        .footer {
             position: fixed;
-            bottom: -30; 
-            left: 0; 
+            bottom: -22; 
             width: 100%; 
             text-align: center; 
-            margin: 0;
-            padding: 10px 0; 
         }
 
-        .foother img {
-            margin-top: 20px;
-            width: 700px; 
-            height: auto;
-            display: inline-block;
-        }
-
-        #tabla-principal td{
-        line-height: 9px; /* Asegura que el contenido se ajuste a la altura */
-        overflow: hidden; /* Evita desbordamientos del contenido */
-        border: solid 2.5px;
+        .watermark-cancelado {
+            font-family: Arial;
+            color: red;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
+            opacity: 0.5;
+            /* Opacidad predeterminada */
+            letter-spacing: 3px;
+            font-size: 150px;
+            white-space: nowrap;
+            z-index:-1;
         }
     </style>
 </head>
+
 <body>
 
     @if ($watermarkText)
@@ -219,19 +124,26 @@
         </div>
     @endif
 
-<img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Marca de Agua" class="watermark">
+    <div class="img-fondo">
+        <img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Marca de Agua fondo">
+    </div>
 
-<div class="header">
-    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" width="300px">
-</div>
+    <div class="encabezado">
+        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" style="width: 300px; float: left; margin-left: -20px; margin-top: -20px;" alt="logo OC 3D">
+        
+        <div  style="margin-bottom: 15px">
+            <b style="font-size: 20px;">Centro de Innovación y Desarrollo<br>Agroalimentario de Michoacán, A.C</b>
+        </div>
+    </div>
 
-<div class="description1">ORGANISMO CERTIFICADOR</div>
-<div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C</div>
-<div class="description3">No. CERTIFICADO: {{ $num_certificado }}</div>
+<div>No. CERTIFICADO: {{ $num_certificado }}</div>
 
-<p class="text1">
+<p >
 Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditado como organismo de certificación de producto con número de acreditación 144/18 ante la Entidad Mexicana de Acreditación, A.C. otorga el siguiente:
 </p>
+
+
+
 
 <p class="title">CERTIFICADO NOM EDICION 6</p>
 <p class="title2">COMO PRODUCTOR DE MEZCAL A</p>
@@ -289,16 +201,16 @@ de Noviembre de 1994, así como sus subsecuentes modificaciones.</p>
     <div class="signature-name">{{ $puesto_firmante }}</div>
 </div>
 
-<div class="down">Este cert¡ficado sustituye al: No aplica<br>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35<br>Edición 5 Entrada en vigor 08/03/2023 <br>
 
- @if ($leyenda)
-    Cancela y sustituye al certificado con clave: CIDAM C-GRA-057/2023
- @endif
-
-</div>
-
-<div class="foother">
-    <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="300px">
+<div class="footer">
+    <p style="text-align: right; font-size: 9px; line-height: 1; margin-bottom: 1px;">
+        @if ($id_sustituye)
+            Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
+        @endif
+        <br>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35<br>
+        Entrada en vigor: 
+    </p>
+    <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705px">
 </div>
 
 </body>
