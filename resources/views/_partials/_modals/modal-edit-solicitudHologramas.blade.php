@@ -96,6 +96,7 @@
                 var contenido = "";
                 for (let index = 0; index < response.marcas.length; index++) {
                     contenido = '<option value="' + response.marcas[index].id_marca + '">' + response
+                        .marcas[index].folio + ' - ' + response
                         .marcas[index].marca + '</option>' + contenido;
                 }
 
