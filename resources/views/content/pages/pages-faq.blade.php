@@ -12,13 +12,10 @@
 
 @section('content')
 <div class="faq-header d-flex flex-column justify-content-center align-items-center h-px-300 position-relative overflow-hidden rounded-4">
-  <img src="{{asset('assets/img/pages/header-'.$configData['style'].'.png')}}" class="scaleX-n1-rtl faq-banner-img h-px-1000 z-n1" alt="background image" data-app-light-img="pages/header2.png" data-app-dark-img="pages/header-dark.png"/>
-  <h4 class="text-center text-primary mb-2"> Hello, how can we help? </h4>
-  <p class="text-body text-center mb-0 px-4">or choose a category to quickly find the help you need</p>
-  <div class="input-wrapper mb-6 mt-7 input-group input-group-merge px-sm-5">
-    <span class="input-group-text" id="basic-addon1"><i class="ri-search-line"></i></span>
-    <input type="text" class="form-control" placeholder="Ask a question...." aria-label="Search" aria-describedby="basic-addon1" />
-  </div>
+  <img src="{{asset('assets/img/pages/header-'.$configData['style'].'.png')}}" class="scaleX-n1-rtl faq-banner-img h-px-300 z-n1" alt="background image" data-app-light-img="pages/header3.png" data-app-dark-img="pages/header-dark.png"/>
+  <h4 class="text-center text-primary mb-2">  </h4>
+  <p class="text-body text-center mb-0 px-4"></p>
+  
 </div>
 
 <div class="row mt-6">
@@ -28,26 +25,31 @@
       <ul class="nav nav-pills flex-column flex-nowrap">
         <li class="nav-item">
           <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#payment">
+<<<<<<< HEAD
             <i class="ri-bank-card-line me-2"></i>
             <span class="align-middle">Quienes somos</span>
+=======
+            <i class="ri-file-list-3-line"></i>
+            <span class="align-middle">Certificación</span>
+>>>>>>> 56a0ea9e56e0537b02b2a2875e860da6afa1513d
           </button>
         </li>
         <li class="nav-item">
           <button class="nav-link" data-bs-toggle="tab" data-bs-target="#delivery">
             <i class="ri-file-text-line"></i>
-            <span class="align-middle">Requisitos para iniciar el proceso </span>
+            <span class="align-middle">Requisitos para el proceso</span>
           </button>
         </li>
         <li class="nav-item">
           <button class="nav-link" data-bs-toggle="tab" data-bs-target="#cancellation">
             <i class="ri-refresh-line me-2"></i>
-            <span class="align-middle"> Proceso de certificación</span>
+            <span class="align-middle">Proceso de certificación</span>
           </button>
         </li>
         <li class="nav-item">
           <button class="nav-link" data-bs-toggle="tab" data-bs-target="#orders">
             <i class="ri-money-dollar-circle-line"></i>
-            <span class="align-middle"> Costos y documentación</span>
+            <span class="align-middle">Costos y documentación</span>
           </button>
         </li>
         <li class="nav-item">
@@ -73,29 +75,35 @@
         <div class="d-flex mb-4 gap-4">
           <div class="avatar avatar-md">
             <div class="avatar-initial bg-label-primary rounded-4">
-            <i class="ri-file-list-3-line ri-30px"></i>
+              <i class="ri-file-list-3-line ri-30px"></i>
             </div>
           </div>
           <div>
             <h5 class="mb-0">
+<<<<<<< HEAD
               <span class="align-middle">Aqui</span>
+=======
+              <span class="align-middle">Certificación</span>
+>>>>>>> 56a0ea9e56e0537b02b2a2875e860da6afa1513d
             </h5>
-            <span>Información general</span>
+            <span>Informacion General</span>
           </div>
         </div>
         <div id="accordionPayment" class="accordion">
           <div class="accordion-item active">
             <h2 class="accordion-header">
               <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionPayment-1" aria-controls="accordionPayment-1">
+<<<<<<< HEAD
                 2do menu
+=======
+              ¿Qué es la certificación de mezcal?
+>>>>>>> 56a0ea9e56e0537b02b2a2875e860da6afa1513d
               </button>
             </h2>
 
             <div id="accordionPayment-1" class="accordion-collapse collapse show">
               <div class="accordion-body">
               Es el proceso oficial para verificar que un producto cumple con la NOM-070-SCFI-2016, permitiendo su comercialización como “Mezcal”.
-
-
               </div>
             </div>
           </div>
@@ -126,9 +134,9 @@
               <div class="accordion-body">
               Sí. Si se desea comercializar legalmente como “mezcal”, tanto en México como en el extranjero, es obligatorio.
 
-                
+                <a href="javascript:void(0);"></a>
                 <span class="fw-medium"></span>
-               
+                <a href="javascript:void(0);"></a>
               </div>
             </div>
           </div>
@@ -137,7 +145,6 @@
             <h2 class="accordion-header">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPayment-4" aria-controls="accordionPayment-4">
               ¿Qué categorías de mezcal existen según la NOM?
-
               </button>
             </h2>
             <div id="accordionPayment-4" class="accordion-collapse collapse">
@@ -148,18 +155,10 @@
                   <li>Mezcal Ancestral</li>
               </ul>
                   <p>Cada categoría tiene procesos específicos de producción regulados.</p>
-
               </div>
             </div>
           </div>
 
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-            </h2>
-            <div id="accordionPayment-5" class="accordion-collapse collapse">
-              
-            </div>
-          </div>
         </div>
       </div>
       <div class="tab-pane fade" id="delivery" role="tabpanel">
@@ -171,10 +170,9 @@
           </div>
           <div>
             <h5 class="mb-0">
-              <span class="align-middle">Requisitos
-              </span>
+              <span class="align-middle">Requisitos para iniciar el proceso</span>
             </h5>
-           
+            <span></span>
           </div>
         </div>
         <div id="accordionDelivery" class="accordion">
@@ -196,6 +194,7 @@
               </div>
             </div>
           </div>
+
           <div class="accordion-item">
             <h2 class="accordion-header">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionDelivery-2" aria-controls="accordionDelivery-2">
@@ -207,34 +206,25 @@
               </div>
             </div>
           </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-            </h2>
-            <div id="accordionDelivery-4" class="accordion-collapse collapse">
-              <div class="accordion-body">
-                <a href="javascript:void(0);">
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div class="tab-pane fade" id="cancellation" role="tabpanel">
         <div class="d-flex mb-4 gap-4 align-items-center">
           <div class="avatar avatar-md">
             <span class="avatar-initial bg-label-primary rounded-4">
-              <i class="ri-refresh-line ri-30px"></i>
+              <i class="ri-refresh-line me-2 ri-30px"></i>
             </span>
           </div>
           <div>
             <h5 class="mb-0"><span class="align-middle">Proceso de certificación</span></h5>
-      </div>
+            <span></span>
+          </div>
         </div>
         <div id="accordionCancellation" class="accordion">
           <div class="accordion-item active">
             <h2 class="accordion-header">
               <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionCancellation-1" aria-controls="accordionCancellation-1">
               ¿Cómo es el proceso de certificación?
-
               </button>
             </h2>
 
@@ -243,7 +233,9 @@
                 <p>
                 Implica revisión documental, visita de inspección, análisis de laboratorio y verificación del cumplimiento de la NOM-070.
                 </p>
-               
+                <p class="mb-0">
+                
+                </p>
               </div>
             </div>
           </div>
@@ -252,11 +244,14 @@
             <h2 class="accordion-header">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionCancellation-2" aria-controls="accordionCancellation-2">
               ¿Cuánto tiempo tarda la certificación?
+
               </button>
             </h2>
             <div id="accordionCancellation-2" class="accordion-collapse collapse">
               <div class="accordion-body">
               Entre 15 y 45 días, dependiendo del cumplimiento documental y operativo.
+                <a href="javascript:void(0);"></a>
+               
               </div>
             </div>
           </div>
@@ -265,12 +260,13 @@
             <h2 class="accordion-header">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" aria-controls="accordionCancellation-3" data-bs-target="#accordionCancellation-3">
               ¿Qué sucede si mi lote no aprueba la certificación?
+
               </button>
             </h2>
             <div id="accordionCancellation-3" class="accordion-collapse collapse">
               <div class="accordion-body">
-              
-                <span class="fw-medium">Recibirás un reporte de no conformidades para corregir y volver a presentar el lote.</span> status</p>
+                <p>Recibirás un reporte de no conformidades para corregir y volver a presentar el lote. <a href="javascript:void(0);"></a></p>
+                <p class="mb-0"> <span class="fw-medium"></span> </p>
               </div>
             </div>
           </div>
@@ -280,13 +276,14 @@
         <div class="d-flex mb-4 gap-4 align-items-center">
           <div class="avatar avatar-md">
             <span class="avatar-initial bg-label-primary rounded-4">
-              <i class="ri-inbox-archive-line ri-30px"></i>
+              <i class="ri-money-dollar-circle-line ri-30px"></i>
             </span>
           </div>
           <div>
             <h5 class="mb-0">
               <span class="align-middle">Costos y Documentación</span>
             </h5>
+            <span></span>
           </div>
         </div>
         <div id="accordionOrders" class="accordion">
@@ -302,6 +299,9 @@
                 <p>
                 Varía según la cantidad de lotes, visitas y análisis requeridos. Puedes solicitar una cotización personalizada.
                 </p>
+                <p class="mb-0">
+                   <span class="fw-medium"></span>
+                </p>
               </div>
             </div>
           </div>
@@ -309,7 +309,7 @@
           <div class="accordion-item">
             <h2 class="accordion-header">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionOrders-2" aria-controls="accordionOrders-2">
-                ¿Qué documentos debo presentar?
+              ¿Qué documentos debo presentar?
               </button>
             </h2>
             <div id="accordionOrders-2" class="accordion-collapse collapse">
@@ -321,32 +321,26 @@
                   <li>Fotografías o planos de la planta</li>
                   <li>Etiquetas y muestras del producto</li>
               </ul>
+ <span class="fw-medium"></span> 
               </div>
             </div>
           </div>
 
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-            </h2>
-            <div id="accordionOrders-3" class="accordion-collapse collapse">
-              <div class="accordion-body">
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
       <div class="tab-pane fade" id="product" role="tabpanel">
         <div class="d-flex mb-4 gap-4 align-items-center">
           <div class="avatar avatar-md">
             <span class="avatar-initial bg-label-primary rounded-4">
-              <i class="ri-settings-4-line ri-30px"></i>
+              <i class="ri-file-check-line ri-30px"></i>
             </span>
           </div>
           <div>
             <h5 class="mb-0">
               <span class="align-middle">Post-certificación y comercialización</span>
             </h5>
-            <span>Lorem ipsum, dolor sit amet.</span>
+            <span></span>
           </div>
         </div>
         <div id="accordionProduct" class="accordion">
@@ -354,6 +348,7 @@
             <h2 class="accordion-header">
               <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionProduct-1" aria-controls="accordionProduct-1">
               ¿Qué puedo hacer después de certificar mi mezcal?
+
               </button>
             </h2>
 
@@ -377,18 +372,12 @@
             <div id="accordionProduct-2" class="accordion-collapse collapse">
               <div class="accordion-body">
               Sí, requiere mantenimiento con inspecciones y certificación por lote.
+              <a href="javascript:void(0);"></a>
               </div>
             </div>
           </div>
 
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-            </h2>
-            <div id="accordionProduct-3" class="accordion-collapse collapse">
-              <div class="accordion-body">
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -430,3 +419,5 @@
 </div>
 <!-- /Contact -->
 @endsection
+
+

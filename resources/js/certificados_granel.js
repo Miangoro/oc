@@ -1202,7 +1202,7 @@ $(document).ready(function () {
 ///FORMATO PDF CERTIFICADO
 $(document).on('click', '.pdfCertificado', function ()  {
   var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
-  var pdfUrl = '/Pre-certificado/' + id; //Ruta del PDF
+  var pdfUrl = '/Pre-certificado-granel/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
       
