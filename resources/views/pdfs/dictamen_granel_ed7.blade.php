@@ -411,7 +411,7 @@
             {{-- <span style="margin-left: 50px;">
                 <strong>{{ $data->firmante->puesto }} | {{ $data->firmante->name }}</strong>
             </span> --}}
-            <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
+            <span style="margin-left: 45px; display: inline-block; text-align: center; position: relative;">
                 @php
                     use Illuminate\Support\Facades\Storage;
                     $firma = $data->firmante->firma ?? null;
