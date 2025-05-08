@@ -3,10 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Certificado como Productor de Mezcal A</title>
+  <title>Certificado como Productor de Mezca</title>
   <style>
+    @page {
+          size: 227mm 292mm;
+    }
+    
     body {
       font-family: 'Calibri', sans-serif;
+      font-size: 13px;
     }
 
     .watermark {

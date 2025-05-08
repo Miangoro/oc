@@ -115,6 +115,7 @@ public function index(Request $request)
         $nestedData['id_revisor'] = $certificado->revisor->user->name ?? null;
         $nestedData['numero_revision'] = $certificado->revisor->numero_revision ?? null;
         $nestedData['decision'] = $certificado->revisor->decision ?? null;
+        $nestedData['respuestas'] = $certificado->revisor->respuestas ?? null;
         
             ///dias vigencia
             $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
