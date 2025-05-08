@@ -12,7 +12,7 @@
 
 @section('content')
 <div class="faq-header d-flex flex-column justify-content-center align-items-center h-px-300 position-relative overflow-hidden rounded-4">
-  <img src="{{asset('assets/img/pages/header-'.$configData['style'].'.png')}}" class="scaleX-n1-rtl faq-banner-img h-px-1000 z-n1" alt="background image" data-app-light-img="pages/header-ligth.png" data-app-dark-img="pages/header-dark.png"/>
+  <img src="{{asset('assets/img/pages/header-'.$configData['style'].'.png')}}" class="scaleX-n1-rtl faq-banner-img h-px-1000 z-n1" alt="background image" data-app-light-img="pages/header2.png" data-app-dark-img="pages/header-dark.png"/>
   <h4 class="text-center text-primary mb-2"> Hello, how can we help? </h4>
   <p class="text-body text-center mb-0 px-4">or choose a category to quickly find the help you need</p>
   <div class="input-wrapper mb-6 mt-7 input-group input-group-merge px-sm-5">
