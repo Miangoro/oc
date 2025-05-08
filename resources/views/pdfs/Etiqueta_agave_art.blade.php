@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -110,6 +111,7 @@
         }
     </style>
 </head>
+
 <body>
     <table class="etiqueta-table">
         <tbody>
@@ -119,30 +121,32 @@
                 </td>
                 <td colspan="4" class="custom-title">Etiqueta para agave (%ART)</td>
                 <td colspan="2" rowspan="3" class="border-green-custom image-cell">
-                    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador" class="logo-smallx">
+                    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador"
+                        class="logo-smallx">
                 </td>
             </tr>
             <tr>
                 <td class="custom">Fecha de muestreo:</td>
-                <td>10/06/2024</td>
+                <td>{{ $datos->solicitud->lote_granel->fecha_emision ?? '' }}</td>
                 <td class="custom">Folio / No. de servicio:</td>
-                <td>{{ $datos->num_servicio ?? 'NA'}} </td>
+                <td>{{ $datos->solicitud->inspeccion->num_servicio }} </td>
             </tr>
             <tr>
                 <td class="customx">No. de lote o tapada:</td>
-                <td>TAP-AMT-71CLS</td>
+                <td>{{ $datos->solicitud->lote_granel->nombre_lote ?? '' }}</td>
                 <td class="custom">Peso total del maguey:</td>
                 <td>20090</td>
             </tr>
             <tr>
                 <td colspan="2" class="custom">Razón Social / Productor:</td>
-                <td colspan="2">{{ $datos->empresa_num_cliente ?? 'xd'}}</td>
+                <td colspan="2">{{ $datos->solicitud->empresa->razon_social }}</td>
                 <td class="custom">No. de piñas anterior:</td>
                 <td colspan="3">3012</td>
             </tr>
             <tr>
                 <td colspan="2" rowspan="4" class="custom">Domicilio:</td>
-                <td colspan="2" rowspan="4">Paraje Salina Grande S/N Tlacolula de Matamoros, Oaxaca C.P. 70403</td>
+                <td colspan="2" rowspan="4">{{ $datos->solicitud->instalaciones->direccion_completa ?? '' }}
+                </td>
                 <td class="custom">No. de piñas comercializadas:</td>
                 <td colspan="3">930</td>
             </tr>
@@ -156,7 +160,16 @@
             </tr>
             <tr>
                 <td class="custom">Especie o tipo de agave:</td>
-                <td colspan="3">Maguey Espadín (A. angustifolia)</td>
+                <td colspan="3">
+                  @if (isset($datos->solicitud->lote_granel) && $datos->solicitud->lote_granel->tipos_relacionados)
+                  @foreach ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
+                      {{ $tipo->nombre ?? '' }} (<em>{{ $tipo->cientifico ?? '' }}</em>)@if (!$loop->last)
+                          ,
+                      @endif
+                  @endforeach
+              @endif
+
+                </td>
             </tr>
             <tr>
                 <td colspan="2" class="custom">Maestro mezcalero:</td>
@@ -173,10 +186,10 @@
         </tbody>
     </table>
 
-<br>
+    <br>
 
 
-<table class="etiqueta-table">
+    <table class="etiqueta-table">
         <tbody>
             <tr>
                 <td colspan="2" rowspan="3" class="border-green-custom image-cell">
@@ -184,30 +197,32 @@
                 </td>
                 <td colspan="4" class="custom-title">Etiqueta para agave (%ART)</td>
                 <td colspan="2" rowspan="3" class="border-green-custom image-cell">
-                    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador" class="logo-smallx">
+                    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador"
+                        class="logo-smallx">
                 </td>
             </tr>
             <tr>
                 <td class="custom">Fecha de muestreo:</td>
-                <td>10/06/2024</td>
+                <td>{{ $datos->solicitud->lote_granel->fecha_emision ?? '' }}</td>
                 <td class="custom">Folio / No. de servicio:</td>
-                <td>UMS-01002/2024</td>
+                <td>{{ $datos->solicitud->inspeccion->num_servicio }}</td>
             </tr>
             <tr>
                 <td class="customx">No. de lote o tapada:</td>
-                <td>TAP-AMT-71CLS</td>
+                <td>{{ $datos->solicitud->lote_granel->nombre_lote ?? '' }}</td>
                 <td class="custom">Peso total del maguey:</td>
                 <td>20090</td>
             </tr>
             <tr>
                 <td colspan="2" class="custom">Razón Social / Productor:</td>
-                <td colspan="2">Amantes del Mezcal S.A. de C.V.</td>
+                <td colspan="2">{{ $datos->solicitud->empresa->razon_social }}</td>
                 <td class="custom">No. de piñas anterior:</td>
                 <td colspan="3">3012</td>
             </tr>
             <tr>
                 <td colspan="2" rowspan="4" class="custom">Domicilio:</td>
-                <td colspan="2" rowspan="4">Paraje Salina Grande S/N Tlacolula de Matamoros, Oaxaca C.P. 70403</td>
+                <td colspan="2" rowspan="4">{{ $datos->solicitud->instalaciones->direccion_completa ?? ''}}
+                </td>
                 <td class="custom">No. de piñas comercializadas:</td>
                 <td colspan="3">930</td>
             </tr>
@@ -221,7 +236,16 @@
             </tr>
             <tr>
                 <td class="custom">Especie o tipo de agave:</td>
-                <td colspan="3">Maguey Espadín (A. angustifolia)</td>
+                <td colspan="3">
+                  @if (isset($datos->solicitud->lote_granel) && $datos->solicitud->lote_granel->tipos_relacionados)
+                  @foreach ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
+                      {{ $tipo->nombre ?? '' }} (<em>{{ $tipo->cientifico ?? '' }}</em>)@if (!$loop->last)
+                          ,
+                      @endif
+                  @endforeach
+              @endif
+
+                </td>
             </tr>
             <tr>
                 <td colspan="2" class="custom">Maestro mezcalero:</td>
@@ -242,12 +266,15 @@
     </div>
 
     <div class="footer-bar-left">
-    <p class="text-center vertical-center" style="bottom: 4px;">
-        Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michpacán A.C. y no puede ser
-        <br>
-        <span class="offset-text">distribuido externamente sin la autorización escrita del Director Ejecutivo.</span>
-    </p>
-</div>
+        <p class="text-center vertical-center" style="bottom: 4px;">
+            Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michpacán A.C. y no
+            puede ser
+            <br>
+            <span class="offset-text">distribuido externamente sin la autorización escrita del Director
+                Ejecutivo.</span>
+        </p>
+    </div>
 
 </body>
+
 </html>
