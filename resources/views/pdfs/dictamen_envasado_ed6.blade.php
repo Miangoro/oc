@@ -510,7 +510,7 @@
             <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
                 @php
                     use Illuminate\Support\Facades\Storage;
-                    $firma = $data->inspectores->firma ?? null;
+                    $firma = $data->firmante->firma ?? null;
                     $firmaPath = $firma ? 'firmas/' . $firma : null;
                 @endphp
         
@@ -519,7 +519,7 @@
                         src="{{ asset('storage/' . $firmaPath) }}">
                 @endif
         
-                <strong>{{ $data->inspectores->puesto ?? '' }} | {{ $data->inspectores->name ?? '' }}</strong>
+                <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
             </span>
         </p>
         

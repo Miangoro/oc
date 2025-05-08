@@ -38,19 +38,15 @@ class Dictamen_Granel extends Model
     }
 
     Public function certificado()
-        {
-            return $this->belongsTo(CertificadosGranel::class, 'id_dictamen', 'id_dictamen');   
-        }  
+    {
+        return $this->belongsTo(CertificadosGranel::class, 'id_dictamen', 'id_dictamen');   
+    }  
 
-    public function inspectores()
+
+    public function firmante()
     {
         return $this->belongsTo(User::class, 'id_firmante', 'id');
     }
-
-    public function firmante()
-        {
-            return $this->belongsTo(User::class, 'id_firmante', 'id');
-        }
 
     
 }
