@@ -682,12 +682,12 @@ if ($guardar && $rutaGuardado) {
     return $rutaGuardado; 
 }
 
-    if ( $datos->fecha_emision >= '2025-04-01' ) {
+    /*if ( $datos->fecha_emision >= '2025-04-01' ) {
         return Pdf::loadView('pdfs.certificado_productor_ed6', $pdfData)->stream('Certificado de productor de mezcal_ed6.pdf');
-    }else{
+    }else{*/
         return Pdf::loadView('pdfs.Certificado_productor_ed5', $pdfData)->stream('Certificado de productor de mezcal.pdf');
 
-    }
+    //}
 }
 
 
