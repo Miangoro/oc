@@ -28,13 +28,8 @@
       <ul class="nav nav-pills flex-column flex-nowrap">
         <li class="nav-item">
           <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#payment">
-<<<<<<< HEAD
             <i class="ri-file-list-3-line"></i>
             <span class="align-middle">Certificación</span>
-=======
-            <i class="ri-bank-card-line me-2"></i>
-            <span class="align-middle">Quienes somos</span>
->>>>>>> 9fe4948f7025b5aaff2dbbda99b477f9e5d3c1fa
           </button>
         </li>
         <li class="nav-item">
@@ -83,11 +78,7 @@
           </div>
           <div>
             <h5 class="mb-0">
-<<<<<<< HEAD
               <span class="align-middle">Certificación</span>
-=======
-              <span class="align-middle">Aqui</span>
->>>>>>> 9fe4948f7025b5aaff2dbbda99b477f9e5d3c1fa
             </h5>
             <span>Información general</span>
           </div>
@@ -96,12 +87,8 @@
           <div class="accordion-item active">
             <h2 class="accordion-header">
               <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionPayment-1" aria-controls="accordionPayment-1">
-<<<<<<< HEAD
               ¿Qué es la certificación de mezcal?
 
-=======
-                2do menu
->>>>>>> 9fe4948f7025b5aaff2dbbda99b477f9e5d3c1fa
               </button>
             </h2>
 
