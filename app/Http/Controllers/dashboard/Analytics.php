@@ -22,7 +22,7 @@ class Analytics extends Controller
   {
     //$datos = solicitudesModel::All();
     $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')->where('fecha_solicitud','>','2024-12-01')->count();
-    $solicitudesSinActa = solicitudesModel::whereNot('id_tipo', 15)
+    $solicitudesSinActa = solicitudesModel::whereNot('id_tipo', 12)->whereNot('id_tipo', 13)->whereNot('id_tipo', 15)->where('fecha_solicitud','>','2024-12-01')
       ->where(function ($query) {
         $query->doesntHave('documentacion_completa')
           ->orWhereHas('documentacion_completa', function ($q) {
