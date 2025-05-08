@@ -144,6 +144,11 @@ public function index(Request $request)
             //Lote envasado
             $lotes = $certificado->dictamen?->inspeccione?->solicitud?->lotesEnvasadoDesdeJson();
             $nestedData['nombre_lote'] = $lotes?->pluck('nombre')->implode(', ') ?? 'No encontrado';
+            //Lote granel
+    $lotesGranel = $lotes?->flatMap(function ($lote) {
+    return $lote->lotesGranel; // Relación definida en el modelo LoteEnvasado
+})->unique('id_lote_granel');
+    $nestedData['nombre_lote_granel'] = $lotesGranel?->pluck('nombre')->implode(', ') ?? 'No encontrado';
             
             
             $data[] = $nestedData;

@@ -188,6 +188,7 @@ if (dt_user_table.length) {
           }
         }, 
         {
+          //caracteristicas
           targets: 4,
           searchable: false,
           orderable: false,
@@ -195,7 +196,8 @@ if (dt_user_table.length) {
           render: function (data, type, full, meta) {
             var $ = full[''];
             return `<div class="small">
-                <b>Lote envasado:</b> ${full['nombre_lote']}  
+                <b>Lote envasado:</b> ${full['nombre_lote']} <br>
+                <b>Lote granel:</b> ${full['nombre_lote_granel']} <br>
               </div>`;
             }
         },
