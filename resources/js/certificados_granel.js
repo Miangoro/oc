@@ -221,7 +221,7 @@ var dataTable = $('.datatables-users').DataTable({
       let personal = $idRevisor !== null ? $idRevisor : `<b style="color: red;">Sin asignar</b>`;
 
       let revision = '';
-        if (numeroRevision == 1) revision = 'Primera revisión - ';
+        if (numeroRevision == 1) revision = '';
         else if (numeroRevision == 2) revision = 'Segunda revisión - ';
 
       let colorClass = '';
