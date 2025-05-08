@@ -408,8 +408,22 @@
         </div>
         <p class="textx" style="font-size: 9px;">
             <strong>AUTORIZÓ</strong>
-            <span style="margin-left: 50px;">
+            {{-- <span style="margin-left: 50px;">
                 <strong>{{ $data->firmante->puesto }} | {{ $data->firmante->name }}</strong>
+            </span> --}}
+            <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
+                @php
+                    use Illuminate\Support\Facades\Storage;
+                    $firma = $data->firmante->firma ?? null;
+                    $firmaPath = $firma ? 'firmas/' . $firma : null;
+                @endphp
+        
+                @if ($firma && Storage::disk('public')->exists($firmaPath))
+                    <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
+                        src="{{ asset('storage/' . $firmaPath) }}">
+                @endif
+        
+                <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
             </span>
         </p>
 
