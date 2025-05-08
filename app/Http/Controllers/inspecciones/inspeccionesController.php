@@ -559,8 +559,8 @@ class inspeccionesController extends Controller
     public function etiqueta_muestra($id_inspeccion)
     {
 
-        $pdf = Pdf::loadView('pdfs.Etiqueta_tapa_muestra');
-        return $pdf->stream('Etiqueta_para_tapa_de_la_muestra.pdf');
+        $pdf = Pdf::loadView('pdfs.Etiqueta_agave_art');
+        return $pdf->stream('Etiqueta para agave (%ART).pdf');
     }
 
     public function etiqueta_granel($id_inspeccion)
@@ -589,7 +589,8 @@ class inspeccionesController extends Controller
     public function etiqueta($id_inspeccion)
     {
       $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
-      $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB',  ['datos' => $datos]);
+
+      $pdf = Pdf::loadView('pdfs.etiquetas_tapas_sellado',  ['datos' => $datos]);
       return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
 }

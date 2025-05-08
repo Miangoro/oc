@@ -57,9 +57,10 @@ class LotesGranel extends Model
         if (is_array($idTipos) && !empty($idTipos)) {
             return tipos::whereIn('id_tipo', $idTipos)->get();
         }
-    
+
         return collect(); // Siempre devuelve colección, vacía si no hay tipos válidos
     }
+
 
     public function tipos()
     {
@@ -104,7 +105,7 @@ class LotesGranel extends Model
     return $this->hasOne(CertificadosGranel::class, 'id_lote_granel', 'id_lote_granel');
 }
 
-    
+
 
 
 }

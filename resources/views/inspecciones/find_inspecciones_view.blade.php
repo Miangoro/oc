@@ -221,13 +221,13 @@
  */
         switch (parseInt(id_tipo)) {
             case 1:
-            $('#links_etiquetas').attr('href', '{{ url('etiqueta-muestra') }}/' + id_solicitud);
+            $('#links_etiquetas').attr('href', '{{ url('etiqueta_agave_art') }}/' + id_solicitud);
                 break;
             case 2:
                 // Acciones para tipo 2
                 break;
             case 3:
-            $('#links_etiquetas').attr('href', '{{ url('etiqueta-2401ESPTOB') }}/' + id_solicitud);
+            $('#links_etiquetas').attr('href', '{{ url('etiquetas_tapas_sellado') }}/' + id_solicitud);
               break;
             case 4:
             case 5:
