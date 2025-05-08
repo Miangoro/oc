@@ -174,7 +174,7 @@
 @endsection
 
 <script>
-    function abrirModal(id_solicitud, tipo, nombre_empresa, id_tipo) {
+    function abrirModal(id_solicitud, id_inspeccion, tipo, nombre_empresa, id_tipo) {
 
         /* $.ajax({
              url: '/lista_empresas/' + id_empresa,
@@ -193,37 +193,54 @@
              }
          });*/
         $('.id_soli').text(id_solicitud);
+        $('.id_deinspeccion').text(id_inspeccion);
         $('.solicitud').text(tipo);
         $('.nombre_empresa').text(nombre_empresa);
         $('.numero_tipo').text(id_tipo);
-        // Asignar URLs
+
+        // Validar si hay inspección
+        if (parseInt(id_inspeccion) === 0) {
+            // No hay inspección, ocultar secciones relacionadas
+            $('#link_solicitud_servicio').closest('a').hide();
+            $('#link_oficio_comision').closest('a').hide();
+            $('#link_orden_servicio').closest('a').hide();
+            $('#links_etiquetas').closest('a').hide();
+        } else {
+            $('#link_solicitud_servicio').closest('a').show();
+            $('#link_solicitud_servicio').attr('href', '{{ url('solicitud_de_servicio') }}/' + id_solicitud);
+            $('#link_oficio_comision').closest('a').show();
+            $('#link_oficio_comision').attr('href', '{{ url('oficio_de_comision') }}/' + id_inspeccion);
+            $('#link_orden_servicio').closest('a').show();
+            $('#link_orden_servicio').attr('href', '{{ url('orden_de_servicio') }}/' + id_inspeccion);
+            $('#links_etiquetas').closest('a').show();
+        }
+     /*    // Asignar URLs
         $('#link_solicitud_servicio').attr('href', '{{ url('solicitud_de_servicio') }}/' + id_solicitud);
         $('#link_oficio_comision').attr('href', '{{ url('oficio_de_comision') }}/' + id_solicitud);
         $('#link_orden_servicio').attr('href', '{{ url('orden_de_servicio') }}/' + id_solicitud);
-
+ */
         switch (parseInt(id_tipo)) {
             case 1:
-            $('#links_etiquetas').attr('href', '{{ url('Etiqueta-Muestra') }}/' + id_solicitud);
+            $('#links_etiquetas').attr('href', '{{ url('etiqueta_agave_art') }}/' + id_solicitud);
                 break;
             case 2:
                 // Acciones para tipo 2
                 break;
             case 3:
-            $('#links_etiquetas').attr('href', '{{ url('Etiqueta-2401ESPTOB') }}/' + id_solicitud);
+            $('#links_etiquetas').attr('href', '{{ url('etiquetas_tapas_sellado') }}/' + id_solicitud);
               break;
             case 4:
             case 5:
-            $('#links_etiquetas').attr('href', '{{ url('Etiqueta_lotes_mezcal_granel') }}/' + id_solicitud);
+            $('#links_etiquetas').attr('href', '{{ url('etiqueta_lotes_mezcal_granel') }}/' + id_solicitud);
                 break;
 
             case 7:
-              $('#links_etiquetas').attr('href', '{{ url('Etiqueta-Barrica') }}/' + id_solicitud);
+              $('#links_etiquetas').attr('href', '{{ url('etiqueta-barrica') }}/' + id_solicitud);
             break;
             default:
                 // Acciones por defecto
                 break;
         }
-
         $('#expedienteServicio').modal('show');
 
     }

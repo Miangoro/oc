@@ -71,23 +71,28 @@ class solicitudesModel extends Model
     }
 
     public function getIdLoteGranelAttribute()
-{
-    $caracteristicas = json_decode($this->caracteristicas, true);
+    {
+        $caracteristicas = json_decode($this->caracteristicas, true);
 
-    // Busca directamente en la raíz del JSON
-    if (isset($caracteristicas['id_lote_granel'])) {
-        return $caracteristicas['id_lote_granel'];
+        // Busca directamente en la raíz del JSON
+        if (isset($caracteristicas['id_lote_granel'])) {
+            return $caracteristicas['id_lote_granel'];
+        }
+
+        // Busca en los lotes relacionados a través de la tabla intermedia
+        if ($this->lotes_envasado_granel && $this->lotes_envasado_granel->isNotEmpty()) {
+            return $this->lotes_envasado_granel->pluck('id_lote_granel')->toArray();
+        }
+
+        // Devuelve null si no se encuentra
+        return null;
     }
 
-    // Busca en los lotes relacionados a través de la tabla intermedia
-    if ($this->lotes_envasado_granel && $this->lotes_envasado_granel->isNotEmpty()) {
-        return $this->lotes_envasado_granel->pluck('id_lote_granel')->toArray();
+    public function getTipoAnalisisAttribute()
+    {
+        return json_decode($this->caracteristicas, true)['tipo_analisis'] ?? null;
     }
 
-    // Devuelve null si no se encuentra
-    return null;
-}
-    
 
     public function lote_granel()
     {
@@ -127,14 +132,14 @@ public function lote_envasado()
         $caracteristicas = json_decode($this->caracteristicas, true);
         return $caracteristicas['instalacion_vigilancia'] ?? null; // Devuelve null si no existe la clave
     }
-    
+
 
     public function instalacion_destino()
     {
         return $this->belongsTo(instalaciones::class, 'instalacion_vigilancia', 'id_instalacion');
     }
 
-    
+
     public function lotes_envasado_granel()
     {
         return $this->hasMany(lotes_envasado_granel::class,'id_lote_envasado', 'id_lote_envasado');
@@ -169,25 +174,25 @@ public function clases_agave()
 
     public function etiqueta()
     {
-        $caracteristicas = is_string($this->caracteristicas) 
-            ? json_decode($this->caracteristicas, true) 
+        $caracteristicas = is_string($this->caracteristicas)
+            ? json_decode($this->caracteristicas, true)
             : $this->caracteristicas;
-    
-        $idEtiqueta = is_array($caracteristicas) 
-            ? ($caracteristicas['id_etiqueta'] ?? null) 
+
+        $idEtiqueta = is_array($caracteristicas)
+            ? ($caracteristicas['id_etiqueta'] ?? null)
             : ($caracteristicas->id_etiqueta ?? null);
-        
+
         if ($idEtiqueta) {
             return Documentacion_url::where('id_relacion', $idEtiqueta)
                 ->where('id_documento', 60)
                 ->value('url'); // Devuelve directamente la URL si existe
         }
-    
+
         return null; // Retorna null si no hay etiqueta
     }
-    
 
-    
+
+
     public function ultima_validacion_oc()
     {
         return $this->hasOne(solicitudesValidacionesModel::class, 'id_solicitud', 'id_solicitud')
@@ -201,14 +206,14 @@ public function clases_agave()
                 ->where('tipo_validacion', 'ui')
                 ->orderByDesc('fecha_realizo'); // Ordenar por la fecha más reciente
     }
-    
+
 
 
     // Accesor para obtener el id de la dirección destinataria desde el JSON
     public function getIdDireccionDestinoAttribute()
     {
         $caracteristicas = json_decode($this->caracteristicas, true);
-        
+
         return $caracteristicas['direccion_destinatario'] ?? null;
     }
 
@@ -218,15 +223,15 @@ public function clases_agave()
         return $this->belongsTo(direcciones::class, 'id_direccion_destino', 'id_direccion');
     }
 
-  
+
       // Accesor para obtener el id de la dirección destinataria desde el JSON
       public function getIdInstalacionEnvasadoAttribute()
       {
           $caracteristicas = json_decode($this->caracteristicas, true);
-          
+
           return $caracteristicas['id_instalacion_envasado'] ?? null;
       }
-  
+
       // Relación con el modelo Direcciones
       public function instalacion_envasado()
       {
@@ -254,6 +259,6 @@ public function clases_agave()
         return lotes_envasado::whereIn('id_lote_envasado', $ids)->get();
     }
 
-  
+
 
 }

@@ -328,7 +328,7 @@ Route::get('/pages/account-settings-security', [AccountSettingsSecurity::class, 
 Route::get('/pages/account-settings-billing', [AccountSettingsBilling::class, 'index'])->name('pages-account-settings-billing');
 Route::get('/pages/account-settings-notifications', [AccountSettingsNotifications::class, 'index'])->name('pages-account-settings-notifications');
 Route::get('/pages/account-settings-connections', [AccountSettingsConnections::class, 'index'])->name('pages-account-settings-connections');
-Route::get('/pages/faq', [Faq::class, 'index'])->name('pages-faq');
+Route::get('/pages/faq', [Faq::class, 'index'])->name('pages-faq')->middleware(['auth']);
 Route::get('/pages/pricing', [PagesPricing::class, 'index'])->name('pages-pricing');
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
 Route::get('/holograma/{folio}', [HologramasValidacion::class, 'index2'])->name('pages-hologramas-validacion');
@@ -490,6 +490,9 @@ Route::get('/solicitud_de_servicios', [CartaAsignacionController::class, 'Solici
 Route::get('/dictamen_cumplimiento_instalaciones', [CartaAsignacionController::class, 'DictamenDeCumplimienoInstalaciones'])->name('DictamenDeCumplimienoInstalaciones');
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'Contancia_trabajo'])->name('Contancia_trabajo');
 Route::get('/informe_inspeccion_etiqueta', [CartaAsignacionController::class, 'InformeInspeccionEtiqueta'])->name('InformeInspeccionEtiqueta');
+
+Route::get('/informe_resultados', [CartaAsignacionController::class, 'informeresulta'])->name('informeresultados');
+
 
 /* orden-trabajo-inspeccion-etiquetas */
 Route::get('/orden_trabajo_inspeccion_etiquetas', [CartaAsignacionController::class, 'OrdenTrabajoInspeccionEtiquetas'])->name('OrdenTrabajoInspeccionEtiquetas');
@@ -706,11 +709,11 @@ Route::middleware(['auth'])->controller(inspeccionesController::class)->group(fu
     Route::resource('inspecciones-list', inspeccionesController::class);
     Route::post('/asignar-inspector', 'asignarInspector');
     Route::get('/oficio_de_comision/{id_inspeccion}', 'pdf_oficio_comision')->name('oficioDeComision');
-    Route::get('/Etiqueta-Muestra/{id_inspeccion}', 'Etiqueta_muestra')->name('Etiqueta-Muestra');
+    Route::get('/etiqueta_agave_art/{id_inspeccion}', 'etiqueta_muestra')->name('etiqueta-muestra');
     Route::get('/orden_de_servicio/{id_inspeccion}', 'pdf_orden_servicio')->name('ordenDeServicio');
-    Route::get('/Etiqueta_lotes_mezcal_granel/{id_inspeccion}', 'Etiqueta_Granel')->name('etiquetaLoteGranel');
-    Route::get('/Etiqueta-Barrica/{id_inspeccion}',  'Etiqueta_Barrica')->name('EtiquetaBarrica');
-    Route::get('/Etiqueta-2401ESPTOB/{id_inspeccion}', 'Etiqueta')->name('Etiqueta-2401ESPTOB');
+    Route::get('/etiqueta_lotes_mezcal_granel/{id_inspeccion}', 'etiqueta_granel')->name('etiquetalotegranel');
+    Route::get('/etiqueta-barrica/{id_inspeccion}',  'etiqueta_barrica')->name('etiquetabarrica');
+    Route::get('/etiquetas_tapas_sellado/{id_inspeccion}', 'etiqueta')->name('etiqueta-2401ESPTOB');
     Route::post('/agregar-resultados', 'agregarResultados');
     Route::get('/acta-solicitud/edit/{id_acta}', 'editActa');
     Route::get('/getInspeccion/{id_solicitud}', 'getInspeccion');
@@ -965,7 +968,7 @@ Route::middleware(['auth'])->controller(Certificado_GranelController::class)->gr
     Route::post('/certificados/granel', [Certificado_GranelController::class, 'store']);
     Route::get('/edit-certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'edit']);
     Route::delete('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'destroy'])->name('certificados.destroy');
-    Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'CertificadoGranel'])->name('PDF-cer-granel');
+    Route::get('/Pre-certificado-granel/{id}', [Certificado_GranelController::class, 'CertificadoGranel'])->name('PDF-cer-granel');
     Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
     Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
     Route::post('/granel/reexpedir', [Certificado_GranelController::class, 'reexpedir'])->name('cer-granel.reex');

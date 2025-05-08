@@ -195,30 +195,56 @@ var dataTable = $('.datatables-users').DataTable({
           estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
         }
       //revisores
-      var id_revisor = full['id_revisor'];   // Obtener el id_revisor
+      //var id_revisor = full['id_revisor'];   // Obtener el id_revisor
       var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
       // Mensajes para los revisores
-      var revisorPersonal, revisorMiembro;
+      //var revisorPersonal, revisorMiembro;
+      var revisorMiembro;
       // Para el revisor personal
-      if (id_revisor !== 'Sin asignar') {
+      /*if (id_revisor !== 'Sin asignar') {
           revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> ${id_revisor}</span>`;
       } else {
           revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
-      }
-      // Para el revisor miembro
+      }*/
+      // ///CONSEJO
       if (id_revisor2 !== 'Sin asignar') {
           revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> ${id_revisor2}</span>`;
       } else {
           revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
       }
 
+      ///PERSONAL
+      var $idRevisor = full['id_revisor'];
+      var numeroRevision = full['numero_revision'];
+      const decision = full['decision'];
+
+      let personal = $idRevisor !== null ? $idRevisor : `<b style="color: red;">Sin asignar</b>`;
+
+      let revision = '';
+        if (numeroRevision == 1) revision = '';
+        else if (numeroRevision == 2) revision = 'Segunda revisión - ';
+
+      let colorClass = '';
+        if (decision === 'positiva') {
+          colorClass = 'badge rounded-pill bg-primary';
+        } else if (decision === 'negativa') {
+          colorClass = 'badge rounded-pill bg-danger';
+        } else if (decision === 'Pendiente') {
+          colorClass = 'badge rounded-pill bg-warning text-dark';
+        }
+
       // Retorna los revisores en formato HTML
-      return estatus+
+      /*return estatus+
         ` <div style="display: flex; flex-direction: column; align-items: flex-start;">
               <div style="display: inline;">${revisorPersonal}</div>
               <div style="display: inline;">${revisorMiembro}</div>
           </div>
-        `;
+        `;*/
+        return estatus + 
+        `<div style="flex-direction: column; margin-top: 2px;">
+          <div class="small"><b>Personal:</b> <span class="${colorClass}">${revision} ${personal}</span> </div>
+          <div style="display: inline;">${revisorMiembro}</div>
+        </div> `;
     }
     },
       {
@@ -1176,7 +1202,7 @@ $(document).ready(function () {
 ///FORMATO PDF CERTIFICADO
 $(document).on('click', '.pdfCertificado', function ()  {
   var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
-  var pdfUrl = '/Pre-certificado/' + id; //Ruta del PDF
+  var pdfUrl = '/Pre-certificado-granel/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
       

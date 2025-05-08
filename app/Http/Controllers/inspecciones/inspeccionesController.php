@@ -556,38 +556,41 @@ class inspeccionesController extends Controller
         $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion', compact('datos', 'hora_llenado', 'fecha_llenado', 'fecha_llenado_fin', 'hora_llenado_fin'));
         return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
     }
-    public function Etiqueta_muestra($id_inspeccion)
+    public function etiqueta_muestra($id_inspeccion)
     {
-        $pdf = Pdf::loadView('pdfs.Etiqueta_tapa_muestra');
-        return $pdf->stream('Etiqueta_para_tapa_de_la_muestra.pdf');
+
+        $pdf = Pdf::loadView('pdfs.Etiqueta_agave_art');
+        return $pdf->stream('Etiqueta para agave (%ART).pdf');
     }
 
-    public function Etiqueta_Granel($id_inspeccion)
+    public function etiqueta_granel($id_inspeccion)
     {
+        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
         // Renderizar el PDF por primera vez para obtener el total de páginas
-        $pdf = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel');
+        $pdf = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', ['datos' => $datos]);
         $dompdf = $pdf->getDomPDF();
         $dompdf->render();
-
         // Obtener el total de páginas
         $totalPaginas = $dompdf->get_canvas()->get_page_count();
-
         // Pasar el total de páginas a la vista para la segunda renderización
         $pdfFinal = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', [
-            'totalPaginas' => $totalPaginas
+            'totalPaginas' => $totalPaginas, 'datos' => $datos
         ]);
 
         // Retornar el PDF final
         return $pdfFinal->stream('Etiqueta para lotes de mezcal a granel.pdf');
     }
-    public function Etiqueta_Barrica($id_inspeccion)
+
+    public function etiqueta_barrica($id_inspeccion)
     {
         $pdf = Pdf::loadView('pdfs.Etiqueta_Barrica');
         return $pdf->stream('Etiqueta_ingreso_a_barrica.pdf');
     }
-    public function Etiqueta($id_inspeccion)
+    public function etiqueta($id_inspeccion)
     {
-      $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
+      $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
+
+      $pdf = Pdf::loadView('pdfs.etiquetas_tapas_sellado',  ['datos' => $datos]);
       return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
 }
