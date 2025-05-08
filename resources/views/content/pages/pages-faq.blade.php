@@ -399,7 +399,7 @@
           <i class="ri-mail-line ri-30px"></i>
         </span>
       </div>
-      <h5 class="mt-4 mb-1"><a class="text-heading" href="mailto:help@help.com">help@help.com</a></h5>
+      <h5 class="mt-4 mb-1"><a class="text-heading" href="mailto:help@help.com">organismocertificadorcidam@gmail.com</a></h5>
       <p class="mb-0">Siempre encantados de ayudarle</p>
     </div>
   </div>
