@@ -375,9 +375,9 @@
 <!-- Contact -->
 <div class="row my-6">
   <div class="col-12 text-center my-6">
-    <div class="badge bg-label-primary rounded-pill">Question?</div>
-    <h4 class="my-2">You still have a question?</h4>
-    <p class="mb-0">If you can't find question in our FAQ, you can contact us. We'll answer you shortly!</p>
+    <div class="badge bg-label-primary rounded-pill">¿Preguntas?</div>
+    <h4 class="my-2">¿Tienes alguna pregunta?</h4>
+    <p class="mb-0">Si no encontró su pregunta en nuestras preguntas frecuentes, puede ponerse en contacto con nosotros. ¡Le responderemos en breve!</p>
   </div>
 </div>
 <div class="row justify-content-center gap-sm-0 gap-6">
@@ -388,8 +388,8 @@
           <i class="ri-phone-line ri-30px"></i>
         </span>
       </div>
-      <h5 class="mt-4 mb-1"><a class="text-heading" href="tel:+(810)25482568">+ (810) 2548 2568</a></h5>
-      <p class="mb-0">We are always happy to help</p>
+      <h5 class="mt-4 mb-1"><a class="text-heading" href="tel:+(810)25482568">+ (52) 443 299 0181</a></h5>
+      <p class="mb-0">La mejor manera de obtener una respuesta rápida</p>
     </div>
   </div>
   <div class="col-sm-6">
@@ -400,7 +400,7 @@
         </span>
       </div>
       <h5 class="mt-4 mb-1"><a class="text-heading" href="mailto:help@help.com">help@help.com</a></h5>
-      <p class="mb-0">Best way to get a quick answer</p>
+      <p class="mb-0">Siempre encantados de ayudarle</p>
     </div>
   </div>
 </div>
