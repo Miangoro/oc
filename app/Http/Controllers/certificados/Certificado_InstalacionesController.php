@@ -738,7 +738,8 @@ public function pdf_certificado_envasador($id_certificado, $guardar = false, $ru
     }
 
     // Generar y retornar el PDF
-    return Pdf::loadView('pdfs.Certificado_envasador_mezcal', $pdfData)->stream('Certificado de envasador de mezcal.pdf');
+   // return Pdf::loadView('pdfs.Certificado_envasador_mezcal', $pdfData)->stream('Certificado de envasador de mezcal.pdf');
+   return Pdf::loadView('pdfs.Certificado_envasador_ed5', $pdfData)->stream('Certificado de envasador de mezcal.pdf');
 }
 
 
