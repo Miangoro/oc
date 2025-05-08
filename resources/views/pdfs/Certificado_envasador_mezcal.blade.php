@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Certificado de Envasador de Mezcal</title>
+  <title>Certificado como Envasador de Mezcal A</title>
   <style>
     body {
       font-family: 'Calibri', sans-serif;
     }
+
     .watermark {
       position: absolute;
       top: 43%;
@@ -18,6 +19,7 @@
       opacity: 0.3;
       z-index: -1; 
     }
+    
     .watermark-cancelado {
       font-family: Arial;
       color: red;
@@ -31,16 +33,19 @@
       white-space: nowrap;
       z-index: -1;
     }
+
     .header img {
       float: left; 
       margin-left: -10px;
       margin-top: -30px; 
     }
+
     .description1 {
       font-size: 25px;
       font-weight: bold;
       text-align: right;
     }
+
     .description2 {
       font-weight: bold;
       font-size: 14px;
@@ -50,6 +55,7 @@
       top: -64px;
       left: 295px; 
     }
+
     .description3 {
       font-weight: bold;
       margin-right: 30px;
@@ -58,12 +64,21 @@
       position: relative;
       top: -30px;
     }
-    .text, .text1 {
+
+    .text {
       font-size: 13.5px;
       line-height: 1;
       text-align: justify;
       margin: 10px 20px;
     }
+
+    .text1 {
+      font-size: 13.5px;
+      line-height: 1;
+      text-align: justify;
+      margin: -5px 20px;
+    }
+
     .title {
       font-size: 25px;
       text-align: center;
@@ -71,42 +86,79 @@
       letter-spacing: 9px;
       line-height: 0.5;
     }
+
     .title2 {
       font-size: 25px;
       text-align: center;
       font-weight: bold;
       line-height: 0.5;
     }
+
     .title3 {
       font-size: 20px;
       text-align: center;
       font-weight: bold;
       color: #0C1444;
     }
+
     table {
-      width: 95%; 
-      border-collapse: collapse;
-      margin: 10px 20px;
-      font-size: 13px;
+            width: 100%;
+            border-collapse: collapse;
+            /*table-layout: fixed; /* Esto asegura que las columnas tengan un ancho fijo */
+        }
+        td {
+            border: 1px solid black;
+            text-align: center;
+            font-size: 11px;
+            padding: 2px;
+        }
+        th {
+            background-color: #608390;
+            color: white;
+            text-align: center;
+            font-size: 11px;
+        }
+        .cidam {
+            color: #161c4a;
+            text-align: center;
+            margin-left: 0;
+            margin-bottom: 20px;
+        }
+        .td-no-margins {
+            border: none;
+        }
+        .td-margins {
+            border-right: none;
+            border-left: none;
+            font-size: 11px;
+        }
+    .even {
+      background: #fbf8f0;
+    }
+
+    .odd {
+      background: #fefcf9;
+    }
+    
+    .cell {
+      border-right: 1px solid transparent;
+      white-space: nowrap; 
+    }
+    
+    .cell1 {
+      white-space: nowrap; 
+    }
+
+    .cent {
       white-space: normal; 
     }
-    td, th {
-      border: 1px solid #595959;
-      padding: 8px; 
-      text-align: left;
-    }
-    th {
-      background: #f0e6cc;
-      font-weight: bold;
-    }
-    .cell1 {
-      white-space: nowrap;
-    }
+
     .signature {
-      margin: 50px 20px; 
+      margin: 20px 10px; 
       text-align: center; 
       margin-top: 20px; 
     }
+
     .signature-line {
       line-height: 10;
       border-top: 1px solid #000; 
@@ -114,6 +166,7 @@
       margin: 0 auto; 
       padding-top: 5px; 
     }
+
     .signature-name {
       font-family: Arial;
       margin: 10px 0 0; 
@@ -121,29 +174,22 @@
       font-weight: bold;
       line-height: 0.5;
     }
-    .down {
-      text-align: right;
-      font-size: 11px;
-      margin-top: -40px; 
-      margin-right: 20px;
-    }
-    .foother {
+
+    .footer {
       position: fixed;
-      bottom: -30px;
-      left: 0; 
+      bottom: -22px; 
       width: 100%; 
       text-align: center; 
-      margin: 0;
-      padding: 10px 0; 
     }
-    .foother img {
-      margin-top: 40px;
-      width: 700px; 
-      height: auto;
-      display: inline-block;
+
+    #tabla-principal td{
+      line-height: 9px; 
+      overflow: hidden; 
+      border: solid 2.5px;
     }
   </style>
 </head>
+
 <body>
 
   @if ($watermarkText)
@@ -152,106 +198,134 @@
     </div>
   @endif
 
-  <img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Marca de Agua" class="watermark">
+  <img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Fondo CIDAM" class="watermark">
 
   <div class="header">
-    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" width="300px">
+    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo Organismo" width="300px">
   </div>
 
   <div class="description1">ORGANISMO CERTIFICADOR</div>
-  <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C</div>
+  <div class="description2">
+    Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.
+  </div>
   <div class="description3">No. CERTIFICADO: {{ $num_certificado }}</div>
 
   <p class="text1">
     Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. — Acreditado como organismo de certificación de producto con número de acreditación 144/18 ante la Entidad Mexicana de Acreditación, A.C. — otorga el siguiente:
   </p>
 
-  <p class="title">CERTIFICADO NOM</p>
-  <p class="title2">COMO ENVASADOR DE MEZCAL A</p>
-  <p class="title3">"{{ strtoupper(str_replace(['á','é','í','ó','ú','Á','É','Í','Ó','Ú'], ['a','e','i','o','u','A','E','I','O','U'], $razon_social)) }}"</p>
+  <p class="title">CERTIFICADO</p>
+  <p class="title2">COMO ENVAZADOR DE MEZCAL A</p>
 
-  <!-- Nueva sección de campos nuevos -->
-  <table id="tabla-datos-generales">
+  <table>
     <tbody>
-      <tr>
-        <td class="cell1"><strong>Razón social:</strong></td>
-        <td>{{ $razon_social }}</td>
-        <td class="cell1"><strong>No. de cliente:</strong></td>
-        <td>{{ $numero_cliente }}</td>
-      </tr>
-      <tr>
-        <td class="cell1"><strong>Representante legal:</strong></td>
-        <td>{{ $representante_legal }}</td>
-        <td class="cell1"><strong>RFC:</strong></td>
-        <td>{{ $rfc }}</td>
-      </tr>
-      <tr>
-        <td class="cell1"><strong>Domicilio Fiscal:</strong></td>
-        <td>{{ $domicilio_fiscal }}</td>
-        <td class="cell1"><strong>Correo electrónico:</strong></td>
-        <td>{{ $correo }}</td>
-      </tr>
-      <tr>
-        <td class="cell1"><strong>Teléfono:</strong></td>
-        <td>{{ $telefono }}</td>
-        <td colspan="2"></td>
-      </tr>
+        <tr>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Razón social:</strong></td>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $razon_social }}</td>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>No. de cliente:</strong></td>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $numero_cliente }}</td>
+        </tr>
+        <tr>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Representante legal:</strong></td>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $representante_legal }}</td>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>RFC:</strong></td>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $rfc }}</td>
+        </tr>
+        <tr>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Domicilio Fiscal:</strong></td>
+            <td class="td-margins" style="text-align: left; padding-top: 8px;padding-bottom: 8px;" colspan="3">{{ $domicilio_fiscal }}</td>
+        </tr>
+        <tr>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Correo electrónico:</strong></td>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $correo }}</td>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Teléfono:</strong></td>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $telefono }}</td>
+        </tr>
+        <tr>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Fecha de inicio de vigencia:</strong></td>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $fecha_emision }}</td>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Fecha de vencimiento::</strong></td>
+            <td class="td-margins"
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $fecha_vigencia }}</td>
+        </tr>
     </tbody>
-  </table>
+</table>
 
-  <!-- Vigencia -->
-  <table id="tabla-vigencia">
-    <tbody>
-      <tr>
-        <td class="cell1"><strong>Fecha de Emisión:</strong></td>
-        <td>{{ $fecha_emision }}</td>
-        <td class="cell1"><strong>Fecha de Vencimiento:</strong></td>
-        <td>{{ $fecha_vigencia }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <p class="text">
+  El presente certificado es emitido de acuerdo con la Norma Oficial Mexicana NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones, mediante el esquema de certificación para los siguientes productos con Denominación de Origen. 
+  </p>
+  <table>
+  <tbody>
+    <tr>
+      <td class="td-margins"
+      style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Categorías:</strong></td>
+      <td class="td-margins"
+      style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $categorias }}</td>
+    </tr>
+    <tr>
+    <td class="td-margins"
+    style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Clases:</strong></td>
+    <td class="td-margins"
+    style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $clases }}</td>
+    </tr>
+  </tbody>
+</table>
 
-  <p class="text">La presente certificación se realiza de acuerdo a la Norma Oficial Mexicana NOM-070-SCFI-2016, Bebidas
-Alcohólicas-Mezcal-Especificaciones, en vigor, mediante el esquema dé certificación para productos con
-Denominación de Origen.</p>
+  <p class="text">
+  Esta empresa ha demostrado que cuenta con la infraestructura, conocimientos y la práctica necesaria para ejecutar las etapas de envasado de la Bebida Alcohólica Destilada Denominada  Mezcal, de conformidad con lo establecido en el apartado 5 de la NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones en las instalaciones descritas a continuación:
+  </p>
 
-<p class="text">Esta empresa a demostrado que cuenta con la infraestructura, conocimientos y la práctica necesaria para ejecutar
-las etapas de comercialización de la Bebida Alcohólica Destilada Denominada Mezcal de conformidad con lo
-establecido en la NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones.
-</p>
-
-  <!-- Datos de la Unidad de Envasado -->
-  <table id="tabla-envasado">
-    <tbody>
-      <tr>
-        <td class="cell1"><strong>Domicilio de la unidad de Envasado:</strong></td>
-        <td>{{ $direccion_completa }}</td>
-      </tr>
-      <tr>
-        <td class="cell1"><strong>No. de Dictamen de cumplimiento con la NOM:</strong></td>
-        <td>{{ $num_dictamen }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <table>
+  <tbody>
+   
+    <tr>
+      <td class="td-margins"
+      style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Domicilio de la unidad de envasado:</strong></td>
+      <td class="td-margins"
+      style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $direccion_completa }}</td>
+    </tr>
+    <tr>
+      <td class="td-margins"
+      style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>No. de dictamen de cumplimiento con la NOM:</strong></td>
+      <td class="td-margins"
+      style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $num_dictamen }}</td>
+    </tr>
+  </tbody>
+</table>
 
   <div class="signature">
+    <img src="{{ public_path('img_pdf/firmapdf.jpg') }}" 
+         alt="Firma" 
+         style="display: block; margin: 0 auto; height: 50px; width: auto; position: relative; top: -20px;">
     <div class="signature-line"></div>
     <div class="signature-name">{{ $nombre_firmante }}</div>
     <div class="signature-name">{{ $puesto_firmante }}</div>
   </div>
 
-  <div class="down">
-    @if ($leyenda)
-      Cancela y sustituye al certificado con clave: CIDAM C-GRA-057/2023
-    @endif
-    <br>
-    Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36 Edición 6<br>
-    Entrada en vigor: 12/01/2025
-  </div>
-
-  <div class="foother">
-    <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Pie de página">
-  </div>
+  <<div class="footer">
+    <p style="text-align: right; font-size: 9px; line-height: 1; margin-bottom: 1px;">
+        
+        <br>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35<br>
+        Edicion 6 Entrada en vigor: 01/04/25
+    </p>
+    <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705px">
+</div>
 
 </body>
 </html>
