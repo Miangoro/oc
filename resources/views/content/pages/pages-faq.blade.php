@@ -12,13 +12,10 @@
 
 @section('content')
 <div class="faq-header d-flex flex-column justify-content-center align-items-center h-px-300 position-relative overflow-hidden rounded-4">
-  <img src="{{asset('assets/img/pages/header-'.$configData['style'].'.png')}}" class="scaleX-n1-rtl faq-banner-img h-px-300 z-n1" alt="background image" data-app-light-img="pages/header-light.png" data-app-dark-img="pages/header-dark.png"/>
-  <h4 class="text-center text-primary mb-2"> Hello, how can we help? </h4>
-  <p class="text-body text-center mb-0 px-4">or choose a category to quickly find the help you need</p>
-  <div class="input-wrapper mb-6 mt-7 input-group input-group-merge px-sm-5">
-    <span class="input-group-text" id="basic-addon1"><i class="ri-search-line"></i></span>
-    <input type="text" class="form-control" placeholder="Ask a question...." aria-label="Search" aria-describedby="basic-addon1" />
-  </div>
+  <img src="{{asset('assets/img/pages/header-'.$configData['style'].'.png')}}" class="scaleX-n1-rtl faq-banner-img h-px-300 z-n1" alt="background image" data-app-light-img="pages/header3.png" data-app-dark-img="pages/header-dark.png"/>
+  <h4 class="text-center text-primary mb-2">  </h4>
+  <p class="text-body text-center mb-0 px-4"></p>
+  
 </div>
 
 <div class="row mt-6">
