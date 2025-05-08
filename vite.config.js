@@ -60,7 +60,6 @@ export default defineConfig({
         'resources/assets/css/demo.css',
         'resources/css/hologramas.css', // ← asegúrate de incluirlo
         'resources/assets/vendor/fonts/personalizados/style.css',
-        'resources/assets/vendor/libs/bootstrap/bootstrap.js',
         'resources/js/app.js',
         ...pageJsFiles,
         ...vendorJsFiles,
