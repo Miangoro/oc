@@ -146,43 +146,41 @@
             </tr>
             <tr>
                 <td class="custom-title" style="width: 120px;">Fecha:</td>
-                <td colspan="2" class="white-background-custom"><strong>01/08/2024</strong></td>
+                <td colspan="2" class="white-background-custom"><strong> {{$datos->fecha_servicio }}</strong></td>
                 <td class="custom-title">Folio / No. de servicio:</td>
-                <td colspan="2" class="white-background-custom"><strong>UMS-1300/2024</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->num_servicio}}</strong></td>
             </tr>
             <tr>
                 <td class="custom-title">No. de lote:</td>
-                <td colspan="2" class="white-background-custom"><strong>2401ESPTOB</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->nombre_lote}}</strong></td>
                 <td class="custom-title">Volumen del lote:</td>
-                <td colspan="2" class="white-background-custom"><strong>50.44</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->volumen}}</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left;">Razón Social / Productor:</td>
-                <td colspan="3" class="white-background-custom"><strong>AMANTES DEL MEZCAL S.A DE C.V</strong></td>
+                <td colspan="3" class="white-background-custom"><strong>{{$datos->solicitud->empresa->razon_social}}</strong></td>
                 <td colspan="2" class="custom-title">Nombre de la marca:</td>
                 <td colspan="2" class="white-background-custom"><strong>---</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left;">Categoría y clase:</td>
-                <td colspan="3" class="white-background-custom"><strong>MEZCAL ARTESANAL - BLANCO O JOVEN</strong>
+                <td colspan="3" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->categoria->categoria}} - {{$datos->solicitud->lote_granel->clase->clase}}</strong>
                 </td>
                 <td colspan="2" class="custom-title">Especie de agave: </td>
-                <td colspan="2" class="white-background-custom" style="font-size: 8px;"><strong>Maguey Espadín (A.
-                        angustifolia)</strong></td>
+                <td colspan="2" class="white-background-custom" style="font-size: 8px;"><strong> {{-- @foreach ( $datos->solicitud->lote_granel as $tiposs ) {{$tiposs->nombre}} @endforeach --}}</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left; height: 34px; ">No. de Análisis Fisicoquímicos:</td>
-                <td class="white-background-custom" style="font-size: 9px;"><strong>NNMZ-47987</strong></td>
+                <td class="white-background-custom" style="font-size: 9px;"><strong>{{$datos->solicitud->lote_granel->folio_fq}}</strong></td>
                 <td colspan="2" class="custom-title" style="text-align: left;">ID del tanque: </td>
-                <td class="white-background-custom" style="font-size: 9px;"><strong>003-AMB, 001-AMG Y 005-AMB</strong>
+                <td class="white-background-custom" style="font-size: 9px;"><strong>{{$datos->solicitud->lote_granel->id_tanque ?? 'N/A'}}</strong>
                 </td>
                 <td colspan="2"class="custom-title">No. de certificado NOM:</td>
                 <td class="white-background-custom" style="font-size: 9px;"><strong>CIDAM C-GRA-261/2024</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="font-size:11px; text-align: left;">Nombre y firma del inspector:</td>
-                <td colspan="3" class="white-background-custom" style="font-size:11px;"><strong>Rey Marcelo
-                        Gandarilla Bailon</strong></td>
+                <td colspan="3" class="white-background-custom" style="font-size:11px;"><strong>{{$datos->inspector->name}}</strong></td>
                 <td colspan="2" class="custom-title" style="font-size:11px; text-align: left;">Nombre y firma del
                     responsable:</td>
                 <td colspan="2" class="white-background-custom" style="font-size: 11px;"><strong>Juan Carlos López
@@ -203,25 +201,25 @@
             </tr>
             <tr>
                 <td class="custom-title" style="width: 120px;">Fecha:</td>
-                <td colspan="2" class="white-background-custom"><strong>01/08/2024</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->fecha_servicio }}</strong></td>
                 <td class="custom-title">Folio / No. de servicio:</td>
-                <td colspan="2" class="white-background-custom"><strong>UMS-1300/2024</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->num_servicio}}</strong></td>
             </tr>
             <tr>
                 <td class="custom-title">No. de lote:</td>
-                <td colspan="2" class="white-background-custom"><strong>2401ESPTOB</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->nombre_lote}}</strong></td>
                 <td class="custom-title">Volumen del lote:</td>
-                <td colspan="2" class="white-background-custom"><strong>50.44</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->volumen}}</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left;">Razón Social / Productor:</td>
-                <td colspan="3" class="white-background-custom"><strong>AMANTES DEL MEZCAL S.A DE C.V</strong></td>
+                <td colspan="3" class="white-background-custom"><strong>{{$datos->solicitud->empresa->razon_social}}</strong></td>
                 <td colspan="2" class="custom-title">Nombre de la marca:</td>
                 <td colspan="2" class="white-background-custom"><strong>---</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left;">Categoría y clase:</td>
-                <td colspan="3" class="white-background-custom"><strong>MEZCAL ARTESANAL - BLANCO O JOVEN</strong>
+                <td colspan="3" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->categoria->categoria}} - {{$datos->solicitud->lote_granel->clase->clase}}</strong>
                 </td>
                 <td colspan="2" class="custom-title">Especie de agave: </td>
                 <td colspan="2" class="white-background-custom" style="font-size: 8px;"><strong>Maguey Espadín (A.
@@ -229,17 +227,15 @@
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left; height: 34px; ">No. de Análisis Fisicoquímicos:</td>
-                <td class="white-background-custom" style="font-size: 9px;"><strong>NNMZ-47987</strong></td>
+                <td class="white-background-custom" style="font-size: 9px;"><strong>{{$datos->solicitud->lote_granel->folio_fq}}</strong></td>
                 <td colspan="2" class="custom-title" style="text-align: left;">ID del tanque: </td>
-                <td class="white-background-custom" style="font-size: 9px;"><strong>003-AMB, 001-AMG Y
-                        005-AMB</strong></td>
+                <td class="white-background-custom" style="font-size: 9px;"><strong>{{$datos->solicitud->lote_granel->id_tanque ?? 'N/A'}}</strong></td>
                 <td colspan="2"class="custom-title">No. de certificado NOM:</td>
                 <td class="white-background-custom" style="font-size: 9px;"><strong>CIDAM C-GRA-261/2024</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="font-size:11px; text-align: left;">Nombre y firma del inspector:</td>
-                <td colspan="3" class="white-background-custom" style="font-size:11px;"><strong>Rey Marcelo
-                        Gandarilla Bailon</strong></td>
+                <td colspan="3" class="white-background-custom" style="font-size:11px;"><strong>{{$datos->inspector->name}}</strong></td>
                 <td colspan="2" class="custom-title" style="font-size:11px; text-align: left;">Nombre y firma del
                     responsable:</td>
                 <td colspan="2" class="white-background-custom" style="font-size: 11px;"><strong>Juan Carlos López
@@ -260,25 +256,25 @@
             </tr>
             <tr>
                 <td class="custom-title" style="width: 120px;">Fecha:</td>
-                <td colspan="2" class="white-background-custom"><strong>01/08/2024</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->fecha_servicio }}</strong></td>
                 <td class="custom-title">Folio / No. de servicio:</td>
-                <td colspan="2" class="white-background-custom"><strong>UMS-1300/2024</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->num_servicio}}</strong></td>
             </tr>
             <tr>
                 <td class="custom-title">No. de lote:</td>
-                <td colspan="2" class="white-background-custom"><strong>2401ESPTOB</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->nombre_lote}}</strong></td>
                 <td class="custom-title">Volumen del lote:</td>
-                <td colspan="2" class="white-background-custom"><strong>50.44</strong></td>
+                <td colspan="2" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->volumen}}</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left;">Razón Social / Productor:</td>
-                <td colspan="3" class="white-background-custom"><strong>AMANTES DEL MEZCAL S.A DE C.V</strong></td>
+                <td colspan="3" class="white-background-custom"><strong>{{$datos->solicitud->empresa->razon_social}}</strong></td>
                 <td colspan="2" class="custom-title">Nombre de la marca:</td>
                 <td colspan="2" class="white-background-custom"><strong>---</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left;">Categoría y clase:</td>
-                <td colspan="3" class="white-background-custom"><strong>MEZCAL ARTESANAL - BLANCO O JOVEN</strong>
+                <td colspan="3" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->categoria->categoria}} - {{$datos->solicitud->lote_granel->clase->clase}}</strong>
                 </td>
                 <td colspan="2" class="custom-title">Especie de agave: </td>
                 <td colspan="2" class="white-background-custom" style="font-size: 8px;"><strong>Maguey Espadín (A.
@@ -286,17 +282,15 @@
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left; height: 34px; ">No. de Análisis Fisicoquímicos:</td>
-                <td class="white-background-custom" style="font-size: 9px;"><strong>NNMZ-47987</strong></td>
+                <td class="white-background-custom" style="font-size: 9px;"><strong>{{$datos->solicitud->lote_granel->folio_fq}}</strong></td>
                 <td colspan="2" class="custom-title" style="text-align: left;">ID del tanque: </td>
-                <td class="white-background-custom" style="font-size: 9px;"><strong>003-AMB, 001-AMG Y
-                        005-AMB</strong></td>
+                <td class="white-background-custom" style="font-size: 9px;"><strong>{{$datos->solicitud->lote_granel->id_tanque ?? 'N/A'}}</strong></td>
                 <td colspan="2"class="custom-title">No. de certificado NOM:</td>
                 <td class="white-background-custom" style="font-size: 9px;"><strong>CIDAM C-GRA-261/2024</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="font-size:11px; text-align: left;">Nombre y firma del inspector:</td>
-                <td colspan="3" class="white-background-custom" style="font-size:11px;"><strong>Rey Marcelo
-                        Gandarilla Bailon</strong></td>
+                <td colspan="3" class="white-background-custom" style="font-size:11px;"><strong>{{$datos->inspector->name}}</strong></td>
                 <td colspan="2" class="custom-title" style="font-size:11px; text-align: left;">Nombre y firma del
                     responsable:</td>
                 <td colspan="2" class="white-background-custom" style="font-size: 11px;"><strong>Juan Carlos López

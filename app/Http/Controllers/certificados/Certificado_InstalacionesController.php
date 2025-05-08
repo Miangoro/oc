@@ -159,8 +159,11 @@ public function index(Request $request)
             $nestedData['numero_cliente'] = $numero_cliente;
             $nestedData['razon_social'] = $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
             //Revisiones
-            $nestedData['id_revisor'] = $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar';
+            //$nestedData['id_revisor'] = $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar';
             $nestedData['id_revisor2'] = $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar';
+        $nestedData['id_revisor'] = $certificado->revisor->user->name ?? null;
+        $nestedData['numero_revision'] = $certificado->revisor->numero_revision ?? null;
+        $nestedData['decision'] = $certificado->revisor->decision ?? null;
             ///dias vigencia
             $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
             $nestedData['fecha_actual'] = $fechaActual;
@@ -637,15 +640,13 @@ public function pdf_certificado_productor($id_certificado, $guardar = false, $ru
     ])->findOrFail($id_certificado);
 
     $empresa = $datos->dictamen->instalaciones->empresa ?? null;
-    /*$numero_cliente = $empresa->empresaNumClientes
-    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))
-    ?->numero_cliente ?? 'N/A';*/
     $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
         ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
         ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+    $id_sustituye = json_decode($datos->observaciones, true) ['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+    $nombre_id_sustituye = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
  
     $watermarkText = $datos->estatus === 1;
-    $leyenda = $datos->estatus === 2;
 
     // Preparar los datos para el PDF
     $pdfData = [
@@ -661,6 +662,8 @@ public function pdf_certificado_productor($id_certificado, $guardar = false, $ru
         'telefono' => $empresa->telefono ?? 'No encontrado',
         'correo' => $empresa->correo ?? 'No encontrado',
         'watermarkText' => $watermarkText,
+        'id_sustituye' => $nombre_id_sustituye,
+        ///
         'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa ?? 'No encontrado',
         'razon_social' => $empresa->razon_social ?? 'No encontrado',  
         'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
@@ -668,7 +671,6 @@ public function pdf_certificado_productor($id_certificado, $guardar = false, $ru
         'nombre_firmante' => $datos->firmante->name,
         'firma_firmante' => $datos->firmante->firma ?? '',
         'puesto_firmante' => $datos->firmante->puesto ?? '',
-        'leyenda' => $leyenda,
         'categorias' => $datos->dictamen->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', '),
         'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
     ];
@@ -680,9 +682,9 @@ if ($guardar && $rutaGuardado) {
 }
 
     if ( $datos->fecha_emision >= '2025-04-01' ) {
-        return Pdf::loadView('pdfs.certificado_productor_ed6', $pdfData)->stream('Certificado de productor de mezcal.pdf');
+        return Pdf::loadView('pdfs.certificado_productor_ed6', $pdfData)->stream('Certificado de productor de mezcal_ed6.pdf');
     }else{
-        return Pdf::loadView('pdfs.Certificado_productor_mezcal', $pdfData)->stream('Certificado de productor de mezcal.pdf');
+        return Pdf::loadView('pdfs.Certificado_productor_ed5', $pdfData)->stream('Certificado de productor de mezcal.pdf');
 
     }
 }

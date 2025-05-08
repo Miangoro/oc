@@ -110,8 +110,12 @@ public function index(Request $request)
             $nestedData['numero_cliente'] = $numero_cliente;
             $nestedData['razon_social'] = $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
             //Revisiones
-            $nestedData['id_revisor'] = $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar';
+            //$nestedData['id_revisor'] = $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar';
             $nestedData['id_revisor2'] = $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar';
+        $nestedData['id_revisor'] = $certificado->revisor->user->name ?? null;
+        $nestedData['numero_revision'] = $certificado->revisor->numero_revision ?? null;
+        $nestedData['decision'] = $certificado->revisor->decision ?? null;
+        
             ///dias vigencia
             $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
             $nestedData['fecha_actual'] = $fechaActual;
@@ -476,10 +480,10 @@ public function MostrarCertificadoExportacion($id_certificado)
     $watermarkText = $data->estatus == 1;
     //Obtener un valor específico del JSON
     $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON actual
-    ['id_certificado_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+    ['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado 
     //Busca el registro del certificado que tiene el id igual a $id_sustituye
-    Certificado_Exportacion::find($id_sustituye)->num_certificado ?? '' : '';
+    Certificado_Exportacion::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
     $datos = $data->dictamen->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
         $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON

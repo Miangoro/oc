@@ -365,4 +365,8 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Bitácora De Hologramas.pdf');
     }
 
+    public function informeresulta(){
+      $pdf = Pdf::loadView('pdfs.informe_resultados');
+      return $pdf->stream('Registro de muestras y Reportes de resultados plaguicidas 2025.pdf');
+    }
 }
