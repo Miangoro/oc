@@ -127,22 +127,30 @@ $(function () {
           targets: 8,
           orderable: 0,
           render: function (data, type, full, meta) {
-            var $decision = full['decision'];
-            var $colorDesicion;
-            var $nombreDesicion;
+            let $decision = full['decision'];
+            let $colorDesicion;
+            let $nombreDesicion;
+            let num_revision = '';
+            
+
+            if(full['num_revision'] == 1){
+              num_revision = 'Primera';
+            }else{
+               num_revision = 'Segunda';
+            }
 
             switch ($decision) {
               case "positiva":
-                $nombreDesicion = 'Revisión positiva';
+                $nombreDesicion = num_revision +' Revisión positiva';
                 $colorDesicion = 'primary';
               break; 
 
               case "negativa":
-                $nombreDesicion = 'Revisión negativa';
+                $nombreDesicion = num_revision + ' Revisión negativa';
                 $colorDesicion = 'danger';
               break;
               default:
-                $nombreDesicion = 'Pendiente';
+                $nombreDesicion = num_revision + ' Revisión pendiente';
                 $colorDesicion = 'warning';
             }
 
@@ -683,7 +691,7 @@ $(document).on('click', '.pdf', function () {
 
   // Mostrar modal de PDF
   $('#mostrarPdf').modal('show');
-  $('#loading-spinner').show();
+  $('#cargando').show();
   $('#pdfViewer').hide();
 
   // Cargar PDF en iframe
@@ -692,7 +700,7 @@ $(document).on('click', '.pdf', function () {
 
 // Ocultar spinner y mostrar PDF cuando el iframe se haya cargado
 $('#pdfViewer').on('load', function () {
-  $('#loading-spinner').hide();
+  $('#cargando').hide();
   $('#pdfViewer').show();
 });
 

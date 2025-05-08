@@ -530,47 +530,35 @@ public function storeRevisor(Request $request)
             return response()->json(['message' => 'El certificado no existe.'], 404);
         }
 
-        $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])->where('tipo_certificado',1)->first();
-        $message = ''; // Inicializar el mensaje
+        $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])
+    ->where('tipo_certificado', 1)
+    ->where('tipo_revision', $validatedData['tipoRevisor']) // buscar según tipo de revisión
+    ->first();
 
-        if ($revisor) {
-            // Actualizar el revisor existente
-            if ($validatedData['tipoRevisor'] == '1') {
-                if ($revisor->id_revisor == $validatedData['nombreRevisor']) {
-                    $message = 'Revisor reasignado.'; 
-                } else {
-                    $revisor->id_revisor = $validatedData['nombreRevisor'];
-                    $message = 'Revisor asignado exitosamente.';
-                }
-            } else {
-                if ($revisor->id_revisor2 == $validatedData['nombreRevisor']) {
-                    $message = 'Revisor reasignado.';
-                } else {
-                    $revisor->id_revisor2 = $validatedData['nombreRevisor'];
-                    $message = 'Revisor Miembro del consejo asignado exitosamente.';
-                }
-            }
-        } else {
-            // Crear un nuevo revisor
-            $revisor = new Revisor();
-            $revisor->id_certificado = $validatedData['id_certificado'];
-            $revisor->tipo_revision = $validatedData['tipoRevisor'];
+$message = '';
 
-            if ($validatedData['tipoRevisor'] == '1') {
-                $revisor->id_revisor = $validatedData['nombreRevisor'];
-                $message = 'Revisor asignado exitosamente.';
-            } else {
-                $revisor->id_revisor2 = $validatedData['nombreRevisor'];
-                $message = 'Revisor Miembro del consejo asignado exitosamente.';
-            }
-        }
+if ($revisor) {
+    if ($revisor->id_revisor == $validatedData['nombreRevisor']) {
+        $message = 'Revisor reasignado.';
+    } else {
+        $revisor->id_revisor = $validatedData['nombreRevisor'];
+        $message = 'Revisor asignado exitosamente.';
+    }
+} else {
+    $revisor = new Revisor();
+    $revisor->id_certificado = $validatedData['id_certificado'];
+    $revisor->tipo_certificado = 1;
+    $revisor->tipo_revision = $validatedData['tipoRevisor'];
+    $revisor->id_revisor = $validatedData['nombreRevisor'];
+    $message = 'Revisor asignado exitosamente.';
+}
 
-        // Guardar los datos del revisor
-        $revisor->tipo_certificado = 1;
-        $revisor->numero_revision = $validatedData['numeroRevision'];
-        $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
-        $revisor->observaciones = $validatedData['observaciones'] ?? '';
-        $revisor->save();
+// Datos comunes
+$revisor->numero_revision = $validatedData['numeroRevision'];
+$revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
+$revisor->observaciones = $validatedData['observaciones'] ?? '';
+$revisor->save();
+
 
         $empresa =  $certificado->dictamen->inspeccione->solicitud->empresa;
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {

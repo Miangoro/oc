@@ -1,6 +1,6 @@
 @extends('layouts.layoutMaster')
 
-@section('title', 'Revision Personal')
+@section('title', 'Revisión Personal')
 
 @section('vendor-style')
 @vite([
@@ -153,8 +153,8 @@
                     <th>Tipo</th>
                     <th>Certificado</th>
                     <th>Revisor</th>
-                    <th>Fecha Emisión</th>
-                    <th>Fecha Revisión</th>
+                    <th>Fecha asignación</th>
+                    <th>Fecha revisión</th>
                     <th>Bitácora</th>
                     <th>Estatus</th>
                     <th>Acciones</th>

@@ -104,7 +104,7 @@
             </h2>
             <div id="accordionPayment-2" class="accordion-collapse collapse">
               <div class="accordion-body">
-              Solo los organismos de certificación autorizados por la Secretaría de Economía y el Consejo Regulador del Mezcal (CRM).
+              Solo los organismos de certificación aprobados por la Dirección General de Normas (DGN) a través de la Secretaría de Economía y que cuenten con una acreditación vigente.
 
               </div>
             </div>
