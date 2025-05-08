@@ -328,7 +328,7 @@ Route::get('/pages/account-settings-security', [AccountSettingsSecurity::class, 
 Route::get('/pages/account-settings-billing', [AccountSettingsBilling::class, 'index'])->name('pages-account-settings-billing');
 Route::get('/pages/account-settings-notifications', [AccountSettingsNotifications::class, 'index'])->name('pages-account-settings-notifications');
 Route::get('/pages/account-settings-connections', [AccountSettingsConnections::class, 'index'])->name('pages-account-settings-connections');
-Route::get('/pages/faq', [Faq::class, 'index'])->name('pages-faq');
+Route::get('/pages/faq', [Faq::class, 'index'])->name('pages-faq')->middleware(['auth']);
 Route::get('/pages/pricing', [PagesPricing::class, 'index'])->name('pages-pricing');
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
 Route::get('/holograma/{folio}', [HologramasValidacion::class, 'index2'])->name('pages-hologramas-validacion');
