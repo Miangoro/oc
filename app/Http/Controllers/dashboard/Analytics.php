@@ -21,8 +21,8 @@ class Analytics extends Controller
   public function index()
   {
     //$datos = solicitudesModel::All();
-    $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')->where('fecha_solicitud','>','2024-12-01')->count();
-    $solicitudesSinActa = solicitudesModel::whereNot('id_tipo', 12)->whereNot('id_tipo', 13)->whereNot('id_tipo', 15)->where('fecha_solicitud','>','2024-12-01')
+    $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')->where('fecha_solicitud','>','2024-12-31')->count();
+    $solicitudesSinActa = solicitudesModel::whereNot('id_tipo', 12)->whereNot('id_tipo', 13)->whereNot('id_tipo', 15)->where('fecha_solicitud','>','2024-12-31')
       ->where(function ($query) {
         $query->doesntHave('documentacion_completa')
           ->orWhereHas('documentacion_completa', function ($q) {
@@ -55,8 +55,8 @@ class Analytics extends Controller
       ->merge($certificadosExportacion);
 
 
-    $dictamenesInstalacionesSinCertificado = Dictamen_instalaciones::whereDoesntHave('certificado')->count();
-    $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->count();
+    $dictamenesInstalacionesSinCertificado = Dictamen_instalaciones::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->count();
+    $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->count();
 
 
 

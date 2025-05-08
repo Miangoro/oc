@@ -42,7 +42,7 @@ class insertar_datos_bd_certificados_granel extends Controller
                     if (!empty($solicitud['n_dictamen'])) {
                         $dictamenes = Dictamen_Granel::where('num_dictamen', $solicitud['n_dictamen'])->first();
                         $id_lote = LotesGranel::where('nombre_lote', $solicitud['n_lote'])->first();
-                        echo  $id_lote->id_lote_granel ?? '0';
+                         $id_lote->id_lote_granel ?? '0';
                         
                     } else {
                         $dictamenes = null; // O maneja este caso según corresponda
@@ -50,8 +50,8 @@ class insertar_datos_bd_certificados_granel extends Controller
                     
 
                     if ($dictamenes) {
-
-
+                        
+                        echo $solicitud['n_certificado'].'<br>';
 
                         //if ($solicitud['n_servicio'] ==$inspecciones->n) {
                             $id_solicitud = CertificadosGranel::create([
