@@ -21,9 +21,10 @@ trait TranslatableActivityLog
             'deleted' => 'eliminó',
             // Agrega más eventos según sea necesario
         ];
+        $userName = auth()->check() ? auth()->user()->name : 'Cliente externo';
+        $action = $eventTranslations[$eventName] ?? $eventName;
 
-        $action = $eventTranslations[$eventName] ?? $eventName; // Usar la traducción o el nombre original
-        return "El usuario " . auth()->user()->name . " {$action} un registro de " . $this->getLogName2() . " el " . now()->format('d/m/Y');
+      return "El usuario {$userName} {$action} un registro de " . $this->getLogName2() . " el " . now()->format('d/m/Y');
     }
 
     protected function getLogName(): string

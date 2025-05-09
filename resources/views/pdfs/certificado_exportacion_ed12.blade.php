@@ -244,8 +244,8 @@
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Categoría y Clase:</td>
             <td style="text-align: left; padding-left: 4px; width: 22%;"> 
-                {{ $lote->lotesGranel->first()->categoria->categoria ?? "N"}}, 
-                {{ $lote->lotesGranel->first()->clase->clase ?? "N"}} 
+                {{ $lote->lotesGranel->first()->categoria->categoria ?? "No encontrado"}}, 
+                {{ $lote->lotesGranel->first()->clase->clase ?? "No encontrado"}} 
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Edad (solo aplica en Añejo):</td>
             <td style="text-align: left; padding-left: 4px;"> 

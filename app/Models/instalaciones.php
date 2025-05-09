@@ -54,13 +54,13 @@ class instalaciones extends Model
 
     public function documentos()
     {
-      
+
         return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_instalacion');
     }
 
     public function documentos_certificados_instalaciones()
     {
-      
+
         return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_instalacion')
         ->whereIn('id_documento', [127, 128, 129, 130, 131]);
     }
@@ -71,9 +71,9 @@ class instalaciones extends Model
     }
 
     public function certificado_instalacion()
-{
-    return $this->hasOne(Dictamen_instalaciones::class, 'id_instalacion', 'id_instalacion')
-        ->with('certificado');
-}
+    {
+        return $this->hasOne(Dictamen_instalaciones::class, 'id_instalacion', 'id_instalacion')
+            ->with('certificado');
+    }
 
 }

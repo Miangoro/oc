@@ -6,8 +6,12 @@
       <div class="modal-body p-0">
         <div class="text-center">
           <h4 class="mb-2">Expediente de inspección</h4>
-          <p class="mb-6 nombre_empresa badge bg-primary"></p>
-          <p class="mb-6 badge bg-primary"></p>
+          <p class="mb-2 nombre_empresa badge bg-primary"></p>
+          <p class="mb-2 inspectorName badge bg-primary"></p>
+        </div>
+        <div class="text-center">
+          <p class="mb-2 folio_solicitud badge bg-info"></p>
+          <p class="mb-2 numero_servicio badge bg-info"></p>
         </div>
         <div class="card">
           <h5 id="solicitud_title"  class="card-header solicitud text-center"></h5>
@@ -20,10 +24,9 @@
                 </tr>
               </thead>
               <tbody class="table-border-bottom-0">
-                <p class="id_soli"></p>
+{{--                 <p class="id_soli"></p>
                 <p class="numero_tipo"></p>
-                <p class="id_deinspeccion"></p>
-                
+                <p class="id_deinspeccion"></p> --}}
                 <tr class="table-success">
                   <td><i class="ri-bank-fill ri-22px text-primary me-4"></i><span class="fw-medium">1. Solicitud de servicio</span></td>
                   <td><a  id="link_solicitud_servicio"  target="_Blank" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
@@ -37,7 +40,7 @@
                   <td><a id="link_orden_servicio" target="_blank" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
                 </tr>
                 <tr class="table-light">
-                  <td><i class="ri-angularjs-line ri-22px text-danger me-4"></i><span class="fw-medium">Etiquetas para muestra</span></td>
+                  <td><i class="ri-angularjs-line ri-22px text-danger me-4"></i><span class="fw-medium etiqueta_name"></span></td>
                   <td><a  id="links_etiquetas" target="_blank" href="#">
                     <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
                   </a>

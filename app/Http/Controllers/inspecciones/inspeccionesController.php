@@ -144,6 +144,8 @@ class inspeccionesController extends Controller
                 $nestedData['id_acta'] = $solicitud->inspeccion->actas_inspeccion->id_acta ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids  ?? 'N/A';
                 $nestedData['folio'] = '<b class="text-primary">' . $solicitud->folio . '</b>';
+                $nestedData['folio_info']=$solicitud->folio;
+                $nestedData['num_servicio_info']= $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
                 $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</apan>';
                 $nestedData['razon_social'] = $solicitud->empresa->razon_social  ?? 'N/A';
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
@@ -152,6 +154,7 @@ class inspeccionesController extends Controller
                 $nestedData['tipo_instalacion'] = $solicitud->instalacion->tipo  ?? '';
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</span>'; // Maneja el caso donde el organismo sea nulo
+                $nestedData['inspectorName'] = $solicitud->inspector->name ?? 'Sin inspector';
                 $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? '';
                 $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo ?? 'N/A';
 

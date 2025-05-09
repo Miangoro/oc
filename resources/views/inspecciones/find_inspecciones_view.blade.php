@@ -174,73 +174,93 @@
 @endsection
 
 <script>
-    function abrirModal(id_solicitud, id_inspeccion, tipo, nombre_empresa, id_tipo) {
+    function abrirModal(id_solicitud, id_inspeccion, tipo, nombre_empresa, id_tipo, folio, noservicio, inspectorName) {
 
-        /* $.ajax({
-             url: '/lista_empresas/' + id_empresa,
-             method: 'GET',
-             success: function(response) {
-                 // Cargar los detalles en el modal
-                 var contenido = "";
-               for (let index = 0; index < response.normas.length; index++) {
-                 contenido = '<input value="'+response.normas[index].id_norma+'" type="hidden" name="id_norma[]"/><div class="col-12 col-md-12 col-sm-12"><div class="form-floating form-floating-outline"><input type="text" id="numero_cliente'+response.normas[index].id_norma+'" name="numero_cliente[]" class="form-control" placeholder="Introducir el número de cliente" /><label for="modalAddressFirstName">Número de cliente para la norma '+response.normas[index].norma+'</label></div></div><br>' + contenido;
-                 console.log(response.normas[index].norma);
-               }
-                 $('#expedienteServicio').modal('show');
-             },
-             error: function() {
-                 alert('Error al cargar los detalles de la empresa.');
-             }
-         });*/
         $('.id_soli').text(id_solicitud);
         $('.id_deinspeccion').text(id_inspeccion);
         $('.solicitud').text(tipo);
         $('.nombre_empresa').text(nombre_empresa);
         $('.numero_tipo').text(id_tipo);
+        $('.folio_solicitud').html('<b class="text-primary">' + (folio) + '</b>');
+        $('.numero_servicio').html('<b class="text-primary">' + noservicio + '</b>');
+        $('.inspectorName').html(inspectorName);
 
-        // Validar si hay inspección
+
+        const links = [{
+                id: '#link_solicitud_servicio',
+                href: '{{ url('solicitud_de_servicio') }}/' + id_solicitud
+            },
+            {
+                id: '#link_oficio_comision',
+                href: '{{ url('oficio_de_comision') }}/' + id_inspeccion
+            },
+            {
+                id: '#link_orden_servicio',
+                href: '{{ url('orden_de_servicio') }}/' + id_inspeccion
+            },
+            {
+                id: '#links_etiquetas',
+                href: ''
+            } // se asigna después según id_tipo
+        ];
+
         if (parseInt(id_inspeccion) === 0) {
-            // No hay inspección, ocultar secciones relacionadas
-            $('#link_solicitud_servicio').closest('a').hide();
-            $('#link_oficio_comision').closest('a').hide();
-            $('#link_orden_servicio').closest('a').hide();
-            $('#links_etiquetas').closest('a').hide();
+            // Desactivar enlaces e íconos
+            links.forEach(link => {
+                $(link.id)
+                    .removeAttr('href')
+                    .addClass('text-secondary opacity-50')
+                    .find('i')
+                    .removeClass('text-danger')
+                    .addClass('text-secondary opacity-50');
+            });
         } else {
-            $('#link_solicitud_servicio').closest('a').show();
-            $('#link_solicitud_servicio').attr('href', '{{ url('solicitud_de_servicio') }}/' + id_solicitud);
-            $('#link_oficio_comision').closest('a').show();
-            $('#link_oficio_comision').attr('href', '{{ url('oficio_de_comision') }}/' + id_inspeccion);
-            $('#link_orden_servicio').closest('a').show();
-            $('#link_orden_servicio').attr('href', '{{ url('orden_de_servicio') }}/' + id_inspeccion);
-            $('#links_etiquetas').closest('a').show();
-        }
-     /*    // Asignar URLs
-        $('#link_solicitud_servicio').attr('href', '{{ url('solicitud_de_servicio') }}/' + id_solicitud);
-        $('#link_oficio_comision').attr('href', '{{ url('oficio_de_comision') }}/' + id_solicitud);
-        $('#link_orden_servicio').attr('href', '{{ url('orden_de_servicio') }}/' + id_solicitud);
- */
-        switch (parseInt(id_tipo)) {
-            case 1:
-            $('#links_etiquetas').attr('href', '{{ url('etiqueta_agave_art') }}/' + id_solicitud);
-                break;
-            case 2:
-                // Acciones para tipo 2
-                break;
-            case 3:
-            $('#links_etiquetas').attr('href', '{{ url('etiquetas_tapas_sellado') }}/' + id_solicitud);
-              break;
-            case 4:
-            case 5:
-            $('#links_etiquetas').attr('href', '{{ url('etiqueta_lotes_mezcal_granel') }}/' + id_solicitud);
-                break;
+            // Restaurar enlaces e íconos
+            links.forEach(link => {
+                if (link.id !== '#links_etiquetas') { // se maneja aparte por id_tipo
+                    $(link.id)
+                        .attr('href', link.href)
+                        .removeClass('text-secondary opacity-50')
+                        .find('i')
+                        .removeClass('text-secondary opacity-50')
+                        .addClass('text-danger');
+                } else {
+                    $(link.id)
+                        .removeClass('text-secondary opacity-50')
+                        .find('i')
+                        .removeClass('text-secondary opacity-50')
+                        .addClass('text-danger');
+                }
+            });
 
-            case 7:
-              $('#links_etiquetas').attr('href', '{{ url('etiqueta-barrica') }}/' + id_solicitud);
-            break;
-            default:
-                // Acciones por defecto
-                break;
+            // Etiquetas específicas según tipo
+            let etiquetaHref = '';
+            let etiquetaTexto = 'Etiquetas';
+
+            switch (parseInt(id_tipo)) {
+                case 1:
+                    etiquetaHref = '{{ url('etiqueta_agave_art') }}/' + id_solicitud;
+                    etiquetaTexto = 'Etiqueta para agave (%ART)';
+                    break;
+                case 3:
+                    etiquetaHref = '{{ url('etiquetas_tapas_sellado') }}/' + id_solicitud;
+                    etiquetaTexto = 'Etiqueta para tapa de la muestra';
+                    break;
+                case 4:
+                case 5:
+                    etiquetaHref = '{{ url('etiqueta_lotes_mezcal_granel') }}/' + id_solicitud;
+                    etiquetaTexto = 'Etiqueta para lotes de mezcal a granel';
+                    break;
+                case 7:
+                    etiquetaHref = '{{ url('etiqueta-barrica') }}/' + id_solicitud;
+                    etiquetaTexto = 'Etiqueta de ingreso a barricas';
+                    break;
+            }
+
+            $('#links_etiquetas').attr('href', etiquetaHref);
+            $('.etiqueta_name').text(etiquetaTexto);
         }
+
         $('#expedienteServicio').modal('show');
 
     }
