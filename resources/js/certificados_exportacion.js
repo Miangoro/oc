@@ -196,8 +196,12 @@ if (dt_user_table.length) {
           render: function (data, type, full, meta) {
             var $ = full[''];
             return `<div class="small">
-                <b>Lote envasado:</b> ${full['nombre_lote']} <br>
+                <b>Lote envasado:</b> ${full['nombre_lote_envasado']} <br>
                 <b>Lote granel:</b> ${full['nombre_lote_granel']} <br>
+                <b>Marca:</b> ${full['marca']} <br>
+                <b>Cajas:</b> ${full['cajas']} <br>
+                <b>Botellas:</b> ${full['botellas']} <br>
+                <b>Pedido:</b> ${full['n_pedido']}
               </div>`;
             }
         },
