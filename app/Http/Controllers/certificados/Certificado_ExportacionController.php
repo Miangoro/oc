@@ -115,6 +115,7 @@ public function index(Request $request)
         $nestedData['id_revisor'] = $certificado->revisor->user->name ?? null;
         $nestedData['numero_revision'] = $certificado->revisor->numero_revision ?? null;
         $nestedData['decision'] = $certificado->revisor->decision ?? null;
+        $nestedData['respuestas'] = $certificado->revisor->respuestas ?? null;
         
             ///dias vigencia
             $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
@@ -143,6 +144,11 @@ public function index(Request $request)
             //Lote envasado
             $lotes = $certificado->dictamen?->inspeccione?->solicitud?->lotesEnvasadoDesdeJson();
             $nestedData['nombre_lote'] = $lotes?->pluck('nombre')->implode(', ') ?? 'No encontrado';
+            //Lote granel
+    $lotesGranel = $lotes?->flatMap(function ($lote) {
+    return $lote->lotesGranel; // Relación definida en el modelo LoteEnvasado
+})->unique('id_lote_granel');
+    $nestedData['nombre_lote_granel'] = $lotesGranel?->pluck('nombre')->implode(', ') ?? 'No encontrado';
             
             
             $data[] = $nestedData;

@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Certificado como Productor de Mezca</title>
+  <title>Certificado como Envasador de Mezcal l ED5</title>
   <style>
     @page {
           size: 227mm 292mm;
     }
-    
+
     body {
       font-family: 'Calibri', sans-serif;
       font-size: 13px;
@@ -220,7 +220,7 @@
   </p>
 
   <p class="title">CERTIFICADO</p>
-  <p class="title2">COMO PRODUCTOR DE MEZCAL A</p>
+  <p class="title2">COMO ENVAZADOR DE MEZCAL A</p>
 
   <table>
     <tbody>
@@ -261,11 +261,11 @@
         </tr>
         <tr>
             <td class="td-margins"
-            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Fecha de emisión:</strong></td>
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Fecha de inicio de vigencia:</strong></td>
             <td class="td-margins"
             style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $fecha_emision }}</td>
             <td class="td-margins"
-            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Fecha de vigencia:</strong></td>
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Fecha de vencimiento::</strong></td>
             <td class="td-margins"
             style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $fecha_vigencia }}</td>
         </tr>
@@ -273,7 +273,7 @@
 </table>
 
   <p class="text">
-    El presente certificado es emitido de acuerdo con la Norma Oficial Mexicana NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones, mediante el esquema de certificación para los siguientes productos con Denominación de Origen:
+  El presente certificado es emitido de acuerdo con la Norma Oficial Mexicana NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones, mediante el esquema de certificación para los siguientes productos con Denominación de Origen. 
   </p>
   <table>
   <tbody>
@@ -293,28 +293,17 @@
 </table>
 
   <p class="text">
-    Las instalaciones que cuentan con el equipo requerido para la producción del producto Mezcal y se encuentran dentro de los estados y municipios contemplados, son las siguientes:
+  Esta empresa ha demostrado que cuenta con la infraestructura, conocimientos y la práctica necesaria para ejecutar las etapas de envasado de la Bebida Alcohólica Destilada Denominada  Mezcal, de conformidad con lo establecido en el apartado 5 de la NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones en las instalaciones descritas a continuación:
   </p>
 
   <table>
   <tbody>
+   
     <tr>
       <td class="td-margins"
-      style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Maestro mezcalero:</strong></td>
-      <td class="td-margins"
-      style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $maestro_mezcalero }}</td>
-    </tr>
-    <tr>
-      <td class="td-margins"
-      style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Domicilio de producción:</strong></td>
+      style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>Domicilio de la unidad de envasado:</strong></td>
       <td class="td-margins"
       style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $direccion_completa }}</td>
-    </tr>
-    <tr>
-      <td class="td-margins"
-      style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;"><strong>No. de autorización para el Uso de la Denominación de Origen Mezcal:</strong></td>
-      <td class="td-margins"
-      style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">{{ $num_autorizacion }}</td>
     </tr>
     <tr>
       <td class="td-margins"
@@ -336,14 +325,13 @@
 
   <<div class="footer">
     <p style="text-align: right; font-size: 9px; line-height: 1; margin-bottom: 1px;">
-        @if ($id_sustituye)
-            Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
-        @endif
+        
         <br>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35<br>
-        Edicion 6 Entrada en vigor: 01/04/25
+        Edicion 5 Entrada en vigor: 01/04/25
     </p>
     <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705px">
 </div>
 
 </body>
 </html>
+

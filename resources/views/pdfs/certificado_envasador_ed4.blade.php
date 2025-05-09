@@ -273,7 +273,7 @@ instalaciones indicadas a continuación. <br>
 
 <strong>No. De Dictamen de cumplimiento con la NOM:</strong> {{$num_dictamen}}</p>
 
-<p class="text"">Dichas instalaciones cuentan con el equipg requerido para el envasado del producto Mezcal y se encuentran
+<p class="text">Dichas instalaciones cuentan con el equipg requerido para el envasado del producto Mezcal y se encuentran
 dentro dé los estados y municipios que contempla la Resolución mediante la cua,l se otorga la protección prevista
 a la Denominación de Origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre, publicada el 28
 de Noviembre de l994. así como sus subsecuentes modificaciones.</p>
@@ -285,7 +285,7 @@ de Noviembre de l994. así como sus subsecuentes modificaciones.</p>
     <div class="signature-name">{{ $puesto_firmante }}</div>
 </div>
 
-<div class="down">Este cértificado sustituye al: No aplica<br>Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36<br>Edición 4 Entrada en vigor 12/01/2024 <br>
+<div class="down">Este cértificado sustituye al: No aplica<br>Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36<br>Edición 6 Entrada en vigor 12/01/2025 <br>
 
 @if ($leyenda)
 Cancela y sustituye al certificado con clave: CIDAM C-GRA-057/2023
