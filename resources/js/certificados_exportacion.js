@@ -237,7 +237,7 @@ if (dt_user_table.length) {
             } else if ($estatus == 1) {
                 estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
             } else if ($estatus == 2) {
-                estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+                estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
             } else {
               estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
             }
@@ -292,7 +292,7 @@ if (dt_user_table.length) {
               <div class="small"><b>Personal:</b> <span class="${colorClass}">${revision} ${personal}</span>${icono} </div>
               <div style="display: inline;">${revisorMiembro}</div>
             </div> `;
-          // Retorna los revisores en formato HTML
+            //'<span class="badge rounded-pill bg-info">Vo. Bo. Cliente</span>';
           /*return estatus+
             `<div style="flex-direction: column;">
                   <div class="small"><b>Personal:</b> <span ${color}> ${revision} ${personal}</span></div>
