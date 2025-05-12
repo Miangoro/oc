@@ -313,6 +313,9 @@
     </tr>
   </tbody>
 </table>
+ <p class="text">
+  Dichas instalaciones cuentan con el equipo requerido para el envasado del producto Mezcal y se encuentran dentro de los estados y municipios que contempla la Resolución mediante la cual se otorga la protección prevista a la Denominación de Origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre, publicada el 28 de Noviembre de 1994, así como sus subsecuentes modificaciones.
+  </p>
 
   <div class="signature">
     <img src="{{ public_path('img_pdf/firmapdf.jpg') }}" 
