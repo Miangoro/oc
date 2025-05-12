@@ -37,6 +37,7 @@
         .light-style .bs-stepper.wizard-icons .bs-stepper-header .bs-stepper-label {
             color: white;
         }
+
         .custom-option.active {
             border: 2px solid #8eb3ae;
             /* El color del borde usa la variable definida */
@@ -227,7 +228,7 @@
                                             <i class="ri-goblet-2-fill"></i>
                                             <small>Otras bebidas alcoholicas</small>
                                         </span>
-                                        <input name="producto[]" value="65" class="form-check-input" type="checkbox"
+                                        <input name="producto[]" value="5" class="form-check-input" type="checkbox"
                                             value="" id="customRadioIcon65" />
                                     </label>
                                 </div>
@@ -278,7 +279,7 @@
                                         <span class="custom-option-body">
                                             <small>NOM-199-SCFI-2017</small>
                                         </span>
-                                        <input name="norma[]" class="form-check-input" type="checkbox" value="64"
+                                        <input name="norma[]" class="form-check-input" type="checkbox" value="4"
                                             id="customRadioIcon68" />
                                     </label>
                                 </div>
@@ -358,8 +359,8 @@
                                                     (2% a 20% Alc.
                                                     Vol.)</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="20" id="customRadioIcon20" />
+                                            <input name="clasificacion[]" class="form-check-input" type="checkbox"
+                                                value="1" id="customRadioIcon20" />
                                         </label>
                                     </div>
                                 </div>
@@ -373,8 +374,8 @@
                                                     Destiladas (32%
                                                     a 55% Alc. Vol.)</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="21" id="customRadioIcon21" />
+                                            <input name="clasificacion[]" class="form-check-input" type="checkbox"
+                                                value="2" id="customRadioIcon21" />
                                         </label>
                                     </div>
                                 </div>
@@ -387,8 +388,8 @@
                                                     cremas (13.5%
                                                     a 55% Alc. Vol.)</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="22" id="customRadioIcon22" />
+                                            <input name="clasificacion[]" class="form-check-input" type="checkbox"
+                                                value="3" id="customRadioIcon22" />
                                         </label>
                                     </div>
                                 </div>
@@ -403,8 +404,8 @@
                                                     (32% a 55%
                                                     Alc. Vol.)</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="23" id="customRadioIcon23" />
+                                            <input name="clasificacion[]" class="form-check-input" type="checkbox"
+                                                value="4" id="customRadioIcon23" />
                                         </label>
                                     </div>
                                 </div>
@@ -418,8 +419,8 @@
                                                     Vol.)
                                                 </small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="24" id="customRadioIcon24" />
+                                            <input name="clasificacion[]" class="form-check-input" type="checkbox"
+                                                value="5" id="customRadioIcon24" />
                                         </label>
                                     </div>
                                 </div>
@@ -432,8 +433,8 @@
                                                 <small>Bebidas alcohólicas preparadas (2% a 12% Alc. Vol.)
                                                 </small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="25" id="customRadioIcon25" />
+                                            <input name="clasificacion[]" class="form-check-input" type="checkbox"
+                                                value="6" id="customRadioIcon25" />
                                         </label>
                                     </div>
                                 </div>
@@ -453,8 +454,8 @@
                                             <span class="custom-option-body">
                                                 <small>Cerveza</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="26" id="customRadioIcon26" />
+                                            <input name="bebida[1][]" class="form-check-input" type="checkbox"
+                                                value="Cerveza" id="customRadioIcon26" />
                                         </label>
                                     </div>
                                 </div>
@@ -464,8 +465,8 @@
                                             <span class="custom-option-body">
                                                 <small>_____Ale</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="27" id="customRadioIcon27" />
+                                            <input name="bebida[1][]" class="form-check-input" type="checkbox"
+                                                value="_____Ale" id="customRadioIcon27" />
                                         </label>
                                     </div>
                                 </div>
@@ -475,8 +476,8 @@
                                             <span class="custom-option-body">
                                                 <small>Pulque</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="28" id="customRadioIcon28" />
+                                            <input name="bebida[1][]" class="form-check-input" type="checkbox"
+                                                value="pulque" id="customRadioIcon28" />
                                         </label>
                                     </div>
                                 </div>
@@ -486,8 +487,8 @@
                                             <span class="custom-option-body">
                                                 <small>Sake</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="29" id="customRadioIcon29" />
+                                            <input name="bebida[1][]" class="form-check-input" type="checkbox"
+                                                value="sake" id="customRadioIcon29" />
                                         </label>
                                     </div>
                                 </div>
@@ -497,8 +498,8 @@
                                             <span class="custom-option-body">
                                                 <small>Sidra</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="30" id="customRadioIcon30" />
+                                            <input name="bebida[1][]" class="form-check-input" type="checkbox"
+                                                value="Sidra" id="customRadioIcon30" />
                                         </label>
                                     </div>
                                 </div>
@@ -508,8 +509,8 @@
                                             <span class="custom-option-body">
                                                 <small>Vino</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="31" id="customRadioIcon31" />
+                                            <input name="bebida[1][]" class="form-check-input" type="checkbox"
+                                                value="vino" id="customRadioIcon31" />
                                         </label>
                                     </div>
                                 </div>
@@ -519,10 +520,15 @@
                                             <span class="custom-option-body">
                                                 <small>Otro (Especifique):</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="32" id="customRadioIcon32" />
+                                            <input class="form-check-input" type="checkbox" id="customRadioIcon32" />
                                         </label>
                                     </div>
+                                    <!-- Campo de texto para especificar -->
+                                    <div id="otroBebidaInput" class="mt-2" style="display: none;">
+                                        <input type="text" name="bebida[1][]" class="form-control"
+                                            placeholder="Especifique la bebida o producto">
+                                    </div>
+
                                 </div>
                             </div>
                             <hr>
@@ -541,8 +547,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Aguardiente</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="33" id="customRadioIcon33" />
+                                            <input name="bebida[2][]" class="form-check-input" type="checkbox"
+                                                value="Aguardiente" id="customRadioIcon33" />
                                         </label>
                                     </div>
                                 </div>
@@ -553,8 +559,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Armagnac</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="34" id="customRadioIcon34" />
+                                            <input name="bebida[2][]" class="form-check-input" type="checkbox"
+                                                value="Armagnac" id="customRadioIcon34" />
                                         </label>
                                     </div>
                                 </div>
@@ -565,8 +571,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Bacanora</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="35" id="customRadioIcon35" />
+                                            <input name="bebida[2][]" class="form-check-input" type="checkbox"
+                                                value="Bacanora" id="customRadioIcon35" />
                                         </label>
                                     </div>
                                 </div>
@@ -577,8 +583,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Brandy</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="36" id="customRadioIcon36" />
+                                            <input name="bebida[2][]" class="form-check-input" type="checkbox"
+                                                value="Brandy" id="customRadioIcon36" />
                                         </label>
                                     </div>
                                 </div>
@@ -589,8 +595,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Cachaca</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="37" id="customRadioIcon37" />
+                                            <input name="bebida[2][]" class="form-check-input" type="checkbox"
+                                                value="Cachaca" id="customRadioIcon37" />
                                         </label>
                                     </div>
                                 </div>
@@ -601,8 +607,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Comiteco</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="38" id="customRadioIcon38" />
+                                            <input name="bebida[2][]" class="form-check-input" type="checkbox"
+                                                value="Comiteco" id="customRadioIcon38" />
                                         </label>
                                     </div>
                                 </div>
@@ -613,8 +619,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Ginebra</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="39" id="customRadioIcon39" />
+                                            <input name="bebida[2][]" class="form-check-input" type="checkbox"
+                                                value="Ginebra" id="customRadioIcon39" />
                                         </label>
                                     </div>
                                 </div>
@@ -633,8 +639,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Anís</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="40" id="customRadioIcon40" />
+                                            <input name="bebida[3][]" class="form-check-input" type="checkbox"
+                                                value="Anis" id="customRadioIcon40" />
                                         </label>
                                     </div>
                                 </div>
@@ -645,8 +651,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Amaretto</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="41" id="customRadioIcon41" />
+                                            <input name="bebida[3][]" class="form-check-input" type="checkbox"
+                                                value="Amaretto" id="customRadioIcon41" />
                                         </label>
                                     </div>
                                 </div>
@@ -657,8 +663,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Crema o licor de cassis</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="42" id="customRadioIcon42" />
+                                            <input name="bebida[3][]" class="form-check-input" type="checkbox"
+                                                value="Crema o licor de cassis" id="customRadioIcon42" />
                                         </label>
                                     </div>
                                 </div>
@@ -669,8 +675,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Crema o licor de café</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="43" id="customRadioIcon43" />
+                                            <input name="bebida[3][]" class="form-check-input" type="checkbox"
+                                                value="Crema o licor de café" id="customRadioIcon43" />
                                         </label>
                                     </div>
                                 </div>
@@ -681,8 +687,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Crema o licor de cacao</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="44" id="customRadioIcon44" />
+                                            <input name="bebida[3][]" class="form-check-input" type="checkbox"
+                                                value="Crema o licor de cacao" id="customRadioIcon44" />
                                         </label>
                                     </div>
                                 </div>
@@ -693,8 +699,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Crema o licor de menta</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="45" id="customRadioIcon45" />
+                                            <input name="bebida[3][]" class="form-check-input" type="checkbox"
+                                                value="Crema o licor de menta" id="customRadioIcon45" />
                                         </label>
                                     </div>
                                 </div>
@@ -705,8 +711,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Fernet</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="46" id="customRadioIcon46" />
+                                            <input name="bebida[3][]" class="form-check-input" type="checkbox"
+                                                value="Fernet" id="customRadioIcon46" />
                                         </label>
                                     </div>
                                 </div>
@@ -717,8 +723,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Irish cream</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="47" id="customRadioIcon47" />
+                                            <input name="bebida[3][]" class="form-check-input" type="checkbox"
+                                                value="Irish cream" id="customRadioIcon47" />
                                         </label>
                                     </div>
                                 </div>
@@ -729,8 +735,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Licor amargo</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="48" id="customRadioIcon48" />
+                                            <input name="bbebida[3][]" class="form-check-input" type="checkbox"
+                                                value="Licor amargo" id="customRadioIcon48" />
                                         </label>
                                     </div>
                                 </div>
@@ -741,8 +747,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Licores de frutas</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="49" id="customRadioIcon49" />
+                                            <input name="bebida[3][]" class="form-check-input" type="checkbox"
+                                                value="Licores de frutas" id="customRadioIcon49" />
                                         </label>
                                     </div>
                                 </div>
@@ -753,8 +759,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Sambuca</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="50" id="customRadioIcon50" />
+                                            <input name="bebida[3][]" class="form-check-input" type="checkbox"
+                                                value="Sambuca" id="customRadioIcon50" />
                                         </label>
                                     </div>
                                 </div>
@@ -765,8 +771,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Xtabentún</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="51" id="customRadioIcon51" />
+                                            <input name="bebida[3][]" class="form-check-input" type="checkbox"
+                                                value="Xtabentun" id="customRadioIcon51" />
                                         </label>
                                     </div>
                                 </div>
@@ -777,10 +783,16 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Otro (Especifique):</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="52" id="customRadioIcon52" />
+                                            <input class="form-check-input" type="checkbox" id="customRadioIcon52" />
                                         </label>
                                     </div>
+
+                                    <!-- Campo de texto para especificar -->
+                                    <div id="otroBebidaInput52" class="mt-2" style="display: none;">
+                                        <input type="text" name="bebida[3][]" class="form-control"
+                                            placeholder="Especifique la bebida o producto">
+                                    </div>
+
                                 </div>
                             </div>
                             <hr>
@@ -799,8 +811,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Kirsch</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="53" id="customRadioIcon53" />
+                                            <input name="bebida[4][]" class="form-check-input" type="checkbox"
+                                                value="Kirsch<" id="customRadioIcon53" />
                                         </label>
                                     </div>
                                 </div>
@@ -811,8 +823,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Poire o Perry</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="54" id="customRadioIcon54" />
+                                            <input name="bebida[4][]" class="form-check-input" type="checkbox"
+                                                value="Poire o Perry" id="customRadioIcon54" />
                                         </label>
                                     </div>
                                 </div>
@@ -823,8 +835,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Ron</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="55" id="customRadioIcon55" />
+                                            <input name="bebida[4][]" class="form-check-input" type="checkbox"
+                                                value="Ron" id="customRadioIcon55" />
                                         </label>
                                     </div>
                                 </div>
@@ -835,8 +847,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Raicilla</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="56" id="customRadioIcon56" />
+                                            <input name="bebida[4][]" class="form-check-input" type="checkbox"
+                                                value="Raicilla" id="customRadioIcon56" />
                                         </label>
                                     </div>
                                 </div>
@@ -847,8 +859,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Sambuca</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="57" id="customRadioIcon57" />
+                                            <input name="bebida[4][]" class="form-check-input" type="checkbox"
+                                                value="Sambuca" id="customRadioIcon57" />
                                         </label>
                                     </div>
                                 </div>
@@ -859,8 +871,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Sotol</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="58" id="customRadioIcon58" />
+                                            <input name="bebida[4][]" class="form-check-input" type="checkbox"
+                                                value="Sotol" id="customRadioIcon58" />
                                         </label>
                                     </div>
                                 </div>
@@ -871,8 +883,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Vodka</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="59" id="customRadioIcon59" />
+                                            <input name="bebida[4][]" class="form-check-input" type="checkbox"
+                                                value="Vodka" id="customRadioIcon59" />
                                         </label>
                                     </div>
                                 </div>
@@ -883,8 +895,8 @@
                                                 <i class="ri-wine-fill"></i>
                                                 <small>Whisky o Whiskey</small>
                                             </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="60" id="customRadioIcon60" />
+                                            <input name="bebida[4][]" class="form-check-input" type="checkbox"
+                                                value="Whisky o Whiskey" id="customRadioIcon60" />
                                         </label>
                                     </div>
                                 </div>
@@ -899,28 +911,28 @@
                             <div class="row gy-3 align-items-start">
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="coctel_de" class="form-control" type="text" id="inputCoctel61"
+                                        <input name="bebida[5][]" class="form-control" type="text" id="inputCoctel61"
                                             placeholder="Cóctel de" />
                                         <label for="inputCoctel61"><small>Cóctel de</small></label>
                                     </div>
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="coctel_sabor_de" class="form-control" type="text"
+                                        <input name="bebida[5][]" class="form-control" type="text"
                                             id="inputCoctel62" placeholder="Cóctel sabor de" />
                                         <label for="inputCoctel62"><small>Cóctel sabor de</small></label>
                                     </div>
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="coctel_de_o_al" class="form-control" type="text"
+                                        <input name="bebida[5][]" class="form-control" type="text"
                                             id="inputCoctel63" placeholder="Cóctel de o al" />
                                         <label for="inputCoctel63"><small>Cóctel de o al</small></label>
                                     </div>
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="coctel_con" class="form-control" type="text" id="inputCoctel64"
+                                        <input name="bebida[5][]" class="form-control" type="text" id="inputCoctel64"
                                             placeholder="Cóctel con" />
                                         <label for="inputCoctel64"><small>Cóctel con</small></label>
                                     </div>
@@ -936,7 +948,7 @@
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
 
-                                        <input name="bebida_alcoholica_preparada_de" class="form-control" type="text"
+                                        <input name="bebida[6][]" class="form-control" type="text"
                                             id="inputBebida65" placeholder="Bebida alcohólica preparada de" />
                                         <label for="inputBebida65" class="custom-option-body"><small>Bebida alcohólica
                                                 preparada de</small></label>
@@ -945,7 +957,7 @@
 
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida_alcoholica_preparada_de_o_al" class="form-control"
+                                        <input name="bebida[6][]" class="form-control"
                                             type="text" id="inputBebida66"
                                             placeholder="Bebida alcohólica preparada de o al" />
                                         <label for="inputBebida66">
@@ -956,7 +968,7 @@
 
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida_alcoholica_preparada_sabor_de" class="form-control"
+                                        <input name="bebida[6][]" class="form-control"
                                             type="text" id="inputBebida67"
                                             placeholder="Bebida alcohólica preparada sabor de" />
                                         <label for="inputBebida67">
@@ -966,7 +978,7 @@
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida_alcoholica_preparada_con" class="form-control" type="text"
+                                        <input name="bebida[6][]" class="form-control" type="text"
                                             id="inputBebida68" placeholder="Bebida alcohólica preparada con" />
                                         <label for="inputBebida68">
                                             <small>Bebida alcohólica preparada con</small>
@@ -1218,7 +1230,7 @@
                                     class="ri-arrow-left-line me-sm-1"></i>
                                 <span class="align-middle d-sm-inline-block d-none">Anterior</span>
                             </button>
-                            <button type="submit" class="btn btn-primary btn-submit">Enviar solicitud</button>
+                            <button class="btn btn-primary btn-submit">Enviar solicitud</button>
                         </div>
                         <!--   -->
                     </div>

@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+
   const mezcalCheckbox = document.getElementById('customRadioIcon1');
   const bebidaCheckbox = document.getElementById('customRadioIcon2');
   const coctelCheckbox = document.getElementById('customRadioIcon3');
@@ -9,22 +10,22 @@ document.addEventListener('DOMContentLoaded', function () {
   const norm199Checkbox = document.getElementById('customRadioIcon68');
   const otrabebida = document.getElementById('customRadioIcon65');
 
-  const checkboxes = [
-    mezcalCheckbox, bebidaCheckbox, coctelCheckbox, licorCheckbox,
-    nom070Checkbox, nom251Checkbox, normexCheckbox, norm199Checkbox, otrabebida
-  ];
+    const checkboxes = [
+      mezcalCheckbox, bebidaCheckbox, coctelCheckbox, licorCheckbox,
+      nom070Checkbox, nom251Checkbox, normexCheckbox, norm199Checkbox, otrabebida
+    ];
 
-function updateBorder(checkbox) {
-  const parentDiv = checkbox.closest('.custom-option');
-  if (checkbox.checked) {
-    parentDiv.classList.add('active');
-    // Asegúrate de que el borde sea el color del botón en el tema actual
-    parentDiv.style.borderColor = getComputedStyle(document.body).getPropertyValue('--primary-color').trim();
-  } else {
-    parentDiv.classList.remove('active');
-    parentDiv.style.borderColor = ''; // Eliminar el color de borde si no está activo
+  function updateBorder(checkbox) {
+    const parentDiv = checkbox.closest('.custom-option');
+    if (checkbox.checked) {
+      parentDiv.classList.add('active');
+      // Asegúrate de que el borde sea el color del botón en el tema actual
+      parentDiv.style.borderColor = getComputedStyle(document.body).getPropertyValue('--primary-color').trim();
+    } else {
+      parentDiv.classList.remove('active');
+      parentDiv.style.borderColor = ''; // Eliminar el color de borde si no está activo
+    }
   }
-}
 
 
   function mostrarSecciones() {
@@ -206,7 +207,9 @@ if (typeof wizardIcons !== undefined && wizardIcons !== null) {
       alert('Submitted..!!');
     });
   }*/
+
 }
+
 
 
 
@@ -333,23 +336,24 @@ document.addEventListener('DOMContentLoaded', () => {
   switchInput.addEventListener('change', copyAddress);
 });
 
+
 $(document).ready(function () {
   // Mapeamos los valores de los checkboxes a sus respectivas secciones
   const sections = {
-      20: '#clasificacion-bebidas-section',     // Bebidas Alcohólicas Fermentadas (2% a 20%)
-      21: '#clasificacion-bebidas-section-2',   // Bebidas Alcohólicas Destiladas (32% a 55%)
-      22: '#clasificacion-bebidas-section-3',   // Licores o cremas (13.5% a 55%)
-      23: '#clasificacion-bebidas-section-4',   // Bebidas Alcohólicas Destiladas (32% a 55%)
-      24: '#clasificacion-cocteles-section-5',    // Cócteles (12% a 32%)
-      25: '#clasificacion-bebidas-section-6'
+      1: '#clasificacion-bebidas-section',     // Bebidas Alcohólicas Fermentadas (2% a 20%)
+      2: '#clasificacion-bebidas-section-2',   // Bebidas Alcohólicas Destiladas (32% a 55%)
+      3: '#clasificacion-bebidas-section-3',   // Licores o cremas (13.5% a 55%)
+      4: '#clasificacion-bebidas-section-4',   // Bebidas Alcohólicas Destiladas (32% a 55%)
+      5: '#clasificacion-cocteles-section-5',    // Cócteles (12% a 32%)
+      6: '#clasificacion-bebidas-section-6'
   };
 
   // Escuchar el cambio en los checkboxes
-  $('input[name="actividad[]"]').on('change', function () {
+  $('input[name="clasificacion[]"]').on('change', function () {
       // Recorremos cada sección y la mostramos u ocultamos dependiendo del checkbox seleccionado
       $.each(sections, function (value, section) {
           // Si el checkbox con el valor 'value' está seleccionado, mostramos la sección
-          if ($(`input[name="actividad[]"][value="${value}"]`).is(':checked')) {
+          if ($(`input[name="clasificacion[]"][value="${value}"]`).is(':checked')) {
               $(section).removeClass('d-none');
           } else {
               // Si no está seleccionado, ocultamos la sección
@@ -357,4 +361,33 @@ $(document).ready(function () {
           }
       });
   });
+
 });
+
+
+$(document).ready(function () {
+    $('#customRadioIcon32').on('change', function () {
+        if ($(this).is(':checked')) {
+            $('#otroBebidaInput').slideDown(); // Animación para mostrar
+        } else {
+            $('#otroBebidaInput').slideUp(function () {
+                $(this).find('input').val(''); // Limpia después de ocultar
+            });
+        }
+    });
+
+      $('#customRadioIcon52').on('change', function () {
+        if ($(this).is(':checked')) {
+            $('#otroBebidaInput52').slideDown();
+        } else {
+            $('#otroBebidaInput52').slideUp(function () {
+                $(this).find('input').val('');
+            });
+        }
+    });
+});
+
+
+
+
+

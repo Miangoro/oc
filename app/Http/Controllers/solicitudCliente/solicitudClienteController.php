@@ -9,6 +9,8 @@ use App\Models\empresa_producto;
 use App\Models\empresa_norma;
 use App\Models\empresa_actividad;
 use App\Models\solicitud_informacion;
+use App\Models\empresa_clasificacion_bebidas;
+use App\Models\catalogo_clasificacion_bebidas;
 use App\Models\estados;
 use App\Mail\correoEjemplo;
 use App\Models\Instalaciones;
@@ -31,7 +33,7 @@ class solicitudClienteController extends Controller
 
   public function registrar(Request $request)
   {
-
+/* dd($request->all()); */
     $empresa = new empresa();
     $empresa->razon_social = $request->razon_social;
     $empresa->domicilio_fiscal = $request->domicilio_fiscal;
@@ -92,13 +94,33 @@ class solicitudClienteController extends Controller
     }
 
 
-    for ($i = 0; $i < count($request->actividad); $i++) {
+/*     for ($i = 0; $i < count($request->actividad); $i++) {
       $actividad = new empresa_actividad();
       $actividad->id_actividad = $request->actividad[$i];
       $actividad->id_empresa = $id_empresa;
       $actividad->save();
+    } */
+
+        if (!empty($request->actividad) && is_array($request->actividad)) {
+        foreach ($request->actividad as $id_actividad) {
+            $actividad = new empresa_actividad();
+            $actividad->id_actividad = $id_actividad;
+            $actividad->id_empresa = $id_empresa;
+            $actividad->save();
+        }
     }
 
+    foreach ($request->clasificacion as $id_clasificacion) {
+        if (!empty($request->bebida[$id_clasificacion])) {
+            foreach ($request->bebida[$id_clasificacion] as $nombre) {
+                $bebida = new empresa_clasificacion_bebidas();
+                $bebida->id_clasificacion = $id_clasificacion;
+                $bebida->nombre = $nombre;
+                $bebida->id_empresa = $id_empresa;
+                $bebida->save();
+            }
+        }
+    }
 
     $solicitud = new solicitud_informacion();
     $solicitud->id_empresa = $id_empresa;
@@ -118,4 +140,6 @@ class solicitudClienteController extends Controller
 
     return view('solicitudes.Registro_exitoso');
   }
+
+
 }
