@@ -732,7 +732,7 @@ class Certificado_InstalacionesController extends Controller
 
         // Generar y retornar el PDF
         //return Pdf::loadView('pdfs.certificado_envasador_ed4', $pdfData)->stream('Certificado de envasador de mezcal.pdf');
-        return Pdf::loadView('pdfs.certificado_envasador_ed5', $pdfData)->stream('Certificado de envasador de mezcal.pdf');
+        return Pdf::loadView('pdfs.certificado_envasador_mezcal', $pdfData)->stream('Certificado de envasador de mezcal.pdf');
     }
 
 
