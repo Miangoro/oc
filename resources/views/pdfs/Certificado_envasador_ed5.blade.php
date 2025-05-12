@@ -53,7 +53,7 @@
 
     .description2 {
       font-weight: bold;
-      font-size: 16px;
+      font-size: 15px;
       color: #5A5768;
       white-space: nowrap;
       position: relative;
