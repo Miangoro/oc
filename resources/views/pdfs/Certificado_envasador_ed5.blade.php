@@ -65,7 +65,7 @@
       font-weight: bold;
       margin-right: 30px;
       text-align: right;
-      font-size: 16px;
+      font-size: 15px;
       position: relative;
       top: -30px;
     }
