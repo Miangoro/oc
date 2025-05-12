@@ -674,7 +674,7 @@ class Certificado_InstalacionesController extends Controller
         /*if ( $datos->fecha_emision >= '2025-04-01' ) {
             return Pdf::loadView('pdfs.certificado_productor_ed6', $pdfData)->stream('Certificado de productor de mezcal_ed6.pdf');
         }else{*/
-        return Pdf::loadView('pdfs.certificado_productor_ed6', $pdfData)->stream('Certificado de productor de mezcal.pdf');
+        return Pdf::loadView('pdfs.Certificado_productor_ed6', $pdfData)->stream('Certificado de productor de mezcal.pdf');
 
         //}
     }
@@ -690,29 +690,26 @@ class Certificado_InstalacionesController extends Controller
             'firmante'
         ])->findOrFail($id_certificado);
 
-        $empresa = $datos->dictamen->instalaciones->empresa ?? null;
-        $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-            ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
-            ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+        $empresa = $datos->dictamen->instalaciones->empresa;
+        $numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente;
         $watermarkText = $datos->estatus === 1;
         $leyenda = $datos->estatus === 2;
 
         // Preparar los datos para el PDF
         $pdfData = [
             'datos' => $datos,
-            'num_certificado' => $datos->num_certificado ?? 'No encontrado',
-            'num_autorizacion' => $datos->num_autorizacion ?? 'No encontrado',
-            'num_dictamen' => $datos->dictamen->num_dictamen ?? 'No encontrado',
-            'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
+            'num_certificado' => $datos->num_certificado,
+            'num_autorizacion' => $datos->num_autorizacion,
+            'num_dictamen' => $datos->dictamen->num_dictamen,
             'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
             'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),
-            'domicilio_fiscal' => $empresa->domicilio_fiscal ?? 'No encontrado',
-            'rfc' => $empresa->rfc ?? 'No encontrado',
+            'domicilio_fiscal' => $empresa->domicilio_fiscal,
+            'rfc' => $empresa->rfc,
             'watermarkText' => $watermarkText,
-            'telefono' => $empresa->telefono ?? 'No encontrado',
-            'correo' => $empresa->correo ?? 'No encontrado',
-            'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa ?? 'No encontrado',
-            'razon_social' => $empresa->razon_social ?? 'No encontrado',
+            'telefono' => $empresa->telefono,
+            'correo' => $empresa->correo,
+            'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa,
+            'razon_social' => $empresa->razon_social,
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
             'numero_cliente' => $numero_cliente ?? 'No encontrado',
             'representante_legal' => $empresa->representante_legal ?? 'No encontrado',
@@ -724,15 +721,25 @@ class Certificado_InstalacionesController extends Controller
             'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
         ];
 
+        $formato = 'pdfs.certificado_envasador_ed4';
+
+        if ($datos->fecha_emision >= "2025-04-01") {
+            $formato = 'pdfs.Certificado_envasador_mezcal_ed6';
+        }
+
         if ($guardar && $rutaGuardado) {
-            $pdf = Pdf::loadView('pdfs.Certificado_envasador_mezcal', $pdfData);
+            $pdf = Pdf::loadView($formato, $pdfData);
             $pdf->save($rutaGuardado);
             return $rutaGuardado;
         }
 
+        /*$formato = 'pdfs.certificado_envasador_ed4';
+        if ($datos->fecha_emision >= "2025-04-01") {
+            $formato = 'pdfs.Certificado_envasador_mezcal_ed6';
+        }*/
+
         // Generar y retornar el PDF
-        //return Pdf::loadView('pdfs.certificado_envasador_ed4', $pdfData)->stream('Certificado de envasador de mezcal.pdf');
-        return Pdf::loadView('pdfs.certificado_envasador_mezcal', $pdfData)->stream('Certificado de envasador de mezcal.pdf');
+        return Pdf::loadView($formato, $pdfData)->stream('Certificado de envasador de mezcal.pdf');
     }
 
 
@@ -745,10 +752,8 @@ class Certificado_InstalacionesController extends Controller
             'firmante'
         ])->findOrFail($id_certificado);
 
-        $empresa = $datos->dictamen->instalaciones->empresa ?? null;
-        $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-            ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
-            ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+        $empresa = $datos->dictamen->instalaciones->empresa;
+        $numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente;
         $watermarkText = $datos->estatus === 1;
         $leyenda = $datos->estatus === 2;
 
@@ -757,7 +762,7 @@ class Certificado_InstalacionesController extends Controller
             'datos' => $datos,
             'num_certificado' => $datos->num_certificado,
             'num_autorizacion' => $datos->num_autorizacion,
-            'num_dictamen' => $datos->dictamen->num_dictamen ?? 'No encontrado',
+            'num_dictamen' => $datos->dictamen->num_dictamen,
             'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
             'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
             'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),
@@ -774,7 +779,7 @@ class Certificado_InstalacionesController extends Controller
             'nombre_firmante' => $datos->firmante->name ?? 'Nombre del firmante no disponible',
             'firma_firmante' => $datos->firmante->firma ?? 'No encontrado',
             'puesto_firmante' => $datos->firmante->puesto ?? '',
-            'leyenda' => $leyenda,
+            'leyenda' => $leyenda ?? 'No encontrado',
             'categorias' => $datos->dictamen->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', '),
             'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
             // Nuevos campos
@@ -788,8 +793,8 @@ class Certificado_InstalacionesController extends Controller
             $pdf->save($rutaGuardado);
             return $rutaGuardado;
         }
-        //return Pdf::loadView('pdfs.certificado_comercializador_ed5', $pdfData)->stream('Certificado de comercializador.pdf');
-        return Pdf::loadView('pdfs.certificado_comercializador_ed6', $pdfData)->stream('Certificado de comercializador.pdf');
+        $pdf = Pdf::loadView('pdfs.Certificado_comercializador', $pdfData);
+        return $pdf->stream('Certificado de comercializador.pdf');
     }
 
 
