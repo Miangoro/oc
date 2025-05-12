@@ -158,6 +158,11 @@ class TrazabilidadController extends Controller
             $query->where('subject_type', 'App\Models\Certificado_Exportacion')
                 ->where('properties->attributes->id_certificado', $id);
         })
+
+        ->orWhere(function($query) use ($id) {
+            $query->where('subject_type', 'App\Models\Revisor')
+                ->where('properties->attributes->id_certificado', $id);
+        })
         /*->orWhere(function($query) use ($id, $inspeccionId) {
             // Filtrar los registros del modelo Dictamen_instalaciones con id_inspeccion
             $query->where('subject_type', 'App\Models\Dictamen_Exportacion')
@@ -169,25 +174,23 @@ class TrazabilidadController extends Controller
                 ->where('properties->attributes->id_inspeccion', $inspeccionId);
         })*/
 
-        ->orderBy('created_at', 'desc')
+        ->orderBy('created_at', 'asc')
         ->get()
         ->map(function($log) {
-            
-        // Inicializar variables
-            $folio = $log->properties['attributes']['num_certificado'] ?? null;
-
+        
+         $attributes = $log->properties['attributes'] ?? [];//todas las propiedades
+    
             // Buscar los objetos solo si los IDs están presentes
-            $num_dictamen = isset($log->properties['attributes']['id_dictamen']) 
-                ? $log->properties['attributes']['id_dictamen'] ?? null 
-                : null;
+            $num_certificado = $attributes['num_certificado'] ?? null;
+            //$num_certificado = $log->properties['attributes']['num_certificado'] ?? null;
 
-            $num_servicio = isset($log->properties['attributes']['id_firmante']) 
-                ? $log->properties['attributes']['id_firmante']?? null 
-                : null;
-
-            /*$empresa = isset($log->properties['attributes']['id_dictamen']) 
-                ? Dictamen_Exportacion::find($log->properties['attributes']['id_dictamen'])->inspeccione->solicitud->empresa->razon_social ?? null 
+            /*$num_dictamen = isset($log->properties['attributes']['id_dictamen']) 
+                ? $log->properties['attributes']['id_dictamen'] ?? 'No encontrado' 
                 : null;*/
+            $num_dictamen = isset($log->properties['attributes']['id_dictamen']) 
+                ? Dictamen_Exportacion::find($log->properties['attributes']['id_dictamen'])->num_dictamen ?? 'No encontrado' 
+                : null;
+
             $empresa = null;
             if (isset($log->properties['attributes']['id_dictamen'])) {
                 $dictamen = Dictamen_Exportacion::find($log->properties['attributes']['id_dictamen']);
@@ -197,23 +200,44 @@ class TrazabilidadController extends Controller
                 }
             }
 
-            // Construcción del contenido condicionalmente
+            //revisiones
+            $num_revision = $attributes['numero_revision'] ?? null;
+            $obs = $attributes['observaciones'] ?? null;
+                $observaciones = null;
+
+                if ($obs) {
+                    $parsed = json_decode($obs, true);
+                    // Si es JSON válido y tiene 'id_sustituye'
+                    if (json_last_error() === JSON_ERROR_NONE && isset($parsed['id_sustituye'])) {
+                        $cert_sust = Certificado_Exportacion::find($parsed['id_sustituye']);
+                        $num_sustituido = optional($cert_sust)->num_certificado ?? 'Desconocido';
+                        $observaciones = "Sustituye al certificado: <span class='badge bg-secondary'>$num_sustituido</span>";
+                    } else {
+                        // Si no es JSON válido, mostrar texto plano
+                        $observaciones = $obs;
+                    }
+                }
+
+
+            //CONTENIDO DE LA TABLA
             $contenido = '';  // Inicializar vacío
-
-            if ($folio) {
-                $contenido .= "<b>Num Cert:</b> <span class='badge bg-secondary'>$folio</span> ";
+            //certificados
+            if ($num_certificado) {
+                $contenido .= "<b>Número del certificado:</b> <span class='badge bg-secondary'>$num_certificado</span>";
             }
-
-            if ($num_dictamen) {
-                $contenido .= "<b>ID dictamen:</b> <span class='badge bg-secondary'>$num_dictamen</span> ";
-            }
-
-            if ($num_servicio) {
-                $contenido .= "<b>firmante:</b> <span class='badge bg-secondary'>$num_servicio</span> ";
-            }
-
             if ($empresa) {
-                $contenido .= "<b>EMPRESA:</b> $empresa ";
+                $contenido .= ", <b>Cliente:</b> $empresa ";
+            }
+            if ($num_dictamen) {
+                $contenido .= ", <b>Número de dictamen:</b> <span class='badge bg-secondary'>$num_dictamen</span> ";
+            }
+            
+            //revisiones
+            if ($num_revision) {
+                $contenido .= "<b>Revisión:</b> $num_revision ";
+            }
+            if ($observaciones) {
+                $contenido .= ", <b>Observaciones:</b> $observaciones ";
             }
 
 

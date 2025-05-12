@@ -1356,9 +1356,7 @@ $(document).on('click', '.trazabilidad', function () {
   var id_certificado = $(this).data('id');
   $('.num_certificado').text($(this).data('folio'));
 
-
-    //ruta de la informacion/controller trazabilidad
-    var url = '/trazabilidad-certificados/' + id_certificado;
+  var url = '/trazabilidad-certificados/' + id_certificado;//ruta de la informacion/controller trazabilidad
 
     // Hacer la solicitud AJAX para obtener los logs
     $.get(url, function (data) {
