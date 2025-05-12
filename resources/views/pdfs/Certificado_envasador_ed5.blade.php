@@ -46,14 +46,14 @@
     }
 
     .description1 {
-      font-size: 30px;
+      font-size: 25px;
       font-weight: bold;
       text-align: right;
     }
 
     .description2 {
       font-weight: bold;
-      font-size: 14px;
+      font-size: 16px;
       color: #5A5768;
       white-space: nowrap;
       position: relative;
@@ -65,7 +65,7 @@
       font-weight: bold;
       margin-right: 30px;
       text-align: right;
-      font-size: 13px;
+      font-size: 16px;
       position: relative;
       top: -30px;
     }
