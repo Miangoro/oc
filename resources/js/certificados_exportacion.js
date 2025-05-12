@@ -1344,13 +1344,7 @@ $('#asignarRevisorModal').on('show.bs.modal', function (event) {
 
 
 
-
-
-
-
-
-
-///TRAZABILIDADDDD
+///VER TRAZABILIDAD
 $(document).on('click', '.trazabilidad', function () {
   // Función para cargar los datos
   var id_certificado = $(this).data('id');
@@ -1362,15 +1356,14 @@ $(document).on('click', '.trazabilidad', function () {
     $.get(url, function (data) {
         if (data.success) {
           console.log('datos:', data);
-            // Recibir los logs y mostrarlos en el modal
-            var logs = data.logs;
-            var contenedor = $('#ListTracking');
-            contenedor.empty(); // Limpiar el contenedor de logs
+          // Recibir los logs y mostrarlos en el modal
+          var logs = data.logs;
+          var contenedor = $('#ListTracking');
+          contenedor.empty(); // Limpiar el contenedor de logs
 
             // Iterar sobre los logs y agregarlos al contenedor
             logs.forEach(function(log) {
                 contenedor.append(`
-
                 <li class="timeline-item timeline-item-transparent">
                     <span class="timeline-point timeline-point-primary"></span>
                     <div class="timeline-event">
@@ -1393,7 +1386,6 @@ $(document).on('click', '.trazabilidad', function () {
     }).fail(function(xhr) {
         console.error(xhr.responseText);
     });
- 
 });
 
 

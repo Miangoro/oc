@@ -167,11 +167,6 @@ class TrazabilidadController extends Controller
             // Filtrar los registros del modelo Dictamen_instalaciones con id_inspeccion
             $query->where('subject_type', 'App\Models\Dictamen_Exportacion')
                 ->where('properties->attributes->id_inspeccion', $id);
-        })
-        ->orWhere(function($query) use ($inspeccionId) {
-            // Filtrar registros cuya id_inspección pertenezca a la inspección de la solicitud
-            $query->where('subject_type', 'App\Models\Dictamen_Exportacion')
-                ->where('properties->attributes->id_inspeccion', $inspeccionId);
         })*/
 
         ->orderBy('created_at', 'asc')
@@ -204,7 +199,6 @@ class TrazabilidadController extends Controller
             $num_revision = $attributes['numero_revision'] ?? null;
             $obs = $attributes['observaciones'] ?? null;
                 $observaciones = null;
-
                 if ($obs) {
                     $parsed = json_decode($obs, true);
                     // Si es JSON válido y tiene 'id_sustituye'

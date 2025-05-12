@@ -963,6 +963,9 @@ Route::middleware(['auth'])->controller(Certificado_InstalacionesController::cla
     Route::get('/certificado_comercializador/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_comercializador'])->name('certificado_comercializador');
     Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
     Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
+
+    Route::post('/certificados/instalacion/documento', [Certificado_InstalacionesController::class, 'subirCertificado']);
+    Route::get('/certificados/instalacion/documento/{id}', [Certificado_InstalacionesController::class, 'CertificadoFirmado']);
 });
 
 //-------------------CERTIFICADO GRANEL-------------------
@@ -977,12 +980,8 @@ Route::middleware(['auth'])->controller(Certificado_GranelController::class)->gr
     Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
     Route::post('/granel/reexpedir', [Certificado_GranelController::class, 'reexpedir'])->name('cer-granel.reex');
 
-Route::post('/certificados/granel/documento', [Certificado_GranelController::class, 'subirCertificado']);
-Route::get('/certificados/granel/documento/{id}', [Certificado_GranelController::class, 'CertificadoFirmado']);
-
-Route::post('/certificados/instalacion/documento', [Certificado_InstalacionesController::class, 'subirCertificado']);
-Route::get('/certificados/instalacion/documento/{id}', [Certificado_InstalacionesController::class, 'CertificadoFirmado']);
-
+    Route::post('/certificados/granel/documento', [Certificado_GranelController::class, 'subirCertificado']);
+    Route::get('/certificados/granel/documento/{id}', [Certificado_GranelController::class, 'CertificadoFirmado']);
 });
 
 //-------------------CERTIFICADO EXPORTACION-------------------
