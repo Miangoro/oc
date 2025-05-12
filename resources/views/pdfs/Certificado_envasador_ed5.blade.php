@@ -46,7 +46,7 @@
     }
 
     .description1 {
-      font-size: 25px;
+      font-size: 30px;
       font-weight: bold;
       text-align: right;
     }
