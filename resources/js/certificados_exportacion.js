@@ -318,14 +318,12 @@ if (dt_user_table.length) {
                   '<div class="dropdown-menu dropdown-menu-end m-0">' +
                     `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
                     `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-dark"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
+                    `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>` +
                     `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor" class="dropdown-item waves-effect text-black reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
                     `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
-                  
-                    `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-file-edit-fill text-success"></i> Trazabilidad</a>` +
-                  
-                    '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                   '<div class="dropdown-menu dropdown-menu-end m-0">' +
                     '<a href="' + userView + '" class="dropdown-item">View</a>' +
-                    '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+                   '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
                   '</div>' +
                '</div>'
              );
@@ -1351,57 +1349,54 @@ $('#asignarRevisorModal').on('show.bs.modal', function (event) {
 
 
 
-/*
+
 ///TRAZABILIDADDDD
 $(document).on('click', '.trazabilidad', function () {
-  //var id_certificado = $(this).data('id');
-  //$('#edit_id_certificado').val(id_certificado);
-
+  // Función para cargar los datos
   var id_certificado = $(this).data('id');
-  //$("#id_solicitud").val(id_solicitud);
-  //$('.solicitud').text(tipo);
+  $('.num_certificado').text($(this).data('folio'));
 
-  // Construir la URL para la solicitud AJAX
-  var url = baseUrl + 'trazabilidad-certificados/' + id_certificado;
 
-  // Hacer la solicitud AJAX para obtener los logs
-  //$.get(`/editCerExp/${id_certificado}/edit`).done(function (datos) {
-  $.get(url, function (data) {
-      if (data.success) {
-          // Recibir los logs y mostrarlos en el modal
-          var logs = data.logs;
-          var contenedor = $('#ListTracking');
-          contenedor.empty(); // Limpiar el contenedor de logs
+    //ruta de la informacion/controller trazabilidad
+    var url = '/trazabilidad-certificados/' + id_certificado;
 
-          // Iterar sobre los logs y agregarlos al contenedor
-          logs.forEach(function(log) {
-            contenedor.append(`
+    // Hacer la solicitud AJAX para obtener los logs
+    $.get(url, function (data) {
+        if (data.success) {
+          console.log('datos:', data);
+            // Recibir los logs y mostrarlos en el modal
+            var logs = data.logs;
+            var contenedor = $('#ListTracking');
+            contenedor.empty(); // Limpiar el contenedor de logs
 
-              <li class="timeline-item timeline-item-transparent">
-                  <span class="timeline-point timeline-point-primary"></span>
-                  <div class="timeline-event">
-                      <div class="timeline-header mb-3">
-                      <h6 class="mb-0">${log.description}</h6>
-                      <small class="text-muted">${log.created_at}</small>
-                      </div>
-                      <p class="mb-2">  ${log.contenido}</p>
-                      <div class="d-flex align-items-center mb-1">
+            // Iterar sobre los logs y agregarlos al contenedor
+            logs.forEach(function(log) {
+                contenedor.append(`
 
-                      </div>
-                  </div>
-                  </li><hr>
-              `);
-          });
+                <li class="timeline-item timeline-item-transparent">
+                    <span class="timeline-point timeline-point-primary"></span>
+                    <div class="timeline-event">
+                        <div class="timeline-header mb-3">
+                        <h6 class="mb-0">${log.description}</h6>
+                        <small class="text-muted">${log.created_at}</small>
+                        </div>
+                        <p class="mb-2">  ${log.contenido}</p>
+                        <div class="d-flex align-items-center mb-1">
 
-          // Mostrar el modal
-          $('#ModalTracking').modal('show');
-      }
-  }).fail(function(xhr) {
-      console.error(xhr.responseText);
-  });
-  
+                        </div>
+                    </div>
+                    </li><hr>
+                `);
+            });
 
-});*/
+            // Mostrar el modal
+            $('#ModalTracking').modal('show');
+        }
+    }).fail(function(xhr) {
+        console.error(xhr.responseText);
+    });
+ 
+});
 
 
 

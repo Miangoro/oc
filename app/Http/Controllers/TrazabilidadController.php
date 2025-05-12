@@ -8,6 +8,9 @@ use App\Models\inspecciones;
 use App\Models\instalaciones;
 use App\Models\solicitudTipo;
 use App\Models\User;
+use App\Models\Certificado_Exportacion;
+use App\Models\Dictamen_Exportacion;
+
 use Illuminate\Http\Request;
 use Spatie\Activitylog\Models\Activity;
 
@@ -145,103 +148,74 @@ class TrazabilidadController extends Controller
 
 
     
-    ///PRUEBA CERTIFICADOSSS
-    /*public function TrackingCertificados($id)
+    ///TRAZABILIDAD CERTIFICADOS
+    public function TrackingCertificados($id)
     {   
-        $inspeccionId = inspecciones::where('id_solicitud', $id)->pluck('id_inspeccion')->first();
+        //$inspeccionId = inspecciones::where('id_solicitud', $id)->pluck('id_inspeccion')->first();
 
         $logs = Activity::where(function($query) use ($id) {
             // Filtrar los registros del modelo inspecciones con el id_solicitud en las properties
-            $query->where('subject_type', 'App\Models\inspecciones')
-                ->where('properties->attributes->id_solicitud', $id);
+            $query->where('subject_type', 'App\Models\Certificado_Exportacion')
+                ->where('properties->attributes->id_certificado', $id);
         })
-        ->orWhere(function($query) use ($id) {
-            // Filtrar los registros del modelo solicitudesModel con el causer_id igual al id_solicitud
-            $query->where('subject_type', 'App\Models\solicitudesModel')
-                ->where('subject_id', $id);
-        })
-        ->orWhere(function($query) use ($id, $inspeccionId) {
+        /*->orWhere(function($query) use ($id, $inspeccionId) {
             // Filtrar los registros del modelo Dictamen_instalaciones con id_inspeccion
-            $query->where('subject_type', 'App\Models\Dictamen_instalaciones')
+            $query->where('subject_type', 'App\Models\Dictamen_Exportacion')
                 ->where('properties->attributes->id_inspeccion', $id);
         })
         ->orWhere(function($query) use ($inspeccionId) {
             // Filtrar registros cuya id_inspección pertenezca a la inspección de la solicitud
-            $query->where('subject_type', 'App\Models\Dictamen_instalaciones')
+            $query->where('subject_type', 'App\Models\Dictamen_Exportacion')
                 ->where('properties->attributes->id_inspeccion', $inspeccionId);
-        })
-        ->orWhere(function($query) use ($id) {
-           
-            $query->where('subject_type', 'App\Models\Documentacion_url')
-                ->where('properties->attributes->id_relacion', $id);
-        })
-        ->orWhere(function($query) use ($id) {
-           
-            $query->where('subject_type', 'App\Models\solicitudesValidacionesModel')
-                ->where('properties->attributes->id_solicitud', $id);
-        })
+        })*/
+
         ->orderBy('created_at', 'desc')
         ->get()
         ->map(function($log) {
             
         // Inicializar variables
-            $folio = $log->properties['attributes']['folio'] ?? null;
+            $folio = $log->properties['attributes']['num_certificado'] ?? null;
 
             // Buscar los objetos solo si los IDs están presentes
-            $tipo_solicitud = isset($log->properties['attributes']['id_tipo']) 
-                ? solicitudTipo::find($log->properties['attributes']['id_tipo'])->tipo ?? null 
-                : null;
-            
-            $num_dictamen = isset($log->properties['attributes']['num_dictamen']) 
-                ? $log->properties['attributes']['num_dictamen'] ?? null 
+            $num_dictamen = isset($log->properties['attributes']['id_dictamen']) 
+                ? $log->properties['attributes']['id_dictamen'] ?? null 
                 : null;
 
-            $instalacion = isset($log->properties['attributes']['id_instalacion']) 
-                ? instalaciones::find($log->properties['attributes']['id_instalacion'])->direccion_completa ?? null 
+            $num_servicio = isset($log->properties['attributes']['id_firmante']) 
+                ? $log->properties['attributes']['id_firmante']?? null 
                 : null;
 
-            $nombre_documento = isset($log->properties['attributes']['nombre_documento']) 
-                ? $log->properties['attributes']['nombre_documento']?? null 
-                : null;
-
-            $empresa = isset($log->properties['attributes']['id_empresa']) 
-                ? empresa::find($log->properties['attributes']['id_empresa'])->razon_social ?? null 
-                : null;
-
-            $inspector = isset($log->properties['attributes']['id_inspector']) 
-                ? User::find($log->properties['attributes']['id_inspector'])->name ?? null 
-                : null;
-
-            $num_servicio = isset($log->properties['attributes']['num_servicio']) 
-                ? $log->properties['attributes']['num_servicio']?? null 
-                : null;
-
-            $pdf_validacion = ($log->subject_type == 'App\Models\solicitudesValidacionesModel') 
-                ? $log->subject_id ?? null 
-                : null;
-            
+            /*$empresa = isset($log->properties['attributes']['id_dictamen']) 
+                ? Dictamen_Exportacion::find($log->properties['attributes']['id_dictamen'])->inspeccione->solicitud->empresa->razon_social ?? null 
+                : null;*/
+            $empresa = null;
+            if (isset($log->properties['attributes']['id_dictamen'])) {
+                $dictamen = Dictamen_Exportacion::find($log->properties['attributes']['id_dictamen']);
+                
+                if ($dictamen && $dictamen->inspeccione && $dictamen->inspeccione->solicitud && $dictamen->inspeccione->solicitud->empresa) {
+                    $empresa = $dictamen->inspeccione->solicitud->empresa->razon_social;
+                }
+            }
 
             // Construcción del contenido condicionalmente
             $contenido = '';  // Inicializar vacío
 
             if ($folio) {
-                $contenido .= "<b>Folio:</b> <span class='badge bg-secondary'>$folio</span> ";
+                $contenido .= "<b>Num Cert:</b> <span class='badge bg-secondary'>$folio</span> ";
             }
-            if ($empresa) {
-                $contenido .= "<b>Cliente:</b> $empresa ";
-            }
+
             if ($num_dictamen) {
-                $contenido .= "<b>Número de dictamen:</b> <span class='badge bg-secondary'>$num_dictamen</span> ";
+                $contenido .= "<b>ID dictamen:</b> <span class='badge bg-secondary'>$num_dictamen</span> ";
             }
-            if ($instalacion) {
-                $contenido .= "<b>Instalación:</b> $instalacion ";
-            }
-            if ($inspector) {
-                $contenido .= "<b>Se asignó al inspector:</b> $inspector ";
-            }
+
             if ($num_servicio) {
-                $contenido .= "<b>Número de servicio:</b> <span class='badge bg-secondary'>$num_servicio</span> ";
+                $contenido .= "<b>firmante:</b> <span class='badge bg-secondary'>$num_servicio</span> ";
             }
+
+            if ($empresa) {
+                $contenido .= "<b>EMPRESA:</b> $empresa ";
+            }
+
 
             // Retornar los datos con el contenido construido
             return [
@@ -254,7 +228,9 @@ class TrazabilidadController extends Controller
     
     return response()->json(['success' => true, 'logs' => $logs]);
     
-    }*/
+    }
+
+
 
 
 
