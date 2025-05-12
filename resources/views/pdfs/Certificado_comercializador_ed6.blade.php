@@ -72,14 +72,14 @@
         }
 
         .text {
-            font-size: 12.5px;
+            font-size: 13.5px;
             line-height: 1;
             text-align: justify;
             margin: 10px 20px;
         }
 
         .text1 {
-            font-size: 12.5px;
+            font-size: 13.5px;
             line-height: 1;
             text-align: justify;
             margin: -5px 20px;
