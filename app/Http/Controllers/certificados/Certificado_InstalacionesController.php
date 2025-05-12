@@ -671,6 +671,7 @@ class Certificado_InstalacionesController extends Controller
             'categorias' => $datos->dictamen->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', '),
             'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
         ];
+        
 
         if ($guardar && $rutaGuardado) {
             $pdf = Pdf::loadView('pdfs.Certificado_productor_mezcal', $pdfData);
