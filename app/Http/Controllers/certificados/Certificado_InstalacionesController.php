@@ -728,7 +728,7 @@ class Certificado_InstalacionesController extends Controller
             'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
         ];
 
-        $formato = 'pdfs.Certificado_envasador_mezcal_ed5';
+        $formato = 'pdfs.Certificado_envasador_ed5';
 
         if ($datos->fecha_emision >= "2025-04-01") {
             $formato = 'pdfs.Certificado_envasador_mezcal_ed6';
