@@ -200,7 +200,6 @@ class Certificado_InstalacionesController extends Controller
             'recordsFiltered' => intval($totalFiltered),
             'data' => $data,
         ]);
-
     }
 
 
@@ -320,7 +319,6 @@ class Certificado_InstalacionesController extends Controller
                     'num_autorizacion' => $certificado->num_autorizacion,
                 ]);
             }
-
         } catch (\Exception $e) {
             Log::error('Error al obtener', [
                 'error' => $e->getMessage(),
@@ -457,12 +455,11 @@ class Certificado_InstalacionesController extends Controller
             if ($request->accion_reexpedir == '1') {
                 $reexpedir->estatus = 1;
                 $observacionesActuales = json_decode($reexpedir->observaciones, true);
-                $observacionesActuales['observaciones'] = $request->observaciones;//Actualiza solo 'observaciones'
+                $observacionesActuales['observaciones'] = $request->observaciones; //Actualiza solo 'observaciones'
                 $reexpedir->observaciones = json_encode($observacionesActuales);
                 $reexpedir->save();
 
                 return response()->json(['message' => 'Cancelado correctamente.']);
-
             } else if ($request->accion_reexpedir == '2') {
                 $reexpedir->estatus = 1;
                 $observacionesActuales = json_decode($reexpedir->observaciones, true);
@@ -619,7 +616,6 @@ class Certificado_InstalacionesController extends Controller
             return response()->json([
                 'message' => $message ?? 'Revisor del OC asignado exitosamente',
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['message' => $e->validator->errors()->first()], 422);
         } catch (\Exception $e) {
@@ -643,7 +639,7 @@ class Certificado_InstalacionesController extends Controller
         $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
             ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
                 ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
-        $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+        $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
         $nombre_id_sustituye = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
         $watermarkText = $datos->estatus === 1;
@@ -713,7 +709,6 @@ class Certificado_InstalacionesController extends Controller
             'num_autorizacion' => $datos->num_autorizacion,
             'num_dictamen' => $datos->dictamen->num_dictamen,
             'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
-            'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
             'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),
             'domicilio_fiscal' => $empresa->domicilio_fiscal,
             'rfc' => $empresa->rfc,
@@ -733,14 +728,20 @@ class Certificado_InstalacionesController extends Controller
             'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
         ];
 
+        $formato = 'pdfs.Certificado_envasador_mezcal_ed5';
+
+        if ($datos->fecha_emision >= "2025-04-01") {
+            $formato = 'pdfs.Certificado_envasador_mezcal_ed6';
+        }
+
         if ($guardar && $rutaGuardado) {
-            $pdf = Pdf::loadView('pdfs.Certificado_envasador_mezcal_ed6', $pdfData);
+            $pdf = Pdf::loadView($formato, $pdfData);
             $pdf->save($rutaGuardado);
             return $rutaGuardado;
         }
 
         // Generar y retornar el PDF
-        return Pdf::loadView('pdfs.Certificado_envasador_mezcal_ed6', $pdfData)->stream('Certificado de envasador de mezcal.pdf');
+        return Pdf::loadView($formato, $pdfData)->stream('Certificado de envasador de mezcal.pdf');
     }
 
 
@@ -812,7 +813,7 @@ class Certificado_InstalacionesController extends Controller
 
         $certificado = Certificados::findOrFail($request->id_certificado);
 
-        $anio = now()->year;// Obtener año actual
+        $anio = now()->year; // Obtener año actual
         // Limpiar num_certificado para evitar crear carpetas por error
         $nombreCertificado = preg_replace('/[^A-Za-z0-9_\-]/', '_', $certificado->num_certificado ?? 'No encontrado');
         // Generar nombre de archivo con num_certificado + cadena aleatoria
@@ -870,10 +871,4 @@ class Certificado_InstalacionesController extends Controller
             'nombre_archivo' => null,
         ]);
     }
-
-
-
-
-
-
 }//end-classController
