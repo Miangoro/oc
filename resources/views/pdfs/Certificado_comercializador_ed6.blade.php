@@ -7,7 +7,7 @@
     <title>Certificado como Productor de Mezcal ED6</title>
     <style>
         @page {
-          size: 227mm 292mm;
+            size: 227mm 292mm;
         }
 
         body {
@@ -54,7 +54,7 @@
 
         .description2 {
             font-weight: bold;
-            font-size: 14px;
+            font-size: 15px;
             color: #5A5768;
             white-space: nowrap;
             position: relative;
@@ -66,7 +66,7 @@
             font-weight: bold;
             margin-right: 30px;
             text-align: right;
-            font-size: 13px;
+            font-size: 15px;
             position: relative;
             top: -30px;
         }
@@ -110,7 +110,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-           
+
         }
 
         td {
@@ -350,41 +350,41 @@
     </p>
 
     <table>
-    <tbody>
-        <tr>
-            <td class="td-margins" style="font-weight: bold; font-size: 12px; text-align: left; padding: 10px;">
-                <strong>Marcas:</strong>
-            </td>
-            <td class="td-margins" style="text-align: left; padding: 10px;">
-                {{ $marcas }}
-            </td>
-        </tr>
-        <tr>
-            <td class="td-margins" style="font-weight: bold; font-size: 12px; text-align: left; padding: 10px;">
-                <strong>Domicilio de la unidad de comercialización y/o almacén:</strong>
-            </td>
-            <td class="td-margins" style="text-align: left; padding: 10px;">
-                {{ $domicilio_unidad }}
-            </td>
-        </tr>
-        <tr>
-            <td class="td-margins" style="font-weight: bold; font-size: 12px; text-align: left; padding: 10px;">
-                <strong>No. de dictamen de cumplimiento con la NOM:</strong>
-            </td>
-            <td class="td-margins" style="text-align: left; padding: 10px;">
-                {{ $num_dictamen }}
-            </td>
-        </tr>
-        <tr>
-            <td class="td-margins" style="font-weight: bold; font-size: 12px; text-align: left; padding: 10px;">
-                <strong>Convenio de corresponsabilidad:</strong>
-            </td>
-            <td class="td-margins" style="text-align: left; padding: 10px;">
-                {{ $convenio_corresponsabilidad }}
-            </td>
-        </tr>
-    </tbody>
-</table>
+        <tbody>
+            <tr>
+                <td class="td-margins" style="font-weight: bold; font-size: 12px; text-align: left; padding: 10px;">
+                    <strong>Marcas:</strong>
+                </td>
+                <td class="td-margins" style="text-align: left; padding: 10px;">
+                    {{ $marcas }}
+                </td>
+            </tr>
+            <tr>
+                <td class="td-margins" style="font-weight: bold; font-size: 12px; text-align: left; padding: 10px;">
+                    <strong>Domicilio de la unidad de comercialización y/o almacén:</strong>
+                </td>
+                <td class="td-margins" style="text-align: left; padding: 10px;">
+                    {{ $domicilio_unidad }}
+                </td>
+            </tr>
+            <tr>
+                <td class="td-margins" style="font-weight: bold; font-size: 12px; text-align: left; padding: 10px;">
+                    <strong>No. de dictamen de cumplimiento con la NOM:</strong>
+                </td>
+                <td class="td-margins" style="text-align: left; padding: 10px;">
+                    {{ $num_dictamen }}
+                </td>
+            </tr>
+            <tr>
+                <td class="td-margins" style="font-weight: bold; font-size: 12px; text-align: left; padding: 10px;">
+                    <strong>Convenio de corresponsabilidad:</strong>
+                </td>
+                <td class="td-margins" style="text-align: left; padding: 10px;">
+                    {{ $convenio_corresponsabilidad }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
 
     <div class="signature">
@@ -397,7 +397,7 @@
 
     <<div class="footer">
         <p style="text-align: right; font-size: 9px; line-height: 1; margin-bottom: 1px;">
-           
+
             <br>Certificado como Comercializador de Mezcal NOM-070-SCFI-2016 F7.1-01-37<br>
             Edición 6 Entrada en vigor: 01/04/2025
         </p>

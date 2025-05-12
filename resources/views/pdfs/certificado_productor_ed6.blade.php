@@ -53,7 +53,7 @@
 
     .description2 {
       font-weight: bold;
-      font-size: 14px;
+      font-size: 15px;
       color: #5A5768;
       white-space: nowrap;
       position: relative;
@@ -65,7 +65,7 @@
       font-weight: bold;
       margin-right: 30px;
       text-align: right;
-      font-size: 13px;
+      font-size: 15px;
       position: relative;
       top: -30px;
     }
