@@ -41,7 +41,7 @@
     }
 
     .description1 {
-      font-size: 25px;
+      font-size: 22px;
       font-weight: bold;
       text-align: right;
     }
@@ -58,7 +58,7 @@
 
     .description3 {
       font-weight: bold;
-      margin-right: 30px;
+      margin-right: 25px;
       text-align: right;
       font-size: 13px;
       position: relative;
@@ -66,21 +66,21 @@
     }
 
     .text {
-      font-size: 13.5px;
+      font-size: 12.5px;
       line-height: 1;
       text-align: justify;
       margin: 10px 20px;
     }
 
     .text1 {
-      font-size: 13.5px;
+      font-size: 12.5px;
       line-height: 1;
       text-align: justify;
       margin: -5px 20px;
     }
 
     .title {
-      font-size: 25px;
+      font-size: 22.5px;
       text-align: center;
       font-weight: bold;
       letter-spacing: 9px;
@@ -88,7 +88,7 @@
     }
 
     .title2 {
-      font-size: 25px;
+      font-size: 22.5px;
       text-align: center;
       font-weight: bold;
       line-height: 0.5;
@@ -110,7 +110,7 @@
             border: 1px solid black;
             text-align: center;
             font-size: 11px;
-            padding: 2px;
+            padding: 1px;
         }
         th {
             background-color: #608390;
@@ -164,7 +164,7 @@
       border-top: 1px solid #000; 
       width: 240px; 
       margin: 0 auto; 
-      padding-top: 5px; 
+      padding-top: 4px; 
     }
 
     .signature-name {
@@ -308,6 +308,9 @@
     </tr>
   </tbody>
 </table>
+ <p class="text">
+Dichas instalaciones cuentan con el equipo requerido para el envasado del producto Mezcal y se encuentran dentro de los estados y municipios que contempla la Resolución mediante la cual se otorga la protección prevista a la Denominación de Origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre, publicada el 28 de Noviembre de 1994, así como sus subsecuentes modificaciones.
+  </p>
 
   <div class="signature">
     <img src="{{ public_path('img_pdf/firmapdf.jpg') }}" 
@@ -322,7 +325,7 @@
     <p style="text-align: right; font-size: 9px; line-height: 1; margin-bottom: 1px;">
         
         <br>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35<br>
-        Edicion 6 Entrada en vigor: 01/04/25
+        Edicion 5 Entrada en vigor: 01/04/25
     </p>
     <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705px">
 </div>

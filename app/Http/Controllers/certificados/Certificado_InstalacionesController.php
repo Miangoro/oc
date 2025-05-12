@@ -734,13 +734,13 @@ class Certificado_InstalacionesController extends Controller
         ];
 
         if ($guardar && $rutaGuardado) {
-            $pdf = Pdf::loadView('pdfs.Certificado_envasador_mezcal', $pdfData);
+            $pdf = Pdf::loadView('pdfs.Certificado_envasador_mezcal_ed6', $pdfData);
             $pdf->save($rutaGuardado);
             return $rutaGuardado;
         }
 
         // Generar y retornar el PDF
-        return Pdf::loadView('pdfs.Certificado_envasador_mezcal', $pdfData)->stream('Certificado de envasador de mezcal.pdf');
+        return Pdf::loadView('pdfs.Certificado_envasador_mezcal_ed6', $pdfData)->stream('Certificado de envasador de mezcal.pdf');
     }
 
 
