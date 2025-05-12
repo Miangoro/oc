@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Etiqueta_ingreso_a_barrica</title>
+    <title>Etiqueta de ingreso a barricas</title>
     <style>
         @page {
-            size: 292mm 227mm;
+          size: 297mm 210mm;
         }
 
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            margin: -10px;
+            padding: -10px;
             margin-top: -10px;
         }
 
         .etiqueta-table {
+          margin-bottom: -10px;
             width: 100%;
             border-collapse: collapse;
             font-size: 8px;
@@ -25,7 +26,7 @@
 
         .etiqueta-table th,
         .etiqueta-table td {
-            padding: 3px;
+            padding: 2px;
             border: 2px solid #3C8A69;
             text-align: center;
             vertical-align: middle;
@@ -54,7 +55,7 @@
         }
 
         .custom-title {
-            font-size: 20px !important; 
+            font-size: 18px !important;
             font-weight: bold;
             background-color: #3C8A69;
             color: white;
@@ -62,7 +63,7 @@
         }
 
         .custom-titlex {
-            font-size: 17px !important; 
+            font-size: 15px !important;
             font-weight: bold;
             background-color: #3C8A69;
             color: white;
@@ -86,51 +87,52 @@
         }
 
         .image-cell {
-            width: 100px; 
-            height: 100px;
+/*             width: 20px;
+            height: 50px; */
             position: relative;
-            text-align: center; 
+            text-align: center;
             vertical-align: middle;
         }
 
+
         .image-cellx {
-            width: 200px; 
-            height: 100px;
+/*             width: 20px;
+            height: 50px; */
             text-align: center;
-            vertical-align: middle; 
+            vertical-align: middle;
         }
 
         .logo-small {
-            max-width: 100%;
-            max-height: 100%; 
-            height: auto; 
-            width: auto; 
+            max-width: 90%;
+            max-height: 90%;
+            height: auto;
+            width: auto;
         }
 
         .logo-smallx {
-            max-width: 120%; 
-            max-height: 120%; 
-            height: auto; 
-            width: auto; 
+            max-width:95%;
+            max-height: 100%;
+            height: auto;
+            width: auto;
         }
 
         .bold {
             font-weight: bold;
-            vertical-align: middle; 
-            text-align: center; 
+            vertical-align: middle;
+            text-align: center;
             padding: 5px;
         }
 
         .firma-container {
-            text-align: center; 
-            vertical-align: middle; 
+            text-align: center;
+            vertical-align: middle;
         }
 
         .firma {
             width: 100px;
-            height: auto; 
-            opacity: 0.7; 
-            margin-bottom: -5px; 
+            height: auto;
+            opacity: 0.7;
+            margin-bottom: -5px;
            }
 
         .firma-text {
@@ -157,7 +159,7 @@
             <td colspan="5" class="custom-titlex">Nombre o Razón social: </td>
         </tr>
         <tr>
-            <td colspan="5">GRUPO SONES S.A DE C.V</td>
+            <td colspan="5">{{ $datos->solicitud->empresa->razon_social }}</td>
         </tr>
         <tr>
             <td class="customd">No. de servicio:</td>
@@ -167,33 +169,41 @@
             <td class="customd">Clase:</td>
         </tr>
         <tr>
-            <td>UMS- 0847/2024</td>
-            <td>16/05/2024</td>
-            <td>2403ESPAMD-A</td>
-            <td>Mezcal Artesanal</td>
-            <td>Blanco o Joven</td>
+            <td>{{ $datos->solicitud->inspeccion->num_servicio }}</td>
+            <td>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</td>
+            <td>{{ $datos->solicitud->lote_granel->nombre_lote }}</td>
+            <td>{{ $datos->solicitud->lote_granel->categoria->categoria }}</td>
+            <td>{{ $datos->solicitud->lote_granel->clase->clase }}</td>
         </tr>
         <tr>
             <td colspan="2" rowspan="2" class="custom">Fisicoquímico:</td>
-            <td rowspan="2">NNMZ-44608</td>
+            <td rowspan="2">{{ $datos->solicitud->lote_granel->folio_fq }}</td>
             <td colspan="2" rowspan="2" class="customx">Grado Alcohólico: </td>
-            <td rowspan="2">49.08</td>
+            <td rowspan="2">{{ $datos->solicitud->lote_granel->cont_alc }}</td>
             <td class="custom">Barrica: </td>
             <td colspan="2"></td>
         </tr>
         <tr>
             <td class="customx">De:</td>
-            <td colspan="2">84</td>
+            <td colspan="2"></td>
         </tr>
         <tr>
             <td colspan="2" class="customx">Nombre y firma del inspector: </td>
             <td colspan="3" class="bold firma-container">
-                <div class="firma-text">Lidia Isabel Cabrera Vásquez</div>
-                <img src="{{ public_path('img_pdf/logoumsn.png') }}" alt="Firma Lidia Isabel Cabrera Vásquez" class="firma">
-            </td>
+              <div class="firma-text">{{ $datos->inspector->name }}</div>
+
+{{--               @php
+              $firma = !empty($datos->inspector->firma)
+                  ? 'storage/firmas/' . $datos->inspector->firma
+                  : 'img_pdf/firma_Erik_Antonio_Mejía_Vaca_1744914296.png'; // esta imagen debe estar en /public/img_pdf/
+          @endphp
+
+          <img src="{{ asset($firma) }}" alt="Firma de {{ $datos->inspector->name }}" class="firma">
+ --}}
+          </td>
             <td class="customx">Nombre y firma del responsable:</td>
             <td colspan="3" class="bold firma-container">
-                <div class="firma-text">Gabina Sánchez Sánchez</div>
+                <div class="firma-text">{{ $datos->solicitud->instalaciones->responsable }}</div>
                 <!-- Lugar si hay firma -->
                 <!-- <img src="{{ public_path('img_pdf/logoumsn.png') }}" alt="Firma Lidia Isabel Cabrera Vásquez" class="firma"> -->
             </td>
@@ -218,7 +228,7 @@
             <td colspan="5" class="custom-titlex">Nombre o Razón social: </td>
         </tr>
         <tr>
-            <td colspan="5">GRUPO SONES S.A DE C.V</td>
+            <td colspan="5">{{ $datos->solicitud->empresa->razon_social }}</td>
         </tr>
         <tr>
             <td class="customd">No. de servicio:</td>
@@ -228,33 +238,46 @@
             <td class="customd">Clase:</td>
         </tr>
         <tr>
-            <td>UMS- 0847/2024</td>
-            <td>16/05/2024</td>
-            <td>2403ESPAMD-A</td>
-            <td>Mezcal Artesanal</td>
-            <td>Blanco o Joven</td>
-        </tr>
+          <td>{{ $datos->solicitud->inspeccion->num_servicio }}</td>
+          <td>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</td>
+          <td>{{ $datos->solicitud->lote_granel->nombre_lote }}</td>
+          <td>{{ $datos->solicitud->lote_granel->categoria->categoria }}</td>
+          <td>{{ $datos->solicitud->lote_granel->clase->clase }}</td>
+      </tr>
         <tr>
-            <td colspan="2" rowspan="2" class="custom">Fisicoquímico:</td>
-            <td rowspan="2">NNMZ-44608</td>
-            <td colspan="2" rowspan="2" class="customx">Grado Alcohólico: </td>
-            <td rowspan="2">49.08</td>
+          <td colspan="2" rowspan="2" class="custom">Fisicoquímico:</td>
+          <td rowspan="2">{{ $datos->solicitud->lote_granel->folio_fq }}</td>
+          <td colspan="2" rowspan="2" class="customx">Grado Alcohólico: </td>
+          <td rowspan="2">{{ $datos->solicitud->lote_granel->cont_alc }}</td>
             <td class="custom">Barrica: </td>
             <td colspan="2"></td>
         </tr>
         <tr>
             <td class="customx">De:</td>
-            <td colspan="2">84</td>
+            <td colspan="2"></td>
         </tr>
         <tr>
             <td colspan="2" class="customx">Nombre y firma del inspector: </td>
+{{--             <td colspan="3" class="bold firma-container">
+                <div class="firma-text">{{ $datos->inspector->name }}</div>
+
+            </td> --}}
+
             <td colspan="3" class="bold firma-container">
-                <div class="firma-text">Lidia Isabel Cabrera Vásquez</div>
-                <img src="{{ public_path('img_pdf/logoumsn.png') }}" alt="Firma Lidia Isabel Cabrera Vásquez" class="firma">
-            </td>
+              <div class="firma-text">{{ $datos->inspector->name }}</div>
+{{--               @php
+              $firmaPath = public_path('storage/firmas/' . $datos->inspector->firma);
+            @endphp
+
+            @if (!empty($datos->inspector->firma) && file_exists($firmaPath))
+                <img src="{{ asset('storage/firmas/' . $datos->inspector->firma) }}" alt="Firma {{ $datos->inspector->name }}" class="firma">
+            @endif --}}
+          </td>
+
+
             <td class="customx">Nombre y firma del responsable:</td>
             <td colspan="3" class="bold firma-container">
-                <div class="firma-text">Gabina Sánchez Sánchez</div>
+                <div class="firma-text">{{ $datos->solicitud->instalaciones->responsable }}</div>
                 <!-- Lugar si hay firma -->
                 <!-- <img src="{{ public_path('img_pdf/logoumsn.png') }}" alt="Firma Lidia Isabel Cabrera Vásquez" class="firma"> -->
             </td>
@@ -279,7 +302,7 @@
             <td colspan="5" class="custom-titlex">Nombre o Razón social: </td>
         </tr>
         <tr>
-            <td colspan="5">GRUPO SONES S.A DE C.V</td>
+            <td colspan="5">{{ $datos->solicitud->empresa->razon_social }}</td>
         </tr>
         <tr>
             <td class="customd">No. de servicio:</td>
@@ -289,33 +312,39 @@
             <td class="customd">Clase:</td>
         </tr>
         <tr>
-            <td>UMS- 0847/2024</td>
-            <td>16/05/2024</td>
-            <td>2403ESPAMD-A</td>
-            <td>Mezcal Artesanal</td>
-            <td>Blanco o Joven</td>
-        </tr>
+          <td>{{ $datos->solicitud->inspeccion->num_servicio }}</td>
+          <td>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</td>
+          <td>{{ $datos->solicitud->lote_granel->nombre_lote }}</td>
+          <td>{{ $datos->solicitud->lote_granel->categoria->categoria }}</td>
+          <td>{{ $datos->solicitud->lote_granel->clase->clase }}</td>
+      </tr>
         <tr>
-            <td colspan="2" rowspan="2" class="custom">Fisicoquímico:</td>
-            <td rowspan="2">NNMZ-44608</td>
-            <td colspan="2" rowspan="2" class="customx">Grado Alcohólico: </td>
-            <td rowspan="2">49.08</td>
+          <td colspan="2" rowspan="2" class="custom">Fisicoquímico:</td>
+          <td rowspan="2">{{ $datos->solicitud->lote_granel->folio_fq }}</td>
+          <td colspan="2" rowspan="2" class="customx">Grado Alcohólico: </td>
+          <td rowspan="2">{{ $datos->solicitud->lote_granel->cont_alc }}</td>
             <td class="custom">Barrica: </td>
             <td colspan="2"></td>
         </tr>
         <tr>
             <td class="customx">De:</td>
-            <td colspan="2">84</td>
+            <td colspan="2"></td>
         </tr>
         <tr>
             <td colspan="2" class="customx">Nombre y firma del inspector: </td>
             <td colspan="3" class="bold firma-container">
-                <div class="firma-text">Lidia Isabel Cabrera Vásquez</div>
-                <img src="{{ public_path('img_pdf/logoumsn.png') }}" alt="Firma Lidia Isabel Cabrera Vásquez" class="firma">
-            </td>
+              <div class="firma-text">{{ $datos->inspector->name }}</div>
+{{--               @php
+              $firmaPath = public_path('storage/firmas/' . $datos->inspector->firma);
+            @endphp
+
+            @if (!empty($datos->inspector->firma) && file_exists($firmaPath))
+                <img src="{{ asset('storage/firmas/' . $datos->inspector->firma) }}" alt="Firma {{ $datos->inspector->name }}" class="firma">
+            @endif --}}
+          </td>
             <td class="customx">Nombre y firma del responsable:</td>
             <td colspan="3" class="bold firma-container">
-                <div class="firma-text">Gabina Sánchez Sánchez</div>
+                <div class="firma-text">{{ $datos->solicitud->instalaciones->responsable }}</div>
                 <!-- Lugar si hay firma -->
                 <!-- <img src="{{ public_path('img_pdf/logoumsn.png') }}" alt="Firma Lidia Isabel Cabrera Vásquez" class="firma"> -->
             </td>

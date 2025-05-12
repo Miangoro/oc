@@ -48,7 +48,7 @@ class RevisionPersonalController extends Controller
     {
         $columns = [
             1 => 'id_revisor',
-            2 => 'id_revisor2',
+            2 => 'decision',
             3 => 'observaciones',
             4 => 'tipo_revision',
             5 => 'id_certificado',
@@ -156,9 +156,10 @@ class RevisionPersonalController extends Controller
                 'fecha_vigencia' => Helpers::formatearFecha($fechaVigencia),
                 'fecha_vencimiento' => Helpers::formatearFecha($fechaVencimiento),
                 'fecha_creacion' => Helpers::formatearFecha($fechaCreacion),
-                'created_at' => Helpers::formatearFecha($revisor->created_at),
-                'updated_at' => Helpers::formatearFecha($revisor->updated_at),
+                'created_at' => Helpers::formatearFechaHora($revisor->created_at),
+                'updated_at' => Helpers::formatearFechaHora($revisor->updated_at),
                 'decision' => $revisor->decision,
+                'num_revision' => $revisor->numero_revision,
                 'tipo_revision' => $tipoCertificado,
             ];
         });

@@ -259,6 +259,12 @@ public function clases_agave()
         return lotes_envasado::whereIn('id_lote_envasado', $ids)->get();
     }
 
+    ///OBTENER COLLECCION CARACTERISTICAS
+    public function caracteristicasDecodificadas(): array
+    {
+        return $this->caracteristicas ? json_decode($this->caracteristicas, true) : [];
+    }
+
 
 
 }

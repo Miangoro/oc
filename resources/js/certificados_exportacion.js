@@ -188,6 +188,7 @@ if (dt_user_table.length) {
           }
         }, 
         {
+          //caracteristicas
           targets: 4,
           searchable: false,
           orderable: false,
@@ -195,7 +196,12 @@ if (dt_user_table.length) {
           render: function (data, type, full, meta) {
             var $ = full[''];
             return `<div class="small">
-                <b>Lote envasado:</b> ${full['nombre_lote']}  
+                <b>Lote envasado:</b> ${full['nombre_lote_envasado']} <br>
+                <b>Lote granel:</b> ${full['nombre_lote_granel']} <br>
+                <b>Marca:</b> ${full['marca']} <br>
+                <b>Cajas:</b> ${full['cajas']} <br>
+                <b>Botellas:</b> ${full['botellas']} <br>
+                <b>Pedido:</b> ${full['n_pedido']}
               </div>`;
             }
         },
@@ -252,11 +258,25 @@ if (dt_user_table.length) {
           var numeroRevision = full['numero_revision'];
           const decision = full['decision'];
 
-          let personal = $idRevisor !== null ? $idRevisor : `<b style="color: red;">Sin asignar</b>`;
+          const respuestas = full['respuestas'] ? JSON.parse(full['respuestas']) : {};
+          const tieneObservaciones = Object.values(respuestas).some(r =>
+              r.some(({ observacion }) => observacion?.toString().trim())
+            );
 
-          let revision = '';
+          const icono = tieneObservaciones
+            ? `<i class="ri-alert-fill text-warning"></i>`
+            : '';
+
+
+          let personal = $idRevisor !== null ? $idRevisor  : `<b style="color: red;">Sin asignar</b>`;
+          //`<i class="ri-alert-fill text-warning" title="Tiene observaciones"></i>`
+
+          /*let revision = '';
             if (numeroRevision == 1) revision = 'Primera revisión - ';
-            else if (numeroRevision == 2) revision = 'Segunda revisión - ';
+            else if (numeroRevision == 2) revision = 'Segunda revisión - ';*/
+          let revision = numeroRevision === 1 ? 'Primera revisión - '
+            : numeroRevision === 2 ? 'Segunda revisión - '
+            : '';
 
           let colorClass = '';
             if (decision === 'positiva') {
@@ -269,7 +289,7 @@ if (dt_user_table.length) {
             
           return estatus + 
             `<div style="flex-direction: column; margin-top: 2px;">
-              <div class="small"><b>Personal:</b> <span class="${colorClass}">${revision} ${personal}</span> </div>
+              <div class="small"><b>Personal:</b> <span class="${colorClass}">${revision} ${personal}</span>${icono} </div>
               <div style="display: inline;">${revisorMiembro}</div>
             </div> `;
           // Retorna los revisores en formato HTML
@@ -300,7 +320,10 @@ if (dt_user_table.length) {
                     `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-dark"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
                     `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor" class="dropdown-item waves-effect text-black reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
                     `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
-                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                  
+                    `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-file-edit-fill text-success"></i> Trazabilidad</a>` +
+                  
+                    '<div class="dropdown-menu dropdown-menu-end m-0">' +
                     '<a href="' + userView + '" class="dropdown-item">View</a>' +
                     '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
                   '</div>' +
@@ -1319,6 +1342,67 @@ $('#asignarRevisorModal').on('show.bs.modal', function (event) {
 
   $('#asignarRevisorForm').show();
 });
+
+
+
+
+
+
+
+
+
+/*
+///TRAZABILIDADDDD
+$(document).on('click', '.trazabilidad', function () {
+  //var id_certificado = $(this).data('id');
+  //$('#edit_id_certificado').val(id_certificado);
+
+  var id_certificado = $(this).data('id');
+  //$("#id_solicitud").val(id_solicitud);
+  //$('.solicitud').text(tipo);
+
+  // Construir la URL para la solicitud AJAX
+  var url = baseUrl + 'trazabilidad-certificados/' + id_certificado;
+
+  // Hacer la solicitud AJAX para obtener los logs
+  //$.get(`/editCerExp/${id_certificado}/edit`).done(function (datos) {
+  $.get(url, function (data) {
+      if (data.success) {
+          // Recibir los logs y mostrarlos en el modal
+          var logs = data.logs;
+          var contenedor = $('#ListTracking');
+          contenedor.empty(); // Limpiar el contenedor de logs
+
+          // Iterar sobre los logs y agregarlos al contenedor
+          logs.forEach(function(log) {
+            contenedor.append(`
+
+              <li class="timeline-item timeline-item-transparent">
+                  <span class="timeline-point timeline-point-primary"></span>
+                  <div class="timeline-event">
+                      <div class="timeline-header mb-3">
+                      <h6 class="mb-0">${log.description}</h6>
+                      <small class="text-muted">${log.created_at}</small>
+                      </div>
+                      <p class="mb-2">  ${log.contenido}</p>
+                      <div class="d-flex align-items-center mb-1">
+
+                      </div>
+                  </div>
+                  </li><hr>
+              `);
+          });
+
+          // Mostrar el modal
+          $('#ModalTracking').modal('show');
+      }
+  }).fail(function(xhr) {
+      console.error(xhr.responseText);
+  });
+  
+
+});*/
+
 
 
 

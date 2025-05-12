@@ -115,6 +115,7 @@ public function index(Request $request)
         $nestedData['id_revisor'] = $certificado->revisor->user->name ?? null;
         $nestedData['numero_revision'] = $certificado->revisor->numero_revision ?? null;
         $nestedData['decision'] = $certificado->revisor->decision ?? null;
+        $nestedData['respuestas'] = $certificado->revisor->respuestas ?? null;
         
             ///dias vigencia
             $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
@@ -141,9 +142,21 @@ public function index(Request $request)
             $urls = $certificado->dictamen?->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
             $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
             //Lote envasado
-            $lotes = $certificado->dictamen?->inspeccione?->solicitud?->lotesEnvasadoDesdeJson();
-            $nestedData['nombre_lote'] = $lotes?->pluck('nombre')->implode(', ') ?? 'No encontrado';
-            
+            $lotes_env = $certificado->dictamen?->inspeccione?->solicitud?->lotesEnvasadoDesdeJson();//obtener todos los lotes
+            $nestedData['nombre_lote_envasado'] = $lotes_env?->pluck('nombre')->implode(', ') ?? 'No encontrado';
+            //Lote granel
+            $lotes_granel = $lotes_env?->flatMap(function ($lote) {
+                return $lote->lotesGranel; // Relación definida en el modelo lotes_envasado
+                })->unique('id_lote_granel');//elimina duplicados
+            $nestedData['nombre_lote_granel'] = $lotes_granel?->pluck('nombre_lote')//extrae cada "nombre"
+                ->implode(', ') ?? 'No encontrado';//une y separa por coma
+            //caracteristicas
+            $nestedData['marca'] = $lotes_env?->first()?->marca->marca ?? 'No encontrado';
+            $caracteristicas = $certificado->dictamen?->inspeccione?->solicitud?->caracteristicasDecodificadas() ?? [];
+            $nestedData['n_pedido'] = $caracteristicas['no_pedido'] ?? 'No encontrado';
+            $nestedData['cajas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_cajas'] ?? 'No encontrado';
+            $nestedData['botellas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado';
+
             
             $data[] = $nestedData;
         }
