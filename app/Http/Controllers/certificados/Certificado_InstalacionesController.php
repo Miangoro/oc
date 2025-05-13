@@ -78,10 +78,18 @@ class Certificado_InstalacionesController extends Controller
         // Apply sorting and pagination
         $query->offset($request->input('start'))
             ->limit($request->input('length'))
-            ->orderByRaw("
+            //->where('num_certificado', 'like', 'CIDAM C-INS25-%')
+            /*->orderByRaw("
             CAST(SUBSTRING_INDEX(num_certificado, '/', -1) AS UNSIGNED) {$dir}, -- Ordena el año
             CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_certificado, '-', -1), '/', 1) AS UNSIGNED) {$dir} -- Ordena el consecutivo
-        ");
+            ");*/
+            ->orderByRaw("
+                    CASE 
+                        WHEN num_certificado LIKE 'CIDAM C-INS25-%' 
+                        THEN CAST(SUBSTRING_INDEX(num_certificado, '-', -1) AS UNSIGNED)
+                        ELSE 0 
+                    END DESC
+                ");
 
         $certificados = $query->get();
 
