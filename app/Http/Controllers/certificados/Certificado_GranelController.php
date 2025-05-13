@@ -88,9 +88,7 @@ public function index(Request $request)
                     EXISTS (
                         SELECT 1 FROM lotes_granel lg
                         WHERE lg.id_lote_granel = JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, '$.id_lote_granel'))
-                          AND lg.nombre_lote LIKE ?
-                    )
-                ", ["%{$search}%"]);
+                          AND lg.nombre_lote LIKE ? ) ", ["%{$search}%"]);
             })
             ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%");
     })
@@ -132,9 +130,7 @@ public function index(Request $request)
                     EXISTS (
                         SELECT 1 FROM lotes_granel lg
                         WHERE lg.id_lote_granel = JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, '$.id_lote_granel'))
-                          AND lg.nombre_lote LIKE ?
-                    )
-                ", ["%{$search}%"]);
+                          AND lg.nombre_lote LIKE ?  ) ", ["%{$search}%"]);
             })
             ->count();
     }
