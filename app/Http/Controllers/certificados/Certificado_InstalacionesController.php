@@ -145,10 +145,10 @@ class Certificado_InstalacionesController extends Controller
                 $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
                 $nestedData['tipo_dictamen'] = $certificado->dictamen->tipo_dictamen ?? 'No encontrado';
                 $nestedData['direccion_completa'] = $certificado->dictamen->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrado';
-                $nestedData['pdf_firmado'] = $certificado->url_pdf_firmado 
+                $nestedData['pdf_firmado'] = $certificado->url_pdf_firmado
                     ? asset("storage/certificados_instalaciones_pdf/{$certificado->url_pdf_firmado}") : null;
                 $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
-                $id_sustituye = json_decode($certificado->observaciones, true) ['id_sustituye'] ?? null;
+                $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null;
                 $nestedData['sustituye'] = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
@@ -204,7 +204,6 @@ class Certificado_InstalacionesController extends Controller
             'recordsFiltered' => intval($totalFiltered),
             'data' => $data,
         ]);
-
     }
 
 
@@ -532,39 +531,28 @@ class Certificado_InstalacionesController extends Controller
                 return response()->json(['message' => 'El certificado no existe.'], 404);
             }
 
-            $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])->where('tipo_certificado', 1)->first();
+            $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])
+                ->where('tipo_certificado', 1)
+                ->where('tipo_revision', $validatedData['tipoRevisor']) // buscar según tipo de revisión
+                ->first();
+
+
             $message = ''; // Inicializar el mensaje
 
             if ($revisor) {
-                // Actualizar el revisor existente
-                if ($validatedData['tipoRevisor'] == '1') {
-                    if ($revisor->id_revisor == $validatedData['nombreRevisor']) {
-                        $message = 'Revisor reasignado.';
-                    } else {
-                        $revisor->id_revisor = $validatedData['nombreRevisor'];
-                        $message = 'Revisor asignado exitosamente.';
-                    }
+                if ($revisor->id_revisor == $validatedData['nombreRevisor']) {
+                    $message = 'Revisor reasignado.';
                 } else {
-                    if ($revisor->id_revisor2 == $validatedData['nombreRevisor']) {
-                        $message = 'Revisor reasignado.';
-                    } else {
-                        $revisor->id_revisor2 = $validatedData['nombreRevisor'];
-                        $message = 'Revisor Miembro del consejo asignado exitosamente.';
-                    }
-                }
-            } else {
-                // Crear un nuevo revisor
-                $revisor = new Revisor();
-                $revisor->id_certificado = $validatedData['id_certificado'];
-                $revisor->tipo_revision = $validatedData['tipoRevisor'];
-
-                if ($validatedData['tipoRevisor'] == '1') {
                     $revisor->id_revisor = $validatedData['nombreRevisor'];
                     $message = 'Revisor asignado exitosamente.';
-                } else {
-                    $revisor->id_revisor2 = $validatedData['nombreRevisor'];
-                    $message = 'Revisor Miembro del consejo asignado exitosamente.';
                 }
+            } else {
+                $revisor = new Revisor();
+                $revisor->id_certificado = $validatedData['id_certificado'];
+                $revisor->tipo_certificado = 1;
+                $revisor->tipo_revision = $validatedData['tipoRevisor'];
+                $revisor->id_revisor = $validatedData['nombreRevisor'];
+                $message = 'Revisor asignado exitosamente.';
             }
 
             // Guardar los datos del revisor
@@ -643,7 +631,7 @@ class Certificado_InstalacionesController extends Controller
         $empresa = $datos->dictamen->instalaciones->empresa ?? null;
         $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
             ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
-            ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+                ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
         $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
         $nombre_id_sustituye = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
@@ -675,7 +663,7 @@ class Certificado_InstalacionesController extends Controller
             'categorias' => $datos->dictamen?->inspeccione?->solicitud?->categorias_mezcal()?->pluck('categoria')->implode(', ') ?? 'No encontrado',
             'clases' => $datos->dictamen?->inspeccione?->solicitud?->clases_agave()?->pluck('clase')->implode(', ') ?? 'No encontrado',
         ];
-        
+
 
         if ($guardar && $rutaGuardado) {
             $pdf = Pdf::loadView('pdfs.certificado_productor_mezcal', $pdfData);
@@ -688,7 +676,7 @@ class Certificado_InstalacionesController extends Controller
         }else{*/
         //return Pdf::loadView('pdfs.certificado_productor_ed5', $pdfData)->stream('Certificado de productor.pdf');
         return Pdf::loadView('pdfs.certificado_productor_ed6', $pdfData)->stream('Certificado de productor de mezcal.pdf');
-        
+
         //}
     }
 
@@ -707,7 +695,7 @@ class Certificado_InstalacionesController extends Controller
         $empresa = $datos->dictamen->instalaciones->empresa ?? null;
         $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
             ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
-            ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+                ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
         $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
         $nombre_id_sustituye = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
@@ -740,7 +728,7 @@ class Certificado_InstalacionesController extends Controller
             'clases' => $datos->dictamen?->inspeccione?->solicitud?->clases_agave()?->pluck('clase')->implode(', ') ?? 'No encontrado',
         ];
 
-        
+
         if ($guardar && $rutaGuardado) {
             $pdf = Pdf::loadView('pdfs.certificado_envasador', $pdfData);
             $pdf->save($rutaGuardado);
@@ -771,7 +759,7 @@ class Certificado_InstalacionesController extends Controller
         $empresa = $datos->dictamen->instalaciones->empresa ?? null;
         $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
             ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
-            ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+                ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
         $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
         $nombre_id_sustituye = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
@@ -813,10 +801,9 @@ class Certificado_InstalacionesController extends Controller
             return $rutaGuardado;
         }
 
-       
+
         //return Pdf::loadView('pdfs.certificado_comercializador_ed5', $pdfData)->stream('Certificado de Comercializador.pdf');
         return Pdf::loadView('pdfs.certificado_comercializador_ed6', $pdfData)->stream('Certificado de Comercializador.pdf');
-       
     }
 
 
@@ -888,10 +875,4 @@ class Certificado_InstalacionesController extends Controller
             'nombre_archivo' => null,
         ]);
     }
-
-
-
-
-
-    
 }//end-classController
