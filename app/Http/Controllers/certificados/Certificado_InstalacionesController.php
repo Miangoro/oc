@@ -145,6 +145,8 @@ class Certificado_InstalacionesController extends Controller
                 $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
                 $nestedData['tipo_dictamen'] = $certificado->dictamen->tipo_dictamen ?? 'No encontrado';
                 $nestedData['direccion_completa'] = $certificado->dictamen->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrado';
+                $nestedData['pdf_firmado'] = $certificado->url_pdf_firmado 
+                    ? asset("storage/certificados_instalaciones_pdf/{$certificado->url_pdf_firmado}") : null;
                 $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
@@ -833,7 +835,7 @@ class Certificado_InstalacionesController extends Controller
 
         // Eliminar archivo anterior si existe
         if ($certificado->url_pdf_firmado) {
-            $rutaAnterior = "{$rutaCarpeta}/{$certificado->url_pdf_firmado}";
+            $rutaAnterior = "public/certificados_instalaciones_pdf/{$certificado->url_pdf_firmado}";
             if (Storage::exists($rutaAnterior)) {
                 Storage::delete($rutaAnterior);
             }
@@ -843,7 +845,7 @@ class Certificado_InstalacionesController extends Controller
         Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
 
         // Guardar solo el nombre del archivo en la BD
-        $certificado->url_pdf_firmado = $nombreArchivo;
+        $certificado->url_pdf_firmado = "{$anio}/{$nombreArchivo}";
         $certificado->save();
 
         return response()->json(['message' => 'Documento actualizado correctamente.']);
@@ -855,11 +857,8 @@ class Certificado_InstalacionesController extends Controller
         $certificado = Certificados::findOrFail($id);
 
         if ($certificado->url_pdf_firmado) {
-            // Obtener año actual desde el archivo
-            $anio = now()->year;
-
             // Construir la ruta completa dentro del storage
-            $rutaArchivo = "certificados_instalaciones_pdf/{$anio}/" . $certificado->url_pdf_firmado;
+            $rutaArchivo = "certificados_instalaciones_pdf/{$certificado->url_pdf_firmado}";
 
             // Comprobar si el archivo existe
             if (Storage::exists("public/{$rutaArchivo}")) {
@@ -880,4 +879,10 @@ class Certificado_InstalacionesController extends Controller
             'nombre_archivo' => null,
         ]);
     }
+
+
+
+
+
+    
 }//end-classController

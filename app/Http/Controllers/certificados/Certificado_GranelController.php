@@ -187,6 +187,8 @@ public function index(Request $request)
             $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
             $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
             $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
+            $nestedData['pdf_firmado'] = $certificado->url_pdf_firmado 
+                ? asset("storage/certificados_granel_pdf/{$certificado->url_pdf_firmado}") : null;
             $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
             $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
             $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
@@ -629,7 +631,8 @@ public function subirCertificado(Request $request)
 
     // Eliminar archivo anterior si existe
     if ($certificado->url_pdf_firmado) {
-        $rutaAnterior = "{$rutaCarpeta}/{$certificado->url_pdf_firmado}";
+        //$rutaAnterior = "{$rutaCarpeta}/{$certificado->url_pdf_firmado}";
+        $rutaAnterior = "public/certificados_granel_pdf/{$certificado->url_pdf_firmado}";
         if (Storage::exists($rutaAnterior)) {
             Storage::delete($rutaAnterior);
         }
@@ -639,7 +642,8 @@ public function subirCertificado(Request $request)
     Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
 
     // Guardar solo el nombre del archivo en la BD
-    $certificado->url_pdf_firmado = $nombreArchivo;
+    //$certificado->url_pdf_firmado = $nombreArchivo;
+    $certificado->url_pdf_firmado = "{$anio}/{$nombreArchivo}";
     $certificado->save();
 
     return response()->json(['message' => 'Documento actualizado correctamente.']);
@@ -652,10 +656,11 @@ public function CertificadoFirmado($id)
 
     if ($certificado->url_pdf_firmado) {
         // Obtener año actual desde el archivo
-        $anio = now()->year;
+        //$anio = now()->year;
 
         // Construir la ruta completa dentro del storage
-        $rutaArchivo = "certificados_granel_pdf/{$anio}/" . $certificado->url_pdf_firmado;
+        //$rutaArchivo = "certificados_granel_pdf/{$anio}/" . $certificado->url_pdf_firmado;
+        $rutaArchivo = "certificados_granel_pdf/{$certificado->url_pdf_firmado}";
 
         // Comprobar si el archivo existe
         if (Storage::exists("public/{$rutaArchivo}")) {

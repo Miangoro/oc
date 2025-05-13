@@ -111,10 +111,26 @@ var dataTable = $('.datatables-users').DataTable({
       render: function (data, type, full, meta) {
         var $num_certificado = full['num_certificado'];
         var $id = full['id_certificado'];
-        return '<small class="fw-bold">' + $num_certificado + '</small>' +
+        var $pdf_firmado  = full['pdf_firmado'];
+
+        if ($pdf_firmado) {
+          var icono = `<a href="${$pdf_firmado}" target="_blank" title="Ver PDF firmado">
+            <i class="ri-file-pdf-2-fill text-success ri-28px cursor-pointer"></i> </a>`;
+        } else {
+          var icono = `<i data-id="${$id}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-toggle="modal" data-bs-target="#mostrarPdf"></i>`;
+        }
+
+        return `
+          <small class="fw-bold">${$num_certificado}</small>
+            ${icono}
+          <br><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']}
+            <i data-id="${full['id_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-toggle="modal" data-bs-target="#mostrarPdf"></i>
+          `;
+
+        /*return '<small class="fw-bold">' + $num_certificado + '</small>' +
             '<i data-id="' +$id+ '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
             `<br><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']} <i data-id="${full['id_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
-          }
+       */}
     }, 
     {
     //Tabla 2
