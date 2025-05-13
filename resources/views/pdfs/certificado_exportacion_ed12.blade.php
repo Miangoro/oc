@@ -259,11 +259,11 @@
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Volumen:</td>
             <td style="text-align: left; padding-left: 4px;"> 
-                {{$presentacion}}  
+                {{ $lote->presentacion.' '.$lote->unidad }}  
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">%Alc. Vol.:</td>
             <td style="text-align: left; padding-left: 4px;"> 
-                {{ $lote->lotesGranel->first()->cont_alc ?? "N" }}% 
+                {{ round($lote->lotesGranel->first()->cont_alc) ?? "N" }}% 
             </td>
         </tr>
 @php
