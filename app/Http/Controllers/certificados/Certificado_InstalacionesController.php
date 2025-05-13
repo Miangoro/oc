@@ -148,6 +148,8 @@ class Certificado_InstalacionesController extends Controller
                 $nestedData['pdf_firmado'] = $certificado->url_pdf_firmado 
                     ? asset("storage/certificados_instalaciones_pdf/{$certificado->url_pdf_firmado}") : null;
                 $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
+                $id_sustituye = json_decode($certificado->observaciones, true) ['id_sustituye'] ?? null;
+            $nestedData['sustituye'] = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
                 ///Folio y no. servicio

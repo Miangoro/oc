@@ -170,7 +170,9 @@ var dataTable = $('.datatables-users').DataTable({
       render: function (data, type, full, meta) {
         var $ = full[''];
         return `<div class="small">
-            <b>Lote granel:</b> ${full['nombre_lote']}  
+            <b>Lote granel:</b> ${full['nombre_lote']}
+            
+            ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
           </div>`;
         }
     },
@@ -206,7 +208,7 @@ var dataTable = $('.datatables-users').DataTable({
         } else if ($estatus == 1) {
             estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
         } else if ($estatus == 2) {
-            estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+            estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
         } else {
           estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
         }
