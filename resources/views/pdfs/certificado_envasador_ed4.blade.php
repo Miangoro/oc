@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificado de envasador de mezcal</title>
+    <title>Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36</title>
     <style>
     
         body {
@@ -285,9 +285,10 @@ de Noviembre de l994. así como sus subsecuentes modificaciones.</p>
     <div class="signature-name">{{ $puesto_firmante }}</div>
 </div>
 
-<div class="down">Este cértificado sustituye al: No aplica<br>Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36<br>Edición 6 Entrada en vigor 12/01/2025 <br>
+<div class="down">Este cértificado sustituye al: No aplica<br>Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36<br>Edición 4 Entrada en vigor: 12/01/2024
+ <br>
 
-@if ($leyenda)
+@if ($id_sustituye)
 Cancela y sustituye al certificado con clave: CIDAM C-GRA-057/2023
 @endif
 

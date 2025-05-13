@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificado como comercializador</title>
+    <title>Certificado como Comercializador de Mezcal NOM-070-SCFI-2016 F7.1-01-37</title>
     <style>
         @page {
             size: 227mm 292mm;

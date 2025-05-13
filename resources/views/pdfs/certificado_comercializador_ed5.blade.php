@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificado de comercializador</title>
+    <title>Certificado como Comercializador de Mezcal NOM-070-SCFI-2016 F7.1-01-37</title>
     <style>
     
         body {
@@ -270,7 +270,7 @@ establecido en la NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificacione
 <p class="text">Esta certificación ampara exclusivamente la comercialización del producto <u>{{ $categorias }}</u>, <strong>Clase: </strong><u>{{ $clases }}</u>, que se realice en las
 instalaciones indicadas a continuación.</p>
 
-<p class="text"><strong>Domicilio de la unidad de Comercialización:</strong> {{$direccion_completa}}</p>
+<p class="text"><strong>Domicilio de la unidad de Comercialización:</strong> {{$domicilio_unidad}}</p>
 
 <p class="text"><strong>No. De Dictamen de cumplimiento con la NOM:</strong> {{$num_dictamen}}</p>
 
@@ -283,9 +283,9 @@ instalaciones indicadas a continuación.</p>
     <div class="signature-name">{{ $puesto_firmante }}</div>
 </div>
 
-<div class="down">Certificado como Comercializador de Mezcal NOM-070-2016 F7.1-01-37 <br>Edición 5 Entrada en vigor 12/01/2024 <br>
+<div class="down">Certificado como Comercializador de Mezcal NOM-070-2016 F7.1-01-37 <br>Edición 5 Entrada en vigor: 12/01/2024 <br>
 
-@if ($leyenda)
+@if ($id_sustituye)
 Cancela y sustituye al certificado con clave: CIDAM C-GRA-057/2023
 @endif
 

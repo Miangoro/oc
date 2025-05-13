@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificado productor de mezcal</title>
+    <title>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35</title>
     <style>
     
         body {
@@ -279,7 +279,7 @@ de Noviembre de 1994, así como sus subsecuentes modificaciones.</p>
             Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
         @endif
         <br>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35<br>
-        Entrada en vigor: 
+        Entrada en vigor: 12/01/2024
     </p>
     <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705px">
 </div>
