@@ -40,4 +40,13 @@ class CertificadosGranel extends Model
     {
         return $this->belongsTo(LotesGranel::class, 'id_lote_granel','id_lote_granel');
     }
+
+    public function certificadoReexpedido()
+    {
+        $datos = json_decode($this->observaciones, true);
+        if (isset($datos['id_sustituye'])) {
+            return Certificados::find($datos['id_sustituye']);
+        }
+        return null;
+    }
 }
