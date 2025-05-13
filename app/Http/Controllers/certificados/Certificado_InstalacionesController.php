@@ -149,7 +149,7 @@ class Certificado_InstalacionesController extends Controller
                     ? asset("storage/certificados_instalaciones_pdf/{$certificado->url_pdf_firmado}") : null;
                 $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
                 $id_sustituye = json_decode($certificado->observaciones, true) ['id_sustituye'] ?? null;
-            $nestedData['sustituye'] = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
+                $nestedData['sustituye'] = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
                 ///Folio y no. servicio
@@ -643,11 +643,11 @@ class Certificado_InstalacionesController extends Controller
         $empresa = $datos->dictamen->instalaciones->empresa ?? null;
         $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
             ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
-                ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+            ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
         $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
         $nombre_id_sustituye = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
-        $watermarkText = $datos->estatus === 1;
+        $watermarkText = $datos->estatus == 1;
 
         // Preparar los datos para el PDF
         $pdfData = [
@@ -655,7 +655,6 @@ class Certificado_InstalacionesController extends Controller
             'num_certificado' => $datos->num_certificado ?? 'No encontrado',
             'num_autorizacion' => $datos->num_autorizacion ?? 'No encontrado',
             'num_dictamen' => $datos->dictamen->num_dictamen ?? 'No encontrado',
-            'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
             'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
             'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),
             'domicilio_fiscal' => $empresa->domicilio_fiscal ?? 'No encontrado',
@@ -670,11 +669,11 @@ class Certificado_InstalacionesController extends Controller
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
             'numero_cliente' => $numero_cliente,
             'representante_legal' => $empresa->representante_legal ?? 'No encontrado',
-            'nombre_firmante' => $datos->firmante->name,
-            'firma_firmante' => $datos->firmante->firma ?? '',
-            'puesto_firmante' => $datos->firmante->puesto ?? '',
-            'categorias' => $datos->dictamen->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', '),
-            'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
+            'nombre_firmante' => $datos->firmante->name ?? 'No encontrado',
+            'puesto_firmante' => $datos->firmante->puesto ?? 'No encontrado',
+            'firma_firmante' => $datos->firmante->firma ?? 'No encontrado',
+            'categorias' => $datos->dictamen?->inspeccione?->solicitud?->categorias_mezcal()?->pluck('categoria')->implode(', ') ?? 'No encontrado',
+            'clases' => $datos->dictamen?->inspeccione?->solicitud?->clases_agave()?->pluck('clase')->implode(', ') ?? 'No encontrado',
         ];
         
 
@@ -704,11 +703,15 @@ class Certificado_InstalacionesController extends Controller
             'firmante'
         ])->findOrFail($id_certificado);
 
-        $empresa = $datos->dictamen->instalaciones->empresa ?? 'No encontrado';//cambio
 
-        //$numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente;
-        $watermarkText = $datos->estatus === 1;
-        $leyenda = $datos->estatus === 2;
+        $empresa = $datos->dictamen->instalaciones->empresa ?? null;
+        $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+            ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+            ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+        $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
+        $nombre_id_sustituye = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
+
+        $watermarkText = $datos->estatus == 1;
 
         // Preparar los datos para el PDF
         $pdfData = [
@@ -720,20 +723,21 @@ class Certificado_InstalacionesController extends Controller
             'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),
             'domicilio_fiscal' => $empresa->domicilio_fiscal ?? 'No encontrado',
             'rfc' => $empresa->rfc ?? 'No encontrado',
-            'watermarkText' => $watermarkText ?? 'No encontrado',
             'telefono' => $empresa->telefono ?? 'No encontrado',
             'correo' => $empresa->correo ?? 'No encontrado',
+            'watermarkText' => $watermarkText,
+            'id_sustituye' => $nombre_id_sustituye,
+            //
             'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa ?? 'No encontrado',
             'razon_social' => $empresa->razon_social ?? 'No encontrado',
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
-            'numero_cliente' => $numero_cliente ?? 'No encontrado',
+            'numero_cliente' => $numero_cliente,
             'representante_legal' => $empresa->representante_legal ?? 'No encontrado',
-            'nombre_firmante' => $datos->firmante->name,
-            'firma_firmante' => $datos->firmante->firma ?? '',
-            'puesto_firmante' => $datos->firmante->puesto ?? '',
-            'leyenda' => $leyenda,
-            'categorias' => $datos->dictamen->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', '),
-            'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
+            'nombre_firmante' => $datos->firmante->name ?? 'No encontrado',
+            'puesto_firmante' => $datos->firmante->puesto ?? 'No encontrado',
+            'firma_firmante' => $datos->firmante->firma ?? 'No encontrado',
+            'categorias' => $datos->dictamen?->inspeccione?->solicitud?->categorias_mezcal()?->pluck('categoria')->implode(', ') ?? 'No encontrado',
+            'clases' => $datos->dictamen?->inspeccione?->solicitud?->clases_agave()?->pluck('clase')->implode(', ') ?? 'No encontrado',
         ];
 
         
@@ -764,10 +768,14 @@ class Certificado_InstalacionesController extends Controller
             'firmante'
         ])->findOrFail($id_certificado);
 
-        $empresa = $datos->dictamen->instalaciones->empresa ?? 'No encontrado';
-        //$numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente ?? 'No encontrado';
-        $watermarkText = $datos->estatus === 1;
-        $leyenda = $datos->estatus === 2;
+        $empresa = $datos->dictamen->instalaciones->empresa ?? null;
+        $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+            ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+            ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+        $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
+        $nombre_id_sustituye = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
+
+        $watermarkText = $datos->estatus == 1;
 
         // Preparar los datos para el PDF
         $pdfData = [
@@ -776,28 +784,27 @@ class Certificado_InstalacionesController extends Controller
             'num_autorizacion' => $datos->num_autorizacion ?? 'No encontrado',
             'num_dictamen' => $datos->dictamen->num_dictamen ?? 'No encontrado',
             'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
-            'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
             'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),
             'domicilio_fiscal' => $empresa->domicilio_fiscal ?? 'No encontrado',
             'rfc' => $empresa->rfc ?? 'No encontrado',
             'telefono' => $empresa->telefono ?? 'No encontrado',
             'correo' => $empresa->correo ?? 'No encontrado',
             'watermarkText' => $watermarkText,
-            'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa ?? 'No encontrado',
+            'id_sustituye' => $nombre_id_sustituye,
+            //
             'razon_social' => $empresa->razon_social ?? 'No encontrado',
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
-            'numero_cliente' => $numero_cliente ?? 'No encontrado',
+            'numero_cliente' => $numero_cliente,
             'representante_legal' => $empresa->representante_legal ?? 'No encontrado',
-            'nombre_firmante' => $datos->firmante->name ?? 'Nombre del firmante no disponible',
-            'firma_firmante' => $datos->firmante->firma ?? '',
-            'puesto_firmante' => $datos->firmante->puesto ?? '',
-            'leyenda' => $leyenda ?? 'No encontrado',
-            'categorias' => $datos->dictamen->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', '),
-            'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
+            'nombre_firmante' => $datos->firmante->name ?? 'No encontrado',
+            'puesto_firmante' => $datos->firmante->puesto ?? 'No encontrado',
+            'firma_firmante' => $datos->firmante->firma ?? 'No encontrado',
+            'categorias' => $datos->dictamen?->inspeccione?->solicitud?->categorias_mezcal()?->pluck('categoria')->implode(', ') ?? 'No encontrado',
+            'clases' => $datos->dictamen?->inspeccione?->solicitud?->clases_agave()?->pluck('clase')->implode(', ') ?? 'No encontrado',
             // Nuevos campos
-            'marcas' => $datos->dictamen->inspeccione->solicitud->marcas()->pluck('marca')->implode(', '),
-            'domicilio_unidad' => $empresa->domicilio_unidad ?? 'Domicilio no disponible',
-            'convenio_corresponsabilidad' => $datos->convenio_corresponsabilidad ?? 'No especificado',
+            'marcas' => $datos->dictamen?->inspeccione?->solicitud?->marcas()?->pluck('marca')->implode(', ') ?? 'No encontrado',
+            'domicilio_unidad' => $datos->dictamen->instalaciones->direccion_completa ?? 'No encontrado',
+            'convenio_corresponsabilidad' => $empresa->convenio_corresp ?? 'No encontrado',
         ];
 
         if ($guardar && $rutaGuardado) {
