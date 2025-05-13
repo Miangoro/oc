@@ -10,10 +10,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const norm199Checkbox = document.getElementById('customRadioIcon68');
   const otrabebida = document.getElementById('customRadioIcon65');
 
-    const checkboxes = [
-      mezcalCheckbox, bebidaCheckbox, coctelCheckbox, licorCheckbox,
-      nom070Checkbox, nom251Checkbox, normexCheckbox, norm199Checkbox, otrabebida
-    ];
+  const checkboxes = [
+    mezcalCheckbox, bebidaCheckbox, coctelCheckbox, licorCheckbox,
+    nom070Checkbox, nom251Checkbox, normexCheckbox, norm199Checkbox, otrabebida
+  ];
 
   function updateBorder(checkbox) {
     const parentDiv = checkbox.closest('.custom-option');
@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   function mostrarSecciones() {
+
     console.log('mezcalCheckbox:', mezcalCheckbox.checked);
     console.log('bebidaCheckbox:', bebidaCheckbox.checked);
     console.log('coctelCheckbox:', coctelCheckbox.checked);
@@ -50,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     toggleSectionVisibility('nom070-section', nom070Checkbox.checked);
     toggleSectionVisibility('normex-section', normexCheckbox.checked);
+
   }
 
   function toggleSectionVisibility(sectionId, shouldShow) {
@@ -177,6 +179,38 @@ window.estadosOptions = `
     @endforeach
 `;
 
+import Stepper from 'bs-stepper/dist/js/bs-stepper';
+
+const bsStepper = document.querySelectorAll('.bs-stepper');
+
+// Adds crossed class
+bsStepper.forEach(el => {
+  el.addEventListener('show.bs-stepper', function (event) {
+    var index = event.detail.indexStep;
+    var numberOfSteps = el.querySelectorAll('.line').length;
+    var line = el.querySelectorAll('.step');
+
+    for (let i = 0; i < index; i++) {
+      line[i].classList.add('crossed');
+      for (let j = index; j < numberOfSteps; j++) {
+        line[j].classList.remove('crossed');
+      }
+    }
+    if (event.detail.to == 0) {
+      for (let k = index; k < numberOfSteps; k++) {
+        line[k].classList.remove('crossed');
+      }
+      line[0].classList.remove('crossed');
+    }
+  });
+});
+
+try {
+  window.Stepper = Stepper;
+} catch (e) {}
+
+export { Stepper };
+
 
 const wizardIcons = document.querySelector('.wizard-icons-example');
 
@@ -210,76 +244,89 @@ if (typeof wizardIcons !== undefined && wizardIcons !== null) {
 
 }
 
-
-
-
+// ...existing code...
 new Cleave(".phone-number-mask", {
   phone: true,
   phoneRegionCode: "US"
 });
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
-  // Función para mostrar u ocultar secciones según el checkbox seleccionado
   function toggleSection() {
-      // Obtener el estado de cada checkbox
-      const agaveCheckbox = document.getElementById('customRadioIcon8');
-      const envasadorCheckbox = document.getElementById('customRadioIcon9');
-      const productorMezcalCheckbox = document.getElementById('customRadioIcon10');
-      const comercializadorCheckbox = document.getElementById('customRadioIcon11');
-      const norm199Checkbox = document.getElementById('customRadioIcon68');
-      const otrasBebidasCheckbox = document.getElementById('customRadioIcon65');
-      const nom070Checkbox = document.getElementById('customRadioIcon5'); // Suponiendo que también necesitas este checkbox
+    // Obtener el estado de cada checkbox
+    const agaveCheckbox = document.getElementById('customRadioIcon8');
+    const envasadorCheckbox = document.getElementById('customRadioIcon9');
+    const productorMezcalCheckbox = document.getElementById('customRadioIcon10');
+    const comercializadorCheckbox = document.getElementById('customRadioIcon11');
+    const norm199Checkbox = document.getElementById('customRadioIcon68');
+    const otrasBebidasCheckbox = document.getElementById('customRadioIcon65');
+    const nom070Checkbox = document.getElementById('customRadioIcon5');
 
-      // Mostrar u ocultar secciones basadas en los checkboxes seleccionados
-      document.getElementById('domiProductAgace').style.display = agaveCheckbox.checked ? 'block' : 'none';
-      document.getElementById('domiEnvasaMezcal').style.display = envasadorCheckbox.checked ? 'block' : 'none';
-      document.getElementById('domiProductMezcal').style.display = productorMezcalCheckbox.checked ? 'block' : 'none';
-      document.getElementById('domiComerMezcal').style.display = comercializadorCheckbox.checked ? 'block' : 'none';
-
-      // Lógica para mostrar u ocultar la sección específica
-      const nom199Section = document.getElementById('nom199-section');
-      if (norm199Checkbox.checked || otrasBebidasCheckbox.checked) {
-          nom199Section.classList.remove('d-none'); // Mostrar sección NOM-199
-      } else {
-          nom199Section.classList.add('d-none'); // Ocultar sección NOM-199
-      }
-
-      // Lógica para mostrar/ocultar la sección de NMX-V-052-NORMEX-2016
-      const normexSection = document.getElementById('normex-section'); // Asegúrate de tener el ID correcto para esta sección
-      if (nom070Checkbox.checked || norm199Checkbox.checked || otrasBebidasCheckbox.checked) {
-          normexSection.classList.add('d-none'); // Ocultar sección de NMX-V-052-NORMEX-2016
-      } else {
-          normexSection.classList.remove('d-none'); // Mostrar sección de NMX-V-052-NORMEX-2016
-      }
-
-      // Limpia los campos de las secciones ocultas
+    // Mostrar u ocultar secciones basadas en los checkboxes seleccionados
+    const domiProductAgace = document.getElementById('domiProductAgace');
+    if (domiProductAgace && agaveCheckbox) {
+      domiProductAgace.style.display = agaveCheckbox.checked ? 'block' : 'none';
       if (!agaveCheckbox.checked) {
-          document.getElementById('domiProductAgace').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-          document.getElementById('domiProductAgace').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        domiProductAgace.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+        domiProductAgace.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
       }
+    }
+    const domiEnvasaMezcal = document.getElementById('domiEnvasaMezcal');
+    if (domiEnvasaMezcal && envasadorCheckbox) {
+      domiEnvasaMezcal.style.display = envasadorCheckbox.checked ? 'block' : 'none';
       if (!envasadorCheckbox.checked) {
-          document.getElementById('domiEnvasaMezcal').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-          document.getElementById('domiEnvasaMezcal').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        domiEnvasaMezcal.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+        domiEnvasaMezcal.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
       }
+    }
+    const domiProductMezcal = document.getElementById('domiProductMezcal');
+    if (domiProductMezcal && productorMezcalCheckbox) {
+      domiProductMezcal.style.display = productorMezcalCheckbox.checked ? 'block' : 'none';
       if (!productorMezcalCheckbox.checked) {
-          document.getElementById('domiProductMezcal').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-          document.getElementById('domiProductMezcal').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        domiProductMezcal.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+        domiProductMezcal.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
       }
+    }
+    const domiComerMezcal = document.getElementById('domiComerMezcal');
+    if (domiComerMezcal && comercializadorCheckbox) {
+      domiComerMezcal.style.display = comercializadorCheckbox.checked ? 'block' : 'none';
       if (!comercializadorCheckbox.checked) {
-          document.getElementById('domiComerMezcal').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-          document.getElementById('domiComerMezcal').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        domiComerMezcal.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+        domiComerMezcal.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
       }
+    }
+
+    // Lógica para mostrar u ocultar la sección específica
+    const nom199Section = document.getElementById('nom199-section');
+    if (nom199Section && (norm199Checkbox || otrasBebidasCheckbox)) {
+      if ((norm199Checkbox && norm199Checkbox.checked) || (otrasBebidasCheckbox && otrasBebidasCheckbox.checked)) {
+        nom199Section.classList.remove('d-none');
+      } else {
+        nom199Section.classList.add('d-none');
+      }
+    }
+
+    // Lógica para mostrar/ocultar la sección de NMX-V-052-NORMEX-2016
+    const normexSection = document.getElementById('normex-section');
+    if (normexSection && (nom070Checkbox || norm199Checkbox || otrasBebidasCheckbox)) {
+      if (
+        (nom070Checkbox && nom070Checkbox.checked) ||
+        (norm199Checkbox && norm199Checkbox.checked) ||
+        (otrasBebidasCheckbox && otrasBebidasCheckbox.checked)
+      ) {
+        normexSection.classList.add('d-none');
+      } else {
+        normexSection.classList.remove('d-none');
+      }
+    }
   }
 
-  // Añadir event listeners a los checkboxes
-  document.getElementById('customRadioIcon8').addEventListener('change', toggleSection);
-  document.getElementById('customRadioIcon9').addEventListener('change', toggleSection);
-  document.getElementById('customRadioIcon10').addEventListener('change', toggleSection);
-  document.getElementById('customRadioIcon11').addEventListener('change', toggleSection);
-  document.getElementById('customRadioIcon68').addEventListener('change', toggleSection);
-  document.getElementById('customRadioIcon65').addEventListener('change', toggleSection);
+  // Añadir event listeners a los checkboxes (solo si existen)
+  ['customRadioIcon8', 'customRadioIcon9', 'customRadioIcon10', 'customRadioIcon11', 'customRadioIcon68', 'customRadioIcon65'].forEach(id => {
+    const checkbox = document.getElementById(id);
+    if (checkbox) {
+      checkbox.addEventListener('change', toggleSection);
+    }
+  });
 
   // Inicializa el estado de las secciones al cargar la página
   toggleSection();
@@ -340,51 +387,51 @@ document.addEventListener('DOMContentLoaded', () => {
 $(document).ready(function () {
   // Mapeamos los valores de los checkboxes a sus respectivas secciones
   const sections = {
-      1: '#clasificacion-bebidas-section',     // Bebidas Alcohólicas Fermentadas (2% a 20%)
-      2: '#clasificacion-bebidas-section-2',   // Bebidas Alcohólicas Destiladas (32% a 55%)
-      3: '#clasificacion-bebidas-section-3',   // Licores o cremas (13.5% a 55%)
-      4: '#clasificacion-bebidas-section-4',   // Bebidas Alcohólicas Destiladas (32% a 55%)
-      5: '#clasificacion-cocteles-section-5',    // Cócteles (12% a 32%)
-      6: '#clasificacion-bebidas-section-6'
+    1: '#clasificacion-bebidas-section',     // Bebidas Alcohólicas Fermentadas (2% a 20%)
+    2: '#clasificacion-bebidas-section-2',   // Bebidas Alcohólicas Destiladas (32% a 55%)
+    3: '#clasificacion-bebidas-section-3',   // Licores o cremas (13.5% a 55%)
+    4: '#clasificacion-bebidas-section-4',   // Bebidas Alcohólicas Destiladas (32% a 55%)
+    5: '#clasificacion-cocteles-section-5',    // Cócteles (12% a 32%)
+    6: '#clasificacion-bebidas-section-6'
   };
 
   // Escuchar el cambio en los checkboxes
   $('input[name="clasificacion[]"]').on('change', function () {
-      // Recorremos cada sección y la mostramos u ocultamos dependiendo del checkbox seleccionado
-      $.each(sections, function (value, section) {
-          // Si el checkbox con el valor 'value' está seleccionado, mostramos la sección
-          if ($(`input[name="clasificacion[]"][value="${value}"]`).is(':checked')) {
-              $(section).removeClass('d-none');
-          } else {
-              // Si no está seleccionado, ocultamos la sección
-              $(section).addClass('d-none');
-          }
-      });
+    // Recorremos cada sección y la mostramos u ocultamos dependiendo del checkbox seleccionado
+    $.each(sections, function (value, section) {
+      // Si el checkbox con el valor 'value' está seleccionado, mostramos la sección
+      if ($(`input[name="clasificacion[]"][value="${value}"]`).is(':checked')) {
+        $(section).removeClass('d-none');
+      } else {
+        // Si no está seleccionado, ocultamos la sección
+        $(section).addClass('d-none');
+      }
+    });
   });
 
 });
 
 
 $(document).ready(function () {
-    $('#customRadioIcon32').on('change', function () {
-        if ($(this).is(':checked')) {
-            $('#otroBebidaInput').slideDown(); // Animación para mostrar
-        } else {
-            $('#otroBebidaInput').slideUp(function () {
-                $(this).find('input').val(''); // Limpia después de ocultar
-            });
-        }
-    });
+  $('#customRadioIcon32').on('change', function () {
+    if ($(this).is(':checked')) {
+      $('#otroBebidaInput').slideDown(); // Animación para mostrar
+    } else {
+      $('#otroBebidaInput').slideUp(function () {
+        $(this).find('input').val(''); // Limpia después de ocultar
+      });
+    }
+  });
 
-      $('#customRadioIcon52').on('change', function () {
-        if ($(this).is(':checked')) {
-            $('#otroBebidaInput52').slideDown();
-        } else {
-            $('#otroBebidaInput52').slideUp(function () {
-                $(this).find('input').val('');
-            });
-        }
-    });
+  $('#customRadioIcon52').on('change', function () {
+    if ($(this).is(':checked')) {
+      $('#otroBebidaInput52').slideDown();
+    } else {
+      $('#otroBebidaInput52').slideUp(function () {
+        $(this).find('input').val('');
+      });
+    }
+  });
 });
 
 

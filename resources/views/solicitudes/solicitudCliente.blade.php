@@ -17,7 +17,7 @@
 
     <!-- Vendor Scripts -->
 @section('vendor-script')
-    @vite(['resources/assets/vendor/libs/jquery/jquery.js', 'resources/assets/vendor/libs/bs-stepper/bs-stepper.js', 'resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js'])
+    @vite(['resources/assets/vendor/libs/jquery/jquery.js', /* 'resources/assets/vendor/libs/bs-stepper/bs-stepper.js', */ 'resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js'])
 @section('content')
 
     <style>
@@ -101,6 +101,7 @@
                     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
                     <!-- información del cliente -->
                     <div id="account-details" class="content">
+                        <input type="text" name="stepseccion1" value="stepseccion1">
                         <div class="content-header mb-4">
                             <h6 class="mb-0">Información del cliente</h6>
                             <small>información del cliente.</small>
@@ -169,6 +170,7 @@
 
                     <!-- Social Links Producto que se va a certificar-->
                     <div id="social-links" class="content">
+                        <input type="text" name="stepseccion2" value="stepseccion2">
                         <!-- 1. Delivery Type -->
                         <h6>Producto(s) que se va a certificar</h6>
                         <div class="row gy-3 align-items-start">
@@ -918,15 +920,15 @@
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[5][]" class="form-control" type="text"
-                                            id="inputCoctel62" placeholder="Cóctel sabor de" />
+                                        <input name="bebida[5][]" class="form-control" type="text" id="inputCoctel62"
+                                            placeholder="Cóctel sabor de" />
                                         <label for="inputCoctel62"><small>Cóctel sabor de</small></label>
                                     </div>
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[5][]" class="form-control" type="text"
-                                            id="inputCoctel63" placeholder="Cóctel de o al" />
+                                        <input name="bebida[5][]" class="form-control" type="text" id="inputCoctel63"
+                                            placeholder="Cóctel de o al" />
                                         <label for="inputCoctel63"><small>Cóctel de o al</small></label>
                                     </div>
                                 </div>
@@ -948,8 +950,8 @@
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
 
-                                        <input name="bebida[6][]" class="form-control" type="text"
-                                            id="inputBebida65" placeholder="Bebida alcohólica preparada de" />
+                                        <input name="bebida[6][]" class="form-control" type="text" id="inputBebida65"
+                                            placeholder="Bebida alcohólica preparada de" />
                                         <label for="inputBebida65" class="custom-option-body"><small>Bebida alcohólica
                                                 preparada de</small></label>
                                     </div>
@@ -957,8 +959,7 @@
 
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[6][]" class="form-control"
-                                            type="text" id="inputBebida66"
+                                        <input name="bebida[6][]" class="form-control" type="text" id="inputBebida66"
                                             placeholder="Bebida alcohólica preparada de o al" />
                                         <label for="inputBebida66">
                                             <small>Bebida alcohólica preparada de o al</small>
@@ -968,8 +969,7 @@
 
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[6][]" class="form-control"
-                                            type="text" id="inputBebida67"
+                                        <input name="bebida[6][]" class="form-control" type="text" id="inputBebida67"
                                             placeholder="Bebida alcohólica preparada sabor de" />
                                         <label for="inputBebida67">
                                             <small>Bebida alcohólica preparada sabor de</small>
@@ -978,8 +978,8 @@
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[6][]" class="form-control" type="text"
-                                            id="inputBebida68" placeholder="Bebida alcohólica preparada con" />
+                                        <input name="bebida[6][]" class="form-control" type="text" id="inputBebida68"
+                                            placeholder="Bebida alcohólica preparada con" />
                                         <label for="inputBebida68">
                                             <small>Bebida alcohólica preparada con</small>
                                         </label>
@@ -1006,6 +1006,7 @@
 
                     {{-- direccion --}}
                     <div id="address" class="content">
+                    <input type="text" name="stepseccion3" value="stepseccion3">
                         <div class="content-header mb-4">
                             <h6 class="mb-0">Domicilio Fiscal</h6>
                             <small>Ingrese los datos del primer domicilio fiscal</small>
@@ -1178,6 +1179,7 @@
 
                     <!-- Información sobre los Procesos y productos a certificar por el cliente -->
                     <div id="personal-info-icon" class="content">
+                      <input type="text" name="stepseccion4" value="stepseccion4">
                         <div class="content-header mb-4">
                             <h6 class="mb-0">Información sobre los Procesos y productos a certificar por el cliente</h6>
                         </div>
