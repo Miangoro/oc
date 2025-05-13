@@ -64,8 +64,8 @@
                                     <p><strong>Motivo:</strong> {{ $obs->observaciones }}</p>
                                 @endif
 
-                                @if($datos->observaciones)
-                                    <p><strong>Observaciones:</strong>  {{ $datos->observaciones }}</p>
+                                @if ($datos->observaciones)
+                                    <p><strong>Observaciones:</strong> {{ $datos->observaciones }}</p>
                                 @endif
 
                             </p>
@@ -184,9 +184,13 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria_clase')
                                             <td><b>
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'N/A' }}
+                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'N/A' }}<br>
                                                     {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->clase->clase ?? 'N/A' }}
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tipos ?? 'N/A' }}
+                                                    @foreach ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
+                                                        <br>
+                                                        {{ $tipo->nombre }} <i>({{ $tipo->cientifico }})</i>
+                                                    @endforeach
+                                                    <br>
                                                     {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->marca->marca ?? 'N/A' }}
                                                 </b></td>
                                         @elseif($pregunta->filtro == 'volumen')
@@ -202,7 +206,7 @@
 
                                                 </b></td>
                                         @elseif($pregunta->filtro == 'cont_alc')
-                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc ?? 'N/A' }}</b>
+                                            <td><b>{{ round($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc) ?? 'N/A' }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'nbotellas')
                                             @php
@@ -243,7 +247,7 @@
 
                                                     @foreach ($datos->certificado->dictamen->inspeccione->solicitud->documentacion(55)->get() as $documento)
                                                         <a target="_blank"
-                                                            href="/{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
+                                                            href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
                                                                 'numero_cliente',
                                                                 '!=',
                                                                 null,
@@ -390,28 +394,55 @@
                                                         <i
                                                             class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
+                                                @else
+                                                    <span class="text-muted">Sin etiqueta</span>
                                                 @endif
                                             </td>
-                                        @else
-                                            <td>Sin datos</td>
-                                        @endif
+                                       
+                                    @elseif($pregunta->filtro == 'corrugado')
                                         <td>
-                                            <div class="resp">
-                                                <select class="form-select form-select-sm" aria-label="Elige la respuesta"
-                                                    name="respuesta[]">
-                                                    <option value="" selected disabled>Seleccione</option>
-                                                    <option value="C">C</option>
-                                                    <option value="NC">NC</option>
-                                                    <option value="NA">NA</option>
-                                                </select>
-                                            </div>
+                                            @if ($datos->certificado->dictamen->inspeccione->solicitud->corrugado())
+                                                <a target="_blank"
+                                                    href="{{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
+                                                        'numero_cliente',
+                                                        '!=',
+                                                        null,
+                                                    )?->numero_cliente
+                                                        ? '../files/' .
+                                                            $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
+                                                                'numero_cliente',
+                                                                '!=',
+                                                                null,
+                                                            )->numero_cliente .
+                                                            '/' .
+                                                            $datos->certificado->dictamen->inspeccione->solicitud->corrugado()
+                                                        : 'NA' }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                </a>
+                                            @else
+                                                <span class="text-muted">Sin corrugado</span>
+                                            @endif
                                         </td>
+                                    @else
+                                        <td>Sin datos</td>
+                                @endif
+                                <td>
+                                    <div class="resp">
+                                        <select class="form-select form-select-sm" aria-label="Elige la respuesta"
+                                            name="respuesta[]">
+                                            <option value="" selected disabled>Seleccione</option>
+                                            <option value="C">C</option>
+                                            <option value="NC">NC</option>
+                                            <option value="NA">NA</option>
+                                        </select>
+                                    </div>
+                                </td>
 
-                                        <td>
-                                            <textarea name="observaciones[{{ $index }}]" rows="1" name="" id="" class="form-control"
-                                                placeholder="Observaciones"></textarea>
-                                        </td>
-                                    </tr>
+                                <td>
+                                    <textarea name="observaciones[{{ $index }}]" rows="1" name="" id="" class="form-control"
+                                        placeholder="Observaciones"></textarea>
+                                </td>
+                                </tr>
                                 @endforeach
 
                             </tbody>
@@ -420,10 +451,10 @@
                 </div>
             </div>
             <!-- <div class="col-md-4">
-                                <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" src="{{ $url }}" frameborder="0"
-                                    style="border-radius: 10px; overflow: hidden;">
-                                </iframe>
-                            </div>-->
+                                        <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" src="{{ $url }}" frameborder="0"
+                                            style="border-radius: 10px; overflow: hidden;">
+                                        </iframe>
+                                    </div>-->
 
             <div class="d-flex justify-content-center mt-3">
                 <button type="submit" class="btn btn-primary me-2 waves-effect waves-light">Registrar revisión</button>

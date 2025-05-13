@@ -191,6 +191,25 @@ public function clases_agave()
         return null; // Retorna null si no hay etiqueta
     }
 
+    public function corrugado()
+    {
+        $caracteristicas = is_string($this->caracteristicas)
+            ? json_decode($this->caracteristicas, true)
+            : $this->caracteristicas;
+
+        $idEtiqueta = is_array($caracteristicas)
+            ? ($caracteristicas['id_etiqueta'] ?? null)
+            : ($caracteristicas->id_etiqueta ?? null);
+
+        if ($idEtiqueta) {
+            return Documentacion_url::where('id_relacion', $idEtiqueta)
+                ->where('id_documento', 75)
+                ->value('url'); // Devuelve directamente la URL si existe
+        }
+
+        return null; // Retorna null si no hay etiqueta
+    }
+
 
 
     public function ultima_validacion_oc()
