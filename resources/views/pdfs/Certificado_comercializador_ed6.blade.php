@@ -216,7 +216,6 @@
 
         .footer {
             position: fixed;
-            bottom: -22px;
             width: 100%;
             text-align: center;
         }
@@ -420,14 +419,16 @@
             <div class="signature-name">{{ $puesto_firmante }}</div>
         </div>
 
-        <<div class="footer">
-            <p style="text-align: right; font-size: 9px; line-height: 1; margin-bottom: 1px;">
-
-                <br>Certificado como Comercializador de Mezcal NOM-070-SCFI-2016 F7.1-01-37<br>
-                Edición 6 Entrada en vigor: 01/04/2025
-            </p>
-            <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705px">
-    </div>
+<div class="footer">
+    <p style="text-align: right; font-size: 9px; line-height: 1; margin-bottom: 1px;">
+        @if ($id_sustituye)
+            Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
+        @endif
+        <br>Certificado como Comercializador de Mezcal NOM-070-SCFI-2016 F7.1-01-37<br>
+        Edición 6 Entrada en vigor: 01/04/2025
+    </p>
+    <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705px">
+</div>
 
 </body>
 
