@@ -207,42 +207,165 @@ bsStepper.forEach(el => {
 
 try {
   window.Stepper = Stepper;
-} catch (e) {}
+} catch (e) { }
 
 export { Stepper };
 
 
-const wizardIcons = document.querySelector('.wizard-icons-example');
+document.addEventListener('DOMContentLoaded', function () {
 
-if (typeof wizardIcons !== undefined && wizardIcons !== null) {
-  const wizardIconsBtnNextList = [].slice.call(wizardIcons.querySelectorAll('.btn-next')),
-    wizardIconsBtnPrevList = [].slice.call(wizardIcons.querySelectorAll('.btn-prev')),
-    wizardIconsBtnSubmit = wizardIcons.querySelector('.btn-submit');
+  const wizard = document.querySelector('.wizard-icons-example');
+  if (!wizard) return;
+  const stepper = new Stepper(wizard, { linear: true, animation: true });
+  const form = wizard.querySelector('form');
 
-  const iconsStepper = new Stepper(wizardIcons, {
-    linear: false
+  // PASO 1: Información del cliente
+  const fvStep1 = FormValidation.formValidation(
+    document.getElementById('account-details'),
+    {
+      fields: {
+        regimen: { validators: { notEmpty: { message: 'Por favor selecciona un régimen' } } },
+        rfc: {
+          validators: {
+            notEmpty: { message: 'Por favor ingresa el RFC' },
+            stringLength: {
+              min: 12,
+              max: 13,
+              message: 'El RFC debe tener 12 o 13 caracteres'
+            }
+          }
+        },
+        razon_social: { validators: { notEmpty: { message: 'Por favor ingresa el nombre' } } },
+        correo: {
+          validators: {
+            notEmpty: { message: 'Por favor ingresa el correo' },
+            emailAddress: { message: 'Correo inválido' }
+          }
+        },
+        telefono: {
+          validators: {
+            notEmpty: { message: 'Por favor ingresa el teléfono' },
+            callback: {
+              message: 'El teléfono debe tener 10 dígitos numéricos',
+              callback: function (input) {
+                // Elimina todos los caracteres que no sean dígitos
+                const digits = (input.value || '').replace(/\D/g, '');
+                return digits.length === 10;
+              }
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: ''
+        }),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      }
+    }
+  ).on('core.form.valid', function () {
+    stepper.next();
   });
-  if (wizardIconsBtnNextList) {
-    wizardIconsBtnNextList.forEach(wizardIconsBtnNext => {
-      wizardIconsBtnNext.addEventListener('click', event => {
-        iconsStepper.next();
-      });
-    });
-  }
-  if (wizardIconsBtnPrevList) {
-    wizardIconsBtnPrevList.forEach(wizardIconsBtnPrev => {
-      wizardIconsBtnPrev.addEventListener('click', event => {
-        iconsStepper.previous();
-      });
-    });
-  }
-  /*if (wizardIconsBtnSubmit) {
-    wizardIconsBtnSubmit.addEventListener('click', event => {
-      alert('Submitted..!!');
-    });
-  }*/
 
-}
+  // PASO 2: Producto a certificar
+  const fvStep2 = FormValidation.formValidation(
+    document.getElementById('social-links'),
+    {
+      fields: {
+        'producto[]': { validators: { notEmpty: { message: 'Por favor selecciona al menos un producto' } } },
+        // Puedes agregar más validaciones si lo necesitas
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: ''
+        }),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      }
+    }
+  ).on('core.form.valid', function () {
+    stepper.next();
+  });
+
+  // PASO 3: Domicilio Fiscal
+  const fvStep3 = FormValidation.formValidation(
+    document.getElementById('address'),
+    {
+      fields: {
+        domicilio_fiscal: { validators: { notEmpty: { message: 'Por favor ingresa el domicilio fiscal' } } },
+        estado_fiscal: { validators: { notEmpty: { message: 'Por favor selecciona un estado' } } }
+        // Puedes agregar más validaciones para los domicilios adicionales si son requeridos
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: ''
+        }),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      }
+    }
+  ).on('core.form.valid', function () {
+    stepper.next();
+  });
+
+  // PASO 4: Información sobre los procesos y productos
+  const fvStep4 = FormValidation.formValidation(
+    document.getElementById('personal-info-icon'),
+    {
+      fields: {
+        certificacion: { validators: { notEmpty: { message: 'Por favor selecciona una opción' } } },
+        info_procesos: { validators: { notEmpty: { message: 'Por favor describe los procesos' } } }
+        // Puedes agregar más validaciones si lo necesitas
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: ''
+        }),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      }
+    }
+  ).on('core.form.valid', function () {
+    form.submit();
+  });
+
+  // Botones de navegación
+  const btnNextList = wizard.querySelectorAll('.btn-next');
+  btnNextList.forEach(btn => {
+    btn.addEventListener('click', function (event) {
+      event.preventDefault();
+      switch (stepper._currentIndex) {
+        case 0: fvStep1.validate(); break;
+        case 1: fvStep2.validate(); break;
+        case 2: fvStep3.validate(); break;
+        case 3: fvStep4.validate(); break;
+      }
+    });
+  });
+
+  const btnPrevList = wizard.querySelectorAll('.btn-prev');
+  btnPrevList.forEach(btn => {
+    btn.addEventListener('click', function () {
+      stepper.previous();
+    });
+  });
+  // ...existing code...
+
+  // Validar antes de enviar en el último paso
+  const btnSubmit = wizard.querySelector('.btn-submit');
+  if (btnSubmit) {
+    btnSubmit.addEventListener('click', function (event) {
+      event.preventDefault();
+      fvStep4.validate();
+    });
+  }
+});
+
 
 // ...existing code...
 new Cleave(".phone-number-mask", {
@@ -433,7 +556,6 @@ $(document).ready(function () {
     }
   });
 });
-
 
 
 

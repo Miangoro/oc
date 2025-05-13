@@ -101,7 +101,6 @@
                     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
                     <!-- información del cliente -->
                     <div id="account-details" class="content">
-                        <input type="text" name="stepseccion1" value="stepseccion1">
                         <div class="content-header mb-4">
                             <h6 class="mb-0">Información del cliente</h6>
                             <small>información del cliente.</small>
@@ -170,7 +169,6 @@
 
                     <!-- Social Links Producto que se va a certificar-->
                     <div id="social-links" class="content">
-                        <input type="text" name="stepseccion2" value="stepseccion2">
                         <!-- 1. Delivery Type -->
                         <h6>Producto(s) que se va a certificar</h6>
                         <div class="row gy-3 align-items-start">
@@ -1006,7 +1004,6 @@
 
                     {{-- direccion --}}
                     <div id="address" class="content">
-                    <input type="text" name="stepseccion3" value="stepseccion3">
                         <div class="content-header mb-4">
                             <h6 class="mb-0">Domicilio Fiscal</h6>
                             <small>Ingrese los datos del primer domicilio fiscal</small>
@@ -1022,7 +1019,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating form-floating-outline">
                                     <select class="form-control select2" name="estado_fiscal" id="estado" required>
-                                        <option disabled selected>selecciona un estado</option>
+                                        <option disabled selected value="">selecciona un estado</option>
                                         @foreach ($estados as $estado)
                                             <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
                                         @endforeach
@@ -1179,7 +1176,6 @@
 
                     <!-- Información sobre los Procesos y productos a certificar por el cliente -->
                     <div id="personal-info-icon" class="content">
-                      <input type="text" name="stepseccion4" value="stepseccion4">
                         <div class="content-header mb-4">
                             <h6 class="mb-0">Información sobre los Procesos y productos a certificar por el cliente</h6>
                         </div>
@@ -1188,7 +1184,7 @@
                                 <div class="form-floating form-floating-outline">
                                     <select class="form-control" id="certificacion" name="certificacion"
                                         aria-label="¿Cuenta con una Certificación de Sistema de Gestión de Calidad?">
-                                        <option value="" disabled selected>¿Cuenta con una Certificación de Sistema
+                                        <option  disabled selected value="">¿Cuenta con una Certificación de Sistema
                                             de Gestión de Calidad?</option>
                                         <option value="si">Sí</option>
                                         <option value="no">No</option>
