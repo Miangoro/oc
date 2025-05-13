@@ -17,7 +17,7 @@
 
     <!-- Vendor Scripts -->
 @section('vendor-script')
-    @vite(['resources/assets/vendor/libs/jquery/jquery.js', 'resources/assets/vendor/libs/bs-stepper/bs-stepper.js', 'resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js'])
+    @vite(['resources/assets/vendor/libs/jquery/jquery.js', /* 'resources/assets/vendor/libs/bs-stepper/bs-stepper.js', */ 'resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js'])
 @section('content')
 
     <style>
@@ -918,15 +918,15 @@
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[5][]" class="form-control" type="text"
-                                            id="inputCoctel62" placeholder="Cóctel sabor de" />
+                                        <input name="bebida[5][]" class="form-control" type="text" id="inputCoctel62"
+                                            placeholder="Cóctel sabor de" />
                                         <label for="inputCoctel62"><small>Cóctel sabor de</small></label>
                                     </div>
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[5][]" class="form-control" type="text"
-                                            id="inputCoctel63" placeholder="Cóctel de o al" />
+                                        <input name="bebida[5][]" class="form-control" type="text" id="inputCoctel63"
+                                            placeholder="Cóctel de o al" />
                                         <label for="inputCoctel63"><small>Cóctel de o al</small></label>
                                     </div>
                                 </div>
@@ -948,8 +948,8 @@
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
 
-                                        <input name="bebida[6][]" class="form-control" type="text"
-                                            id="inputBebida65" placeholder="Bebida alcohólica preparada de" />
+                                        <input name="bebida[6][]" class="form-control" type="text" id="inputBebida65"
+                                            placeholder="Bebida alcohólica preparada de" />
                                         <label for="inputBebida65" class="custom-option-body"><small>Bebida alcohólica
                                                 preparada de</small></label>
                                     </div>
@@ -957,8 +957,7 @@
 
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[6][]" class="form-control"
-                                            type="text" id="inputBebida66"
+                                        <input name="bebida[6][]" class="form-control" type="text" id="inputBebida66"
                                             placeholder="Bebida alcohólica preparada de o al" />
                                         <label for="inputBebida66">
                                             <small>Bebida alcohólica preparada de o al</small>
@@ -968,8 +967,7 @@
 
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[6][]" class="form-control"
-                                            type="text" id="inputBebida67"
+                                        <input name="bebida[6][]" class="form-control" type="text" id="inputBebida67"
                                             placeholder="Bebida alcohólica preparada sabor de" />
                                         <label for="inputBebida67">
                                             <small>Bebida alcohólica preparada sabor de</small>
@@ -978,8 +976,8 @@
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[6][]" class="form-control" type="text"
-                                            id="inputBebida68" placeholder="Bebida alcohólica preparada con" />
+                                        <input name="bebida[6][]" class="form-control" type="text" id="inputBebida68"
+                                            placeholder="Bebida alcohólica preparada con" />
                                         <label for="inputBebida68">
                                             <small>Bebida alcohólica preparada con</small>
                                         </label>
@@ -1021,7 +1019,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating form-floating-outline">
                                     <select class="form-control select2" name="estado_fiscal" id="estado" required>
-                                        <option disabled selected>selecciona un estado</option>
+                                        <option disabled selected value="">selecciona un estado</option>
                                         @foreach ($estados as $estado)
                                             <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
                                         @endforeach
@@ -1186,7 +1184,7 @@
                                 <div class="form-floating form-floating-outline">
                                     <select class="form-control" id="certificacion" name="certificacion"
                                         aria-label="¿Cuenta con una Certificación de Sistema de Gestión de Calidad?">
-                                        <option value="" disabled selected>¿Cuenta con una Certificación de Sistema
+                                        <option  disabled selected value="">¿Cuenta con una Certificación de Sistema
                                             de Gestión de Calidad?</option>
                                         <option value="si">Sí</option>
                                         <option value="no">No</option>

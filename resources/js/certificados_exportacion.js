@@ -194,7 +194,7 @@ if (dt_user_table.length) {
           orderable: false,
           responsivePriority: 4, 
           render: function (data, type, full, meta) {
-            var $ = full[''];
+            
             return `<div class="small">
                 <b>Lote envasado:</b> ${full['nombre_lote_envasado']} <br>
                 <b>Lote granel:</b> ${full['nombre_lote_granel']} <br>
@@ -202,6 +202,8 @@ if (dt_user_table.length) {
                 <b>Cajas:</b> ${full['cajas']} <br>
                 <b>Botellas:</b> ${full['botellas']} <br>
                 <b>Pedido:</b> ${full['n_pedido']}
+                
+                ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
               </div>`;
             }
         },

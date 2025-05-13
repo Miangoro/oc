@@ -117,10 +117,21 @@ initializeSelect2(select2Elements);
             var $num_certificado = full['num_certificado'];
             var $tipo =full['tipo_dictamen'];
             var $id = full['id_certificado'];
+            var $pdf_firmado  = full['pdf_firmado'];
+
+            if ($pdf_firmado) {
+              var $icono = `<a href="${$pdf_firmado}" target="_blank" title="Ver PDF firmado">
+                <i class="ri-file-pdf-2-fill text-success ri-28px cursor-pointer"></i> </a>`;
+            } else {
+              var $icono = `<i data-id="${$id}" data-tipo="${$tipo}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-toggle="modal" data-bs-target="#mostrarPdf"></i>`;
+            }
+
             return '<small class="fw-bold">' +$num_certificado+ '</small>' +
-                '<i data-id="'+$id+'" data-tipo="'+$tipo+'" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
-                `<br><small><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']}</small> <i data-id="${full['id_dictamen']}" data-tipo="${full['tipo_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
-              }
+                  $icono +
+                `<br><small><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']}</small> 
+                  <i data-id="${full['id_dictamen']}" data-tipo="${full['tipo_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+
+            }
         }, 
         {
         //Tabla 2
@@ -189,7 +200,8 @@ initializeSelect2(select2Elements);
             }
         
             // Retorna el badge con el texto y color apropiado
-            return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span><br><small>${full['direccion_completa']}</small>`;
+            return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span><br><small>${full['direccion_completa']}
+              ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''} </small>`;
           }  
         },
         {
@@ -224,7 +236,7 @@ initializeSelect2(select2Elements);
               } else if ($estatus == 1) {
                   estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
               } else if ($estatus == 2) {
-                  estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+                  estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
               } else {
                 estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
               }

@@ -14,39 +14,31 @@ $(document).ready(function () {
 //FECHAS
 $('#fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);// Sumar 1 año a la fecha inicial
-  //fechaInicial.setDate(fechaInicial.getDate() + 1); // Sumar 1 día a la fecha inicial
-  // Establecer la fecha de vigencia al año sumado sin que el calendario se recargue
-  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-  // Actualizamos el valor de #fecha_vigencia
+  fechaInicial.setDate(fechaInicial.getDate() + 90); // +90 días
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0];
   $('#fecha_vigencia').val(fechaVigencia);
-  // Deshabilitar la interacción con flatpickr en #fecha_vigencia.
   flatpickr("#fecha_vigencia", {
-      dateFormat: "Y-m-d", // Formato de la fecha
-      enableTime: false,    // Desactiva la hora
-      allowInput: true,     // Permite la escritura manual
-      locale: "es",         // Español
-      static: true,         // Establece el calendario como no interactivo
-      disable: true          // Español
+      dateFormat: "Y-m-d",
+      enableTime: false,
+      allowInput: true,
+      locale: "es",
+      static: true,
+      disable: true
   });
 });
 //FECHAS EDIT
 $('#edit_fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);// Sumar 1 año a la fecha iniciaL
-  // Establecer el valor en el campo edit_fecha_vigencia
-  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-  // Actualizamos el valor de #edit_fecha_vigencia
+  fechaInicial.setDate(fechaInicial.getDate() + 90); // +90 días
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0];
   $('#edit_fecha_vigencia').val(fechaVigencia);
-
-  // Deshabilitar la interacción con flatpickr en #edit_fecha_vigencia
   flatpickr("#edit_fecha_vigencia", {
-    dateFormat: "Y-m-d",  // Formato de la fecha
-    enableTime: false,     // Desactiva la hora
-    allowInput: true,      // Permite la escritura manual
-    locale: "es",          // Español
-    static: true,          // Hace que el calendario no se muestre como interactivo
-    disable: true          // Deshabilita la selección
+      dateFormat: "Y-m-d",
+      enableTime: false,
+      allowInput: true,
+      locale: "es",
+      static: true,
+      disable: true
   });
 });
 
@@ -832,12 +824,12 @@ $(document).ready(function () {
 
   //funcion fechas
   $('#rex_fecha_emision').on('change', function () {
-      var fecha_emision = $(this).val();
-      if (fecha_emision) {
-          var fecha = moment(fecha_emision, 'YYYY-MM-DD');
-          var fecha_vigencia = fecha.add(1, 'years').format('YYYY-MM-DD');
-          $('#rex_fecha_vigencia').val(fecha_vigencia);
-      }
+    var fecha_emision = $(this).val();
+    if (fecha_emision) {
+        var fecha = moment(fecha_emision, 'YYYY-MM-DD');
+        var fecha_vigencia = fecha.add(90, 'days').format('YYYY-MM-DD');
+        $('#rex_fecha_vigencia').val(fecha_vigencia);
+    }
   });
 
   $(document).on('change', '#accion_reexpedir', function () {

@@ -14,4 +14,5 @@ class empresa_norma extends Model
         'id_norma',
         'id_empresa',
       ];
+      public $timestamps = false;
 }

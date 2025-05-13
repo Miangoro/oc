@@ -97,6 +97,8 @@ public function index(Request $request)
             $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
             $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
             $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
+            $id_sustituye = json_decode($certificado->observaciones, true) ['id_sustituye'] ?? null;
+            $nestedData['sustituye'] = $id_sustituye ? Certificado_Exportacion::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
             $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
             $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
             ///Folio y no. servicio
@@ -156,8 +158,8 @@ public function index(Request $request)
             $nestedData['n_pedido'] = $caracteristicas['no_pedido'] ?? 'No encontrado';
             $nestedData['cajas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_cajas'] ?? 'No encontrado';
             $nestedData['botellas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado';
-
             
+
             $data[] = $nestedData;
         }
     }
@@ -536,8 +538,8 @@ public function MostrarCertificadoExportacion($id_certificado)
         'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? 'No encontrado',
         'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? 'No encontrado',
-        'convenio' => $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA',
-        'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
+        'convenio' =>  $lotes[0]->lotesGranel[0]->empresa->convenio_corresp ?? 'NA', 
+        'DOM' => $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? 'NA',
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
         'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'No encontrado',

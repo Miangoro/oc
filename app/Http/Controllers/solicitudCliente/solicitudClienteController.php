@@ -59,15 +59,15 @@ class solicitudClienteController extends Controller
       $producto->save();
     }
 
-/*     for ($i = 0; $i < count($request->norma); $i++) {
+    for ($i = 0; $i < count($request->norma); $i++) {
       $norma = new empresa_norma();
       $norma->id_norma = $request->norma[$i];
       $norma->id_empresa = $id_empresa;
       $norma->save();
-    } */
+    }
 
     if (!empty($request->domicilio_productora) && !empty($request->estado_productora)) {
-      $productora = new Instalaciones();
+      $productora = new instalaciones();
       $productora->direccion_completa = $request->domicilio_productora;
       $productora->estado = $request->estado_productora;
       $productora->id_empresa = $id_empresa;
@@ -76,7 +76,7 @@ class solicitudClienteController extends Controller
     }
 
     if (!empty($request->domicilio_envasadora) && !empty($request->estado_envasadora)) {
-      $envasadora = new Instalaciones();
+      $envasadora = new instalaciones();
       $envasadora->direccion_completa = $request->domicilio_envasadora;
       $envasadora->estado = $request->estado_envasadora;
       $envasadora->id_empresa = $id_empresa;
@@ -85,7 +85,7 @@ class solicitudClienteController extends Controller
     }
 
     if (!empty($request->domicilio_comercializadora) && !empty($request->estado_comercializadora)) {
-      $comercializadora = new Instalaciones();
+      $comercializadora = new instalaciones();
       $comercializadora->direccion_completa = $request->domicilio_comercializadora;
       $comercializadora->estado = $request->estado_comercializadora;
       $comercializadora->id_empresa = $id_empresa;
@@ -109,18 +109,29 @@ class solicitudClienteController extends Controller
             $actividad->save();
         }
     }
-
+if (is_array($request->clasificacion)) {
     foreach ($request->clasificacion as $id_clasificacion) {
-        if (!empty($request->bebida[$id_clasificacion])) {
+
+        if (
+            isset($request->bebida[$id_clasificacion]) &&
+            is_array($request->bebida[$id_clasificacion])
+        ) {
             foreach ($request->bebida[$id_clasificacion] as $nombre) {
-                $bebida = new empresa_clasificacion_bebidas();
-                $bebida->id_clasificacion = $id_clasificacion;
-                $bebida->nombre = $nombre;
-                $bebida->id_empresa = $id_empresa;
-                $bebida->save();
+
+                if (!empty($nombre)) {
+                    $bebida = new empresa_clasificacion_bebidas();
+                    $bebida->id_clasificacion = $id_clasificacion;
+                    $bebida->nombre = $nombre;
+                    $bebida->id_empresa = $id_empresa;
+                    $bebida->save();
+                }
+
             }
         }
+
     }
+}
+
 
     $solicitud = new solicitud_informacion();
     $solicitud->id_empresa = $id_empresa;
