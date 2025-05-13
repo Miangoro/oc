@@ -326,10 +326,12 @@
     <div class="signature-name">{{ $puesto_firmante }}</div>
   </div>
 
-  <<div class="footer">
+<div class="footer">
     <p style="text-align: right; font-size: 9px; line-height: 1; margin-bottom: 1px;">
-        
-        <br>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35<br>
+        @if ($id_sustituye)
+            Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
+        @endif
+        <br>Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36<br>
         Edicion 5 Entrada en vigor: 01/04/25
     </p>
     <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705px">
