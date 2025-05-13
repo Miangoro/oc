@@ -269,7 +269,7 @@
 @php
 $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
 $folio1 = trim($folios[0] ?? '');
-$folio2 = trim($folios[1] ?? '');
+$folio2 = trim($folios[1] ?? 'NA');
 @endphp
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de análisis:</td>
@@ -303,7 +303,7 @@ $folio2 = trim($folios[1] ?? '');
 @if( $lotes->count() == 1 )
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">Envasado en:</td>
-            <td style="text-align: justify; font-size: 9px; padding-left: 4px; width: 22%;">&nbsp;</td>
+            <td style="text-align: justify; font-size: 9px; padding-left: 4px; width: 22%;">{{ $envasadoEN }}</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Cajas:</td>
             <td style="text-align: left; padding-left: 4px; width: 22%;">{{$cajas}}</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Botellas:</td>
@@ -313,7 +313,7 @@ $folio2 = trim($folios[1] ?? '');
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 35px;">Aduana de despacho:</td>
             <td style="text-align: left; padding-left: 4px;">{{$aduana}}</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Fracción Arancelaria:</td>
-            <td style="text-align: left; padding-left: 4px;">Falta</td>
+            <td style="text-align: left; padding-left: 4px;">2208.90.05.00</td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de <br>pedido:</td>
             <td style="text-align: left; padding-left: 4px;">{{ $n_pedido }}</td>
         </tr>

@@ -545,7 +545,7 @@ public function MostrarCertificadoExportacion($id_certificado)
         'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'No encontrado',
         'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'No encontrado',
         'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado',
-        'envasadoEN' => $data->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa?? 'No encontrado',
+        'envasadoEN' => $data->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa ?? 'No encontrado',
         ///caracteristicas
         'aduana' => $aduana_salida ?? 'No encontrado',
         'n_pedido' => $no_pedido ?? 'No encontrado',
