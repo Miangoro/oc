@@ -675,7 +675,7 @@ class Certificado_InstalacionesController extends Controller
         
 
         if ($guardar && $rutaGuardado) {
-            $pdf = Pdf::loadView('pdfs.Certificado_productor_mezcal', $pdfData);
+            $pdf = Pdf::loadView('pdfs.certificado_productor_mezcal', $pdfData);
             $pdf->save($rutaGuardado);
             return $rutaGuardado;
         }
@@ -734,7 +734,7 @@ class Certificado_InstalacionesController extends Controller
 
         
         if ($guardar && $rutaGuardado) {
-            $pdf = Pdf::loadView('pdfs.Certificado_envasador', $pdfData);
+            $pdf = Pdf::loadView('pdfs.certificado_envasador', $pdfData);
             $pdf->save($rutaGuardado);
             return $rutaGuardado;
         }
@@ -797,7 +797,7 @@ class Certificado_InstalacionesController extends Controller
         ];
 
         if ($guardar && $rutaGuardado) {
-            $pdf = Pdf::loadView('pdfs.Certificado_comercializador', $pdfData);
+            $pdf = Pdf::loadView('pdfs.certificado_comercializador', $pdfData);
             $pdf->save($rutaGuardado);
             return $rutaGuardado;
         }
