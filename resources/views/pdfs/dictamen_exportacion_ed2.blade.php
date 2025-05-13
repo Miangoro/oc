@@ -221,7 +221,7 @@
         Dictamen de Cumplimiento para Producto de
         <br> Exportación
     </div>
-    <div class="negrita" style="font-size: 14px">PRODUCTO:</div>
+    <div class="negrita" style="font-size: 14px">PRODUCTO: {{ $lotes[0]->lotesGranel->first()->categoria->categoria ?? "No encontrada"}}</div>
     <table>
         <tr>
             <td style="font-size: 15px;padding-bottom: 15px; padding-top: 15px"><b>Fecha de emisión</b></td>

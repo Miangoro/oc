@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificado como Productor de Mezcal ED6</title>
+    <title>Certificado como comercializador</title>
     <style>
         @page {
             size: 227mm 292mm;
