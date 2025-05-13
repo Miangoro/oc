@@ -156,7 +156,9 @@ public function index(Request $request)
             $nestedData['n_pedido'] = $caracteristicas['no_pedido'] ?? 'No encontrado';
             $nestedData['cajas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_cajas'] ?? 'No encontrado';
             $nestedData['botellas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado';
-
+            
+            $id_sustituye = json_decode($certificado->observaciones, true) ['id_sustituye'] ?? null;
+            $nestedData['sustituye'] = $id_sustituye ? Certificado_Exportacion::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
             
             $data[] = $nestedData;
         }
