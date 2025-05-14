@@ -210,7 +210,7 @@ $(function () {
       { data: 'fecha_servicio' },
       { data: '' },
       {
-        data: 'estatus', 
+        data: 'estatus',
         render: function(data, type, row) {
             // Define las etiquetas para cada estado
             let estatus_validado_oc = 'bg-warning';
@@ -221,7 +221,7 @@ $(function () {
             if(row.estatus_validado_oc=='Rechazada'){
               estatus_validado_oc = 'bg-danger';
             }
-          
+
             if(row.estatus_validado_ui=='Validada'){
               estatus_validado_ui = 'bg-success';
             }
@@ -231,8 +231,8 @@ $(function () {
             return `<span class="badge bg-warning mb-1">${data}</span><br>
             <span class="badge ${estatus_validado_oc} mb-1">${row.estatus_validado_oc} por oc</span><br>
             <span class="badge ${estatus_validado_ui}">${row.estatus_validado_ui} por ui</span>`;
-                    
-              
+
+
         }
     },
       { data: 'action' }
@@ -333,7 +333,7 @@ $(function () {
               data-razon-social="${full['razon_social']}"
               class="cursor-pointer dropdown-item text-dark edit-record-tipo">` +
             '<i class="text-warning ri-edit-fill"></i> Editar</a>' +
-         
+
             // Aquí agregamos la opción de eliminar
             `<a  data-id="${full['id']}"   data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">` +
             '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>' +
@@ -1159,12 +1159,12 @@ $(document).on('click', '.expediente-record', function () {
               // Otros campos específicos para tipo 10
               }
               else if (id_tipo === 11) {
-                
+
                   modal.find('.id_solicitud').val(id_solicitud);
                   modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
                   modal.find('#fecha_visita_edit').val(response.data.fecha_visita);
                   modal.find('.instalacion_id').val(response.data.id_instalacion);
-                  if (response.caracteristicas) { 
+                  if (response.caracteristicas) {
                     modal.find('#tipo_solicitud_edit').val(response.caracteristicas.tipo_solicitud).trigger('change');
                     modal.find('.direccion_id').val(response.caracteristicas.direccion_destinatario);
                     modal.find('.aduana_salida').val(response.caracteristicas.aduana_salida);
@@ -1174,8 +1174,8 @@ $(document).on('click', '.expediente-record', function () {
                     var lotesEnvasado = response.caracteristicas.detalles.map(function(detalle) {
                       return detalle.id_lote_envasado;
                   });
-                  
-                    modal.find('.lote_envasado_id').val(lotesEnvasado.join(',')); 
+
+                    modal.find('.lote_envasado_id').val(lotesEnvasado.join(','));
                     var cantidadDeLotes = response.caracteristicas.detalles.length;
 
                     // Primero eliminar todos los bloques extras si es necesario
@@ -1193,9 +1193,9 @@ $(document).on('click', '.expediente-record', function () {
                         }
                     }
                 }
-  
+
                 modal.find('#comentarios_edit').val(response.data.info_adicional);
-              
+
             } else if (id_tipo === 14) {
               // Aquí va el tipo correspondiente para tu caso
               // Llenar los campos del modal con los datos de la solicitud
@@ -1310,7 +1310,7 @@ $(document).on('click', '.expediente-record', function () {
           $('#editFormTipo10')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
           $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
-          
+
 
           Swal.fire({
             icon: 'success',
@@ -1416,9 +1416,9 @@ $(document).on('click', '.expediente-record', function () {
           $('#editSolicitudDictamen').modal('hide');
           $('#addEditSolicitud')[0].reset();
           $('.select2').val(null).trigger('change');
-          
+
           $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
-        
+
 
           Swal.fire({
             icon: 'success',
@@ -2254,7 +2254,7 @@ $(document).on('click', '.expediente-record', function () {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
       });
-  
+
       // Inicializar FormValidation para la solicitud de muestreo
       const formDictaminacion = document.getElementById('editPedidoExportacionForm');
       const fvDictaminacion = FormValidation.formValidation(formDictaminacion, {
@@ -2282,14 +2282,14 @@ $(document).on('click', '.expediente-record', function () {
         },
 
         id_etiqueta: {
-          selector: "input[name='id_etiqueta']",  
+          selector: "input[name='id_etiqueta']",
           validators: {
             notEmpty: {
               message: 'Por favor seleccione una etiqueta.'
             }
           }
         },
- 
+
         direccion_destinatario: {
           validators: {
             notEmpty: {
@@ -2350,7 +2350,7 @@ $(document).on('click', '.expediente-record', function () {
 
       // Añadir el JSON al FormData como string
       formData.append('caracteristicas', JSON.stringify(caracteristicas));
-  
+
         $.ajax({
           url: '/actualizar-solicitudes/' + $('#solicitud_id_pedidos').val(),
           type: 'POST',
@@ -2362,8 +2362,8 @@ $(document).on('click', '.expediente-record', function () {
             $('#editPedidoExportacionForm')[0].reset();
             $('.select2').val(null).trigger('change');
             $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
-           
-  
+
+
             Swal.fire({
               icon: 'success',
               title: '¡Éxito!',
@@ -2375,7 +2375,7 @@ $(document).on('click', '.expediente-record', function () {
           },
           error: function (xhr) {
             console.log('Error:', xhr.responseText);
-  
+
             Swal.fire({
               icon: 'error',
               title: '¡Error!',
@@ -4091,7 +4091,7 @@ $(document).on('click', '.expediente-record', function () {
     $('#modalAddInstalacion').on('hidden.bs.modal', function () {
       if (openedFromFirstModal) {
         $('#addInspeccionEnvasado').modal('show');
-       
+
         openedFromFirstModal = false;
       }
     });
@@ -4109,7 +4109,7 @@ $(document).on('click', '.expediente-record', function () {
     $tipoSolicitud.on('change', function () {
       var valorSeleccionado = $tipoSolicitud.val();
 
-  
+
       if (valorSeleccionado === '2' || valorSeleccionado === '5') {
         $botonesCharacteristics.removeClass('d-none'); // Mostrar los botones
       } else {
@@ -4125,12 +4125,12 @@ $(document).on('click', '.expediente-record', function () {
     // Función para agregar una nueva sección dinámica
     $('#add-characteristics').click(function () {
       // Validar que se haya seleccionado una empresa
-      let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val() 
-    ? $('#id_empresa_solicitud_exportacion').val() 
+      let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val()
+    ? $('#id_empresa_solicitud_exportacion').val()
     : $('#id_empresa_solicitud_exportacion_edit').val();
 
 
-  
+
 
       if (!empresaSeleccionada) {
         // Mostrar alerta si no se seleccionó ninguna empresa
@@ -4190,12 +4190,12 @@ $(document).on('click', '.expediente-record', function () {
       `;
 
       // Agregar la nueva sección al contenedor
-      $('#sections-container').append(newSection); 
-      $('#sections-container2').append(newSection); 
+      $('#sections-container').append(newSection);
+      $('#sections-container2').append(newSection);
 
       // Cargar opciones dinámicas para los selects de la nueva sección
       cargarLotes(empresaSeleccionada, sectionCount);
-      
+
 
       // Inicializar Select2 en los nuevos selects
       var select2Elements = $('.select2');
@@ -4235,7 +4235,7 @@ $(document).on('click', '.expediente-record', function () {
           if (response.lotes_envasado.length == 0) {
             contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
           }
-          
+
           // Actualizar las opciones del select para la nueva sección
           $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
         },
@@ -4320,7 +4320,7 @@ $(document).on('click', '.expediente-record', function () {
           }
         },
 
-       
+
         'cantidad_botellas[0]': {
           validators: {
             notEmpty: {
@@ -4344,7 +4344,7 @@ $(document).on('click', '.expediente-record', function () {
         },
 
         id_etiqueta: {
-          selector: "input[name='id_etiqueta']",  
+          selector: "input[name='id_etiqueta']",
           validators: {
             notEmpty: {
               message: 'Por favor seleccione una etiqueta.'
@@ -4483,15 +4483,15 @@ $(document).on('click', '.expediente-record', function () {
     if (divsMostrar) {
       divsMostrar.forEach(divId => {
         $(`#${divId}`).removeClass('d-none');
-      
+
         document.querySelectorAll('.d-none select').forEach(el => {
          // el.disabled = true;
-          
+
         });
-        
+
       });
     }
-  
+
   }
   // Manejar el clic en los enlaces con clase "validar-solicitudes"
   $(document).on('click', '.validar-solicitudes', function () {
@@ -4504,7 +4504,7 @@ $(document).on('click', '.expediente-record', function () {
 
       // Manejar la visibilidad de divs si aplica
       manejarVisibilidadDivs(idTipo);
-  
+
 
     $.ajax({
       url: `/getDatosSolicitud/${id_solicitud}`,
@@ -4528,14 +4528,14 @@ $(document).on('click', '.expediente-record', function () {
             );
           }
 
-    
+
 
           $('.razonSocial').text(response?.data?.empresa?.razon_social || 'No disponible');
           $('.fechaHora').text(response?.fecha_visita_formateada || 'No disponible');
-     
+
           $('.nombreLote').text(response?.data?.lote_granel?.nombre_lote || 'No disponible');
 
-       
+
           $('.guiasTraslado').text(response?.data?.caracteristicas?.guias || 'No disponible');
 
           // Validar categoría
@@ -4557,7 +4557,7 @@ $(document).on('click', '.expediente-record', function () {
           $('.certificadoGranel').text(response?.data?.lote_granel?.folio_certificado || 'No disponible');
 
           $('.tipos').text(response?.tipos_agave || 'No disponible');
-          
+
 
           // Validar nombre del lote envasado
           $('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
@@ -4692,7 +4692,7 @@ $(document).on('click', '.expediente-record', function () {
       }
     });
 
-  
+
   });
 
   $(document).ready(function () {
@@ -4976,7 +4976,7 @@ $(document).on('click', '.expediente-record', function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
 
-      
+
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(form);
@@ -5017,9 +5017,9 @@ $(document).on('click', '.expediente-record', function () {
       });
     });
 
-  
 
 
- 
+
+
   });
 
