@@ -57,11 +57,9 @@
             /*padding-bottom: 2px; /*espacio al fondo si es necesario */
         }
         .img-footer {
-            background-image: url("{{ public_path('img_pdf/pie_certificado.png') }}");
             background-size: cover; /* ajusta img al contenedor */
             background-position: center; /* Centra la imagen en el contenedor */
             height: 45px; 
-            width: 95%; /* Hace que la imagen ocupe todo el ancho del contenedor */
         }
 
         .watermark-cancelado {
@@ -101,9 +99,9 @@
         <br>Solicitud de emisión de Certificado para Exportación NOM-070-S SCFI-2016 F7.1-01-21<br>
         Edición 10 Entrada en vigor: 26/08/2024
     </p>
-    {{-- <img src="{{ public_path('img_pdf/pie_certificado.png') }}" style="height: 40px; width: 710px; position: absolute; margin-top: 0;"
-        alt="pie de certificado"> --}}
-    <div class="img-footer"></div>
+    <div class="img-footer">
+            <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705">
+    </div>
 </div>
     
 <div class="encabezado">
@@ -149,9 +147,50 @@
     </table>
     <table>
         <tr>
-            <td style="width: 200px; padding: 10%; border-bottom:none"></td>
-            <td style="width: 200px;  padding: 10%; border-bottom:none"></td>
+            <td colspan="5" style="padding:6px; border-bottom:none; color: red">Seleccione el servicio solicitado colocando una X en la casilla correspondiente.</td>
         </tr>
+        <tr>
+            <td style="text-align: right; padding:5px; width: 25%; border-top:none; border-bottom:none">Verificación en producto ENVASADO:</td>
+            <td style="width: 14%;"> </td>
+            <td style="width: 13%; border:none"></td>
+            <td style="text-align: left; width: 16%; border:none">Fecha de visita propuesta:</td>
+            <td style="width: 30%;"> </td>
+        </tr>
+        <tr><td colspan="5" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
+        <tr>
+            <td style="text-align: right; padding:5px; width: 25%; border-top:none; border-bottom:none">Entrega de HOLOGRAMAS:</td>
+            <td style="width: 14%;"> </td>
+            <td style="width: 13%; border:none"></td>
+            <td colspan="2" style="text-align: left; width: 16%; border-top:none; border-bottom:none; border-left:none;">
+                Los hologramas se entregaran después de 48 horas de aceptación
+                de la solicitud, a partir de recibir la documentación que evidencie
+                el cumplimiento del producto con el apartado 4.3 de la
+                NOM-070-SCFI-2016 o de la NOM-199-SCFI-2017. En caso de que el
+                producto ya cuente con los hologramas no seleccionar este
+                recuadro.
+            </td>
+        </tr>
+        <tr><td colspan="5" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
+        <tr>
+            <td style="text-align: right; padding:5px; width: 25%; border-top:none; border-bottom:none">Emisión del CERTIFICADO NOM de EXPORTACIÓN:</td>
+            <td style="width: 14%;">X</td>
+            <td style="width: 13%; border:none"></td>
+            <td colspan="2" style="text-align: left; width: 16%; border-top:none; border-bottom:none; border-left:none;">
+                El certificado se emitirá una vez verificado el producto, que
+                cuente con hologramas y la UV emita el dictamen
+                correspondiente de acuerdo a la NOM que aplique.
+            </td>
+        </tr>
+        <tr><td colspan="5" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
+        <tr>
+            <td style="text-align: right; padding:5px; width: 25%; border-top:none; border-bottom:none">Emisión de Certificado de PROMOCIÓN:</td>
+            <td style="width: 14%;"> </td>
+            <td style="width: 13%; border:none"></td>
+            <td colspan="2" style="text-align: left; width: 16%; border-top:none; border-bottom:none; border-left:none;">
+                El certificado se emitirá una vez verificado el producto y que cuente con hologramas
+            </td>
+        </tr>
+        <tr><td colspan="5" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
     </table>
 
     <!--PUNTO 3-->
@@ -375,11 +414,57 @@
             <td class="amarillo" style=""><b>&nbsp;&nbsp;ANEXOS</b></td>
         </tr>
     </table>
+<div style="page-break-before: always;"></div> 
+<br><br><br><br>
     <table>
         <tr>
-            <td style="width: 200px; padding: 10%; border-bottom:none"></td>
-            <td style="width: 200px;  padding: 10%; border-bottom:none"></td>
+            <td colspan="3" style="padding:6px; border-bottom:none; color: red">Adjuntar a la solicitud los documentos que a continuación se enlistan:</td>
         </tr>
+        <tr>
+            <td style="width: 13%; border-top:none; border-bottom:none; border-right:none;"></td>
+            <td style="width: 13%;">X</td>
+            <td style="text-align: left; border-top:none; border-bottom:none; border-left:none;">
+                Copia del análisis de laboratorio de cada uno de los lotes en cumplimiento con el apartado 4.3 de
+la NOM-070-SCFI-2016 o de la NOM-199-SCFI-2017. En caso de producto cuente con ajuste de
+grado alcohólico, reposado o añejo adjuntar copia de los analisis de laboratorio posteriores al
+proceso en cumplimiento con el numeral 5 de la NOM-070-SCFI-2016.
+            </td>
+        </tr>
+        <tr><td colspan="3" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
+        <tr>
+            <td style="width: 13%; border-top:none; border-bottom:none; border-right:none;"></td>
+            <td style="width: 13%; padding:14px;">X</td>
+            <td style="text-align: left; border-top:none; border-bottom:none; border-left:none;">
+                Constancia de cumplimiento de la etiqueta emitida por UV acreditada en información comercial
+            </td>
+        </tr>
+        <tr><td colspan="3" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
+        <tr>
+            <td style="width: 13%; border-top:none; border-bottom:none; border-right:none;"></td>
+            <td style="width: 13%; padding:14px;"> </td>
+            <td style="text-align: left; border-top:none; border-bottom:none; border-left:none;">
+                En caso de vigilancia en producto envasado, adjuntar certificado NOM a granel y certificado de envasado
+            </td>
+        </tr>
+        <tr><td colspan="3" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
+        <tr>
+            <td style="width: 13%; border-top:none; border-bottom:none; border-right:none;"></td>
+            <td style="width: 13%; padding:14px;"> </td>
+            <td style="text-align: left; border-top:none; border-bottom:none; border-left:none;">
+                Copia de la orden de compra del importador o invitación a la feria o exposición en el extranjero
+            </td>
+        </tr>
+        <tr><td colspan="3" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
+        <tr>
+            <td style="width: 13%; border-top:none; border-bottom:none; border-right:none;"></td>
+            <td style="width: 13%;">X</td>
+            <td style="text-align: left; border-top:none; border-bottom:none; border-left:none;">
+                Copia de la factura o proforma. En caso de que el producto se exporte con fines de promoción,
+                entregar factura sin valor comercial.
+            </td>
+        </tr>
+        <tr><td colspan="3" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
+    
     </table>
 
 
