@@ -47,7 +47,7 @@
                         <div class="form-floating form-floating-outline mb-4">
                             <select id="instalacion_vigilancia" name="instalacion_vigilancia"
                                 class="select2 form-select">
-                                <option value="" disabled selected>Selecciona lote a granel</option>
+                                <option value="" disabled selected>Selecciona una dirección</option>
                                 @foreach ($instalaciones as $instalaciones)
                                     <option value="{{ $instalaciones->id_instalacion }}">
                                         {{ $instalaciones->direccion_completa }}

@@ -13,7 +13,7 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange="obtenerInstalacionesMuestreoAgave(); obtenerlasguias();"  name="id_empresa"
                                     class="select2 form-select id_empresa_dic2" required>
-                                    <option value="">Selecciona cliente</option>
+                                    <option value="" disabled selected >Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">
                                             {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}

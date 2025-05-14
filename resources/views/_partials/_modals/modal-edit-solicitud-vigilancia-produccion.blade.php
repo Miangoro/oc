@@ -204,18 +204,10 @@
                     if (response && response.lotes_granel) {
                         $('#edit_id_categoria_vig').val(response.lotes_granel.id_categoria || '');
                         $('#edit_id_clase_vig').val(response.lotes_granel.id_clase || '');
-                        $('#edit_id_tipo_vig').val(response.lotes_granel.id_tipo || '').trigger('change');
-
-                        // Aquí manejamos los valores del campo de tipos de maguey
-                        const idtiposedit = response.lotes_granel.id_tipo || [];
-                        if (Array.isArray(idtiposedit) && idtiposedit.length > 0) {
-                            // Asignar los valores múltiples de tipo de maguey al select
-                            $('#edit_id_tipo_vig').val(idtiposedit).trigger(
-                            'change'); // Actualiza los valores de Select2
-                        } else {
-                            $('#edit_id_tipo_vig').val([]).trigger(
-                            'change'); // Si no hay valores, limpiamos el select
-                        }
+                    var idTiposvigiEdit = response.tipo.map(function(tipo) {
+                        return tipo.id_tipo; // Asegúrate de devolver id_tipo desde el backend
+                    });
+                    $('#edit_id_tipo_vig').val(idTiposvigiEdit).trigger('change'); // Asignar y refrescar select2
 
                         $('#edit_analisis_vig').val(response.lotes_granel.folio_fq || '');
                         $('#edit_volumen_vig').val(response.lotes_granel.cont_alc || '');

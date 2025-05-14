@@ -286,7 +286,7 @@
                             contenido;
                     }
                     if (response.instalaciones.length == 0) {
-                        contenido = '';
+                        contenido = '<option value="">Sin instalaciones registradas</option>';
                     }
                     $('.id_instalacion').html(contenido);
                 },

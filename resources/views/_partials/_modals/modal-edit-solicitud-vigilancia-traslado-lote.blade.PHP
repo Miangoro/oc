@@ -160,7 +160,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input onkeyup="obtenerSobrante(this.value)" type="number" class="form-control "
+                                <input onkeyup="obtenerSobranteEdit(this.value)" type="number" class="form-control "
                                     id="edit_id_vol_traslado" name="id_vol_traslado"
                                     placeholder="Ingresa una Categoria" step="0.01" />
                                 <label for="id_vol_traslado">Volumen trasladado</label>
@@ -238,7 +238,7 @@
         }
     }
 
-    function obtenerSobrante(trasladado) {
+    function obtenerSobranteEdit(trasladado) {
         $('#edit_id_vol_res').val($('#edit_id_vol_actual').val() - trasladado);
     }
 
