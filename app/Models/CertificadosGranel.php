@@ -31,9 +31,14 @@ class CertificadosGranel extends Model
         return $this->belongsTo(User::class, 'id_firmante', 'id'); 
     }
 
-    public function revisor()
+    public function revisorPersonal()
     {
-        return $this->belongsTo(Revisor::class, 'id_certificado', 'id_certificado')->where('tipo_certificado',2);
+        return $this->hasOne(Revisor::class, 'id_certificado')->where('tipo_revision', 1);
+    }
+
+    public function revisorConsejo()
+    {
+        return $this->hasOne(Revisor::class, 'id_certificado')->where('tipo_revision', 2);
     }
 
     public function loteGranel()

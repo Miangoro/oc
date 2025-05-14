@@ -243,56 +243,68 @@ if (dt_user_table.length) {
             } else {
               estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
             }
-          //revisores
-          //var id_revisor = full['id_revisor'];   // Obtener el id_revisor
-          var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
-          var revisorMiembro; // Mensajes para los revisores
 
-          ///CONSEJO
-          if (id_revisor2 !== 'Sin asignar') {
-            revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> ${id_revisor2}</span>`;
-          } else {
-            revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
-          }
-   
-          ///PERSONAL
-          var $idRevisor = full['id_revisor'];
-          var numeroRevision = full['numero_revision'];
-          const decision = full['decision'];
+          ///revisores PERSONAL
+          var $revisor_personal = full['revisor_personal'];
+          var $numero_revision_personal = full['numero_revision_personal'];
+          const decision_personal = full['decision_personal'];
+          const respuestas_personal = full['respuestas_personal'] ? JSON.parse(full['respuestas_personal']) : {};
 
-          const respuestas = full['respuestas'] ? JSON.parse(full['respuestas']) : {};
-          const tieneObservaciones = Object.values(respuestas).some(r =>
-              r.some(({ observacion }) => observacion?.toString().trim())
-            );
+          const observaciones_personal = Object.values(respuestas_personal).some(r =>
+              r.some(({ observacion }) => observacion?.toString().trim()) );
 
-          const icono = tieneObservaciones
+          const icono_oc = observaciones_personal
             ? `<i class="ri-alert-fill text-warning"></i>`
             : '';
 
-
-          let personal = $idRevisor !== null ? $idRevisor  : `<b style="color: red;">Sin asignar</b>`;
-          //`<i class="ri-alert-fill text-warning" title="Tiene observaciones"></i>`
-
-          /*let revision = '';
-            if (numeroRevision == 1) revision = 'Primera revisión - ';
-            else if (numeroRevision == 2) revision = 'Segunda revisión - ';*/
-          let revision = numeroRevision === 1 ? 'Primera revisión - '
-            : numeroRevision === 2 ? 'Segunda revisión - '
+          let revisor_oc = $revisor_personal !== null ? $revisor_personal  : `<b style="color: red;">Sin asignar</b>`;
+ 
+          let revision_oc = $numero_revision_personal === 1 ? 'Primera revisión - '
+            : $numero_revision_personal === 2 ? 'Segunda revisión - '
             : '';
 
           let colorClass = '';
-            if (decision === 'positiva') {
+            if (decision_personal === 'positiva') {
               colorClass = 'badge rounded-pill bg-primary';
-            } else if (decision === 'negativa') {
+            } else if (decision_personal === 'negativa') {
               colorClass = 'badge rounded-pill bg-danger';
-            } else if (decision === 'Pendiente') {
+            } else if (decision_personal === 'Pendiente') {
               colorClass = 'badge rounded-pill bg-warning text-dark';
             }
+
+          ///revisores CONSEJO
+          var $revisor_consejo = full['revisor_consejo'];
+          var $numero_revision_consejo = full['numero_revision_consejo'];
+          const decision_consejo = full['decision_consejo'];
+          const respuestas_consejo = full['respuestas_consejo'] ? JSON.parse(full['respuestas_consejo']) : {};
+
+          const observaciones2 = Object.values(respuestas_consejo).some(r =>
+              r.some(({ observacion }) => observacion?.toString().trim()) );
+
+          const icono2 = observaciones2
+            ? `<i class="ri-alert-fill text-warning"></i>`
+            : '';
+
+          let revisor2 = $revisor_consejo !== null ? $revisor_consejo  : `<b style="color: red;">Sin asignar</b>`;
+ 
+          let revision2 = $numero_revision_consejo === 1 ? 'Primera revisión - '
+            : $numero_revision_consejo === 2 ? 'Segunda revisión - '
+            : '';
+
+          let colorClass2 = '';
+            if (decision_consejo === 'positiva') {
+              colorClass2 = 'badge rounded-pill bg-primary';
+            } else if (decision_consejo === 'negativa') {
+              colorClass2 = 'badge rounded-pill bg-danger';
+            } else if (decision_consejo === 'Pendiente') {
+              colorClass2 = 'badge rounded-pill bg-warning text-dark';
+            }
+          
             
           return estatus + 
             `<div style="flex-direction: column; margin-top: 2px;">
-              <div class="small"><b>Personal:</b> <span class="${colorClass}">${revision} ${personal}</span>${icono} </div>
-              <div style="display: inline;">${revisorMiembro}</div>
+              <div class="small"><b>Personal:</b> <span class="${colorClass}">${revision_oc} ${revisor_oc}</span>${icono_oc}</div>
+              <div style="display: inline;" class="small"><b>Consejo:</b> <span class="${colorClass2}">${revision2} ${revisor2}</span>${icono2} 
             </div> `;
             //'<span class="badge rounded-pill bg-info">Vo. Bo. Cliente</span>';
           /*return estatus+

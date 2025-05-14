@@ -202,12 +202,17 @@ public function index(Request $request)
             $nestedData['numero_cliente'] = $numero_cliente;
             $nestedData['razon_social'] = $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
             //Revisiones
-            //$nestedData['id_revisor'] = $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar';
-            $nestedData['id_revisor2'] = $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar';
-        $RevisionTipo2 = $certificado->revisor?->tipo_certificado == 2;
-        $nestedData['id_revisor'] = $RevisionTipo2 ? $certificado->revisor->user->name : null;
-        $nestedData['numero_revision'] = $RevisionTipo2 ? $certificado->revisor->numero_revision : null;
-        $nestedData['decision'] = $RevisionTipo2 ? $certificado->revisor->decision : null;
+            $PersonalTipo2 = $certificado->revisorPersonal && $certificado->revisorPersonal?->tipo_certificado === 2;
+            $nestedData['revisor_personal'] = $PersonalTipo2 ? $certificado->revisorPersonal->user->name : null;
+            $nestedData['numero_revision_personal'] = $PersonalTipo2 ? $certificado->revisorPersonal->numero_revision : null;
+            $nestedData['decision_personal'] = $PersonalTipo2 ? $certificado->revisorPersonal->decision : null;
+            $nestedData['respuestas_personal'] = $PersonalTipo2 ? $certificado->revisorPersonal->respuestas : null;
+            $ConsejoTipo2 = $certificado->revisorConsejo && $certificado->revisorConsejo?->tipo_certificado === 2;
+            $nestedData['revisor_consejo'] = $ConsejoTipo2 ? $certificado->revisorConsejo->user->name : null;
+            $nestedData['numero_revision_consejo'] = $ConsejoTipo2 ? $certificado->revisorConsejo->numero_revision : null;
+            $nestedData['decision_consejo'] = $ConsejoTipo2 ? $certificado->revisorConsejo->decision : null;
+            $nestedData['respuestas_consejo'] = $ConsejoTipo2 ? $certificado->revisorConsejo->respuestas : null;
+    
             ///dias vigencia
             $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
             $nestedData['fecha_actual'] = $fechaActual;
