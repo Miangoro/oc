@@ -82,7 +82,7 @@ class empresa extends Model
             ->toArray();
 
         // Buscar los lotes de envasado correspondientes, incluyendo relaciones anidadas
-        return lotes_envasado::whereIn('id_empresa', $idsMaquiladoras)->with('lotes_envasado_granel.lotes_granel','dictamenEnvasado')
+        return lotes_envasado::whereIn('id_empresa', $idsMaquiladoras)->with('lotes_envasado_granel.lotes_granel','dictamenEnvasado')->orderByDesc('id_lote_envasado')
             ->get();
     }
 
