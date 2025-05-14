@@ -400,11 +400,13 @@
       <!--<img src="{{ public_path('img_pdf/firmapdf.jpg') }}" alt="Firma"
         style="display: block; margin: 0 auto; height: 50px; width: auto; position: relative; top: -20px;">-->
         <br>
+        <br>
       <div class="signature-line"></div>
       <div class="signature-name">{{ $nombre_firmante }}</div>
       <div class="signature-name">{{ $puesto_firmante }}</div>
     </div>
 
+    <br>
     <div class="footer">
       <p style="text-align: right; font-size: 9px; line-height: 1; margin-bottom: 1px;">
         @if ($id_sustituye)

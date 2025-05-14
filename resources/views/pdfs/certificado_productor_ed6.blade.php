@@ -256,7 +256,7 @@
     </p>
 
     <p class="title">CERTIFICADO</p>
-    <p class="title2">COMO <strong>PRODCUTOR DE MEZCAL</strong> A</p>
+    <p class="title2">COMO <strong>PRODUCTOR DE MEZCAL</strong> A</p>
 
     <table>
       <tbody>
@@ -411,6 +411,7 @@
     <div class="signature">
       <!--<img src="{{ public_path('img_pdf/firmapdf.jpg') }}" alt="Firma"
         style="display: block; margin: 0 auto; height: 40px; width: auto; position: relative; top: -20px;">-->
+        <br>
         <br>
       <div class="signature-line"></div>
       <div class="signature-name">{{ $nombre_firmante }}</div>
