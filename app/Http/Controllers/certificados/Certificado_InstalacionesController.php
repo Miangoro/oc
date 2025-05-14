@@ -84,12 +84,20 @@ class Certificado_InstalacionesController extends Controller
             CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_certificado, '-', -1), '/', 1) AS UNSIGNED) {$dir} -- Ordena el consecutivo
             ");*/
             ->orderByRaw("
-                    CASE 
-                        WHEN num_certificado LIKE 'CIDAM C-INS25-%' 
-                        THEN CAST(SUBSTRING_INDEX(num_certificado, '-', -1) AS UNSIGNED)
-                        ELSE 0 
-                    END DESC
-                ");
+          -- 1. Prioriza certificados con formato 'CIDAM C-INS25-'
+          CASE
+              WHEN num_certificado LIKE 'CIDAM C-INS25-%' THEN 0
+              ELSE 1
+          END ASC,
+
+          -- 2. Extrae el número después de 'CIDAM C-INS25-' ignorando cualquier sufijo (-A, etc.)
+          CAST(
+              SUBSTRING_INDEX(
+                  SUBSTRING(num_certificado, LOCATE('CIDAM C-INS25-', num_certificado) + 15),
+                  '-', 1
+              ) AS UNSIGNED
+          ) DESC
+      ");
 
         $certificados = $query->get();
 
