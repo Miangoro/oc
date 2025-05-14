@@ -29,7 +29,7 @@ function obtenerIcono(id_tipo) {
         case '9': 
             return 'assets/img/icons/brands/mac.png'; 
         case '10': 
-            return 'assets/img/solicitudes/georeferenciación.png'; 
+            return 'assets/img/solicitudes/geo.png'; 
         case '11': 
             return 'assets/img/solicitudes/exportación.png'; 
         case '12': 
@@ -91,7 +91,7 @@ function obtenerIcono(id_tipo) {
                         card.innerHTML = ` 
                             <div data-bs-target="${solicitud}" data-bs-toggle="modal" data-bs-dismiss="modal" class="card card-hover shadow-sm border-light">
                                 <div class="card-body text-center d-flex flex-column align-items-center">
-                                    <img src="${icono}" alt="Icono" class="img-fluid mb-3" style="max-width: 50px;"/>
+                                    <img src="${icono}" alt="Icono" class="img-fluid mb-3" style="max-width: 80px;"/>
                                     <h5 class="card-title mb-4">${item.tipo || 'Tipo no disponible'}</h5>
                                 </div>
                             </div>
