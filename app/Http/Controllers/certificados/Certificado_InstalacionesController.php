@@ -771,7 +771,6 @@ class Certificado_InstalacionesController extends Controller
         ];
 
 
-        if ($guardar && $rutaGuardado) {
         /*if ($guardar && $rutaGuardado) {
             $pdf = Pdf::loadView('pdfs.certificado_envasador', $pdfData);
             $pdf->save($rutaGuardado);
@@ -785,9 +784,7 @@ class Certificado_InstalacionesController extends Controller
         }
         // Generar y retornar el PDF
         return Pdf::loadView($edicion, $pdfData)->stream('Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36.pdf');
-        //return Pdf::loadView('pdfs.certificado_envasador_ed4', $pdfData)->stream('Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36.pdf');
-    }
-
+        //return Pdf::loadView('pdfs.certificado_envasador_ed5', $pdfData)->stream('Cer.pdf');
 }
 
 
