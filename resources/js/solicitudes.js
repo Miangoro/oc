@@ -4485,7 +4485,7 @@ $(document).on('click', '.expediente-record', function () {
         $(`#${divId}`).removeClass('d-none');
       
         document.querySelectorAll('.d-none select').forEach(el => {
-          el.disabled = true;
+         // el.disabled = true;
           
         });
         
@@ -4557,12 +4557,20 @@ $(document).on('click', '.expediente-record', function () {
           $('.certificadoGranel').text(response?.data?.lote_granel?.folio_certificado || 'No disponible');
 
           $('.tipos').text(response?.tipos_agave || 'No disponible');
-          $('.tipoAnalisis').text(response?.data?.caracteristicas?.tipo_analisis || 'No disponible');
+          
 
           // Validar nombre del lote envasado
           $('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
 
           var caracteristicas = JSON.parse(response.data?.caracteristicas);
+          var tipos = {
+            1: 'Análisis completo',
+            2: 'Ajuste de grado alcohólico'
+        };
+
+        var texto = tipos[caracteristicas?.tipo_analisis] || 'No disponible';
+
+        $('.tipoAnalisis').text(texto);
           $('.materialRecipiente').text(caracteristicas.material);
           $('.capacidadRecipiente').text(caracteristicas.capacidad);
           $('.numeroRecipiente').text(caracteristicas.num_recipientes);

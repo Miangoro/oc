@@ -44,15 +44,14 @@
     </style>
 <!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="verSolicitudes" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Seleccione la solicitud que desee registrar</h4>
-                    <p class="address-subtitle"></p>
-                </div>
-
+            <div class="modal-header bg-primary pb-6 text-center">
+                <h5 class="modal-title text-white text-center">Seleccione la solicitud que desee registrar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-6">
+               
                 <div class="container mt-5">
                     <div class="card shadow-sm border-light">
                       <div class="card-body">
@@ -60,18 +59,18 @@
                           <li class="nav-item">
                             <a class="nav-link active" id="tab-mezcal-tab" data-bs-toggle="tab" href="#tab-mezcal" role="tab">Mezcal</a>
                           </li>
-                          <li class="nav-item">
+                          <!--<li class="nav-item">
                             <a class="nav-link" id="tab-alcoholicas-tab" data-bs-toggle="tab" href="#tab-alcoholicas" role="tab">Otras bebidas de mezcal</a>
                           </li>
                           <li class="nav-item">
                             <a class="nav-link" id="tab-no-alcoholicas-tab" data-bs-toggle="tab" href="#tab-no-alcoholicas" role="tab">Otras bebidas alcohólicas</a>
-                          </li>
+                          </li>-->
                         </ul>
                         <div class="tab-content" id="myTabContent">
                           <!-- Pestaña Mezcal -->
                           <div class="tab-pane fade show active" id="tab-mezcal" role="tabpanel">
-                            <h5 class="card-title">Solicitudes para mezcal</h5>
-                            <p class="card-text">Seleccione la solicitud que desea realizar.</p>
+                            <h5 class="card-title text-center">Solicitudes para mezcal</h5>
+                            <p class="card-text text-center">Seleccione la solicitud que desea realizar.</p>
                             <div class="row g-6 mb-6" id="tab-mezcal-content">
                               <!-- Mensaje de carga -->
                               <div class="col-md-12 text-center" id="loading-message">
