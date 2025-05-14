@@ -1,12 +1,11 @@
-<div class="modal fade" id="editVigilanciaTraslado" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+<div class="modal fade" id="editVigilanciaTraslado" tabindex="-1" >
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Editar vigilancia en el traslado del lote</h4>
-                    <p class="solicitud badge bg-primary"></p>
-                </div>
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Editar solicitud de vigilancia en el traslado del lote</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-8">
                 <form id="editVigilanciaTrasladoForm">
                     <input type="hidden" name="id_solicitud" id="edit_id_solicitud_traslado">
                     <input type="hidden" name="form_type" value="vigilanciatraslado">
@@ -154,15 +153,16 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_vol_actual" name="id_vol_actual" placeholder="Ingresa el volumen actual"
-                                    readonly style="pointer-events: none;" />
+                                    id="edit_id_vol_actual" name="id_vol_actual"
+                                    placeholder="Ingresa el volumen actual" readonly style="pointer-events: none;" />
                                 <label for="id_vol_actual">Volumen actual del lote</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input onkeyup="obtenerSobrante(this.value)" type="number" class="form-control " id="edit_id_vol_traslado"
-                                    name="id_vol_traslado" placeholder="Ingresa una Categoria" step="0.01" />
+                                <input onkeyup="obtenerSobrante(this.value)" type="number" class="form-control "
+                                    id="edit_id_vol_traslado" name="id_vol_traslado"
+                                    placeholder="Ingresa una Categoria" step="0.01" />
                                 <label for="id_vol_traslado">Volumen trasladado</label>
                             </div>
                         </div>
@@ -184,9 +184,9 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary " data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger " data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-fill"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -202,7 +202,7 @@
                 url: '/getDatos/' + empresa,
                 method: 'GET',
                 success: function(response) {
-                    
+
                     var contenido = "";
                     let seleccionado = "";
                     var instalacion_id = $("#instalacion_id_traslado").val();
@@ -213,7 +213,8 @@
                             seleccionado = "";
                         }
                         var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-                        contenido = '<option ' + seleccionado + ' value="' + response.instalaciones[index].id_instalacion +
+                        contenido = '<option ' + seleccionado + ' value="' + response.instalaciones[index]
+                            .id_instalacion +
                             '">' +
                             tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                             '</option>' +
@@ -237,8 +238,8 @@
         }
     }
 
-    function obtenerSobrante(trasladado){
-        $('#edit_id_vol_res').val( $('#edit_id_vol_actual').val() - trasladado);
+    function obtenerSobrante(trasladado) {
+        $('#edit_id_vol_res').val($('#edit_id_vol_actual').val() - trasladado);
     }
 
     function editobtenerGranelesTraslado(empresa) {
@@ -256,7 +257,8 @@
                         } else {
                             seleccionado = "";
                         }
-                        contenido = '<option ' + seleccionado + ' value="' + response.lotes_granel[index].id_lote_granel + '">' +
+                        contenido = '<option ' + seleccionado + ' value="' + response.lotes_granel[index]
+                            .id_lote_granel + '">' +
                             response
                             .lotes_granel[index].nombre_lote + '</option>' + contenido;
                     }

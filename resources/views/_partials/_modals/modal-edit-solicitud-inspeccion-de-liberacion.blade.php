@@ -1,12 +1,12 @@
-<div class="modal fade" id="editInspeccionLiberacion" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+<div class="modal fade" id="editInspeccionLiberacion" tabindex="-1" >
+    <div class="modal-dialog modal-xl ">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Editar Inspección de liberación a barrica/contenedor de vidrio</h4>
-                    <p class="address-subtitle"></p>
-                </div>
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Editar solicitud de inspección de liberación a barrica/contenedor de
+                    vidrio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-8">
                 <form id="editInspeccionLiberacionForm">
                     <input type="hidden" name="id_solicitud" id="edit_id_solicitud_liberacion">
                     <input type="hidden" name="form_type" value="muestreobarricadaliberacion">
@@ -66,8 +66,8 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_categoria_liberacion" name=""
-                                    placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
+                                    id="edit_id_categoria_liberacion" name="" placeholder="Ingresa una Categoria"
+                                    readonly style="pointer-events: none;" />
                                 <label for="id_categoria_liberacion">Ingresa Categoria</label>
                             </div>
                             <input type="hidden" id="edit_id_categoria_liberacion_id" name="id_categoria_liberacion">
@@ -77,8 +77,8 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_clase_liberacion" name=""
-                                    placeholder="Ingresa una Clase" readonly style="pointer-events: none;" />
+                                    id="edit_id_clase_liberacion" name="" placeholder="Ingresa una Clase"
+                                    readonly style="pointer-events: none;" />
                                 <label for="id_clase_liberacion">Ingresa Clase</label>
                             </div>
                             <input type="hidden" id="edit_id_clase_liberacion_id" name="id_clase_liberacion">
@@ -99,7 +99,8 @@
                                 placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
                             <label for="id_tipo_maguey_liberacion">Ingresa Tipo de Maguey</label>
                         </div>
-                        <input type="hidden" id="edit_id_tipo_maguey_liberacion_ids" name="id_tipo_maguey_liberacion[]">
+                        <input type="hidden" id="edit_id_tipo_maguey_liberacion_ids"
+                            name="id_tipo_maguey_liberacion[]">
                     </div>
                     <div class="row">
                         <div class="col-md-5">
@@ -194,9 +195,9 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary " data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger " data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -287,7 +288,7 @@
                     $('#edit_id_categoria_liberacion').val(response.categoria ? response.categoria
                         .categoria :
                         '');
-                        $('#edit_id_categoria_liberacion_id').val(response.categoria ? response.categoria
+                    $('#edit_id_categoria_liberacion_id').val(response.categoria ? response.categoria
                         .id_categoria :
                         '');
 

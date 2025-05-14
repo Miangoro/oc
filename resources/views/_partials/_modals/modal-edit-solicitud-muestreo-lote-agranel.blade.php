@@ -1,12 +1,11 @@
 <div class="modal fade" id="editMuestreoLoteAgranel" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Editar Muestreo de Lote a granel</h4>
-                    <p class="address-subtitle"></p>
-                </div>
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Editar solicitud muestreo de Lote a granel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-8">
                 <form id="editMuestreoLoteAgranelForm">
                     <input type="hidden" name="id_solicitud" id="edit_id_solicitud_muestreo">
                     <input type="hidden" name="form_type" value="muestreoloteagranel">
@@ -76,8 +75,8 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_categoria_muestreo"
-                                    placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
+                                    id="edit_id_categoria_muestreo" placeholder="Ingresa una Categoria" readonly
+                                    style="pointer-events: none;" />
                                 <label for="id_categoria_muestreo">Ingresa Categoria</label>
                             </div>
                             <input type="hidden" id="edit_id_categoria_muestreo_id" name="id_categoria_muestreo">
@@ -85,8 +84,8 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_clase_muestreo"  placeholder="Ingresa una Clase"
-                                    readonly style="pointer-events: none;" />
+                                    id="edit_id_clase_muestreo" placeholder="Ingresa una Clase" readonly
+                                    style="pointer-events: none;" />
                                 <label for="id_clase_muestreo">Ingresa Clase</label>
                             </div>
                             <input id="edit_id_clase_muestreo_id" type="hidden" name="id_clase_muestreo">
@@ -95,11 +94,12 @@
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control bg-light text-muted"
-                                id="edit_id_tipo_maguey_muestreo"
-                                placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
+                                id="edit_id_tipo_maguey_muestreo" placeholder="Ingresa un tipo de Maguey" readonly
+                                style="pointer-events: none;" />
                             <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
                         </div>
-                        <input type="hidden" id="edit_id_tipo_maguey_muestreo_ids" name="id_tipo_maguey_muestreo[0]">
+                        <input type="hidden" id="edit_id_tipo_maguey_muestreo_ids"
+                            name="id_tipo_maguey_muestreo[0]">
                     </div>
                     <div class="row">
                         <div class="col-md-5">
@@ -134,9 +134,9 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary " id="ejemploo"
-                            data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger " id="ejemploo" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -156,7 +156,8 @@
                     var contenido = "";
                     for (let index = 0; index < response.instalaciones.length; index++) {
                         var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-                        contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        contenido = '<option value="' + response.instalaciones[index].id_instalacion +
+                            '">' +
                             tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                             '</option>' +
                             contenido;
@@ -194,9 +195,9 @@
                     } else {}
                     $('#edit_id_lote_granel_muestreo').html(contenido);
 
-                     // Mantener el dato del select
-                     const idloteSeleccionada = $('#edit_id_lote_granel_muestreo').data('selected');
-                     console.log('el lote seleccionado es el: '+idloteSeleccionada);
+                    // Mantener el dato del select
+                    const idloteSeleccionada = $('#edit_id_lote_granel_muestreo').data('selected');
+                    console.log('el lote seleccionado es el: ' + idloteSeleccionada);
                     if (idloteSeleccionada) {
                         $('#edit_id_lote_granel_muestreo')
                             .val(idloteSeleccionada)
@@ -224,10 +225,13 @@
                 url: '/getDatos2/' + lote_granel_id,
                 method: 'GET',
                 success: function(response) {
-                    $('#edit_id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :'');
-                    $('#edit_id_categoria_muestreo_id').val(response.categoria ? response.categoria.id_categoria :'' );
+                    $('#edit_id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :
+                        '');
+                    $('#edit_id_categoria_muestreo_id').val(response.categoria ? response.categoria
+                        .id_categoria : '');
                     $('#edit_id_clase_muestreo').val(response.clase ? response.clase.clase : '');
-                    $('#edit_id_clase_muestreo_id').val(response.clase ? response.clase.id_clase :''); // Campo oculto para el ID
+                    $('#edit_id_clase_muestreo_id').val(response.clase ? response.clase.id_clase :
+                    ''); // Campo oculto para el ID
 
                     if (response.tipo && response.tipo.length > 0) {
                         var tiposConcatenados = response.tipo.map(function(tipo) {
