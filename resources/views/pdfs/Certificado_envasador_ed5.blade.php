@@ -215,10 +215,11 @@
     }
 
     .footer {
-      position: fixed;
-      width: 100%;
-      text-align: center;
-    }
+    position: fixed;
+    bottom: -45px; 
+    width: 100%;
+    text-align: center;
+}
 
     #tabla-principal td {
       line-height: 9px;
