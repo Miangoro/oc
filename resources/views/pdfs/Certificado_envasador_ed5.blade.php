@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Certificado como Envasador de Mezcal l ED5</title>
+  <title>Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36</title>
   <style>
     @page {
           size: 227mm 292mm;

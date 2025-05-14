@@ -78,10 +78,18 @@ class Certificado_InstalacionesController extends Controller
         // Apply sorting and pagination
         $query->offset($request->input('start'))
             ->limit($request->input('length'))
-            ->orderByRaw("
+            //->where('num_certificado', 'like', 'CIDAM C-INS25-%')
+            /*->orderByRaw("
             CAST(SUBSTRING_INDEX(num_certificado, '/', -1) AS UNSIGNED) {$dir}, -- Ordena el año
             CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_certificado, '-', -1), '/', 1) AS UNSIGNED) {$dir} -- Ordena el consecutivo
-        ");
+            ");*/
+            ->orderByRaw("
+                    CASE 
+                        WHEN num_certificado LIKE 'CIDAM C-INS25-%' 
+                        THEN CAST(SUBSTRING_INDEX(num_certificado, '-', -1) AS UNSIGNED)
+                        ELSE 0 
+                    END DESC
+                ");
 
         $certificados = $query->get();
 
@@ -561,11 +569,39 @@ class Certificado_InstalacionesController extends Controller
             $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
             $revisor->observaciones = $validatedData['observaciones'] ?? '';
             $revisor->save();
+            
 
             $empresa = $certificado->dictamen->inspeccione->solicitud->empresa;
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
                 return !empty($numero);
             });
+
+            if ($request->hasFile('url')) {
+            if ($revisor->id_revision) {
+                // Buscar el registro existente
+        
+            
+                    // Si no existe, crea una nueva instancia
+                    $documentacion_url = new Documentacion_url();
+                    $documentacion_url->id_relacion = $revisor->id_revision;
+                    $documentacion_url->id_documento = $request->id_documento;
+                    $documentacion_url->id_empresa = $empresa->id_empresa;
+                
+
+                // Procesar el nuevo archivo
+                $file = $request->file('url');
+                $nombreLimpio = str_replace('/', '-', $request->nombre_documento);
+                $filename = $nombreLimpio . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+
+                // Actualizar los datos del registro
+                $documentacion_url->nombre_documento = $nombreLimpio;
+                $documentacion_url->url = $filename;
+                $documentacion_url->save();
+
+            }
+        }
+
 
 
             // Preparar datos para el correo
@@ -663,21 +699,18 @@ class Certificado_InstalacionesController extends Controller
             'categorias' => $datos->dictamen?->inspeccione?->solicitud?->categorias_mezcal()?->pluck('categoria')->implode(', ') ?? 'No encontrado',
             'clases' => $datos->dictamen?->inspeccione?->solicitud?->clases_agave()?->pluck('clase')->implode(', ') ?? 'No encontrado',
         ];
-
-
-        if ($guardar && $rutaGuardado) {
+        
+        /*if ($guardar && $rutaGuardado) {
             $pdf = Pdf::loadView('pdfs.certificado_productor_mezcal', $pdfData);
             $pdf->save($rutaGuardado);
             return $rutaGuardado;
+        }*/
+
+        if ( $datos->fecha_emision >= '2025-04-01' ) {
+            return Pdf::loadView('pdfs.certificado_productor_ed6', $pdfData)->stream('Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35.pdf');
+        }else{
+            return Pdf::loadView('pdfs.certificado_productor_ed5', $pdfData)->stream('Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35.pdf');
         }
-
-        /*if ( $datos->fecha_emision >= '2025-04-01' ) {
-            return Pdf::loadView('pdfs.certificado_productor_ed6', $pdfData)->stream('Certificado de productor de mezcal_ed6.pdf');
-        }else{*/
-        //return Pdf::loadView('pdfs.certificado_productor_ed5', $pdfData)->stream('Certificado de productor.pdf');
-        return Pdf::loadView('pdfs.certificado_productor_ed6', $pdfData)->stream('Certificado de productor de mezcal.pdf');
-
-        //}
     }
 
 
@@ -730,21 +763,23 @@ class Certificado_InstalacionesController extends Controller
 
 
         if ($guardar && $rutaGuardado) {
+        /*if ($guardar && $rutaGuardado) {
             $pdf = Pdf::loadView('pdfs.certificado_envasador', $pdfData);
             $pdf->save($rutaGuardado);
             return $rutaGuardado;
-        }
-
-        /*$formato = 'pdfs.certificado_envasador_ed4';
-        if ($datos->fecha_emision >= "2025-04-01") {
-            $formato = 'pdfs.Certificado_envasador_mezcal_ed6';
         }*/
 
+        if ($datos->fecha_emision >= "2025-04-01") {
+            $edicion = 'pdfs.certificado_envasador_ed5';
+        }else{
+            $edicion = 'pdfs.certificado_envasador_ed4';
+        }
         // Generar y retornar el PDF
-        //return Pdf::loadView($formato, $pdfData)->stream('Certificado de envasador de mezcal.pdf');
-        //return Pdf::loadView('pdfs.certificado_envasador_ed4', $pdfData)->stream('Certificado de Envasador.pdf');
-        return Pdf::loadView('pdfs.certificado_envasador_ed5', $pdfData)->stream('Certificado de Envasador.pdf');
+        return Pdf::loadView($edicion, $pdfData)->stream('Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36.pdf');
+        //return Pdf::loadView('pdfs.certificado_envasador_ed4', $pdfData)->stream('Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36.pdf');
     }
+
+}
 
 
     public function pdf_certificado_comercializador($id_certificado, $guardar = false, $rutaGuardado = null)
@@ -795,15 +830,19 @@ class Certificado_InstalacionesController extends Controller
             'convenio_corresponsabilidad' => $empresa->convenio_corresp ?? 'No encontrado',
         ];
 
-        if ($guardar && $rutaGuardado) {
+        /*if ($guardar && $rutaGuardado) {
             $pdf = Pdf::loadView('pdfs.certificado_comercializador', $pdfData);
             $pdf->save($rutaGuardado);
             return $rutaGuardado;
+        }*/
+
+        if ($datos->fecha_emision >= "2025-04-01") {
+            $edicion = 'pdfs.certificado_comercializador_ed6';
+        }else{
+            $edicion = 'pdfs.certificado_comercializador_ed5';
         }
-
-
-        //return Pdf::loadView('pdfs.certificado_comercializador_ed5', $pdfData)->stream('Certificado de Comercializador.pdf');
-        return Pdf::loadView('pdfs.certificado_comercializador_ed6', $pdfData)->stream('Certificado de Comercializador.pdf');
+       
+        return Pdf::loadView($edicion, $pdfData)->stream('Certificado como Comercializador de Mezcal NOM-070-SCFI-2016 F7.1-01-37.pdf');
     }
 
 

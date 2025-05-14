@@ -17,6 +17,7 @@ use App\Models\LotesGranel;
 use App\Notifications\GeneralNotification;
 //Enviar Correo
 use App\Mail\CorreoCertificado;
+use App\Models\Documentacion_url;
 use Illuminate\Support\Facades\Mail; 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -395,47 +396,66 @@ public function storeRevisor(Request $request)
             return response()->json(['message' => 'El certificado no existe.'], 404);
         }
 
-        $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])->where('tipo_certificado',2)->first();
-        $message = ''; // Inicializar el mensaje
+         $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])
+                ->where('tipo_certificado', 1)
+                ->where('tipo_revision', $validatedData['tipoRevisor']) // buscar según tipo de revisión
+                ->first();
 
-        if ($revisor) {
-            // Actualizar el revisor existente
-            if ($validatedData['tipoRevisor'] == '1') {
+
+            $message = ''; // Inicializar el mensaje
+
+            if ($revisor) {
                 if ($revisor->id_revisor == $validatedData['nombreRevisor']) {
-                    $message = 'Revisor reasignado.'; 
+                    $message = 'Revisor reasignado.';
                 } else {
                     $revisor->id_revisor = $validatedData['nombreRevisor'];
                     $message = 'Revisor asignado exitosamente.';
                 }
             } else {
-                if ($revisor->id_revisor2 == $validatedData['nombreRevisor']) {
-                    $message = 'Revisor reasignado.';
-                } else {
-                    $revisor->id_revisor2 = $validatedData['nombreRevisor'];
-                    $message = 'Revisor Miembro del consejo asignado exitosamente.';
-                }
-            }
-        } else {
-            // Crear un nuevo revisor
-            $revisor = new Revisor();
-            $revisor->id_certificado = $validatedData['id_certificado'];
-            $revisor->tipo_revision = $validatedData['tipoRevisor'];
-
-            if ($validatedData['tipoRevisor'] == '1') {
+                $revisor = new Revisor();
+                $revisor->id_certificado = $validatedData['id_certificado'];
+                $revisor->tipo_certificado = 2; //El 2 corresponde al certificado de granel
+                $revisor->tipo_revision = $validatedData['tipoRevisor'];
                 $revisor->id_revisor = $validatedData['nombreRevisor'];
                 $message = 'Revisor asignado exitosamente.';
-            } else {
-                $revisor->id_revisor2 = $validatedData['nombreRevisor'];
-                $message = 'Revisor Miembro del consejo asignado exitosamente.';
             }
-        }
-
         // Guardar los datos del revisor
-        $revisor->tipo_certificado = 2; //El 2 corresponde al certificado de granel
+        
         $revisor->numero_revision = $validatedData['numeroRevision'];
         $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
         $revisor->observaciones = $validatedData['observaciones'] ?? '';
         $revisor->save();
+
+        $empresa = $certificado->dictamen->inspeccione->solicitud->empresa;
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
+
+            if ($request->hasFile('url')) {
+            if ($revisor->id_revision) {
+                // Buscar el registro existente
+        
+            
+                    // Si no existe, crea una nueva instancia
+                    $documentacion_url = new Documentacion_url();
+                    $documentacion_url->id_relacion = $revisor->id_revision;
+                    $documentacion_url->id_documento = $request->id_documento;
+                    $documentacion_url->id_empresa = $empresa->id_empresa;
+                
+
+                // Procesar el nuevo archivo
+                $file = $request->file('url');
+                $nombreLimpio = str_replace('/', '-', $request->nombre_documento);
+                $filename = $nombreLimpio . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+
+                // Actualizar los datos del registro
+                $documentacion_url->nombre_documento = $nombreLimpio;
+                $documentacion_url->url = $filename;
+                $documentacion_url->save();
+
+            }
+        }
 
         // Preparar datos para el correo
         $data1 = [
