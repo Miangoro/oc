@@ -4,10 +4,10 @@
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
                 <h5 class="modal-title text-white">Registrar nueva solicitud de georeferenciación</h5>
-                
+
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-           
+
             <div class="modal-body p-8">
                 <form id="addRegistrarSolicitudGeoreferenciacion">
                     <div class="row">

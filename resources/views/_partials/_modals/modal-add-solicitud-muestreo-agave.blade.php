@@ -1,13 +1,12 @@
 <!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="addSolicitudMuestreoAgave" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Registrar nueva solicitud de muestreo de agave</h4>
-                    <p class="address-subtitle"></p>
-                </div>
+                      <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Registrar nueva solicitud de muestreo de agave</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-8">
                 <form id="addRegistrarSolicitudMuestreoAgave">
                     <div class="row">
                         <div class="col-md-6">
@@ -58,9 +57,9 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary btnCancelar" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>

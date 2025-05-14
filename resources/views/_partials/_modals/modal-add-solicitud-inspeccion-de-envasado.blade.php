@@ -1,12 +1,11 @@
-<div class="modal fade" id="addInspeccionEnvasado" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+<div class="modal fade" id="addInspeccionEnvasado" tabindex="-1" >
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Registrar solicitud de inspección de envasado</h4>
-                    <p class="address-subtitle"></p>
-                </div>
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Registrar nueva solicitud de inspección de envasado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-8">
                 <form id="addInspeccionEnvasadoForm">
                     <div class="row">
                         <div class="col-md-6">
@@ -92,14 +91,15 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" class="form-control bg-light text-muted" id="volumen_inspeccion"
-                                    name="volumen_inspeccion" placeholder="Ingresa el volumen" readonly/>
+                                    name="volumen_inspeccion" placeholder="Ingresa el volumen" readonly />
                                 <label for="volumen_inspeccion">%Alc. Vol.</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted" id="analisis_inspeccion"
-                                    name="analisis_inspeccion" placeholder="Ingresa Análisis fisicoquímico" readonly/>
+                                <input type="text" class="form-control bg-light text-muted"
+                                    id="analisis_inspeccion" name="analisis_inspeccion"
+                                    placeholder="Ingresa Análisis fisicoquímico" readonly />
                                 <label for="analisis_inspeccion">Análisis fisicoquímico</label>
                             </div>
                         </div>
@@ -162,9 +162,9 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary btnCancelar" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -213,7 +213,8 @@
                         contenido = '<option value="' + response.lotes_envasado[index].id_lote_envasado +
                             '">' +
                             response
-                            .lotes_envasado[index].nombre + ' | GRANEL: ' + response.lotes_envasado[index].lotes_envasado_granel[0].lotes_granel[0].nombre_lote + '</option>' + contenido;
+                            .lotes_envasado[index].nombre + ' | GRANEL: ' + response.lotes_envasado[index]
+                            .lotes_envasado_granel[0].lotes_granel[0].nombre_lote + '</option>' + contenido;
                     }
                     if (response.lotes_envasado.length == 0) {
                         contenido = '<option value="">Sin lotes registrados</option>';
@@ -234,33 +235,39 @@
         }
     }
 
-    function obtenerDatosGranelesInspecciones() { 
+    function obtenerDatosGranelesInspecciones() {
         var lote_envasado_id = $("#id_lote_envasado_inspeccion").val();
-        if (lote_envasado_id !== "" && lote_envasado_id !== null && lote_envasado_id !== undefined) { 
-            
+        if (lote_envasado_id !== "" && lote_envasado_id !== null && lote_envasado_id !== undefined) {
+
             $.ajax({
                 url: '/getDatosLoteEnvasado/' + lote_envasado_id,
                 method: 'GET',
                 success: function(response) {
-                    $('#id_categoria_inspeccion').val(response.primer_lote_granel ? response.primer_lote_granel.id_categoria :'');
-                    $('#id_clase_inspeccion').val(response.primer_lote_granel ? response.primer_lote_granel.id_clase : '');
-                    $('#id_tipo_maguey_inspeccion').val(response.primer_lote_granel ? response.primer_lote_granel.tipos_ids : '');
+                    $('#id_categoria_inspeccion').val(response.primer_lote_granel ? response
+                        .primer_lote_granel.id_categoria : '');
+                    $('#id_clase_inspeccion').val(response.primer_lote_granel ? response.primer_lote_granel
+                        .id_clase : '');
+                    $('#id_tipo_maguey_inspeccion').val(response.primer_lote_granel ? response
+                        .primer_lote_granel.tipos_ids : '');
                     $('#id_marca').val(response.lotes_envasado.marca.marca || '');
                     $('#analisis_inspeccion').val(response.primer_lote_granel.folio_fq || '');
                     $('#volumen_inspeccion').val(response.primer_lote_granel.cont_alc || '');
-                    $('#id_certificado_inspeccion').val(response.primer_lote_granel.folio_certificado || '');
+                    $('#id_certificado_inspeccion').val(response.primer_lote_granel.folio_certificado ||
+                    '');
                     $('#id_cantidad_bote').val(response.lotes_envasado.cant_botellas || '');
                     $('#id_tipo_inspeccion').val(response.lotes_envasado.tipo || '');
-                    $('#id_instalacion_inspeccion').val(response.lotes_envasado.lugar_envasado || '').triger('change');
-                    
+                    $('#id_instalacion_inspeccion').val(response.lotes_envasado.lugar_envasado || '')
+                        .triger('change');
+
 
                 },
                 error: function() {
                     console.error('Error al obtener los datos del lote granel.');
                 }
             });
-        }else{
-            $('#id_categoria_inspeccion, #id_clase_inspeccion, #id_tipo_maguey_inspeccion, #id_marca, #analisis_inspeccion, #volumen_inspeccion, #id_certificado_inspeccion, #id_cantidad_bote, #id_tipo_inspeccion, #id_instalacion_inspeccion').val('').trigger('change');
+        } else {
+            $('#id_categoria_inspeccion, #id_clase_inspeccion, #id_tipo_maguey_inspeccion, #id_marca, #analisis_inspeccion, #volumen_inspeccion, #id_certificado_inspeccion, #id_cantidad_bote, #id_tipo_inspeccion, #id_instalacion_inspeccion')
+                .val('').trigger('change');
         }
     }
 

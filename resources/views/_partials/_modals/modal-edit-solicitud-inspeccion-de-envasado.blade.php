@@ -1,8 +1,11 @@
-<div class="modal fade" id="editInspeccionEnvasado" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="editInspeccionEnvasado" tabindex="-1" >
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Editar solicitud de inspección de envasado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-8">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Editar Inspección de envasado</h4>
                     <p class="address-subtitle"></p>
@@ -170,9 +173,9 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary " data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger " data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>

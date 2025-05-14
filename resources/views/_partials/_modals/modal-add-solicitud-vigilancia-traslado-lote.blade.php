@@ -1,12 +1,11 @@
-<div class="modal fade" id="addVigilanciaTraslado" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+<div class="modal fade" id="addVigilanciaTraslado" tabindex="-1">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Registrar vigilancia en el traslado del lote</h4>
-                    <p class="address-subtitle"></p>
-                </div>
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Registrar nueva solicitud de vigilancia en el traslado del lote</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-8">
                 <form id="addVigilanciaTrasladoForm">
                     <div class="row">
                         <div class="col-md-6">
@@ -58,7 +57,7 @@
                             <label for="instalacion_vigilancia">Dirección de destino</label>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
@@ -159,8 +158,9 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input onkeyup="obtenerSobrante(this.value)" type="number" class="form-control " id="id_vol_traslado"
-                                    name="id_vol_traslado" placeholder="Ingresa volumen trasladado" step="0.01" />
+                                <input onkeyup="obtenerSobrante(this.value)" type="number" class="form-control "
+                                    id="id_vol_traslado" name="id_vol_traslado"
+                                    placeholder="Ingresa volumen trasladado" step="0.01" />
                                 <label for="id_vol_traslado">Volumen trasladado</label>
                             </div>
                         </div>
@@ -181,9 +181,9 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary btnCancelar" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-fill"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -205,7 +205,8 @@
                         // Limpia el campo tipo usando la función limpiarTipo
                         var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
 
-                        contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        contenido = '<option value="' + response.instalaciones[index].id_instalacion +
+                            '">' +
                             tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                             '</option>' +
                             contenido;
@@ -220,8 +221,8 @@
         }
     }
 
-    function obtenerSobrante(trasladado){
-        $('#id_vol_res').val( $('#id_vol_actual').val() - trasladado);
+    function obtenerSobrante(trasladado) {
+        $('#id_vol_res').val($('#id_vol_actual').val() - trasladado);
     }
 
     function limpiarTipo(tipo) {
@@ -275,7 +276,7 @@
                     $('#analisis_traslado').val(response.lotes_granel.folio_fq);
                     $('#volumen_traslado').val(response.lotes_granel.cont_alc);
                     $('#id_vol_actual').val(response.lotes_granel.volumen);
-                   
+
                 },
                 error: function() {
                     console.error('Error al obtener los datos del lote granel.');

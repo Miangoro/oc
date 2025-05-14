@@ -1,18 +1,17 @@
 <!-- Add New Lote Envasado Modal -->
-<div class="modal fade" id="addMuestreoLoteEnvasado" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+<div class="modal fade" id="addMuestreoLoteEnvasado" tabindex="-1" >
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Muestreo de lote envasado</h4>
-                    <p class="address-subtitle"></p>
-                </div>
+                                    <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Regustrar nueva solicitud de muestreo de lote envasado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-8">
                 <form id="addMuestreoLoteEnvasadoForm">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_solicitud" onchange="obtenerInstalacion();" 
+                                <select id="id_empresa_solicitud" onchange="obtenerInstalacion();"
                                     name="id_empresa" class="id_empresa select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -31,7 +30,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
 
                     <div class="row">
                         <div class="col-md-12">
@@ -40,13 +39,13 @@
                                     <option value="" selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
-                               
+
                                 <button type="button" class="btn btn-primary" id="abrirModalInstalaciones"><i class="ri-add-line"></i> Agregar nueva instalación</button>
-                                
+
                             </div>
                     </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-150" id="comentarios" placeholder="Información adicional sobre la actividad..."></textarea>
@@ -54,9 +53,9 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button  type="reset" class="btn btn-outline-secondary btnCancelar" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="ri-add-line"></i> Registrar</button>
+                        <button  type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -85,9 +84,9 @@
                 }
                 if (response.instalaciones.length == 0) {
                     contenido = '<option value="">Sin instalaciones registradas</option>';
-                    
+
                 }else{
-                   
+
                 }
                 $('#id_instalacion').html(contenido);
             },

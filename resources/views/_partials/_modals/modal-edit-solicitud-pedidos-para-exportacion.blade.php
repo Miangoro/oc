@@ -1,12 +1,11 @@
 <div class="modal fade" id="editPedidoExportacion" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-simple modal-edit-new-address">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Editar pedidos para exportación</h4>
-                    <p class="address-subtitle"></p>
-                </div>
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Editar solicitud de pedidos para exportación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-8">
                 <form id="editPedidoExportacionForm">
                     <input type="hidden" name="id_solicitud" class="id_solicitud" id="solicitud_id_pedidos">
                     <input type="hidden" name="form_type" value="pedidosExportacion">
@@ -25,8 +24,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_solicitud_exportacion_edit" 
-                                    name="id_empresa" class="select2 form-select" onchange="cargarDatosClienteEdit()">
+                                <select id="id_empresa_solicitud_exportacion_edit" name="id_empresa"
+                                    class="select2 form-select" onchange="cargarDatosClienteEdit()">
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">
@@ -46,8 +45,8 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input id="fecha_visita_edit" placeholder="YYYY-MM-DD" class="form-control" type="datetime-local"
-                                    name="fecha_visita" />
+                                <input id="fecha_visita_edit" placeholder="YYYY-MM-DD" class="form-control"
+                                    type="datetime-local" name="fecha_visita" />
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -68,8 +67,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select onchange="cargarMarcasEdit();" class="form-select select2" name="direccion_destinatario"
-                                            id="direccion_destinatario_ex_edit">
+                                        <select onchange="cargarMarcasEdit();" class="form-select select2"
+                                            name="direccion_destinatario" id="direccion_destinatario_ex_edit">
                                             <option value="" disabled selected>Seleccione una dirección</option>
                                         </select>
                                         <label for="direccion_destinatario">Domicilio del destinatario</label>
@@ -112,17 +111,18 @@
 
                             </div>
                             <div class="row mt-2">
-                               <div class="col-md-12">
-                                   <div class="form-floating form-floating-outline mb-4">
-                                       <select class="select2 form-select" id="id_nstalaciones_envasado_2_edit"
-                                           name="id_nstalaciones_envasado_2_edit" aria-label="id_nstalaciones_envasado_2_edit"
-                                           required>
-                                           <option value="" disabled selected>Lista de instalaciones de envasado</option>
-                                       </select>
-                                       <label for="id_nstalaciones_envasado_2_edit">Domicilio de envasado</label>
-                                   </div>
-                               </div>
-                           </div>
+                                <div class="col-md-12">
+                                    <div class="form-floating form-floating-outline mb-4">
+                                        <select class="select2 form-select" id="id_nstalaciones_envasado_2_edit"
+                                            name="id_nstalaciones_envasado_2_edit"
+                                            aria-label="id_nstalaciones_envasado_2_edit" required>
+                                            <option value="" disabled selected>Lista de instalaciones de envasado
+                                            </option>
+                                        </select>
+                                        <label for="id_nstalaciones_envasado_2_edit">Domicilio de envasado</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div id="sections-container2">
@@ -133,7 +133,8 @@
                                 <div class="row caracteristicas-row">
                                     <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select onchange="cargarDetallesLoteEnvasadoEdit(this.value)"  name="lote_envasado[0]"
+                                            <select onchange="cargarDetallesLoteEnvasadoEdit(this.value)"
+                                                name="lote_envasado[0]"
                                                 class="select2 form-select evasado_export evasado_export_edit">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
@@ -152,22 +153,22 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" class="form-control" id="cantidad_botellas0" name="cantidad_botellas[0]"
-                                                placeholder="Cantidad de botellas">
+                                            <input type="number" class="form-control" id="cantidad_botellas0"
+                                                name="cantidad_botellas[0]" placeholder="Cantidad de botellas">
                                             <label for="cantidad_botellas">Cantidad de botellas</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" class="form-control" id="cantidad_cajas0" name="cantidad_cajas[0]"
-                                                placeholder="Cantidad de cajas">
+                                            <input type="number" class="form-control" id="cantidad_cajas0"
+                                                name="cantidad_cajas[0]" placeholder="Cantidad de cajas">
                                             <label for="cantidad_cajas">Cantidad de cajas</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" class="form-control presentacion" name="presentacion[0]"
-                                                placeholder="Ej. 750ml">
+                                            <input type="text" class="form-control presentacion"
+                                                name="presentacion[0]" placeholder="Ej. 750ml">
                                             <label for="presentacion">Presentación</label>
                                         </div>
                                     </div>
@@ -194,7 +195,8 @@
                         <div class="card-body">
                             <h6>Información del lote envasado</h6>
                             <div class="row">
-                                <table id="tablaLotes" class="table table-bordered mb-2 table-sm" style="width: 100%; border-collapse: collapse;">
+                                <table id="tablaLotes" class="table table-bordered mb-2 table-sm"
+                                    style="width: 100%; border-collapse: collapse;">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -208,7 +210,7 @@
                                         <!-- Aquí se insertarán dinámicamente los datos -->
                                     </tbody>
                                 </table>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -246,15 +248,15 @@
                             <label for="comentarios">Información adicional sobre la actividad</label>
                         </div>
                     </div>
-                    <input type="hidden" class="instalacion_id"> 
+                    <input type="hidden" class="instalacion_id">
                     <input type="hidden" class="direccion_id">
-                    <input type="hidden" class="instalacion_envasado_id"> 
-                    <input type="text" class="lote_envasado_id"> 
-                    <input type="hidden" class="etiqueta_id"> 
+                    <input type="hidden" class="instalacion_envasado_id">
+                    <input type="text" class="lote_envasado_id">
+                    <input type="hidden" class="etiqueta_id">
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Editar</button>
-                        <button type="reset" class="btn btn-outline-secondary btnCancelar" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -267,9 +269,9 @@
 <script>
     function cargarDatosClienteEdit() {
         var empresa = $("#id_empresa_solicitud_exportacion_edit").val();
-       
+
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
-          
+
             $.ajax({
                 url: '/getDatos/' + empresa,
                 method: 'GET',
@@ -281,7 +283,7 @@
                     cargarMarcasEdit();
                     compararLotesConSelects();
                     cargarLotesGranel(response.lotes_granel);
-                   
+
                 },
                 error: function() {
                     console.error('Error al cargar los datos.');
@@ -309,13 +311,15 @@
 
                 contenidoInstalaciones = '<option ' + seleccionado + ' value="' + instalaciones[index]
                     .id_instalacion + '">' +
-                    tipoLimpio + ' | ' +instalaciones[index].direccion_completa +
+                    tipoLimpio + ' | ' + instalaciones[index].direccion_completa +
                     '</option>' + contenidoInstalaciones;
-                    }
+            }
             if (instalaciones.length === 0) {
                 contenidoInstalaciones = '<option value="" disabled selected>Sin instalaciones registradas</option>';
             }
-            contenidoInstalaciones='<option value="" disabled selected>Seleccione un domicilio de inspección</option>'+contenidoInstalaciones;
+            contenidoInstalaciones =
+                '<option value="" disabled selected>Seleccione un domicilio de inspección</option>' +
+                contenidoInstalaciones;
             $('#id_instalacion_exportacion_edit').html(contenidoInstalaciones);
         }
     }
@@ -343,7 +347,8 @@
             if (instalaciones.length === 0) {
                 contenidoInstalaciones = '<option value="" disabled selected>Sin instalaciones registradas</option>';
             }
-            contenidoInstalaciones = '<option value="" disabled selected>Seleccione un domicilio de envasado</option>'+contenidoInstalaciones;
+            contenidoInstalaciones = '<option value="" disabled selected>Seleccione un domicilio de envasado</option>' +
+                contenidoInstalaciones;
             $('#id_nstalaciones_envasado_2_edit').html(contenidoInstalaciones);
         }
     }
@@ -362,7 +367,7 @@
                 } else {
                     seleccionado = ""; // Asegúrate de limpiar este valor si no coincide
                 }
-                
+
                 let destinatario = direcciones[index].destinatario || "Sin destinatario";
                 contenidoDirecciones += `
             <option ${seleccionado} value="${direcciones[index].id_direccion}">
@@ -372,13 +377,15 @@
             if (direcciones.length === 0) {
                 contenidoDirecciones = '<option value="" disabled selected>Sin direcciones registradas</option>';
             }
-            contenidoDirecciones = '<option value="" disabled selected>Seleccione un domicililio del destinatario</option>'+contenidoDirecciones;
+            contenidoDirecciones =
+                '<option value="" disabled selected>Seleccione un domicililio del destinatario</option>' +
+                contenidoDirecciones;
             $('#direccion_destinatario_ex_edit').html(contenidoDirecciones);
             //cargarMarcas();
         }
     }
 
-    
+
     // Función para cargar lotes envasados
     function cargarLotesEnvasado(lotesEnvasado, marcas) {
         var contenidoLotes = "";
@@ -387,8 +394,8 @@
             var skuLimpio = (skuLimpiot === '{"inicial":""}') ? "SKU no definido" : skuLimpiot;
             var marcaEncontrada = marcas.find(marca => marca.id_marca === lotesEnvasado[index].id_marca);
             var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
-            var dictamenEnvasado = lotesEnvasado[index].dictamen_envasado?.num_dictamen 
-    ?? "Sin dictamen de envasado";
+            var dictamenEnvasado = lotesEnvasado[index].dictamen_envasado?.num_dictamen ??
+                "Sin dictamen de envasado";
 
 
             contenidoLotes += `
@@ -401,40 +408,41 @@
         }
         $('.evasado_export').html(contenidoLotes);
 
-       
-        cargarDetallesLoteEnvasadoEdit($(".evasado_export").val());
-       
 
-     
+        cargarDetallesLoteEnvasadoEdit($(".evasado_export").val());
+
+
+
     }
 
     function compararLotesConSelects() {
-    var idsLotes = $('.lote_envasado_id').val().split(',');
+        var idsLotes = $('.lote_envasado_id').val().split(',');
 
-    $('.evasado_export').each(function() {
-        var $select = $(this);
-        var opciones = $select.find('option');
+        $('.evasado_export').each(function() {
+            var $select = $(this);
+            var opciones = $select.find('option');
 
-        var encontrado = false;
+            var encontrado = false;
 
-        opciones.each(function() {
-            var valorOption = $(this).val();
+            opciones.each(function() {
+                var valorOption = $(this).val();
 
-            if (idsLotes.includes(valorOption)) {
-                $(this).prop('selected', true); // <<< Aquí hacemos que se seleccione automáticamente
-                encontrado = true;
-                //console.log('Seleccionado lote envasado:', valorOption);
-                return false; // Ya encontró, no sigue revisando
+                if (idsLotes.includes(valorOption)) {
+                    $(this).prop('selected',
+                    true); // <<< Aquí hacemos que se seleccione automáticamente
+                    encontrado = true;
+                    //console.log('Seleccionado lote envasado:', valorOption);
+                    return false; // Ya encontró, no sigue revisando
+                }
+            });
+
+            if (!encontrado) {
+                $select.prop('selectedIndex', 0); // Si no encuentra, deja el primero (o ninguno)
             }
+
+            $select.trigger('change'); // Disparar el evento por si necesitas recargar detalles
         });
-
-        if (!encontrado) {
-            $select.prop('selectedIndex', 0); // Si no encuentra, deja el primero (o ninguno)
-        }
-
-        $select.trigger('change'); // Disparar el evento por si necesitas recargar detalles
-    });
-}
+    }
 
 
     // Función para cargar lotes a granel
@@ -453,43 +461,45 @@
             $('.lotes_granel_export').html(contenidoLotesGraneles);
         }
     }
+
     function cargarDetallesLoteEnvasadoEdit(idLoteEnvasado) {
-    if (idLoteEnvasado) {
-        $.ajax({
-            url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
-            method: 'GET',
-            success: function(response) {
-                console.log(response); // Verifica la respuesta en la consola
-                console.log("Entro en el de modal edit");
+        if (idLoteEnvasado) {
+            $.ajax({
+                url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+                method: 'GET',
+                success: function(response) {
+                    console.log(response); // Verifica la respuesta en la consola
+                    console.log("Entro en el de modal edit");
 
-                let tbody = $('#tablaLotes tbody');
-                tbody.empty(); // Limpia los datos anteriores
+                    let tbody = $('#tablaLotes tbody');
+                    tbody.empty(); // Limpia los datos anteriores
 
-                // Verifica si existe lote_envasado y lo muestra en la tabla
-                if (response.lote_envasado) {
-                    $(".presentacion").val(response.lote_envasado.presentacion + " "+response.lote_envasado.unidad);
+                    // Verifica si existe lote_envasado y lo muestra en la tabla
+                    if (response.lote_envasado) {
+                        $(".presentacion").val(response.lote_envasado.presentacion + " " + response
+                            .lote_envasado.unidad);
 
-                    let filaEnvasado = `
+                        let filaEnvasado = `
                         <tr>
                             <td>1</td>
                             <td>${response.lote_envasado.nombre}</td>
                             <td>${limpiarSku(response.lote_envasado.sku) == '{"inicial":""}' ? "SKU no definido" : limpiarSku(response.lote_envasado.sku)}</td>
                             <td>${response.lote_envasado.presentacion || 'N/A'} ${response.lote_envasado.unidad || ''}</td>
-                            
+
                             <td>Botellas: ${response.lote_envasado.cant_botellas}<br>Cajas: Sin definir</td>
                         </tr>`;
-                    tbody.append(filaEnvasado);
-                }
+                        tbody.append(filaEnvasado);
+                    }
 
-                // Verifica si hay lotes a granel asociados y los muestra
-                if (response.detalle && response.detalle.length > 0) {
-                    tbody.append(`
+                    // Verifica si hay lotes a granel asociados y los muestra
+                    if (response.detalle && response.detalle.length > 0) {
+                        tbody.append(`
                         <tr>
                             <td style='background-color: #f5f5f7' colspan="5" class="text-center font-weight-bold fw-bold">Lotes a granel asociados</td>
                         </tr>`);
-                    let nombre_lote_granel = "";
-                    response.detalle.forEach((lote, index) => {
-                        let filaGranel = `
+                        let nombre_lote_granel = "";
+                        response.detalle.forEach((lote, index) => {
+                            let filaGranel = `
                             <tr>
                                 <td>${index + 2}</td>
                                 <td>
@@ -506,21 +516,23 @@
                             </td>
 
                             </tr>`;
-                        tbody.append(filaGranel);
-                        nombre_lote_granel += lote.nombre_lote;
-                    });
+                            tbody.append(filaGranel);
+                            nombre_lote_granel += lote.nombre_lote;
+                        });
 
-                    $('.lotes_granel_export').val(nombre_lote_granel);
-                } else {
-                    tbody.append(`<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`);
+                        $('.lotes_granel_export').val(nombre_lote_granel);
+                    } else {
+                        tbody.append(
+                            `<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`
+                            );
+                    }
+                },
+                error: function() {
+                    console.error('Error al cargar el detalle del lote envasado.');
                 }
-            },
-            error: function() {
-                console.error('Error al cargar el detalle del lote envasado.');
-            }
-        });
+            });
+        }
     }
-}
 
 
 
@@ -547,37 +559,37 @@
 
 
     function cargarMarcasEdit() {
-    var id_empresa = $('#id_empresa_solicitud_exportacion_edit').val();
-    var id_marca = $('.evasado_export_edit').find(':selected').data('id-marca-edit');
-    var id_direccion = $('#direccion_destinatario_ex_edit').val();
+        var id_empresa = $('#id_empresa_solicitud_exportacion_edit').val();
+        var id_marca = $('.evasado_export_edit').find(':selected').data('id-marca-edit');
+        var id_direccion = $('#direccion_destinatario_ex_edit').val();
         //alert('/marcas/' + id_marca + '/' + id_direccion)
-    let seleccionado = "";
-    var etiqueta_id = $(".etiqueta_id").val();
-    if (id_empresa) {
-      
-        $.ajax({
-            url: '/marcas/' + id_marca + '/' + id_direccion,
-            method: 'GET',
-            success: function(marcas) {
-                var tbody = '';
+        let seleccionado = "";
+        var etiqueta_id = $(".etiqueta_id").val();
+        if (id_empresa) {
 
-                // Verificar si hay datos disponibles
-                if (marcas.length > 0 && marcas[0].destinos.length > 0) {
-                    $("#encabezado_etiquetas").text(marcas[0].destinos[0].direccion);
-                }
+            $.ajax({
+                url: '/marcas/' + id_marca + '/' + id_direccion,
+                method: 'GET',
+                success: function(marcas) {
+                    var tbody = '';
 
-                tbody = "";
-                
+                    // Verificar si hay datos disponibles
+                    if (marcas.length > 0 && marcas[0].destinos.length > 0) {
+                        $("#encabezado_etiquetas").text(marcas[0].destinos[0].direccion);
+                    }
+
+                    tbody = "";
+
                     // Asegurar que 'etiquetado' es un objeto
-                 
-                    
+
+
 
                     // Iterar sobre los SKU en 'etiquetado'
                     for (var i = 0; i < marcas.length; i++) {
 
-                        if(etiqueta_id == marcas[i].id_etiqueta){
+                        if (etiqueta_id == marcas[i].id_etiqueta) {
                             seleccionado = 'checked';
-                        }else{
+                        } else {
                             seleccionado = '';
                         }
 
@@ -610,7 +622,8 @@
                         // Función para generar enlace de documentos
                         function generarEnlaceDocumento(documento, nombre) {
                             if (documento && documento.url) {
-                                let url = `/files/${marcas[i].marca.empresa.empresa_num_clientes[0].numero_cliente}/${documento.url}`;
+                                let url =
+                                    `/files/${marcas[i].marca.empresa.empresa_num_clientes[0].numero_cliente}/${documento.url}`;
                                 return `<td><a href="${url}" target="_blank"><i class="ri-file-pdf-2-line ri-20px"></i></a></td>`;
                             }
                             return `<td>--</td>`;
@@ -622,26 +635,25 @@
 
                         tbody += '</tr>';
                     }
-                
 
-                // Si no hay datos, mostrar mensaje
-                if (!tbody) {
-                    tbody = '<tr><td colspan="8" class="text-center">No hay datos disponibles.</td></tr>';
+
+                    // Si no hay datos, mostrar mensaje
+                    if (!tbody) {
+                        tbody =
+                            '<tr><td colspan="8" class="text-center">No hay datos disponibles.</td></tr>';
+                    }
+
+                    // Insertar las filas en la tabla
+                    $('#tabla_marcas tbody').html(tbody);
+                },
+                error: function(xhr) {
+                    console.error('Error al obtener marcas:', xhr);
+                    $('#tabla_marcas tbody').html(
+                    '<tr><td colspan="8">Error al cargar los datos</td></tr>');
                 }
-
-                // Insertar las filas en la tabla
-                $('#tabla_marcas tbody').html(tbody);
-            },
-            error: function(xhr) {
-                console.error('Error al obtener marcas:', xhr);
-                $('#tabla_marcas tbody').html('<tr><td colspan="8">Error al cargar los datos</td></tr>');
-            }
-        });
-    } else {
-        $('#tabla_marcas tbody').html('<tr><td colspan="8">Seleccione una empresa para ver los datos</td></tr>');
+            });
+        } else {
+            $('#tabla_marcas tbody').html('<tr><td colspan="8">Seleccione una empresa para ver los datos</td></tr>');
+        }
     }
-}
-
-
-
 </script>
