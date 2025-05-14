@@ -173,9 +173,10 @@ class Certificado_InstalacionesController extends Controller
                 //Revisiones
                 //$nestedData['id_revisor'] = $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar';
                 $nestedData['id_revisor2'] = $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar';
-                $nestedData['id_revisor'] = $certificado->revisor->user->name ?? null;
-                $nestedData['numero_revision'] = $certificado->revisor->numero_revision ?? null;
-                $nestedData['decision'] = $certificado->revisor->decision ?? null;
+                $RevisionTipo1 = $certificado->revisor?->tipo_certificado == 1;
+                $nestedData['id_revisor'] = $RevisionTipo1 ? $certificado->revisor->user->name : null;
+                $nestedData['numero_revision'] = $RevisionTipo1 ? $certificado->revisor->numero_revision : null;
+                $nestedData['decision'] = $RevisionTipo1 ? $certificado->revisor->decision : null;
                 ///dias vigencia
                 $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
                 $nestedData['fecha_actual'] = $fechaActual;
