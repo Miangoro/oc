@@ -115,10 +115,12 @@ public function index(Request $request)
             //Revisiones
             //$nestedData['id_revisor'] = $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar';
             $nestedData['id_revisor2'] = $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar';
-            $nestedData['id_revisor'] = $certificado->revisor->user->name ?? null;
-            $nestedData['numero_revision'] = $certificado->revisor->numero_revision ?? null;
-            $nestedData['decision'] = $certificado->revisor->decision ?? null;
-            $nestedData['respuestas'] = $certificado->revisor->respuestas ?? null;
+            
+            $RevisionTipo3 = $certificado->revisor?->tipo_certificado == 3;
+            $nestedData['id_revisor'] = $RevisionTipo3 ? $certificado->revisor->user->name : null;
+            $nestedData['numero_revision'] = $RevisionTipo3 ? $certificado->revisor->numero_revision : null;
+            $nestedData['decision'] = $RevisionTipo3 ? $certificado->revisor->decision : null;
+            $nestedData['respuestas'] = $RevisionTipo3 ? $certificado->revisor->respuestas : null;
         
             ///dias vigencia
             $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
