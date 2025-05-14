@@ -423,7 +423,7 @@
     
 <br>
 <div class="footer">
-    <p style="text-align: right; font-size: 9px; line-height: 1; margin-bottom: 1px;">
+    <p style="text-align: right; font-size: 9px; line-height: 1; margin-bottom: -1px;">
         @if ($id_sustituye)
             Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
         @endif
