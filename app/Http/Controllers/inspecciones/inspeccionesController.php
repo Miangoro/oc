@@ -595,7 +595,7 @@ class inspeccionesController extends Controller
     {
       $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
 
-      $pdf = Pdf::loadView('pdfs.etiquetas_tapas_sellado',  ['datos' => $datos]);
+      $pdf = Pdf::loadView('pdfs.Etiquetas_tapas_sellado',  ['datos' => $datos]);
       return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
 }
