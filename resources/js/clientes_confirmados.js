@@ -755,13 +755,13 @@ $(function () {
             notEmpty: {
               message: 'Por favor ingrese el correo electrónico'
             },
-            emailAddress: {
+           /* emailAddress: {
               message: 'Por favor ingrese un correo electrónico válido'
             },
             regexp: {
               regexp: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
               message: 'Por favor ingrese un correo electrónico en un formato válido'
-            }
+            }*/
           }
         },
         telefono: {

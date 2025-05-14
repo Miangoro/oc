@@ -495,7 +495,7 @@
 
     function cargarMarcas() {
         var id_empresa = $('#id_empresa_solicitud_exportacion').val();
-        var id_marca = $('.evasado_export').find(':selected').data('id-marca');
+       var id_marca = $('.evasado_export_edit').find(':selected').data('id-marca-edit');
         var id_direccion = $('#direccion_destinatario_ex').val();
         //alert('/marcas/' + id_marca + '/' + id_direccion)
         if (id_empresa) {
