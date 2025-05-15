@@ -37,7 +37,7 @@ function obtenerIcono(id_tipo) {
         case '13': 
             return 'assets/img/solicitudes/certificado_granel.png'; 
         case '14': 
-        return 'assets/img/solicitudes/dictaminación.png'; 
+        return 'assets/img/solicitudes/dictaminacioDeInstalaciones.png'; 
         case '15': 
             return 'assets/img/icons/brands/vue.png'; 
         default:
