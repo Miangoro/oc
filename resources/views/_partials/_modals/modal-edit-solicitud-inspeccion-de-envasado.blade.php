@@ -282,7 +282,8 @@
                         '');
                     $('#edit_id_cantidad_bote').val(response.lotes_envasado.cant_botellas || '');
                     $('#edit_id_tipo_inspeccion').val(response.lotes_envasado.tipo || '');
-                    $('#edit_id_marca').val(response.lotes_envasado.marca.marca || '');
+                    $('#edit_id_marca').val(response.lotes_envasado?.marca?.marca || '');
+
                 },
                 error: function() {
                     console.error('Error al obtener los datos del lote granel.');

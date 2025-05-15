@@ -245,7 +245,7 @@
                     $('#id_tipo_inspeccion').val(response.lotes_envasado.tipo || '');
                     $('#id_instalacion_inspeccion').val(response.lotes_envasado.lugar_envasado || '')
                         .trigger('change');
-                    $('#id_marca').val(response.lotes_envasado.marca.marca || '');
+                    $('#id_marca').val(response.lotes_envasado?.marca?.marca || '');
 
                 },
                 error: function() {
