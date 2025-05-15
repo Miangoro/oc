@@ -190,7 +190,7 @@ public function index(Request $request)
 ///FUNCION REGISTRAR
 public function store(Request $request)
 {
-    //try {
+    try {
     $validated = $request->validate([
         'id_dictamen' => 'required|exists:dictamenes_exportacion,id_dictamen',
         'num_certificado' => 'required|string|max:40',
@@ -208,13 +208,13 @@ public function store(Request $request)
         $new->save();
     
         return response()->json(['message' => 'Registrado correctamente.']);
-    /*} catch (\Exception $e) {
+    } catch (\Exception $e) {
         Log::error('Error al registrar', [
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
         return response()->json(['error' => 'Error al registrar.'], 500);
-    }*/
+    }
 }
 
 
