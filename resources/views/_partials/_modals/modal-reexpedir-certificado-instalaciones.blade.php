@@ -53,6 +53,7 @@
                                     @else
                                         {{ $dictamen->tipo_dictamen }}
                                     @endif
+                                    | {{ $dictamen->inspeccione->solicitud->folio }}
                                 </option>
                                 @endforeach
                             </select>
@@ -84,22 +85,6 @@
                         </div>
                     </div>
 
-                    <!-- CAMPOS CONDICIONALES POR TIPO DE DICTAMEN -->
-                    <div class="row" id="rex_CamposCondicionales_tipo" style="display: none;">
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <input type="text" class="form-control" id="rex_maestro_mezcalero" name="maestro_mezcalero" placeholder="Maestro Mezcalero">
-                                <label for="">Maestro Mezcalero</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <input type="text" class="form-control" id="rex_num_autorizacion" name="num_autorizacion" placeholder="No. de Autorización">
-                                <label for="">No. de Autorización</label>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
@@ -115,6 +100,22 @@
                                 <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- CAMPOS CONDICIONALES POR TIPO DE DICTAMEN -->
+                    <div class="row" id="rex_CamposCondicionales_tipo" style="display: none;">
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input type="text" class="form-control" id="rex_maestro_mezcalero" name="maestro_mezcalero" placeholder="Maestro Mezcalero">
+                                <label for="">Maestro Mezcalero</label>
+                            </div>
+                        </div>
+                        {{-- <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input type="text" class="form-control" id="rex_num_autorizacion" name="num_autorizacion" placeholder="No. de Autorización">
+                                <label for="">No. de Autorización</label>
+                            </div>
+                        </div> --}}
                     </div>
                         
                 </div>

@@ -29,8 +29,9 @@
                                     @elseif((string) $dictamen->tipo_dictamen === '5')
                                                 Área de maduración
                                     @else
-                                        {{ $dictamen->tipo_dictamen }}
+                                        {{ $dictamen->tipo_dictamen }} 
                                     @endif
+                                    | {{ $dictamen->inspeccione->solicitud->folio }}
                                 </option>
                             @endforeach
                         </select>
@@ -40,7 +41,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" name="num_certificado" placeholder="No. de certificado">
+                                <input type="text" class="form-control" name="num_certificado" placeholder="No. de certificado"
+                                    value="CIDAM C-INS25-">
                                 <label for="">No. de certificado</label>
                             </div>
                         </div>
@@ -53,22 +55,6 @@
                                     @endforeach
                                 </select>
                                 <label for="">Selecciona un firmante</label>
-                            </div>
-                        </div>
-                    </div>
-
-                <!-- CAMPOS CONDICIONALES -->
-                    <div class="row" id="CamposCondicionales_tipo" style="display: none;">
-                        <div class="col-md-6"><!-- Maestro Mezcalero -->
-                            <div class="form-floating form-floating-outline mb-6" >
-                                <input type="text" class="form-control" id="maestro_mezcalero" placeholder="Maestro Mezcalero" name="maestro_mezcalero">
-                                <label for="">Maestro mezcalero</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6"><!-- Número de Autorización -->
-                            <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" id="no_autorizacion" placeholder="No. de Autorización" name="num_autorizacion">
-                                <label for="">No. de autorización</label>
                             </div>
                         </div>
                     </div>
@@ -88,6 +74,22 @@
                                 <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- CAMPOS CONDICIONALES -->
+                    <div class="row" id="CamposCondicionales_tipo" style="display: none;">
+                        <div class="col-md-12"><!-- Maestro Mezcalero -->
+                            <div class="form-floating form-floating-outline mb-6" >
+                                <input type="text" class="form-control" id="maestro_mezcalero" placeholder="Maestro Mezcalero" name="maestro_mezcalero">
+                                <label for="">Maestro mezcalero</label>
+                            </div>
+                        </div>
+                        {{-- <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="text" class="form-control" id="no_autorizacion" placeholder="No. de Autorización" name="num_autorizacion">
+                                <label for="">No. de autorización</label>
+                            </div>
+                        </div> --}}
                     </div>
         
                     
@@ -139,6 +141,7 @@
                                     @else
                                         {{ $dictamen->tipo_dictamen }}
                                     @endif
+                                    | {{ $dictamen->inspeccione->solicitud->folio }}
                                 </option>
                             @endforeach
                         </select>
@@ -166,22 +169,6 @@
                         </div>
                     </div>
 
-                    <!-- CAMPOS CONDICIONALES -->
-                    <div class="row" id="Edit_CamposCondicionales_tipo" style="display: none;">
-                        <div class="col-md-6"><!-- Maestro Mezcalero -->
-                            <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" id="edit_maestro_mezcalero" placeholder="Maestro Mezcalero" name="maestro_mezcalero">
-                                <label for="">Maestro Mezcalero</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6"><!-- Número de Autorización -->
-                            <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" id="edit_num_autorizacion" placeholder="No. de Autorización" name="num_autorizacion">
-                                <label for="">No. de Autorización</label>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
@@ -197,6 +184,22 @@
                                 <label for="">Fecha de vigencia</label>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- CAMPOS CONDICIONALES -->
+                    <div class="row" id="Edit_CamposCondicionales_tipo" style="display: none;">
+                        <div class="col-md-12"><!-- Maestro Mezcalero -->
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="text" class="form-control" id="edit_maestro_mezcalero" placeholder="Maestro Mezcalero" name="maestro_mezcalero">
+                                <label for="">Maestro Mezcalero</label>
+                            </div>
+                        </div>
+                        {{-- <div class="col-md-6"><!-- Número de Autorización -->
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="text" class="form-control" id="edit_num_autorizacion" placeholder="No. de Autorización" name="num_autorizacion">
+                                <label for="">No. de Autorización</label>
+                            </div>
+                        </div> --}}
                     </div>
 
                     <!-- Botones -->

@@ -238,17 +238,18 @@ class Certificado_InstalacionesController extends Controller
             'fecha_emision' => 'required|date',
             'fecha_vigencia' => 'required|date',
             'maestro_mezcalero' => 'nullable|string|max:60',
-            'num_autorizacion' => 'nullable|integer',
+            //'num_autorizacion' => 'nullable|integer',
             'id_firmante' => 'required|integer',
         ]);
 
-        $certificado = Certificados::create([
+        //$certificado = 
+        Certificados::create([
             'id_dictamen' => $validatedData['id_dictamen'],
             'num_certificado' => $validatedData['num_certificado'],
             'fecha_emision' => $validatedData['fecha_emision'],
             'fecha_vigencia' => $validatedData['fecha_vigencia'],
             'maestro_mezcalero' => $validatedData['maestro_mezcalero'] ?: null,
-            'num_autorizacion' => $validatedData['num_autorizacion'] ?: null,
+            //'num_autorizacion' => $validatedData['num_autorizacion'] ?: null,
             'id_firmante' => $validatedData['id_firmante']
         ]);
         /*
@@ -341,7 +342,7 @@ class Certificado_InstalacionesController extends Controller
                     'fecha_vigencia' => $certificado->fecha_vigencia,
                     'id_firmante' => $certificado->id_firmante,
                     'maestro_mezcalero' => $certificado->maestro_mezcalero,
-                    'num_autorizacion' => $certificado->num_autorizacion,
+                    //'num_autorizacion' => $certificado->num_autorizacion,
                 ]);
             }
         } catch (\Exception $e) {
@@ -362,7 +363,7 @@ class Certificado_InstalacionesController extends Controller
             'fecha_emision' => 'required|date',
             'fecha_vigencia' => 'nullable|date',
             'maestro_mezcalero' => 'nullable|string|max:60',
-            'num_autorizacion' => 'nullable|integer',
+            //'num_autorizacion' => 'nullable|integer',
             'id_firmante' => 'required|integer',
         ]);
 
@@ -402,7 +403,7 @@ class Certificado_InstalacionesController extends Controller
             $certificado->fecha_emision = $validated['fecha_emision'];
             $certificado->fecha_vigencia = $validated['fecha_vigencia'];
             $certificado->maestro_mezcalero = $validated['maestro_mezcalero'] ?: null;
-            $certificado->num_autorizacion = $validated['num_autorizacion'] ?: null;
+            //$certificado->num_autorizacion = $validated['num_autorizacion'] ?: null;
             $certificado->id_firmante = $validated['id_firmante'];
             $certificado->save();
 
@@ -470,7 +471,7 @@ class Certificado_InstalacionesController extends Controller
                     'fecha_emision' => 'required|date',
                     'fecha_vigencia' => 'required|date',
                     'maestro_mezcalero' => 'nullable|string|max:60',
-                    'num_autorizacion' => 'nullable|integer',
+                    //'num_autorizacion' => 'nullable|integer',
                     'id_firmante' => 'required|integer',
                 ]);
             }
@@ -502,7 +503,7 @@ class Certificado_InstalacionesController extends Controller
                 $new->estatus = 2;
                 $new->observaciones = json_encode(['id_sustituye' => $request->id_certificado]);
                 $new->maestro_mezcalero = $request->maestro_mezcalero ?: null;
-                $new->num_autorizacion = $request->num_autorizacion ?: null;
+                //$new->num_autorizacion = $request->num_autorizacion ?: null;
                 $new->save();
 
                 return response()->json(['message' => 'Registrado correctamente.']);

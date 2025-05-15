@@ -27,7 +27,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" name="num_certificado" placeholder="No. de certificado">
+                                <input type="text" class="form-control" name="num_certificado" placeholder="No. de certificado"
+                                    value="CIDAM C-EXP25-">
                                 <label for="">No. de certificado</label>
                             </div>
                         </div>
