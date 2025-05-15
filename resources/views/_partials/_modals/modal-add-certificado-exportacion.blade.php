@@ -16,7 +16,7 @@
                                 <select class="form-select select2" id="id_dictamen" name="id_dictamen" data-placeholder="Selecciona un dictamen">
                                     <option value="" disabled selected>NULL</option>
                                     @foreach ($dictamen as $dic)
-                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | </option>
+                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | {{ $dic->inspeccione->solicitud->folio }}</option>
                                     @endforeach
                                 </select>
                                 <label for="">No. de dictamen</label>
@@ -121,7 +121,7 @@
                                 <select class="form-select select2" name="id_dictamen" 
                                     id="edit_id_dictamen">
                                     @foreach ($dictamen as $dic)
-                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | </option>
+                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | {{ $dic->inspeccione->solicitud->folio }}</option>
                                     @endforeach
                                 </select>
                                 <label for="">No. de dictamen</label>

@@ -126,14 +126,12 @@ public function index(Request $request)
             $nestedData['respuestas_consejo'] = $ConsejoTipo3 ? $certificado->revisorConsejo->respuestas : null;
         
             ///dias vigencia
-            $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
-            $nestedData['fecha_actual'] = $fechaActual;
-            $nestedData['vigencia'] = $certificado->fecha_vigencia;
+            $fechaActual = Carbon::now()->startOfDay();//Obtener la fecha actual sin horas
             $fechaVigencia = Carbon::parse($certificado->fecha_vigencia)->startOfDay();
                 if ($fechaActual->isSameDay($fechaVigencia)) {
                     $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este certificado</span>";
                 } else {
-                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);//diferencia de "dias" actual a vigencia
                     if ($diasRestantes > 0) {
                         if ($diasRestantes > 15) {
                             $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
@@ -192,7 +190,7 @@ public function index(Request $request)
 ///FUNCION REGISTRAR
 public function store(Request $request)
 {
-    try {
+    //try {
     $validated = $request->validate([
         'id_dictamen' => 'required|exists:dictamenes_exportacion,id_dictamen',
         'num_certificado' => 'required|string|max:40',
@@ -210,13 +208,13 @@ public function store(Request $request)
         $new->save();
     
         return response()->json(['message' => 'Registrado correctamente.']);
-    } catch (\Exception $e) {
+    /*} catch (\Exception $e) {
         Log::error('Error al registrar', [
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
         return response()->json(['error' => 'Error al registrar.'], 500);
-    }
+    }*/
 }
 
 
