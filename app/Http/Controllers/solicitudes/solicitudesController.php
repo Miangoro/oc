@@ -498,18 +498,9 @@ class solicitudesController extends Controller
 
         $InspeccionEnva->caracteristicas = json_encode([
             'id_lote_envasado' => $request->id_lote_envasado_inspeccion,
-            'id_categoria' => $request->id_categoria_inspeccion,
-            'id_clase' => $request->id_clase_inspeccion,
-            'id_tipo_maguey' => $request->id_tipo_maguey_inspeccion,
-            'id_marca' => $request->id_marca,
-            'volumen_inspeccion' => $request->volumen_inspeccion,
-            'analisis_inspeccion' => $request->analisis_inspeccion,
-            'id_tipo_inspeccion' => $request->id_tipo_inspeccion,
-            'id_cantidad_bote' => $request->id_cantidad_bote,
             'id_cantidad_caja' => $request->id_cantidad_caja,
             'id_inicio_envasado' => $request->id_inicio_envasado,
             'id_previsto' => $request->id_previsto,
-            'id_certificado_inspeccion' => $request->id_certificado_inspeccion,
         ]);
 
         $InspeccionEnva->save();
@@ -1063,19 +1054,10 @@ class solicitudesController extends Controller
                         'info_adicional' => 'nullable|string'
                     ]);
                     $caracteristicasJson = [
-                        'id_lote_granel_inspeccion' => $request->id_lote_granel_inspeccion,
-                        'id_categoria_inspeccion' => $request->id_categoria_inspeccion,
-                        'id_clase_inspeccion' => $request->id_clase_inspeccion,
-                        'id_tipo_maguey_inspeccion' => $request->id_tipo_maguey_inspeccion,
-                        'id_marca' => $request->id_marca,
-                        'volumen_inspeccion' => $request->volumen_inspeccion,
-                        'analisis_inspeccion' => $request->analisis_inspeccion,
-                        'id_tipo_inspeccion' => $request->id_tipo_inspeccion,
-                        'id_cantidad_bote' => $request->id_cantidad_bote,
+                        'id_lote_envasado' => $request->edit_id_lote_envasado_inspeccion,
                         'id_cantidad_caja' => $request->id_cantidad_caja,
                         'id_inicio_envasado' => $request->id_inicio_envasado,
                         'id_previsto' => $request->id_previsto,
-                        'id_certificado_inspeccion' => $request->id_certificado_inspeccion,
 
                     ];
                     $jsonContent = json_encode($caracteristicasJson);
@@ -1299,8 +1281,8 @@ class solicitudesController extends Controller
 
 
                         // Guardar la solicitud
-                  
-                
+
+
                         $solicitud->id_empresa = $validated['id_empresa'];
                         $solicitud->fecha_visita = $validated['fecha_visita'];
                         $solicitud->id_instalacion = $validated['id_instalacion'];
@@ -1621,11 +1603,11 @@ class solicitudesController extends Controller
     public function getDetalleLoteEnvasado($id_lote_envasado)
     {
         $lote = lotes_envasado::with('lotesGranel.categoria','lotesGranel.clase','lotesGranel.certificadoGranel')->find($id_lote_envasado); // Cargar relación
-        
+
         if (!$lote) {
             return response()->json(['error' => 'Lote no encontrado'], 404);
         }
-    
+
         return response()->json([
             'lote_envasado' => $lote, // Devuelve todos los datos del lote envasado
             'detalle' => $lote->lotesGranel->isEmpty() ? null : $lote->lotesGranel->map(function ($granel) {
@@ -1634,9 +1616,9 @@ class solicitudesController extends Controller
                 ]);
             })
         ], 200);
-        
+
     }
-    
+
 
     public function getDetalleLoteTipo($id_lote_granel)
     {
