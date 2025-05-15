@@ -154,8 +154,8 @@
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-2">
                                 <div class="avatar me-4">
-                                    <span class="avatar-initial rounded-3 bg-label-primary"><i
-                                            class="ri-home-gear-line ri-24px"></i></span>
+                                    <span class="avatar-initial rounded-3 bg-label-danger"><i
+                                            class="ri-file-warning-line ri-24px"></i></span>
                                 </div>
                                 <h4 class="mb-0">{{ $dictamenesInstalacionesSinCertificado }}</h4>
                             </div>
@@ -163,12 +163,21 @@
                             <hr>
                             <div class="d-flex align-items-center mb-2">
                                 <div class="avatar me-4">
-                                    <span class="avatar-initial rounded-3 bg-label-warning"><i
-                                            class="ri-paint-fill ri-24px"></i></span>
+                                    <span class="avatar-initial rounded-3 bg-label-danger"><i
+                                            class="ri-file-warning-line ri-24px"></i></span>
                                 </div>
                                 <h4 class="mb-0">{{ $dictamenesGranelesSinCertificado }}</h4>
                             </div>
                             <h6 class="mb-0 fw-normal">Pendiente de crear certificado de graneles</h6>
+                             <hr>
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="avatar me-4">
+                                    <span class="avatar-initial rounded-3 bg-label-danger"><i
+                                            class="ri-file-warning-line ri-24px"></i></span>
+                                </div>
+                                <h4 class="mb-0">{{ $dictamenesExportacionSinCertificado }}</h4>
+                            </div>
+                            <h6 class="mb-0 fw-normal">Pendiente de crear certificado de exportación</h6>
                         </div>
                     </div>
                 </div>

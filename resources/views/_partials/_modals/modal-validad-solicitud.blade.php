@@ -696,21 +696,6 @@
                                         </tr>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Domicilio de Instalaciones (Unidad de Producción o Envasadora
-                                                Autorizada):
-                                            </th>
-                                            <td class="domicilioInstalacion"></td>
-                                            <td>
-                                                <select name="domicilioInstalacion" class="form-control form-control-sm"
-                                                    id="cumpleDomicilioInstalacionesEmisorDictamen">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Fecha y
                                                 Hora de Visita:</th>
                                             <td class="fechaHora"></td>
@@ -801,6 +786,22 @@
                                             <td class="fq"></td>
                                             <td>
                                                 <select name="fq" class="form-control form-control-sm" id="cumpleFqEnvasado">
+                                                    <option value="" disabled selected>Seleccionar</option>
+                                                    <option value="si">Sí</option>
+                                                    <option value="no">No</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                                Domicilio de Instalaciones (Unidad de Producción o Envasadora
+                                                Autorizada):
+                                            </th>
+                                            <td class="domicilioInstalacion"></td>
+                                            <td>
+                                                <select name="domicilioInstalacion" class="form-control form-control-sm"
+                                                    id="cumpleDomicilioInstalacionesEmisorDictamen">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>

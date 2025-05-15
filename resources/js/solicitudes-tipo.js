@@ -11,7 +11,7 @@ function obtenerIcono(id_tipo) {
    // console.log('ID recibido:', id_tipoStr); 
     switch (id_tipoStr) {
         case '1': 
-            return 'assets/img/solicitudes/muestreo_agave.png'; 
+            return 'assets/img/solicitudes/muestreoDeAgave.png'; 
         case '2': 
             return 'assets/img/solicitudes/vigilancia_producción.png'; 
         case '3': 
