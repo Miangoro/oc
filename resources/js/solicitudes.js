@@ -1295,8 +1295,14 @@ $(document).on('click', '.expediente-record', function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function (e) {
-      // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
+       $('#btnEditGeo').prop('disabled', true);
+
+        $('#btnEditGeo').html('<span class="spinner-border spinner-border-sm me-2"></span> Actualizando...');
+        setTimeout(function () {
+            $('#btnEditGeo').prop('disabled', false);
+            $('#btnEditGeo').html('<i class="ri-add-line"></i> Registrar');
+        }, 2000);
 
       // Hacer la solicitud AJAX
       $.ajax({
@@ -1405,7 +1411,13 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(formDictaminacion);
+       $('#btnEditDicIns').prop('disabled', true);
 
+        $('#btnEditDicIns').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+        setTimeout(function () {
+            $('#btnEditDicIns').prop('disabled', false);
+            $('#btnEditDicIns').html('<i class="ri-add-line"></i> Registrar');
+        }, 2000);
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud').val(),
         type: 'POST',
@@ -2121,7 +2133,13 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function () {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
+       $('#btneditlib').prop('disabled', true);
 
+        $('#btneditlib').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+        setTimeout(function () {
+            $('#btneditlib').prop('disabled', false);
+            $('#btneditlib').html('<i class="ri-add-line"></i> Editar');
+        }, 2000);
       // Hacer la solicitud AJAX
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_liberacion_terminado').val(),
@@ -2533,8 +2551,14 @@ $(document).on('click', '.expediente-record', function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function (e) {
-      // Validar el formulario
       var formData = new FormData(form);
+             $('#btnRegistrarDicIns').prop('disabled', true);
+
+        $('#btnRegistrarDicIns').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+        setTimeout(function () {
+            $('#btnRegistrarDicIns').prop('disabled', false);
+            $('#btnRegistrarDicIns').html('<i class="ri-add-line"></i> Registrar');
+        }, 2000);
 
       $.ajax({
         url: '/solicitudes-list',
@@ -2619,7 +2643,13 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(form2);
+       $('#btnRegistrarGeo').prop('disabled', true);
 
+        $('#btnRegistrarGeo').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+        setTimeout(function () {
+            $('#btnRegistrarGeo').prop('disabled', false);
+            $('#btnRegistrarGeo').html('<i class="ri-add-line"></i> Registrar');
+        }, 2000);
       $.ajax({
         url: '/registrar-solicitud-georeferenciacion',
         type: 'POST',
@@ -3708,6 +3738,13 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(formDictaminacion);
+       $('#btnRegistrarlib').prop('disabled', true);
+
+        $('#btnRegistrarlib').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+        setTimeout(function () {
+            $('#btnRegistrarlib').prop('disabled', false);
+            $('#btnRegistrarlib').html('<i class="ri-add-line"></i> Registrar');
+        }, 2000);
 
       $.ajax({
         url: '/registrar-solicitud-lib-prod-term',
@@ -3725,7 +3762,7 @@ $(document).on('click', '.expediente-record', function () {
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
-            text: response.message,
+            text: 'La liberación del producto se registró exitosamente.',
             customClass: {
               confirmButton: 'btn btn-success'
             }

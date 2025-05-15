@@ -199,8 +199,6 @@
                             </div>
                         </div>
                     </div>
-
-
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-150" id="edit_comentarios_lib_ter"
@@ -209,7 +207,7 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="submit" class="btn btn-primary" id="btneditlib"><i class="ri-pencil-fill"></i> Editar</button>
                         <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
                                 class="ri-close-line"></i> Cancelar</button>
                     </div>
