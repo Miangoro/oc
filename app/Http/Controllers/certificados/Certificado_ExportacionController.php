@@ -27,7 +27,9 @@ class Certificado_ExportacionController extends Controller
     {
         $certificado = Certificado_Exportacion::all(); // Obtener todos los datos
         //$dictamen = Dictamen_Exportacion::where('estatus','!=',1)->get();
-        $dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')->get();
+        $dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')
+            ->orderBy('id_dictamen', 'desc')
+            ->get();
         $users = User::where('tipo',1)->get(); //Solo Prrsonal OC 
         $empresa = empresa::where('tipo', 2)->get();
         $revisores = Revisor::all(); 
