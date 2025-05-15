@@ -3690,7 +3690,7 @@ $(document).on('click', '.expediente-record', function () {
         id_lote_envasado: {
           validators: {
             notEmpty: {
-              message: 'Selecciona al menos una clase.'
+              message: 'Selecciona al menos un lote envasado.'
             }
           }
         },

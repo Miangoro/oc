@@ -258,19 +258,19 @@
                     }
 
                     // Cargar los detalles de los lotes envasado en el modal
-                    var contenidoLotesEnvasado = "";
+                    var contenidoLotesEnvasados = "";
                     for (let index = 0; index < response.lotes_envasado.length; index++) {
-                        contenidoLotesEnvasado = '<option value="' + response.lotes_envasado[index]
+                        contenidoLotesEnvasados = '<option value="' + response.lotes_envasado[index]
                             .id_lote_envasado + '">' +
                             response.lotes_envasado[index].nombre + '</option>' +
-                            contenidoLotesEnvasado;
+                            contenidoLotesEnvasados;
                     }
                     if (response.lotes_envasado.length == 0) {
-                        contenidoLotesEnvasado =
+                        contenidoLotesEnvasados =
                             '<option disabled selected value="">Sin lotes envasados registrados</option>';
                     }
                     // Agregar el contenido de los lotes envasado al select correspondiente
-                    $('#id_lote_envasado_lib_ter').html(contenidoLotesEnvasado);
+                    $('#id_lote_envasado_lib_ter').html(contenidoLotesEnvasados);
 
 
                 },
