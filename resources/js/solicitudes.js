@@ -4554,7 +4554,7 @@ $(document).on('click', '.expediente-record', function () {
 
           $('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
           $('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
-          $('.certificadoGranel').text(response?.data?.lote_granel?.folio_certificado || 'No disponible');
+          $('.certificadoGranel').text(response?.data?.lote_granel?.certificadoGranel?.num_certificado || 'No disponible');
 
           $('.tipos').text(response?.tipos_agave || 'No disponible');
 
