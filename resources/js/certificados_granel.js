@@ -271,9 +271,13 @@ var dataTable = $('.datatables-users').DataTable({
         
         return estatus + 
           `<div style="flex-direction: column; margin-top: 2px;">
-            <div class="small"><b>Personal:</b> <span class="${colorClass}">${revision_oc} ${revisor_oc}</span>${icono_oc}</div>
-            <div style="display: inline;" class="small"><b>Consejo:</b> <span class="${colorClass2}">${revision2} ${revisor2}</span>${icono2} 
-          </div> `;
+              <div class="small"> <b>Personal:</b> 
+                <span class="${colorClass}">${revision_oc} ${revisor_oc}</span>${icono_oc}
+              </div>
+              <div style="display: inline;" class="small"> <b>Consejo:</b> 
+                <span class="${colorClass2}">${revision2} ${revisor2}</span>${icono2}
+              </div>
+            </div> `;
       // Retorna los revisores en formato HTML
       /*return estatus+
         ` <div style="display: flex; flex-direction: column; align-items: flex-start;">

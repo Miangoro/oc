@@ -179,36 +179,32 @@ class Certificado_InstalacionesController extends Controller
                 $nestedData['numero_cliente'] = $numero_cliente;
                 $nestedData['razon_social'] = $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
                 //Revisiones
-                $PersonalTipo1 = $certificado->revisorPersonal && $certificado->revisorPersonal?->tipo_certificado === 1;
-                $nestedData['revisor_personal'] = $PersonalTipo1 ? $certificado->revisorPersonal->user->name : null;
-                $nestedData['numero_revision_personal'] = $PersonalTipo1 ? $certificado->revisorPersonal->numero_revision : null;
-                $nestedData['decision_personal'] = $PersonalTipo1 ? $certificado->revisorPersonal->decision : null;
-                $nestedData['respuestas_personal'] = $PersonalTipo1 ? $certificado->revisorPersonal->respuestas : null;
-                $ConsejoTipo1 = $certificado->revisorConsejo && $certificado->revisorConsejo?->tipo_certificado === 1;
-                $nestedData['revisor_consejo'] = $ConsejoTipo1 ? $certificado->revisorConsejo->user->name : null;
-                $nestedData['numero_revision_consejo'] = $ConsejoTipo1 ? $certificado->revisorConsejo->numero_revision : null;
-                $nestedData['decision_consejo'] = $ConsejoTipo1 ? $certificado->revisorConsejo->decision : null;
-                $nestedData['respuestas_consejo'] = $ConsejoTipo1 ? $certificado->revisorConsejo->respuestas : null;
+                $nestedData['revisor_personal'] = $certificado->revisorPersonal->user->name ?? null;
+                $nestedData['numero_revision_personal'] = $certificado->revisorPersonal->numero_revision ?? null;
+                $nestedData['decision_personal'] = $certificado->revisorPersonal->decision?? null;
+                $nestedData['respuestas_personal'] = $certificado->revisorPersonal->respuestas ?? null;
+                $nestedData['revisor_consejo'] = $certificado->revisorConsejo->user->name ?? null;
+                $nestedData['numero_revision_consejo'] = $certificado->revisorConsejo->numero_revision ?? null;
+                $nestedData['decision_consejo'] = $certificado->revisorConsejo->decision ?? null;
+                $nestedData['respuestas_consejo'] = $certificado->revisorConsejo->respuestas ?? null;
                 ///dias vigencia
                 $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
-                $nestedData['fecha_actual'] = $fechaActual;
-                $nestedData['vigencia'] = $certificado->fecha_vigencia;
                 $fechaVigencia = Carbon::parse($certificado->fecha_vigencia)->startOfDay();
-                if ($fechaActual->isSameDay($fechaVigencia)) {
-                    $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este certificado</span>";
-                } else {
-                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
-                    if ($diasRestantes > 0) {
-                        if ($diasRestantes > 15) {
-                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
-                        } else {
-                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
-                        }
-                        $nestedData['diasRestantes'] = $res;
+                    if ($fechaActual->isSameDay($fechaVigencia)) {
+                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este certificado</span>";
                     } else {
-                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                        $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+                        if ($diasRestantes > 0) {
+                            if ($diasRestantes > 15) {
+                                $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
+                            } else {
+                                $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
+                            }
+                            $nestedData['diasRestantes'] = $res;
+                        } else {
+                            $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                        }
                     }
-                }
                 ///solicitud y acta
                 $nestedData['id_solicitud'] = $certificado->dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
                 $urls = $certificado->dictamen?->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();

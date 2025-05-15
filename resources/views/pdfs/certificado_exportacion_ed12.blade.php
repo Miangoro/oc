@@ -274,7 +274,12 @@
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Edad
                     (solo aplica en Añejo):</td>
                 <td style="text-align: left; padding-left: 4px;">
-                    {{ mb_strtoupper($lote->lotesGranel->first()->edad) ?? '-----' }}
+                    {{-- {{ mb_strtoupper($lote->lotesGranel->first()->edad) ?? '-----' }} --}}
+                    {{ in_array(optional($lote->lotesGranel->first())->id_clase, [2, 3]) 
+                        ? (filled(optional($lote->lotesGranel->first())->edad) 
+                            ? mb_strtoupper(optional($lote->lotesGranel->first())->edad) 
+                            : 'No encontrado') 
+                        : 'NA' }}
                 </td>
             </tr>
             <tr>

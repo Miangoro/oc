@@ -44,12 +44,16 @@ class Certificados extends Model
 
     public function revisorPersonal()
     {
-        return $this->hasOne(Revisor::class, 'id_certificado')->where('tipo_revision', 1);
+        return $this->hasOne(Revisor::class, 'id_certificado')
+            ->where('tipo_revision', 1)
+            ->where('tipo_certificado', 1);
     }
 
     public function revisorConsejo()
     {
-        return $this->hasOne(Revisor::class, 'id_certificado')->where('tipo_revision', 2);
+        return $this->hasOne(Revisor::class, 'id_certificado')
+            ->where('tipo_revision', 2)
+            ->where('tipo_certificado', 1);
     }
     
     public function certificadoReexpedido()

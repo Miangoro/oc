@@ -303,16 +303,14 @@ if (dt_user_table.length) {
             
           return estatus + 
             `<div style="flex-direction: column; margin-top: 2px;">
-              <div class="small"><b>Personal:</b> <span class="${colorClass}">${revision_oc} ${revisor_oc}</span>${icono_oc}</div>
-              <div style="display: inline;" class="small"><b>Consejo:</b> <span class="${colorClass2}">${revision2} ${revisor2}</span>${icono2} 
+              <div class="small"> <b>Personal:</b> 
+                <span class="${colorClass}">${revision_oc} ${revisor_oc}</span>${icono_oc}
+              </div>
+              <div style="display: inline;" class="small"> <b>Consejo:</b> 
+                <span class="${colorClass2}">${revision2} ${revisor2}</span>${icono2}
+              </div>
             </div> `;
             //'<span class="badge rounded-pill bg-info">Vo. Bo. Cliente</span>';
-          /*return estatus+
-            `<div style="flex-direction: column;">
-                  <div class="small"><b>Personal:</b> <span ${color}> ${revision} ${personal}</span></div>
-                  <div style="display: inline;">${revisorMiembro}</div>
-              </div>
-            `;*/
             //<div style="display: flex; flex-direction: column; align-items: flex-start;">
         }
         },
