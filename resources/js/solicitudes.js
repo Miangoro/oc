@@ -4553,7 +4553,8 @@ $(document).on('click', '.expediente-record', function () {
           $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
           // Validar si `direccion_completa` no está vacío
           if (response.data.instalacion) {
-            $('.domicilioInstalacion').html(response.data.instalacion.direccion_completa + " <b>Vigencia: </b>"+response.data.instalacion.fecha_vigencia);
+            $('.domicilioInstalacion').html(
+              '<a target="_blank" href="/certificado_productor_mezcal/'+response.data.instalacion.certificado_instalacion.certificado.id_certificado + '"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
           } else {
             // Si está vacío, usar `ubicacion_predio`
             $('.domicilioInstalacion').text(response.data?.predios?.ubicacion_predio);
@@ -4619,7 +4620,7 @@ $(document).on('click', '.expediente-record', function () {
           $('.volumenTrasladado').text(caracteristicas.id_vol_traslado);
           $('.volumenSobrante').text(caracteristicas.id_vol_res);
           $('.volumenIngresado').text(caracteristicas.volumen_ingresado);
-          $('.etiqueta').html('<a href="files/'+response.data.empresa.empresa_num_clientes[0].numero_cliente+'/'+response?.url_etiqueta+'" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          $('.etiqueta').html('<a title="Etiqueta" href="files/'+response.data.empresa.empresa_num_clientes[0].numero_cliente+'/'+response?.url_etiqueta+'" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a> <br><a title="Corrugado" href="files/'+response.data.empresa.empresa_num_clientes[0].numero_cliente+'/'+response?.url_corrugado+'" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
           $('.dictamenEnvasado').html('<a href="/dictamen_envasado/'+response?.data?.lote_envasado?.dictamen_envasado?.id_dictamen_envasado+'" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
 
           // Verificar si 'detalles' existe y es un arreglo
@@ -4675,12 +4676,12 @@ $(document).on('click', '.expediente-record', function () {
               noDocMessage: 'No hay factura proforma',
               condition: (documento, response) => documento.id_empresa == response.data.id_empresa
             },
-            {
+          /*/  {
               ids: [128],
               targetClass: '.domicilioInstalacion',
               noDocMessage: 'No hay dictamen de instalaciones',
               condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
-            }
+            }*/
           ];
 
           // Variable para seguimiento de documentos encontrados

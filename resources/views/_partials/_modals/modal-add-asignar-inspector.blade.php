@@ -18,6 +18,10 @@
           </div>-->
           <form id="addAsignarInspector" class="row g-5" onsubmit="return false">
             <input name="id_solicitud" type="hidden" id="id_solicitud">
+
+            <div id="datosSolicitud">
+
+            </div>
   
 
             <div class="col-12">

@@ -282,6 +282,38 @@
                     $("#num_servicio").val(data.num_servicio || '');
                     $("#fecha_servicio").val(data.fecha_servicio || '');
                     $("#observaciones").text(data.observaciones || '');
+
+                 if (data.solicitud) {
+    const solicitud = data.solicitud;
+
+    const tabla = `
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered">
+          
+                <tbody>
+                    <tr>
+                        <td>Folio</td>
+                        <td>${solicitud.folio}</td>
+                    </tr>
+                    <tr>
+                        <td>Fecha</td>
+                        <td>${solicitud.fecha_solicitud}</td>
+                    </tr>
+                    <tr>
+                        <td>Cliente</td>
+                        <td>${solicitud.empresa.razon_social}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    $("#datosSolicitud").html(tabla);
+} else {
+    $("#datosSolicitud").html('<div class="alert alert-warning">No hay datos de la solicitud.</div>');
+}
+
+
                 } else {
                     alert('No se pudieron obtener los datos de la solicitud.');
                 }

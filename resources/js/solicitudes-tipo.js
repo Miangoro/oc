@@ -13,31 +13,31 @@ function obtenerIcono(id_tipo) {
         case '1': 
             return 'assets/img/solicitudes/muestreoDeAgave.png'; 
         case '2': 
-            return 'assets/img/solicitudes/vigilancia_producción.png'; 
+            return 'assets/img/solicitudes/Vigilancia en la producción de lote.png'; 
         case '3': 
-            return 'assets/img/icons/brands/cent.png'; 
+            return 'assets/img/solicitudes/muestreo de lote a granel.png'; 
         case '4': 
-            return 'assets/img/solicitudes/traslado.png'; 
+            return 'assets/img/solicitudes/Vigilancia en el transaldo.png'; 
         case '5': 
-            return 'assets/img/solicitudes/envasado.png'; 
+            return 'assets/img/solicitudes/inspección de envasado.png'; 
         case '6': 
-            return 'assets/img/solicitudes/muestreo_envasado.png'; 
+            return 'assets/img/solicitudes/muestreo de lote envasado.png'; 
         case '7': 
-            return 'assets/img/icons/brands/github.png'; 
+            return 'assets/img/solicitudes/Inspección de ingreso.png'; 
         case '8': 
             return 'assets/img/solicitudes/terminado.png';  
         case '9': 
-            return 'assets/img/icons/brands/mac.png'; 
+            return 'assets/img/solicitudes/Inspección en la liberación.png'; 
         case '10': 
             return 'assets/img/solicitudes/geo.png'; 
         case '11': 
-            return 'assets/img/solicitudes/exportación.png'; 
+            return 'assets/img/solicitudes/pedidos para exportacion.png'; 
         case '12': 
             return 'assets/img/solicitudes/certificado_granel.png'; 
         case '13': 
             return 'assets/img/solicitudes/certificado_granel.png'; 
         case '14': 
-        return 'assets/img/solicitudes/dictaminacioDeInstalaciones.png'; 
+        return 'assets/img/solicitudes/Dictaminación de instalaciones.png'; 
         case '15': 
             return 'assets/img/icons/brands/vue.png'; 
         default:

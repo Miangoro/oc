@@ -248,6 +248,13 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
             ->value('url'); // Obtiene directamente el valor del campo 'url'
         }
 
+    
+        if ($idEtiqueta) {
+            $url_corrugado = Documentacion_url::where('id_relacion', $idEtiqueta)
+            ->where('id_documento', 75)
+            ->value('url'); // Obtiene directamente el valor del campo 'url'
+        }
+
     }
     
 
@@ -256,6 +263,7 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
         'data' => $solicitud,
         'documentos' => $documentos,
         'url_etiqueta' => $url_etiqueta ?? '',
+        'url_corrugado' => $url_corrugado ?? '',
         'fecha_visita_formateada' => Helpers::formatearFechaHora($solicitud->fecha_visita),
         'tipos_agave' => $tipos
     ]);
