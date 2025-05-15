@@ -381,7 +381,7 @@
                 Aduana de salida:  
             </td>
             <td style="font-weight: bold; width: 40%">
-                FALTA
+                {{$aduana}} 
             </td>
         </tr>
         <tr>
@@ -389,31 +389,31 @@
                 Fracción arancelaria
             </td>
             <td style="font-weight: bold; width: 40%" >
-                FALTA
+                2208.90.05.00
             </td>
         </tr>
     </table>
     <table>
         <tr>
             <td style="font-weight: bold; padding-top:16px; padding-bottom:16px; width: 50%; border-top: none">
-                FALTA
+                {{$resp_instalacion}}
                 <br><br>
                 Nombre del responsable de instalaciones
             </td>
             <td style="font-weight: bold; width: 50%; border-top: none">
-                FALTA
+                 {{$empresa}}
                 <br><br>
                 Nombre del solicitante de exportación
             </td>
         </tr>
     </table>
     <table>
-        <td style="padding-top:16px; padding-bottom:16px; width: 30%;">
-            INFORMACIÓN ADICIONAL SOBRE LA ACTIVIDAD:  
-        </td>
-        <td style="font-weight: bold; width: 70%">
-            FALTA
-        </td>
+        <tr>
+            <td style="font-weight: bold; padding-top:16px; padding-bottom:16px; width: 30%;">
+                INFORMACIÓN ADICIONAL SOBRE LA ACTIVIDAD:
+            </td>
+            <td>{{$info_adicional}}</td>
+        <tr>
     </table>
 
     <!--PUNTO 5-->

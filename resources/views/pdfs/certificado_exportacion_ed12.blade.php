@@ -271,8 +271,7 @@
                     {{ mb_strtoupper($lote->lotesGranel->first()->categoria->categoria) ?? 'No encontrado' }},
                     {{ mb_strtoupper($lote->lotesGranel->first()->clase->clase) ?? 'No encontrado' }}
                 </td>
-                <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Edad
-                    (solo aplica en Añejo):</td>
+                <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Edad:</td>
                 <td style="text-align: left; padding-left: 4px;">
                     {{-- {{ mb_strtoupper($lote->lotesGranel->first()->edad) ?? '-----' }} --}}
                     {{ in_array(optional($lote->lotesGranel->first())->id_clase, [2, 3]) 
@@ -286,7 +285,7 @@
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px;">
                     Certificado <br> NOM a <br>Granel:</td>
                 <td style="text-align: left; padding-left: 4px;">
-                    {{ $lote->lotesGranel->first()->folio_certificado ?? 'NA' }}&nbsp;
+                    {{ $lote->lotesGranel->first()->folio_certificado ?? 'No encontrado' }}&nbsp;
                 </td>
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Volumen:</td>
                 <td style="text-align: left; padding-left: 4px;">
@@ -343,7 +342,7 @@
                     <td
                         style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">
                         Envasado en:</td>
-                    <td style="text-align: justify; font-size: 9px; padding-left: 4px; width: 22%;">
+                    <td style="text-align: justify; font-size: 9px; padding-left: 4px; padding-right: 2px; width: 22%;">
                         {{ mb_strtoupper($envasadoEN) }}</td>
                     <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
                         Cajas:</td>
@@ -381,7 +380,7 @@
                     <td
                         style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">
                         Envasado en:</td>
-                    <td style="text-align: justify; font-size: 9px; padding-left: 4px; width: 22%;">
+                    <td style="text-align: justify; font-size: 9px; padding-left: 4px; padding-right: 2px; width: 22%;">
                         {{ $envasadoEN }}&nbsp;</td>
                     <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
                         Cajas:</td>

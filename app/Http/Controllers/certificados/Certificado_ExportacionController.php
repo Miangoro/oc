@@ -629,7 +629,10 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         'empresa' => $empresa->razon_social ?? 'No encontrado',
         'domicilio_inspeccion' => $data->dictamen->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrado',
         'fecha_propuesta' => Helpers::formatearFecha($data->dictamen->inspeccione->solicitud->fecha_visita) ?? 'No encontrado',
+        'resp_instalacion' => $data->dictamen->inspeccione->solicitud->instalacion->responsable ?? 'No encontrado',
+        'info_adicional' => $data->dictamen->inspeccione->solicitud->info_adicional ?? 'No encontrado',
         
+
         'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? 'No encontrado',
         'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? 'No encontrado',
