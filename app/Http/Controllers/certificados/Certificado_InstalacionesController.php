@@ -687,7 +687,6 @@ class Certificado_InstalacionesController extends Controller
         $pdfData = [
             'datos' => $datos,
             'num_certificado' => $datos->num_certificado ?? 'No encontrado',
-            'num_autorizacion' => $datos->num_autorizacion ?? 'No encontrado',
             'num_dictamen' => $datos->dictamen->num_dictamen ?? 'No encontrado',
             'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
             'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),
@@ -701,6 +700,7 @@ class Certificado_InstalacionesController extends Controller
             'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa ?? 'No encontrado',
             'razon_social' => $empresa->razon_social ?? 'No encontrado',
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
+            'num_autorizacion' => $empresa->num_autorizacion ?? 'No encontrado',
             'numero_cliente' => $numero_cliente,
             'representante_legal' => $empresa->representante ?? 'No encontrado',
             'nombre_firmante' => $datos->firmante->name ?? 'No encontrado',
