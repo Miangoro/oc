@@ -289,7 +289,7 @@
                 </td>
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">%Alc. Vol.:</td>
                 <td style="text-align: left; padding-left: 4px;">
-                    {{ round($lote->lotesGranel->first()->cont_alc) ?? 'N' }}%
+                    {{ round($lote->lotesGranel->first()->cont_alc) ?? 'No encontrado' }}%
                 </td>
             </tr>
             @php
@@ -306,12 +306,12 @@
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. lote granel:
                 </td>
                 <td style="text-align: left; padding-left: 4px;">
-                    {{ $lote->lotesGranel->first()->nombre_lote ?? 'N' }}
+                    {{ $lote->lotesGranel->first()->nombre_lote ?? 'No encontrado' }}
                 </td>
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de lote
                     envasado:</td>
                 <td style="text-align: left; padding-left: 4px;">
-                    {{ $lote->nombre ?? 'N' }}
+                    {{ $lote->nombre ?? 'No encontrado' }}
                 </td>
             </tr>
             <tr>
@@ -322,10 +322,10 @@
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Tipo de Maguey:
                 </td>
                 <td style="text-align: left; padding-left: 4px;">
-    {!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
-        return $tipo->nombre . ' (<i>' . $tipo->cientifico . '</i>)';
-    })->implode(', ') !!}
-</td>
+                    {!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
+                        return $tipo->nombre . ' (<i>' . $tipo->cientifico . '</i>)';
+                    })->implode(', ') !!}
+                </td>
 
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Folio Hologramas:
                 </td>

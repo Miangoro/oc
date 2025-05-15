@@ -594,23 +594,21 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
     }
 
-    $fecha = Helpers::formatearFecha($data->fecha_emision);
     //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
     /*$fecha_emision = Carbon::parse($data->fecha_emision);
         $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
     $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
         $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');*/
     $empresa = $data->dictamen->inspeccione->solicitud->empresa ?? null;
-    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() ? $empresa
-        ->empresaNumClientes
-        ->first(fn($item) => $item->empresa_id === $empresa
-        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'N/A' : 'N/A';
-    $watermarkText = $data->estatus == 1;//Determinar si marca de agua es visible
+    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() 
+        ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
     $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON
         ['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ?//verifica si $id_sustituye tiene valor  
         //Busca el registro del certificado que tiene el id igual a $id_sustituye
         Certificado_Exportacion::find($id_sustituye)->num_certificado ?? '' : '';
+    $watermarkText = $data->estatus == 1;//Determinar si marca de agua es visible
 
     $datos = $data->dictamen?->inspeccione?->solicitud?->caracteristicas; //Obtener Características Solicitud
         $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
@@ -632,11 +630,12 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
     $pdf = Pdf::loadView('pdfs.solicitud_certificado_exportacion_ed10', [//formato del PDF
         'data' => $data,
         'lotes' =>$lotes,
-        'expedicion' => $fecha ?? "",
-        'vigencia' => $fecha2 ?? "",
+        'fecha_solicitud' => Helpers::formatearFecha($data->dictamen->inspeccione->solicitud->fecha_solicitud) ?? 'No encontrado',
         'n_cliente' => $numero_cliente,
-        'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
-        'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'No encontrado',
+        'empresa' => $empresa->razon_social ?? 'No encontrado',
+        'domicilio_inspeccion' => $data->dictamen->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrado',
+        'fecha_propuesta' => Helpers::formatearFecha($data->dictamen->inspeccione->solicitud->fecha_visita) ?? 'No encontrado',
+        
         'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? 'No encontrado',
         'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? 'No encontrado',
@@ -644,18 +643,24 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
+
         'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'No encontrado',
         'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'No encontrado',
         'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado',
+
+        'folio' => isset($data->dictamen->inspeccione->solicitud->folio) && 
+           preg_match('/^([A-Z\-]+)(\d+)$/', $data->dictamen->inspeccione->solicitud->folio, $m)
+           ? $m[1] . str_pad(((int)$m[2]) + 1, strlen($m[2]), '0', STR_PAD_LEFT)
+           : 'No encontrado',
         ///caracteristicas
         'aduana' => $aduana_salida ?? 'No encontrado',
         'n_pedido' => $no_pedido ?? 'No encontrado',
         'botellas' => $botellas ?? 'No encontrado',
         'cajas' => $cajas ?? 'No encontrado',
-        'presentacion' => $presentacion ?? 'No encontrado',
+        //'presentacion' => $presentacion ?? 'No encontrado', se tomara directod el lote
     ]);
     //nombre al descargar
-    return $pdf->stream('F7.1-01-21 Ver 10. Solicitud de emisión de Certificado para Exportación.pdf');
+    return $pdf->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');
 }
 
 

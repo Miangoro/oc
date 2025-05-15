@@ -8,13 +8,12 @@
     <title>Solicitud de Emisión del Certificado NOM para Exportación</title>
     <style>
         @page {
-            size: 225mm 280mm;
+            size: 227mm 292mm;/*tamaño carta*/
             margin-left: 52px;
             margin-right: 56px;
-            /*margin-top: 30;
-            margin-left: 80px;
-            margin-right: 25px;
-            margin-bottom: 1px;*/
+            /*margin-left: 80px;
+            margin-right: 25px;*/
+            margin-bottom: 1px;
         }
         body {
             font-family: Helvetica;
@@ -128,13 +127,13 @@
     <table>
         <tr>
             <td style="padding:8px;"> Fecha de solicitud:</td>
-            <td style="font-weight: bold;">{{ $expedicion}}</td>
+            <td style="font-weight: bold;">{{ $fecha_solicitud}}</td>
             <td>N° de cliente:</td>
             <td><b>{{ $n_cliente}}</b></td>
         </tr>
         <tr>
             <td style="padding-top:16px; padding-bottom:16px">Domicilio donde se<br>encuentra el producto:</td>
-            <td style="font-weight: bold; width: 500px" colspan="3"> {{ $domicilio}}</td>
+            <td style="font-weight: bold; width: 500px" colspan="3"> {{ $domicilio_inspeccion}}</td>
         </tr>
     </table>
 
@@ -154,7 +153,7 @@
             <td style="width: 14%;"> </td>
             <td style="width: 13%; border:none"></td>
             <td style="text-align: left; width: 16%; border:none">Fecha de visita propuesta:</td>
-            <td style="width: 30%;"> </td>
+            <td style="width: 30%;">{{ $fecha_propuesta}}</td>
         </tr>
         <tr><td colspan="5" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
         <tr>
@@ -206,12 +205,12 @@
         <tr>
             <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">&nbsp;&nbsp;Marca:</td>
             <td style="font-weight: bold; width: 30%;"> 
-                {{ $lote->marca->marca ?? "N"}}
+                {{ $lote->marca->marca ?? "No encontrado"}}
             </td>
-            <td style="text-align: left;  width: 20%;">&nbsp;&nbsp;Categoría y Clase:</td>
-            <td style="font-weight: bold; width: 30%;"> 
-                {{ $lote->lotesGranel->first()->categoria->categoria ?? "N"}}, 
-                {{ $lote->lotesGranel->first()->clase->clase ?? "N"}} 
+            <td style="text-align: left;  width: 20%;" colspan="3">&nbsp;&nbsp;Categoría y Clase:</td>
+            <td style="font-weight: bold; width: 30%;" colspan="3"> 
+                {{ $lote->lotesGranel->first()->categoria->categoria ?? "No encontrado"}}, 
+                {{ $lote->lotesGranel->first()->clase->clase ?? "No encontrado"}} 
             </td>
         </tr>
         <tr>
@@ -219,26 +218,31 @@
                 &nbsp;&nbsp;Certificado NOM a Granel:
             </td>
             <td style="font-weight: bold; width: 30%;"> 
-                {{ $lote->lotesGranel->first()->folio_certificado ?? "N" }}
+                {{ $lote->lotesGranel->first()->folio_certificado ?? "No encontrado" }}
             </td>
-            <td style="text-align: left;  width: 20%;">
+            <td style="text-align: left;  width: 20%;" colspan="3">
                 &nbsp;&nbsp;Edad:
             </td>
-            <td style="font-weight: bold; width: 30%;"> 
+            <td style="font-weight: bold; width: 30%;" colspan="3"> 
                 {{ $lote->lotesGranel->first()->edad ?? "NA"}}  
             </td>
         </tr>
+    @php
+        $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
+        $folio1 = trim($folios[0] ?? '');
+        $folio2 = trim($folios[1] ?? 'NA');
+    @endphp
         <tr>
             <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
                 &nbsp;&nbsp;No. de análisis:
             </td>
             <td style="font-weight: bold; width: 30%;"> 
-                {{ $lote->lotesGranel->first()->folio_fq ?? "N" }} 
+                {{ $folio1 }} 
             </td>
-            <td style="text-align: left;  width: 20%;">
+            <td style="text-align: left;  width: 20%;" colspan="3">
                 &nbsp;&nbsp;Contenido Alcohólico:</td>
-            <td style="font-weight: bold; width: 30%;"> 
-                {{ $lote->lotesGranel->first()->cont_alc ?? "N" }}% 
+            <td style="font-weight: bold; width: 30%;" colspan="3"> 
+                {{ $lote->lotesGranel->first()->cont_alc ?? "No encontrado" }}% 
             </td>
         </tr>
         <tr>
@@ -246,11 +250,11 @@
                 &nbsp;&nbsp;No. de análisis de ajuste:
             </td>
             <td style="font-weight: bold; width: 30%;"> 
-               FALTA
+               {{ $folio2 }}
             </td>
-            <td style="text-align: left;  width: 20%;">
+            <td style="text-align: left;  width: 20%;" colspan="3">
                 &nbsp;&nbsp; No. de lote a granel:</td>
-            <td style="font-weight: bold; width: 30%;"> 
+            <td style="font-weight: bold; width: 30%;" colspan="3"> 
                 {{ $lote->lotesGranel->first()->nombre_lote ?? "N" }}
             </td>
         </tr>
@@ -259,12 +263,14 @@
                 &nbsp;&nbsp;Tipo de Maguey: 
             </td>
             <td style="font-weight: bold; width: 30%;"> 
-               FALTA
+               {!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
+                    return $tipo->nombre . ' (<i>' . $tipo->cientifico . '</i>)';
+                })->implode(', ') !!}
             </td>
-            <td style="text-align: left;  width: 20%;">
+            <td style="text-align: left;  width: 20%;" colspan="3">
                 &nbsp;&nbsp;No. de lote envasado:</td>
-            <td style="font-weight: bold; width: 30%;"> 
-                {{ $lote->nombre ?? "N" }}
+            <td style="font-weight: bold; width: 30%;" colspan="3"> 
+                {{ $lote->nombre ?? "No encontrado" }}
             </td>
         </tr>
         <tr>
@@ -272,13 +278,14 @@
                 &nbsp;&nbsp;Contenido neto por
             </td>
             <td style="font-weight: bold; width: 30%;"> 
-               xxxx
+               {{ $lote->presentacion ?? 'No encontrado'}}
             </td>
-            <td style="text-align: left;  width: 20%;">
-                &nbsp;&nbsp;xxxx</td>
-            <td style="font-weight: bold; width: 30%;"> 
-                xxxx
-            </td>
+            <td>mL</td>
+            <td><b>{{ $lote->unidad === 'mL' ? 'X' : '' }}</b></td>
+            <td>cL</td>
+            <td><b>{{ $lote->unidad === 'cL' ? 'X' : '' }}</b></td>
+            <td>L</td>
+            <td><b>{{ $lote->unidad === 'L' ? 'X' : '' }}</b></td>
         </tr>
     </table>
 
@@ -374,7 +381,7 @@
                 Aduana de salida:  
             </td>
             <td style="font-weight: bold; width: 40%">
-                AEROPUERTO INTERNACIONAL DE LA CIUDAD
+                FALTA
             </td>
         </tr>
         <tr>
@@ -382,19 +389,19 @@
                 Fracción arancelaria
             </td>
             <td style="font-weight: bold; width: 40%" >
-                2208.90.05.00
+                FALTA
             </td>
         </tr>
     </table>
     <table>
         <tr>
-            <td style="padding-top:16px; padding-bottom:16px; width: 50%; border-top: none">
-                Angélica Yanet Delgadillo 
+            <td style="font-weight: bold; padding-top:16px; padding-bottom:16px; width: 50%; border-top: none">
+                FALTA
                 <br><br>
                 Nombre del responsable de instalaciones
             </td>
             <td style="font-weight: bold; width: 50%; border-top: none">
-                JANETTE ELIZABETH CERVANTES
+                FALTA
                 <br><br>
                 Nombre del solicitante de exportación
             </td>
@@ -404,7 +411,9 @@
         <td style="padding-top:16px; padding-bottom:16px; width: 30%;">
             INFORMACIÓN ADICIONAL SOBRE LA ACTIVIDAD:  
         </td>
-        <td style="font-weight: bold; width: 70%"></td>
+        <td style="font-weight: bold; width: 70%">
+            FALTA
+        </td>
     </table>
 
     <!--PUNTO 5-->
@@ -478,14 +487,14 @@ proceso en cumplimiento con el numeral 5 de la NOM-070-SCFI-2016.
             </td>
         </tr>
         <tr>
-            <td style="width: 50%; text-align: right; border-top: none"  >
+            <td style="width: 50%; text-align: right; border-top:none; border-right:none; color:#999999"  >
                 Campo para uso exclusivo del personal del<br>OC-CIDAM
             </td>
-            <td style="width: 15%;">
+            <td style="width: 15%; background:#dddddd; border-top:none; border-right:none; border-left:none">
                 N° DE SOLICITUD: 
             </td>
             <td style="width: 35%">
-                SOL-14401
+                {{$folio}}
             </td>
         </tr>
     </table>
