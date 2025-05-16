@@ -17,8 +17,8 @@
 
         body {
             font-family: Helvetica;
-            font-size: 12px;
-            padding-top: 22%;
+            font-size: 11.6px;
+            padding-top: 23%;
             padding-right: 4px;
             padding-left: 4px;
         }
@@ -32,31 +32,17 @@
         td {
             border: 1px solid #366091;
             text-align: center;
-            font-size: 11px;
         }
 
         th {
             background-color: #608390;
             color: white;
             text-align: center;
-            font-size: 11px;
-        }
-
-        .cidam {
-            color: #161c4a;
-            text-align: center;
-            margin-left: 0;
-            margin-bottom: 20px;
-        }
-
-        .td-no-margins {
-            border: none;
         }
 
         .td-margins {
             border-right: none;
             border-left: none;
-            font-size: 11px;
         }
 
         .titulos {
@@ -67,7 +53,6 @@
         }
 
         .titulo2 {
-            font-size: 12px;
             text-align: center;
             padding: 10px;
         }
@@ -102,8 +87,16 @@
         .encabezado {
             position: fixed;
             width: 100%;
-            top: 0;
+            top: -2%;
             left: 0;
+        }
+
+        .cidam {
+            color: #161c4a;
+            text-align: center;
+            display: inline-block;
+            margin-top: 7.5%;
+            margin-left: -10px;
         }
 
         .footer {
@@ -171,34 +164,28 @@
 
     <div class="encabezado">
         <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}"
-            style="width: 300px; float: left; margin-left: -20px; margin-top: -20px;" alt="logo de CIDAM 3D">
+            style="width: 340px; vertical-align: top; margin-left: -13px" alt="logo de CIDAM 3D">
 
-        <div class="cidam" style="margin-bottom: 15px">
-            <b style="font-size: 16px;">CENTRO DE INNOVACIÓN Y DESARROLLO <br>AGROALIMENTARIO DE MICHOACÁN A.C.</b>
-            <p style="font-size: 10px">Organismo de Certificación de producto acreditado ante la <br>
-                entidad mexicana de acreditación ema A.C. con <b> No. 144/18</b></p>
+        <div class="cidam">
+            <b style="font-size: 17.5px;">CENTRO DE INNOVACIÓN Y DESARROLLO <br>AGROALIMENTARIO DE MICHOACÁN A.C.</b>
+            <p style="font-size: 11px; margin-top: 0px;">Organismo de Certificación de producto acreditado ante la
+                <br>entidad mexicana de acreditación ema A.C. con <b>No. 144/18</b></p>
         </div>
 
-        <div class="titulos">CERTIFICADO DE AUTENTICIDAD DE EXPORTACIÓN DE MEZCAL</div>
+        <div class="titulos" style="margin-top: -2%;">CERTIFICADO DE AUTENTICIDAD DE EXPORTACIÓN DE MEZCAL</div>
         <table>
             <tr>
-                <td class="td-no-margins"
-                    style="font-weight: bold;font-size: 11.5px;padding-right: 4px;padding-left: 0; text-align: left">
+                <td style="font-weight: bold; text-align: center; border:none">
                     Número de Certificado:</td>
-                <td class="td-no-margins"
-                    style="font-weight:bold; font-size:11.5px; padding-right: 4px;padding-left: 0; text-align: left">
+                <td style="font-weight:bold; font-size: 11px; text-align: left;border:none">
                     {{ $data->num_certificado }}</td>
-                <td class="td-no-margins"
-                    style="font-weight: bold;font-size: 11.5px;padding-right: 4px;padding-left: 0; text-align: right">
+                <td style="font-weight: bold; text-align: right;padding-right: 20px; border:none">
                     Fecha de <br> expedición:</td>
-                <td class="td-no-margins"
-                    style="font-weight: bold;font-size: 11.5px;padding-right: 4px;padding-left: 0; text-align: right">
+                <td style="font-weight: bold; text-align: right; border:none">
                     {{ $expedicion }}</td>
-                <td class="td-no-margins"
-                    style="font-weight: bold;font-size: 11.5px;padding-right: 4px;padding-left: 0; text-align: right">
-                    Vigencia de 90 días <br> naturales</td>
-                <td class="td-no-margins"
-                    style="font-weight: bold;font-size: 11.5px;padding-right: 4px;padding-left: 0; text-align: right">
+                <td style="font-weight: bold;  text-align: right; padding-right: 20px; border:none">
+                    Vigencia de 90 días <br> naturales:</td>
+                <td style="font-weight: bold; text-align: right;padding-right: 20px; border:none">
                     {{ $vigencia }}</td>
             </tr>
         </table>
@@ -220,8 +207,9 @@
             <td class="td-margins"
                 style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px; padding-top: 8px;padding-bottom: 8px;">
                 Domicilio:</td>
-            <td class="td-margins" style="text-align: left; padding-top: 8px;padding-bottom: 8px;" colspan="3">
-                {{ mb_strtoupper($domicilio) }}</td>
+            <td class="td-margins" style="font-size: 11px; text-align: left; padding-top: 8px;padding-bottom: 8px;" colspan="3">
+                GUILLERMO GONZÁLEZ CAMARENA #800 PISO 2, SANTA FE ÁLVARO OBREGÓN, CIUDAD DE MÉXICO
+</td>
         </tr>
         <tr>
             <td class="td-margins"

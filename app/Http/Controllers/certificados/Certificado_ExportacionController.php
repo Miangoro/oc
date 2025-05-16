@@ -81,12 +81,42 @@ public function index(Request $request)
 
     $users = $query->offset($start)
         ->limit($limit)
-        ->orderBy($order, $dir)
+        //->orderBy($order, $dir)
+        ->orderByRaw("
+          -- 1. Prioriza certificados con formato 'CIDAM C-EXP25--'
+          CASE
+              WHEN num_certificado LIKE 'CIDAM C-EXP25--%' THEN 0
+              ELSE 1
+          END ASC,
+
+          -- 2. Extrae el número después de 'CIDAM C-EXP25--' ignorando cualquier sufijo (-A, etc.)
+          CAST(
+              SUBSTRING_INDEX(
+                  SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25--', num_certificado) + 15),
+                  '-', 1
+              ) AS UNSIGNED
+          ) DESC
+      ")
         ->get();
 
     $totalFiltered = Certificado_Exportacion::where('id_certificado', 'LIKE', "%{$search}%")
-        ->where("id_certificado", 1)
-        ->orWhere('num_certificado', 'LIKE', "%{$search}%")
+        //->where("id_certificado", 1)
+        //->orWhere('num_certificado', 'LIKE', "%{$search}%")
+        ->orderByRaw("
+          -- 1. Prioriza certificados con formato 'CIDAM C-EXP25--'
+          CASE
+              WHEN num_certificado LIKE 'CIDAM C-EXP25--%' THEN 0
+              ELSE 1
+          END ASC,
+
+          -- 2. Extrae el número después de 'CIDAM C-EXP25--' ignorando cualquier sufijo (-A, etc.)
+          CAST(
+              SUBSTRING_INDEX(
+                  SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25--', num_certificado) + 15),
+                  '-', 1
+              ) AS UNSIGNED
+          ) DESC
+      ")
         ->count();
     }
     
