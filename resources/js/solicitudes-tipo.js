@@ -25,7 +25,7 @@ function obtenerIcono(id_tipo) {
         case '7': 
             return 'assets/img/solicitudes/Inspección de ingreso.png'; 
         case '8': 
-            return 'assets/img/solicitudes/terminado.png';  
+            return 'assets/img/solicitudes/liberación de producto.png';  
         case '9': 
             return 'assets/img/solicitudes/Inspección en la liberación.png'; 
         case '10': 
@@ -131,7 +131,31 @@ function obtenerIcono(id_tipo) {
 
     // Escuchar el clic en el botón de cancelar
 $(".btnCancelar").on('click', function () {
-    // Al cerrar el modal actual, abrir el anterior
+    // Obtener el modal actual desde el botón que se hizo clic
+    const modal = $(this).closest('.modal');
+
+    // Buscar un formulario dentro de ese modal
+    const form = modal.find('form')[0]; // obtiene el primer <form> dentro del modal
+
+    if (form && typeof form.reset === 'function') {
+        form.reset(); // Limpia inputs, textareas, etc.
+    }
+
+    // Limpiar Select2 dentro del modal
+    modal.find('.select2').val(null).trigger('change');
+
+    // Opcional: limpiar errores de validación visual (Bootstrap)
+    modal.find('.is-invalid').removeClass('is-invalid');
+    // No eliminar, solo limpiar y ocultar los mensajes de error
+    modal.find('.invalid-feedback').text('');
+
+    // Ocultar el modal actual
+    modal.modal('hide');
+
+    // Mostrar el modal anterior (ajusta si usas varios niveles)
     $("#verSolicitudes").modal('show');
 });
+
+
+
 });

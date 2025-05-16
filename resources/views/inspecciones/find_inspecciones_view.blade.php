@@ -164,11 +164,10 @@
         @include('_partials._modals.modal-add-asignar-inspector')
         @include('_partials._modals.modal-trazabilidad')
         @include('_partials._modals.modal-add-resultados-inspeccion')
-        @include('_partials._modals.modal-acta-unidades-produccion')
-        @include('_partials._modals.modal-acta-edit-unidades')
+      
 
 
-        <!-- /Modal -->
+       <!-- Modal -->
 
     </div>
 @endsection
@@ -276,42 +275,56 @@
             url: '/getInspeccion/' + id_solicitud,
             method: 'GET',
             success: function(response) {
-                if (response.success) {
+                if (response.success) { 
                     const data = response.data;
-                    $("#id_inspector").val(data.id_inspector).change();
-                    $("#num_servicio").val(data.num_servicio || '');
-                    $("#fecha_servicio").val(data.fecha_servicio || '');
-                    $("#observaciones").text(data.observaciones || '');
+                    console.log(data);
 
-                 if (data.solicitud) {
-    const solicitud = data.solicitud;
+                    if (data) {
+                        const solicitud = data;
 
-    const tabla = `
-        <div class="table-responsive">
-            <table class="table table-striped table-hover table-bordered">
-          
-                <tbody>
-                    <tr>
-                        <td>Folio</td>
-                        <td>${solicitud.folio}</td>
-                    </tr>
-                    <tr>
-                        <td>Fecha</td>
-                        <td>${solicitud.fecha_solicitud}</td>
-                    </tr>
-                    <tr>
-                        <td>Cliente</td>
-                        <td>${solicitud.empresa.razon_social}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    `;
+                        const tabla = `
+                        <div class="table-responsive">
+                            <table class="table small table-hover table-bordered table-sm">
+                        
+                                <tbody>
+                                    <tr>
+                                        <td><b>Folio</b></td>
+                                        <td>${solicitud.folio}</td>
+                                    </tr>
+                                     <tr>
+                                        <td><b>Cliente</b></td>
+                                        <td>${solicitud.empresa.razon_social}</td>
+                                    </tr>
+                                </tbody>
+                                    <tr>
+                                        <td><b>Fecha</b></td>
+                                        <td>${solicitud.fecha_solicitud}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Fecha sugerida</b></td>
+                                        <td>${solicitud.fecha_visita}</td>
+                                    </tr>
+                                   
+                            </table>
+                        </div>`;
 
-    $("#datosSolicitud").html(tabla);
-} else {
-    $("#datosSolicitud").html('<div class="alert alert-warning">No hay datos de la solicitud.</div>');
-}
+                        $("#datosSolicitud").html(tabla);
+                    } else {
+                        $("#datosSolicitud").html(
+                            '<div class="alert alert-warning">No hay datos de la solicitud.</div>');
+                    }
+
+                     if (data.inspeccion) {
+                        $("#id_inspector").val(data.inspeccion.id_inspector).change();
+                        $("#num_servicio").val(data.inspeccion.num_servicio || '');
+                        $("#fecha_servicio").val(data.inspeccion.fecha_servicio || '');
+                        $("#observaciones").text(data.inspeccion.observaciones || '');
+                     }else{
+                       
+                        $("#num_servicio").val('');
+                        $("#fecha_servicio").val('');
+                        $("#observaciones").text('');
+                     }
 
 
                 } else {

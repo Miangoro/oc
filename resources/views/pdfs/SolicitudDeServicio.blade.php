@@ -666,6 +666,16 @@
                     <b>Tipo:</b>
                     {{ $caracteristicas['tipo_analisis'] == 1 ? 'Análisis completo' : ($caracteristicas['tipo_analisis'] == 2 ? 'Ajuste de grado alcohólico' : '') }}
                     <br>
+                 @elseif($inspeccion_envasado === 'X')
+                    <b>Tipo:</b>
+                    {{ $caracteristicas['id_lote_envasado'] }}
+                    <br>
+                     <b>Inicio de envasado:</b>
+                    {{ $caracteristicas['fecha_inicio'] }}
+                    <br>
+                     <b>Término previsto del envasado:</b>
+                    {{ $caracteristicas['fecha_fin'] }}
+                    <br>
 
 
                 @endif

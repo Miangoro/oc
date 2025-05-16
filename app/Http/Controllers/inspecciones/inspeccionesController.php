@@ -382,7 +382,7 @@ class inspeccionesController extends Controller
     {
         try {
             // Aquí obtienes el acta de inspección junto con sus testigos
-            $datos = inspecciones::with('solicitud.empresa')->where('id_solicitud',$id_solicitud)->first();
+            $datos = solicitudesModel::with('inspeccion','empresa')->where('id_solicitud',$id_solicitud)->first();
             return response()->json(['success' => true, 'data' =>$datos]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener los datos de la inspección'], 500);
