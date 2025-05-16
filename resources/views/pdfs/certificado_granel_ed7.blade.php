@@ -21,8 +21,8 @@
         .watermark {
             position: absolute;
             top: 43%; 
-            left: 55%; 
-            width: 40%;
+            left: 50%; 
+            width: 55%;
             height: auto;
             transform: translate(-50%, -50%);
             opacity: 0.1;
@@ -89,7 +89,7 @@
 
         .pie {
             text-align: right;
-            font-size: 10px;
+            font-size: 8px;
             line-height: 1;
             position: fixed;
             bottom: 10px;
@@ -148,7 +148,7 @@
             z-index: 1; 
         }
 
-        .img-background-left {
+        .margen_mezcal_granel {
             position: absolute;
             top: 90px; 
             left: -80px; 
@@ -251,7 +251,7 @@
         </div>
     @endif
     
-    <div class="img-background-left"></div>
+    <div class="margen_mezcal_granel"></div>
     <img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Marca de Agua" class="watermark">
 
     <div class="header">
@@ -323,7 +323,7 @@
 			<td class="columna">Ingredientes</td>
 			<td class="columna-norm">{{ $ingredientes }}</td>
 			<td class="columna" style="white-space: nowrap;">Volumen de lote</td>
-			<td class="columna-norm">{{ $volumen }} L</td>
+			<td class="columna-norm">{{ $volumen }} {{ $unidad }}</td>
 			<td class="columna">Contenido Alcohólico</td>
 			<td class="columna-norm" style="white-space: nowrap;">{{ $cont_alc }}% Alc. Vol.</td>
 		</tr>
@@ -343,22 +343,26 @@
 
 <p class="text2">Este certificado de cumplimiento de mezcal a granel se expide de acuerdo a Norma Oficial Mexicana NOM-070-SCFI-2016. Bebidas Alcohólicasmezcal-especificaciones, en vigor.</p>
 
-<p class="firma">AUTORIZÓ <br><br> Q.F.B. Mayra Gutiérrez Romero <br> Gerente Técnico del Organismo Certificador CIDAM</p>
 
-  <p class="pie-pag">Página 1 de 1</p>
-    <p class="pie">Certificado NOM de Mezcal a Granel NOM-070-SCFI-2016F7.1-01-07
+
+<div class="firma">AUTORIZÓ
     <br>
-    Edición 7 Entrada en vigor: 07/11/2023
+    <br>{{ $nombre_firmante }}
+    <br>{{ $puesto_firmante }}
+</div>
 
-    @if ($leyenda)
-    <p class="leyenda">
-    Cancela y sustituye al certificado con clave: CIDAM C-GRA-057/2023
-    </p>
+  
+<div class="pie">
+    @if ($id_sustituye)
+        Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
     @endif
-    </p>
+    <br>Certificado NOM de Mezcal a Granel NOM-070-SCFI-2016F7.1-01-07
+    <br>Edición 7 Entrada en vigor: 07/11/2023
+</div>
+<div class="foother">
+    <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="300px">
+</div>
 
-    <div class="foother">
-        <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="300px">
-    </div>
+
 </body>
 </html>

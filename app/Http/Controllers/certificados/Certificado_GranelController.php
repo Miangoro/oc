@@ -582,10 +582,10 @@ public function CertificadoGranel($id_certificado)
         return abort(404, 'Registro no encontrado.');
         //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
     }
-
-    $direccionCompleta = $certificado->dictamen->inspeccione->solicitud->instalaciones->direccion_completa ?? 'No encontrado';
+    
     $watermarkText = $certificado->estatus === 1;
-    $leyenda = $certificado->estatus === 2;
+    $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
+    $nombre_id_sustituye = $id_sustituye ? CertificadosGranel::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
     // Procesar los nombres de los tipos
     $tipoNombres = 'N/A';
@@ -601,15 +601,17 @@ public function CertificadoGranel($id_certificado)
     $pdfData = [
         'data' => $certificado,
         'num_certificado' => $certificado->num_certificado ?? 'No encontrado',
+        'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
+        'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
         'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'representante' => $certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'No encontrado',
         'domicilio_fiscal' => $certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'No encontrado',
         'rfc' => $certificado->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
-        'direccion_completa' => $direccionCompleta ?? 'No encontrado',
-        'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
-        'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+        'direccion_completa' => $certificado->dictamen->inspeccione->solicitud->instalaciones->direccion_completa ?? 'No encontrado',
+        'nombre_firmante' => $certificado->user->name ?? 'No encontrado',
+        'puesto_firmante' => $certificado->user->puesto ?? 'No encontrado',
         'watermarkText' => $watermarkText,
-        'leyenda' => $leyenda ?? '',
+        'id_sustituye' => $nombre_id_sustituye,
         //lote
         'estado' => $certificado->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado',
         'categoria' => $certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'No encontrado',
@@ -617,6 +619,7 @@ public function CertificadoGranel($id_certificado)
         'nombre_lote' => $certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote?? 'No encontrado',
         'n_analisis' => $certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'No encontrado',
         'volumen' => $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen_restante ?? 'No encontrado',
+        'unidad' => $certificado->dictamen->inspeccione->solicitud->lote_granel->unidad ?? 'No encontrado',
         'cont_alc' => $certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc?? 'No encontrado',
         'tipo_maguey' => $certificado->dictamen->inspeccione->solicitud->lote_granel ?? 'No encontrado',
         'edad' => $certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? '-----',
@@ -625,7 +628,7 @@ public function CertificadoGranel($id_certificado)
     ];
 
     // Generar y mostrar el PDF
-    return Pdf::loadView('pdfs.certificado_granel_ed7', $pdfData)->stream("F7.1-01-07 Certificado NOM de Mezcal a Granel.pdf");
+    return Pdf::loadView('pdfs.certificado_granel_ed7', $pdfData)->stream("Certificado NOM de Mezcal a Granel NOM-070-SCFI-2016F7.1-01-07.pdf");
 }
 
 
