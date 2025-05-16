@@ -969,7 +969,7 @@ $(function () {
               } else {
                 modal.find('#edit_id_lote_envasado_inspeccion').val('');
               }
-              if (response.caracteristicas && response.caracteristicas.id_categoria_inspeccion) {
+/*               if (response.caracteristicas && response.caracteristicas.id_categoria_inspeccion) {
                 modal.find('#edit_id_categoria_inspeccion').val(response.caracteristicas.id_categoria_inspeccion);
               } else {
                 modal.find('#edit_id_categoria_inspeccion').val('');
@@ -1008,19 +1008,19 @@ $(function () {
                 modal.find('#edit_id_cantidad_bote').val(response.caracteristicas.id_cantidad_bote);
               } else {
                 modal.find('#edit_id_cantidad_bote').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_cantidad_caja) {
-                modal.find('#edit_id_cantidad_caja').val(response.caracteristicas.id_cantidad_caja);
+              } */
+              if (response.caracteristicas && response.caracteristicas.cantidad_caja) {
+                modal.find('#edit_id_cantidad_caja').val(response.caracteristicas.cantidad_caja);
               } else {
                 modal.find('#edit_id_cantidad_caja').val('');
               }
-              if (response.caracteristicas && response.caracteristicas.id_inicio_envasado) {
-                modal.find('#edit_id_inicio_envasado').val(response.caracteristicas.id_inicio_envasado);
+              if (response.caracteristicas && response.caracteristicas.fecha_inicio) {
+                modal.find('#edit_id_inicio_envasado').val(response.caracteristicas.fecha_inicio);
               } else {
                 modal.find('#edit_id_inicio_envasado').val('');
               }
-              if (response.caracteristicas && response.caracteristicas.id_previsto) {
-                modal.find('#edit_id_previsto').val(response.caracteristicas.id_previsto);
+              if (response.caracteristicas && response.caracteristicas.fecha_fin) {
+                modal.find('#edit_id_previsto').val(response.caracteristicas.fecha_fin);
               } else {
                 modal.find('#edit_id_previsto').val('');
               }
@@ -2082,7 +2082,7 @@ $(function () {
       setTimeout(function () {
         $('#btnAddInspEnv').prop('disabled', false);
         $('#btnAddInspEnv').html('<i class="ri-add-line"></i> Registrar');
-      }, 2000);
+      }, 3000);
 
       $.ajax({
         url: '/hologramas/storeInspeccionEnvasado', // Cambiar a la ruta correspondiente

@@ -498,9 +498,9 @@ class solicitudesController extends Controller
 
         $InspeccionEnva->caracteristicas = json_encode([
             'id_lote_envasado' => $request->id_lote_envasado_inspeccion,
-            'id_cantidad_caja' => $request->id_cantidad_caja,
-            'id_inicio_envasado' => $request->id_inicio_envasado,
-            'id_previsto' => $request->id_previsto,
+            'cantidad_caja' => $request->id_cantidad_caja,
+            'fecha_inicio' => $request->id_inicio_envasado,
+            'fecha_fin' => $request->id_previsto,
         ]);
 
         $InspeccionEnva->save();
@@ -1055,9 +1055,9 @@ class solicitudesController extends Controller
                     ]);
                     $caracteristicasJson = [
                         'id_lote_envasado' => $request->edit_id_lote_envasado_inspeccion,
-                        'id_cantidad_caja' => $request->id_cantidad_caja,
-                        'id_inicio_envasado' => $request->id_inicio_envasado,
-                        'id_previsto' => $request->id_previsto,
+                        'cantidad_caja' => $request->id_cantidad_caja,
+                        'fecha_inicio' => $request->id_inicio_envasado,
+                        'fecha_fin' => $request->id_previsto,
 
                     ];
                     $jsonContent = json_encode($caracteristicasJson);

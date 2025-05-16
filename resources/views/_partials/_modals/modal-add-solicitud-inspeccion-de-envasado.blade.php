@@ -25,7 +25,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    id="fecha_visita" name="fecha_visita" />
+                                    id="fecha_visita" name="fecha_visita"  autocomplete="off"/>
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -192,7 +192,7 @@
                             contenido;
                     }
                     if (response.instalaciones.length == 0) {
-                        contenido = '<option value="">Sin instalaciones registradas</option>';
+                        contenido = '<option disabled selected value="">Sin instalaciones registradas</option>';
                     }
                     $('#id_instalacion_inspeccion').html(contenido);
 
@@ -204,10 +204,10 @@
                             .lotes_envasado[index].nombre + '</option>' + contenidoEnv;
                     }
                     if (response.lotes_envasado.length == 0) {
-                        contenidoEnv = '<option value="">Sin lotes registrados</option>';
+                        contenidoEnv = '<option disabled selected value="">Sin lotes registrados</option>';
                     } else {}
                     $('#id_lote_envasado_inspeccion').html(contenidoEnv);
-                    /* obtenerDatosGranelesInspecciones(); */
+                     obtenerDatosGranelesInspecciones();
                 },
                 error: function() {}
             });
@@ -243,8 +243,6 @@
                     '');
                     $('#id_cantidad_bote').val(response.lotes_envasado.cant_botellas || '');
                     $('#id_tipo_inspeccion').val(response.lotes_envasado.tipo || '');
-                    $('#id_instalacion_inspeccion').val(response.lotes_envasado.lugar_envasado || '')
-                        .trigger('change');
                     $('#id_marca').val(response.lotes_envasado?.marca?.marca || '');
 
                 },
@@ -253,7 +251,7 @@
                 }
             });
         } else {
-            $('#id_categoria_inspeccion, #id_clase_inspeccion, #id_tipo_maguey_inspeccion, #id_marca, #analisis_inspeccion, #volumen_inspeccion, #id_certificado_inspeccion, #id_cantidad_bote, #id_tipo_inspeccion, #id_instalacion_inspeccion')
+            $('#id_categoria_inspeccion, #id_clase_inspeccion, #id_tipo_maguey_inspeccion, #id_marca, #analisis_inspeccion, #volumen_inspeccion, #id_certificado_inspeccion, #id_cantidad_bote, #id_tipo_inspeccion')
                 .val('').trigger('change');
         }
     }
