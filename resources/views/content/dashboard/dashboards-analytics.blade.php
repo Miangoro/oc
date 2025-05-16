@@ -5,7 +5,7 @@
 @endphp
 @extends('layouts/layoutMaster')
 
-@section('title', 'Dashboard - Analytics')
+@section('title', 'Inicio')
 @section('vendor-style')
     @vite(['resources/assets/vendor/libs/apex-charts/apex-charts.scss', 'resources/assets/vendor/libs/swiper/swiper.scss'])
 @endsection
