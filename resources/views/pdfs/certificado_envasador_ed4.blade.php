@@ -17,7 +17,7 @@
             width: 50%;
             height: auto; 
             transform: translate(-50%, -50%);
-            opacity: 0.3;
+            opacity: 0.1;
             z-index: -1; 
         }
 
@@ -42,29 +42,22 @@
             margin-top: -30px; 
         }
 
-        .description1 {
-            font-size: 25px;
-            font-weight: bold;
-            text-align: right;
-        }
-
-        .description2 {
-            font-weight: bold;
-            font-size: 14px;
-            color: #5A5768;
-            white-space: nowrap;
-            position: relative;
-            top: -64px;
-            left: 295px; 
+        .cidam {
+            color:rgb(76, 80, 109);
+            text-align: left;
+            margin-left: 0;
+            margin-right: 5;
+            margin-bottom: 10px;
+            font-family: 'Arial', sans-serif; 
         }
 
         .description3 {
             font-weight: bold;
             margin-right: 30px;
             text-align: right;
-            font-size: 13px;
+            font-size: 15px;
             position: relative;
-            top: -30px;
+            top: -20px;
         }
 
         .text {
@@ -94,13 +87,6 @@
             text-align: center;
             font-weight: bold;
             line-height: 0.5;
-        }
-
-        .title3 {
-            font-size: 20px;
-            text-align: center;
-            font-weight: bold;
-            color: #0C1444;
         }
 
         table {
@@ -137,19 +123,6 @@
 
         .odd {
             background: #fefcf9;
-        }
-        
-        .cell {
-            border-right: 1px solid transparent;
-            white-space: nowrap; 
-        }
-        
-        .cell1 {
-            white-space: nowrap; 
-        }
-
-        .cent {
-            white-space: normal; 
         }
 
         .signature {
@@ -216,13 +189,16 @@
 
 <img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Marca de Agua" class="watermark">
 
-<div class="header">
-    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" width="300px">
-</div>
+    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}"
+            style="width: 325px; float: left; margin-left: -15px; margin-top: -20px;" alt="logo de CIDAM 3D">
+    <div class="cidam" style="margin-bottom: 10px"> <b style="font-size: 24px;">Centro de Innovación y Desarrollo
+        <br>Agroalimentario de Michoacán, A.C</b>
+    </div>
+    <br>
+    <div class="description3" style="margin-right: 30px; text-align: right; font-size: 13px; margin-top: 20px;">
+        <b>No. de Certificado: {{ $num_certificado }}</b>
+    </div>
 
-<div class="description1">ORGANISMO CERTIFICADOR</div>
-<div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C</div>
-<div class="description3">No. CERTIFICADO: {{$num_certificado}}</div>
 
 <p class="text1">
 Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditado como organismo de certificación de producto con número de acreditación 144/18 ante la Entidad Mexicana de Acreditación, A.C. otorga el siguiente:
@@ -230,28 +206,28 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
 
 <p class="title">CERTIFICADO NOM</p>
 <p class="title2">COMO ENVASADOR DE MEZCAL A</p>
-<p class="title3">"{{ strtoupper(str_replace(['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú'], ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'], $razon_social)) }}"</p>
+<p style="font-size: 20px; text-align: center;"><b>"{{ strtoupper(str_replace(['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú'], ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'], $razon_social)) }}"</b></p>
 
 <table id="tabla-principal">
     <tbody>
         <tr>
-            <td class="cell1"><strong>Domicilio Fiscal:</strong></td>
-            <td colspan="3" class="cent" style="text-align: center; vertical-align: middle;">{{ $domicilio_fiscal }}</td>
+            <td style="border-right: none"><strong>Domicilio:</strong></td>
+            <td colspan="3" style="text-align: center; vertical-align: middle; border-left: none">{{$domicilio_fiscal}}</td>
         </tr>
         <tr>
-            <td class="cell"><strong>RFC:</strong></td>
-            <td>{{ $rfc }}</td>
-            <td class="cell"><strong>Tel:</strong></td>
-            <td>{{ $telefono }}</td>
+            <td style="border-right: none"><strong>RFC:</strong></td>
+            <td style="border-left: none">{{$rfc}}</td>
+            <td style="border-right: none"><strong>Tel:</strong></td>
+            <td style="border-left: none">{{$telefono}}</td>
         </tr>
         <tr>
-            <td class="cell"><strong>Correo electrónico:</strong></td>
-            <td colspan="3">{{ $correo }}</td>
+            <td style="border-right: none"><strong>Correo electrónico:</strong></td>
+            <td colspan="3" style="border-left: none">{{$correo}}</td>
         </tr>
         <tr>
-            <td class="cell1"><strong>Fecha de inicio vigencia:</strong></td>
+            <td><strong>Fecha de inicio vigencia:</strong></td>
             <td>{{$fecha_emision}}</td>
-            <td class="cell1"><strong>Fecha de Vencimiento:</strong></td>
+            <td><strong>Fecha de Vencimiento:</strong></td>
             <td>{{$fecha_vigencia}}</td>
         </tr>
     </tbody>
@@ -285,13 +261,12 @@ de Noviembre de l994. así como sus subsecuentes modificaciones.</p>
     <div class="signature-name">{{ $puesto_firmante }}</div>
 </div>
 
-<div class="down">Este cértificado sustituye al: No aplica<br>Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36<br>Edición 4 Entrada en vigor: 12/01/2024
- <br>
-
-@if ($id_sustituye)
-Cancela y sustituye al certificado con clave: CIDAM C-GRA-057/2023
-@endif
-
+<div class="down">
+    @if ($id_sustituye)
+    Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
+   @endif
+    <br>Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36
+    <br>Edición 4 Entrada en vigor: 12/01/2024
 </div>
 
 <div class="foother">

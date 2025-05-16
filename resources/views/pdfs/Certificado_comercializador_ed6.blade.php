@@ -47,22 +47,6 @@
             margin-top: -30px;
         }
 
-        .description1 {
-            font-size: 25px;
-            font-weight: bold;
-            text-align: right;
-        }
-
-        .description2 {
-            font-weight: bold;
-            font-size: 15px;
-            color: #5A5768;
-            white-space: nowrap;
-            position: relative;
-            top: -64px;
-            left: 295px;
-        }
-
         .description3 {
             font-weight: bold;
             margin-right: 30px;
@@ -207,19 +191,13 @@
             transform: translate(-50%, -50%);
         }
 
-        .encabezado {
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-        }
 
         .footer {
-    position: fixed;
-    bottom: -45px; 
-    width: 100%;
-    text-align: center;
-}
+            position: fixed;
+            bottom: -45px; 
+            width: 100%;
+            text-align: center;
+        }
 
         #tabla-principal td {
             line-height: 9px;
@@ -238,7 +216,7 @@
     @endif
     <div class="img-fondo"> <img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Fondo CIDAM" class="watermark">
     </div>
-    <div class="encabezado"> <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}"
+    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}"
             style="width: 325px; float: left; margin-left: -15px; margin-top: -20px;" alt="logo de CIDAM 3D">
 
         <div class="cidam" style="margin-bottom: 10px"> <b style="font-size: 24px;">Centro de Innovación y Desarrollo
