@@ -1,4 +1,4 @@
-<div class="modal fade" id="addVigilanciaProduccion" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="addVigilanciaProduccion" tabindex="-1" >
     <div class="modal-dialog modal-xl ">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
@@ -33,14 +33,12 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select select id_instalacion" id="id_instalacion"
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select class=" form-select select2 id_instalacion"
                                     name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                 </select>
                                 <label for="id_instalacion">Instalaciones</label>
-                                <button type="button" class="btn btn-primary" id="modalVigilancia"><i
-                                        class="ri-add-line"></i> Agregar nueva instalación</button>
                             </div>
                         </div>
                     </div>
@@ -304,26 +302,4 @@
             return tipo;
         }
     }
-
-    /* Limpiar campos al cerrar el modal
-    $('#addVigilanciaProduccion').on('hidden.bs.modal', function() {
-        $('#id_empresa_vigilancia').val('').trigger('change');
-        $('#id_instalacion').html('<option value="" disabled selected>Lista de instalaciones</option>');
-        $('#id_lote_granel').val('').trigger('change');
-        $('#id_categoria').val('').trigger('change');
-        $('#id_clase').val('').trigger('change');
-        $('#id_tipo_maguey').val('').trigger('change');
-        $('#fecha_visita').val('');
-        $('#analisis').val('');
-        $('#volumen').val('');
-        $('#fecha_corte').val('');
-        $('#kg_maguey').val('');
-        $('#cant_pinas').val('');
-        $('#art').val('');
-        $('#etapa').val('');
-        $('#folio').val('');
-        $('#nombre_predio').val('');
-        $('#info_adicional').val('');
-        $('#addVigilanciaProduccionForm').trigger('reset');
-    });*/
 </script>

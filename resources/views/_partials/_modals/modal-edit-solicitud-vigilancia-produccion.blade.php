@@ -34,14 +34,12 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select select id_instalacion" id="edit_id_instalacion_vig"
+                            <div class="form-floating form-floating-outline mb-6 ">
+                                <select class=" form-select select2 id_instalacion" id="edit_id_instalacion_vig"
                                     name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                 </select>
                                 <label for="id_instalacion">Instalaciones</label>
-                                <button type="button" class="btn btn-primary" id="vigi"><i
-                                        class="ri-add-line"></i> Agregar nueva instalación</button>
                             </div>
                         </div>
                     </div>

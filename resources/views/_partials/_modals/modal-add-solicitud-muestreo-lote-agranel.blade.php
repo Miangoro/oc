@@ -1,7 +1,7 @@
 <div class="modal fade" id="addMuestreoLoteAgranel" tabindex="-1">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-                      <div class="modal-header bg-primary pb-4">
+            <div class="modal-header bg-primary pb-4">
                 <h5 class="modal-title text-white">Registrar nueva solicitud de muestreo de Lote a granel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -12,7 +12,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="id_empresa_muestreo"
-                                    onchange="obtenerInstalacionesMuestreo(); obtenerGranelesMuestreo(this.value);"
+                                    onchange="obtenerInstalacionesMuestreo();"
                                     name="id_empresa" class="id_empresa_muestreo select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -34,13 +34,11 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select" id="id_instalacion_muestreo" name="id_instalacion"
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select class=" form-select select2" id="id_instalacion_muestreo" name="id_instalacion"
                                     aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
-                                <button type="button" class="btn btn-primary" id="modalMuestreo"><i
-                                        class="ri-add-line"></i> Agregar nueva instalación</button>
                             </div>
                         </div>
                     </div>
@@ -161,52 +159,31 @@
                         contenido = '<option value="">Sin instalaciones registradas</option>';
                     }
                     $('#id_instalacion_muestreo').html(contenido);
-                },
-                error: function() {}
-            });
-        }
-    }
-
-    function obtenerGranelesMuestreo() {
-        // Obtener el ID de la empresa
-        var empresas = $("#id_empresa_muestreo").val();
-
-        console.log('La empresa es: ' + empresas);
-
-        // Validar que el ID de la empresa no esté vacío
-        if (empresas !== "" && empresas !== null && empresas !== undefined) {
-            // Realizar la solicitud AJAX
-            $.ajax({
-                url: '/getDatos/' + empresas,
-                method: 'GET',
-                success: function(response) {
-                    var contenido = "";
+                    var contenidogranel = "";
 
                     // Iterar sobre los lotes a granel recibidos
                     if (response.lotes_granel && response.lotes_granel.length > 0) {
                         response.lotes_granel.forEach(function(lote) {
-                            contenido += '<option value="' + lote.id_lote_granel + '">' +
+                            contenidogranel += '<option value="' + lote.id_lote_granel + '">' +
                                 lote.nombre_lote + '</option>';
                         });
                     } else {
-                        contenido = '<option value="">Sin lotes registrados</option>';
+                        contenidogranel = '<option value="">Sin lotes registrados</option>';
                     }
 
                     // Insertar el contenido en el select
-                    $('#id_lote_granel_muestreo').html(contenido);
-
+                    $('#id_lote_granel_muestreo').html(contenidogranel);
+                    obtenerDatosGranelesMuestreo();
                 },
-                error: function(xhr, status, error) {
-                    console.error("Error al obtener los lotes a granel:", error);
-                    $('#id_lote_granel_muestreo').html('<option value="">Error al cargar lotes</option>');
-                }
+                error: function() {}
             });
-        } else {
+        }
+        else {
             console.warn('No se seleccionó ninguna empresa.');
-            $('#id_lote_granel_muestreo').html('<option value="">Seleccione una empresa primero</option>');
+            $('#id_instalacion_muestreo').html('<option value="">Seleccione una empresa primero</option>');
+            $('#id_lote_granel_muestreo').html('<option value="">Seleccione una instalación primero</option>');
         }
     }
-
 
     function limpiarTipo(tipo) {
         if (tipo.startsWith('[') && tipo.endsWith(']')) {
@@ -250,7 +227,7 @@
 
                         // Asignar directamente los IDs separados por coma al campo oculto
                         $('#id_tipo_maguey_muestreo_ids').val(tiposIds.join(
-                        ',')); // Unir IDs por coma (sin comillas adicionales)
+                            ',')); // Unir IDs por coma (sin comillas adicionales)
                     } else {
                         // Limpiar ambos campos si no hay datos
                         $('#id_tipo_maguey_muestreo').val('');
@@ -267,23 +244,4 @@
             });
         }
     }
-
-
-    /* Limpiar campos al cerrar el modal
-    $('#addMuestreoLoteAgranel').on('hidden.bs.modal', function() {
-        $('#id_empresa_muestreo').val('');
-        $('#id_instalacion_muestreo').html('<option value="" selected>Lista de instalaciones</option>');
-        $('#id_lote_granel_muestreo').val('');
-        $('#destino_lote').val('');
-        $('#id_categoria_muestreo').val('');
-        $('#id_clase_muestreo').val('');
-        $('#id_tipo_maguey_muestreo').val('');
-        $('#analisis_muestreo').val('');
-        $('#volumen_muestreo').val('');
-        $('#id_certificado_muestreo').val('');
-        $('#info_adicional').val('');
-        if (typeof formValidator !== 'undefined') {
-            formValidator.resetForm(true);
-        }
-    });*/
 </script>

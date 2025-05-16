@@ -3937,7 +3937,7 @@ $(function () {
 
   var openedFromFirstModal = false;
 
-  $('#abrirModalInstalaciones').on('click', function () {
+/*   $('#abrirModalInstalaciones').on('click', function () {
     var clienteSeleccionado = $('#id_empresa_solicitudes').val();
 
     openedFromFirstModal = true;
@@ -3945,7 +3945,7 @@ $(function () {
     $('#id_empresa option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
     $('#id_empresa').trigger('change');
     $('#modalAddInstalacion').modal('show');
-  });
+  }); */
 
   // Al cerrar el segundo modal
   $('#modalAddInstalacion').on('hidden.bs.modal', function () {
@@ -3971,210 +3971,6 @@ $(function () {
     }
   });
 
-  //Vigilancia boton instalaciones
-  $(document).ready(function () {
-    let openedFromFirstModal = false;
-
-    $('#modalVigilancia').on('click', function () {
-      var clienteSeleccionado = $('.id_empresa').val();
-      // Verificar si hay una empresa seleccionada
-      if (!clienteSeleccionado) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
-        });
-        return;
-      }
-      $('#addVigilanciaProduccion').modal('hide');
-      // Marcar que el nuevo modal fue abierto desde el anterior
-      openedFromFirstModal = true;
-      // Preseleccionar la empresa en el modal de nueva instalación
-      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-      $('#modalAddInstalacion').modal('show');
-    });
-    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-      if (openedFromFirstModal) {
-        $('#addVigilanciaProduccion').modal('show');
-        openedFromFirstModal = false;
-      }
-    });
-  });
-
-  //Muestreo de lote a granel
-  $(document).ready(function () {
-    let openedFromFirstModal = false;
-
-    $('#modalMuestreo').on('click', function () {
-      var clienteSeleccionado = $('.id_empresa_muestreo').val();
-      // Verificar si hay una empresa seleccionada
-      if (!clienteSeleccionado) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
-        });
-        return;
-      }
-      $('#addMuestreoLoteAgranel').modal('hide');
-      // Marcar que el nuevo modal fue abierto desde el anterior
-      openedFromFirstModal = true;
-      // Preseleccionar la empresa en el modal de nueva instalación
-      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-      $('#modalAddInstalacion').modal('show');
-    });
-    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-      if (openedFromFirstModal) {
-        $('#addMuestreoLoteAgranel').modal('show');
-        openedFromFirstModal = false;
-      }
-    });
-  });
-
-  //Muestreo de vigilancia traslado
-  $(document).ready(function () {
-    let openedFromFirstModal = false;
-
-    $('#modalVigilanciaTraslado').on('click', function () {
-      var clienteSeleccionado = $('.id_empresa_traslado').val();
-      // Verificar si hay una empresa seleccionada
-      if (!clienteSeleccionado) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
-        });
-        return;
-      }
-      $('#addVigilanciaTraslado').modal('hide');
-      // Marcar que el nuevo modal fue abierto desde el anterior
-      openedFromFirstModal = true;
-      // Preseleccionar la empresa en el modal de nueva instalación
-      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-      $('#modalAddInstalacion').modal('show');
-    });
-    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-      if (openedFromFirstModal) {
-        $('#addVigilanciaTraslado').modal('show');
-        openedFromFirstModal = false;
-      }
-    });
-  });
-
-  //Muestreo de inpeccion ingreso barricada
-  $(document).ready(function () {
-    let openedFromFirstModal = false;
-
-    $('#modalVigilanciaBarricada').on('click', function () {
-      var clienteSeleccionado = $('.id_empresa_barricada').val();
-      // Verificar si hay una empresa seleccionada
-      if (!clienteSeleccionado) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
-        });
-        return;
-      }
-      $('#addInspeccionIngresoBarricada').modal('hide');
-      // Marcar que el nuevo modal fue abierto desde el anterior
-      openedFromFirstModal = true;
-      // Preseleccionar la empresa en el modal de nueva instalación
-      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-      $('#modalAddInstalacion').modal('show');
-    });
-    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-      if (openedFromFirstModal) {
-        $('#addInspeccionIngresoBarricada').modal('show');
-        openedFromFirstModal = false;
-      }
-    });
-  });
-
-  //Muestreo de inpeccion liberacion barricada
-  $(document).ready(function () {
-    let openedFromFirstModal = false;
-
-    $('#modalVigilanciaBarricadaLiberacion').on('click', function () {
-      var clienteSeleccionado = $('.id_empresa_liberacion').val();
-      // Verificar si hay una empresa seleccionada
-      if (!clienteSeleccionado) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
-        });
-        return;
-      }
-      $('#addInspeccionLiberacion').modal('hide');
-      // Marcar que el nuevo modal fue abierto desde el anterior
-      openedFromFirstModal = true;
-      // Preseleccionar la empresa en el modal de nueva instalación
-      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-      $('#modalAddInstalacion').modal('show');
-    });
-    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-      if (openedFromFirstModal) {
-        $('#addInspeccionLiberacion').modal('show');
-        openedFromFirstModal = false;
-      }
-    });
-  });
-
-  //Muestreo de inspeccion de envasado
-  $(document).ready(function () {
-    let openedFromFirstModal = false;
-
-    $('#modalMuestreoInspeccion').on('click', function () {
-      var clienteSeleccionado = $('.id_empresa_inspeccion').val();
-      // Verificar si hay una empresa seleccionada
-      if (!clienteSeleccionado) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
-        });
-        return;
-      }
-      $('#addInspeccionEnvasado').modal('hide');
-      // Marcar que el nuevo modal fue abierto desde el anterior
-      openedFromFirstModal = true;
-      // Preseleccionar la empresa en el modal de nueva instalación
-      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-      $('#modalAddInstalacion').modal('show');
-    });
-    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-      if (openedFromFirstModal) {
-        $('#addInspeccionEnvasado').modal('show');
-
-        openedFromFirstModal = false;
-      }
-    });
-  });
 
   /* seccion para exportacion */
   $(document).ready(function () {
