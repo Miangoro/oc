@@ -6,6 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-8">
+                <p class="solicitud badge bg-primary"></p>
                 <form id="editMuestreoLoteAgranelForm">
                     <input type="hidden" name="id_solicitud" id="edit_id_solicitud_muestreo">
                     <input type="hidden" name="form_type" value="muestreoloteagranel">
@@ -36,8 +37,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select select2" id="edit_id_instalacion_muestreo" name="id_instalacion"
-                                    aria-label="id_instalacion" required>
+                                <select class=" form-select select2" id="edit_id_instalacion_muestreo"
+                                    name="id_instalacion" aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
                             </div>
@@ -95,8 +96,7 @@
                                 style="pointer-events: none;" />
                             <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
                         </div>
-                        <input type="hidden" id="edit_id_tipo_maguey_muestreo_ids"
-                            name="id_tipo_maguey_muestreo[0]">
+                        <input type="hidden" id="edit_id_tipo_maguey_muestreo_ids" name="id_tipo_maguey_muestreo[0]">
                     </div>
                     <div class="row">
                         <div class="col-md-5">
@@ -228,7 +228,7 @@
                         .id_categoria : '');
                     $('#edit_id_clase_muestreo').val(response.clase ? response.clase.clase : '');
                     $('#edit_id_clase_muestreo_id').val(response.clase ? response.clase.id_clase :
-                    ''); // Campo oculto para el ID
+                        ''); // Campo oculto para el ID
 
                     if (response.tipo && response.tipo.length > 0) {
                         var tiposConcatenados = response.tipo.map(function(tipo) {

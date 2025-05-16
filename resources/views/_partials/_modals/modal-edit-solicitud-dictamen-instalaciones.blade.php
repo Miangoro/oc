@@ -5,7 +5,8 @@
                 <h5 class="modal-title text-white">Editar solicitud de dictaminación de instalaciones</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-10">
+            <div class="modal-body p-8">
+                <p class="solicitud badge bg-primary"></p>
                 <form id="addEditSolicitud">
                     @csrf
 

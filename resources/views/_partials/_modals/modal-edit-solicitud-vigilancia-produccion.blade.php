@@ -6,6 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-8">
+                <p class="solicitud badge bg-primary"></p>
                 <form id="editVigilanciaProduccionForm">
                     <input type="hidden" name="id_solicitud" id="edit_id_solicitud_vig">
                     <input type="hidden" name="form_type" value="vigilanciaenproduccion">
@@ -181,8 +182,8 @@
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary"><i class="ri-pencil-fill"></i> Editar</button>
-                        <button type="reset" class="btn btn-danger " data-bs-dismiss="modal"
-                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                        <button type="reset" class="btn btn-danger " data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-line"></i> Cancelar</button>
                     </div>
             </div>
 
@@ -202,10 +203,11 @@
                     if (response && response.lotes_granel) {
                         $('#edit_id_categoria_vig').val(response.lotes_granel.id_categoria || '');
                         $('#edit_id_clase_vig').val(response.lotes_granel.id_clase || '');
-                    var idTiposvigiEdit = response.tipo.map(function(tipo) {
-                        return tipo.id_tipo; // Asegúrate de devolver id_tipo desde el backend
-                    });
-                    $('#edit_id_tipo_vig').val(idTiposvigiEdit).trigger('change'); // Asignar y refrescar select2
+                        var idTiposvigiEdit = response.tipo.map(function(tipo) {
+                            return tipo.id_tipo; // Asegúrate de devolver id_tipo desde el backend
+                        });
+                        $('#edit_id_tipo_vig').val(idTiposvigiEdit).trigger(
+                        'change'); // Asignar y refrescar select2
 
                         $('#edit_analisis_vig').val(response.lotes_granel.folio_fq || '');
                         $('#edit_volumen_vig').val(response.lotes_granel.cont_alc || '');

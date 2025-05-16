@@ -549,10 +549,12 @@ $(function () {
       var $this = $(this);
       select2Focus($this);
       $this.wrap('<div class="position-relative"></div>').select2({
-        dropdownParent: $this.parent()
+        dropdownParent: $this.parent(),
+      language: 'es',
       });
     });
   }
+
   initializeSelect2(select2Elements);
   //funcion para los datepickers formato año/mes/dia
   $(document).ready(function () {
@@ -2573,84 +2575,6 @@ $(function () {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-
-    // Inicializar FormValidation para la solicitud de muestreo de agave
-    /*     const form3 = document.getElementById('addRegistrarSolicitudMuestreoAgave');
-        const fv3 = FormValidation.formValidation(form3, {
-          fields: {
-            id_empresa: {
-              validators: {
-                notEmpty: {
-                  message: 'Selecciona el cliente.'
-                }
-              }
-            },
-            fecha_visita: {
-              validators: {
-                notEmpty: {
-                  message: 'Selecciona la fecha sugerida para la inspección.'
-                }
-              }
-            },
-            punto_reunion: {
-              validators: {
-                notEmpty: {
-                  message: 'Introduce la dirección para el punto de reunión.'
-                }
-              }
-            }
-          },
-          plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-              eleValidClass: '',
-              eleInvalidClass: 'is-invalid',
-              rowSelector: '.form-floating'
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-          }
-        }).on('core.form.valid', function (e) {
-          // Validar el formulario
-          var formData = new FormData(form3);
-
-          $.ajax({
-            url: '/registrar-solicitud-muestreo-agave',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-              $('#addSolicitudMuestreoAgave').modal('hide');
-              $('#addRegistrarSolicitudMuestreoAgave')[0].reset();
-              $('.select2').val(null).trigger('change');
-              $('.datatables-solicitudes').DataTable().ajax.reload();
-              console.log(response);
-
-              Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: 'Solicitud de muestreo registrado exitosamente.',
-                customClass: {
-                  confirmButton: 'btn btn-success'
-                }
-              });
-            },
-            error: function (xhr) {
-              console.log('Error:', xhr.responseText);
-
-              Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'Error al registrar la solicitud',
-                customClass: {
-                  confirmButton: 'btn btn-danger'
-                }
-              });
-            }
-          });
-        }); */
-
     // Inicializar FormValidation para la solicitud de dictaminación de instalaciones
     const form = document.getElementById('addRegistrarSolicitud');
     const fv = FormValidation.formValidation(form, {
@@ -2762,28 +2686,43 @@ $(function () {
       fv.revalidateField($(this).attr('name'));
     });
 
-    // Inicializar FormValidation para la solicitud de georeferenciacion
+  });
+
+  $(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+        // Inicializar FormValidation para la solicitud de georeferenciacion
     const form2 = document.getElementById('addRegistrarSolicitudGeoreferenciacion');
     const fv2 = FormValidation.formValidation(form2, {
       fields: {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha sugerida para la inspección.'
+              message: 'Por favor seleccione la fecha sugerida para la inspección.'
             }
           }
         },
         punto_reunion: {
           validators: {
             notEmpty: {
-              message: 'Introduce la dirección para el punto de reunión.'
+              message: 'Por favor introduzca la dirección para el punto de reunión.'
+            }
+          }
+        },
+        id_predio: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione el predio.'
             }
           }
         }
@@ -2844,7 +2783,12 @@ $(function () {
         }
       });
     });
-  });
+
+    $('select[name="id_empresa"], select[name="id_predio"], select[name=punto_reunion]').on('change', function () {
+      // Revalidar el campo cuando se cambia el valor del select2
+      fv2.revalidateField($(this).attr('name'));
+    });
+ });
 
   //new new
   $(function () {

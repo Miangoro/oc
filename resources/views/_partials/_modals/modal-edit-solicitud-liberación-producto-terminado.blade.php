@@ -7,6 +7,7 @@
             </div>
             <div class="modal-body p-8">
                 <form id="editLiberacionProductoForm">
+                    <p class="solicitud badge bg-primary"></p>
                     <div class="row">
                         <div class="col-md-6">
                             <input type="hidden" name="id_solicitud" id="edit_id_solicitud_liberacion_terminado">
@@ -37,8 +38,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select select2" id="edit_id_instalacion_lib_ter" name="id_instalacion"
-                                    aria-label="id_instalacion" required>
+                                <select class=" form-select select2" id="edit_id_instalacion_lib_ter"
+                                    name="id_instalacion" aria-label="id_instalacion" required>
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
@@ -203,7 +204,8 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btneditlib"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="submit" class="btn btn-primary" id="btneditlib"><i
+                                class="ri-pencil-fill"></i> Editar</button>
                         <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
                                 class="ri-close-line"></i> Cancelar</button>
                     </div>

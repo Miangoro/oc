@@ -1,4 +1,4 @@
-<div class="modal fade" id="editVigilanciaTraslado" tabindex="-1" >
+<div class="modal fade" id="editVigilanciaTraslado" tabindex="-1">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
@@ -6,6 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-8">
+                <p class="solicitud badge bg-primary"></p>
                 <form id="editVigilanciaTrasladoForm">
                     <input type="hidden" name="id_solicitud" id="edit_id_solicitud_traslado">
                     <input type="hidden" name="form_type" value="vigilanciatraslado">
@@ -38,8 +39,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select select2" id="edit_id_instalacion_traslado" name="id_instalacion"
-                                    aria-label="id_instalacion" required>
+                                <select class=" form-select select2" id="edit_id_instalacion_traslado"
+                                    name="id_instalacion" aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
                             </div>

@@ -6,6 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-8">
+                <p class="solicitud badge bg-primary"></p>
                 <form id="editInspeccionEnvasadoForm">
                     <input type="hidden" name="id_solicitud" id="edit_id_solicitud_inspeccion">
                     <input type="hidden" name="form_type" value="inspeccionenvasado">
@@ -36,8 +37,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select select2" id="edit_id_instalacion_inspeccion" name="id_instalacion"
-                                    aria-label="id_instalacion" required>
+                                <select class=" form-select select2" id="edit_id_instalacion_inspeccion"
+                                    name="id_instalacion" aria-label="id_instalacion" required>
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                 </select>
                             </div>
@@ -101,15 +102,18 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" class="form-control text-muted bg-light" id="edit_volumen_inspeccion"
-                                    name="volumen_inspeccion" placeholder="Ingresa el volumen" readonly style="pointer-events: none;"/>
+                                <input type="number" class="form-control text-muted bg-light"
+                                    id="edit_volumen_inspeccion" name="volumen_inspeccion"
+                                    placeholder="Ingresa el volumen" readonly style="pointer-events: none;" />
                                 <label for="volumen_inspeccion">%Alc. Vol.</label>
                             </div>
                         </div>
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control text-muted bg-light" id="edit_analisis_inspeccion"
-                                    name="analisis_inspeccion" placeholder="Ingresa Análisis fisicoquímico" readonly style="pointer-events: none;"/>
+                                <input type="text" class="form-control text-muted bg-light"
+                                    id="edit_analisis_inspeccion" name="analisis_inspeccion"
+                                    placeholder="Ingresa Análisis fisicoquímico" readonly
+                                    style="pointer-events: none;" />
                                 <label for="analisis_inspeccion">Ingresa Análisis fisicoquímico</label>
                             </div>
                         </div>
@@ -117,8 +121,10 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="edit_id_tipo_inspeccion" name="id_tipo_inspeccion" class="form-select text-muted bg-light" readonly style="pointer-events: none;" >
-                                    <option class="text-muted" value="" disabled selected>Selecciona un tipo</option>
+                                <select id="edit_id_tipo_inspeccion" name="id_tipo_inspeccion"
+                                    class="form-select text-muted bg-light" readonly style="pointer-events: none;">
+                                    <option class="text-muted" value="" disabled selected>Selecciona un tipo
+                                    </option>
                                     <option value="Con etiqueta" class="text-muted">Con etiqueta</option>
                                     <option value="Sin etiqueta" class="text-muted">Sin etiqueta</option>
                                 </select>
@@ -127,8 +133,9 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" class="form-control bg-light text-muted" id="edit_id_cantidad_bote"
-                                    name="id_cantidad_bote" placeholder="Cantidad de botellas" readonly style="pointer-events: none;"  />
+                                <input type="number" class="form-control bg-light text-muted"
+                                    id="edit_id_cantidad_bote" name="id_cantidad_bote"
+                                    placeholder="Cantidad de botellas" readonly style="pointer-events: none;" />
                                 <label for="id_cantidad_bote">Cantidad de botellas</label>
                             </div>
                         </div>
@@ -150,8 +157,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control datepicker" id="edit_id_previsto" name="id_previsto"
-                                    placeholder="Termino previsto del envasado" />
+                                <input type="text" class="form-control datepicker" id="edit_id_previsto"
+                                    name="id_previsto" placeholder="Termino previsto del envasado" />
                                 <label for="id_previsto">Termino previsto del envasado</label>
                             </div>
                         </div>
@@ -173,7 +180,8 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="enviarInspec"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="submit" class="btn btn-primary" id="enviarInspec"><i
+                                class="ri-pencil-fill"></i> Editar</button>
                         <button type="reset" class="btn btn-danger " data-bs-dismiss="modal" aria-label="Close"><i
                                 class="ri-close-line"></i> Cancelar</button>
                     </div>
@@ -186,7 +194,7 @@
 <script>
     function editobtenerInstalacionesInspecciones() {
         var empresa = $("#edit_id_empresa_inspeccion").val();
-          $('#enviarInspec').prop('disabled', true);
+        $('#enviarInspec').prop('disabled', true);
         $('#estado_datos_cliente').text('Cargando datos...').css('color', 'black');
         $('#spinner_datos_cliente').show();
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
@@ -237,12 +245,12 @@
                     }
 
                     // Ocultar mensaje o cambiarlo
-                     $('#enviarInspec').prop('disabled', false);
+                    $('#enviarInspec').prop('disabled', false);
                     $('#spinner_datos_cliente').hide();
                     $('#estado_datos_cliente').text('');
                 },
                 error: function() {
-                   $('#enviarInspec').prop('disabled', true);
+                    $('#enviarInspec').prop('disabled', true);
                     $('#spinner_datos_cliente').hide();
                     $('#estado_datos_cliente').text('Error al cargar los datos').css('color', 'red');
                 }

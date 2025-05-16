@@ -36,8 +36,8 @@
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
                             <select onchange="obtenerDatosPredios(this.value);" class="select2 form-select id_predio"
-                                name="id_predio" aria-label="id_predio" required>
-                                <option value="" selected>Lista de predios</option>
+                                name="id_predio" aria-label="id_predio">
+                                <option value="" disabled selected>Lista de predios</option>
                             </select>
                             <label for="id_predio">Domicilio del predio a inspeccionar</label>
                         </div>

@@ -6,6 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-8">
+                <p class="solicitud badge bg-primary"></p>
                 <form id="editPedidoExportacionForm">
                     <input type="hidden" name="id_solicitud" class="id_solicitud" id="solicitud_id_pedidos">
                     <input type="hidden" name="form_type" value="pedidosExportacion">
@@ -429,7 +430,7 @@
 
                 if (idsLotes.includes(valorOption)) {
                     $(this).prop('selected',
-                    true); // <<< Aquí hacemos que se seleccione automáticamente
+                        true); // <<< Aquí hacemos que se seleccione automáticamente
                     encontrado = true;
                     //console.log('Seleccionado lote envasado:', valorOption);
                     return false; // Ya encontró, no sigue revisando
@@ -524,7 +525,7 @@
                     } else {
                         tbody.append(
                             `<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`
-                            );
+                        );
                     }
                 },
                 error: function() {
@@ -649,7 +650,7 @@
                 error: function(xhr) {
                     console.error('Error al obtener marcas:', xhr);
                     $('#tabla_marcas tbody').html(
-                    '<tr><td colspan="8">Error al cargar los datos</td></tr>');
+                        '<tr><td colspan="8">Error al cargar los datos</td></tr>');
                 }
             });
         } else {

@@ -7,6 +7,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-8">
+                <p class="solicitud badge bg-primary"></p>
                 <form id="editRegistrarSolicitudMuestreoAgave">
                     <div class="row">
                         <input type="hidden" name="id_solicitud" id="edit_id_solicitud_muestr">
@@ -29,7 +30,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
-                                    id="fecha_visita_muestr" type="text" name="fecha_visita" />
+                                    id="fecha_visita_muestr" type="text" name="fecha_visita" autocomplete="off" />
                                 <label for="num_anterior">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -37,7 +38,7 @@
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
                             <select class="select2 form-select" id="id_instalacion_dic23" name="id_instalacion"
-                                aria-label="id_instalacion" required>
+                                aria-label="id_instalacion">
                                 <option value="" selected>Lista de instalaciones</option>
                             </select>
                             <label for="id_predio">Domicilio de la instalación de producción</label>
@@ -46,7 +47,7 @@
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
                             <select multiple class="select2 form-select guiass" id="edit_id_guiass" name="id_guia[]"
-                                aria-label="id_instalacion" required>
+                                aria-label="id_instalacion">
                                 <option value="" disabled selected>Lista de guías de agave</option>
                             </select>
                             <label for="id_predio">Guías de agave expedidas por OC CIDAM</label>
@@ -60,7 +61,8 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnEditMA"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="submit" class="btn btn-primary" id="btnEditMA"><i class="ri-pencil-fill"></i>
+                            Editar</button>
                         <button type="reset" class="btn btn-danger " data-bs-dismiss="modal" aria-label="Close"><i
                                 class="ri-close-line"></i> Cancelar</button>
                     </div>
