@@ -205,7 +205,7 @@
                         contenidoEnv = '<option disabled selected value="">Sin lotes registrados</option>';
                     } else {}
                     $('#id_lote_envasado_inspeccion').html(contenidoEnv);
-                     obtenerDatosGranelesInspecciones();
+                     /* obtenerDatosGranelesInspecciones(); */
                 },
                 error: function() {}
             });

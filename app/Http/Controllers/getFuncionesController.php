@@ -62,7 +62,7 @@ class getFuncionesController extends Controller
     {
         // Obtener las marcas de la empresa
         //$marcas = $empresa->marcas()->get();  // Llamamos a `get()` para obtener los datos reales
-        $marcas = $empresa->todasLasMarcas()->get(); 
+        $marcas = $empresa->todasLasMarcas()->get();
 
         // Depurar las marcas
 
@@ -80,7 +80,11 @@ class getFuncionesController extends Controller
             'predios' => $empresa->predios(),
             'predio_plantacion' => $empresa->predio_plantacion(),
             'direcciones' => $empresa->direcciones(),
-            'lotes_envasado' => $empresa->todos_lotes_envasado(),
+            /* 'lotes_envasado' => $empresa->todos_lotes_envasado(), */
+            'lotes_envasado' => lotes_envasado::whereIn('id_empresa', $idsEmpresas)
+            ->with('lotes_envasado_granel.lotes_granel', 'dictamenEnvasado')
+            ->orderByDesc('id_lote_envasado')
+            ->get(),
             'direcciones_destino' => Destinos::where("id_empresa", $empresa->id_empresa)->where('tipo_direccion', 1)->get(),
             'instalaciones_produccion' => Instalaciones::where('tipo', 'like', '%Productora%')->where("id_empresa", $empresa->id_empresa)->get(),
             'instalaciones_comercializadora' => Instalaciones::where('tipo', 'like', '%Comercializadora%')->where("id_empresa", $empresa->id_empresa)->get(),
@@ -192,14 +196,14 @@ class getFuncionesController extends Controller
 $solicitudQuery = solicitudesModel::with([
     'empresa.empresaNumClientes',
     'instalacion.certificado_instalacion',
-   
+
     'predios',
     'marcas',
      'lote_envasado.lotes_envasado_granel.lotes_granel.clase',
     'lote_envasado.lotes_envasado_granel.lotes_granel.categoria',
     'lote_envasado.marca',
     'lote_envasado.dictamenEnvasado',
-    
+
 ]);
 
 // Cargamos la solicitud
@@ -234,21 +238,21 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
     $documentos = Documentacion_url::where("id_empresa", $solicitud->empresa->id_empresa)->get();
 
     if ($solicitud && $solicitud->id_tipo == 11) {
-        $caracteristicas = is_string($solicitud->caracteristicas) 
-            ? json_decode($solicitud->caracteristicas, true) 
+        $caracteristicas = is_string($solicitud->caracteristicas)
+            ? json_decode($solicitud->caracteristicas, true)
             : $solicitud->caracteristicas;
-    
-        $idEtiqueta = is_array($caracteristicas) 
-            ? ($caracteristicas['id_etiqueta'] ?? null) 
+
+        $idEtiqueta = is_array($caracteristicas)
+            ? ($caracteristicas['id_etiqueta'] ?? null)
             : ($caracteristicas->id_etiqueta ?? null);
-    
+
         if ($idEtiqueta) {
             $url_etiqueta = Documentacion_url::where('id_relacion', $idEtiqueta)
             ->where('id_documento', 60)
             ->value('url'); // Obtiene directamente el valor del campo 'url'
         }
 
-    
+
         if ($idEtiqueta) {
             $url_corrugado = Documentacion_url::where('id_relacion', $idEtiqueta)
             ->where('id_documento', 75)
@@ -256,7 +260,7 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
         }
 
     }
-    
+
 
     return response()->json([
         'success' => true,
