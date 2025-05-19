@@ -3019,7 +3019,14 @@ $(function () {
     });
   });
 
-  // Validación del formulario Muestreo Lote Agranel
+$(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+// Validación del formulario Muestreo Lote Agranel
   const addMuestreoLoteAgranelForm = document.getElementById('addMuestreoLoteAgranelForm');
   const fvMuestreo = FormValidation.formValidation(addMuestreoLoteAgranelForm, {
     fields: {
@@ -3110,7 +3117,15 @@ $(function () {
   });
 
 
-  // Validación del formulario Inspección Ingreso Barricada
+});
+
+$(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+// Validación del formulario Inspección Ingreso Barricada
   const addInspeccionIngresoBarricadaForm = document.getElementById('addInspeccionIngresoBarricadaForm');
   const fvBarricada = FormValidation.formValidation(addInspeccionIngresoBarricadaForm, {
     fields: {
@@ -3229,8 +3244,15 @@ $(function () {
       }
     });
   });
+     });
 
-  // Validación del formulario Inspección Liberación Barrica/Contenedor de Vidrio
+     $(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+// Validación del formulario Inspección Liberación Barrica/Contenedor de Vidrio
   const addInspeccionLiberacionForm = document.getElementById('addInspeccionLiberacionForm');
   const fvLiberacion = FormValidation.formValidation(addInspeccionLiberacionForm, {
     fields: {
@@ -3357,8 +3379,16 @@ $(function () {
       }
     });
   });
+    });
 
-  //Validar vigilancia en traslado
+
+$(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+//Validar vigilancia en traslado
   const addVigilanciaTrasladoForm = document.getElementById('addVigilanciaTrasladoForm');
   const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
     fields: {
@@ -3458,6 +3488,8 @@ $(function () {
       }
     });
   });
+    });
+
 
   /*funcion para solicitud de liberacion producto termiando  */
   $(function () {
