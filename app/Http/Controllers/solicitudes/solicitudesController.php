@@ -563,7 +563,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud Inspeccion ingreso a barricada',
+            'title' => 'Nuevo registro de solicitud Inspeccion ingreso a barrica',
             'message' => $InspeccionBarri->folio . " " . $InspeccionBarri->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -572,7 +572,7 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Inspeccion ingreso a barricada de lote registrada exitosamente']);
+        return response()->json(['message' => 'Inspeccion ingreso a barrica de lote registrada exitosamente']);
     }
 
     public function storeInspeccionBarricadaLiberacion(Request $request)
@@ -610,7 +610,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud Inspeccion liberacion a barricada',
+            'title' => 'Nuevo registro de solicitud Inspeccion liberacion a barrica',
             'message' => $BarricadaLib->folio . " " . $BarricadaLib->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -619,7 +619,7 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Inspeccion liberacion a barricada de lote registrada exitosamente']);
+        return response()->json(['message' => 'Inspeccion liberacion a barrica de lote registrada exitosamente']);
     }
 
 
