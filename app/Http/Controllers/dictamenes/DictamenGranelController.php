@@ -418,7 +418,7 @@ public function MostrarDictamenGranel($id_dictamen)
         'qrCodeBase64' => $qrCodeBase64
     ]);
 
-    return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
+    return $pdf->stream('Dictamen de Cumplimiento NOM Mezcal a Granel F-UV-04-16.pdf');
 }
 
 

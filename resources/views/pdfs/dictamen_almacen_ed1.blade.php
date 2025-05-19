@@ -344,7 +344,7 @@
     </div>
 
     <p class="pie">Entrada en vigor: 15-07-2024<br>
-        F-UV-02-04 Ver 10.
+        F-UV-02-04 Ver 1.
     </p>
 </div>
 </body>

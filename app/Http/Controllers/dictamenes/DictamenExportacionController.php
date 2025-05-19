@@ -446,7 +446,7 @@ public function MostrarDictamenExportacion($id_dictamen)
         
     ]);
     //nombre al descarga
-    return $pdf->stream('F-UV-04-18 Ver 2. Dictamen de Cumplimiento para Producto de Exportación.pdf');
+    return $pdf->stream('Dictamen de Cumplimiento para Producto de Exportación F-UV-04-18.pdf');
 }
 
 

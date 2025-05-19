@@ -27,6 +27,7 @@ use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ValidationException;
+use Illuminate\Support\Facades\Storage;
 
 
 class DictamenEnvasadoController extends Controller
@@ -416,6 +417,7 @@ public function MostrarDictamenEnvasado($id_dictamen)
     $id_sustituye = json_decode($data->observaciones, true)['id_sustituye'] ?? null;
     $nombre_id_sustituye = $id_sustituye ? Dictamen_Envasado::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
 
+    
     // Renderizar el PDF con los lotes a granel
     //$pdf = Pdf::loadView('pdfs.dictamen_envasado_ed6', [
     $pdf = [

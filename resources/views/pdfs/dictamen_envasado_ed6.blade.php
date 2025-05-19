@@ -508,7 +508,7 @@
         <p class="textx" style="font-size: 9px; margin-bottom:-8px; margin-top:-2px; position: relative;">
             <strong>AUTORIZÓ</strong>
             <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
-                {{-- @php
+                @php
                     use Illuminate\Support\Facades\Storage;
                     $firma = $data->firmante->firma ?? null;
                     $firmaPath = $firma ? 'firmas/' . $firma : null;
@@ -516,10 +516,11 @@
         
                 @if ($firma && Storage::disk('public')->exists($firmaPath))
                     <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
-                        src="{{ asset('storage/' . $firmaPath) }}">
+                        {{-- src="{{ asset('storage/' . $firmaPath) }}"> --}}
+                        src="{{ public_path('storage/' . $firmaPath) }}">
                 @endif
         
-                <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong> --}}
+                <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
             </span>
         </p>
         

@@ -481,7 +481,16 @@ public function dictamen_productor($id_dictamen)
     $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
     $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
-    $pdf = Pdf::loadView('pdfs.DictamenProductor', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
+    
+    $pdf = Pdf::loadView('pdfs.dictamen_productor_ed10', [
+        'datos' => $datos,
+        'fecha_inspeccion' => $fecha_inspeccion, 
+        'fecha_emision' => $fecha_emision, 
+        'fecha_vigencia' => $fecha_vigencia, 
+        'firmaDigital' => $firmaDigital, 
+        'qrCodeBase64' => $qrCodeBase64
+    ])->setPaper('letter', 'portrait');
+
     return $pdf->stream($datos->num_dictamen .' Dictamen de cumplimiento de Instalaciones como productor.pdf');
 }
 
@@ -513,7 +522,10 @@ public function dictamen_envasador($id_dictamen)
     $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
     $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
-    $pdf = Pdf::loadView('pdfs.DictamenEnvasado', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
+    $pdf = Pdf::loadView('pdfs.dictamen_envasador_ed10', [
+        'datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64
+    ])->setPaper('letter', 'portrait');
+    
     return $pdf->stream($datos->num_dictamen.' Dictamen de cumplimiento de Instalaciones como envasador.pdf');
 }
 
@@ -545,7 +557,10 @@ public function dictamen_comercializador($id_dictamen)
     $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
     $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
-    $pdf = Pdf::loadView('pdfs.DictamenComercializador', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
+    $pdf = Pdf::loadView('pdfs.dictamen_comercializador_ed10', [
+        'datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64
+    ])->setPaper('letter', 'portrait');
+    
     return $pdf->stream($datos->num_dictamen . ' Dictamen de cumplimiento de instalaciones como comercializador.pdf');
 }
 
@@ -581,7 +596,7 @@ public function dictamen_almacen($id_dictamen)
     $categorias = json_decode($datos->categorias, true);
     $clases = json_decode($datos->clases, true);
     $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
-    $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_Instalaciones', [
+    $pdf = Pdf::loadView('pdfs.dictamen_almacen_ed1', [
         'datos' => $datos,
         'fecha_inspeccion' => $fecha_inspeccion ?? '',
         'fecha_emision' => $fecha_emision ?? '',
@@ -602,7 +617,7 @@ public function dictamen_maduracion($id_dictamen)
     $categorias = json_decode($datos->categorias, true);
     $clases = json_decode($datos->clases, true);
 
-    $pdf = Pdf::loadView('pdfs.Dictamen_Instalaciones_maduracion_mezcal', [
+    $pdf = Pdf::loadView('pdfs.dictamen_maduracion_ed1', [
         'datos' => $datos,
         'fecha_inspeccion' => $fecha_inspeccion,
         'fecha_emision' => $fecha_emision,
@@ -611,7 +626,7 @@ public function dictamen_maduracion($id_dictamen)
         'clases' => $clases
     ]);
 
-    return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones del área de maduración.pdf');
+    return $pdf->stream('Dictamen de cumplimiento de Instalaciones del área de maduración.pdf');
 }
 
 
