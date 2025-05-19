@@ -26,7 +26,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
-                                    id="fecha_visita" type="text" name="fecha_visita" autocomplete="off"/>
+                                    id="fecha_visita_vigi" type="text" name="fecha_visita" autocomplete="off"/>
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class=" form-select select2 id_instalacion"
-                                    name="id_instalacion" aria-label="id_instalacion">
+                                    name="id_instalacion" aria-label="id_instalacion" id="id_instalacion_vigi">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                 </select>
                                 <label for="id_instalacion">Instalaciones</label>

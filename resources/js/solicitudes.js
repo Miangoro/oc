@@ -1248,28 +1248,28 @@ $(function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_predio: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un predio para la inspección.'
+              message: 'Por favor seleccione un predio para la inspección.'
             }
           }
         },
         punto_reunion: {
           validators: {
             notEmpty: {
-              message: 'Introduce la dirección para el punto de reunión.'
+              message: 'Por favor introduzca la dirección para el punto de reunión.'
             }
           }
         }
@@ -1348,42 +1348,42 @@ $(function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha sugerida para la inspección.'
+              message: 'Por favor seleccione la fecha sugerida para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
         'clases[]': {
           validators: {
             notEmpty: {
-              message: 'Selecciona al menos una clase.'
+              message: 'Por favor seleccione al menos una clase.'
             }
           }
         },
         'categorias[]': {
           validators: {
             notEmpty: {
-              message: 'Selecciona al menos una categoria.'
+              message: 'Por favor seleccione al menos una categoria.'
             }
           }
         },
         renovacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona si es renovación o no.'
+              message: 'Por favor seleccione si es renovación o no.'
             }
           }
         }
@@ -1463,28 +1463,28 @@ $(function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_lote_granel: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un predio para la inspección.'
+              message: 'Por favor seleccione un predio para la inspección.'
             }
           }
         },
         punto_reunion: {
           validators: {
             notEmpty: {
-              message: 'Introduce la dirección para el punto de reunión.'
+              message: 'Por favor introduzca la dirección para el punto de reunión.'
             }
           }
         }
@@ -1579,35 +1579,35 @@ $(function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
         id_lote_granel_muestreo: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote a granel.'
+              message: 'Por favor seleccione un lote a granel.'
             }
           }
         },
         destino_lote: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un tipo.'
+              message: 'Por favor seleccione un tipo.'
             }
           }
         }
@@ -1684,35 +1684,35 @@ $(function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
         id_lote_granel_traslado: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote a granel.'
+              message: 'Por favor seleccione un lote a granel.'
             }
           }
         },
         id_vol_traslado: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el volumen trasladado.'
+              message: 'Por favor ingrese el volumen trasladado.'
             },
             numeric: {
               message: 'El volumen debe ser un número válido.'
@@ -1793,35 +1793,35 @@ $(function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
         id_lote_granel_barricada: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote a granel.'
+              message: 'Por favor seleccione un lote a granel.'
             }
           }
         },
         volumen_barricada: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el volumen trasladado.'
+              message: 'por favor ingrese el volumen trasladado.'
             },
             numeric: {
               message: 'El volumen debe ser un número válido.'
@@ -1901,21 +1901,21 @@ $(function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
@@ -2147,7 +2147,7 @@ $(function () {
       });
     });
     // Inicializar select2 y revalidar el campo cuando cambie
-    $('#id_empresa_inspeccion, #id_lote_envasado_inspeccion, #id_inicio_envasado, #id_previsto').on('change', function () {
+    $('#id_empresa_inspeccion, #fecha_visita_inspeccion_envasado, #id_lote_envasado_inspeccion, #id_inicio_envasado, #id_previsto, #id_instalacion_inspeccion').on('change', function () {
       fvEnvasado.revalidateField($(this).attr('name'));
     });
   });
@@ -2168,35 +2168,35 @@ $(function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
         id_lote_granel_liberacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote a granel.'
+              message: 'Por favor seleccione un lote a granel.'
             }
           }
         },
         volumen_liberacion: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el volumen trasladado.'
+              message: 'Por favor ingrese el volumen trasladado.'
             },
             numeric: {
               message: 'El volumen debe ser un número válido.'
@@ -2217,12 +2217,12 @@ $(function () {
     }).on('core.form.valid', function (e) {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
-    $('#btnEditLiberacion').prop('disabled', true);
-    $('#btnEditLiberacion').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
-    setTimeout(function () {
-      $('#btnEditLiberacion').prop('disabled', false);
-      $('#btnEditLiberacion').html('<i class="ri-add-line"></i> Editar');
-    }, 3000);
+      $('#btnEditLiberacion').prop('disabled', true);
+      $('#btnEditLiberacion').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+      setTimeout(function () {
+        $('#btnEditLiberacion').prop('disabled', false);
+        $('#btnEditLiberacion').html('<i class="ri-add-line"></i> Editar');
+      }, 3000);
 
       // Hacer la solicitud AJAX
       $.ajax({
@@ -2276,28 +2276,28 @@ $(function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
         id_lote_envasado: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote envasado.'
+              message: 'Por favor seleccione un lote envasado.'
             }
           }
         },
@@ -2611,42 +2611,42 @@ $(function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha sugerida para la inspección'
+              message: 'Por favor seleccione la fecha sugerida para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la instalación'
+              message: 'Por favor seleccione la instalación.'
             }
           }
         },
         renovacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la opción'
+              message: 'Por favor seleccione una opción.'
             }
           }
         },
         'clases[]': {
           validators: {
             notEmpty: {
-              message: 'Selecciona la clase'
+              message: 'Por favor seleccione una clase'
             }
           }
         },
         'categorias[]': {
           validators: {
             notEmpty: {
-              message: 'Selecciona la clase'
+              message: 'Por favor seleccione una categoria'
             }
           }
         }
@@ -2708,10 +2708,7 @@ $(function () {
       });
     });
     // Inicializar select2 y manejar eventos de cambio por "name"
-    $(
-      'select[name="clases[]"], select[name="categorias[]"], select[name="id_instalacion"], select[name="id_empresa"]'
-    ).on('change', function () {
-      // Revalidar el campo cuando se cambia el valor del select2
+    $('#id_empresa_solicitudes, #fechaSoliInstalacion, #id_instalacion_dic, #categoriaDictamenIns, #clasesDicIns, #renovacion').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
 
@@ -2813,8 +2810,7 @@ $(function () {
       });
     });
 
-    $('select[name="id_empresa"], select[name="id_predio"], select[name=punto_reunion]').on('change', function () {
-      // Revalidar el campo cuando se cambia el valor del select2
+    $('#id_empresa_georefere, #fecha_visita_geo, #id_predio_georefe, #punto_reunion_georefere').on('change', function () {
       fv2.revalidateField($(this).attr('name'));
     });
   });
@@ -2899,22 +2895,6 @@ $(function () {
     });
   });
 
-  // Limpiar los campos del formulario cuando el modal se oculta
-  $('#modalEditInstalacion').on('hidden.bs.modal', function () {
-    $('#edit_certificado_otros').addClass('d-none');
-    $('#archivo_url_display').html('No hay archivo disponible.');
-
-    // Limpiar campos individuales
-    $('#edit_id_empresa').val('').trigger('change');
-    $('#edit_tipo').val('').trigger('change');
-    $('#edit_estado').val('').trigger('change');
-    $('#edit_direccion').val('');
-    $('#edit_certificacion').val('oc_cidam').trigger('change');
-    $('#edit_folio').val('');
-    $('#edit_id_organismo').val('').trigger('change');
-    $('#edit_fecha_emision').val('');
-    $('#edit_fecha_vigencia').val('');
-  });
 
   $(function () {
     $.ajaxSetup({
@@ -3017,478 +2997,500 @@ $(function () {
         }
       });
     });
+    $('#id_empresa_vigilancia, #fecha_visita_vigi, #id_instalacion_vigi').on('change', function () {
+      fv5.revalidateField($(this).attr('name'));
+    });
   });
 
-$(function () {
+  $(function () {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
 
-// Validación del formulario Muestreo Lote Agranel
-  const addMuestreoLoteAgranelForm = document.getElementById('addMuestreoLoteAgranelForm');
-  const fvMuestreo = FormValidation.formValidation(addMuestreoLoteAgranelForm, {
-    fields: {
-      id_empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una empresa.'
+    // Validación del formulario Muestreo Lote Agranel
+    const addMuestreoLoteAgranelForm = document.getElementById('addMuestreoLoteAgranelForm');
+    const fvMuestreo = FormValidation.formValidation(addMuestreoLoteAgranelForm, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa.'
+            }
           }
-        }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha y hora de la visita.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una instalación.'
+            }
+          }
+        },
+        id_lote_granel: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un lote a granel.'
+            }
+          }
+        },
       },
-      fecha_visita: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha y hora de la visita.'
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-4, .mb-5, .mb-6';
           }
-        }
-      },
-      id_instalacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una instalación.'
-          }
-        }
-      },
-      id_lote_granel: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un lote a granel.'
-          }
-        }
-      },
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          return '.mb-4, .mb-5, .mb-6';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    const formData = new FormData(addMuestreoLoteAgranelForm);
-    $('#btnRegistrMLote').prop('disabled', true);
-    $('#btnRegistrMLote').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
-    setTimeout(function () {
-      $('#btnRegistrMLote').prop('disabled', false);
-      $('#btnRegistrMLote').html('<i class="ri-add-line"></i> Registrar');
-    }, 3000);
-
-    $.ajax({
-      url: '/hologramas/storeMuestreoLote', // Actualiza con la URL correcta
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        // Cerrar modal y reiniciar formulario
-        $('#addMuestreoLoteAgranel').modal('hide');
-        $('#addMuestreoLoteAgranelForm')[0].reset();
-        $('.select2').val(null).trigger('change');
-        $('.datatables-solicitudes').DataTable().ajax.reload();
-
-        // Mostrar alerta de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Solicitud de Muestreo registrado exitosamente.',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function () {
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar el muestreo.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
       }
+    }).on('core.form.valid', function () {
+      const formData = new FormData(addMuestreoLoteAgranelForm);
+      $('#btnRegistrMLote').prop('disabled', true);
+      $('#btnRegistrMLote').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnRegistrMLote').prop('disabled', false);
+        $('#btnRegistrMLote').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
+
+      $.ajax({
+        url: '/hologramas/storeMuestreoLote', // Actualiza con la URL correcta
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // Cerrar modal y reiniciar formulario
+          $('#addMuestreoLoteAgranel').modal('hide');
+          $('#addMuestreoLoteAgranelForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Solicitud de Muestreo registrado exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function () {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar el muestreo.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+
     });
+    $('#id_empresa_muestreo, #fecha_visita_muestreoLo, #id_instalacion_muestreoLo, #id_lote_granel_muestreo').on('change', function () {
+      fvMuestreo.revalidateField($(this).attr('name'));
+    });
+
   });
 
-
-});
-
-$(function () {
+  $(function () {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-// Validación del formulario Inspección Ingreso Barricada
-  const addInspeccionIngresoBarricadaForm = document.getElementById('addInspeccionIngresoBarricadaForm');
-  const fvBarricada = FormValidation.formValidation(addInspeccionIngresoBarricadaForm, {
-    fields: {
-      id_empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un cliente.'
+    // Validación del formulario Inspección Ingreso Barricada
+    const addInspeccionIngresoBarricadaForm = document.getElementById('addInspeccionIngresoBarricadaForm');
+    const fvBarricada = FormValidation.formValidation(addInspeccionIngresoBarricadaForm, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un cliente.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una instalación.'
+            }
+          }
+        },
+        id_lote_granel_barricada: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un lote a granel.'
+            }
+          }
+        },
+        tipo_lote: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un tipo.'
+            }
+          }
+        },
+        analisis_barricada: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el análisis fisicoquímico.'
+            }
+          }
+        },
+        volumen_barricada: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el porcentaje de alcohol.'
+            },
+            numeric: {
+              message: 'Por favor ingrese un valor numérico válido.'
+            }
+          }
+        },
+        fecha_inicio: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha de inicio.'
+            }
           }
         }
       },
-      fecha_visita: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-4, .mb-5, .mb-6';
           }
-        }
-      },
-      id_instalacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una instalación.'
-          }
-        }
-      },
-      id_lote_granel_barricada: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un lote a granel.'
-          }
-        }
-      },
-      tipo_lote: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un tipo.'
-          }
-        }
-      },
-      analisis_barricada: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el análisis fisicoquímico.'
-          }
-        }
-      },
-      volumen_barricada: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el porcentaje de alcohol.'
-          },
-          numeric: {
-            message: 'Por favor ingrese un valor numérico válido.'
-          }
-        }
-      },
-      fecha_inicio: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha de inicio.'
-          }
-        }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
       }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          return '.mb-4, .mb-5, .mb-6';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    const formData = new FormData(addInspeccionIngresoBarricadaForm);
-    $('#btnReIngresoBarrica').prop('disabled', true);
-    $('#btnReIngresoBarrica').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
-    setTimeout(function () {
-      $('#btnReIngresoBarrica').prop('disabled', false);
-      $('#btnReIngresoBarrica').html('<i class="ri-add-line"></i> Registrar');
-    }, 2000);
-    $.ajax({
-      url: '/hologramas/storeInspeccionBarricada', // Actualiza con la URL correcta
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        // Cerrar modal y reiniciar formulario
-        $('#addInspeccionIngresoBarricada').modal('hide');
-        $('#addInspeccionIngresoBarricadaForm')[0].reset();
-        $('.select2').val(null).trigger('change');
-        $('.datatables-solicitudes').DataTable().ajax.reload();
+    }).on('core.form.valid', function () {
+      const formData = new FormData(addInspeccionIngresoBarricadaForm);
+      $('#btnReIngresoBarrica').prop('disabled', true);
+      $('#btnReIngresoBarrica').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnReIngresoBarrica').prop('disabled', false);
+        $('#btnReIngresoBarrica').html('<i class="ri-add-line"></i> Registrar');
+      }, 2000);
+      $.ajax({
+        url: '/hologramas/storeInspeccionBarricada', // Actualiza con la URL correcta
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // Cerrar modal y reiniciar formulario
+          $('#addInspeccionIngresoBarricada').modal('hide');
+          $('#addInspeccionIngresoBarricadaForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
 
-        // Mostrar alerta de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Inspección barricada registrada exitosamente.',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function () {
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar la inspección.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Inspección barricada registrada exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function () {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la inspección.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+        $('#id_empresa_barricada, #fecha_visita_ingreso_barrica, #id_instalacion_barricada, #id_lote_granel_barricada, #fecha_inicio_ingreso_barrica').on('change', function () {
+      fvBarricada.revalidateField($(this).attr('name'));
     });
   });
-     });
 
-     $(function () {
+  $(function () {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-// Validación del formulario Inspección Liberación Barrica/Contenedor de Vidrio
-  const addInspeccionLiberacionForm = document.getElementById('addInspeccionLiberacionForm');
-  const fvLiberacion = FormValidation.formValidation(addInspeccionLiberacionForm, {
-    fields: {
-      id_empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un cliente.'
+    // Validación del formulario Inspección Liberación Barrica/Contenedor de Vidrio
+    const addInspeccionLiberacionForm = document.getElementById('addInspeccionLiberacionForm');
+    const fvLiberacion = FormValidation.formValidation(addInspeccionLiberacionForm, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un cliente.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una instalación.'
+            }
+          }
+        },
+        id_lote_granel_liberacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un lote a granel.'
+            }
+          }
+        },
+        tipo_lote_lib: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un tipo.'
+            }
+          }
+        },
+        analisis_liberacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el análisis fisicoquímico.'
+            }
+          }
+        },
+        volumen_liberacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el volumen.'
+            },
+            numeric: {
+              message: 'Por favor ingrese un valor numérico válido.'
+            }
+          }
+        },
+        fecha_inicio_lib: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha de inicio.'
+            }
+          }
+        },
+        fecha_termino_lib: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha de término.'
+            }
           }
         }
       },
-      fecha_visita: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-4, .mb-5, .mb-6';
           }
-        }
-      },
-      id_instalacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una instalación.'
-          }
-        }
-      },
-      id_lote_granel_liberacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un lote a granel.'
-          }
-        }
-      },
-      tipo_lote_lib: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un tipo.'
-          }
-        }
-      },
-      analisis_liberacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el análisis fisicoquímico.'
-          }
-        }
-      },
-      volumen_liberacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el volumen.'
-          },
-          numeric: {
-            message: 'Por favor ingrese un valor numérico válido.'
-          }
-        }
-      },
-      fecha_inicio_lib: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha de inicio.'
-          }
-        }
-      },
-      fecha_termino_lib: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha de término.'
-          }
-        }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
       }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          return '.mb-4, .mb-5, .mb-6';
+    }).on('core.form.valid', function () {
+      const formData = new FormData(addInspeccionLiberacionForm);
+      $('#btnAddLiberacion').prop('disabled', true);
+      $('#btnAddLiberacion').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnAddLiberacion').prop('disabled', false);
+        $('#btnAddLiberacion').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
+
+      $.ajax({
+        url: '/hologramas/storeInspeccionBarricadaLiberacion', // Actualiza con la URL correcta
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // Cerrar modal y reiniciar formulario
+          $('#addInspeccionLiberacion').modal('hide');
+          $('#addInspeccionLiberacionForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Inspección de liberacion barricada registrada exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function () {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la inspección.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
         }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    const formData = new FormData(addInspeccionLiberacionForm);
-    $('#btnAddLiberacion').prop('disabled', true);
-    $('#btnAddLiberacion').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
-    setTimeout(function () {
-      $('#btnAddLiberacion').prop('disabled', false);
-      $('#btnAddLiberacion').html('<i class="ri-add-line"></i> Registrar');
-    }, 3000);
-
-    $.ajax({
-      url: '/hologramas/storeInspeccionBarricadaLiberacion', // Actualiza con la URL correcta
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        // Cerrar modal y reiniciar formulario
-        $('#addInspeccionLiberacion').modal('hide');
-        $('#addInspeccionLiberacionForm')[0].reset();
-        $('.select2').val(null).trigger('change');
-        $('.datatables-solicitudes').DataTable().ajax.reload();
-
-        // Mostrar alerta de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Inspección de liberacion barricada registrada exitosamente.',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function () {
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar la inspección.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
+      });
+    });
+    $('#id_empresa_liberacion, #fecha_visita_liberacion, #id_instalacion_liberacion, #id_lote_granel_liberacion, #fecha_inicio_libe_inspe, #fecha_termino_libe_inspe').on('change', function () {
+      fvLiberacion.revalidateField($(this).attr('name'));
     });
   });
-    });
 
 
-$(function () {
+  $(function () {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-//Validar vigilancia en traslado
-  const addVigilanciaTrasladoForm = document.getElementById('addVigilanciaTrasladoForm');
-  const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
-    fields: {
-      id_empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una empresa.'
+    //Validar vigilancia en traslado
+    const addVigilanciaTrasladoForm = document.getElementById('addVigilanciaTrasladoForm');
+    const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha y hora de la inspección.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una instalación.'
+            }
+          }
+        },
+        instalacion_vigilancia:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una dirección de destino.'
+            }
+          }
+        },
+        id_lote_granel_traslado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un lote a granel.'
+            }
+          }
+        },
+        id_vol_traslado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el volumen trasladado.'
+            },
+            numeric: {
+              message: 'El volumen trasladado debe ser un número válido.',
+              thousandsSeparator: '',
+              decimalSeparator: '.'
+            }
           }
         }
       },
-      fecha_visita: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha y hora de la inspección.'
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-4, .mb-5, .mb-6';
           }
-        }
-      },
-      id_instalacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una instalación.'
-          }
-        }
-      },
-      id_lote_granel_traslado: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un lote a granel.'
-          }
-        }
-      },
-      id_vol_traslado: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el volumen trasladado.'
-          },
-          numeric: {
-            message: 'El volumen trasladado debe ser un número válido.',
-            thousandsSeparator: '',
-            decimalSeparator: '.'
-          }
-        }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
       }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          return '.mb-4, .mb-5, .mb-6';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    const formData = new FormData(addVigilanciaTrasladoForm);
-    $('#btnReVigiLote').prop('disabled', true);
-    $('#btnReVigiLote').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
-    setTimeout(function () {
-      $('#btnReVigiLote').prop('disabled', false);
-      $('#btnReVigiLote').html('<i class="ri-add-line"></i> Registrar');
-    }, 3000);
-    $.ajax({
-      url: '/hologramas/storeVigilanciaTraslado', // Cambia a la URL correcta
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        // Cerrar modal y reiniciar formulario
-        $('#addVigilanciaTraslado').modal('hide');
-        $('#addVigilanciaTrasladoForm')[0].reset();
-        $('.select2').val(null).trigger('change');
-        $('.datatables-solicitudes').DataTable().ajax.reload();
+    }).on('core.form.valid', function () {
+      const formData = new FormData(addVigilanciaTrasladoForm);
+      $('#btnReVigiLote').prop('disabled', true);
+      $('#btnReVigiLote').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnReVigiLote').prop('disabled', false);
+        $('#btnReVigiLote').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
+      $.ajax({
+        url: '/hologramas/storeVigilanciaTraslado', // Cambia a la URL correcta
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // Cerrar modal y reiniciar formulario
+          $('#addVigilanciaTraslado').modal('hide');
+          $('#addVigilanciaTrasladoForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
 
-        // Mostrar alerta de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Vigilancia traslado registrada exitosamente.',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function () {
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar la vigilancia.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Vigilancia traslado registrada exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function () {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la vigilancia.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+    $('#id_empresa_traslado, #fecha_visita_traslado, #id_instalacion_traslado, #instalacion_vigilancia, #id_lote_granel_traslado').on('change', function () {
+      fvVigilancia.revalidateField($(this).attr('name'));
     });
   });
-    });
 
 
   /*funcion para solicitud de liberacion producto termiando  */
@@ -3507,28 +3509,28 @@ $(function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha sugerida para la inspección.'
+              message: 'Por favor seleccione la fecha sugerida para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
         id_lote_envasado: {
           validators: {
             notEmpty: {
-              message: 'Selecciona al menos un lote envasado.'
+              message: 'Por favor seleccione al menos un lote envasado.'
             }
           }
         },
@@ -3590,6 +3592,9 @@ $(function () {
         }
       });
     });
+    $('#id_empresa_solicitud_lib_ter, #fecha_visita_liberacion_produto, #id_instalacion_lib_ter, #id_lote_envasado_lib_ter').on('change', function () {
+      fvDictaminacion.revalidateField($(this).attr('name'));
+    });
   });
 
   // Manejar el cambio en el tipo de instalación
@@ -3649,43 +3654,6 @@ $(function () {
       iframe.show();
     });
   });
-
-  var openedFromFirstModal = false;
-
-  /*   $('#abrirModalInstalaciones').on('click', function () {
-      var clienteSeleccionado = $('#id_empresa_solicitudes').val();
-
-      openedFromFirstModal = true;
-      $('#addSolicitudDictamen').modal('hide');
-      $('#id_empresa option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
-      $('#id_empresa').trigger('change');
-      $('#modalAddInstalacion').modal('show');
-    }); */
-
-  // Al cerrar el segundo modal
-  $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-    if (openedFromFirstModal) {
-      openedFromFirstModal = false;
-      $('#addSolicitudDictamen').modal('show');
-    }
-  });
-
-  // Al registrar el segundo modal
-  $('#btnRegistrarInstalacion').on('click', function () {
-    var clienteSeleccionado = $('#id_empresa').val();
-    if (openedFromFirstModal) {
-      openedFromFirstModal = false;
-      // $('#modalAddInstalacion').modal('hide');
-
-      $('#id_empresa_solicitudes option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
-      $('#id_empresa_solicitudes').trigger('change');
-      obtenerInstalacion();
-
-
-      $('#addSolicitudDictamen').modal('show');
-    }
-  });
-
 
   /* seccion para exportacion */
   $(document).ready(function () {
@@ -4378,244 +4346,262 @@ $(function () {
       }
     });
   });
-});
 
-//Date picker
-$(document).ready(function () {
-  const flatpickrDateTime = document.querySelectorAll('.flatpickr-datetime');
+  //Date picker
+  $(document).ready(function () {
+    const flatpickrDateTime = document.querySelectorAll('.flatpickr-datetime');
 
-  if (flatpickrDateTime.length) {
-    flatpickrDateTime.forEach((element) => {
-      // Inicializar flatpickr para cada input
-      flatpickr(element, {
-        enableTime: true, // Habilitar selección de tiempo
-        time_24hr: true, // Mostrar tiempo en formato 24 horas
-        dateFormat: 'Y-m-d H:i',
-        locale: 'es',
-        allowInput: true,
+    if (flatpickrDateTime.length) {
+      flatpickrDateTime.forEach((element) => {
+        // Inicializar flatpickr para cada input
+        flatpickr(element, {
+          enableTime: true, // Habilitar selección de tiempo
+          time_24hr: true, // Mostrar tiempo en formato 24 horas
+          dateFormat: 'Y-m-d H:i',
+          locale: 'es',
+          allowInput: true,
+        });
+      });
+    }
+  });
+
+
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation para la solicitud de muestreo de agave
+    const form3 = document.getElementById('addRegistrarSolicitudMuestreoAgave');
+    const fv3 = FormValidation.formValidation(form3, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un cliente.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la fecha sugerida para la inspección.'
+            }
+          }
+        },
+        punto_reunion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la dirección para el punto de reunión.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un domicilio para la inspección.'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      // Validar el formulario
+      var formData = new FormData(form3);
+      $('#btnRegistrarMA').prop('disabled', true);
+
+      $('#btnRegistrarMA').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnRegistrarMA').prop('disabled', false);
+        $('#btnRegistrarMA').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
+      $.ajax({
+        url: '/registrar-solicitud-muestreo-agave',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#addSolicitudMuestreoAgave').modal('hide');
+          $('#addRegistrarSolicitudMuestreoAgave')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+          console.log(response);
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Solicitud de muestreo registrado exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la solicitud',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
       });
     });
-  }
-});
-
-
-
-$(function () {
-  // Configuración CSRF para Laravel
-  $.ajaxSetup({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-  });
-
-  // Inicializar FormValidation para la solicitud de muestreo de agave
-  const form3 = document.getElementById('addRegistrarSolicitudMuestreoAgave');
-  const fv3 = FormValidation.formValidation(form3, {
-    fields: {
-      id_empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un cliente.'
-          }
-        }
-      },
-      fecha_visita: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione la fecha sugerida para la inspección.'
-          }
-        }
-      },
-      punto_reunion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la dirección para el punto de reunión.'
-          }
-        }
-      }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        eleInvalidClass: 'is-invalid',
-        rowSelector: '.form-floating'
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function (e) {
-    // Validar el formulario
-    var formData = new FormData(form3);
-    $('#btnRegistrarMA').prop('disabled', true);
-
-    $('#btnRegistrarMA').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
-    setTimeout(function () {
-      $('#btnRegistrarMA').prop('disabled', false);
-      $('#btnRegistrarMA').html('<i class="ri-add-line"></i> Registrar');
-    }, 3000);
-    $.ajax({
-      url: '/registrar-solicitud-muestreo-agave',
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        $('#addSolicitudMuestreoAgave').modal('hide');
-        $('#addRegistrarSolicitudMuestreoAgave')[0].reset();
-        $('.select2').val(null).trigger('change');
-        $('.datatables-solicitudes').DataTable().ajax.reload();
-        console.log(response);
-
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Solicitud de muestreo registrado exitosamente.',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function (xhr) {
-        console.log('Error:', xhr.responseText);
-
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar la solicitud',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
-    });
-  });
-
-  // Inicializar FormValidation para las validaciones por parte del personal oc
-  const form = document.getElementById('addValidarSolicitud');
-
-  const fv = FormValidation.formValidation(form, {
-    excluded: ':disabled',
-    fields: {
-      /* razonSocial: {
-         validators: {
-           notEmpty: {
-             message: 'Selecciona la respuesta'
-           }
-         }
-       },
-       razonSocial1: {
-         validators: {
-           notEmpty: {
-             message: 'Selecciona la respuesta'
-           }
-         }
-       },
-       domicilioFiscal: {
-         validators: {
-           notEmpty: {
-             message: 'Selecciona la respuesta'
-           }
-         }
-       },
-       domicilioInstalacion: {
-         validators: {
-           notEmpty: {
-             message: 'Selecciona la respuesta'
-           }
-         }
-       },
-       fechaHora: {
-         validators: {
-           notEmpty: {
-             message: 'Selecciona la respuesta'
-           }
-         }
-       },
-       actaConstitutiva: {
-         validators: {
-           notEmpty: {
-             message: 'Selecciona la respuesta'
-           }
-         }
-       },
-       csf: {
-         validators: {
-           notEmpty: {
-             message: 'Selecciona la respuesta'
-           }
-         }
-       },
-       comprobantePosesion: {
-         validators: {
-           notEmpty: {
-             message: 'Selecciona la respuesta'
-           }
-         }
-       },
-       planoDistribucion: {
-         validators: {
-           notEmpty: {
-             message: 'Selecciona la respuesta'
-           }
-         }
-       }, */
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        eleInvalidClass: 'is-invalid',
-        rowSelector: '.marcar'
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-
-
-  }).on('core.form.valid', function (e) {
-    // Validar el formulario
-    var formData = new FormData(form);
-
-    $.ajax({
-      url: '/registrarValidarSolicitud',
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        $('#addSolicitudValidar').modal('hide');
-        $('#addValidarSolicitud')[0].reset();
-        $('.datatables-solicitudes').DataTable().ajax.reload();
-
-
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Solicitud validada correctamente',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function (xhr) {
-        console.log('Error:', xhr.responseText);
-
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al validar la solicitud',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
+    $('#id_empresa_dic2mues, #fecha_visita_dic2, #id_instalacion_dic2').on('change', function () {
+      fv3.revalidateField($(this).attr('name'));
     });
   });
 
 
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    // Inicializar FormValidation para las validaciones por parte del personal oc
+    const form = document.getElementById('addValidarSolicitud');
+
+    const fv = FormValidation.formValidation(form, {
+      excluded: ':disabled',
+      fields: {
+        /* razonSocial: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         razonSocial1: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         domicilioFiscal: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         domicilioInstalacion: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         fechaHora: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         actaConstitutiva: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         csf: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         comprobantePosesion: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         planoDistribucion: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         }, */
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.marcar'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
 
 
+    }).on('core.form.valid', function (e) {
+      // Validar el formulario
+      var formData = new FormData(form);
+
+      $.ajax({
+        url: '/registrarValidarSolicitud',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#addSolicitudValidar').modal('hide');
+          $('#addValidarSolicitud')[0].reset();
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Solicitud validada correctamente',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al validar la solicitud',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+
+  });
 
 });
+
+
+
 

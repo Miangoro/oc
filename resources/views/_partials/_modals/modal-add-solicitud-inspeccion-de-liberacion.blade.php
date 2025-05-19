@@ -27,7 +27,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    id="fecha_visita" name="fecha_visita" autocomplete="off"/>
+                                    id="fecha_visita_liberacion" name="fecha_visita" autocomplete="off"/>
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -126,14 +126,14 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
-                                    id="fecha_inicio_libe" name="fecha_inicio_lib" autocomplete="off"/>
+                                    id="fecha_inicio_libe_inspe" name="fecha_inicio_lib" autocomplete="off"/>
                                 <label for="fecha_inicio_lib">Fecha de inicio ingreso/liberación </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
-                                    id="fecha_termino_libe" name="fecha_termino_lib" autocomplete="off"/>
+                                    id="fecha_termino_libe_inspe" name="fecha_termino_lib" autocomplete="off"/>
                                 <label for="fecha_termino_lib">Fecha de término ingreso/liberación
                                 </label>
                             </div>

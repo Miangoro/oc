@@ -26,7 +26,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    id="fecha_visita" name="fecha_visita" autocomplete="off"/>
+                                    id="fecha_visita_traslado" name="fecha_visita" autocomplete="off"/>
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>

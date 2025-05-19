@@ -27,7 +27,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    id="fecha_visita" name="fecha_visita" />
+                                    id="fecha_visita_ingreso_barrica" name="fecha_visita" autocomplete="off"/>
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="analisis_barricada"
-                                    name="analisis_barricada" placeholder="Ingresa Análisis fisicoquímico" />
+                                    name="analisis_barricada" placeholder="Ingresa Análisis fisicoquímico" autocomplete="off"/>
                                 <label for="analisis_barricada">Análisis fisicoquímico</label>
                             </div>
                         </div>
@@ -130,14 +130,14 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
-                                    id="fecha_inicio" name="fecha_inicio" />
+                                    id="fecha_inicio_ingreso_barrica" name="fecha_inicio" autocomplete="off"/>
                                 <label for="fecha_inicio">Fecha de inicio del ingreso</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
-                                    id="fecha_termino" name="fecha_termino" />
+                                    id="fecha_termino" name="fecha_termino" autocomplete="off"/>
                                 <label for="fecha_termino">Fecha de término del ingreso
                                 </label>
                             </div>

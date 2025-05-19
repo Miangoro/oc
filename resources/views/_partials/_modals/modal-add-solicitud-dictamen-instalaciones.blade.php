@@ -28,7 +28,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    name="fecha_visita" />
+                                   id="fechaSoliInstalacion" name="fecha_visita" />
                                 <label for="num_anterior">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6 select2-dark">
                                 <select name="categorias[]" class="form-select select2"
-                                    placeholder="Seleccione una o más categorias" multiple>
+                                    placeholder="Seleccione una o más categorias" multiple id="categoriaDictamenIns">
                                     @foreach ($categorias as $cate)
                                         <option value="{{ $cate->id_categoria }}">{{ $cate->categoria }}</option>
                                     @endforeach
@@ -60,7 +60,7 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4 select2-dark">
-                                <select name="clases[]" class="form-select select2"
+                                <select id="clasesDicIns" name="clases[]" class="form-select select2"
                                     placeholder="Seleccione una o más clases" multiple>
                                     @foreach ($clases as $clase)
                                         <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>

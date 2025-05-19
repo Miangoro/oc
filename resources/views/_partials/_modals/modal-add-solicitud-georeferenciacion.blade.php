@@ -14,7 +14,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange="obtenerPredios2(this.value);" name="id_empresa"
-                                    class="select2 form-select id_empresa" required>
+                                    class="select2 form-select id_empresa" required id="id_empresa_georefere">
                                     <option selected disabled value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">
@@ -28,7 +28,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    name="fecha_visita" />
+                                    name="fecha_visita" id="fecha_visita_geo"/>
                                 <label for="num_anterior">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -36,7 +36,7 @@
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
                             <select onchange="obtenerDatosPredios(this.value);" class="select2 form-select id_predio"
-                                name="id_predio" aria-label="id_predio">
+                                name="id_predio" aria-label="id_predio" id="id_predio_georefe">
                                 <option value="" disabled selected>Lista de predios</option>
                             </select>
                             <label for="id_predio">Domicilio del predio a inspeccionar</label>
@@ -46,7 +46,7 @@
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="Dirección del punto de reunión" class="form-control" type="text"
-                                    name="punto_reunion" />
+                                    name="punto_reunion" id="punto_reunion_georefere"/>
                                 <label for="num_anterior">Dirección del punto de reunión</label>
                             </div>
                         </div>
