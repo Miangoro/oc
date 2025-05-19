@@ -1,4 +1,4 @@
-<div class="modal fade" id="addInspeccionIngresoBarricada" tabindex="-1">
+<div class="modal fade" id="addInspeccionIngresoBarricada" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl ">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">

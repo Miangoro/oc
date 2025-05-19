@@ -1,4 +1,4 @@
-<div class="modal fade" id="editVigilanciaTraslado" tabindex="-1">
+<div class="modal fade" id="editVigilanciaTraslado" tabindex="-1" ria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">

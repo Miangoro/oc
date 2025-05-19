@@ -1,5 +1,5 @@
 <!-- Share Project Modal -->
-<div class="modal fade" id="expedienteServicio" tabindex="-1">
+<div class="modal fade" id="expedienteServicio" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-simple modal-enable-otp modal-dialog-centered">
     <div class="modal-content">
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
