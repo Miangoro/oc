@@ -29,7 +29,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    id="edit_fecha_visita" name="fecha_visita" />
+                                    id="edit_fecha_visita" name="fecha_visita" autocomplete="off"/>
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -131,7 +131,7 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="submit" class="btn btn-primary" id="btnEditMLote"><i class="ri-pencil-fill"></i> Editar</button>
                         <button type="reset" class="btn btn-danger " id="ejemploo" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
