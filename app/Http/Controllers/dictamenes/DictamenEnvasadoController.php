@@ -417,7 +417,8 @@ public function MostrarDictamenEnvasado($id_dictamen)
     $nombre_id_sustituye = $id_sustituye ? Dictamen_Envasado::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
 
     // Renderizar el PDF con los lotes a granel
-    $pdf = Pdf::loadView('pdfs.dictamen_envasado_ed6', [
+    //$pdf = Pdf::loadView('pdfs.dictamen_envasado_ed6', [
+    $pdf = [
         'data' => $data,
         'lote_envasado' => $loteEnvasado,
         'marca' => $marca,
@@ -429,9 +430,16 @@ public function MostrarDictamenEnvasado($id_dictamen)
         'id_sustituye' => $nombre_id_sustituye,
         'firmaDigital' => $firmaDigital,
         'qrCodeBase64' => $qrCodeBase64
-    ]);
+    ];
 
-    return $pdf->stream('F-UV-04-17 Ver 6 Dictamen de Cumplimiento NOM de Mezcal Envasado.pdf');
+    if ($data->fecha_emision >= "2024-12-10") {
+        $edicion = 'pdfs.dictamen_envasado_ed7';//FALTA
+    }else{
+        $edicion = 'pdfs.dictamen_envasado_ed6';
+    }
+    //return $pdf->stream('F-UV-04-17 Ver 6 Dictamen de Cumplimiento NOM de Mezcal Envasado.pdf');
+    return Pdf::loadView($edicion, $pdf)->stream('Dictamen de Cumplimiento NOM de Mezcal Envasado F-UV-04-17.pdf');
+
 }
 
    
