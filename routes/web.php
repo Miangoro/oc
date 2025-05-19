@@ -1007,6 +1007,7 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::post('asignar_revisor_exportacion', [Certificado_ExportacionController::class, 'storeRevisor'])->name('cer-expor.asignarRevisor');
 });
 
+
 //-------------------TRAMITE IMPI-------------------
 Route::middleware(['auth'])->controller(impiController::class)->group(function () {
     Route::get('tramiteIMPI', [impiController::class, 'UserManagement'])->name('IMPI');

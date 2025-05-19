@@ -51,6 +51,11 @@ class solicitudesController extends Controller
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
         return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas'));
     }
+    public function findCertificadosExportacion()
+{
+    $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); 
+    return view('certificados.find_certificados_exportacion', compact('empresas'));
+}
 
     public function index(Request $request)
     {
@@ -558,7 +563,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud Inspeccion ingreso a barricada',
+            'title' => 'Nuevo registro de solicitud Inspeccion ingreso a barrica',
             'message' => $InspeccionBarri->folio . " " . $InspeccionBarri->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -567,7 +572,7 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Inspeccion ingreso a barricada de lote registrada exitosamente']);
+        return response()->json(['message' => 'Inspeccion ingreso a barrica de lote registrada exitosamente']);
     }
 
     public function storeInspeccionBarricadaLiberacion(Request $request)
@@ -605,7 +610,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud Inspeccion liberacion a barricada',
+            'title' => 'Nuevo registro de solicitud Inspeccion liberacion a barrica',
             'message' => $BarricadaLib->folio . " " . $BarricadaLib->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -614,7 +619,7 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Inspeccion liberacion a barricada de lote registrada exitosamente']);
+        return response()->json(['message' => 'Inspeccion liberacion a barrica de lote registrada exitosamente']);
     }
 
 
