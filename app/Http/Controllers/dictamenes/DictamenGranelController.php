@@ -125,6 +125,8 @@ class DictamenGranelController extends Controller  {
                 $nestedData['id_dictamen'] = $dictamen->id_dictamen ?? 'No encontrado';
                 $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
                 $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
+                $id_sustituye = json_decode($dictamen->observaciones, true) ['id_sustituye'] ?? null;
+                $nestedData['sustituye'] = $id_sustituye ? Dictamen_Granel::find($id_sustituye)->num_dictamen ?? 'No encontrado' : null;
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
                 $nestedData['num_servicio'] = $dictamen->inspeccione->num_servicio ?? 'No encontrado';
@@ -421,7 +423,7 @@ public function MostrarDictamenGranel($id_dictamen)
     return $pdf->stream('Dictamen de Cumplimiento NOM Mezcal a Granel F-UV-04-16.pdf');
 }
 
-
+/*
 ///FQ'S
 public function foliofq($id_dictamen) 
 {
@@ -492,7 +494,7 @@ public function foliofq($id_dictamen)
         return response()->json(['success' => false, 'message' => 'Error inesperado'], 500);
     }
 }
-
+*/
 
 
 

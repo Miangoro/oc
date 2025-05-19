@@ -200,8 +200,9 @@ initializeSelect2(select2Elements);
             }
         
             // Retorna el badge con el texto y color apropiado
-            return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span><br><small>${full['direccion_completa']}
-              ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''} </small>`;
+            return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span>
+                <br><small>${full['direccion_completa']}
+                ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''} </small>`;
           }  
         },
         {

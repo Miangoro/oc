@@ -170,7 +170,8 @@ var dataTable = $('.datatables-users').DataTable({
       render: function (data, type, full, meta) {
         var $ = full[''];
         return `<div class="small">
-            <b>Lote granel:</b> ${full['nombre_lote']}
+            <b>Lote granel:</b> ${full['nombre_lote']} <br>
+            <b>Análisis FQ:</b> ${full['n_analisis']}
             
             ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
           </div>`;

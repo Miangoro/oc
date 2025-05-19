@@ -177,6 +177,8 @@ class DictamenInstalacionesController extends Controller
                 $nestedData['tipo_dictamen'] = $dictamen->tipo_dictamen ?? 'No encontrado';
                 $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
                 $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
+                $id_sustituye = json_decode($dictamen->observaciones, true)['id_sustituye'] ?? null;
+                $nestedData['sustituye'] = $id_sustituye ? Dictamen_instalaciones::find($id_sustituye)->num_dictamen ?? 'No encontrado' : null;
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
                 $nestedData['num_servicio'] = $dictamen->inspeccione->num_servicio ?? 'No encontrado';

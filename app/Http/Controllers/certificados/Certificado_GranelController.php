@@ -237,7 +237,9 @@ public function index(Request $request)
             //Lote granel
             $caracteristicas = json_decode($certificado->dictamen?->inspeccione?->solicitud?->caracteristicas, true);
                 $idLote = $caracteristicas['id_lote_granel'] ?? null;
-            $nestedData['nombre_lote'] = LotesGranel::find($idLote)?->nombre_lote ?? 'No encontrado';
+            $loteGranel = LotesGranel::find($idLote);
+            $nestedData['nombre_lote'] = $loteGranel?->nombre_lote ?? 'No encontrado';
+            $nestedData['n_analisis'] = $loteGranel?->folio_fq ?? 'No encontrado';
 
 
             $data[] = $nestedData;

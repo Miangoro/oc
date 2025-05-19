@@ -140,6 +140,9 @@ class DictamenEnvasadoController extends Controller
                 $nestedData['id_dictamen_envasado'] = $dictamen->id_dictamen_envasado ?? 'No encontrado';
                 $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
                 $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
+                $id_sustituye = json_decode($dictamen->observaciones, true) ['id_sustituye'] ?? null;
+                $nestedData['sustituye'] = $id_sustituye ? Dictamen_envasado::find($id_sustituye)->num_dictamen ?? 'No encontrado' : null;
+                $nestedData['lote_envasado'] = $dictamen->lote_envasado->nombre ?? 'No encontrado';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
                 $nestedData['num_servicio'] = $dictamen->inspeccion->num_servicio ?? 'No encontrado';
@@ -177,7 +180,7 @@ class DictamenEnvasadoController extends Controller
                 $nestedData['id_solicitud'] = $dictamen->inspeccion->solicitud->id_solicitud ?? 'No encontrado';
                 $urls = $dictamen->inspeccion?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
                 $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
-               
+
 
                 $data[] = $nestedData;
             }

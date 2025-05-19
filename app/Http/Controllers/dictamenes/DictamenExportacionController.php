@@ -102,6 +102,8 @@ public function index(Request $request)
             $nestedData['id_dictamen'] = $dictamen->id_dictamen ?? 'No encontrado';
             $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
             $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
+            $id_sustituye = json_decode($dictamen->observaciones, true) ['id_sustituye'] ?? null;
+            $nestedData['sustituye'] = $id_sustituye ? Dictamen_Exportacion::find($id_sustituye)->num_dictamen ?? 'No encontrado' : null;
             $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
             $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
             $nestedData['num_servicio'] = $dictamen->inspeccione->num_servicio ?? 'No encontrado';
@@ -137,8 +139,17 @@ public function index(Request $request)
             $nestedData['id_solicitud'] = $dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
             $urls = $dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
             $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
-            
-                
+
+             //Lote envasado
+            $lotes_env = $dictamen->inspeccione?->solicitud?->lotesEnvasadoDesdeJson();//obtener todos los lotes
+            $nestedData['nombre_lote_envasado'] = $lotes_env?->pluck('nombre')->implode(', ') ?? 'No encontrado';
+            //Lote granel
+            $lotes_granel = $lotes_env?->flatMap(function ($lote) {
+                return $lote->lotesGranel; // Relación definida en el modelo lotes_envasado
+                })->unique('id_lote_granel');//elimina duplicados
+            $nestedData['nombre_lote_granel'] = $lotes_granel?->pluck('nombre_lote')//extrae cada "nombre"
+                ->implode(', ') ?? 'No encontrado';//une y separa por coma
+
             $data[] = $nestedData;
         }
     }
@@ -418,6 +429,7 @@ public function MostrarDictamenExportacion($id_dictamen)
     $pdf = Pdf::loadView('pdfs.dictamen_exportacion_ed2', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
         'lotes' =>$lotes,
+        'producto' => $lotes->first()?->lotesGranel->first()?->categoria?->categoria ?? 'No encontrado',
         'no_dictamen' => $data->num_dictamen,
         'fecha_emision' => $fecha_emision2,
         'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',

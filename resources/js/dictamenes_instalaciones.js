@@ -187,7 +187,9 @@ $.ajaxSetup({
               }
           
               // Retorna el badge con el texto y color apropiado
-              return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span><br><small>${full['direccion_completa']}</small>`;
+              return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span>
+                  <br><small>${full['direccion_completa']}
+                  ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''} </small>`;
             }     
           },
           {//fechas
@@ -229,7 +231,7 @@ $.ajaxSetup({
                 } else if ($estatus == 1) {
                     estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
                 } else if ($estatus == 2) {
-                    estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+                    estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
                 } else {
                   estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
                 }
