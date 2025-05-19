@@ -154,14 +154,14 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_material" name="material"
-                                    placeholder="Material de los recipientes" />
+                                    placeholder="Material de los recipientes" autocomplete="off"/>
                                 <label for="material">Material de los recipientes</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_capacidad" name="capacidad"
-                                    placeholder="Capacidad de recipientes" />
+                                    placeholder="Capacidad de recipientes" autocomplete="off"/>
                                 <label for="capacidad">Capacidad de recipientes</label>
                             </div>
                         </div>
@@ -176,7 +176,7 @@
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional"
-                                placeholder="Observaciones..."></textarea>
+                                placeholder="Observaciones..."autocomplete="off"></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad:</label>
                         </div>
                     </div>

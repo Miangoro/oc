@@ -180,7 +180,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <input type="text" id="hologramas_mermas_lib_ter" name="hologramas_mermas"
-                                    class="form-control" placeholder="Hologramas de Mermas" />
+                                    class="form-control" placeholder="Hologramas de Mermas" autocomplete="off"/>
                                 <label for="hologramas_mermas">Hologramas de Mermas</label>
                             </div>
                         </div>
@@ -189,7 +189,7 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <input type="text" id="certificado_nom_granel_lib_ter"
                                     name="certificado_nom_granel" class="form-control"
-                                    placeholder="Certificado de NOM a Granel" />
+                                    placeholder="Certificado de NOM a Granel" autocomplete="off"/>
                                 <label for="certificado_nom_granel">Certificado de NOM a Granel</label>
                             </div>
                         </div>
@@ -199,7 +199,7 @@
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-150" id="comentarios"
-                                placeholder="Información adicional sobre la actividad..."></textarea>
+                                placeholder="Información adicional sobre la actividad..." autocomplete="off"></textarea>
                             <label for="comentarios">Información adicional sobre la actividad</label>
                         </div>
                     </div>
@@ -267,7 +267,9 @@
                     }
                     // Agregar el contenido de los lotes envasado al select correspondiente
                     $('#id_lote_envasado_lib_ter').html(contenidoLotesEnvasados);
-
+                      ObtenerDatosLoteEnv();
+                    // Si hay un valor previo, seleccionarlo automáticamente
+                    const idLoteEnvasadoPrevio = $('#id_lote_envasado_lib_ter').data('selected');
 
                 },
                 error: function() {

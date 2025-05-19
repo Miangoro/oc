@@ -98,7 +98,7 @@
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="analisis_muestreo"
-                                    name="analisis_muestreo" placeholder="Ingresa Análisis fisicoquímico" />
+                                    name="analisis_muestreo" placeholder="Ingresa Análisis fisicoquímico" autocomplete="off"/>
                                 <label for="analisis_muestreo">Ingresa Análisis fisicoquímico</label>
                             </div>
                         </div>
@@ -113,14 +113,14 @@
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="id_certificado_muestreo"
                                     name="id_certificado_muestreo"
-                                    placeholder="Ingresa el Certificado de NOM a granel" />
+                                    placeholder="Ingresa el Certificado de NOM a granel" autocomplete="off"/>
                                 <label for="id_certificado_muestreo">Ingresa Certificado de NOM a granel</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..." autocomplete="off"></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
                                 CONTENEDORES):</label>
                         </div>

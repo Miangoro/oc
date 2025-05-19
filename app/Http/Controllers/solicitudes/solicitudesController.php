@@ -209,9 +209,8 @@ class solicitudesController extends Controller
 
                 $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
                 $nestedData['id_lote_envasado'] = $loteEnvasado ? $loteEnvasado->nombre : 'N/A';
-                $nestedData['lote_granel'] = ($loteEnvasado && count($loteEnvasado->lotesGranel) > 0)
-                    ? $loteEnvasado->lotesGranel[0]->nombre_lote
-                    : 'N/A';
+                $primerLote = $loteEnvasado?->lotesGranel->first();
+                $nestedData['lote_granel'] = $primerLote ? $primerLote->nombre_lote : 'N/A';
                 $nestedData['nombre_predio'] = $caracteristicas['nombre_predio'] ?? 'N/A';
                 $nestedData['art'] = $caracteristicas['art'] ?? 'N/A';
                 $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
