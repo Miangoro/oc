@@ -51,6 +51,11 @@ class solicitudesController extends Controller
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
         return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas'));
     }
+    public function findCertificadosExportacion()
+{
+    $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); 
+    return view('certificados.find_certificados_exportacion', compact('empresas'));
+}
 
     public function index(Request $request)
     {
