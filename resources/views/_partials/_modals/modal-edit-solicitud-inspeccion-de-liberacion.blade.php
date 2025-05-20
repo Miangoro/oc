@@ -1,4 +1,4 @@
-<div class="modal fade" id="editInspeccionLiberacion" tabindex="-1">
+<div class="modal fade" id="editInspeccionLiberacion" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl ">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
@@ -30,7 +30,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    id="edit_fecha_visita" name="fecha_visita" />
+                                    id="edit_fecha_visita" name="fecha_visita" autocomplete="off"/>
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -103,7 +103,7 @@
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_analisis_liberacion"
-                                    name="analisis_liberacion" placeholder="Ingresa Análisis fisicoquímico" />
+                                    name="analisis_liberacion" placeholder="Ingresa Análisis fisicoquímico" autocomplete="off"/>
                                 <label for="analisis_liberacion">Ingresa Análisis fisicoquímico</label>
                             </div>
                         </div>
@@ -131,14 +131,14 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
-                                    id="edit_fecha_inicio_lib" name="fecha_inicio_lib" />
+                                    id="edit_fecha_inicio_lib" name="fecha_inicio_lib" autocomplete="off"/>
                                 <label for="fecha_inicio_lib">Fecha de inicio ingreso/liberación </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
-                                    id="edit_fecha_termino_lib" name="fecha_termino_lib" />
+                                    id="edit_fecha_termino_lib" name="fecha_termino_lib" autocomplete="off"/>
                                 <label for="fecha_termino_lib">Fecha de término ingreso/liberación
                                 </label>
                             </div>
@@ -148,14 +148,14 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_material_liberacion"
-                                    name="material_liberacion" placeholder="Material de los recipientes" />
+                                    name="material_liberacion" placeholder="Material de los recipientes" autocomplete="off"/>
                                 <label for="material_liberacion">Material de los recipientes</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_capacidad_liberacion"
-                                    name="capacidad_liberacion" placeholder="Capacidad de recipientes" />
+                                    name="capacidad_liberacion" placeholder="Capacidad de recipientes" autocomplete="off"/>
                                 <label for="capacidad_liberacion">Capacidad de recipientes</label>
                             </div>
                         </div>
@@ -171,14 +171,14 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_tiempo_dura_lib"
-                                    name="tiempo_dura_lib" placeholder="Tiempo de maduración" />
+                                    name="tiempo_dura_lib" placeholder="Tiempo de maduración" autocomplete="off"/>
                                 <label for="tiempo_dura_lib">Tiempo de maduración</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_id_certificado_liberacion"
-                                    name="id_certificado_liberacion" placeholder="Certificado de NOM a granel" />
+                                    name="id_certificado_liberacion" placeholder="Certificado de NOM a granel" autocomplete="off"/>
                                 <label for="id_certificado_liberacion">Certificado de NOM a granel </label>
                             </div>
                         </div>
@@ -186,13 +186,13 @@
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional"
-                                placeholder="Observaciones..."></textarea>
+                                placeholder="Observaciones..."autocomplete="off"></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
                                 CONTENEDORES):</label>
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="submit" class="btn btn-primary" id="btnEditLiberacion"><i class="ri-pencil-fill"></i> Editar</button>
                         <button type="reset" class="btn btn-danger " data-bs-dismiss="modal" aria-label="Close"><i
                                 class="ri-close-line"></i> Cancelar</button>
                     </div>

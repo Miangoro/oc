@@ -182,7 +182,7 @@
             font-size: 9px;
             line-height: 1;
             position: fixed;
-            bottom: -10;
+            bottom: -4;
             left: 0;   
             right: 0;  
             width: calc(100% - 40px); 
@@ -191,9 +191,30 @@
             padding: 10px 0px;
             font-family: 'Lucida Sans Unicode';
         }
+        .watermark-cancelado {
+            font-family: Arial;
+            color: red;
+            position: fixed;
+            top: 48%;
+            left: 45%;
+            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
+            opacity: 0.5;
+            /* Opacidad predeterminada */
+            letter-spacing: 3px;
+            font-size: 150px;
+            white-space: nowrap;
+            z-index:-1;
+        }
     </style>
 </head>
 <body>
+
+@if ($watermarkText)
+    <div class="watermark-cancelado">
+        Cancelado
+    </div>
+@endif
+
 <div class="container">
     <div class="header">
         <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="275px">
@@ -224,7 +245,7 @@ Instalaciones a:</p>
 		</tr>
 		<tr>
 			<td><strong>Domicilio del área de maduración:</strong></td>
-			<td class="center">{{ $datos->instalaciones->direccion_completa }}</td>
+			<td class="center">{{ $datos->instalaciones->direccion_completa ?? '' }}</td>
 		</tr>
 		<tr>
 			<td><strong>Categorías del mezcal:</strong></td>
@@ -280,13 +301,21 @@ de noviembre de 1994, así como sus modificaciones subsecuente.</p>
     No5v5rvZPkbUthYT2r5M0sGP5Y+s97oLa8GA5hqyDAgE9P0d1u0uwU7Q8SF0GYfe lavijxvsWaZg5QA5og==
     </p>
 
+
+     <p class="pie">
+        @if ($id_sustituye)
+        Este dictamen sustituye al: {{ $id_sustituye }}
+        @endif
+        <br>Entrada en vigor: 15-07-2024
+        <br>F-UV-02-14 Ver 1.
+    </p>
+
     <div class="footer-bar">
         <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
         <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341. Morelia Michoacán</p>
     </div>
 
-    <p class="pie">Entrada en vigor: 15-07-2024<br>
-    F-UV-02-14 Ver 1.
-    </p>
+
+
 </body>
 </html>

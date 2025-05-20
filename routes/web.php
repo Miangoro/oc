@@ -914,7 +914,7 @@ Route::middleware(['auth'])->group(function () {//agrupa distintos controladores
     Route::post('dictamenes-granel',[DictamenGranelController::class, 'store'])->name('dictamen.store');
     route::get('/dictamenes/granel/{id_dictamen}/edit', [DictamenGranelController::class, 'edit'])->name('dictamenes.edit');
     Route::post('/dictamenes/granel/{id_dictamen}/update', [DictamenGranelController::class, 'update'])->name('dictamen.update');
-    Route::get('/dictamenes/granel/{id_dictamen}/foliofq', [DictamenGranelController::class, 'foliofq'])->name('dictamenes.foliofq');
+    //Route::get('/dictamenes/granel/{id_dictamen}/foliofq', [DictamenGranelController::class, 'foliofq'])->name('dictamenes.foliofq');
     Route::post('/registrar/reexpedir-granel', [DictamenGranelController::class, 'reexpedir'])->name('dic-granel.reex');
     Route::get('/dictamen_granel/{id_dictamen}', [DictamenGranelController::class, 'MostrarDictamenGranel'])->name('formato-dictamen-granel');
 });
@@ -1006,6 +1006,7 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     //Asignar revisor
     Route::post('asignar_revisor_exportacion', [Certificado_ExportacionController::class, 'storeRevisor'])->name('cer-expor.asignarRevisor');
 });
+
 
 //-------------------TRAMITE IMPI-------------------
 Route::middleware(['auth'])->controller(impiController::class)->group(function () {

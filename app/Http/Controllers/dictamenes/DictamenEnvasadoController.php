@@ -27,6 +27,7 @@ use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ValidationException;
+use Illuminate\Support\Facades\Storage;
 
 
 class DictamenEnvasadoController extends Controller
@@ -139,6 +140,9 @@ class DictamenEnvasadoController extends Controller
                 $nestedData['id_dictamen_envasado'] = $dictamen->id_dictamen_envasado ?? 'No encontrado';
                 $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
                 $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
+                $id_sustituye = json_decode($dictamen->observaciones, true) ['id_sustituye'] ?? null;
+                $nestedData['sustituye'] = $id_sustituye ? Dictamen_envasado::find($id_sustituye)->num_dictamen ?? 'No encontrado' : null;
+                $nestedData['lote_envasado'] = $dictamen->lote_envasado->nombre ?? 'No encontrado';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
                 $nestedData['num_servicio'] = $dictamen->inspeccion->num_servicio ?? 'No encontrado';
@@ -176,7 +180,7 @@ class DictamenEnvasadoController extends Controller
                 $nestedData['id_solicitud'] = $dictamen->inspeccion->solicitud->id_solicitud ?? 'No encontrado';
                 $urls = $dictamen->inspeccion?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
                 $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
-               
+
 
                 $data[] = $nestedData;
             }
@@ -416,8 +420,10 @@ public function MostrarDictamenEnvasado($id_dictamen)
     $id_sustituye = json_decode($data->observaciones, true)['id_sustituye'] ?? null;
     $nombre_id_sustituye = $id_sustituye ? Dictamen_Envasado::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
 
+    
     // Renderizar el PDF con los lotes a granel
-    $pdf = Pdf::loadView('pdfs.dictamen_envasado_ed6', [
+    //$pdf = Pdf::loadView('pdfs.dictamen_envasado_ed6', [
+    $pdf = [
         'data' => $data,
         'lote_envasado' => $loteEnvasado,
         'marca' => $marca,
@@ -429,9 +435,16 @@ public function MostrarDictamenEnvasado($id_dictamen)
         'id_sustituye' => $nombre_id_sustituye,
         'firmaDigital' => $firmaDigital,
         'qrCodeBase64' => $qrCodeBase64
-    ]);
+    ];
 
-    return $pdf->stream('F-UV-04-17 Ver 6 Dictamen de Cumplimiento NOM de Mezcal Envasado.pdf');
+    if ($data->fecha_emision >= "2024-12-10") {
+        $edicion = 'pdfs.dictamen_envasado_ed7';
+    }else{
+        $edicion = 'pdfs.dictamen_envasado_ed6';
+    }
+    //return $pdf->stream('F-UV-04-17 Ver 6 Dictamen de Cumplimiento NOM de Mezcal Envasado.pdf');
+    return Pdf::loadView($edicion, $pdf)->stream('Dictamen de Cumplimiento NOM de Mezcal Envasado F-UV-04-17.pdf');
+
 }
 
    

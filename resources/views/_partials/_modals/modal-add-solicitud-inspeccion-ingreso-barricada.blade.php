@@ -1,4 +1,4 @@
-<div class="modal fade" id="addInspeccionIngresoBarricada" tabindex="-1">
+<div class="modal fade" id="addInspeccionIngresoBarricada" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl ">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
@@ -27,7 +27,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    id="fecha_visita" name="fecha_visita" />
+                                    id="fecha_visita_ingreso_barrica" name="fecha_visita" autocomplete="off"/>
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="analisis_barricada"
-                                    name="analisis_barricada" placeholder="Ingresa Análisis fisicoquímico" />
+                                    name="analisis_barricada" placeholder="Ingresa Análisis fisicoquímico" autocomplete="off"/>
                                 <label for="analisis_barricada">Análisis fisicoquímico</label>
                             </div>
                         </div>
@@ -130,14 +130,14 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
-                                    id="fecha_inicio" name="fecha_inicio" />
+                                    id="fecha_inicio_ingreso_barrica" name="fecha_inicio" autocomplete="off"/>
                                 <label for="fecha_inicio">Fecha de inicio del ingreso</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
-                                    id="fecha_termino" name="fecha_termino" />
+                                    id="fecha_termino" name="fecha_termino" autocomplete="off"/>
                                 <label for="fecha_termino">Fecha de término del ingreso
                                 </label>
                             </div>
@@ -147,14 +147,14 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="material" name="material"
-                                    placeholder="Material de los recipientes" />
+                                    placeholder="Material de los recipientes" autocomplete="off"/>
                                 <label for="material">Material de los recipientes</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="capacidad" name="capacidad"
-                                    placeholder="Capacidad de recipientes" />
+                                    placeholder="Capacidad de recipientes" autocomplete="off"/>
                                 <label for="capacidad">Capacidad de recipientes</label>
                             </div>
                         </div>
@@ -168,12 +168,12 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."autocomplete="off"></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad:</label>
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="submit" class="btn btn-primary" id="btnReIngresoBarrica"><i class="ri-add-line"></i> Registrar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>

@@ -1,4 +1,4 @@
-<div class="modal fade" id="addMuestreoLoteAgranel" tabindex="-1">
+<div class="modal fade" id="addMuestreoLoteAgranel" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
@@ -27,7 +27,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    id="fecha_visita" name="fecha_visita" />
+                                    id="fecha_visita_muestreoLo" name="fecha_visita" autocomplete="off" />
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -35,8 +35,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select select2" id="id_instalacion_muestreo" name="id_instalacion"
-                                    aria-label="id_instalacion" required>
+                                <select class=" form-select select2" id="id_instalacion_muestreoLo" name="id_instalacion"
+                                    aria-label="id_instalacion">
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
                             </div>
@@ -98,7 +98,7 @@
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="analisis_muestreo"
-                                    name="analisis_muestreo" placeholder="Ingresa Análisis fisicoquímico" />
+                                    name="analisis_muestreo" placeholder="Ingresa Análisis fisicoquímico" autocomplete="off"/>
                                 <label for="analisis_muestreo">Ingresa Análisis fisicoquímico</label>
                             </div>
                         </div>
@@ -113,20 +113,20 @@
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="id_certificado_muestreo"
                                     name="id_certificado_muestreo"
-                                    placeholder="Ingresa el Certificado de NOM a granel" />
+                                    placeholder="Ingresa el Certificado de NOM a granel" autocomplete="off"/>
                                 <label for="id_certificado_muestreo">Ingresa Certificado de NOM a granel</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..." autocomplete="off"></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
                                 CONTENEDORES):</label>
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="submit" class="btn btn-primary" id="btnRegistrMLote"><i class="ri-add-line"></i> Registrar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
@@ -158,7 +158,7 @@
                     if (response.instalaciones.length == 0) {
                         contenido = '<option value="">Sin instalaciones registradas</option>';
                     }
-                    $('#id_instalacion_muestreo').html(contenido);
+                    $('#id_instalacion_muestreoLo').html(contenido);
                     var contenidogranel = "";
 
                     // Iterar sobre los lotes a granel recibidos
@@ -180,7 +180,7 @@
         }
         else {
             console.warn('No se seleccionó ninguna empresa.');
-            $('#id_instalacion_muestreo').html('<option value="">Seleccione una empresa primero</option>');
+            $('#id_instalacion_muestreoLo').html('<option value="">Seleccione una empresa primero</option>');
             $('#id_lote_granel_muestreo').html('<option value="">Seleccione una instalación primero</option>');
         }
     }

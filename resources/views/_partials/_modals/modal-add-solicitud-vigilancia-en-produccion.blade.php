@@ -1,4 +1,4 @@
-<div class="modal fade" id="addVigilanciaProduccion" tabindex="-1" >
+<div class="modal fade" id="addVigilanciaProduccion" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl ">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
@@ -26,7 +26,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
-                                    id="fecha_visita" type="text" name="fecha_visita" />
+                                    id="fecha_visita_vigi" type="text" name="fecha_visita" autocomplete="off"/>
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class=" form-select select2 id_instalacion"
-                                    name="id_instalacion" aria-label="id_instalacion">
+                                    name="id_instalacion" aria-label="id_instalacion" id="id_instalacion_vigi">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                 </select>
                                 <label for="id_instalacion">Instalaciones</label>
@@ -98,7 +98,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="analisis" name="analisis"
-                                    placeholder="Ingresa Análisis fisicoquímico" />
+                                    placeholder="Ingresa Análisis fisicoquímico" autocomplete="off"/>
                                 <label for="analisis">Ingresa Análisis fisicoquímico</label>
                             </div>
                         </div>
@@ -114,14 +114,14 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
-                                    id="fecha_corte" type="text" name="fecha_corte" />
+                                    id="fecha_corte" type="text" name="fecha_corte" autocomplete="off"/>
                                 <label for="fecha_corte">Fecha de corte</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" class="form-control" id="kg_maguey" name="kg_maguey"
-                                    placeholder="Ingresa la cantidad de maguey" />
+                                    placeholder="Ingresa la cantidad de maguey" autocomplete="off"/>
                                 <label for="kg_maguey">Kg. de maguey</label>
                             </div>
                         </div>
@@ -130,21 +130,21 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" class="form-control" id="cant_pinas" name="cant_pinas"
-                                    placeholder="Ingrese la cantidad de piñas">
+                                    placeholder="Ingrese la cantidad de piñas" autocomplete="off">
                                 <label for="cant_pinas">Cantidad de piñas</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" class="form-control" id="art" name="art"
-                                    placeholder="Ingrese la cantidad de azúcares" step="0.01">
+                                    placeholder="Ingrese la cantidad de azúcares" step="0.01" autocomplete="off">
                                 <label for="art">% de azúcares ART totales</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="etapa" name="etapa"
-                                    placeholder="Ingrese la etapa de proceso">
+                                    placeholder="Ingrese la etapa de proceso" autocomplete="off">
                                 <label for="etapa">Etapa de proceso en la que se encuentra</label>
                             </div>
                         </div>
@@ -163,19 +163,19 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="nombre_predio" name="nombre_predio"
-                                    placeholder="Ingrese el predio de procedencia">
+                                    placeholder="Ingrese el predio de procedencia" autocomplete="off">
                                 <label for="nombre_predio">Predio de la procedencia</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..." autocomplete="off"></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad</label>
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary"><i class="ri-add-line"></i>  Registrar</button>
+                        <button type="submit" class="btn btn-primary" id="btnRegisVigiPro"><i class="ri-add-line"></i>  Registrar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line"></i>  Cancelar</button>
                     </div>
@@ -246,6 +246,7 @@
                         contenido = '<option value="">Sin lotes registrados</option>';
                     } else {}
                     $('#id_lote_granel').html(contenido);
+                    obtenerDatosGraneles();
 
 
                     //guias de traslado
@@ -259,9 +260,6 @@
                         contenidoGuias = '<option value="">Sin guias registrados</option>';
                     } else {}
                     $('#edit_id_guias_vigiP').html(contenidoGuias);
-
-
-
                 },
                 error: function() {}
             });

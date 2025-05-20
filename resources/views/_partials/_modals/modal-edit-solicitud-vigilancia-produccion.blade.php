@@ -1,4 +1,4 @@
-<div class="modal fade" id="editVigilanciaProduccion" tabindex="-1">
+<div class="modal fade" id="editVigilanciaProduccion" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
@@ -181,7 +181,7 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="submit" class="btn btn-primary" id="btnEditVigiProd"><i class="ri-pencil-fill"></i> Editar</button>
                         <button type="reset" class="btn btn-danger " data-bs-dismiss="modal" aria-label="Close"><i
                                 class="ri-close-line"></i> Cancelar</button>
                     </div>

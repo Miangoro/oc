@@ -177,6 +177,8 @@ class DictamenInstalacionesController extends Controller
                 $nestedData['tipo_dictamen'] = $dictamen->tipo_dictamen ?? 'No encontrado';
                 $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
                 $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
+                $id_sustituye = json_decode($dictamen->observaciones, true)['id_sustituye'] ?? null;
+                $nestedData['sustituye'] = $id_sustituye ? Dictamen_instalaciones::find($id_sustituye)->num_dictamen ?? 'No encontrado' : null;
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
                 $nestedData['num_servicio'] = $dictamen->inspeccione->num_servicio ?? 'No encontrado';
@@ -481,7 +483,27 @@ public function dictamen_productor($id_dictamen)
     $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
     $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
-    $pdf = Pdf::loadView('pdfs.DictamenProductor', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
+    
+    $watermarkText = $datos->estatus == 1;//Determinar si marca de agua es visible
+    //Obtener un valor específico del JSON
+    $id_sustituye = json_decode($datos->observaciones, true)//Decodifica el JSON actual
+        ['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+    $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado 
+        //Busca el registro del certificado que tiene el id igual a $id_sustituye
+        Dictamen_instalaciones::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
+
+    $pdf = Pdf::loadView('pdfs.dictamen_productor_ed10', [
+        'datos' => $datos,
+        'fecha_inspeccion' => $fecha_inspeccion, 
+        'fecha_emision' => $fecha_emision, 
+        'fecha_vigencia' => $fecha_vigencia, 
+        'watermarkText' => $watermarkText,
+        'id_sustituye' => $nombre_id_sustituye,
+        
+        'firmaDigital' => $firmaDigital, 
+        'qrCodeBase64' => $qrCodeBase64
+    ])->setPaper('letter', 'portrait');
+
     return $pdf->stream($datos->num_dictamen .' Dictamen de cumplimiento de Instalaciones como productor.pdf');
 }
 
@@ -513,7 +535,22 @@ public function dictamen_envasador($id_dictamen)
     $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
     $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
-    $pdf = Pdf::loadView('pdfs.DictamenEnvasado', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
+    $watermarkText = $datos->estatus == 1;
+    $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+    $nombre_id_sustituye = $id_sustituye ? Dictamen_instalaciones::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
+    
+    $pdf = Pdf::loadView('pdfs.dictamen_envasador_ed10', [
+        'datos' => $datos, 
+        'fecha_inspeccion' => $fecha_inspeccion, 
+        'fecha_emision' => $fecha_emision, 
+        'fecha_vigencia' => $fecha_vigencia,
+        'watermarkText' => $watermarkText,
+        'id_sustituye' => $nombre_id_sustituye,
+
+        'firmaDigital' => $firmaDigital, 
+        'qrCodeBase64' => $qrCodeBase64
+    ])->setPaper('letter', 'portrait');
+    
     return $pdf->stream($datos->num_dictamen.' Dictamen de cumplimiento de Instalaciones como envasador.pdf');
 }
 
@@ -545,7 +582,22 @@ public function dictamen_comercializador($id_dictamen)
     $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
     $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
-    $pdf = Pdf::loadView('pdfs.DictamenComercializador', ['datos' => $datos, 'fecha_inspeccion' => $fecha_inspeccion, 'fecha_emision' => $fecha_emision, 'fecha_vigencia' => $fecha_vigencia, 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
+    $watermarkText = $datos->estatus == 1;
+    $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+    $nombre_id_sustituye = $id_sustituye ? Dictamen_instalaciones::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
+    
+    $pdf = Pdf::loadView('pdfs.dictamen_comercializador_ed10', [
+        'datos' => $datos, 
+        'fecha_inspeccion' => $fecha_inspeccion, 
+        'fecha_emision' => $fecha_emision, 
+        'fecha_vigencia' => $fecha_vigencia, 
+        'watermarkText' => $watermarkText,
+        'id_sustituye' => $nombre_id_sustituye,
+
+        'firmaDigital' => $firmaDigital, 
+        'qrCodeBase64' => $qrCodeBase64
+    ])->setPaper('letter', 'portrait');
+    
     return $pdf->stream($datos->num_dictamen . ' Dictamen de cumplimiento de instalaciones como comercializador.pdf');
 }
 
@@ -576,16 +628,25 @@ public function dictamen_almacen($id_dictamen)
     $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
     $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+    $watermarkText = $datos->estatus == 1;
+    $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+    $nombre_id_sustituye = $id_sustituye ? Dictamen_instalaciones::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
 
     // Solucion al problema de la cadena, como se guarda en la BD: ["Blanco o Joven","Reposado", "A\u00f1ejo"
     $categorias = json_decode($datos->categorias, true);
     $clases = json_decode($datos->clases, true);
     $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
-    $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_Instalaciones', [
+    $pdf = Pdf::loadView('pdfs.dictamen_almacen_ed1', [
         'datos' => $datos,
         'fecha_inspeccion' => $fecha_inspeccion ?? '',
         'fecha_emision' => $fecha_emision ?? '',
-        'fecha_vigencia' => $fecha_vigencia ?? '', 'firmaDigital' => $firmaDigital, 'qrCodeBase64' => $qrCodeBase64])->setPaper('letter', 'portrait');
+        'fecha_vigencia' => $fecha_vigencia ?? '', 
+        'watermarkText' => $watermarkText,
+        'id_sustituye' => $nombre_id_sustituye,
+        
+        'firmaDigital' => $firmaDigital, 
+        'qrCodeBase64' => $qrCodeBase64
+        ])->setPaper('letter', 'portrait');
 
     return $pdf->stream($datos->num_dictamen .' Dictamen de cumplimiento de Instalaciones almacén.pdf');
 }
@@ -597,21 +658,26 @@ public function dictamen_maduracion($id_dictamen)
     $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
     $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+    $watermarkText = $datos->estatus == 1;
+    $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+    $nombre_id_sustituye = $id_sustituye ? Dictamen_instalaciones::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
 
     // Solucion al problema de la cadena, como se guarda en la BD: ["Blanco o Joven","Reposado", "A\u00f1ejo"
     $categorias = json_decode($datos->categorias, true);
     $clases = json_decode($datos->clases, true);
 
-    $pdf = Pdf::loadView('pdfs.Dictamen_Instalaciones_maduracion_mezcal', [
+    $pdf = Pdf::loadView('pdfs.dictamen_maduracion_ed1', [
         'datos' => $datos,
         'fecha_inspeccion' => $fecha_inspeccion,
         'fecha_emision' => $fecha_emision,
         'fecha_vigencia' => $fecha_vigencia,
+        'watermarkText' => $watermarkText,
+        'id_sustituye' => $nombre_id_sustituye,
         'categorias' => $categorias,
         'clases' => $clases
     ]);
 
-    return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones del área de maduración.pdf');
+    return $pdf->stream('Dictamen de cumplimiento de Instalaciones del área de maduración.pdf');
 }
 
 

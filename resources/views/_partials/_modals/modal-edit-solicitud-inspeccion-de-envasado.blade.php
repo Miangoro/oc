@@ -1,4 +1,4 @@
-<div class="modal fade" id="editInspeccionEnvasado" tabindex="-1">
+<div class="modal fade" id="editInspeccionEnvasado" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
@@ -151,14 +151,14 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control datepicker" id="edit_id_inicio_envasado"
-                                    name="id_inicio_envasado" placeholder="Inicio de envasado" />
+                                    name="id_inicio_envasado" placeholder="Inicio de envasado" autocomplete="off"/>
                                 <label for="id_inicio_envasado">Inicio de envasado</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control datepicker" id="edit_id_previsto"
-                                    name="id_previsto" placeholder="Termino previsto del envasado" />
+                                    name="id_previsto" placeholder="Termino previsto del envasado" autocomplete="off"/>
                                 <label for="id_previsto">Termino previsto del envasado</label>
                             </div>
                         </div>
@@ -166,7 +166,7 @@
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_id_certificado_inspeccion"
                                     name="id_certificado_inspeccion"
-                                    placeholder="Ingresa el Certificado de NOM a granel" />
+                                    placeholder="Ingresa el Certificado de NOM a granel" autocomplete="off"/>
                                 <label for="id_certificado_inspeccion">Ingresa Certificado de NOM a granel</label>
                             </div>
                         </div>
@@ -174,7 +174,7 @@
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional"
-                                placeholder="Observaciones..."></textarea>
+                                placeholder="Observaciones..."autocomplete="off"></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
                                 CONTENEDORES):</label>
                         </div>

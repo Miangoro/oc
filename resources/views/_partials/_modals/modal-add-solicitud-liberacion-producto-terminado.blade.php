@@ -1,4 +1,4 @@
-<div class="modal fade" id="addLiberacionProducto" tabindex="-1">
+<div class="modal fade" id="addLiberacionProducto" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl ">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
@@ -25,7 +25,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    name="fecha_visita" />
+                                 id="fecha_visita_liberacion_produto"   name="fecha_visita" />
                                 <label for="num_anterior">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -36,7 +36,7 @@
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class=" form-select select2" id="id_instalacion_lib_ter" name="id_instalacion"
-                                    aria-label="id_instalacion" required>
+                                    aria-label="id_instalacion" >
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
@@ -180,7 +180,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <input type="text" id="hologramas_mermas_lib_ter" name="hologramas_mermas"
-                                    class="form-control" placeholder="Hologramas de Mermas" />
+                                    class="form-control" placeholder="Hologramas de Mermas" autocomplete="off"/>
                                 <label for="hologramas_mermas">Hologramas de Mermas</label>
                             </div>
                         </div>
@@ -189,7 +189,7 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <input type="text" id="certificado_nom_granel_lib_ter"
                                     name="certificado_nom_granel" class="form-control"
-                                    placeholder="Certificado de NOM a Granel" />
+                                    placeholder="Certificado de NOM a Granel" autocomplete="off"/>
                                 <label for="certificado_nom_granel">Certificado de NOM a Granel</label>
                             </div>
                         </div>
@@ -199,7 +199,7 @@
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-150" id="comentarios"
-                                placeholder="Información adicional sobre la actividad..."></textarea>
+                                placeholder="Información adicional sobre la actividad..." autocomplete="off"></textarea>
                             <label for="comentarios">Información adicional sobre la actividad</label>
                         </div>
                     </div>
@@ -267,7 +267,9 @@
                     }
                     // Agregar el contenido de los lotes envasado al select correspondiente
                     $('#id_lote_envasado_lib_ter').html(contenidoLotesEnvasados);
-
+                      ObtenerDatosLoteEnv();
+                    // Si hay un valor previo, seleccionarlo automáticamente
+                    const idLoteEnvasadoPrevio = $('#id_lote_envasado_lib_ter').data('selected');
 
                 },
                 error: function() {

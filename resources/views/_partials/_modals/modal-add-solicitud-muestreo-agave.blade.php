@@ -12,7 +12,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange="obtenerInstalacionesMuestreoAgave(); obtenerlasguias();"
-                                    name="id_empresa" class="select2 form-select id_empresa_dic2" required>
+                                    name="id_empresa" id="id_empresa_dic2mues" class="select2 form-select id_empresa_dic2" >
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">
@@ -26,7 +26,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    name="fecha_visita" autocomplete="off" />
+                                    name="fecha_visita" id="fecha_visita_dic2" autocomplete="off" />
                                 <label for="num_anterior">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -34,7 +34,7 @@
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
                             <select class="select2 form-select" id="id_instalacion_dic2" name="id_instalacion"
-                                aria-label="id_instalacion" required>
+                                aria-label="id_instalacion">
                                 <option value="" selected>Lista de instalaciones</option>
                             </select>
                             <label for="domicilio">Domicilio de la instalación de producción</label>

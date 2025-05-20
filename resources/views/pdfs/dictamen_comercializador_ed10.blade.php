@@ -210,7 +210,7 @@
             font-size: 9px;
             line-height: 1;
             position: fixed;
-            bottom: -10;
+            bottom: -4;
             left: 0;
             right: 0;
             width: calc(100% - 40px);
@@ -225,10 +225,31 @@
             line-height: 10px;
         }
         
+        .watermark-cancelado {
+            font-family: Arial;
+            color: red;
+            position: fixed;
+            top: 48%;
+            left: 45%;
+            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
+            opacity: 0.5;
+            /* Opacidad predeterminada */
+            letter-spacing: 3px;
+            font-size: 150px;
+            white-space: nowrap;
+            z-index:-1;
+        }
     </style>
 </head>
 
 <body>
+
+@if ($watermarkText)
+    <div class="watermark-cancelado">
+        Cancelado
+    </div>
+@endif
+
     <div class="container">
         <div class="header">
             <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM">
@@ -326,7 +347,7 @@
         
                 @if ($firma && Storage::disk('public')->exists($firmaPath))
                     <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
-                        src="{{ asset('storage/' . $firmaPath) }}">
+                        src="{{ public_path('storage/' . $firmaPath) }}">
                 @endif
         
                 <strong>{{ $datos->firmante->puesto ?? '' }} | {{ $datos->firmante->name ?? '' }}</strong>
@@ -349,16 +370,23 @@
         </p>
         
 
-        <div class="footer-bar">
-            <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
-            <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341.
-                Morelia Michoacán</p>
-        </div>
+    <p class="pie">
+        @if ($id_sustituye)
+        Este dictamen sustituye al: {{ $id_sustituye }}
+        @endif
+        <br>Entrada en vigor: 15-07-2024
+        <br>F-UV-02-04 Ver 10.
+    </p>
 
-        <p class="pie">Entrada en vigor: 15-07-2024<br>
-            F-UV-02-04 Ver 10.
-        </p>
+    <div class="footer-bar">
+        <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
+        <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341.
+            Morelia Michoacán</p>
     </div>
-</body>
 
+        
+
+</div>
+
+</body>
 </html>

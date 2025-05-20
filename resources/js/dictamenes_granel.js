@@ -155,7 +155,12 @@ if (dt_user_table.length) {
           orderable: false, 
           responsivePriority: 4, 
           render: function (data, type, full, meta) {
-            return `<b>Lote: </b><small>${full['nombre_lote']}</small><br><b>FQs: </b><small>${full['analisis']}</small>`;
+            return `<div class="small">
+                <b>Lote granel:</b> ${full['nombre_lote']} <br>
+                <b>FQs: </b> ${full['analisis']}
+                
+                ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
+              </div>`;
           }     
         },
         {
@@ -191,7 +196,7 @@ if (dt_user_table.length) {
               } else if ($estatus == 1) {
                   estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
               } else if ($estatus == 2) {
-                  estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+                  estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
               } else {
                 estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
               }
@@ -1113,7 +1118,7 @@ $(document).on('click', '.pdfActa', function () {
 });
 
 
-
+/*
 ///FQ'S
 $(document).on('click', '.ver-folio-fq', function (e) {
   e.preventDefault();
@@ -1213,7 +1218,7 @@ $(document).on('click', '.ver-pdf', function (e) {
     $('#modalVerDocumento').modal('show');
   });
 });
-
+*/
 
 
 

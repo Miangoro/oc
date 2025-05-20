@@ -166,7 +166,12 @@ if (dt_user_table.length) {
         responsivePriority: 4, 
         render: function (data, type, full, meta) {
           var $ = full[''];
-          return '<span class="small"> Falta </span>';
+          return `<div class="small">
+                <b>Lote envasado:</b> ${full['nombre_lote_envasado']} <br>
+                <b>Lote granel:</b> ${full['nombre_lote_granel']}
+
+                ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
+              </div>`;
           }
       },
       {
@@ -202,7 +207,7 @@ if (dt_user_table.length) {
             } else if ($estatus == 1) {
                 estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
             } else if ($estatus == 2) {
-                estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+                estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
             } else {
               estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
             }

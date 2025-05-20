@@ -241,14 +241,18 @@
         }
 
         .pie {
-            position: fixed;
-            font-family: 'Lucida Sans Unicode';
-            bottom: 10.5px;
-            left: 550px;
             text-align: right;
             font-size: 9px;
             line-height: 1;
-            padding-bottom: 8px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: calc(100% - 40px);
+            height: 45px;
+            margin-right: 30px;
+            padding: 10px 0px;
+            font-family: 'Lucida Sans Unicode';
         }
 
         .watermark {
@@ -420,7 +424,7 @@
         
                 @if ($firma && Storage::disk('public')->exists($firmaPath))
                     <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
-                        src="{{ asset('storage/' . $firmaPath) }}">
+                        src="{{ public_path('storage/' . $firmaPath) }}">
                 @endif
         
                 <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
@@ -445,10 +449,15 @@
     </div>
 
 
-
-    <p class="pie">Entrada en vigor: 15-07-2024 <br>
-        F-UV-04-16 Ver 7
+    <p class="pie">
+        @if ($id_sustituye)
+        Este dictamen sustituye al: {{ $id_sustituye }}
+        @endif
+        <br>Entrada en vigor: 15-07-2024
+        <br>F-UV-04-16 Ver 7
     </p>
+
+
 </body>
 
 </html>

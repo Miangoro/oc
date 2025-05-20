@@ -1,4 +1,4 @@
-<div class="modal fade" id="addVigilanciaTraslado" tabindex="-1">
+<div class="modal fade" id="addVigilanciaTraslado" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
@@ -26,7 +26,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    id="fecha_visita" name="fecha_visita" />
+                                    id="fecha_visita_traslado" name="fecha_visita" autocomplete="off"/>
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -102,14 +102,14 @@
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="id_certificado_traslado"
                                     name="id_certificado_traslado"
-                                    placeholder="Ingresa el Certificado de NOM a granel" />
+                                    placeholder="Ingresa el Certificado de NOM a granel" autocomplete="off"/>
                                 <label for="id_certificado_traslado">Certificado de NOM a granel</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="analisis_traslado"
-                                    name="analisis_traslado" placeholder="Ingresa Análisis fisicoquímico" />
+                                    name="analisis_traslado" placeholder="Ingresa Análisis fisicoquímico" autocomplete="off"/>
                                 <label for="analisis_traslado">Análisis fisicoquímico</label>
                             </div>
                         </div>
@@ -125,7 +125,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="id_salida" name="id_salida"
-                                    placeholder="Ingresa identificador de contenedor de salida" />
+                                    placeholder="Ingresa identificador de contenedor de salida" autocomplete="off"/>
                                 <label for="id_salida">Identificador de contenedor de salida
                                 </label>
                             </div>
@@ -133,14 +133,14 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="id_contenedor" name="id_contenedor"
-                                    placeholder="Ingresa identificador de contenedor de recepción" />
+                                    placeholder="Ingresa identificador de contenedor de recepción" autocomplete="off"/>
                                 <label for="id_contenedor">Identificador de contenedor de recepción</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="id_sobrante" name="id_sobrante"
-                                    placeholder="Ingresa Sobrante en contenedor de salida" />
+                                    placeholder="Ingresa Sobrante en contenedor de salida" autocomplete="off"/>
                                 <label for="id_sobrante">Sobrante en contenedor de salida</label>
                             </div>
                         </div>
@@ -173,13 +173,13 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."autocomplete="off"></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
                                 CONTENEDORES):</label>
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="submit" class="btn btn-primary" id="btnReVigiLote"><i class="ri-add-line"></i> Registrar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-fill"></i> Cancelar</button>
                     </div>

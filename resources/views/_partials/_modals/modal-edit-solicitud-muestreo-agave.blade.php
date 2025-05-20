@@ -14,7 +14,7 @@
                         <input type="hidden" name="form_type" value="muestreoagave">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerInstalacionesMuestreoAgaves(); obtenerlasguiass();"
+                                <select onchange="editobtenerInstalacionesMuestreoAgaves(); obtenerlasguiass();"
                                     id="id_empresa_muestr" name="id_empresa"
                                     class="select2 form-select id_empresa_dic23" required>
                                     <option value="">Selecciona cliente</option>
@@ -75,7 +75,7 @@
 
 
 <script>
-    function obtenerInstalacionesMuestreoAgaves() {
+    function editobtenerInstalacionesMuestreoAgaves() {
         var empresa = $(".id_empresa_dic23").val();
 
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
