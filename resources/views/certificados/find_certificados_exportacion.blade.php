@@ -152,7 +152,9 @@
 @include('_partials/_modals/modal-add-asignar-revisor')
 @include('_partials/_modals/modal-reexpedir-certificado-exportacion')
 @include('_partials/_modals/modal-trazabilidad-certificados')
-@include('_partials._modals.modal-export-excel-certificados-exportacion', ['empresas' => $empresas ?? collect()])
+@include('_partials._modals.modal-export-excel-certificados-exportacion')
+
+
 
 
 

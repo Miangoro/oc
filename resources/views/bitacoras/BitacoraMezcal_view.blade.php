@@ -61,7 +61,7 @@
 </div>
 
 <!-- Modal -->
-@include('_partials/_modals/modal-pdfs-certificados')
+
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-bitacoraMezcal')
 <!-- /Modal -->

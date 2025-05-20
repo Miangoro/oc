@@ -4074,12 +4074,7 @@ $(function () {
           $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
           // Validar si `direccion_completa` no está vacío
           if (response.data.instalacion) {
-<<<<<<< HEAD
-            $('.domicilioInstalacion').html(
-              '<a target="_blank" href="/certificado_productor_mezcal/'+response.data.instalacion.certificado_instalacion.certificado.id_certificado + '"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-=======
             $('.domicilioInstalacion').html(response.data.instalacion.direccion_completa + " <b>Vigencia: </b>" + response.data.instalacion.fecha_vigencia);
->>>>>>> b19e36c3b3bf5aafc44482a5a5144d4a25f9f490
           } else {
             // Si está vacío, usar `ubicacion_predio`
             $('.domicilioInstalacion').text(response.data?.predios?.ubicacion_predio);
@@ -4145,13 +4140,8 @@ $(function () {
           $('.volumenTrasladado').text(caracteristicas.id_vol_traslado);
           $('.volumenSobrante').text(caracteristicas.id_vol_res);
           $('.volumenIngresado').text(caracteristicas.volumen_ingresado);
-<<<<<<< HEAD
-          $('.etiqueta').html('<a title="Etiqueta" href="files/'+response.data.empresa.empresa_num_clientes[0].numero_cliente+'/'+response?.url_etiqueta+'" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a><br><a title="Corrugado" href="files/'+response.data.empresa.empresa_num_clientes[0].numero_cliente+'/'+response?.url_corrugado+'" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-          $('.dictamenEnvasado').html('<a href="/dictamen_envasado/'+response?.data?.lote_envasado?.dictamen_envasado?.id_dictamen_envasado+'" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-=======
           $('.etiqueta').html('<a href="files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + response?.url_etiqueta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
           $('.dictamenEnvasado').html('<a href="/dictamen_envasado/' + response?.data?.lote_envasado?.dictamen_envasado?.id_dictamen_envasado + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
->>>>>>> b19e36c3b3bf5aafc44482a5a5144d4a25f9f490
 
           // Verificar si 'detalles' existe y es un arreglo
           if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {

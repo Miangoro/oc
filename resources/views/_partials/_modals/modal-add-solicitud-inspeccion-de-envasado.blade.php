@@ -125,39 +125,41 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control bg-light text-muted" id="id_certificado_inspeccion"
+                                    name="id_certificado_inspeccion" style="pointer-events: none;"
+                                    placeholder="Ingresa el Certificado de NOM a granel" autocomplete="off" />
+                                <label for="id_certificado_inspeccion">Certificado de NOM a granel</label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" class="form-control" id="id_cantidad_caja"
                                     name="id_cantidad_caja" placeholder="Cantidad de cajas" />
                                 <label for="id_cantidad_caja">Cantidad de cajas</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control datepicker" id="id_inicio_envasado"
-                                    name="id_inicio_envasado" placeholder="Inicio de envasado" autocomplete="off"/>
+                                    name="id_inicio_envasado" placeholder="Inicio de envasado" autocomplete="off" />
                                 <label for="id_inicio_envasado">Inicio de envasado</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control datepicker" id="id_previsto" name="id_previsto"
-                                    placeholder="Termino previsto del envasado" autocomplete="off"/>
+                                    placeholder="Termino previsto del envasado" autocomplete="off" />
                                 <label for="id_previsto">Término previsto del envasado</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="id_certificado_inspeccion"
-                                    name="id_certificado_inspeccion"
-                                    placeholder="Ingresa el Certificado de NOM a granel" autocomplete="off"/>
-                                <label for="id_certificado_inspeccion">Certificado de NOM a granel</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..." autocomplete="off"></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."
+                                autocomplete="off"></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
                                 CONTENEDORES):</label>
                         </div>

@@ -136,7 +136,8 @@ class getFuncionesController extends Controller
         $loteEnvasado = lotes_envasado::with([
             'marca',
             'lotesGranel.categoria',
-            'lotesGranel.clase'
+            'lotesGranel.clase',
+            'lotesGranel.certificadoGranel'
         ])->find($idLoteEnvasado);
 
         // Si no se encuentra el lote envasado, devolver un error
@@ -179,7 +180,9 @@ class getFuncionesController extends Controller
                   'nombre_clase' => $primerLoteGranel->clase ? $primerLoteGranel->clase->clase : '', // Nombre de la clase
                   'folio_fq' => $primerLoteGranel->folio_fq,
                   'cont_alc' => $primerLoteGranel->cont_alc,
-                  'folio_certificado' => $primerLoteGranel->folio_certificado,
+                  'folio_certificado' => $primerLoteGranel->certificadoGranel && $primerLoteGranel->certificadoGranel->num_certificado
+                      ? $primerLoteGranel->certificadoGranel->num_certificado
+                      : ($primerLoteGranel->folio_certificado ?? null),
                   'tipos' => $tipos,
                   'tipos_ids' => $idTipos, // Solo los IDs
                   'tipos_nombres' => $tipos->pluck('nombre'),
