@@ -33,7 +33,7 @@ class RevisionPersonalController extends Controller
         
 
         //EXPORTACION
-        $EstadisticasExportacion = $this->calcularCertificados($userId, 2);
+        $EstadisticasExportacion = $this->calcularCertificados($userId, 3);
 
 
         $users = User::where('tipo', 1)->get(); // Select Aprobacion
@@ -410,37 +410,7 @@ class RevisionPersonalController extends Controller
         }
     }
 
-    //CERTIFICADOS DE GRANEL 
-
-    public function calcularCertificadosGranel($userId)
-    {
-        $totalCertificadosGranel = RevisorGranel::where('id_revisor', $userId)->count();
-        $totalCertificadosGranelGlobal = RevisorGranel::count();
-        $porcentajeGranel = $totalCertificadosGranel > 0 ? ($totalCertificadosGranel / $totalCertificadosGranelGlobal) * 100 : 0;
-
-        $certificadosPendientesGranel = RevisorGranel::where('id_revisor', $userId)
-            ->where(function ($query) {
-                $query->whereNull('decision')
-                    ->orWhere('decision', '');
-            })
-            ->count();
-
-        $certificadosRevisadosGranel = RevisorGranel::where('id_revisor', $userId)
-            ->whereNotNull('decision')
-            ->count();
-
-        $porcentajePendientesGranel = $totalCertificadosGranel > 0 ? ($certificadosPendientesGranel / $totalCertificadosGranel) * 100 : 0;
-        $porcentajeRevisadosGranel = $totalCertificadosGranel > 0 ? ($certificadosRevisadosGranel / $totalCertificadosGranel) * 100 : 0;
-
-        return [
-            'totalCertificadosGranel' => $totalCertificadosGranel,
-            'porcentajeGranel' => $porcentajeGranel,
-            'certificadosPendientesGranel' => $certificadosPendientesGranel,
-            'porcentajePendientesGranel' => $porcentajePendientesGranel,
-            'certificadosRevisadosGranel' => $certificadosRevisadosGranel,
-            'porcentajeRevisadosGranel' => $porcentajeRevisadosGranel
-        ];
-    }
+    
 
 
 

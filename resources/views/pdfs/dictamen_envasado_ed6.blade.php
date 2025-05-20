@@ -374,7 +374,7 @@
                     <td>
                         @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->ingredientes ?? ''}}
+                                {{ !empty($loteGranel->ingredientes) ? $loteGranel->ingredientes : '----' }}
                                 <!-- Añade una separación si deseas entre los nombres de lotes -->
                                 @if (!$loop->last)
                                     ,
@@ -386,11 +386,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="column2">Edad (Exclusivo clase añejo)</td>
+                    <td class="column2">Edad</td>
                     <td>
                         @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->edad ?? ''}}
+                                {{ !empty($loteGranel->edad) ? $loteGranel->edad : '----' }}
                                 <!-- Añade una separación si deseas entre los nombres de lotes -->
                                 @if (!$loop->last)
                                     ,

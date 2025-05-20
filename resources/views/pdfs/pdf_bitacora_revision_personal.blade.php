@@ -389,14 +389,16 @@
                     $firmaPath = $firmaRevisor ? 'firmas/' . $firmaRevisor : null;
                 @endphp
                 @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
-                    <img style="position: absolute; top: 860px; left: 150; right: 0; margin: 0 auto;" height="50px"
-                        src="{{ asset('storage/' . $firmaPath) }}">
+                    <img style="position: absolute; top: 830px; left: 165; right: 0; margin: 0 auto;" height="50px"
+                        src="{{ public_path('storage/' . $firmaPath) }}">
                 @endif
                 DE QUIEN TOMA LA APROBACIÓN</td>
-            <td class="leftLetter" style="font-size: 8px;padding-top: 0">{{ $id_aprobador }} <br>
+            <td class="leftLetter" style="font-size: 8px;padding-top: 0"><span class="negrita">{{ $id_aprobador === 'Sin asignar' ? 'Q.F.B. Mayra Gutierrez Romero' : $id_aprobador }}</span><br>
                 Gerente Técnico del Organismo <br>
                 Certificador de CIDAM <br>
-                {{ $fecha_aprobacion }} {{ ucfirst($aprobacion) }}<div style="padding-top: 20px"></div>
+                <span class="negrita">{{ $fecha_aprobacion === 'N/A' ? $fecha : $fecha_aprobacion }}<div style="padding-top: 20px"></span></div>
+                <img style="position: absolute; top: 900px; left: 140; right: 0; margin: 0 auto;" height="50px"
+                        src="{{ public_path('storage/firmas/firma_Q.F.B._Mayra_Gutiérrez_Romero_1739201715.png') }}">
             </td>
         </tr>
     </table>
