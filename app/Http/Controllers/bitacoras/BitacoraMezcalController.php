@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Bitacoras;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\LotesGranel;
 use App\Models\BitacoraMezcal;
 use App\Helpers\Helpers;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -81,8 +82,10 @@ class BitacoraMezcalController extends Controller
         ]);
     }
 
-    public function PDFBitacoraMezcal($id) {
-      $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal');
-      return $pdf->stream('Bitácora Mezcal a Granel.pdf');
+    public function PDFBitacoraMezcal() {
+        $bitacoras = BitacoraMezcal::with('loteBitacora')->orderBy('fecha', 'desc')->get();
+        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras'))
+        ->setPaper('a4', 'landscape');
+          return $pdf->stream('Bitácora Mezcal a Granel.pdf');
     }
 }
