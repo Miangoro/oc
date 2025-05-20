@@ -389,7 +389,7 @@
                     $firmaPath = $firmaRevisor ? 'firmas/' . $firmaRevisor : null;
                 @endphp
                 @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
-                    <img style="position: absolute; top: 860px; left: 150; right: 0; margin: 0 auto;" height="50px"
+                    <img style="position: absolute; top: 840px; left: 158; right: 0; margin: 0 auto;" height="50px"
                         src="{{ public_path('storage/' . $firmaPath) }}">
                 @endif
                 DE QUIEN TOMA LA APROBACIÓN</td>
