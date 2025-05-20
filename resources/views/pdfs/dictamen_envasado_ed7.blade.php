@@ -278,16 +278,17 @@
             <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="275px">
         </div>
         <br>
-        <div class="description1">Unidad de Inspección <br>No. UVNOM-129</div></br>
+        <div class="description1">Unidad de Inspección No. UVNOM-129</div>
         <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
         <div class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C.</div>
         {{-- <div class="textimg font-lucida-sans-seminegrita">No.: UMC-00_/20</div><br> --}}
 
-        <div class="title"> Dictamen de cumplimiento NOM de Mezcal Envasado</div>
+        <div class="title">Dictamen de Cumplimiento NOM de Mezcal <br> Envasado</div><br>
 
-        <p class="text" style="margin-bottom: 20px;"> La Unidad de Inspección CIDAMA.C. con domicilio en Kilómetro 8 Antigua Carretera a Pátzcuaro, 
-            S/N Colonia Otra no Especificada en el Catálogo, C.P. 58341, Morelia, Michoacán. Unidad de Inspección tipo A.
-</p>
+        <p class="text" style="margin-bottom: 20px;">La Unidad de Inspección CIDAM A.C. con domicilio en Kilómetro 8 Antigua Carretera a
+            Pátzcuaro, S/N Colonia Otra no Especificada en el Catálogo, C.P. 58341, Morelia,
+            Michoacán. Unidad de Verificación tipo A con acreditación No. UVNOM-129, acreditada
+            por la entidad mexicana de acreditación, A.C.</p>
 
         <p class="subtema" >I. &nbsp;&nbsp;&nbsp;&nbsp;Datos de la empresa</p>
 
@@ -327,157 +328,175 @@
         <p class="subtema2">II. &nbsp;&nbsp;&nbsp;&nbsp;Descripción del producto</p>
 
         <table>
-    <tbody>
-        <tr>
-            <td colspan="6" class="colum-title">PRODUCTO
-                @if ($lotesGranel->isNotEmpty())
-                    @foreach ($lotesGranel as $loteGranel)
-                        {{ $loteGranel->categoria->categoria ?? 'No encontrado' }}
-                        @if (!$loop->last), @endif
-                    @endforeach
-                @else
-                    --
-                @endif
-                <br> ORIGEN {{ $data->inspeccion->solicitud->instalacion->estados->nombre ?? 'N/A' }}
-            </td>
-        </tr>
-        <tr>
-            <td class="column2">No. de Certificado NOM a Granel</td>
-            <td colspan="5">{{ $data->certificado_nom ?? 'No encontrado' }}</td>
-                <td class="column2">No. de lote a granel</td>
-            <td>
-                @if ($lotesGranel->isNotEmpty())
-                    @foreach ($lotesGranel as $loteGranel)
-                        {{ $loteGranel->nombre_lote ?? 'No encontrado' }}
-                        @if (!$loop->last), @endif
-                    @endforeach
-                @else
-                    N/A
-                @endif
-            </td>
-            <td class="column2">No. de análisis</td>
-            <td>{{ $lotesGranel->folio_fq ?? 'No encontrado' }}</td>
-             <td class="column2">Contenido alcohólico</td>
-            <td>
-                @if ($lotesGranel->isNotEmpty())
-                    @foreach ($lotesGranel as $loteGranel)
-                        {{ $loteGranel->cont_alc ?? 'No encontrado' }} % Alc. Vol.
-                        @if (!$loop->last), @endif
-                    @endforeach
-                @else
-                    N/A
-                @endif
-            </td>
-        </tr>
-        <tr>
-            <td class="column2">Categoría y clase</td>
-            <td>
-                @if ($lotesGranel->isNotEmpty())
-                    @foreach ($lotesGranel as $loteGranel)
-                        {{ $loteGranel->categoria->categoria ?? 'N/A' }},
-                        {{ $loteGranel->clase->clase ?? 'N/A' }}
-                        @if (!$loop->last), @endif
-                    @endforeach
-                @else
-                    N/A
-                @endif
-            </td>
-            <td class="column2">No. de lote envasado</td>
-            <td>{{ $data->lote_envasado->nombre ?? 'No encontrado' }}</td>
-            <td class="column2">No. de botellas</td>
-            <td>{{ $data->lote_envasado->cant_botellas ?? 'N/A' }}</td>
-            <td class="column2">Presentación</td>
-            
-            <td class="column2">Tipo de maguey</td>
-            <td colspan="2">
-                @if ($lotesGranel->isNotEmpty())
-                    @foreach ($lotesGranel as $loteGranel)
-                        @php $tipos = $loteGranel->tiposRelacionados ?? collect(); @endphp
-                        @if ($tipos->isNotEmpty())
-                            @foreach ($tipos as $tipo)
-                                {{ $tipo->nombre ?? 'No encontrado' }} <i>({{ $tipo->cientifico ?? 'No encontrado' }})</i>
-                                @if (!$loop->last), @endif
+            <tbody>
+                <tr>
+                    <td colspan="6" class="colum-title">PRODUCTO
+                        @if ($lotesGranel->isNotEmpty())
+                            @foreach ($lotesGranel as $loteGranel)
+                                {{ $loteGranel->categoria->categoria ?? 'No encontrado' }}
+                                <!-- Añade una separación si es necesario -->
+                                @if (!$loop->last)
+                                    ,
+                                @endif
                             @endforeach
                         @else
-                            No encontrado
+                            --
                         @endif
-                        @if (!$loop->last), @endif
-                    @endforeach
-                @else
-                    N/A
-                @endif
-            </td>
-        </tr>
-        </tr>
-        <tr>
-            <td class="column2">Ingredientes</td>
-            <td>
-                @if ($lotesGranel->isNotEmpty())
-                    @foreach ($lotesGranel as $loteGranel)
-                        {{ $loteGranel->ingredientes ?? 'No encontrado' }}
-                        @if (!$loop->last), @endif
-                    @endforeach
-                @else
-                    N/A
-                @endif
-            </td>
-            <td class="column2">Edad (Exclusivo clase añejo)</td>
-            <td>
-                @if ($lotesGranel->isNotEmpty())
-                    @foreach ($lotesGranel as $loteGranel)
-                        {{ $loteGranel->edad ?? 'No encontrado' }}
-                        @if (!$loop->last), @endif
-                    @endforeach
-                @else
-                    N/A
-                @endif
-            </td>
-            <td class="column2">Marca</td>
-            <td colspan="2">{{ $marca->marca ?? 'N/A' }}</td>
-           
-            <td class="column2">Volumen del lote envasado</td>
-            <td>
-                @if ($lotesGranel->isNotEmpty())
-                    @foreach ($lotesGranel as $loteGranel)
-                        {{ $loteGranel->volumen ?? 'No encontrado' }}
-                        @if (!$loop->last), @endif
-                    @endforeach
-                @else
-                    N/A
-                @endif
-            </td>
-        </tr>
-        <tr>
-        </tr>
-        <tr>
-            <td class="column2">Tipo de maguey</td>
-            <td colspan="2">
-                @if ($lotesGranel->isNotEmpty())
-                    @foreach ($lotesGranel as $loteGranel)
-                        @php $tipos = $loteGranel->tiposRelacionados ?? collect(); @endphp
-                        @if ($tipos->isNotEmpty())
-                            @foreach ($tipos as $tipo)
-                                {{ $tipo->nombre ?? 'No encontrado' }} <i>({{ $tipo->cientifico ?? 'No encontrado' }})</i>
-                                @if (!$loop->last), @endif
+                        <br> ORIGEN
+                        {{ $data->inspeccion->solicitud->instalacion->estados->nombre ?? 'N/A' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="column2">Categoría y clase</td>
+                    <td>
+                        @if ($lotesGranel->isNotEmpty())
+                            @foreach ($lotesGranel as $loteGranel)
+                                <!-- Mostrar la categoría y la clase -->
+                                {{ $loteGranel->categoria->categoria ?? 'N/A' }},
+                                {{ $loteGranel->clase->clase ?? 'N/A' }}
+
+                                <!-- Añade una separación si hay más elementos en el loop -->
+                                @if (!$loop->last)
+                                    ,
+                                @endif
                             @endforeach
                         @else
-                            No encontrado
+                            N/A
                         @endif
-                        @if (!$loop->last), @endif
-                    @endforeach
-                @else
-                    N/A
-                @endif
-            </td>
-            <td class="column2">Marca</td>
-            <td colspan="2">{{ $marca->marca ?? 'N/A' }}</td>
-        </tr>
-    </tbody>
-</table>
+                    </td>{{-- aun no se de donde se jala --}}
+                    <td rowspan="2" class="column2">No. de lote envasado</td>
+                    <td rowspan="2">{{ $data->lote_envasado->nombre ?? 'No encontrado' }}</td>
+                    <td rowspan="2" class="column2">No. de botellas</td>
+                    <td rowspan="2">{{ $data->lote_envasado->cant_botellas ?? 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <td class="column2">Ingredientes</td>
+                    <td>
+                        @if ($lotesGranel->isNotEmpty())
+                            @foreach ($lotesGranel as $loteGranel)
+                                {{ $loteGranel->ingredientes ?? ''}}
+                                <!-- Añade una separación si deseas entre los nombres de lotes -->
+                                @if (!$loop->last)
+                                    ,
+                                @endif
+                            @endforeach
+                        @else
+                            N/A
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td class="column2">Edad (Exclusivo clase añejo)</td>
+                    <td>
+                        @if ($lotesGranel->isNotEmpty())
+                            @foreach ($lotesGranel as $loteGranel)
+                                {{ $loteGranel->edad ?? ''}}
+                                <!-- Añade una separación si deseas entre los nombres de lotes -->
+                                @if (!$loop->last)
+                                    ,
+                                @endif
+                            @endforeach
+                        @else
+                            N/A
+                        @endif
+                    </td>
+                    <td class="column2">No. de lote a granel</td>
+                    <td>
+                        @if ($lotesGranel->isNotEmpty())
+                            @foreach ($lotesGranel as $loteGranel)
+                                {{ $loteGranel->nombre_lote ?? '' }}
+                                <!-- Añade una separación si deseas entre los nombres de lotes -->
+                                @if (!$loop->last)
+                                    ,
+                                @endif
+                            @endforeach
+                        @else
+                            N/A
+                        @endif
+                    </td>
+                    <td class="column2">No. de análisis</td>
+                    <td>
+                        @if ($lotesGranel->isNotEmpty())
+                            @foreach ($lotesGranel as $loteGranel)
+                                {{ $loteGranel->folio_fq ?? ''}}
+                                <!-- Añade una separación si deseas entre los nombres de lotes -->
+                                @if (!$loop->last)
+                                    ,
+                                @endif
+                            @endforeach
+                        @else
+                            N/A
+                        @endif
+                    </td>{{-- no se de donde se jala --}}
+                </tr>
+                <tr>
+                    <td class="column2">Presentación</td>
+                    <td>{{ $data->lote_envasado->presentacion ?? 'N/A' }}</td>
+                    <td class="column2">Volumen del lote</td>
+
+                    <td>
+                        @if ($lotesGranel->isNotEmpty())
+                            @foreach ($lotesGranel as $loteGranel)
+                                {{ $loteGranel->volumen ?? '' }}
+                                <!-- Añade una separación si deseas entre los nombres de lotes -->
+                                @if (!$loop->last)
+                                    ,
+                                @endif
+                            @endforeach
+                        @else
+                            N/A
+                        @endif
+                    </td> {{-- no se de donde se jala --}}
+                    <td class="column2">Contenido alcohólico</td>
+                    <td>
+                        @if ($lotesGranel->isNotEmpty())
+                            @foreach ($lotesGranel as $loteGranel)
+                                {{ $loteGranel->cont_alc ?? '' }}
+                                <!-- Añade una separación si deseas entre los nombres de lotes -->
+                                @if (!$loop->last)
+                                    ,
+                                @endif
+                            @endforeach
+                        @else
+                            N/A
+                        @endif % Alc. Vol.
+                    </td> {{-- no se de donde se jala --}}
+                </tr>
+                <tr>
+                    <td class="column2">Tipo de maguey</td>
+                    <td colspan="2">
+                    @if ($lotesGranel->isNotEmpty())
+                        @foreach ($lotesGranel as $loteGranel)
+                            @php
+                                $tipos = $loteGranel->tiposRelacionados ?? collect();
+                            @endphp
+                
+                            @if ($tipos->isNotEmpty())
+                                @foreach ($tipos as $tipo)
+                                    {{ $tipo->nombre }} <i>({{ $tipo->cientifico }})</i>@if (!$loop->last), @endif
+                                @endforeach
+                            @else
+                                No encontrado
+                            @endif
+                
+                            @if (!$loop->last)
+                             ,
+                            @endif
+                        @endforeach
+                    @else
+                        N/A
+                    @endif
+                    </td>
+                    <td class="column2">Marca</td>
+                    <td colspan="2">{{ $marca->marca ?? 'N/A' }}</td>
+                </tr>
+            </tbody>
+        </table>
 
         <p class="text2">Este dictamen de cumplimiento de lote de mezcal envasado se expide de acuerdo a la
             Norma Oficial Mexicana NOM-070-SCFI-2016. Bebidas alcohólicas -mezcal-
             especificaciones.</p>
+
 
 <!--FIRMA DIGITAL-->
 <div style="margin-left: -5px;">
@@ -489,7 +508,7 @@
         <p class="textx" style="font-size: 9px; margin-bottom:-8px; margin-top:-2px; position: relative;">
             <strong>AUTORIZÓ</strong>
             <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
-                {{-- @php
+                @php
                     use Illuminate\Support\Facades\Storage;
                     $firma = $data->firmante->firma ?? null;
                     $firmaPath = $firma ? 'firmas/' . $firma : null;
@@ -497,10 +516,11 @@
         
                 @if ($firma && Storage::disk('public')->exists($firmaPath))
                     <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
+                        {{-- src="{{ asset('storage/' . $firmaPath) }}"> --}}
                         src="{{ public_path('storage/' . $firmaPath) }}">
                 @endif
         
-                <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong> --}}
+                <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
             </span>
         </p>
         
@@ -515,7 +535,6 @@
             <strong>SELLO DIGITAL</strong>
         </p>
 
-        
         <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
             {{ $firmaDigital['firma'] }}
         </p>
@@ -526,8 +545,8 @@
             Morelia Michoacán</p>
     </div> 
 
-    <p class="pie">Ed. 7 Entrada en vigor: 10-12-2024<br>
-        F-UV-04-17 Ver 7.
+    <p class="pie">Entrada en vigor: 15-07-2024<br>
+        F-UV-04-17 Ver 6.
     </p>
     
 </div>
