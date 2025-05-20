@@ -62,7 +62,7 @@
                                 class="select2 form-select">
                                 <option value="" disabled selected>Selecciona lote envasado</option>
                             </select>
-                            <label for="edit_id_lote_envasado_inspeccion">Lote a granel</label>
+                            <label for="edit_id_lote_envasado_inspeccion">Lote envasado</label>
                         </div>
                     </div>
                     <div class="row">
@@ -141,33 +141,34 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" class="form-control" id="edit_id_cantidad_caja"
-                                    name="id_cantidad_caja" placeholder="Cantidad de cajas" />
-                                <label for="id_cantidad_caja">Cantidad de cajas</label>
+                                <input type="text" class="form-control bg-light text-muted" id="edit_id_certificado_inspeccion"
+                                    name="id_certificado_inspeccion" readonly style="pointer-events: none;"
+                                    placeholder="Ingresa el Certificado de NOM a granel"/>
+                                <label for="id_certificado_inspeccion">Ingresa Certificado de NOM a granel</label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
+                                <input type="number" class="form-control" id="edit_id_cantidad_caja"
+                                    name="id_cantidad_caja" placeholder="Cantidad de cajas" />
+                                <label for="id_cantidad_caja">Cantidad de cajas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control datepicker" id="edit_id_inicio_envasado"
-                                    name="id_inicio_envasado" placeholder="Inicio de envasado" autocomplete="off"/>
+                                    name="id_inicio_envasado" placeholder="Inicio de envasado" autocomplete="off" />
                                 <label for="id_inicio_envasado">Inicio de envasado</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control datepicker" id="edit_id_previsto"
-                                    name="id_previsto" placeholder="Termino previsto del envasado" autocomplete="off"/>
+                                    name="id_previsto" placeholder="Termino previsto del envasado"
+                                    autocomplete="off" />
                                 <label for="id_previsto">Termino previsto del envasado</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="edit_id_certificado_inspeccion"
-                                    name="id_certificado_inspeccion"
-                                    placeholder="Ingresa el Certificado de NOM a granel" autocomplete="off"/>
-                                <label for="id_certificado_inspeccion">Ingresa Certificado de NOM a granel</label>
                             </div>
                         </div>
                     </div>
@@ -293,9 +294,14 @@
                 },
                 error: function() {
                     console.error('Error al obtener los datos del lote granel.');
+                    $('#edit_id_categoria_inspeccion, #edit_id_clase_inspeccion, #edit_id_tipo_maguey_inspeccion, #edit_analisis_inspeccion, #edit_volumen_inspeccion, #edit_id_certificado_inspeccion, #edit_id_cantidad_bote, #edit_id_tipo_inspeccion, #edit_id_marca')
+                        .val('').trigger('change');
                 },
 
             });
+        } else {
+            $('#edit_id_categoria_inspeccion, #edit_id_clase_inspeccion, #edit_id_tipo_maguey_inspeccion, #edit_analisis_inspeccion, #edit_volumen_inspeccion, #edit_id_certificado_inspeccion, #edit_id_cantidad_bote, #edit_id_tipo_inspeccion, #edit_id_marca')
+                .val('').trigger('change');
         }
     }
 </script>

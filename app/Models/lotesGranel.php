@@ -101,9 +101,9 @@ class LotesGranel extends Model
 
 
     public function certificadoGranel()
-{
-    return $this->hasOne(CertificadosGranel::class, 'id_lote_granel', 'id_lote_granel');
-}
+    {
+        return $this->hasOne(CertificadosGranel::class, 'id_lote_granel', 'id_lote_granel');
+    }
 
 
 
