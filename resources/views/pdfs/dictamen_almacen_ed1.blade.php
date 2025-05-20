@@ -208,7 +208,7 @@
                 font-size: 9px;
                 line-height: 1;
                 position: fixed;
-                bottom: -10;
+                bottom: -4;
                 left: 0;
                 right: 0;
                 width: calc(100% - 40px);
@@ -223,9 +223,31 @@
                 line-height: 10px;
             }
 
+        .watermark-cancelado {
+            font-family: Arial;
+            color: red;
+            position: fixed;
+            top: 48%;
+            left: 45%;
+            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
+            opacity: 0.5;
+            /* Opacidad predeterminada */
+            letter-spacing: 3px;
+            font-size: 150px;
+            white-space: nowrap;
+            z-index:-1;
+        }
+
     </style>
 </head>
 <body>
+
+@if ($watermarkText)
+    <div class="watermark-cancelado">
+        Cancelado
+    </div>
+@endif
+
 <div class="container">
     <div class="header">
         <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="275px">
@@ -304,7 +326,7 @@
     </div>
     <p class="textx" style="font-size: 9px; margin-bottom:-8px; position: relative;">
         <strong>AUTORIZÓ</strong>
-        <span style="margin-left: -33px; display: inline-block; text-align: center; position: relative;">
+        <span style="margin-left: 25px; display: inline-block; text-align: center; position: relative;">
             @php
                 use Illuminate\Support\Facades\Storage;
     
@@ -314,7 +336,7 @@
     
             @if ($firma && Storage::disk('public')->exists($firmaPath))
                 <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
-                    src="{{ asset('storage/' . $firmaPath) }}">
+                    src="{{ public_path('storage/' . $firmaPath) }}">
             @endif
     
             <strong>{{ $datos->firmante->puesto ?? '' }} | {{ $datos->firmante->name ?? '' }}</strong>
@@ -324,7 +346,7 @@
     <p class="textx" style="font-size: 9px; margin-bottom:-8px">
         <strong>CADENA ORIGINAL</strong>
         <span style="margin-left: 14px;">
-            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+            {{-- <strong>{{ $firmaDigital['cadena_original'] }}</strong> --}}
         </span>
     </p>
 
@@ -333,9 +355,17 @@
     </p>
 
     <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
-        {{ $firmaDigital['firma'] }}
+        {{-- {{ $firmaDigital['firma'] }} --}}
     </p>
     
+
+    <p class="pie">
+        @if ($id_sustituye)
+        Este dictamen sustituye al: {{ $id_sustituye }}
+        @endif
+        <br>Entrada en vigor: 15-07-2024
+        <br>F-UV-02-04 Ver 1.
+    </p>
 
     <div class="footer-bar">
         <p class="negrita">www.cidam.org . unidadverificacion@cidam.org</p>
@@ -343,10 +373,8 @@
             Morelia Michoacán</p>
     </div>
 
-    <p class="pie">Entrada en vigor: 15-07-2024<br>
-        F-UV-02-04 Ver 1.
-    </p>
+    
 </div>
-</body>
 
+</body>
 </html>

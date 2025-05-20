@@ -438,7 +438,7 @@ public function MostrarDictamenEnvasado($id_dictamen)
     ];
 
     if ($data->fecha_emision >= "2024-12-10") {
-        $edicion = 'pdfs.dictamen_envasado_ed7';//FALTA
+        $edicion = 'pdfs.dictamen_envasado_ed7';
     }else{
         $edicion = 'pdfs.dictamen_envasado_ed6';
     }

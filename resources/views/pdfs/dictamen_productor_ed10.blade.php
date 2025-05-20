@@ -223,7 +223,7 @@
             font-size: 9px;
             line-height: 1;
             position: fixed;
-            bottom: -10;
+            bottom: -4;
             left: 0;
             right: 0;
             width: calc(100% - 40px);
@@ -233,14 +233,36 @@
             font-family: 'Lucida Sans Unicode';
         }
 
-        
         .interlineado{
             line-height: 10px;
+        }
+
+        .watermark-cancelado {
+            font-family: Arial;
+            color: red;
+            position: fixed;
+            top: 48%;
+            left: 45%;
+            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
+            opacity: 0.5;
+            /* Opacidad predeterminada */
+            letter-spacing: 3px;
+            font-size: 150px;
+            white-space: nowrap;
+            z-index:-1;
         }
         
     </style>
 </head>
 <body>
+
+@if ($watermarkText)
+    <div class="watermark-cancelado">
+        Cancelado
+    </div>
+@endif
+
+
 <div class="container">
     <div class="header">
         <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="275px">
@@ -328,15 +350,18 @@
     <p class="text1">Las instalaciones se encuentran en región de los estados y municipios que contempla la resolución mediante el cual se otorga la protección
     prevista a la denominación de origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre, publicada el 28 de noviembre
     de 1994, así como sus modificaciones subsecuentes.</p>
+
+
     <br><br>
     <p class="sello">Sello de Unidad de Inspección</p>
     <div class="images-container">
         <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
         <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
     </div>
+    
     <p class="textx" style="font-size: 9px; margin-bottom:-8px; position: relative;">
         <strong>AUTORIZÓ</strong>
-        <span style="margin-left: -33px; display: inline-block; text-align: center; position: relative;">
+        <span style="margin-left: 25px; display: inline-block; text-align: center; position: relative;">
             @php
                 use Illuminate\Support\Facades\Storage;
     
@@ -369,16 +394,22 @@
     </p>
     
 
+    <p class="pie">
+        @if ($id_sustituye)
+        Este dictamen sustituye al: {{ $id_sustituye }}
+        @endif
+        <br>Entrada en vigor: 15-07-2024
+        <br>F-UV-02-04 Ver 10.
+    </p>
+    
     <div class="footer-bar">
         <p class="negrita">www.cidam.org . unidadverificacion@cidam.org</p>
         <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341.
             Morelia Michoacán</p>
     </div>
+    
 
-    <p class="pie">Entrada en vigor: 15-07-2024<br>
-        F-UV-02-04 Ver 10.
-    </p>
 </div>
-</body>
 
+</body>
 </html>
