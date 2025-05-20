@@ -536,7 +536,7 @@
         </p>
 
         <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
-            {{ $firmaDigital['firma'] }}
+            
         </p>
 
     <div class="footer-bar">
