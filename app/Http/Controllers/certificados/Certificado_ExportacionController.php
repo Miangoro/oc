@@ -36,95 +36,76 @@ class Certificado_ExportacionController extends Controller
         $hologramas = activarHologramasModelo::all(); 
         
         return view('certificados.find_certificados_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores', 'hologramas'))
-        ->with('dictamenes', $dictamen); // Pasamos el dictamen como un JSON;
+        ;//->with('dictamenes', $dictamen); // Pasamos el dictamen como un JSON;
     }
 
 
 public function index(Request $request)
 {
+    // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
-    //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
-        1 => 'id_certificado',
-        2 => 'id_dictamen',
-        3 => '',
-        4 => '',
-        5 => 'fechas',
-        6 => 'estatus',
+        0 => '',               
+        1 => 'num_certificado',
+        2 => 'id_dictamen',                // solicitud + servicio
+        3 => 'clientes',        // nombre cliente
+        4 => '',                // sin uso
+        5 => 'fecha_emision',
+        6 => 'estatus',                // revisores
+        7 => '',                // acciones
     ];
 
-    $search = [];
     $totalData = Certificado_Exportacion::count();
     $totalFiltered = $totalData;
 
     $limit = $request->input('length');
     $start = $request->input('start');
-    $order = $columns[$request->input('order.0.column')];
-    $dir = $request->input('order.0.dir');
 
+    // Columnas ordenadas desde DataTables
+    $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
+    $orderColumn = $columns[$orderColumnIndex] ?? 'num_certificado'; // Por defecto
+    $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
 
-    if (empty($request->input('search.value'))) {
-        // ORDENAR EL BUSCADOR "thead"
-        $users = Certificado_Exportacion::where('id_certificado', 'LIKE', "%{$request->input('search.value')}%")
-        ->offset($start)
-        ->limit($limit)
-        ->orderBy($order, $dir)
-        ->get();
-
-    } else {
-    // BUSCADOR
     $search = $request->input('search.value');
 
-    // Consulta con filtros
-    $query = Certificado_Exportacion::where('id_certificado', 'LIKE', "%{$search}%")
-    ->where("id_certificado", 1)
-    ->orWhere('num_certificado', 'LIKE', "%{$search}%");
+    $query = Certificado_Exportacion::query();
 
-    $users = $query->offset($start)
-        ->limit($limit)
-        //->orderBy($order, $dir)
-        ->orderByRaw("
-          -- 1. Prioriza certificados con formato 'CIDAM C-EXP25--'
-          CASE
-              WHEN num_certificado LIKE 'CIDAM C-EXP25--%' THEN 0
-              ELSE 1
-          END ASC,
+    // Búsqueda
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('num_certificado', 'LIKE', "%{$search}%")
+              ->orWhere('id_certificado', 'LIKE', "%{$search}%");
+        });
 
-          -- 2. Extrae el número después de 'CIDAM C-EXP25--' ignorando cualquier sufijo (-A, etc.)
-          CAST(
-              SUBSTRING_INDEX(
-                  SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25--', num_certificado) + 15),
-                  '-', 1
-              ) AS UNSIGNED
-          ) DESC
-      ")
-        ->get();
-
-    $totalFiltered = Certificado_Exportacion::where('id_certificado', 'LIKE', "%{$search}%")
-        //->where("id_certificado", 1)
-        //->orWhere('num_certificado', 'LIKE', "%{$search}%")
-        ->orderByRaw("
-          -- 1. Prioriza certificados con formato 'CIDAM C-EXP25--'
-          CASE
-              WHEN num_certificado LIKE 'CIDAM C-EXP25--%' THEN 0
-              ELSE 1
-          END ASC,
-
-          -- 2. Extrae el número después de 'CIDAM C-EXP25--' ignorando cualquier sufijo (-A, etc.)
-          CAST(
-              SUBSTRING_INDEX(
-                  SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25--', num_certificado) + 15),
-                  '-', 1
-              ) AS UNSIGNED
-          ) DESC
-      ")
-        ->count();
+        $totalFiltered = $query->count();
     }
+
+    // Ordenamiento especial para num_certificado con formato 'CIDAM C-EXP25-####'
+    if ($orderColumn === 'num_certificado') {
+        $query->orderByRaw("
+            CASE
+                WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(
+                SUBSTRING_INDEX(
+                    SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14),
+                    '-', 1
+                ) AS UNSIGNED
+            ) $orderDirection
+        ");
+    } elseif (!empty($orderColumn)) {
+        $query->orderBy($orderColumn, $orderDirection);
+    }
+
+    //dd($query->toSql(), $query->getBindings());
+    // Paginación
+    $certificados = $query->offset($start)->limit($limit)->get();
     
 
     //MANDA LOS DATOS AL JS
     $data = [];
-    if (!empty($users)) {
-        foreach ($users as $certificado) {
+    if (!empty($certificados)) {
+        foreach ($certificados as $certificado) {
             $nestedData['id_certificado'] = $certificado->id_certificado ?? 'No encontrado';
             $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
             $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
@@ -196,21 +177,13 @@ public function index(Request $request)
         }
     }
 
-    if ($data) {
-        return response()->json([
-            'draw' => intval($request->input('draw')),
-            'recordsTotal' => intval($totalData),
-            'recordsFiltered' => intval($totalFiltered),
-            'code' => 200,
-            'data' => $data,
-        ]);
-    } else {
-        return response()->json([
-            'message' => 'Internal Server Error',
-            'code' => 500,
-            'data' => [],
-        ]);
-    }
+    return response()->json([
+        'draw' => intval($request->input('draw')),
+        'recordsTotal' => intval($totalData),
+        'recordsFiltered' => intval($totalFiltered),
+        'code' => 200,
+        'data' => $data,
+    ]);
 }
 
 
