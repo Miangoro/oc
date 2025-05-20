@@ -31,11 +31,11 @@ class Certificado_ExportacionController extends Controller
             ->orderBy('id_dictamen', 'desc')
             ->get();
         $users = User::where('tipo',1)->get(); //Solo Prrsonal OC 
-        $empresa = empresa::where('tipo', 2)->get();
+        $empresas = empresa::where('tipo', 2)->get();
         $revisores = Revisor::all(); 
         $hologramas = activarHologramasModelo::all(); 
         
-        return view('certificados.find_certificados_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores', 'hologramas'))
+        return view('certificados.find_certificados_exportacion', compact('certificado', 'dictamen', 'users', 'empresas', 'revisores', 'hologramas'))
         ->with('dictamenes', $dictamen); // Pasamos el dictamen como un JSON;
     }
 
