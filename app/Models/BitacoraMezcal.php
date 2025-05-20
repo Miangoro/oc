@@ -24,11 +24,11 @@ class BitacoraMezcal extends Model
         'num_analisis',
         'num_certificado',
 
-        //INVENTARIO INICIAL 
+        //INVENTARIO INICIAL
         'volumen_inicial',
         'alcohol_inicial',
 
-        //ENTRADA 
+        //ENTRADA
         'procedencia_entrada',
         'volumen_entrada',
         'alcohol_entrada',
@@ -42,7 +42,8 @@ class BitacoraMezcal extends Model
         //INVENTARIO FINAL
         'volumen_final',
         'alcohol_final',
-        
-        'observaciones',        
+
+        'observaciones',
     ];
+       public $timestamps = false;
 }
