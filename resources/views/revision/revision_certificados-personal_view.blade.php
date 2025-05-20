@@ -45,7 +45,7 @@
             <div class="card-body d-flex flex-column"> 
                 <div class="d-flex justify-content-between">
                     <div class="me-1">
-                        <p class="text-heading mb-1">Instalaciones</p>
+                        <p class="text-heading mb-1 fw-bold">Instalaciones</p>
                         <div class="d-flex align-items-center">
                             <h4 class="mb-1 me-2">{{ $EstadisticasInstalaciones['totalCertificados'] }}</h4>
                             <p class="text-success mb-1">({{ number_format($EstadisticasInstalaciones['porcentaje'], 0) }}%)</p>
@@ -84,7 +84,7 @@
             <div class="card-body d-flex flex-column">
                 <div class="d-flex justify-content-between">
                     <div class="me-1">
-                        <p class="text-heading mb-1">Granel</p>
+                        <p class="text-heading mb-1 fw-bold">Granel</p>
                         <div class="d-flex align-items-center">
                             <h4 class="mb-1 me-2">{{ $EstadisticasGranel['totalCertificados'] }}</h4>
                             <p class="text-success mb-1">({{ number_format($EstadisticasGranel['porcentaje'], 0) }}%)</p>
@@ -122,7 +122,7 @@
             <div class="card-body d-flex flex-column">
                 <div class="d-flex justify-content-between">
                     <div class="me-1">
-                        <p class="text-heading mb-1">Exportación</p>
+                        <p class="text-heading mb-1 fw-bold">Exportación</p>
                         <div class="d-flex align-items-center">
                             <h4 class="mb-1 me-2">{{ $EstadisticasExportacion['totalCertificados'] }}</h4>
                             <p class="text-success mb-1">({{ number_format($EstadisticasExportacion['porcentaje'], 0) }}%)</p>
