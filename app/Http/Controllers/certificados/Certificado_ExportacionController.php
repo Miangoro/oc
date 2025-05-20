@@ -46,12 +46,12 @@ public function index(Request $request)
     $columns = [
         0 => '',               
         1 => 'num_certificado',
-        2 => 'id_dictamen',                // solicitud + servicio
-        3 => 'clientes',        // nombre cliente
-        4 => '',                // sin uso
+        2 => 'dictamenes_exportacion.num_dictamen', //nombre de mi tabla y atributo
+        3 => 'razon_social', //valor unico
+        4 => '', 
         5 => 'fecha_emision',
-        6 => 'estatus',                // revisores
-        7 => '',                // acciones
+        6 => 'estatus',            
+        7 => '',// acciones
     ];
 
     $totalData = Certificado_Exportacion::count();
@@ -67,14 +67,34 @@ public function index(Request $request)
 
     $search = $request->input('search.value');
 
-    $query = Certificado_Exportacion::query();
+    //1)$query = Certificado_Exportacion::query();
+    /*2)$query = Certificado_Exportacion::select('certificados_exportacion.*')
+    ->leftJoin('dictamenes_exportacion', 'certificados_exportacion.id_dictamen', '=', 'dictamenes_exportacion.id_dictamen');
+    */
+    $query = Certificado_Exportacion::query()
+    ->leftJoin('dictamenes_exportacion', 'dictamenes_exportacion.id_dictamen', '=', 'certificados_exportacion.id_dictamen')
+    ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
+    ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+    ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+    ->select('certificados_exportacion.*', 'empresa.razon_social')
+    ->where(function ($q) use ($search) {
+        $q->where('empresa.razon_social', 'LIKE', "%{$search}%")
+          ->orWhere('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
+          ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%");
+    });
 
     // Búsqueda
     if (!empty($search)) {
-        $query->where(function ($q) use ($search) {
+        /*1)$query->where(function ($q) use ($search) {
             $q->where('num_certificado', 'LIKE', "%{$search}%")
               ->orWhere('id_certificado', 'LIKE', "%{$search}%");
+        });*/
+        $query->where(function ($q) use ($search) {
+            $q->where('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
+            ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%"); // <- aquí se agrega
         });
+
 
         $totalFiltered = $query->count();
     }
