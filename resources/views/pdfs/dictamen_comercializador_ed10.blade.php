@@ -289,7 +289,8 @@
                             comercializador:</span>
                     </td>
                     <td style="text-align: center; vertical-align: middle;">
-                        {{ $datos->instalaciones->direccion_completa ?? '' }}</td>
+                        {{ $datos->instalaciones->direccion_completa ?? '' }}
+                    </td>
                 </tr>
                 <tr>
                     <td>
