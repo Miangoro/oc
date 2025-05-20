@@ -371,7 +371,7 @@
     
             @if ($firma && Storage::disk('public')->exists($firmaPath))
                 <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
-                    src="{{ asset('storage/' . $firmaPath) }}">
+                    src="{{ public_path('storage/' . $firmaPath) }}">
             @endif
     
             <strong>{{ $datos->firmante->puesto ?? '' }} | {{ $datos->firmante->name ?? '' }}</strong>
