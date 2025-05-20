@@ -546,6 +546,7 @@ $(function () {
         }
       ],
 
+
       ///PAGINA RESPONSIVA
       responsive: {
         details: {
@@ -582,6 +583,76 @@ $(function () {
       }
 
 
+    });
+
+    $(document).ready(function () {
+      $('#reporteForm').on('submit', function (e) {
+        e.preventDefault(); // Prevenir el envío tradicional del formulario
+        const exportUrl = $(this).attr('action'); // Obtener la URL del formulario
+        const formData = $(this).serialize(); // Serializa los datos del formulario
+
+        // Mostrar el SweetAlert de "Generando Reporte"
+        Swal.fire({
+          title: 'Generando Reporte...',
+          text: 'Por favor espera mientras se genera el reporte.',
+          icon: 'info',
+          didOpen: () => {
+            Swal.showLoading(); // Muestra el ícono de carga
+          },
+          customClass: {
+            confirmButton: false
+          }
+        });
+
+        // Realizar la solicitud GET para descargar el archivo
+        $.ajax({
+          url: exportUrl,
+          type: 'GET',
+          data: formData,
+          xhrFields: {
+            responseType: 'blob' // Necesario para manejar la descarga de archivos
+          },
+          success: function (response) {
+            const link = document.createElement('a');
+            const url = window.URL.createObjectURL(response);
+            link.href = url;
+            link.download = 'reporte_certificados_exportacion.xlsx';
+            link.click();
+            window.URL.revokeObjectURL(url);
+
+            $('#exportarExcelCertificados').modal('hide');
+            Swal.fire({
+              title: '¡Éxito!',
+              text: 'El reporte se generó exitosamente.',
+              icon: 'success',
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            });
+          },
+          error: function (xhr, status, error) {
+            console.error('Error al generar el reporte:', error);
+            $('#exportarExcelCertificados').modal('hide');
+            Swal.fire({
+              title: '¡Error!',
+              text: 'Ocurrió un error al generar el reporte.',
+              icon: 'error',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
+      });
+    });
+
+
+    $(document).ready(function () {
+      $('#restablecerFiltros').on('click', function () {
+        $('#reporteForm')[0].reset();
+        $('.select2').val('').trigger('change');
+        console.log('Filtros restablecidos.');
+      });
     });
   }// end-datatable
 
