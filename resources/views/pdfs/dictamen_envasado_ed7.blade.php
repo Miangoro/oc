@@ -527,7 +527,7 @@
         <p class="textx" style="font-size: 9px; margin-bottom:-8px">
             <strong>CADENA ORIGINAL</strong>
             <span style="margin-left: 14px;">
-                <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+                <strong></strong>
             </span>
         </p>
 
