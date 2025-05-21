@@ -26,18 +26,24 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class PrediosController extends Controller
+{public function UserManagement()
 {
-    public function UserManagement()
-    {
-        $predios = Predios::with('empresa')->get(); // Obtener todos los registros con la relación cargada
-            $empresaId = null;
+    $empresaId = null;
 
     if (auth()->user()->tipo == 3) {
         $empresaId = auth()->user()->empresa?->id_empresa;
     }
 
-    $predios = Predios::with('empresa')->get(); // Esto puedes filtrar también si es necesario
+    // Filtrar predios si el usuario es tipo 3
+    $prediosQuery = Predios::with('empresa');
 
+    if ($empresaId) {
+        $prediosQuery->where('id_empresa', $empresaId);
+    }
+
+    $predios = $prediosQuery->get();
+
+    // Filtrar empresas
     $empresasQuery = empresa::where('tipo', 2);
 
     if ($empresaId) {
@@ -45,17 +51,17 @@ class PrediosController extends Controller
     }
 
     $empresas = $empresasQuery->get();
-        $tipos = tipos::all(); // Obtén todos los tipos de agave
-        $estados = estados::all(); // Obtén todos los estados
-       /*  $documentos = Documentacion::where('id_documento', '=', '34')->get(); */
-        return view('domicilios.find_domicilio_predios_view', [
-            'predios' => $predios, // Pasar los datos a la vista
-            'empresas' => $empresas, // Pasar las empresas a la vista
-            'tipos' => $tipos, // Pasar los tipos a la vista
-            'estados' => $estados,
-            //'documentos' => $documentos // Pasar los documentos a la vista
-        ]);
-    }
+
+    $tipos = tipos::all();
+    $estados = estados::all();
+
+    return view('domicilios.find_domicilio_predios_view', [
+        'predios' => $predios,
+        'empresas' => $empresas,
+        'tipos' => $tipos,
+        'estados' => $estados,
+    ]);
+}
 
 
     public function index(Request $request)
