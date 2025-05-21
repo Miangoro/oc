@@ -577,6 +577,7 @@ class Certificado_InstalacionesController extends Controller
 
             // Guardar los datos del revisor
             $revisor->tipo_certificado = 1;
+            $revisor->decision = 'Pendiente';
             $revisor->numero_revision = $validatedData['numeroRevision'];
             $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
             $revisor->observaciones = $validatedData['observaciones'] ?? '';
@@ -604,7 +605,7 @@ class Certificado_InstalacionesController extends Controller
                 $file = $request->file('url');
                 $nombreLimpio = str_replace('/', '-', $request->nombre_documento);
                 $filename = $nombreLimpio . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+                $filePath = $file->storeAs('revisiones/', $filename, 'public');
 
                 // Actualizar los datos del registro
                 $documentacion_url->nombre_documento = $nombreLimpio;

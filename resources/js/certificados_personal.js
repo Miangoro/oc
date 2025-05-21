@@ -194,8 +194,8 @@ $(function () {
               `data-tipo="${full['tipo_dictamen']}" ` +
               `data-tipo_revision="${full['tipo_revision']}" ` +
               `data-accion="editar" ` +  // Identificador
-              `data-bs-toggle="modal" ` +
-              `data-bs-target="#fullscreenModal">` +
+           
+              `>` +
               '<i class="ri-pencil-fill ri-20px text-primary"></i> Editar Revisión' + 
               '</a>' +
               // Botón para Aprobación

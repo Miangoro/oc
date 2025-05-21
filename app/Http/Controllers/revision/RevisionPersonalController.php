@@ -24,13 +24,13 @@ class RevisionPersonalController extends Controller
         $EstadisticasInstalaciones = $this->calcularCertificados($userId, 1); // Estadisticas Instalaciones
         $EstadisticasGranel = $this->calcularCertificados($userId, 2); // Estadisticas Granel
 
-        $revisorQuery = Revisor::with('certificadoNormal','certificadoGranel','certificadoExportacion');
+        $revisorQuery = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion');
         if ($userId != 1) {
             $revisorQuery->where('id_revisor', $userId);
         }
         $revisor = $revisorQuery->first();
 
-        
+
 
         //EXPORTACION
         $EstadisticasExportacion = $this->calcularCertificados($userId, 3);
@@ -41,7 +41,7 @@ class RevisionPersonalController extends Controller
         $preguntasRevisorGranel = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 2)->get(); // Preguntas Granel
         $noCertificados = (!$revisor || !$revisor->certificado); // Alerta si no hay Certificados Asignados al Revisor
 
-        return view('revision.revision_certificados-personal_view', compact('revisor','preguntasRevisor', 'preguntasRevisorGranel', 'EstadisticasInstalaciones', 'EstadisticasGranel', 'users', 'noCertificados', 'EstadisticasExportacion'));
+        return view('revision.revision_certificados-personal_view', compact('revisor', 'preguntasRevisor', 'preguntasRevisorGranel', 'EstadisticasInstalaciones', 'EstadisticasGranel', 'users', 'noCertificados', 'EstadisticasExportacion'));
     }
 
     public function index(Request $request)
@@ -180,53 +180,7 @@ class RevisionPersonalController extends Controller
         ]);
     }
 
-    public function registrarRespuestas(Request $request)
-    {
-        try {
-            $request->validate([
-                'id_revision' => 'required|integer',
-                'respuestas' => 'nullable|array',
-                'observaciones' => 'nullable|array',
-                'decision' => 'nullable|string',
-            ]);
 
-            $revisor = Revisor::where('id_revision', $request->id_revision)->first();
-            if (!$revisor) {
-                return response()->json(['message' => 'El registro no fue encontrado.'], 404);
-            }
-
-            $historialRespuestas = json_decode($revisor->respuestas, true) ?? [];
-            $numRevision = count($historialRespuestas) + 1;
-            $revisionKey = "Revision $numRevision";
-
-            $nuevoRegistro = [];
-            $todasLasRespuestasSonC = true;
-
-            foreach ($request->respuestas as $key => $nuevaRespuesta) {
-                $nuevaObservacion = $request->observaciones[$key] ?? null;
-
-                if ($nuevaRespuesta !== 'C') {
-                    $todasLasRespuestasSonC = false;
-                }
-
-                $nuevoRegistro[$key] = [
-                    'respuesta' => $nuevaRespuesta,
-                    'observacion' => $nuevaObservacion,
-                ];
-            }
-
-            $historialRespuestas[$revisionKey] = $nuevoRegistro;
-            $revisor->respuestas = json_encode($historialRespuestas);
-            $revisor->decision = $todasLasRespuestasSonC ? 'positiva' : 'negativa';
-
-            $revisor->save();
-            return response()->json(['message' => 'Respuestas y decisión registradas exitosamente.'], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Ocurrió un error al registrar las respuestas: ' . $e->getMessage(),
-            ], 500);
-        }
-    }
 
     public function obtenerRespuestas($id_revision)
     {
@@ -356,7 +310,7 @@ class RevisionPersonalController extends Controller
         }
     }
 
-    
+
 
     public function editarRespuestas(Request $request)
     {
@@ -410,65 +364,8 @@ class RevisionPersonalController extends Controller
         }
     }
 
-    
 
 
-
-    public function PreCertificado($id_certificado)
-    {
-        $certificado = CertificadosGranel::with('dictamen.empresa.instalaciones', 'dictamen.lote_granel.clase', 'dictamen.lote_granel.tipo')->findOrFail($id_certificado);
-
-        $direccionCompleta = $certificado->dictamen->empresa->instalaciones->first()->direccion_completa ?? 'N/A';
-        $clase = $certificado->dictamen->lote_granel->clase->clase ?? 'N/A';
-        $ingredientes = $certificado->dictamen->lote_granel->ingredientes ?? 'N/A';
-        $volumen = $certificado->dictamen->lote_granel->volumen ?? 'N/A';
-        $nombre_lote = $certificado->dictamen->lote_granel->nombre_lote ?? 'N/A';
-        $edad = $certificado->dictamen->lote_granel->edad ?? 'N/A';
-        $cont_alc = $certificado->dictamen->lote_granel->cont_alc ?? 'N/A';
-        $folio_fq = $certificado->dictamen->lote_granel->folio_fq ?? 'N/A';
-        $num_dictamen = $certificado->dictamen->num_dictamen ?? 'N/A';
-        $watermarkText = $certificado->estatus === 1;
-        $leyenda = $certificado->estatus === 2;
-
-        // Procesar los nombres de los tipos
-        $tipoNombres = 'N/A';
-        if ($certificado->dictamen->lote_granel->id_tipo) {
-            $idTipos = json_decode($certificado->dictamen->lote_granel->id_tipo, true);
-            if (is_array($idTipos)) {
-                $tipoNombresArray = tipos::whereIn('id_tipo', $idTipos)->pluck('nombre')->toArray();
-                $tipoNombres = implode(', ', $tipoNombresArray);
-            }
-        }
-
-        // Datos para el PDF
-        $pdfData = [
-            // Tabla #1
-            'num_certificado' => $certificado->num_certificado,
-            'razon_social' => $certificado->dictamen->empresa->razon_social,
-            'representante' => $certificado->dictamen->empresa->representante,
-            'domicilio_fiscal' => $certificado->dictamen->empresa->domicilio_fiscal,
-            'rfc' => $certificado->dictamen->empresa->rfc,
-            'direccion_completa' => $direccionCompleta,
-            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-            'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
-            'watermarkText' => $watermarkText,
-            'leyenda' => $leyenda,
-
-            // Tabla #2
-            'lote' => $clase,
-            'ingredientes' => $ingredientes,
-            'volumen' => $volumen,
-            'nombre_lote' => $nombre_lote,
-            'edad' => $edad,
-            'cont_alc' => $cont_alc,
-            'folio_fq' => $folio_fq,
-            'num_dictamen' => $num_dictamen,
-            'tipo' => $tipoNombres,
-        ];
-
-        // Generar y mostrar el PDF
-        return Pdf::loadView('pdfs.pre-certificado', $pdfData)->stream("Pre-certificado.pdf");
-    }
 
 
 
@@ -476,8 +373,8 @@ class RevisionPersonalController extends Controller
     public function add_revision($id_revision)
     {
 
-        $datos = Revisor::with('certificadoNormal','certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
-        $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->get();
+        $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
+        $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->get();
 
         $id_dictamen = $datos->certificado->dictamen->tipo_dictamen ?? '';
 
@@ -510,17 +407,16 @@ class RevisionPersonalController extends Controller
                 default:
                     $tipo = 'Desconocido';
             }
-        }elseif ($datos->tipo_certificado == 3){
-            $url = 'certificado_exportacion'. $datos->id_certificado;
-            $tipo = 'Exportación';
-        }
-        if ($datos->tipo_certificado == 2) { //Granel
+        } 
+        elseif ($datos->tipo_certificado == 2) { //Granel
             $url = "/Pre-certificado/" . $datos->id_certificado;
             $tipo = "Granel";
         }
-        if ($datos->tipo_certificado == 3) { //Exportación
+        elseif ($datos->tipo_certificado == 3) { //Exportación
             $url = "/certificado_exportacion/" . $datos->id_certificado;
             $tipo = "Exportación";
+
+            
         }
         return view('certificados.add_revision', compact('datos', 'preguntas', 'url', 'tipo'));
     }
@@ -539,19 +435,19 @@ class RevisionPersonalController extends Controller
                 return response()->json(['message' => 'El registro no fue encontrado.'], 404);
             }
 
-          // Obtener el historial de respuestas como array
-$historialRespuestas = $revisor->respuestas ?? [];
+            // Obtener el historial de respuestas como array
+            $historialRespuestas = $revisor->respuestas ?? [];
 
-// Asegurarse de que es un array, por si viene como JSON string
-if (is_string($historialRespuestas)) {
-    $historialRespuestas = json_decode($historialRespuestas, true);
-}
+            // Asegurarse de que es un array, por si viene como JSON string
+            if (is_string($historialRespuestas)) {
+                $historialRespuestas = json_decode($historialRespuestas, true);
+            }
 
-// Definir número de revisión
-$numRevision = count($historialRespuestas) + 1;
-$revisionKey = "Revision $numRevision";
+            // Definir número de revisión
+            $numRevision = count($historialRespuestas) + 1;
+            $revisionKey = "Revision $numRevision";
 
-            
+
 
             $nuevoRegistro = [];
             $todasLasRespuestasSonC = true;
@@ -588,6 +484,64 @@ $revisionKey = "Revision $numRevision";
         }
     }
 
+    public function edit_revision($id_revision)
+    {
+
+        $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
+        $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->get();
+
+        $respuestas_json = json_decode($datos->respuestas, true); // Convierte el campo JSON a array PHP
+        $respuestas_revision = $respuestas_json['Revision 1'] ?? []; // O la clave correspondiente
+
+        // Crear un array indexado por id_pregunta para fácil acceso
+        $respuestas_map = collect($respuestas_revision)->keyBy('id_pregunta');
+
+        $id_dictamen = $datos->certificado->dictamen->tipo_dictamen ?? '';
+
+
+
+
+        if ($datos->tipo_certificado == 1) { //Instalaciones
+
+            switch ($id_dictamen) {
+                case 1:
+                    $tipo = 'Instalaciones de productor';
+                    $url = "/certificado_productor_mezcal/" . $datos->id_certificado;
+                    break;
+                case 2:
+                    $tipo = 'Instalaciones de envasador';
+                    $url = "/certificado_envasador_mezcal/" . $datos->id_certificado;
+                    break;
+                case 3:
+                    $tipo = 'Instalaciones de comercializador';
+                    $url = "/certificado_comercializador/" . $datos->id_certificado;
+                    break;
+                case 4:
+                    $tipo = 'Instalaciones de almacén y bodega';
+                    $url = "/certificado_almacen/" . $datos->id_certificado;
+                    break;
+                case 5:
+                    $tipo = 'Instalaciones de área de maduración';
+                    $url = "/certificado_maduracion/" . $datos->id_certificado;
+                    break;
+                default:
+                    $tipo = 'Desconocido';
+            }
+        } elseif ($datos->tipo_certificado == 3) {
+            $url = 'certificado_exportacion' . $datos->id_certificado;
+            $tipo = 'Exportación';
+        }
+        if ($datos->tipo_certificado == 2) { //Granel
+            $url = "/Pre-certificado/" . $datos->id_certificado;
+            $tipo = "Granel";
+        }
+        if ($datos->tipo_certificado == 3) { //Exportación
+            $url = "/certificado_exportacion/" . $datos->id_certificado;
+            $tipo = "Exportación";
+        }
+        return view('certificados.edit_revision', compact('datos', 'preguntas', 'url', 'tipo','respuestas_map'));
+    }
+
 
     public function pdf_bitacora_revision_personal($id)
     {
@@ -598,7 +552,11 @@ $revisionKey = "Revision $numRevision";
         $respuestasJson = json_decode($revisor->respuestas, true);
 
         // Asegurar que "Revisión 1" existe en el array
-        $respuestas = collect($respuestasJson["Revision 1"] ?? []);
+$respuestas = collect(array_merge(
+    $respuestasJson["Revision 1"] ?? [],
+    $respuestasJson["Revision 2"] ?? []
+));
+
 
         $preguntas = preguntas_revision::whereIn('id_pregunta', $respuestas->pluck('id_pregunta'))->get();
 
@@ -636,18 +594,18 @@ $revisionKey = "Revision $numRevision";
                     break;
                 case 5:
                     $tipo_certificado = 'Instalaciones de área de maduración';
-                    
+
                     break;
                 default:
                     $tipo_certificado = 'Desconocido';
             }
         }
         if ($revisor->tipo_certificado == 2) { //Granel
-            
+
             $tipo_certificado = "NOM a Granel";
         }
         if ($revisor->tipo_certificado == 3) { //Exportación
-            
+
             $tipo_certificado = "Exportación";
         }
 
@@ -690,59 +648,58 @@ $revisionKey = "Revision $numRevision";
     }
 
     public function cargarHistorial($id_revision)
-{
-    try {
-        $revisores = Revisor::where('id_revision', $id_revision)->get();
+    {
+        try {
+            $revisores = Revisor::where('id_revision', $id_revision)->get();
 
-        if ($revisores->isEmpty()) {
-            return response()->json(['message' => 'El registro no fue encontrado.'], 404);
-        }
+            if ($revisores->isEmpty()) {
+                return response()->json(['message' => 'El registro no fue encontrado.'], 404);
+            }
 
-        // Cargar todas las preguntas una vez para optimizar
-        $todasPreguntas = preguntas_revision::all()->keyBy('id_pregunta');
+            // Cargar todas las preguntas una vez para optimizar
+            $todasPreguntas = preguntas_revision::all()->keyBy('id_pregunta');
 
-        $historialFormateado = [];
+            $historialFormateado = [];
 
-        foreach ($revisores as $revisor) {
-            $respuestasPorRevision = json_decode($revisor->respuestas, true) ?? [];
+            foreach ($revisores as $revisor) {
+                $respuestasPorRevision = json_decode($revisor->respuestas, true) ?? [];
 
-            $formatoFinal = [];
+                $formatoFinal = [];
 
-            foreach ($respuestasPorRevision as $nombreRevision => $respuestas) {
-                $formatoRespuestas = [];
+                foreach ($respuestasPorRevision as $nombreRevision => $respuestas) {
+                    $formatoRespuestas = [];
 
-                foreach ($respuestas as $r) {
-                    $pregunta = $todasPreguntas[$r['id_pregunta']] ?? null;
+                    foreach ($respuestas as $r) {
+                        $pregunta = $todasPreguntas[$r['id_pregunta']] ?? null;
 
-                    $formatoRespuestas[] = [
-                        'id_pregunta' => $r['id_pregunta'],
-                        'pregunta' => $pregunta->pregunta ?? 'Pregunta no encontrada',
-                        'respuesta' => $r['respuesta'] ?? null,
-                        'observacion' => $r['observacion'] ?? null,
+                        $formatoRespuestas[] = [
+                            'id_pregunta' => $r['id_pregunta'],
+                            'pregunta' => $pregunta->pregunta ?? 'Pregunta no encontrada',
+                            'respuesta' => $r['respuesta'] ?? null,
+                            'observacion' => $r['observacion'] ?? null,
+                        ];
+                    }
+
+                    $formatoFinal[] = [
+                        'nombre_revision' => $nombreRevision,
+                        'respuestas' => $formatoRespuestas,
                     ];
                 }
 
-                $formatoFinal[] = [
-                    'nombre_revision' => $nombreRevision,
-                    'respuestas' => $formatoRespuestas,
+                $historialFormateado[] = [
+                    'revision' => $revisor->id_revision,
+                    'respuestas' => $formatoFinal,
                 ];
             }
 
-            $historialFormateado[] = [
-                'revision' => $revisor->id_revision,
-                'respuestas' => $formatoFinal,
-            ];
+            return response()->json([
+                'message' => 'Historial de respuestas recuperado exitosamente.',
+                'respuestas' => $historialFormateado,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ocurrió un error al cargar el historial: ' . $e->getMessage(),
+            ], 500);
         }
-
-        return response()->json([
-            'message' => 'Historial de respuestas recuperado exitosamente.',
-            'respuestas' => $historialFormateado,
-        ], 200);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Ocurrió un error al cargar el historial: ' . $e->getMessage(),
-        ], 500);
     }
-}
 }//end

@@ -71,6 +71,16 @@
                         @if ($datos->observaciones)
                             <p><strong>Observaciones:</strong> {{ $datos->observaciones }}</p>
                         @endif
+                        @if (!empty($datos->evidencias) && count($datos->evidencias) > 0)
+                            @foreach ($datos->evidencias as $evidencia)
+                                @if (!empty($evidencia))
+                                    <b>{{ $evidencia->nombre_documento }}</b>
+                                    <a target="_blank" href="/storage/revisiones/{{ $evidencia->url }}">
+                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                    </a>
+                                @endif
+                            @endforeach
+                        @endif
 
                     </div>
                     <div>
@@ -424,6 +434,14 @@
                                                     <span class="text-muted">Sin corrugado</span>
                                                 @endif
                                             </td>
+                                        @elseif($pregunta->filtro == 'dictamen_exportacion')
+                                            <td>
+                                                <a target="_blank"
+                                                    href="/dictamen_exportacion/{{ $datos->certificado->id_certificado ?? 'N/A' }}">
+                                                    <i
+                                                        class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>
+                                            </td>
                                         @else
                                             <td>Sin datos</td>
                                         @endif
@@ -458,8 +476,8 @@
                                         </div>-->
 
             <div class="d-flex justify-content-center mt-3">
-                <button type="submit" class="btn btn-primary me-2 waves-effect waves-light">Registrar revisión</button>
-                <a href="/revision/personal" class="btn btn-outline-danger waves-effect">Cancelar</a>
+                <button type="submit" class="btn btn-primary me-2 waves-effect waves-light"><i class="ri-add-line"></i> Registrar {{ $datos->numero_revision }}ª revisión</button>
+                <a href="/revision/personal" class="btn btn-danger waves-effect"><i class="ri-close-line"></i>Cancelar</a>
             </div>
 
         </div>
