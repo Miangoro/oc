@@ -53,6 +53,8 @@ class DomiciliosController extends Controller
             $empresaId = null;
         }
 
+        dd($empresaId);
+
         $totalData = instalaciones::whereHas('empresa', function ($query) use ($empresaId) {
             $query->where('tipo', 2);
 
