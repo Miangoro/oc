@@ -626,6 +626,7 @@ $respuestas = collect(array_merge(
         $numero_cliente = $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar';
 
         $pdfData = [
+            'numero_revision' =>$revisor->numero_revision,
             'num_certificado' => $revisor->certificado->num_certificado,
             'tipo_certificado' => $tipo_certificado,
             'decision' => $decision,

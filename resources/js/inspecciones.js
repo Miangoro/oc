@@ -138,7 +138,7 @@ $(function () {
                         data-bs-target="#mostrarPdf"
                         data-bs-toggle="modal"
                         data-bs-dismiss="modal"
-                        data-id="/files/${cliente}/${acta}"
+                        data-id="/files/${cliente}/actas/${acta}"
                         data-registro="${razon}">
                      </i>`;
           } else {

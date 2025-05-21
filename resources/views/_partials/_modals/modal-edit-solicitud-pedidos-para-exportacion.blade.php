@@ -46,7 +46,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input id="fecha_visita_edit" placeholder="YYYY-MM-DD" class="form-control"
+                                <input id="fecha_visita_edit_exportacion" placeholder="YYYY-MM-DD" class="form-control"
                                     type="datetime-local" name="fecha_visita" />
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
@@ -91,7 +91,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <input type="file" class="form-control" id="factura_proforma"
+                                        <input type="file" class="form-control" id="factura_proforma_edit"
                                             name="factura_proforma">
                                         <input type="hidden" name="id_documento_factura" value="55">
                                         <input type="hidden" name="nombre_documento_factura" value="Factura proforma">
@@ -100,7 +100,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <input type="file" class="form-control" id="factura_proforma_cont"
+                                        <input type="file" class="form-control" id="factura_proforma_cont_edit"
                                             name="factura_proforma_cont">
                                         <input type="hidden" name="id_documento_factura_cont" value="55">
                                         <input type="hidden" name="nombre_documento_factura_cont"
@@ -183,10 +183,10 @@
 
                     <!-- Botones -->
                     <div id="botones_characteristics" class="d-none">
-                        <button type="button" id="add-characteristics" class="btn btn-primary btn-sm mt-1">
+                        <button type="button" id="add-characteristics_edit" class="btn btn-primary btn-sm mt-1">
                             <i class="ri-add-line"></i> Agregar Tabla
                         </button>
-                        <button type="button" id="delete-characteristics"
+                        <button type="button" id="delete-characteristics_edit"
                             class="btn btn-danger btn-sm mt-1 float-end">
                             <i class="ri-delete-bin-6-fill"></i> Eliminar tabla
                         </button>
@@ -220,7 +220,7 @@
                     <!-- Sección: Elegir Etiquetas y Corrugados -->
                     <div class="card mt-4" id="etiquetas_Ex">
                         <div class="card-body table-responsive text-nowrap">
-                            <h6 id="encabezado_etiquetas">Elegir Etiquetas y Corrugados</h6>
+                            <h6 id="encabezado_etiquetas_edit">Elegir Etiquetas y Corrugados</h6>
                             <table class="table table-striped small table-sm" id="tabla_marcas">
                                 <thead>
                                     <tr>
@@ -255,7 +255,7 @@
                     <input type="text" class="lote_envasado_id">
                     <input type="hidden" class="etiqueta_id">
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="submit" class="btn btn-primary" id="btnEditExport"><i class="ri-pencil-fill"></i> Editar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
@@ -479,7 +479,7 @@
                     if (response.lote_envasado) {
                         $(".presentacion").val(response.lote_envasado.presentacion + " " + response
                             .lote_envasado.unidad);
-
+                        $("#cantidad_botellas0").val(response.lote_envasado.cant_botellas);
                         let filaEnvasado = `
                         <tr>
                             <td>1</td>
@@ -576,7 +576,7 @@
 
                     // Verificar si hay datos disponibles
                     if (marcas.length > 0 && marcas[0].destinos.length > 0) {
-                        $("#encabezado_etiquetas").text(marcas[0].destinos[0].direccion);
+                        $("#encabezado_etiquetas_edit").text(marcas[0].destinos[0].direccion);
                     }
 
                     tbody = "";

@@ -138,7 +138,7 @@ if (dt_user_table.length) {
           }else {
             //var $acta = `<i data-id="${full['numero_cliente']}/${full['url_acta']}" data-empresa="${full['razon_social']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
             var $acta = full['url_acta'].map(url => `
-              <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
+              <i data-id="${full['numero_cliente']}/actas/${url}" data-empresa="${full['razon_social']}"
                  class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
                  data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
               </i>

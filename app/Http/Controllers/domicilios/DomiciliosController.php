@@ -44,11 +44,24 @@ class DomiciliosController extends Controller
         ];
 
         $search = [];
+
       
 
-        $totalData = instalaciones::whereHas('empresa', function ($query) {
+        if (auth()->user()->tipo == 3) {
+            $empresaId = auth()->user()->empresa?->id_empresa;
+        } else {
+            $empresaId = null;
+        }
+        
+
+        $totalData = instalaciones::whereHas('empresa', function ($query) use ($empresaId) {
             $query->where('tipo', 2);
+
+            if ($empresaId) {
+                $query->where('id_empresa', $empresaId);
+            }
         })->count();
+
 
         $totalFiltered = $totalData;
 
@@ -59,8 +72,12 @@ class DomiciliosController extends Controller
 
         if (empty($request->input('search.value'))) {
             $instalaciones = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
-                ->whereHas('empresa', function ($query) {
+                ->whereHas('empresa', function ($query) use ($empresaId) {
                     $query->where('tipo', 2);
+
+                    if ($empresaId) {
+                            $query->where('id_empresa', $empresaId);
+                        }
                 })
                 ->offset($start)
                 ->limit($limit)
@@ -69,8 +86,12 @@ class DomiciliosController extends Controller
         } else {
             $search = $request->input('search.value');
             $instalaciones = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
-                ->whereHas('empresa', function ($query) {
+                ->whereHas('empresa', function ($query)  use($empresaId){
                     $query->where('tipo', 2);
+
+                    if ($empresaId) {
+                        $query->where('id_empresa', $empresaId);
+                    }
                 })
                 ->where(function ($query) use ($search) {
                     
@@ -96,6 +117,7 @@ class DomiciliosController extends Controller
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
+       
 
             $totalFiltered = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
                 ->whereHas('empresa', function ($query) {
@@ -118,9 +140,11 @@ class DomiciliosController extends Controller
                         ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
                         ->orWhere('folio', 'LIKE', "%{$search}%")
                         ->orWhere('tipo', 'LIKE', "%{$search}%");
+                        
                     
                 })
                 ->count();
+
         }
 
         $data = [];
