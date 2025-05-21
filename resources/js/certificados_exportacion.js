@@ -101,8 +101,8 @@ $(function () {
 
 
 
-  ///FUNCIONALIDAD DE LA VISTA datatable
-  if (dt_user_table.length) {
+///FUNCIONALIDAD DE LA VISTA datatable
+if (dt_user_table.length) {
     var dataTable = dt_user_table.DataTable({
       processing: true,
       serverSide: true,
@@ -372,9 +372,9 @@ $(function () {
         }
       },
 
-      // Opciones Exportar Documentos
+      // Opciones NUEVO/FIRMAR/EXPORTAR/exportar default
       buttons: [
-        {
+        /*{
           extend: 'collection',
           className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
           text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
@@ -518,7 +518,8 @@ $(function () {
               }
             }
           ]
-        },
+        },*///BOTONES EXPORTAR
+
         {
           text: '<i class="ri-file-excel-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
           className: 'btn btn-primary waves-effect waves-light me-2',
@@ -528,7 +529,6 @@ $(function () {
             'data-bs-target': '#exportarExcelCertificados'
           }
         },
-
         {
           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Firmar Docusign</span>',
           className: 'btn btn-info waves-effect waves-light me-2',
@@ -536,7 +536,6 @@ $(function () {
             window.location.href = '/add_firmar_docusign';
           }
         },
-
         {
           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Certificado</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
@@ -585,7 +584,7 @@ $(function () {
       }
 
 
-    });
+    });//var DataTable
 
     $(document).ready(function () {
       $('#reporteForm').on('submit', function (e) {
@@ -648,7 +647,6 @@ $(function () {
       });
     });
 
-
     $(document).ready(function () {
       $('#restablecerFiltros').on('click', function () {
         $('#reporteForm')[0].reset();
@@ -656,7 +654,8 @@ $(function () {
         console.log('Filtros restablecidos.');
       });
     });
-  }// end-datatable
+
+}// end-datatable
 
 
 
