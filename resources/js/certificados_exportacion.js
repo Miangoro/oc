@@ -169,7 +169,7 @@ if (dt_user_table.length) {
               var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
             } else {
               var $acta = full['url_acta'].map(url => `
-                <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
+                <i data-id="${full['numero_cliente']}/actas/${url}" data-empresa="${full['razon_social']}"
                    class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
                    data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
                 </i>
