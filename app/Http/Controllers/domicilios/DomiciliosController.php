@@ -52,8 +52,7 @@ class DomiciliosController extends Controller
         } else {
             $empresaId = null;
         }
-
-        dd($empresaId);
+        
 
         $totalData = instalaciones::whereHas('empresa', function ($query) use ($empresaId) {
             $query->where('tipo', 2);
@@ -73,8 +72,12 @@ class DomiciliosController extends Controller
 
         if (empty($request->input('search.value'))) {
             $instalaciones = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
-                ->whereHas('empresa', function ($query) {
+                ->whereHas('empresa', function ($query) use ($empresaId) {
                     $query->where('tipo', 2);
+
+                    if ($empresaId) {
+                            $query->where('id_empresa', $empresaId);
+                        }
                 })
                 ->offset($start)
                 ->limit($limit)
@@ -83,8 +86,12 @@ class DomiciliosController extends Controller
         } else {
             $search = $request->input('search.value');
             $instalaciones = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
-                ->whereHas('empresa', function ($query) {
+                ->whereHas('empresa', function ($query)  use($empresaId){
                     $query->where('tipo', 2);
+
+                    if ($empresaId) {
+                        $query->where('id_empresa', $empresaId);
+                    }
                 })
                 ->where(function ($query) use ($search) {
                     
@@ -110,9 +117,7 @@ class DomiciliosController extends Controller
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
-             if ($empresaId) {
-                $instalaciones->where('id_empresa',$empresaId);
-             }
+       
 
             $totalFiltered = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
                 ->whereHas('empresa', function ($query) {
@@ -140,9 +145,6 @@ class DomiciliosController extends Controller
                 })
                 ->count();
 
-                 if ($empresaId) {
-                $totalFiltered->where('id_empresa', $empresaId);
-            }
         }
 
         $data = [];
