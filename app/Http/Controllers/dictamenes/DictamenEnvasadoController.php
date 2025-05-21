@@ -408,8 +408,30 @@ public function MostrarDictamenEnvasado($id_dictamen)
     if($data->id_firmante == 14){ //Mario
         $pass = 'v921009villa';
     }
-    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccion?->num_servicio, $pass, $data->id_firmante);
-    
+  $firmaDigital = Helpers::firmarCadena(
+    $data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccion?->num_servicio,
+    $pass,
+    $data->id_firmante
+);
+
+// 📌 Convertir JsonResponse en array válido
+if ($firmaDigital instanceof JsonResponse) {
+    $firmaDigitalArray = json_decode($firmaDigital->getContent(), true) ?? [];
+
+    if (isset($firmaDigitalArray['error'])) {
+        Log::error('Error en la firma digital: ' . $firmaDigitalArray['error']);
+        $firmaDigital = [
+            'cadena_original' => 'No disponible',
+            'firma' => 'Error al generar firma'
+        ]; 
+    } else {
+        $firmaDigital = $firmaDigitalArray; // ✅ Ahora es un array accesible en el Blade
+    }
+}
+
+// Depuración: Ver qué contiene firmaDigital antes de pasarlo a Blade
+
+
     $loteEnvasado = $data->lote_envasado ?? null;
     $marca = $loteEnvasado ? $loteEnvasado->marca : null;
     $lotesGranel = $loteEnvasado ? $loteEnvasado->lotesGranel : collect(); // Si no hay, devuelve una colección vacía
