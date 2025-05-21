@@ -21,6 +21,7 @@ use App\Models\Documentacion_url;
 use Illuminate\Support\Facades\Mail; 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 
 class Certificado_GranelController extends Controller
@@ -39,16 +40,16 @@ class Certificado_GranelController extends Controller
     
 public function index(Request $request)
 {
-    //DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
+    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
 
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
         0 => '',               
         1 => 'num_certificado',
-        2 => 'num_dictamen',
+        2 => 'folio',
         3 => 'razon_social', 
         4 => '', 
-        5 => 'certificados_granel.fecha_emision',
+        5 => 'fecha_emision',
         6 => 'estatus',            
         7 => '',// acciones
     ];

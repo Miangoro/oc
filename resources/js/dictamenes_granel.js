@@ -226,7 +226,7 @@ if (dt_user_table.length) {
       }
     ],
 
-    order: [[2, 'desc']],
+    order: [[1, 'desc']],
     dom:
       '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
       '<"me-5 ms-n2"f>' +

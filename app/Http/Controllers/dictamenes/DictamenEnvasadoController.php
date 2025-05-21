@@ -51,110 +51,88 @@ class DictamenEnvasadoController extends Controller
 
     public function index(Request $request)
     {
-        $columns = [
-            1 => 'id_dictamen_envasado',
-            2 => 'id_inspeccion',
-            3 => '',
-            4 => '',
-            5 => 'fecha_emision',
-            6 => 'estatus',
-        ];
-     $empresaId = null;
-      if (auth()->check() && auth()->user()->tipo == 3) {
-          $empresaId = auth()->user()->empresa?->id_empresa;
-      }
+        DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
 
-        $search = $request->input('search.value');
-        /* $totalData = Dictamen_envasado::count(); */
-                         $totalData = Dictamen_envasado::when($empresaId, function ($q) use ($empresaId) {
-            $q->whereHas('inspeccion.solicitud.empresa', function ($q2) use ($empresaId) {
-              $q2->where('id_empresa', $empresaId);
-              });
-              })->count();
-        $totalFiltered = $totalData;
+    // Mapear las columnas según el orden DataTables (índice JS)
+    $columns = [
+        0 => '',               
+        1 => 'num_dictamen',
+        2 => 'folio', //nombre de mi tabla y atributo
+        3 => 'razon_social', 
+        4 => '', //caracteristicas
+        5 => 'fecha_emision',
+        6 => 'estatus',            
+        7 => '',// acciones
+    ];
 
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
-        /*$order = $columns[$request->input('order.0.column')] ?? 'id_dictamen_envasado';
-        $dir = $request->input('order.0.dir', 'asc');
+    $totalData = Dictamen_Envasado::count();
+    $totalFiltered = $totalData;
 
-        $query = dictamen_envasado::with(['inspeccion', 'empresa', 'lote_envasado']);
-        if (!empty($search)) {
-            $query = $query->where(function ($q) use ($search) {
-                $q->where('id_dictamen_envasado', 'LIKE', "%{$search}%")
-                    ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-                    ->orWhereHas('empresa', function ($q) use ($search) {
-                        $q->where('razon_social', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('inspeccion', function ($q) use ($search) {
-                        $q->where('num_servicio', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('lote_envasado', function ($q) use ($search) {
-                        $q->where('nombre_lote', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhere('estatus', 'LIKE', "%{$search}%");
-            });
-            $totalFiltered = $query->count();
-        }*/
+    $limit = $request->input('length');
+    $start = $request->input('start');
 
-        $order = isset($columns[$order]) ? $columns[$order] : 'id_dictamen_envasado';//Por defecto ordenar por 'id_dictamen'
+    // Columnas ordenadas desde DataTables
+    $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
+    $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
+    $orderColumn = $columns[$orderColumnIndex] ?? 'num_dictamen'; // Por defecto
+    
+    $search = $request->input('search.value');//Define la búsqueda global.
 
-        // Si el índice de la columna es 2 (id_inspeccion), ignoramos la ordenación
-        if ($order === 'id_inspeccion') {
-            $order = 'id_dictamen_envasado';  // Cambiar a id_dictamen si la columna es id_inspeccion
-        }
 
-        /* $query = Dictamen_envasado::with(['inspeccion.solicitud.empresa']); */
-                //Declara la relacion
-        $query = Dictamen_envasado::with(['inspeccion.solicitud.empresa'])
-    ->when($empresaId, function ($q) use ($empresaId) {
-        $q->whereHas('inspeccion.solicitud.empresa', function ($q2) use ($empresaId) {
-            $q2->where('id_empresa', $empresaId);
+    $query = Dictamen_Envasado::query()
+    ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_envasado.id_inspeccion')
+    ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+    ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+    ->select('dictamenes_envasado.*', 'empresa.razon_social');
+
+
+    // Búsqueda Global
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('dictamenes_envasado.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhereRaw("DATE_FORMAT(dictamenes_envasado.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
         });
-    });
 
 
-        //Buscador
-        if (!empty($search)) {
-            $query = $query->where(function ($q) use ($search) {
-                $q->where('id_dictamen_envasado', 'LIKE', "%{$search}%")
-                    ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-                    ->orWhere('estatus', 'LIKE', "%{$search}%")
-                    //empresa
-                    ->orWhereHas('inspeccion.solicitud.empresa', function ($q) use ($search) {
-                        $q->where('razon_social', 'LIKE', "%{$search}%");
-                    })
-                    //inspecciones
-                    ->orWhereHas('inspeccion', function ($q) use ($search) {
-                        $q->where('num_servicio', 'LIKE', "%{$search}%")
-                        ->orWhere('id_inspeccion', 'LIKE', "%{$search}%");
-                    })
-                    //num-cliente
-                    ->orWhereHas('inspeccion.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
-                        $q->where('numero_cliente', 'LIKE', "%{$search}%");
-                    })
-                    //solicitudes
-                    ->orWhereHas('inspeccion.solicitud', function ($q) use ($search) {
-                        $q->where('folio', 'LIKE', "%{$search}%")
-                        ->orWhere('caracteristicas', 'LIKE', "%{$search}%");
-                    });
-            });
-            // Calcular el total filtrado
-            $totalFiltered = $query->count();
-        }
+        $totalFiltered = $query->count();
+    }
 
-        $res = $query->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir)
-            ->get();
+    // Ordenamiento especial para num_certificado con formato 'UME-###'
+    if ($orderColumn === 'num_dictamen') {
+        $query->orderByRaw("
+            CASE
+                WHEN num_dictamen LIKE 'UME-%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(
+                SUBSTRING_INDEX(
+                    SUBSTRING(num_dictamen, LOCATE('UME-', num_dictamen) + 4),
+                    '-', 1
+                ) AS UNSIGNED
+            ) $orderDirection
+        ");
+    } elseif (!empty($orderColumn)) {
+        $query->orderBy($orderColumn, $orderDirection);
+    }
 
+    // Paginación
+    $dictamenes = $query
+        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
+            'inspeccion',// Relación anidada: dictamen > inspeccione
+            'inspeccion.solicitud',// dictamen > inspeccione > solicitud
+            // solicitud > empresa > empresaNumClientes
+            'inspeccion.solicitud.empresa',
+            'inspeccion.solicitud.empresa.empresaNumClientes',
+        ])->offset($start)->limit($limit)->get();
 
+    
         //MANDA LOS DATOS AL JS
         $data = [];
-        if (!empty($res)) {
-            foreach ($res as $dictamen) {
+        if (!empty($dictamenes)) {
+            foreach ($dictamenes as $dictamen) {
                 $nestedData['id_dictamen_envasado'] = $dictamen->id_dictamen_envasado ?? 'No encontrado';
                 $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
                 $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
