@@ -530,7 +530,7 @@
 
 <div style="clear: both;"></div> 
 
-@if($numero_revision == 'segunda')
+@if($numero_revision == 2)
 
   <table style="width: 340px; float: right; margin-top: -100px;">
         <tr>

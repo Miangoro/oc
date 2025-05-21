@@ -19,6 +19,10 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+//Clase de exportacion
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CertificadosExport;
+
 
 
 class Certificado_ExportacionController extends Controller
@@ -223,6 +227,19 @@ public function index(Request $request)
         'code' => 200,
         'data' => $data,
     ]);
+}
+
+
+
+public function exportar(Request $request)
+{
+    try {
+        $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes']);
+        return Excel::download(new CertificadosExport($filtros), 'reporte_certificados.xlsx');
+    } catch (\Exception $e) {
+        Log::error('Error al generar el reporte: ' . $e->getMessage());
+        return response()->json(['message' => 'Error al generar el reporte. Verifica los filtros e intenta nuevamente.', 'code' => 500]);
+    }
 }
 
 
@@ -703,6 +720,7 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
     //nombre al descargar
     return $pdf->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');
 }
+
 
 
 
