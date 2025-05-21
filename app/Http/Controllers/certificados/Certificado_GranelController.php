@@ -39,146 +39,87 @@ class Certificado_GranelController extends Controller
     
 public function index(Request $request)
 {
+    //DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
+
+    // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
-        1 => 'id_certificado',
-        2 => 'id_dictamen',
-        3 => '',
-        4 => '',
-        5 => 'fechas',
-        6 => 'estatus',
+        0 => '',               
+        1 => 'num_certificado',
+        2 => 'num_dictamen',
+        3 => 'razon_social', 
+        4 => '', 
+        5 => 'certificados_granel.fecha_emision',
+        6 => 'estatus',            
+        7 => '',// acciones
     ];
 
-    $search = $request->input('search.value');
     $totalData = CertificadosGranel::count();
     $totalFiltered = $totalData;
+
     $limit = $request->input('length');
     $start = $request->input('start');
-    $orderIndex = $request->input('order.0.column');
-    $orderDir = $request->input('order.0.dir');
 
-    $order = $columns[$orderIndex] ?? 'id_dictamen';
-    $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
+    // Columnas ordenadas desde DataTables
+    $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
+    $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
+    $orderColumn = $columns[$orderColumnIndex] ?? 'num_certificado'; // Por defecto
+    
+    $search = $request->input('search.value');//Define la búsqueda global.
 
-    $query = CertificadosGranel::with(['dictamen.inspeccione.solicitud.empresa'])
-        ->when($search, function($q, $search) {
-        $q->orWhere('id_firmante', 'LIKE', "%{$search}%")
-            ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
-            ->orWhere('num_certificado', 'LIKE', "%{$search}%")
-             //empresa
-             ->orWhereHas('dictamen.inspeccione.solicitud.empresa', function ($q) use ($search) {
-                $q->where('razon_social', 'LIKE', "%{$search}%");
-            })
-             //empresa
-             ->orWhereHas('dictamen', function ($q) use ($search) {
-                $q->where('num_dictamen', 'LIKE', "%{$search}%");
-            })
-            //inspecciones
-            ->orWhereHas('dictamen.inspeccione', function ($q) use ($search) {
-                $q->where('num_servicio', 'LIKE', "%{$search}%");
-            })
-            //num-cliente
-            ->orWhereHas('dictamen.inspeccione.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
-                $q->where('numero_cliente', 'LIKE', "%{$search}%");
-            })
-            //solicitudes
-            ->orWhereHas('dictamen.inspeccione.solicitud', function ($q) use ($search) {
-                $q->where('folio', 'LIKE', "%{$search}%")
-                ->orWhere('caracteristicas', 'LIKE', "%{$search}%");
-            })
-            //Lote a granel
-            ->orWhereHas('dictamen.inspeccione.solicitud', function ($q) use ($search) {
-                $q->whereRaw("
-                    EXISTS (
-                        SELECT 1 FROM lotes_granel lg
-                        WHERE lg.id_lote_granel = JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, '$.id_lote_granel'))
-                          AND lg.nombre_lote LIKE ? ) ", ["%{$search}%"]);
-            })
-            ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%");
-    })
-            ->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir);
 
-            $certificados = $query->get();
+    $query = CertificadosGranel::query()
+    ->leftJoin('dictamenes_granel', 'dictamenes_granel.id_dictamen', '=', 'certificados_granel.id_dictamen')
+    ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_granel.id_inspeccion')
+    ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+    ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+    ->select('certificados_granel.*', 'empresa.razon_social');
 
-    if ($search) {
-        $totalFiltered = CertificadosGranel::where('id_firmante', 'LIKE', "%{$search}%")
-            ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
-            ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%")
-            ->orWhere('num_certificado', 'LIKE', "%{$search}%")
-            //empresa
-            ->orWhereHas('dictamen.inspeccione.solicitud.empresa', function ($q) use ($search) {
-                $q->where('razon_social', 'LIKE', "%{$search}%");
-            })
-             //empresa
-             ->orWhereHas('dictamen', function ($q) use ($search) {
-                $q->where('num_dictamen', 'LIKE', "%{$search}%");
-            })
-            //inspecciones
-            ->orWhereHas('dictamen.inspeccione', function ($q) use ($search) {
-                $q->where('num_servicio', 'LIKE', "%{$search}%");
-            })
-            //num-cliente
-            ->orWhereHas('dictamen.inspeccione.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
-                $q->where('numero_cliente', 'LIKE', "%{$search}%");
-            })
-            //solicitudes
-            ->orWhereHas('dictamen.inspeccione.solicitud', function ($q) use ($search) {
-                $q->where('folio', 'LIKE', "%{$search}%")
-                ->orWhere('caracteristicas', 'LIKE', "%{$search}%");
-            })
-            //Lote a granel
-            ->orWhereHas('dictamen.inspeccione.solicitud', function ($q) use ($search) {
-                $q->whereRaw("
-                    EXISTS (
-                        SELECT 1 FROM lotes_granel lg
-                        WHERE lg.id_lote_granel = JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, '$.id_lote_granel'))
-                          AND lg.nombre_lote LIKE ?  ) ", ["%{$search}%"]);
-            })
-            ->count();
+
+    // Búsqueda Global
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('certificados_granel.num_certificado', 'LIKE', "%{$search}%")
+            ->orWhere('dictamenes_granel.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhereRaw("DATE_FORMAT(certificados_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+        });
+
+        $totalFiltered = $query->count();
     }
 
-    /*$data = $certificados->map(function ($certificado) use (&$start) {
-    $empresa = $certificado->dictamen->empresa;
-    $numero_cliente = $empresa ? $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente : 'N/A';
-
-    $lote = $certificado->dictamen->lote_granel;
-    $tipoNombres = 'N/A';
-    if (!empty($lote->id_tipo)) {
-        $idTipos = json_decode($lote->id_tipo, true); // Decodificar JSON
-        if (json_last_error() === JSON_ERROR_NONE && is_array($idTipos)) {
-            $tiposNombres = \App\Models\tipos::whereIn('id_tipo', $idTipos)->pluck('nombre')->toArray();
-            $tipoNombres = !empty($tiposNombres) ? implode(', ', $tiposNombres) : 'Sin coincidencias';
-        } else {
-            $tipoNombres = 'Formato inválido';
-        }
+    // Ordenamiento especial para num_certificado con formato 'CIDAM C-GRA25-###'
+    if ($orderColumn === 'num_certificado') {
+        $query->orderByRaw("
+            CASE
+                WHEN num_certificado LIKE 'CIDAM C-GRA25-%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(
+                SUBSTRING_INDEX(
+                    SUBSTRING(num_certificado, LOCATE('CIDAM C-GRA25-', num_certificado) + 14),
+                    '-', 1
+                ) AS UNSIGNED
+            ) $orderDirection
+        ");
+    } elseif (!empty($orderColumn)) {
+        $query->orderBy($orderColumn, $orderDirection);
     }
 
-    return [
-        'fake_id' => ++$start,
-        'id_certificado' => $certificado->id_certificado,
-        'id_dictamen' => $certificado->dictamen->num_dictamen ?? 'N/A',
-        'id_firmante' => $certificado->user->name ?? 'N/A',
-        'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
-        'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-        'num_certificado' => $certificado->num_certificado,
-        'razon_social' => $empresa->razon_social ?? 'N/A',
-        'numero_cliente' => $numero_cliente,
-        'id_revisor' => $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar',
-        'id_revisor2' => $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar',
-        'estatus' => $certificado->estatus,
+    // Paginación
+    $certificados = $query
+        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
+            'dictamen',// Relación directa
+            'dictamen.inspeccione',// Relación anidada: dictamen > inspeccione
+            'dictamen.inspeccione.solicitud',
+            'dictamen.inspeccione.solicitud.empresa',
+            'dictamen.inspeccione.solicitud.empresa.empresaNumClientes',
+            'revisorPersonal.user',
+            'revisorConsejo.user',
+        ])->offset($start)->limit($limit)->get();
 
-        // Datos del Certificado
-        'clase' => $certificado->dictamen->lote_granel->clase->clase ?? 'N/A',
-        'ingredientes' => $certificado->dictamen->lote_granel->ingredientes ?? 'N/A',
-        'tipo' => $tipoNombres, // Incluye los nombres de los tipos
-        'lote' => $certificado->dictamen->lote_granel->nombre_lote ?? 'N/A',
-        'volumen' => $certificado->dictamen->lote_granel->volumen ?? 'N/A',
-        'edad' => $certificado->dictamen->lote_granel->edad ?? 'N/A',
-        'analisis' => $certificado->dictamen->lote_granel->folio_fq ?? 'N/A',
-        'cont_alc' => $certificado->dictamen->lote_granel->cont_alc ?? 'N/A',
-    ];
-    });*/
+    
     $data = [];
     if (!empty($certificados)) {
         foreach ($certificados as $certificado) {
