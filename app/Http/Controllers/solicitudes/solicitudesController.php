@@ -24,6 +24,7 @@ use App\Models\tipos;
 use App\Models\marcas;
 use App\Models\guias;
 use App\Models\Destinos;
+use App\Models\BitacoraMezcal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 //clase de exportacion
@@ -53,7 +54,7 @@ class solicitudesController extends Controller
     }
     public function findCertificadosExportacion()
 {
-    $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); 
+    $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get();
     return view('certificados.find_certificados_exportacion', compact('empresas'));
 }
 
@@ -474,6 +475,47 @@ class solicitudesController extends Controller
         ]);
 
         $VigilanciaTras->save();
+          // Crear nuevo registro en la Bitácora de Mezcal
+          $bitacora = new BitacoraMezcal();
+          $bitacora->fecha = now(); // o $request->fecha_visita si aplica
+          $bitacora->id_tanque = $request->id_contenedor;
+          $bitacora->lote_a_granel = $request->id_lote_granel_traslado;
+          // inicial
+          $bitacora->volumen_inicial = $request->id_vol_actual ?? 0;
+          $bitacora->alcohol_inicial = $request->volumen_traslado ?? 0;
+
+          // Entrada
+          $bitacora->procedencia_entrada = 0;
+          $bitacora->volumen_entrada = $request->volumen_entrada ?? 0;
+          $bitacora->alcohol_entrada = $request->volumen_traslado ?? 0;
+          $bitacora->agua_entrada = 0;
+
+          // Salida
+          $bitacora->volumen_salidas = $request->id_vol_traslado ?? 0;
+          $bitacora->alcohol_salidas = $request->volumen_traslado ?? 0;
+          $bitacora->destino_salidas = $request->instalacion_vigilancia;
+
+          // Inventario Final
+          $bitacora->volumen_final = $request->id_vol_res ?? 0;
+          $bitacora->alcohol_final = $request->volumen_traslado ?? 0;
+
+          // Otros campos opcionales
+          $bitacora->categoria = $request->id_categoria_traslado ?? null;
+          $bitacora->clase = $request->id_clase_traslado ?? null;
+
+          // ✅ Esta es la línea que debes cambiar:
+          $bitacora->tipo_agave = is_array($request->id_tipo_maguey_traslado)
+              ? implode(', ', $request->id_tipo_maguey_traslado)
+              : $request->id_tipo_maguey_traslado;
+
+          $bitacora->num_analisis = $request->analisis_traslado ?? null;
+          $bitacora->num_certificado = $request->id_certificado_traslado ?? null;
+          $bitacora->observaciones = "Registro automático desde vigilancia en traslado.";
+
+
+          $bitacora->save();
+
+
 
         $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
 

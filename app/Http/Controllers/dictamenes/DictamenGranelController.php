@@ -169,7 +169,7 @@ class DictamenGranelController extends Controller  {
                 $caracteristicas = json_decode($dictamen->inspeccione->solicitud->caracteristicas, true);
                 $idLoteGranel = $caracteristicas['id_lote_granel'] ?? null;
                 $loteGranel = LotesGranel::find($idLoteGranel); // Busca el lote a granel
-                $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
+                $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'No encontrado';
                 $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
                 
 

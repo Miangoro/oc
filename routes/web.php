@@ -858,7 +858,7 @@ Route::get('/bitacora_hologramas', [CartaAsignacionController::class, 'BitacoraH
 // BitacoraMezcal
 Route::get('/bitacoraMezcal', [BitacoraMezcalController::class, 'UserManagement'])->name('bitacora-mezcal');
 Route::resource('/bitacoraMezcal-list', BitacoraMezcalController::class);
-Route::get('/bitacora_mezcal/{id}', [BitacoraMezcalController::class, 'PDFBitacoraMezcal']);
+Route::get('/bitacora_mezcal', [BitacoraMezcalController::class, 'PDFBitacoraMezcal']);
 
 // BitacoraMaduracion
 Route::get('/bitacoraProductoMaduracion', [BitacoraProductoMaduracionController::class, 'UserManagement'])->name('bitacoraProductoMaduracion');

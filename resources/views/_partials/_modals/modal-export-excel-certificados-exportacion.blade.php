@@ -18,7 +18,7 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <select name="id_empresa" class="select2 form-select">
                                     <option value="">Todos</option>
-                                    @foreach ($empresas as $empresa)
+                                    @foreach ($empresa as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">
                                             {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
                                             | {{ $empresa->razon_social }}

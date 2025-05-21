@@ -147,6 +147,8 @@ $(function () {
         },
         {
           targets: 1,
+          orderable: true,
+          searchable: true,
           render: function (data, type, full, meta) {
             var $num_certificado = full['num_certificado'];
             var $id = full['id_certificado'];
@@ -346,7 +348,7 @@ $(function () {
         }
       ],
 
-      order: [[2, 'desc']],
+      order: [[1, 'desc']],//por defecto ordene por num_certificado (index 1)
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' +

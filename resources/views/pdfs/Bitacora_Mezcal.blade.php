@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +14,8 @@
         table-layout: fixed;
     }
 
-    th, td {
+    th,
+    td {
         border: 1px solid;
         padding: 8px;
         text-align: center;
@@ -41,7 +43,8 @@
         font-size: 18px;
     }
 
-    tr.text-title td, tr.text-title th {
+    tr.text-title td,
+    tr.text-title th {
         padding: 2px;
         text-align: center;
         font-size: 5px;
@@ -54,23 +57,33 @@
     }
 
     .pie {
-            text-align: right;
-            font-size: 12px;
-            line-height: 1;
-            position: fixed;
-            bottom: -40px;
-            left: 0;
-            right: 0;
-            width: calc(100% - 40px);
-            height: 45px;
-            margin-right: 30px;
-            padding: 10px 0;
-            font-family: 'Lucida Sans Unicode';
-            z-index: 1;
-            color: #A6A6A6;
-     }
+        text-align: right;
+        font-size: 12px;
+        line-height: 1;
+        position: fixed;
+        bottom: -40px;
+        left: 0;
+        right: 0;
+        width: calc(100% - 40px);
+        height: 45px;
+        margin-right: 30px;
+        padding: 10px 0;
+        font-family: 'Lucida Sans Unicode';
+        z-index: 1;
+        color: #A6A6A6;
+    }
+
+    tr.bitacora-row td, tr.bitacora-row th {
+        font-size: 5px;
+/*         border: 1px solid #bbb; */
+        padding: 3px 5px;
+        text-align: center;
+        vertical-align: middle;
+        word-wrap: break-word;
+    }
 
 </style>
+
 <body>
     <div class="img">
         <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" class="logo-small">
@@ -79,7 +92,6 @@
     <div>
         <p class="text">INVENTARIO DE MEZCAL A GRANEL</p>
     </div>
-
     <table>
         <tbody>
             <tr class="text-title">
@@ -114,266 +126,39 @@
                 <td>VOLUMEN</td>
                 <td>%ALC.VOL.</td>
             </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            @forelse($bitacoras as $bitacora)
+                <tr class="bitacora-row">
+                    <td>{{ $bitacora->fecha ?? '-' }}</td>
+                    <td>{{ $bitacora->id_tanque ?? '-' }}</td>
+<td>{{ $bitacora->loteBitacora ? $bitacora->loteBitacora->nombre_lote : '-' }}</td>
+                    <td>{{ $bitacora->operacion_adicional ?? '-' }}</td>
+                    <td>{{ $bitacora->categoria ?? '-' }}</td>
+                    <td>{{ $bitacora->clase ?? '-' }}</td>
+                    <td>{{ $bitacora->ingredientes ?? '-' }}</td>
+                    <td>{{ $bitacora->edad ?? '-' }}</td>
+                    <td>{{ $bitacora->tipo_agave ?? '-' }}</td>
+                    <td>{{ $bitacora->num_analisis ?? '-' }}</td>
+                    <td>{{ $bitacora->num_certificado ?? '-' }}</td>
+                    <td>{{ $bitacora->volumen_inicial ?? '-' }}</td>
+                    <td>{{ $bitacora->alcohol_inicial ?? '-' }}</td>
+                    <td>{{ $bitacora->procedencia_entrada ?? '-' }}</td>
+                    <td>{{ $bitacora->volumen_entrada ?? '-' }}</td>
+                    <td>{{ $bitacora->alcohol_entrada ?? '-' }}</td>
+                    <td>{{ $bitacora->agua_entrada ?? '-' }}</td>
+                    <td>{{ $bitacora->volumen_salidas ?? '-' }}</td>
+                    <td>{{ $bitacora->alcohol_salidas ?? '-' }}</td>
+                    <td>{{ $bitacora->destino_salidas ?? '-' }}</td>
+                    <td>{{ $bitacora->volumen_final ?? '-' }}</td>
+                    <td>{{ $bitacora->alcohol_final ?? '-' }}</td>
+                    <td>{{ $bitacora->observaciones ?? '-' }}</td>
+                    <td><!-- Aquí puedes dejar para la firma --></td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="24" class="text-center">No hay datos para mostrar</td>
+                </tr>
+            @endforelse
+
         </tbody>
     </table>
 
@@ -382,4 +167,5 @@
     </div>
 
 </body>
+
 </html>
