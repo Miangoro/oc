@@ -161,7 +161,7 @@ if (dt_user_table.length) {
           //Tabla 2
           targets: 2,
           searchable: true,
-          orderable: true,
+          orderable: false,
           render: function (data, type, full, meta) {
             var $num_servicio = full['num_servicio'];
             var $folio_solicitud = full['folio_solicitud'];
@@ -194,7 +194,7 @@ if (dt_user_table.length) {
         {
           //caracteristicas
           targets: 4,
-          searchable: false,
+          searchable: true,
           orderable: false,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
@@ -229,7 +229,7 @@ if (dt_user_table.length) {
         },
         {
           targets: 6,
-          searchable: true,
+          searchable: false,
           orderable: true,
           className: 'text-center',
           render: function (data, type, full, meta) {

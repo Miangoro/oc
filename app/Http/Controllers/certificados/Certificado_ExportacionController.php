@@ -95,9 +95,10 @@ public function index(Request $request)
         $query->where(function ($q) use ($search) {
             $q->where('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
             ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
-->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
-
+            ->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
         });
 
 
@@ -126,7 +127,7 @@ public function index(Request $request)
     // Paginación
     //1)$certificados = $query->offset($start)->limit($limit)->get();
     $certificados = $query
-        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda de query adicionales en BD)
+        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
             'dictamen',// Relación directa
             'dictamen.inspeccione',// Relación anidada: dictamen > inspeccione
             'dictamen.inspeccione.solicitud',// dictamen > inspeccione > solicitud
