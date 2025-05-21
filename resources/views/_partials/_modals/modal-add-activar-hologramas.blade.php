@@ -244,7 +244,7 @@
                 success: function(response) {
                     // Agregar el enlace dentro de un contenedor específico
                     $('#contenedorActa').html(`
-            <a id="url_acta" target="_blank" href="/files/${response.numero_cliente}/${response.url_acta[0]}">
+            <a id="url_acta" target="_blank" href="/files/${response.numero_cliente}/actas/${response.url_acta[0]}">
                 <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
             </a>
             `);

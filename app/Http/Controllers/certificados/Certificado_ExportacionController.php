@@ -18,9 +18,13 @@ use App\Models\solicitudesModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+<<<<<<< HEAD
 //Clase de exportacion
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CertificadosExport;
+=======
+use Illuminate\Support\Facades\DB;
+>>>>>>> 769e0fc18997dbadcead1b76ed1b04c0efdd9757
 
 
 class Certificado_ExportacionController extends Controller
@@ -45,14 +49,16 @@ class Certificado_ExportacionController extends Controller
 
 public function index(Request $request)
 {
+    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
+
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
         0 => '',               
         1 => 'num_certificado',
         2 => 'dictamenes_exportacion.num_dictamen', //nombre de mi tabla y atributo
-        3 => 'razon_social', //valor unico
-        4 => '', 
-        5 => 'fecha_emision',
+        3 => 'razon_social', 
+        4 => '', //caracteristicas
+        5 => 'certificados_exportacion.fecha_emision',
         6 => 'estatus',            
         7 => '',// acciones
     ];
@@ -65,10 +71,10 @@ public function index(Request $request)
 
     // Columnas ordenadas desde DataTables
     $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
-    $orderColumn = $columns[$orderColumnIndex] ?? 'num_certificado'; // Por defecto
     $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
-
-    $search = $request->input('search.value');
+    $orderColumn = $columns[$orderColumnIndex] ?? 'num_certificado'; // Por defecto
+    
+    $search = $request->input('search.value');//Define la búsqueda global.
 
     //1)$query = Certificado_Exportacion::query();
     /*2)$query = Certificado_Exportacion::select('certificados_exportacion.*')
@@ -80,14 +86,14 @@ public function index(Request $request)
     ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
     ->select('certificados_exportacion.*', 'empresa.razon_social')
-    ->where(function ($q) use ($search) {
+    /*->where(function ($q) use ($search) {
         $q->where('empresa.razon_social', 'LIKE', "%{$search}%")
           ->orWhere('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
           ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%");
-    });
+    })*/;
 
-    // Búsqueda
-    if (!empty($search)) {
+    // Búsqueda Global
+    if (!empty($search)) {//solo se aplica si hay búsqueda global
         /*1)$query->where(function ($q) use ($search) {
             $q->where('num_certificado', 'LIKE', "%{$search}%")
               ->orWhere('id_certificado', 'LIKE', "%{$search}%");
@@ -95,14 +101,16 @@ public function index(Request $request)
         $query->where(function ($q) use ($search) {
             $q->where('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
             ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
-            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%"); // <- aquí se agrega
+            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+
         });
 
 
         $totalFiltered = $query->count();
     }
 
-    // Ordenamiento especial para num_certificado con formato 'CIDAM C-EXP25-####'
+    // Ordenamiento especial para num_certificado con formato 'CIDAM C-EXP25-###'
     if ($orderColumn === 'num_certificado') {
         $query->orderByRaw("
             CASE
@@ -120,9 +128,22 @@ public function index(Request $request)
         $query->orderBy($orderColumn, $orderDirection);
     }
 
-    //dd($query->toSql(), $query->getBindings());
+    //dd($query->toSql(), $query->getBindings());ver que manda
     // Paginación
-    $certificados = $query->offset($start)->limit($limit)->get();
+    //1)$certificados = $query->offset($start)->limit($limit)->get();
+    $certificados = $query
+        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda de query adicionales en BD)
+            'dictamen',// Relación directa
+            'dictamen.inspeccione',// Relación anidada: dictamen > inspeccione
+            'dictamen.inspeccione.solicitud',// dictamen > inspeccione > solicitud
+            // solicitud > empresa > empresaNumClientes
+            'dictamen.inspeccione.solicitud.empresa',
+            'dictamen.inspeccione.solicitud.empresa.empresaNumClientes',
+            // Revisores
+            'revisorPersonal.user',
+            'revisorConsejo.user',
+        ])->offset($start)->limit($limit)->get();
+
     
 
     //MANDA LOS DATOS AL JS

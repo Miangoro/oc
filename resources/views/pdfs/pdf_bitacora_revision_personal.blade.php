@@ -530,6 +530,7 @@
 
 <div style="clear: both;"></div> 
 
+@if($numero_revision == 2)
 
   <table style="width: 340px; float: right; margin-top: -100px;">
         <tr>
@@ -556,7 +557,7 @@
     
         
                 @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
-                    <img style="position: absolute; top: 340px; left: 165; right: 0; margin: 0 auto;" height="50px"
+                    <img style="position: absolute; top: 400px; left: 165; right: 0; margin: 0 auto;" height="50px"
                         src="{{ public_path('storage/' . $firmaPath) }}">
                 @endif
                 DE QUIEN TOMA LA APROBACIÓN</td>
@@ -569,5 +570,6 @@
             </td>
         </tr>
     </table>
+    @endif
 
 </body>

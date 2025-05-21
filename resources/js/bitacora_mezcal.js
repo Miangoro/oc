@@ -88,7 +88,7 @@ $(function () {
               '<span class="small">' + $alcohol_final + '</span>';
           }
         },
-        {
+/*         {
           // Abre el pdf Bitacora
           targets: 5,
           className: 'text-center',
@@ -96,10 +96,10 @@ $(function () {
             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="${full['id']}" data-bs-target="#mostrarPdfDictamen1" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
 
           }
-        },
+        }, */
         {
           // Actions
-          targets: 6,
+          targets: 5,
           title: 'Acciones',
           searchable: false,
           orderable: false,

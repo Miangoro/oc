@@ -319,7 +319,7 @@ class inspeccionesController extends Controller
 
                     // Si existe un registro, elimina el archivo anterior
                     if ($documentacion_url) {
-                        $existingFilePath = 'uploads/' . $numeroCliente . '/' . $documentacion_url->url;
+                        $existingFilePath = 'uploads/' . $numeroCliente . '/actas/' . $documentacion_url->url;
                         if (Storage::disk('public')->exists($existingFilePath)) {
                             Storage::disk('public')->delete($existingFilePath);
                         }
@@ -333,7 +333,7 @@ class inspeccionesController extends Controller
 
                     // Procesar el nuevo archivo
                     $filename = str_replace('/', '-', $request->nombre_documento[$index]) . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+                    $filePath = $file->storeAs('uploads/' . $numeroCliente.'/actas/', $filename, 'public');
 
                     // Actualizar los datos del registro
                     $documentacion_url->nombre_documento = str_replace('/', '-', $request->nombre_documento[$index]);

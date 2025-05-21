@@ -1152,7 +1152,7 @@ $(function () {
 
               modal.find('.id_solicitud').val(id_solicitud);
               modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
-              modal.find('#fecha_visita_edit').val(response.data.fecha_visita);
+              modal.find('#fecha_visita_edit_exportacion').val(response.data.fecha_visita);
               modal.find('.instalacion_id').val(response.data.id_instalacion);
               if (response.caracteristicas) {
                 modal.find('#tipo_solicitud_edit').val(response.caracteristicas.tipo_solicitud).trigger('change');
