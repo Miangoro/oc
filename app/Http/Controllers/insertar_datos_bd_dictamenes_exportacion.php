@@ -66,12 +66,7 @@ class insertar_datos_bd_dictamenes_exportacion extends Controller
                             $id_solicitud = Dictamen_Exportacion::create([
                                 'id_inspeccion'   => $inspecciones->id_inspeccion,
                                
-                                'estatus'   => match ($solicitud['estatus']) {
-                                    "0" => "Emitido",
-                                    "1" => "Cancelado",
-                                    "2" => "Reexpedido",
-                                    default => $solicitud['estatus'], 
-                                },
+                             
                                 'num_dictamen'    => $solicitud['n_certificado'],
                                 'fecha_emision'   => $solicitud['fecha_expedicion'],
                                 'fecha_vigencia'  => $solicitud['fecha_vigencia'],
