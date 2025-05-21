@@ -76,7 +76,19 @@ class solicitudesController extends Controller
 
         $search = [];
 
+        
+        if (auth()->user()->tipo == 3) {
+            $empresaId = auth()->user()->empresa?->id_empresa;
+        } else {
+            $empresaId = null;
+        }
+        
+
         $totalData = solicitudesModel::count();
+        
+        if ($empresaId) {
+            $totalData->where('id_empresa', $empresaId);
+        }
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -93,6 +105,9 @@ class solicitudesController extends Controller
                 ->offset($start)
                 ->limit($limit)
                 ->get();
+              if ($empresaId) {
+                    $solicitudes->where('id_empresa', $empresaId);
+                }
         } else {
             // Consulta con búsqueda
             $search = $request->input('search.value');
