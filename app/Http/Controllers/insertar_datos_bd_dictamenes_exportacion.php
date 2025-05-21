@@ -47,7 +47,7 @@ class insertar_datos_bd_dictamenes_exportacion extends Controller
 
                     if ($inspecciones AND !empty($inspecciones->solicitud->id_instalacion)) {
 
-                        $firma = $solicitud['firma'];
+                        $firma = $solicitud['firma_oc'];
 
                     if ($firma === "../img/Firma Inspector Erik.png") {
                         echo $id_firmante = 9;
