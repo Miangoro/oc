@@ -213,8 +213,8 @@ if (dt_user_table.length) {
         },
         {
           targets: 5,
-          searchable: false,
-          orderable: false,
+          searchable: true,
+          orderable: true,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $fecha_emision = full['fecha_emision'] ?? 'No encontrado';
