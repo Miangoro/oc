@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\Helpers;
 use App\Models\Dictamen_Exportacion;
-use App\Models\inspecciones; 
+use App\Models\inspecciones;
 use App\Models\User;
-use App\Models\empresa; 
+use App\Models\empresa;
 use App\Models\lotes_envasado;
 use App\Models\instalaciones;
 //Extensiones
@@ -38,7 +38,7 @@ class DictamenExportacionController extends Controller
         $inspeccion = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 11);
             })->orderBy('id_inspeccion', 'desc')->get();
-        $users = User::where('tipo',2)->get(); //Solo inspectores 
+        $users = User::where('tipo',2)->get(); //Solo inspectores
         $empresa = empresa::where('tipo', 2)->get(); //solo empresas tipo '2'
 
         // Pasar los datos a la vista
@@ -59,6 +59,7 @@ public function index(Request $request)
     ];
 
     $search = [];
+
     $totalData = Dictamen_Exportacion::count();
     $totalFiltered = $totalData;
 
@@ -66,7 +67,6 @@ public function index(Request $request)
     $start = $request->input('start');
     $order = $columns[$request->input('order.0.column')];
     $dir = $request->input('order.0.dir');
-
 
     if (empty($request->input('search.value'))) {
         // ORDENAR EL BUSCADOR "thead"
@@ -93,7 +93,7 @@ public function index(Request $request)
             ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
             ->count();
     }
-    
+
 
     //MANDA LOS DATOS AL JS
     $data = [];
@@ -248,7 +248,7 @@ public function edit($id_dictamen)
 }
 
 ///FUNCION ACTUALIZAR
-public function update(Request $request, $id_dictamen) 
+public function update(Request $request, $id_dictamen)
 {
     try {
         // Validar los datos del formulario
@@ -304,13 +304,13 @@ public function reexpedir(Request $request)
         $reexpedir = Dictamen_Exportacion::findOrFail($request->id_dictamen);
 
         if ($request->accion_reexpedir == '1') {
-            $reexpedir->estatus = 1; 
+            $reexpedir->estatus = 1;
             // Decodificar el JSON actual
             $observacionesActuales = json_decode($reexpedir->observaciones, true);
             // Actualiza solo 'observaciones' sin modificar 'id_sustituye'
             $observacionesActuales['observaciones'] = $request->observaciones;
             // Volver a codificar el array y asignarlo a $certificado->observaciones
-            $reexpedir->observaciones = json_encode($observacionesActuales); 
+            $reexpedir->observaciones = json_encode($observacionesActuales);
             $reexpedir->save();
 
             return response()->json(['message' => 'Cancelado correctamente.']);
@@ -320,7 +320,7 @@ public function reexpedir(Request $request)
                 $observacionesActuales = json_decode($reexpedir->observaciones, true);
                 $observacionesActuales['observaciones'] = $request->observaciones;
             $reexpedir->observaciones = json_encode($observacionesActuales);
-            $reexpedir->save(); 
+            $reexpedir->save();
 
             // Crear un nuevo registro de reexpedición
             $new = new Dictamen_Exportacion();
@@ -349,7 +349,7 @@ public function reexpedir(Request $request)
 
 
 ///PDF DICTAMEN
-public function MostrarDictamenExportacion($id_dictamen) 
+public function MostrarDictamenExportacion($id_dictamen)
 {
     // Obtener los datos del dictamen
     //$data = Dictamen_Exportacion::with(['inspeccione','inspeccione.solicitud','inspeccione.inspector'])->find($id_dictamen);
@@ -390,7 +390,7 @@ public function MostrarDictamenExportacion($id_dictamen)
         $pass = 'v921009villa';
     }
     $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccione?->num_servicio, $pass, $data->id_firmante);
-    
+
 
     // Verifica qué valor tiene esta variable
     $fecha_emision2 = Helpers::formatearFecha($data->fecha_emision);
@@ -400,7 +400,7 @@ public function MostrarDictamenExportacion($id_dictamen)
     //Obtener un valor específico del JSON
     $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON actual
         ['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
-    $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado 
+    $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado
         //Busca el registro del certificado que tiene el id igual a $id_sustituye
         Dictamen_Exportacion::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
 
@@ -424,7 +424,7 @@ public function MostrarDictamenExportacion($id_dictamen)
             : collect(); // Si no hay IDs, devolvemos una colección vacía
 
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
-        
+
 
     $pdf = Pdf::loadView('pdfs.dictamen_exportacion_ed2', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
@@ -455,7 +455,7 @@ public function MostrarDictamenExportacion($id_dictamen)
 
         'fecha_servicio' => $fecha_servicio,
         'fecha_vigencia' => $fecha_vigencia,
-        
+
     ]);
     //nombre al descarga
     return $pdf->stream('Dictamen de Cumplimiento para Producto de Exportación F-UV-04-18.pdf');
