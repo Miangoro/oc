@@ -37,8 +37,8 @@ class insertar_datos_bd_dictamenes_exportacion extends Controller
                        
                     }*/
                    
-                    if (!empty($solicitud['n_servicio'])) {
-                        $inspecciones = inspecciones::where('num_servicio', $solicitud['n_servicio'])->first();
+                    if (!empty($solicitud['num_servicio'])) {
+                        $inspecciones = inspecciones::where('num_servicio', $solicitud['num_servicio'])->first();
                         
                     } else {
                         $inspecciones = null; // O maneja este caso según corresponda
