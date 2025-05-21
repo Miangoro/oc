@@ -247,7 +247,9 @@ Route::get('files/{filename}', [FileController::class, 'show'])
     ->middleware('auth'); // Middleware para autenticar usuarios
 
     Route::get('files/{carpeta}/{filename}', [FileController::class, 'show2'])
-    ->name('file.show2')
+    ->name('file.show2');
+     Route::get('files/{carpeta}/{carpeta2}/{filename}', [FileController::class, 'show3'])
+    ->name('file.show3')
     ->middleware('auth'); // Middleware para autenticar usuarios
 
 Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');

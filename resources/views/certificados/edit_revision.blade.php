@@ -379,7 +379,7 @@
                                                                     '!=',
                                                                     null,
                                                                 )->numero_cliente .
-                                                                '/' .
+                                                                '/actas/' .
                                                                 $datos->obtenerDocumentoActa($pregunta->id_documento, $datos->certificado->dictamen->inspeccione->id_solicitud)
                                                             : 'NA' }}">
                                                         <i

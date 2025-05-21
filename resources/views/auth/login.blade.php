@@ -406,8 +406,7 @@
                                     </a>
                                 @endif
                             </div>
-                            <button class="btn btn-primary d-grid w-100 border-effect-boton">
-                                Iniciar sesión
+                            <button class="btn btn-primary d-grid w-100 border-effect-boton"><i class="ri-login-box-line"></i> Iniciar sesión
                             </button>
                         </form>
                         <p class="text-center">
