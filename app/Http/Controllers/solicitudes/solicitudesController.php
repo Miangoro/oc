@@ -84,11 +84,14 @@ class solicitudesController extends Controller
         }
         
 
-        $totalData = solicitudesModel::count();
-        
+       $query = solicitudesModel::query();
+
         if ($empresaId) {
-            $totalData->where('id_empresa', $empresaId);
+            $query->where('id_empresa', $empresaId);
         }
+
+        $totalData = $query->count();
+
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
