@@ -119,7 +119,10 @@ class solicitudHolograma extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
+                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)
+    ->whereNotNull('numero_cliente')
+    ->value('numero_cliente');
+
                 
                 $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
                 $name = \App\Models\User::where('id', $user->id_solicitante)->value('name');
