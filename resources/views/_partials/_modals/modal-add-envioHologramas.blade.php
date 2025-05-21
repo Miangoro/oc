@@ -44,13 +44,13 @@
                     <label for="no_guia">No. De guía</label>
                 </div>
 
-                <div class="form-floating form-floating-outline mb-5">
+               <!-- <div class="form-floating form-floating-outline mb-5">
                     <input class="form-control form-control-sm" type="file" name="url[]">
                     <input value="51" class="form-control" type="hidden" name="id_documento[]">
                     <input value="Comprobante de pago de holograma" class="form-control" type="hidden"
                         name="nombre_documento[]">
                     <label for="Comprobante de pago de holograma">Adjuntar Comprobante de Pago</label>
-                </div>
+                </div>-->
 
                 <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                     <button type="submit" class="btn btn-primary">Registrar</button>
