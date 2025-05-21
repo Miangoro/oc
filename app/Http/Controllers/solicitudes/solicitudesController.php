@@ -128,65 +128,86 @@ class solicitudesController extends Controller
             $solicitudes = $query->offset($start)
                 ->limit($limit)
                 ->get();
-        } else {
-            // Consulta con búsqueda
-            $search = $request->input('search.value');
+                        } else {
+                            // Consulta con búsqueda
+                            $search = $request->input('search.value');
 
-            $solicitudes = solicitudesModel::with(['tipo_solicitud', 'empresa', 'instalacion', 'inspeccion.inspector', 'ultima_validacion_oc', 'ultima_validacion_ui'])
-                ->where(function ($query) use ($search, $empresaId) {
-                    $query->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
-                        ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
-                        ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
-                        ->orWhereHas('empresa', function ($q) use ($search) {
-                            $q->where('razon_social', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
-                            $q->where('tipo', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('instalacion', function ($q) use ($search) {
-                            $q->where('direccion_completa', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('inspeccion', function ($q) use ($search) {
-                            $q->where('num_servicio', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('inspeccion.inspector', function ($q) use ($search) {
-                            $q->where('name', 'LIKE', "%{$search}%");
+                            $solicitudes = solicitudesModel::with([
+                        'tipo_solicitud',
+                        'empresa',
+                        'instalacion',
+                        'inspeccion.inspector',
+                        'ultima_validacion_oc',
+                        'ultima_validacion_ui'
+                    ])
+                    ->where(function ($query) use ($search) {
+                        $query->where(function ($q) use ($search) {
+                            $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
+                                ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+                                ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
+                                ->orWhereHas('empresa', function ($q) use ($search) {
+                                    $q->where('razon_social', 'LIKE', "%{$search}%");
+                                })
+                                ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
+                                    $q->where('tipo', 'LIKE', "%{$search}%");
+                                })
+                                ->orWhereHas('instalacion', function ($q) use ($search) {
+                                    $q->where('direccion_completa', 'LIKE', "%{$search}%");
+                                })
+                                ->orWhereHas('inspeccion', function ($q) use ($search) {
+                                    $q->where('num_servicio', 'LIKE', "%{$search}%");
+                                })
+                                ->orWhereHas('inspeccion.inspector', function ($q) use ($search) {
+                                    $q->where('name', 'LIKE', "%{$search}%");
+                                });
                         });
+                    });
 
-                         if ($empresaId) {
-                            $query->where('id_empresa', $empresaId);
-                        }
-                })
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy("solicitudes.id_solicitud", $dir)
-                ->get();
+                if ($empresaId) {
+                    $solicitudes->where('id_empresa', $empresaId);
+                }
 
-            $totalFiltered = solicitudesModel::with(['tipo_solicitud', 'empresa', 'instalacion', 'inspeccion.inspector', 'ultima_validacion_oc', 'ultima_validacion_ui'])
-                ->where(function ($query) use ($search,$empresaId) {
-                    $query->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
-                        ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
-                        ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
-                        ->orWhereHas('empresa', function ($q) use ($search) {
-                            $q->where('razon_social', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
-                            $q->where('tipo', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('instalacion', function ($q) use ($search) {
-                            $q->where('direccion_completa', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('inspeccion', function ($q) use ($search) {
-                            $q->where('num_servicio', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('inspeccion.inspector', function ($q) use ($search) {
-                            $q->where('name', 'LIKE', "%{$search}%");
+                $solicitudes = $solicitudes->offset($start)
+                    ->limit($limit)
+                    ->orderBy("solicitudes.id_solicitud", $dir)
+                    ->get();
+
+
+                            $totalFiltered = solicitudesModel::with('tipo_solicitud',
+                        'empresa',
+                        'instalacion',
+                        'inspeccion.inspector',
+                        'ultima_validacion_oc',
+                        'ultima_validacion_ui')
+                    ->where(function ($query) use ($search) {
+                        $query->where(function ($q) use ($search) {
+                            $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
+                                ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+                                ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
+                                ->orWhereHas('empresa', function ($q) use ($search) {
+                                    $q->where('razon_social', 'LIKE', "%{$search}%");
+                                })
+                                ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
+                                    $q->where('tipo', 'LIKE', "%{$search}%");
+                                })
+                                ->orWhereHas('instalacion', function ($q) use ($search) {
+                                    $q->where('direccion_completa', 'LIKE', "%{$search}%");
+                                })
+                                ->orWhereHas('inspeccion', function ($q) use ($search) {
+                                    $q->where('num_servicio', 'LIKE', "%{$search}%");
+                                })
+                                ->orWhereHas('inspeccion.inspector', function ($q) use ($search) {
+                                    $q->where('name', 'LIKE', "%{$search}%");
+                                });
                         });
-                         if ($empresaId) {
-                            $query->where('id_empresa', $empresaId);
-                        }
-                })
-                ->count();
+                    });
+
+                if ($empresaId) {
+                    $totalFiltered->where('id_empresa', $empresaId);
+                }
+
+                $totalFiltered = $totalFiltered->count();
+
         }
         $data = [];
 
