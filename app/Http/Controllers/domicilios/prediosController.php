@@ -30,7 +30,21 @@ class PrediosController extends Controller
     public function UserManagement()
     {
         $predios = Predios::with('empresa')->get(); // Obtener todos los registros con la relación cargada
-        $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+            $empresaId = null;
+
+    if (auth()->user()->tipo == 3) {
+        $empresaId = auth()->user()->empresa?->id_empresa;
+    }
+
+    $predios = Predios::with('empresa')->get(); // Esto puedes filtrar también si es necesario
+
+    $empresasQuery = empresa::where('tipo', 2);
+
+    if ($empresaId) {
+        $empresasQuery->where('id_empresa', $empresaId);
+    }
+
+    $empresas = $empresasQuery->get();
         $tipos = tipos::all(); // Obtén todos los tipos de agave
         $estados = estados::all(); // Obtén todos los estados
        /*  $documentos = Documentacion::where('id_documento', '=', '34')->get(); */
@@ -61,9 +75,19 @@ class PrediosController extends Controller
 
         $search = [];
 
+        if (auth()->user()->tipo == 3) {
+            $empresaId = auth()->user()->empresa?->id_empresa;
+        } else {
+            $empresaId = null;
+        }
+
+
         // Obtener el total de registros filtrados
-        $totalData = Predios::whereHas('empresa', function ($query) {
+        $totalData = Predios::whereHas('empresa', function ($query)  use ($empresaId) {
             $query->where('tipo', 2);
+                        if ($empresaId) {
+                $query->where('id_empresa', $empresaId);
+            }
         })->count();
 
         $totalFiltered = $totalData;
@@ -75,8 +99,11 @@ class PrediosController extends Controller
 
         if (empty($request->input('search.value'))) {
             $predios = Predios::with('empresa') // Carga la relación
-                ->whereHas('empresa', function ($query) {
+                ->whereHas('empresa', function ($query) use ($empresaId){
                     $query->where('tipo', 2);
+                                        if ($empresaId) {
+                            $query->where('id_empresa', $empresaId);
+                        }
                 })
                 ->offset($start)
                 ->limit($limit)
@@ -86,8 +113,11 @@ class PrediosController extends Controller
             $search = $request->input('search.value');
 
             $predios = Predios::with('empresa')
-                ->whereHas('empresa', function ($query) {
+                ->whereHas('empresa', function ($query) use($empresaId) {
                     $query->where('tipo', 2);
+                    if ($empresaId) {
+                        $query->where('id_empresa', $empresaId);
+                    }
                 })
                 ->where(function ($query) use ($search) {
                     $query->whereHas('empresa', function ($q) use ($search) {

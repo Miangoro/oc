@@ -131,7 +131,7 @@
                                 <div class="row caracteristicas-row">
                                     <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select onchange="cargarDetallesLoteEnvasadoEdit(this.value)" name="lote_envasado[0]"
+                                            <select onchange="cargarDetallesLoteEnvasadoex(this.value)" name="lote_envasado[0]"
                                                 class="select2 form-select evasado_export">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
@@ -150,7 +150,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" class="form-control" name="cantidad_botellas[0]"
+                                            <input type="number" class="form-control cantidad_botellas0" name="cantidad_botellas[0]"
                                                 placeholder="Cantidad de botellas">
                                             <label for="cantidad_botellas">Cantidad de botellas</label>
                                         </div>
@@ -246,7 +246,7 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="submit" class="btn btn-primary" id="btnAddExport"><i class="ri-add-line"></i> Registrar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
@@ -396,7 +396,7 @@
         }
     }
 
-    function cargarDetallesLoteEnvasado(idLoteEnvasado) {
+    function cargarDetallesLoteEnvasadoex(idLoteEnvasado) {
         if (idLoteEnvasado) {
             $.ajax({
                 url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
@@ -411,7 +411,7 @@
                     if (response.lote_envasado) {
                         $(".presentacion").val(response.lote_envasado.presentacion + " " + response
                             .lote_envasado.unidad);
-
+                        $(".cantidad_botellas0").val(response.lote_envasado.cant_botellas);
                         let filaEnvasado = `
                         <tr>
                             <td>1</td>
