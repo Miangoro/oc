@@ -161,7 +161,7 @@ if (dt_user_table.length) {
           //Tabla 2
           targets: 2,
           searchable: true,
-          orderable: true,
+          orderable: false,
           render: function (data, type, full, meta) {
             var $num_servicio = full['num_servicio'];
             var $folio_solicitud = full['folio_solicitud'];
@@ -169,7 +169,7 @@ if (dt_user_table.length) {
               var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
             } else {
               var $acta = full['url_acta'].map(url => `
-                <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
+                <i data-id="${full['numero_cliente']}/actas/${url}" data-empresa="${full['razon_social']}"
                    class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
                    data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
                 </i>
@@ -194,7 +194,7 @@ if (dt_user_table.length) {
         {
           //caracteristicas
           targets: 4,
-          searchable: false,
+          searchable: true,
           orderable: false,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
@@ -229,7 +229,7 @@ if (dt_user_table.length) {
         },
         {
           targets: 6,
-          searchable: true,
+          searchable: false,
           orderable: true,
           className: 'text-center',
           render: function (data, type, full, meta) {

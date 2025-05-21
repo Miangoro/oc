@@ -217,6 +217,7 @@ use App\Http\Controllers\efirma\firmaController;
 use App\Http\Controllers\hologramas\hologramasACtivar;
 use App\Http\Controllers\insertar_datos_bd_actas;
 use App\Http\Controllers\insertar_datos_bd_certificados_granel;
+use App\Http\Controllers\insertar_datos_bd_dictamenes_exportacion;
 use App\Http\Controllers\insertar_datos_bd_dictamenes_graneles;
 use App\Http\Controllers\insertar_datos_bd_lotes_envasado;
 use App\Http\Controllers\permisos\permisosController;
@@ -882,6 +883,7 @@ Route::resource('/bitacoraHologramas-list', BitacoraHologramasController::class)
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
 Route::get('/insertarDictamenesDesdeAPI', [insertar_datos_bd_dictamenes::class, 'insertarDictamenesDesdeAPI'])->name('insertarDictamenesDesdeAPI');
 Route::get('/insertarDictamenesGranelesDesdeAPI', [insertar_datos_bd_dictamenes_graneles::class, 'insertarDictamenesGranelesDesdeAPI'])->name('insertarDictamenesGranelesDesdeAPI');
+Route::get('/insertarDictamenesExportacionDesdeAPI', [insertar_datos_bd_dictamenes_exportacion::class, 'insertarDictamenesExportacionDesdeAPI'])->name('insertarDictamenesExportacionDesdeAPI');
 Route::get('/insertarCertificadosDesdeAPI', [insertar_datos_bd_certificados::class, 'insertarCertificadosDesdeAPI'])->name('insertarCertificadosDesdeAPI');
 Route::get('/insertarCertificadosGranelDesdeAPI', [insertar_datos_bd_certificados_granel::class, 'insertarCertificadosGranelDesdeAPI'])->name('insertarCertificadosGranelDesdeAPI');
 Route::get('/insertarActasDesdeAPI', [insertar_datos_bd_actas::class, 'insertarActasDesdeAPI'])->name('insertarActasDesdeAPI');
@@ -1007,6 +1009,7 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::post('/creaCerExp/reexpedir', [Certificado_ExportacionController::class, 'reexpedir'])->name('cer-expor.reex');
     //Asignar revisor
     Route::post('asignar_revisor_exportacion', [Certificado_ExportacionController::class, 'storeRevisor'])->name('cer-expor.asignarRevisor');
+    Route::get('/certificados/exportar', 'exportar')->name('certificados.exportar');
 });
 
 
