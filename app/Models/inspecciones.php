@@ -56,7 +56,7 @@ class inspecciones extends Model
 
       public function dictamenEnvasado()
     {
-        return $this->belongsTo(Dictamen_Envasado::class, 'id_inspeccion', 'id_inspeccion');
+        return $this->hasOne(Dictamen_Envasado::class, 'id_inspeccion', 'id_inspeccion');
     }
 
 
