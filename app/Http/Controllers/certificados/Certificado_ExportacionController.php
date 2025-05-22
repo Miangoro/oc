@@ -45,6 +45,12 @@ class Certificado_ExportacionController extends Controller
 
 public function index(Request $request)
 {
+    //Permiso de empresa
+    $empresaId = null;
+    if (auth()->check() && auth()->user()->tipo == 3) {
+        $empresaId = auth()->user()->empresa?->id_empresa;
+    }
+
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
 
     // Mapear las columnas según el orden DataTables (índice JS)
@@ -58,14 +64,9 @@ public function index(Request $request)
         6 => 'estatus',
         7 => '',// acciones
     ];
-      $empresaId = null;
-      if (auth()->check() && auth()->user()->tipo == 3) {
-          $empresaId = auth()->user()->empresa?->id_empresa;
-      }
-
-/*     $totalData = Certificado_Exportacion::count();
+      
+    /*$totalData = Certificado_Exportacion::count();
     $totalFiltered = $totalData; */
-
     $limit = $request->input('length');
     $start = $request->input('start');
 
@@ -76,27 +77,28 @@ public function index(Request $request)
 
     $search = $request->input('search.value');//Define la búsqueda global.
 
+
     //1)$query = Certificado_Exportacion::query();
     /*2)$query = Certificado_Exportacion::select('certificados_exportacion.*')
     ->leftJoin('dictamenes_exportacion', 'certificados_exportacion.id_dictamen', '=', 'dictamenes_exportacion.id_dictamen');
     */
     $query = Certificado_Exportacion::query()
-    ->leftJoin('dictamenes_exportacion', 'dictamenes_exportacion.id_dictamen', '=', 'certificados_exportacion.id_dictamen')
-    ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
-    ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
-    ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
-    ->select('certificados_exportacion.*', 'empresa.razon_social')//especifica la columna obtenida
-    /*->where(function ($q) use ($search) {
-        $q->where('empresa.razon_social', 'LIKE', "%{$search}%")
-          ->orWhere('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
-          ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%");
-    })*/;
-          if ($empresaId) {
-          $query->where('solicitudes.id_empresa', $empresaId);
-      }
-      $baseQuery = clone $query;
-      // totalData (sin búsqueda)
-      $totalData = $baseQuery->count();
+        ->leftJoin('dictamenes_exportacion', 'dictamenes_exportacion.id_dictamen', '=', 'certificados_exportacion.id_dictamen')
+        ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
+        ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+        ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+        ->select('certificados_exportacion.*', 'empresa.razon_social')//especifica la columna obtenida
+        /*->where(function ($q) use ($search) {
+            $q->where('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhere('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
+            ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%");
+        })*/;
+    if ($empresaId) {
+        $query->where('solicitudes.id_empresa', $empresaId);
+    }
+    $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
+    $totalData = $baseQuery->count();// totalData (sin búsqueda)
+
 
     // Búsqueda Global
     if (!empty($search)) {//solo se aplica si hay búsqueda global
@@ -111,13 +113,13 @@ public function index(Request $request)
             ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
             ->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
-
         });
 
         $totalFiltered = $query->count();
     } else {
         $totalFiltered = $totalData;
     }
+
 
     // Ordenamiento especial para num_certificado con formato 'CIDAM C-EXP25-###'
     if ($orderColumn === 'num_certificado') {
@@ -137,6 +139,7 @@ public function index(Request $request)
         $query->orderBy($orderColumn, $orderDirection);
     }
 
+    
     //dd($query->toSql(), $query->getBindings());ver que manda
     // Paginación
     //1)$certificados = $query->offset($start)->limit($limit)->get();

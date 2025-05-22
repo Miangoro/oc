@@ -49,7 +49,14 @@ class DictamenExportacionController extends Controller
 
 public function index(Request $request)
 {
+    //Permiso de empresa
+    $empresaId = null;
+    if (auth()->check() && auth()->user()->tipo == 3) {
+        $empresaId = auth()->user()->empresa?->id_empresa;
+    }
+
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
+
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
         0 => '',               
@@ -62,9 +69,8 @@ public function index(Request $request)
         7 => '',// acciones
     ];
 
-    $totalData = Dictamen_Exportacion::count();
-    $totalFiltered = $totalData;
-
+    /*$totalData = Dictamen_Exportacion::count();
+    $totalFiltered = $totalData;*/
     $limit = $request->input('length');
     $start = $request->input('start');
     
@@ -75,21 +81,29 @@ public function index(Request $request)
     
     $search = $request->input('search.value');//Define la búsqueda global.
 
+
     //1)$query = Dictamen_Exportacion::query();
     /*2)$query = Dictamen_Exportacion::select('inspecciones.*')
     ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion');
     */
     $query = Dictamen_Exportacion::query()
-    ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
-    ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
-    ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
-    ->select('dictamenes_exportacion.*', 'empresa.razon_social')//especifica la columna obtenida
-    /*->where(function ($q) use ($search) {
-        $q->where('empresa.razon_social', 'LIKE', "%{$search}%")
-          ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
-          ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%");
-    })*/;
+        ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
+        ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+        ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+        ->select('dictamenes_exportacion.*', 'empresa.razon_social')//especifica la columna obtenida
+        /*->where(function ($q) use ($search) {
+            $q->where('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%");
+        })*/;
 
+    if ($empresaId) {
+        $query->where('solicitudes.id_empresa', $empresaId);
+    }
+    $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
+    $totalData = $baseQuery->count();// totalData (sin búsqueda)
+
+    
     // Búsqueda Global
     if (!empty($search)) {//solo se aplica si hay búsqueda global
         /*1)$query->where(function ($q) use ($search) {
@@ -104,9 +118,11 @@ public function index(Request $request)
             ->orWhereRaw("DATE_FORMAT(dictamenes_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
         });
 
-
         $totalFiltered = $query->count();
+    } else {
+        $totalFiltered = $totalData;
     }
+
 
     // Ordenamiento especial para num_dictamen con formato 'UMEXP-###'
     if ($orderColumn === 'num_dictamen') {
@@ -126,6 +142,7 @@ public function index(Request $request)
         $query->orderBy($orderColumn, $orderDirection);
     }
 
+    
     //dd($query->toSql(), $query->getBindings());ver que manda
     // Paginación
     //1)$dictamenes = $query->offset($start)->limit($limit)->get();

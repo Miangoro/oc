@@ -46,6 +46,11 @@ class DictamenGranelController extends Controller  {
 
 public function index(Request $request)
 {
+    $empresaId = null;
+    if (auth()->check() && auth()->user()->tipo == 3) {
+        $empresaId = auth()->user()->empresa?->id_empresa;
+    }
+
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
@@ -57,8 +62,6 @@ public function index(Request $request)
         6 => 'estatus',
     ];
 
-    $totalData = Dictamen_Granel::count();
-    $totalFiltered = $totalData;
     $limit = $request->input('length');
     $start = $request->input('start');
     // Columnas ordenadas desde DataTables
@@ -75,6 +78,12 @@ public function index(Request $request)
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
     ->select('dictamenes_granel.*', 'empresa.razon_social');
 
+    if ($empresaId) {
+        $query->where('solicitudes.id_empresa', $empresaId);
+    }
+    $baseQuery = clone $query;
+    $totalData = $baseQuery->count();// totalData (sin búsqueda)
+
 
     // Búsqueda Global
     if (!empty($search)) {
@@ -86,10 +95,12 @@ public function index(Request $request)
             ->orWhereRaw("DATE_FORMAT(dictamenes_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
         });
 
-
         $totalFiltered = $query->count();
+    } else {
+        $totalFiltered = $totalData;
     }
 
+    
     // Ordenamiento especial para num_dictamen con formato 'UMG-###'
     if ($orderColumn === 'num_dictamen') {
         $query->orderByRaw("

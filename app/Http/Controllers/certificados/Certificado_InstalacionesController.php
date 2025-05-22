@@ -39,6 +39,11 @@ class Certificado_InstalacionesController extends Controller
 
 public function index(Request $request)
 {
+    $empresaId = null;
+    if (auth()->check() && auth()->user()->tipo == 3) {
+        $empresaId = auth()->user()->empresa?->id_empresa;
+    }
+
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
@@ -50,11 +55,6 @@ public function index(Request $request)
         6 => 'estatus',
     ];
 
-      $empresaId = null;
-      if (auth()->check() && auth()->user()->tipo == 3) {
-          $empresaId = auth()->user()->empresa?->id_empresa;
-      }
-
     $limit = $request->input('length');
     $start = $request->input('start');
     $orderColumnIndex = $request->input('order.0.column');
@@ -65,24 +65,50 @@ public function index(Request $request)
 
 
     $query = Certificados::query()
+        ->leftJoin('dictamenes_instalaciones', 'dictamenes_instalaciones.id_dictamen', '=', 'certificados.id_dictamen')
+        ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_instalaciones.id_inspeccion')
+        ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+        ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+        ->leftJoin('instalaciones', 'instalaciones.id_instalacion', '=', 'dictamenes_instalaciones.id_instalacion')
+        ->select('certificados.*', 'empresa.razon_social');
+        
+    if ($empresaId) {
+        $query->where('solicitudes.id_empresa', $empresaId);
+    }
+    $baseQuery = clone $query;
+    $totalData = $baseQuery->count();
 
-    ->leftJoin('dictamenes_instalaciones', 'dictamenes_instalaciones.id_dictamen', '=', 'certificados.id_dictamen')
-    ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_instalaciones.id_inspeccion')
-    ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
-    ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
-    ->leftJoin('instalaciones', 'instalaciones.id_instalacion', '=', 'dictamenes_instalaciones.id_instalacion')
-    ->select('certificados.*', 'empresa.razon_social');
-      if ($empresaId) {
-          $query->where('solicitudes.id_empresa', $empresaId);
-      }
-      // Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
-      $baseQuery = clone $query;
-      // totalData (sin búsqueda)
-      $totalData = $baseQuery->count();
 
+    // Mapeo de nombres a valores numéricos de tipo certificado
+    $tiposCertificados = [
+        'productor' => 1,
+        'envasador' => 2,
+        'comercializador' => 3,
+        'almacén y bodega' => 4,
+        'área de maduración' => 5,
+    ];
     // Búsqueda Global
     if (!empty($search)) {
-        $query->where(function ($q) use ($search){
+        // Convertir a minúsculas sin tildes para comparar
+        $searchNormalized = mb_strtolower(trim($search), 'UTF-8');
+        // También elimina tildes para mejor comparación
+        $searchNormalized = strtr($searchNormalized, [
+            'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
+            'Á' => 'a', 'É' => 'e', 'Í' => 'i', 'Ó' => 'o', 'Ú' => 'u'
+        ]);
+        // Buscar coincidencia de nombre
+        $tipoCertificadoValor = null;
+        foreach ($tiposCertificados as $nombre => $valor) {
+            $nombreNormalizado = strtr(mb_strtolower($nombre, 'UTF-8'), [
+                'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u'
+            ]);
+            if (strpos($searchNormalized, $nombreNormalizado) !== false) {
+                $tipoCertificadoValor = $valor;
+                break;
+            }
+        }
+
+        $query->where(function ($q) use ($search, $tipoCertificadoValor){
             $q->where('certificados.num_certificado', 'LIKE', "%{$search}%")
             ->orWhere('dictamenes_instalaciones.num_dictamen', 'LIKE', "%{$search}%")
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
@@ -90,13 +116,20 @@ public function index(Request $request)
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
             ->orWhereRaw("DATE_FORMAT(certificados.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
             ->orWhere('instalaciones.direccion_completa', 'LIKE', "%{$search}%");
+
+            // Si se encontró un valor válido para el tipo_dictamen, agregarlo
+            if (!is_null($tipoCertificadoValor)) {
+                $q->orWhere('dictamenes_instalaciones.tipo_dictamen', $tipoCertificadoValor);
+            }
+
         });
 
         $totalFiltered = $query->count();
-    }   else {
-    $totalFiltered = $totalData;
-}
+    }  else {
+        $totalFiltered = $totalData;
+    }
 
+    
     // Ordenamiento especial para num_certificado con formato 'CIDAM C-INS25-###'
     if ($orderColumn === 'num_certificado') {
         $query->orderByRaw("

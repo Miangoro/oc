@@ -71,12 +71,15 @@ public function index(Request $request)
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
     ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
     ->select('certificados_granel.*', 'empresa.razon_social');
-      if ($empresaId) {
-          $query->where('solicitudes.id_empresa', $empresaId);
-      }
-      $baseQuery = clone $query;
-      // totalData (sin búsqueda)
-      $totalData = $baseQuery->count();
+
+    if ($empresaId) {
+        $query->where('solicitudes.id_empresa', $empresaId);
+    }
+    $baseQuery = clone $query;
+    // totalData (sin búsqueda)
+    $totalData = $baseQuery->count();
+
+    
     // Búsqueda Global
     if (!empty($search)) {
         $query->where(function ($q) use ($search) {
