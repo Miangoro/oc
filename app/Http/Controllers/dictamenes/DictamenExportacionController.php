@@ -125,19 +125,15 @@ public function index(Request $request)
     }
 
 
-    // Ordenamiento especial para num_dictamen con formato 'UMEXP25-###'
+    // Ordenamiento especial para num_dictamen con formato 'UMEXP##-###'
     if ($orderColumn === 'num_dictamen') {
         $query->orderByRaw("
             CASE
-                WHEN num_dictamen LIKE 'UMEXP25-%' THEN 0
+                WHEN num_dictamen LIKE 'UMEXP%' THEN 0
                 ELSE 1
             END ASC,
-            CAST(
-                SUBSTRING_INDEX(
-                    SUBSTRING(num_dictamen, LOCATE('UMEXP25-', num_dictamen) + 8),
-                    '-', 1
-                ) AS UNSIGNED
-            ) $orderDirection
+            CAST(SUBSTRING(num_dictamen, 7, 2) AS UNSIGNED) $orderDirection, -- año (por ejemplo, 25 de UMEXP25-045)
+            CAST(SUBSTRING_INDEX(num_dictamen, '-', -1) AS UNSIGNED) $orderDirection -- número (por ejemplo, 045)
         ");
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
