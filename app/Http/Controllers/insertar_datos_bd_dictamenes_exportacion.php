@@ -59,7 +59,7 @@ class insertar_datos_bd_dictamenes_exportacion extends Controller
                     else {
                         echo $id_firmante = 14;
                     }
-
+                    $numero_dictamen = 'No entro en ninguno';
                      $anio = \Carbon\Carbon::parse($solicitud['fecha_expedicion'])->format('y');
 
 if (preg_match('/CIDAM C-EXP-?(\d+)/', $solicitud['n_certificado'], $coincidencias)) {
@@ -67,8 +67,6 @@ if (preg_match('/CIDAM C-EXP-?(\d+)/', $solicitud['n_certificado'], $coincidenci
     $numero_dictamen = 'UMEXP' . $anio . '-' . $consecutivo;
 } else {
     $numero_dictamen = 'UMEXP' . $anio . '-000'; // valor por defecto si no hay match
-}else{
-    $numero_dictamen = 'No entro en ninguno';
 }
 
 
