@@ -187,7 +187,7 @@ class inspeccionesController extends Controller
                     $id = $solicitud->inspeccion->dictamenGranel->id_dictamen;
                 } elseif ($solicitud->inspeccion?->dictamenEnvasado) {
                     $tipo_dictamen = 'dictamen_envasado';
-                    $id = $solicitud->inspeccion->dictamenEnvasado->id_dictamen;
+                    $id = $solicitud->inspeccion->dictamenEnvasado->id_dictamen_envasado;
                 } else {
                     $tipo_dictamen = null;
                     $id = null;
