@@ -55,63 +55,76 @@ class CertificadosExport implements FromCollection, WithHeadings, WithEvents, Wi
     }
 
     public function headings(): array
-    {
-        return [
-            ['Reporte de Certificados de Exportación'],
-            ['Empresa', 'Número Certificado', 'Fecha Emisión', 'Fecha Vigencia', 'Estatus']
-        ];
-    }
+{
+    return [
+        ['Reporte de Certificados de Exportación'],
+        ['ESTATUS', 'FECHA DE EXPEDICIÓN', 'No. DE CERTIFICADO', 'CONTACTO', 'EMPRESA', 'LOTE GRANEL', 'LOTE ENVASADO', 'MARCA', 'PAÍS DESTINO', 'No. DE BOTELLAS', 'CONTENIDO', 'TOTAL DE LITROS', '% ALC. VOL']
+    ];
+}
+
 
     public function map($certificado): array
-    {
-        return [
-            $certificado->razon_social ?? 'NA',
-            $certificado->num_certificado ?? 'NA',
-            Carbon::parse($certificado->fecha_emision)->translatedFormat('d \d\e F \d\e Y h:i A'),
-            Carbon::parse($certificado->fecha_vigencia)->translatedFormat('d \d\e F \d\e Y h:i A'),
-            match ($certificado->estatus) {
-                0 => 'Emitido',
-                1 => 'Cancelado',
-                2 => 'Reexpedido',
-                default => 'NA',
-            }
-        ];
-    }
+{
+    return [
+        match ($certificado->estatus) {
+            0 => 'Emitido',
+            1 => 'Cancelado',
+            2 => 'Reexpedido',
+            default => 'No encontrado',
+        },
+        Carbon::parse($certificado->fecha_expedicion)->translatedFormat('d \d\e F \d\e Y h:i A'),
+        $certificado->num_certificado ?? 'No encontrado',
+        $certificado->contacto ?? 'No encontrado',
+        $certificado->empresa ?? 'No encontrado',
+        $certificado->lote_granel ?? 'No encontrado',
+        $certificado->lote_envasado ?? 'No encontrado',
+        $certificado->marca ?? 'No encontrado',
+        $certificado->pais_destino ?? 'No encontrado',
+        $certificado->num_botellas ?? 'No encontrado',
+        $certificado->contenido ?? 'No encontrado',
+        $certificado->total_litros ?? 'No encontrado',
+        $certificado->porcentaje_alcohol_vol ?? 'No encontrado',
+    ];
+}
 
     public function registerEvents(): array
-    {
-        return [
-            AfterSheet::class => function (AfterSheet $event) {
-                $sheet = $event->sheet->getDelegate();
+{
+    return [
+        AfterSheet::class => function (AfterSheet $event) {
+            $sheet = $event->sheet->getDelegate();
 
-                // Estilo para el título
-                $sheet->mergeCells('A1:E1');
-                $sheet->getStyle('A1:E1')
-                    ->getFont()
-                    ->setBold(true)
-                    ->setSize(14)
-                    ->getColor()->setARGB('000000');
-                $sheet->getStyle('A1:E1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            // **Título**
+            $sheet->mergeCells('A1:M1');
+            $sheet->getStyle('A1:M1')
+                ->getFont()->setBold(true)->setSize(14)->getColor()->setARGB('000000');
+            $sheet->getStyle('A1:M1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-                // Estilo para los encabezados
-                $sheet->getStyle('A2:E2')
-                    ->getFont()
-                    ->setBold(true)
-                    ->getColor()->setARGB('000000');
-                $sheet->getStyle('A2:E2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle('A2:E2')
-                    ->getFill()
-                    ->setFillType(Fill::FILL_SOLID)
-                    ->getStartColor()->setRGB('8eaadc');
+            // **Encabezados**
+            $sheet->getStyle('A2:M2')
+                ->getFont()->setBold(true)->getColor()->setARGB('000000');
+            $sheet->getStyle('A2:M2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A2:M2')
+                ->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('8eaadc');
 
-                // Formato general para las celdas
-                foreach (range('A', 'E') as $column) {
-                    $sheet->getColumnDimension($column)->setAutoSize(true);
-                }
-                $sheet->getStyle('A2:E' . ($event->sheet->getHighestRow()))
-                    ->getBorders()->getAllBorders()
-                    ->setBorderStyle(Border::BORDER_THIN);
+            // **Color Verde para "No. DE CERTIFICADO"**
+            $sheet->getStyle('C2')->getFill()->setFillType(Fill::FILL_SOLID);
+            $sheet->getStyle('C2')->getFill()->getStartColor()->setARGB('00FF00'); // Verde
+            $sheet->getStyle('C2')->getFont()->setBold(true)->setSize(12);
+
+            // **Color Naranja para "EMPRESA"**
+            $sheet->getStyle('E2')->getFill()->setFillType(Fill::FILL_SOLID);
+            $sheet->getStyle('E2')->getFill()->getStartColor()->setARGB('FFA500'); // Naranja
+            $sheet->getStyle('E2')->getFont()->setBold(true)->setSize(12);
+
+            // **Formato general para las columnas**
+            foreach (range('A', 'M') as $column) {
+                $sheet->getColumnDimension($column)->setAutoSize(true);
             }
-        ];
-    }
+
+            $sheet->getStyle('A2:M' . ($event->sheet->getHighestRow()))
+                ->getBorders()->getAllBorders()
+                ->setBorderStyle(Border::BORDER_THIN);
+        }
+    ];
+}
 }

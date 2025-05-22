@@ -14,17 +14,14 @@ use App\Models\lotes_envasado;
 use App\Models\activarHologramasModelo;
 use App\Models\Documentacion_url;
 use App\Models\solicitudesModel;
+//Clase de exportacion
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CertificadosExport;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-<<<<<<< HEAD
-//Clase de exportacion
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\CertificadosExport;
-=======
 use Illuminate\Support\Facades\DB;
->>>>>>> 769e0fc18997dbadcead1b76ed1b04c0efdd9757
 
 
 class Certificado_ExportacionController extends Controller
@@ -45,7 +42,6 @@ class Certificado_ExportacionController extends Controller
         return view('certificados.find_certificados_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores', 'hologramas'))
         ;//->with('dictamenes', $dictamen); // Pasamos el dictamen como un JSON;
     }
-
 
 public function index(Request $request)
 {
@@ -105,7 +101,6 @@ public function index(Request $request)
 ->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
 
         });
-
 
         $totalFiltered = $query->count();
     }
@@ -229,7 +224,6 @@ public function index(Request $request)
         'data' => $data,
     ]);
 }
-
 public function exportar(Request $request)
 {
     try {
@@ -240,6 +234,7 @@ public function exportar(Request $request)
         return response()->json(['message' => 'Error al generar el reporte. Verifica los filtros e intenta nuevamente.', 'code' => 500]);
     }
 }
+
 
 ///FUNCION REGISTRAR
 public function store(Request $request)
@@ -272,7 +267,6 @@ public function store(Request $request)
 }
 
 
-
 ///FUNCION ELIMINAR
 public function destroy($id_certificado)
 {
@@ -289,7 +283,6 @@ public function destroy($id_certificado)
         return response()->json(['error' => 'Error al eliminar.'], 500);
     }
 }
-
 
 
 ///FUNCION PARA OBTENER LOS REGISTROS
@@ -345,7 +338,6 @@ public function update(Request $request, $id_certificado)
         return response()->json(['error' => 'Error al actualizar.'], 500);
     }
 }
-
 
 
 ///FUNCION REEXPEDIR 
@@ -414,7 +406,6 @@ public function reexpedir(Request $request)
 }
 
 
-
 ///FUNCION AGREGAR REVISOR
 public function storeRevisor(Request $request)
 {
@@ -442,7 +433,6 @@ public function storeRevisor(Request $request)
                 ->where('tipo_certificado', 3)
                 ->where('tipo_revision', $validatedData['tipoRevisor']) // buscar según tipo de revisión
                 ->first();
-
 
             $message = ''; // Inicializar el mensaje
 
@@ -547,7 +537,6 @@ public function storeRevisor(Request $request)
 }
 
 
-
 ///PDF CERTIFICADO
 public function MostrarCertificadoExportacion($id_certificado) 
 {
@@ -603,7 +592,6 @@ public function MostrarCertificadoExportacion($id_certificado)
        
     //return response()->json(['message' => 'No se encontraron características.', $data], 404)
 
-
     $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
         'lotes' =>$lotes,
@@ -635,7 +623,6 @@ public function MostrarCertificadoExportacion($id_certificado)
     //nombre al descargar
     return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
 }
-
 
 ///PDF SOLICITUD CERTIFICADO
 public function MostrarSolicitudCertificadoExportacion($id_certificado) 
@@ -678,7 +665,6 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
 
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
 
-
     $pdf = Pdf::loadView('pdfs.solicitud_certificado_exportacion_ed10', [//formato del PDF
         'data' => $data,
         'lotes' =>$lotes,
@@ -717,8 +703,6 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
     //nombre al descargar
     return $pdf->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');
 }
-
-
 
 
 
