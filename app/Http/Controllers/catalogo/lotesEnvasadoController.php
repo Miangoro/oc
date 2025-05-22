@@ -72,6 +72,11 @@ class lotesEnvasadoController extends Controller
             10 => 'volumen_total',
             11 => 'lugar_envasado',
         ];
+              if (auth()->user()->tipo == 3) {
+                  $empresaId = auth()->user()->empresa?->id_empresa;
+              } else {
+                  $empresaId = null;
+              }
 
         $limit = $request->input('length');
         $start = $request->input('start');
@@ -82,7 +87,9 @@ class lotesEnvasadoController extends Controller
         $searchValue = $request->input('search.value');
 
         $query = lotes_envasado::with(['empresa.empresaNumClientes', 'marca', 'Instalaciones', 'lotes_envasado_granel']); // Cargar relaciones necesarias
-
+        if ($empresaId) {
+            $query->where('id_empresa', $empresaId);
+        }
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('destino_lote', 'LIKE', "%{$searchValue}%")
@@ -126,7 +133,7 @@ class lotesEnvasadoController extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-  
+
                 $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $user->id_empresa)->first();
 
 $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first(fn($numero) => !empty($numero));
@@ -346,10 +353,10 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
     public function obtenerMarcasPorEmpresa($id_empresa)
     {
         $marcas = marcas::where('id_empresa', $id_empresa)->get();
-    
+
         foreach ($marcas as $marca) {
             $etiquetado = is_string($marca->etiquetado) ? json_decode($marca->etiquetado, true) : $marca->etiquetado;
-    
+
             if (is_null($etiquetado) || !is_array($etiquetado)) {
                 $marca->tipo_nombre = [];
                 $marca->clase_nombre = [];
@@ -358,11 +365,11 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                 $marca->etiquetado = [];
                 continue;
             }
-    
+
             $tipos = isset($etiquetado['id_tipo']) ? tipos::whereIn('id_tipo', $etiquetado['id_tipo'])->pluck('nombre')->toArray() : [];
             $clases = isset($etiquetado['id_clase']) ? clases::whereIn('id_clase', $etiquetado['id_clase'])->pluck('clase')->toArray() : [];
             $categorias = isset($etiquetado['id_categoria']) ? categorias::whereIn('id_categoria', $etiquetado['id_categoria'])->pluck('categoria')->toArray() : [];
-    
+
             $direcciones = [];
             if (isset($etiquetado['id_direccion']) && is_array($etiquetado['id_direccion'])) {
                 foreach ($etiquetado['id_direccion'] as $id_direccion) {
@@ -370,12 +377,12 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                     $direcciones[] = $direccion ?? 'N/A';
                 }
             }
-    
+
             // Obtener los documentos asociados a la marca
             $documentos = Documentacion_url::where('id_empresa', $marca->id_empresa)
                                             ->where('id_relacion', $marca->id_marca)
                                             ->get();
-    
+
             // Agregar los datos procesados al resultado
             $marca->tipo_nombre = $tipos;
             $marca->clase_nombre = $clases;
@@ -384,9 +391,9 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
             $marca->etiquetado = $etiquetado;
             $marca->documentos = $documentos; // Agregar documentos a la marca
         }
-    
+
         return response()->json($marcas);
     }
-    
-    
+
+
 }
