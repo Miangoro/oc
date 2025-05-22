@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 
 class Certificado_GranelController extends Controller
@@ -40,6 +41,12 @@ class Certificado_GranelController extends Controller
 
 public function index(Request $request)
 {
+    //Permiso de empresa
+    $empresaId = null;
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaId = Auth::user()->empresa?->id_empresa;
+    }
+
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
@@ -50,10 +57,6 @@ public function index(Request $request)
         5 => 'fecha_emision',
         6 => 'estatus',
     ];
-      $empresaId = null;
-      if (auth()->check() && auth()->user()->tipo == 3) {
-          $empresaId = auth()->user()->empresa?->id_empresa;
-      }
 
     $limit = $request->input('length');
     $start = $request->input('start');
@@ -65,12 +68,12 @@ public function index(Request $request)
 
 
     $query = CertificadosGranel::query()
-    ->leftJoin('dictamenes_granel', 'dictamenes_granel.id_dictamen', '=', 'certificados_granel.id_dictamen')
-    ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_granel.id_inspeccion')
-    ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
-    ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
-    ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
-    ->select('certificados_granel.*', 'empresa.razon_social');
+        ->leftJoin('dictamenes_granel', 'dictamenes_granel.id_dictamen', '=', 'certificados_granel.id_dictamen')
+        ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_granel.id_inspeccion')
+        ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+        ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+        ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
+        ->select('certificados_granel.*', 'empresa.razon_social');
 
     if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
@@ -116,6 +119,7 @@ public function index(Request $request)
         $query->orderBy($orderColumn, $orderDirection);
     }
 
+
     // Paginación
     $certificados = $query
         ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
@@ -129,6 +133,7 @@ public function index(Request $request)
         ])->offset($start)->limit($limit)->get();
 
 
+        
     $data = [];
     if (!empty($certificados)) {
         foreach ($certificados as $certificado) {

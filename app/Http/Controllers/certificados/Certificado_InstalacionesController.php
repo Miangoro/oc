@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 
 class Certificado_InstalacionesController extends Controller
@@ -39,9 +40,10 @@ class Certificado_InstalacionesController extends Controller
 
 public function index(Request $request)
 {
+    //Permiso de empresa
     $empresaId = null;
-    if (auth()->check() && auth()->user()->tipo == 3) {
-        $empresaId = auth()->user()->empresa?->id_empresa;
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaId = Auth::user()->empresa?->id_empresa;
     }
 
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
@@ -129,7 +131,6 @@ public function index(Request $request)
         $totalFiltered = $totalData;
     }
 
-    
     // Ordenamiento especial para num_certificado con formato 'CIDAM C-INS25-###'
     if ($orderColumn === 'num_certificado') {
         $query->orderByRaw("
@@ -147,6 +148,7 @@ public function index(Request $request)
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
     }
+
 
     // Paginación
     $certificados = $query
@@ -282,7 +284,7 @@ public function index(Request $request)
             'code' => 200,
             'data' => $data,
         ]);
-    }
+}
 
 
 

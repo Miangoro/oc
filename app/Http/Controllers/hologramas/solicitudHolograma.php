@@ -196,7 +196,7 @@ class solicitudHolograma extends Controller
         $request->validate([
             'id_empresa' => 'required|integer',
             'id_marca' => 'required|integer',
-            'tipo' => 'required|in:A,B',
+            'tipo' => 'required|in:A,J',
             'cantidad_hologramas' => 'required|integer',
             'id_direccion' => 'required|integer',
             'comentarios' => 'nullable|string|max:1000',
