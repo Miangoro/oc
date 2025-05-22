@@ -1,5 +1,6 @@
 <!-- Modal para exportar Excel -->
-<div class="modal fade" id="exportarExcelCertificados" tabindex="-1" aria-labelledby="exportarExcelLabel" aria-hidden="true">
+<div class="modal fade" id="exportarExcelCertificados" tabindex="-1" aria-labelledby="exportarExcelLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,7 +8,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="reporteForm" action="{{ route('solicitudes.exportar') }}" method="GET">
+                <form id="reporteForm" action="{{ route('certificados.exportar') }}" method="GET">
                     @csrf
                     <div class="mb-4">
                         <p class="text-start text-muted"><i class="ri-filter-fill"></i> Filtrar Datos </p>
@@ -19,7 +20,7 @@
                                 <select name="id_empresa" class="select2 form-select">
                                     <option value="">Todos</option>
                                     @foreach ($empresa as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">
+                                       <option value="{{ $empresa->id_empresa }}">
                                             {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
                                             | {{ $empresa->razon_social }}
                                         </option>
@@ -50,9 +51,10 @@
                         <div class="col-md-6 mb-4">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select class="form-select" id="estatus" name="estatus">
-                                    <option value="todos">Todos</option>
-                                    <option value="pendiente">Pendiente</option>
-                                    <option value="con_acta">Con acta</option>
+                                    <option value="">Todos</option>
+                                    <option value="0">Emitido</option>
+                                    <option value="1">Cancelado</option>
+                                    <option value="2">Reexpedido</option>
                                 </select>
                                 <label for="estatus">Estatus</label>
                             </div>

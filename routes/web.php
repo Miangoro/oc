@@ -1009,6 +1009,7 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::post('/creaCerExp/reexpedir', [Certificado_ExportacionController::class, 'reexpedir'])->name('cer-expor.reex');
     //Asignar revisor
     Route::post('asignar_revisor_exportacion', [Certificado_ExportacionController::class, 'storeRevisor'])->name('cer-expor.asignarRevisor');
+    Route::get('/certificados/exportar', 'exportar')->name('certificados.exportar');
 });
 
 

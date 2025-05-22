@@ -108,6 +108,8 @@ var dataTable = $('.datatables-users').DataTable({
       },
       {
       targets: 1,
+      searchable: true,
+      orderable: true,
       render: function (data, type, full, meta) {
         var $num_certificado = full['num_certificado'];
         var $id = full['id_certificado'];
@@ -179,8 +181,8 @@ var dataTable = $('.datatables-users').DataTable({
     },
     {
       targets: 5,
-      searchable: false,
-      orderable: false,
+      searchable: true,
+      orderable: true,
       className: 'text-center',
       render: function (data, type, full, meta) {
         var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
@@ -195,7 +197,7 @@ var dataTable = $('.datatables-users').DataTable({
     },
     {
     targets: 6,
-    searchable: true,
+    searchable: false,
     orderable: true,
     className: 'text-center',
     render: function (data, type, full, meta) {
@@ -317,7 +319,7 @@ var dataTable = $('.datatables-users').DataTable({
         }
       }
     ],
-    order: [[2, 'desc']],
+    order: [[1, 'desc']],
     dom:
       '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
       '<"me-5 ms-n2"f>' +

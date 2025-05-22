@@ -350,7 +350,7 @@ class solicitudHolograma extends Controller
                 return !empty($numero);
             });
 
-            foreach ($request->id_documento as $index => $id_documento) {
+          /*  foreach ($request->id_documento as $index => $id_documento) {
                 // Agregar nuevo documento si no existe
                 if ($request->hasFile('url') && isset($request->file('url')[$index])) {
                     $file = $request->file('url')[$index];
@@ -365,7 +365,7 @@ class solicitudHolograma extends Controller
                     $documentacion_url->id_empresa = $request->empresa;
                     $documentacion_url->save();
                 }
-            }
+            }*/
             // Retorna una respuesta exitosa
             return response()->json(['success' => 'Solicitud de envio actualizada correctamente']);
         } catch (\Exception $e) {

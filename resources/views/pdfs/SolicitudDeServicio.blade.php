@@ -143,7 +143,7 @@
             </td>
             <td colspan="4" rowspan="2">
                 @if ($vigilancia_traslado === 'X')
-                    {{ $datos->instalacion_destino->direccion_completa ?? ''}}
+                    {{ $datos->instalacion_destino->direccion_completa ?? '' }}
                 @else
                     ------------------------
                 @endif <br><br>
@@ -600,8 +600,12 @@
                         <span>Cantidad de Cajas: {{ $detalle['cantidad_cajas'] ?? 'No definido' }}</span><br>
                         <span>Presentación: {{ $detalle['presentacion'] ?? 'No definido' }}</span>
                     @endforeach
+                @elseif($inspeccion_envasado === 'X')
+                   <span>Cantidad de Botellas:  {{ $datos->lote_envasado->cant_botellas ?? 'No definido' }}</span><br>
+                   <span>Cantidad de Cajas: {{ $caracteristicas['cantidad_caja'] ?? 'No definido' }}</span><br>
+                   
                 @else
-                    <p>---------------</< /p>
+                    <p>---------------</p>
                 @endif
             </td>
         </tr>
@@ -638,12 +642,12 @@
             <td class="con-negra" colspan="3" rowspan="3">INFORMACIÓN ADICIONAL SOBRE LA <br> ACTIVIDAD:</td>
             <td class="td-margins" colspan="6">
                 @if ($vigilancia_traslado === 'X')
-                    <b>Identificador de contenedor de salida:</b> {{ $caracteristicas['id_salida'] ?? ''}}<br>
-                    <b>Identificador de contenedor de recepción:</b> {{ $caracteristicas['id_contenedor'] ?? ''}}<br>
-                    <b>Sobrante en contenedor de salida:</b> {{ $caracteristicas['id_vol_res'] ?? ''}}<br>
-                    <b>Volumen actual del lote:</b> {{ $caracteristicas['id_vol_actual'] ?? ''}}<br>
-                    <b>Volumen trasladado</b> {{ $caracteristicas['id_vol_traslado'] ?? ''}}<br>
-                    <b>Volumen sobrante del lote:</b> {{ $caracteristicas['id_sobrante']?? '' }}<br>
+                    <b>Identificador de contenedor de salida:</b> {{ $caracteristicas['id_salida'] ?? '' }}<br>
+                    <b>Identificador de contenedor de recepción:</b> {{ $caracteristicas['id_contenedor'] ?? '' }}<br>
+                    <b>Sobrante en contenedor de salida:</b> {{ $caracteristicas['id_vol_res'] ?? '' }}<br>
+                    <b>Volumen actual del lote:</b> {{ $caracteristicas['id_vol_actual'] ?? '' }}<br>
+                    <b>Volumen trasladado</b> {{ $caracteristicas['id_vol_traslado'] ?? '' }}<br>
+                    <b>Volumen sobrante del lote:</b> {{ $caracteristicas['id_sobrante'] ?? '' }}<br>
                 @elseif($geo === 'X')
                     @foreach ($datos->predios->predio_plantaciones as $plantacion)
                         <b>Especie de agave:</b> {{ $plantacion->tipo->nombre }}
@@ -652,7 +656,7 @@
                         <b>No. de Plantas:</b> {{ $plantacion->num_plantas }}<br>
                         <b>Edad de plantación:</b> {{ $plantacion->anio_plantacion }}<br>
                         <b>Tipo de plantación:</b> {{ $plantacion->tipo_plantacion }}<br>
-                        <b>Dirección del punto de reunión: </b> {{ $caracteristicas['punto_reunion'] ?? ''}}<br>
+                        <b>Dirección del punto de reunión: </b> {{ $caracteristicas['punto_reunion'] ?? '' }}<br>
                         <hr>
                     @endforeach
                 @elseif($ingreso_barrica === 'X')
@@ -666,14 +670,22 @@
                     <b>Tipo:</b>
                     {{ $caracteristicas['tipo_analisis'] == 1 ? 'Análisis completo' : ($caracteristicas['tipo_analisis'] == 2 ? 'Ajuste de grado alcohólico' : '') }}
                     <br>
-                 @elseif($inspeccion_envasado === 'X')
-                    <b>Tipo:</b>
-                    {{ $caracteristicas['id_lote_envasado'] }}
+                @elseif($inspeccion_envasado === 'X')
+                    @if (!empty($datos->lote_granel->edad) && $datos->lote_granel->edad != 0)
+                        <b>Edad:</b> {{ $datos->lote_granel->edad }}<br>
+                    @endif
+
+                    <b>Con etiqueta o sin etiqueta:</b>
+                    {{ $datos->lote_envasado->tipo ?? '---------------' }}
                     <br>
-                     <b>Inicio de envasado:</b>
+                     <b>Volumen envasado:</b>
+                   {{ number_format($datos->lote_envasado->volumen_total, 0, '.', ',') . ' L' }}
+
+                    <br>
+                    <b>Inicio de envasado:</b>
                     {{ $caracteristicas['fecha_inicio'] }}
                     <br>
-                     <b>Término previsto del envasado:</b>
+                    <b>Término previsto del envasado:</b>
                     {{ $caracteristicas['fecha_fin'] }}
                     <br>
 

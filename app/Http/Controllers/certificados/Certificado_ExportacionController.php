@@ -19,6 +19,10 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+//Clase de exportacion
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CertificadosExport;
+
 
 
 class Certificado_ExportacionController extends Controller
@@ -95,9 +99,10 @@ public function index(Request $request)
         $query->where(function ($q) use ($search) {
             $q->where('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
             ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
-->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
-
+            ->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
         });
 
 
@@ -126,7 +131,7 @@ public function index(Request $request)
     // Paginación
     //1)$certificados = $query->offset($start)->limit($limit)->get();
     $certificados = $query
-        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda de query adicionales en BD)
+        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
             'dictamen',// Relación directa
             'dictamen.inspeccione',// Relación anidada: dictamen > inspeccione
             'dictamen.inspeccione.solicitud',// dictamen > inspeccione > solicitud
@@ -222,6 +227,19 @@ public function index(Request $request)
         'code' => 200,
         'data' => $data,
     ]);
+}
+
+
+
+public function exportar(Request $request)
+{
+    try {
+        $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes']);
+        return Excel::download(new CertificadosExport($filtros), 'reporte_certificados.xlsx');
+    } catch (\Exception $e) {
+        Log::error('Error al generar el reporte: ' . $e->getMessage());
+        return response()->json(['message' => 'Error al generar el reporte. Verifica los filtros e intenta nuevamente.', 'code' => 500]);
+    }
 }
 
 
@@ -702,6 +720,7 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
     //nombre al descargar
     return $pdf->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');
 }
+
 
 
 
