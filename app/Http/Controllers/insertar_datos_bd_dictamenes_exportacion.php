@@ -67,7 +67,7 @@ class insertar_datos_bd_dictamenes_exportacion extends Controller
                                 'id_inspeccion'   => $inspecciones->id_inspeccion,
                                
                              
-                                'num_dictamen'    => $solicitud['n_certificado'],
+                                'num_dictamen'    => preg_replace('/CIDAM C-EXP\d*/', 'UMEXP', $solicitud['n_certificado']),
                                 'fecha_emision'   => $solicitud['fecha_expedicion'],
                                 'fecha_vigencia'  => $solicitud['fecha_vigencia'],
                                 'id_firmante'        => $id_firmante,

@@ -35,7 +35,7 @@ class Analytics extends Controller
 
 
     $hoy = Carbon::today(); // Solo la fecha, sin hora.
-    $fechaLimite = $hoy->copy()->addDays(15); // Fecha límite en 15 días.
+    $fechaLimite = $hoy->copy()->addDays(5); // Fecha límite en 5 días.
 
 
     $dictamenesInstalacion = Dictamen_instalaciones::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
