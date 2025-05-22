@@ -39,6 +39,7 @@ $navbarDetached = ($navbarDetached ?? '');
       @endif
 
       <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+        
 
         @if(!isset($menuHorizontal))
         <!-- Search -->
@@ -52,6 +53,8 @@ $navbarDetached = ($navbarDetached ?? '');
         </div>
         <!-- /Search -->
         @endif
+
+        
 
        <ul class="navbar-nav flex-row align-items-center ms-auto">
           @if(isset($menuHorizontal))
@@ -264,18 +267,20 @@ $navbarDetached = ($navbarDetached ?? '');
                       </div>
                     </div>
                     <div class="flex-grow-1">
-                      <span class="fw-medium d-block small">
+                      <span class="fw-bold d-block small">
                         @if (Auth::check())
                           {{ Auth::user()->name }}
                         @else
                           Sin usuario logeado
                         @endif
                       </span>
-                      <small class="text-muted"> @if (Auth::check())
+                      <small class="text-primary"> 
+                        @if (Auth::check() and Auth::user()->puesto)
                         {{ Auth::user()->puesto }}
-                      @else
-                        Admin
-                      @endif</small>
+                        @else
+                          {{ Auth::user()->empresa->razon_social }}
+                        @endif
+                    </small>
                     </div>
                   </div>
                 </a>
@@ -285,7 +290,7 @@ $navbarDetached = ($navbarDetached ?? '');
               </li>
               <li>
                 <a class="dropdown-item" href="{{ Route::has('profile.show') ? route('profile.show') : url('pages/profile-user') }}">
-                  <i class="ri-user-3-line ri-22px me-3"></i><span class="align-middle">Mi perfil</span>
+                  <i class="ri-user-3-line ri-22px me-3 text-primary"></i><span class="align-middle">Mi perfil</span>
                 </a>
               </li>
 
