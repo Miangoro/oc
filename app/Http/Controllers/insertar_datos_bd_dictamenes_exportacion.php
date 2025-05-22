@@ -60,12 +60,22 @@ class insertar_datos_bd_dictamenes_exportacion extends Controller
                         echo $id_firmante = 14;
                     }
 
-                        
+                     $anio = \Carbon\Carbon::parse($solicitud['fecha_expedicion'])->format('y');
+
+if (preg_match('/CIDAM C-EXP-?(\d+)/', $solicitud['n_certificado'], $coincidencias)) {
+    $consecutivo = str_pad($coincidencias[1], 3, '0', STR_PAD_LEFT);
+    $numero_dictamen = 'UMEXP' . $anio . '-' . $consecutivo;
+} else {
+    $numero_dictamen = 'UMEXP' . $anio . '-000'; // valor por defecto si no hay match
+}else{
+    $numero_dictamen = 'No entro en ninguno';
+}
+
 
                         //if ($solicitud['n_servicio'] ==$inspecciones->n) {
                             $id_solicitud = Dictamen_Exportacion::create([
                                 'id_inspeccion'   => $inspecciones->id_inspeccion,
-                                'num_dictamen' => preg_replace('/CIDAM C-EXP(-?\d+)(\/\d{4}(-[A-Z])?)?/','UMEXP$1',$solicitud['n_certificado']),
+                                'num_dictamen' =>  $numero_dictamen,
                                 'fecha_emision'   => $solicitud['fecha_expedicion'],
                                 'fecha_vigencia'  => $solicitud['fecha_vigencia'],
                                 'id_firmante'        => $id_firmante,
