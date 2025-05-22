@@ -6,6 +6,27 @@
 @extends('layouts/layoutMaster')
 
 @section('title', 'Inicio')
+
+<!-- Vendor Styles -->
+@section('vendor-style')
+@vite(['resources/assets/vendor/libs/swiper/swiper.scss'])
+@endsection
+
+<!-- Page Styles -->
+@section('page-style')
+@vite(['resources/assets/vendor/scss/pages/ui-carousel.scss'])
+@endsection
+
+<!-- Vendor Scripts -->
+@section('vendor-script')
+@vite(['resources/assets/vendor/libs/swiper/swiper.js'])
+@endsection
+
+<!-- Page Scripts -->
+@section('page-script')
+@vite(['resources/assets/js/ui-carousel.js'])
+@endsection
+
 @section('vendor-style')
     @vite(['resources/assets/vendor/libs/apex-charts/apex-charts.scss', 'resources/assets/vendor/libs/swiper/swiper.scss'])
 @endsection
@@ -22,6 +43,9 @@
 @section('page-script')
     @vite(['resources/assets/js/dashboards-analytics.js'])
 @endsection
+
+
+
 
 @section('content')
     <div class="row g-6">
@@ -95,41 +119,51 @@
           </div>-->
         <!--/ Sessions line chart -->
 
-        <div class="row my-4">
-
-            <div class="col-md-12 col-xxl-12">
-                <div class="card">
-                    <div class="d-flex align-items-end row">
-                        <div class="col-md-6 order-2 order-md-1">
-                            <div class="card-body">
-                                <h4 class="card-title mb-4">Bienvenido<br> <span class="fw-bold">
-                                        @if (Auth::check())
-                                            {{ Auth::user()->name }}
-                                        @else
-                                            Sin usuario logeado
-                                        @endif
-                                    </span> 🎉</h4>
-                                <p class="mb-0 fs-5 fw-semibold text-dark">
-                                    @if (Auth::check() && Auth::user()->puesto)
-                                        {{ Auth::user()->puesto }}
-                                    @else
-                                        {{ Auth::user()->empresa->razon_social }}
-                                    @endif
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 text-center text-md-end order-1 order-md-2">
-                            <div class="card-body pb-0 px-0 pt-2">
-                                <img src="https://demos.pixinvent.com/materialize-html-laravel-admin-template/demo/assets/img/illustrations/illustration-john-light.png"
-                                    height="186" class="scaleX-n1-rtl" alt="View Profile"
-                                    data-app-light-img="illustrations/illustration-john-light.png"
-                                    data-app-dark-img="illustrations/illustration-john-dark.png">
-                            </div>
-                        </div>
+        <div class="row my-2">
+    <div class="col-12">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="row g-0 align-items-center">
+                <!-- Texto de bienvenida -->
+                <div class="col-md-4 p-4">
+                    <div class="card-body">
+                        <h4 class="card-title mb-3">
+                            👋 Bienvenido a la nueva Plataforma
+                        </h4>
+                        <h5 class="fw-bold text-primary mb-2">
+                            @if (Auth::check())
+                                {{ Auth::user()->name }}
+                            @else
+                                Sin usuario logeado
+                            @endif
+                        </h5>
+                        <p class="text-muted fs-5">
+                            @if (Auth::check() && Auth::user()->puesto)
+                                {{ Auth::user()->puesto }}
+                            @else
+                                {{ Auth::user()->empresa->razon_social }}
+                            @endif
+                        </p>
                     </div>
+                </div>
+
+                <!-- Imagen decorativa -->
+                <div class="col-md-8 text-center d-none d-md-block">
+                   <div class="swiper text-white" id="swiper-with-arrows">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide" style="background-image:url({{asset('assets/img/pages/header3.png')}})"></div>
+        <div class="swiper-slide" style="background-image:url({{asset('assets/img/elements/1.jpg')}})">Slide 2</div>
+      </div>
+      <div class="swiper-button-next swiper-button-white custom-icon">
+      </div>
+      <div class="swiper-button-prev swiper-button-white custom-icon">
+      </div>
+    </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
 
 
 
