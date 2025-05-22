@@ -230,7 +230,7 @@ public function exportar(Request $request)
         $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes']);
         return Excel::download(new CertificadosExport($filtros), 'reporte_certificados.xlsx');
     } catch (\Exception $e) {
-        \Log::error('Error al generar el reporte: ' . $e->getMessage());
+        Log::error('Error al generar el reporte: ' . $e->getMessage());
         return response()->json(['message' => 'Error al generar el reporte. Verifica los filtros e intenta nuevamente.', 'code' => 500]);
     }
 }

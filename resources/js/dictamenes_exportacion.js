@@ -87,7 +87,7 @@ if (dt_user_table.length) {
       { data: '' },
       { data: 'num_dictamen' },
       { data: 'num_servicio' },
-      { data: null, // Se usará null porque combinaremos varios valores
+      { data: null, orderable: false,// Se usará null porque combinaremos varios valores
         render: function(data, type, row) {
           return `
             <strong>${data.numero_cliente}</strong>
@@ -159,9 +159,9 @@ if (dt_user_table.length) {
           `;
         }
       }, 
-      {
+      {//caracteristicas
         targets: 4,
-        searchable: false,
+        searchable: true,
         orderable: false,
         responsivePriority: 4, 
         render: function (data, type, full, meta) {
@@ -177,8 +177,8 @@ if (dt_user_table.length) {
       {
         ///fechas 
         targets: 5,
-        searchable: false,
-        orderable: false,
+        searchable: true,
+        orderable: true,
         className: 'text-center',//columna centrada
         render: function (data, type, full, meta) {
           var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
@@ -191,10 +191,9 @@ if (dt_user_table.length) {
             </div> `;
           }
       },
-      {
-        ///estatus
+      { ///estatus
         targets: 6,
-        searchable: true,
+        searchable: false,
         orderable: true,
         className: 'text-center',
         render: function (data, type, full, meta) {
@@ -243,7 +242,7 @@ if (dt_user_table.length) {
       }
     ],
 
-    order: [[2, 'desc']],
+    order: [[1, 'desc']],
     dom:
       '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
       '<"me-5 ms-n2"f>' +

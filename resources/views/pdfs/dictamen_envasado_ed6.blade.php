@@ -431,21 +431,11 @@
                 </tr>
                 <tr>
                     <td class="column2">Presentación</td>
-                    <td>{{ $data->lote_envasado->presentacion ?? 'N/A' }}</td>
+                    <td>{{ $data->lote_envasado->presentacion ?? 'No encontrado' }}</td>
                     <td class="column2">Volumen del lote</td>
 
                     <td>
-                        @if ($lotesGranel->isNotEmpty())
-                            @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->volumen ?? '' }}
-                                <!-- Añade una separación si deseas entre los nombres de lotes -->
-                                @if (!$loop->last)
-                                    ,
-                                @endif
-                            @endforeach
-                        @else
-                            N/A
-                        @endif
+                        {{ $data->lote_envasado->volumen_total ?? 'No encontrado' }} L
                     </td> {{-- no se de donde se jala --}}
                     <td class="column2">Contenido alcohólico</td>
                     <td>

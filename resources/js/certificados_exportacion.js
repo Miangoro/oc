@@ -211,7 +211,7 @@ if (dt_user_table.length) {
               </div>`;
           }
         },
-        {
+        {//fechas
           targets: 5,
           searchable: true,
           orderable: true,
@@ -227,7 +227,7 @@ if (dt_user_table.length) {
                 </div> `;
           }
         },
-        {
+        {//estatus
           targets: 6,
           searchable: false,
           orderable: true,

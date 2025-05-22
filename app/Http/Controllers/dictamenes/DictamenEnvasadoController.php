@@ -49,10 +49,9 @@ class DictamenEnvasadoController extends Controller
     }
 
 
-    public function index(Request $request)
-    {
-        DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
-
+public function index(Request $request)
+{
+    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
         1 => 'num_dictamen',
@@ -65,10 +64,8 @@ class DictamenEnvasadoController extends Controller
 
     $totalData = Dictamen_Envasado::count();
     $totalFiltered = $totalData;
-
     $limit = $request->input('length');
     $start = $request->input('start');
-
     // Columnas ordenadas desde DataTables
     $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
     $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
@@ -81,6 +78,7 @@ class DictamenEnvasadoController extends Controller
     ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_envasado.id_inspeccion')
     ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+    ->leftJoin('lotes_envasado', 'lotes_envasado.id_lote_envasado', '=', 'dictamenes_envasado.id_lote_envasado')
     ->select('dictamenes_envasado.*', 'empresa.razon_social');
 
 
@@ -91,7 +89,8 @@ class DictamenEnvasadoController extends Controller
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
             ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
-            ->orWhereRaw("DATE_FORMAT(dictamenes_envasado.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+            ->orWhereRaw("DATE_FORMAT(dictamenes_envasado.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
+            ->orWhere('lotes_envasado.nombre', 'LIKE', "%{$search}%");
         });
 
 
@@ -102,15 +101,11 @@ class DictamenEnvasadoController extends Controller
     if ($orderColumn === 'num_dictamen') {
         $query->orderByRaw("
             CASE
-                WHEN num_dictamen LIKE 'UME-%' THEN 0
+                WHEN num_dictamen LIKE 'UME-%/%' THEN 0
                 ELSE 1
             END ASC,
-            CAST(
-                SUBSTRING_INDEX(
-                    SUBSTRING(num_dictamen, LOCATE('UME-', num_dictamen) + 4),
-                    '-', 1
-                ) AS UNSIGNED
-            ) $orderDirection
+            CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) $orderDirection, -- Año
+            CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '/', 1), '-', -1) AS UNSIGNED) $orderDirection -- Número
         ");
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
@@ -119,14 +114,14 @@ class DictamenEnvasadoController extends Controller
     // Paginación
     $dictamenes = $query
         ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
-            'inspeccion',// Relación anidada: dictamen > inspeccione
-            'inspeccion.solicitud',// dictamen > inspeccione > solicitud
-            // solicitud > empresa > empresaNumClientes
+            'inspeccion',// Relación directa
+            'inspeccion.solicitud',// Relación anidada: inspeccione > solicitu
             'inspeccion.solicitud.empresa',
             'inspeccion.solicitud.empresa.empresaNumClientes',
         ])->offset($start)->limit($limit)->get();
 
-    
+
+
         //MANDA LOS DATOS AL JS
         $data = [];
         if (!empty($dictamenes)) {
@@ -187,7 +182,7 @@ class DictamenEnvasadoController extends Controller
             'code' => 200,
             'data' => $data,
         ]);
-    }
+}
 
 
 

@@ -149,7 +149,7 @@ if (dt_user_table.length) {
           }, 
           {
             targets: 4,
-            searchable: false,
+            searchable: true,
             orderable: false, 
             responsivePriority: 4, 
             render: function (data, type, full, meta) {
@@ -160,8 +160,7 @@ if (dt_user_table.length) {
               </div>`;
             }     
           },
-          {
-            ///fechas
+          { ///fechas
             targets: 5,
             searchable: true,
             orderable: true,

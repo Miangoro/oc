@@ -17,6 +17,7 @@ use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
@@ -48,153 +49,116 @@ class DictamenInstalacionesController extends Controller
     }
 
 
-    public function index(Request $request)
-    {
+public function index(Request $request)
+{
+    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
+    // Mapear las columnas según el orden DataTables (índice JS)
+    $columns = [
+        1 => 'num_dictamen',
+        2 => 'solicitudes.folio', 
+        3 => 'razon_social', 
+        4 => '', 
+        5 => 'fecha_emision',
+        6 => 'estatus',
+    ];
+
+    $totalData = Dictamen_instalaciones::count();
+    $totalFiltered = $totalData;
+    $limit = $request->input('length');
+    $start = $request->input('start');
+    // Columnas ordenadas desde DataTables
+    $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
+    $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
+    $orderColumn = $columns[$orderColumnIndex] ?? 'num_dictamen'; // Por defecto
+    
+    $search = $request->input('search.value');//Define la búsqueda global.
 
 
-        $columns = [
-            //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
-            1 => 'id_dictamen',
-            2 => 'num_dictamen',
-            3 => 'tipo_dictamen',
-            4 => 'num_servicio',
-            5 => 'fecha_emision',
-            6 => 'razon_social', //este lugar lo ocupa fecha en find
-            7 => 'direccion_completa',
-            //8 => 'fecha_vigencia'
-        ];
-
-        $search = [];
-      $empresaId = null;
-      if (auth()->check() && auth()->user()->tipo == 3) {
-          $empresaId = auth()->user()->empresa?->id_empresa;
-      }
-            $totalData = Dictamen_instalaciones::when($empresaId, function ($q) use ($empresaId) {
-            $q->whereHas('inspeccione.solicitud.empresa', function ($q2) use ($empresaId) {
-              $q2->where('id_empresa', $empresaId);
-              });
-              })->count();
-        $totalFiltered = $totalData;
-
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
+    $query = Dictamen_instalaciones::query()
+    ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_instalaciones.id_inspeccion')
+    ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+    ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+    ->leftJoin('instalaciones', 'instalaciones.id_instalacion', '=', 'dictamenes_instalaciones.id_instalacion')
+    ->select('dictamenes_instalaciones.*', 'empresa.razon_social');
 
 
-        if (empty($request->input('search.value'))) {
-            // ORDENAR EL BUSCADOR "thead"
-               $query = Dictamen_instalaciones::with('inspeccione.solicitud.empresa');
-                if ($empresaId) {
-                    $query->whereHas('inspeccione.solicitud.empresa', function ($q) use ($empresaId) {
-                        $q->where('id_empresa', $empresaId);
-                    });
-                }
-                $users = $query->offset($start)
-                ->limit($limit)
-                ->orderByRaw("
-                CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
-                CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')
-            ")
-                ->get();
-        } else {
-            // BUSCADOR
-            $search = $request->input('search.value');
-            // Definimos el nombre al valor de "tipo_dictamen"
-            $map = [
-                'productor' => 1,
-                'envasador' => 2,
-                'comercializador' => 3,
-                'almacén y bodega' => 4,
-                'área de maduración' => 5,
-            ];
-
-            $searchValue = strtolower(trim($search));
-            $searchType = $map[$searchValue] ?? null;
-
-            $query = Dictamen_instalaciones::with('inspeccione.solicitud.empresa');
-
-            // 👇 Aplicar el filtro por empresa
-            if ($empresaId) {
-                $query->whereHas('inspeccione.solicitud.empresa', function ($q) use ($empresaId) {
-                    $q->where('id_empresa', $empresaId);
-                });
+    // Mapeo de nombres a valores numéricos de tipo_dictamen
+    $tiposDictamen = [
+        'productor' => 1,
+        'envasador' => 2,
+        'comercializador' => 3,
+        'almacén y bodega' => 4,
+        'área de maduración' => 5,
+    ];
+    // Búsqueda Global
+    if (!empty($search)) {
+        // Convertir a minúsculas sin tildes para comparar
+        $searchNormalized = mb_strtolower(trim($search), 'UTF-8');
+        // También elimina tildes para mejor comparación
+        $searchNormalized = strtr($searchNormalized, [
+            'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
+            'Á' => 'a', 'É' => 'e', 'Í' => 'i', 'Ó' => 'o', 'Ú' => 'u'
+        ]);
+        // Buscar coincidencia de nombre
+        $tipoDictamenValor = null;
+        foreach ($tiposDictamen as $nombre => $valor) {
+            $nombreNormalizado = strtr(mb_strtolower($nombre, 'UTF-8'), [
+                'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u'
+            ]);
+            if (strpos($searchNormalized, $nombreNormalizado) !== false) {
+                $tipoDictamenValor = $valor;
+                break;
             }
-            // Filtrar por tipo_dictamen si se proporciona un valor válido
-            if ($searchType !== null) {
-                $query->where('tipo_dictamen', $searchType);
-            } else {
-                // Filtrar por otros campos si no es un tipo_dictamen válido
-                $query->where(function ($q) use ($search) {
-                    $q->where('id_dictamen', 'LIKE', "%{$search}%")
-                        ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-                        ->orWhereDate('dictamenes_instalaciones.fecha_emision', 'LIKE', "%{$search}%")
-                        ->orWhereDate('dictamenes_instalaciones.fecha_vigencia', 'LIKE', "%{$search}%")
-                        ->orWhereHas('inspeccione', function ($q) use ($search) {
-                            $q->where('num_servicio', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('inspeccione.solicitud', function ($q) use ($search) {
-                            $q->where('folio', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('inspeccione.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
-                            $q->where('numero_cliente', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('inspeccione.solicitud.empresa', function ($q) use ($search) {
-                            $q->where('razon_social', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('inspeccione.solicitud.instalacion', function ($q) use ($search) {
-                            $q->where('direccion_completa', 'LIKE', "%{$search}%");
-                        });
-                });
-            }
-
-            // Obtener resultados con paginación
-            $users = $query->offset($start)
-                ->limit($limit)
-                ->orderByRaw("
-                CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
-                CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')")
-                ->get();
-
-            // Calcular el total filtrado
-                $totalFiltered = Dictamen_instalaciones::where(function ($q) use ($search, $searchType, $empresaId) {
-                    if ($empresaId) {
-                        $q->whereHas('inspeccione.solicitud.empresa', function ($q2) use ($empresaId) {
-                            $q2->where('id_empresa', $empresaId);
-                        });
-                    }
-                    if ($searchType !== null) {
-                        $q->where('tipo_dictamen', $searchType);
-                    } else {
-                        $q->where('id_dictamen', 'LIKE', "%{$search}%")
-                            ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-                            ->orWhereDate('dictamenes_instalaciones.fecha_emision', 'LIKE', "%{$search}%")
-                            ->orWhere('dictamenes_instalaciones.fecha_vigencia', 'LIKE', "%{$search}%")
-                            ->orWhereHas('inspeccione', function ($q) use ($search) {
-                                $q->where('num_servicio', 'LIKE', "%{$search}%");
-                            })
-                            ->orWhereHas('inspeccione.solicitud', function ($q) use ($search) {
-                                $q->where('folio', 'LIKE', "%{$search}%");
-                            })
-                            ->orWhereHas('inspeccione.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
-                                $q->where('numero_cliente', 'LIKE', "%{$search}%");
-                            })
-                            ->orWhereHas('inspeccione.solicitud.empresa', function ($q) use ($search) {
-                                $q->where('razon_social', 'LIKE', "%{$search}%");
-                            })
-                            ->orWhereHas('inspeccione.solicitud.instalacion', function ($q) use ($search) {
-                                $q->where('direccion_completa', 'LIKE', "%{$search}%");
-                            });
-                    }
-                })
-                ->count();
         }
+
+        $query->where(function ($q) use ($search, $tipoDictamenValor) {
+            $q->where('dictamenes_instalaciones.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhereRaw("DATE_FORMAT(dictamenes_instalaciones.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
+            ->orWhere('instalaciones.direccion_completa', 'LIKE', "%{$search}%");
+            
+            // Si se encontró un valor válido para el tipo_dictamen, agregarlo
+            if (!is_null($tipoDictamenValor)) {
+                $q->orWhere('dictamenes_instalaciones.tipo_dictamen', $tipoDictamenValor);
+            }
+        
+        });
+
+
+        $totalFiltered = $query->count();
+    }
+
+    // Ordenamiento especial para num_dictamen con formato 'UMC-###'
+    if ($orderColumn === 'num_dictamen') {
+        $query->orderByRaw("
+            CASE
+                WHEN num_dictamen LIKE 'UMC-%/%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) $orderDirection, -- Año
+            CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '/', 1), '-', -1) AS UNSIGNED) $orderDirection -- Número
+        ");
+    } elseif (!empty($orderColumn)) {
+        $query->orderBy($orderColumn, $orderDirection);
+    }
+
+    // Paginación
+    $dictamenes = $query
+        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
+            'inspeccione',// Relación directa
+            'inspeccione.solicitud',// Relación anidada: inspeccione > solicitu
+            'inspeccione.solicitud.empresa',
+            'inspeccione.solicitud.empresa.empresaNumClientes',
+        ])->offset($start)->limit($limit)->get();
+
 
 
         //MANDA LOS DATOS AL JS
         $data = [];
-        if (!empty($users)) {
-            foreach ($users as $dictamen) {
+        if (!empty($dictamenes)) {
+            foreach ($dictamenes as $dictamen) {
                 $nestedData['id_dictamen'] = $dictamen->id_dictamen ?? 'No encontrado';
                 $nestedData['tipo_dictamen'] = $dictamen->tipo_dictamen ?? 'No encontrado';
                 $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
@@ -243,23 +207,15 @@ class DictamenInstalacionesController extends Controller
             }
         }
 
-
-        if ($data) {
-            return response()->json([
-                'draw' => intval($request->input('draw')),
-                'recordsTotal' => intval($totalData),
-                'recordsFiltered' => intval($totalFiltered),
-                'code' => 200,
-                'data' => $data,
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'Internal Server Error',
-                'code' => 500,
-                'data' => [],
-            ]);
-        }
-    }
+       
+        return response()->json([
+            'draw' => intval($request->input('draw')),
+            'recordsTotal' => intval($totalData),
+            'recordsFiltered' => intval($totalFiltered),
+            'code' => 200,
+            'data' => $data,
+        ]);
+}
 
 
 

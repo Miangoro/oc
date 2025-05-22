@@ -470,14 +470,7 @@
             <td>{{ $marca->marca ?? 'N/A' }}</td>
             <td class="column2">Volumen del Lote Envasado</td>
             <td>
-                @if ($lotesGranel->isNotEmpty())
-                    @foreach ($lotesGranel as $loteGranel)
-                        {{ $loteGranel->volumen ?? 'N/A' }}
-                        @if (!$loop->last), @endif
-                    @endforeach
-                @else
-                    N/A
-                @endif
+                {{ $data->lote_envasado->volumen_total ?? 'No encontrado' }} L
             </td>
         </tr>
     </tbody>

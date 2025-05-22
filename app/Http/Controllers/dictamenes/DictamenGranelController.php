@@ -44,100 +44,81 @@ class DictamenGranelController extends Controller  {
     }
 
 
-    public function index(Request $request)
-    {
-        $columns = [
-        //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
-            1 => 'id_dictamen',
-            2 => 'id_inspeccion',//servicio
-            3 => '',//num-cliente
-            4 => '',//caracteristicas
-            5 => 'fecha_emision',
-            6 => 'estatus',
-        ];
-      $empresaId = null;
-      if (auth()->check() && auth()->user()->tipo == 3) {
-          $empresaId = auth()->user()->empresa?->id_empresa;
-      }
+public function index(Request $request)
+{
+    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
+    // Mapear las columnas según el orden DataTables (índice JS)
+    $columns = [
+        1 => 'num_dictamen',
+        2 => 'folio', 
+        3 => 'razon_social', 
+        4 => '', 
+        5 => 'fecha_emision',
+        6 => 'estatus',
+    ];
 
-        $search = $request->input('search.value');//Obtener el valor de búsqueda
-                    $totalData = Dictamen_Granel::when($empresaId, function ($q) use ($empresaId) {
-            $q->whereHas('inspeccione.solicitud.empresa', function ($q2) use ($empresaId) {
-              $q2->where('id_empresa', $empresaId);
-              });
-              })->count();
+    $totalData = Dictamen_Granel::count();
+    $totalFiltered = $totalData;
+    $limit = $request->input('length');
+    $start = $request->input('start');
+    // Columnas ordenadas desde DataTables
+    $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
+    $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
+    $orderColumn = $columns[$orderColumnIndex] ?? 'num_dictamen'; // Por defecto
+    
+    $search = $request->input('search.value');//Define la búsqueda global.
 
-        /* $totalData = Dictamen_Granel::count(); */// Contar todos los registros sin filtros
-        $totalFiltered = $totalData;// Inicializar totalFiltered con el valor total de registros
 
-        $limit = $request->input('length');// Número de registros por página
-        $start = $request->input('start');// Inicio de la paginación
-        //$order = $columns[$request->input('order.0.column')];//Orden de columna
-        $order = $request->input('order.0.column');//Orden de columna
-        $dir = $request->input('order.0.dir');// Dirección del orden (asc o desc)
+    $query = Dictamen_Granel::query()
+    ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_granel.id_inspeccion')
+    ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+    ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+    ->select('dictamenes_granel.*', 'empresa.razon_social');
 
-        // Validamos si el índice de la columna es válido
-    $orderColumn = isset($columns[$order]) ? $columns[$order] : 'id_dictamen'; //Por defecto ordenar por 'id_dictamen'
 
-    // Si el índice de la columna es 2 (id_inspeccion), ignoramos la ordenación
-    if ($orderColumn === 'id_inspeccion') {
-        $orderColumn = 'id_dictamen';  // Cambiar a id_dictamen si la columna es id_inspeccion
+    // Búsqueda Global
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('dictamenes_granel.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhereRaw("DATE_FORMAT(dictamenes_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+        });
+
+
+        $totalFiltered = $query->count();
     }
 
-        //Declara la relacion
-        $query = Dictamen_Granel::with(['inspeccione.solicitud.empresa'])
-    ->when($empresaId, function ($q) use ($empresaId) {
-        $q->whereHas('inspeccione.solicitud.empresa', function ($q2) use ($empresaId) {
-            $q2->where('id_empresa', $empresaId);
-        });
-    });
+    // Ordenamiento especial para num_dictamen con formato 'UMG-###'
+    if ($orderColumn === 'num_dictamen') {
+        $query->orderByRaw("
+            CASE
+                WHEN num_dictamen LIKE 'UMG-%/%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) $orderDirection, -- Año
+            CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '/', 1), '-', -1) AS UNSIGNED) $orderDirection -- Número
+        ");
+    } elseif (!empty($orderColumn)) {
+        $query->orderBy($orderColumn, $orderDirection);
+    }
 
+    // Paginación
+    $dictamenes = $query
+        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
+            'inspeccione',// Relación directa
+            'inspeccione.solicitud',// Relación anidada: inspeccione > solicitu
+            'inspeccione.solicitud.empresa',
+            'inspeccione.solicitud.empresa.empresaNumClientes',
+        ])->offset($start)->limit($limit)->get();
 
-        //Buscador
-        if (!empty($search)) {
-            $query = $query->where(function ($q) use ($search) {
-                $q->where('id_dictamen', 'LIKE', "%{$search}%")
-                    ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-                    ->orWhere('estatus', 'LIKE', "%{$search}%")
-                    //empresa
-                    ->orWhereHas('inspeccione.solicitud.empresa', function ($q) use ($search) {
-                        $q->where('razon_social', 'LIKE', "%{$search}%");
-                    })
-                    //inspecciones
-                    ->orWhereHas('inspeccione', function ($q) use ($search) {
-                        $q->where('num_servicio', 'LIKE', "%{$search}%")
-                        ->orWhere('id_inspeccion', 'LIKE', "%{$search}%");
-                    })
-                    //num-cliente
-                    ->orWhereHas('inspeccione.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
-                        $q->where('numero_cliente', 'LIKE', "%{$search}%");
-                    })
-                    //solicitudes
-                    ->orWhereHas('inspeccione.solicitud', function ($q) use ($search) {
-                        $q->where('folio', 'LIKE', "%{$search}%")
-                        ->orWhere('caracteristicas', 'LIKE', "%{$search}%");
-                    });
-            });
-            // Calcular el total filtrado
-            $totalFiltered = $query->count();
-        }
-
-        // Obtener resultados con paginación
-        $res = $query->offset($start)//$query vincula al foreach del JS
-            ->limit($limit)
-            ->orderBy($orderColumn, $dir)// Ordenamos por la columna seleccionada
-            /*->orderByRaw("
-        CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
-        CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')
-        ")*/
-            //->orderBy('id_dictamen', 'desc')
-            ->get();
 
 
         //MANDA LOS DATOS AL JS
         $data = [];
-        if (!empty($res)) {
-            foreach ($res as $dictamen) {
+        if (!empty($dictamenes)) {
+            foreach ($dictamenes as $dictamen) {
                 $nestedData['id_dictamen'] = $dictamen->id_dictamen ?? 'No encontrado';
                 $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
                 $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
@@ -200,7 +181,7 @@ class DictamenGranelController extends Controller  {
             'code' => 200,
             'data' => $data,
         ]);
-    }
+}
 
 
 
