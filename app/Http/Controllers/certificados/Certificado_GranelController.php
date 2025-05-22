@@ -40,32 +40,26 @@ class Certificado_GranelController extends Controller
     
 public function index(Request $request)
 {
-    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
-
+    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
-        0 => '',               
         1 => 'num_certificado',
         2 => 'folio',
         3 => 'razon_social', 
         4 => '', 
         5 => 'fecha_emision',
         6 => 'estatus',            
-        7 => '',// acciones
     ];
 
     $totalData = CertificadosGranel::count();
     $totalFiltered = $totalData;
-
     $limit = $request->input('length');
     $start = $request->input('start');
-
-    // Columnas ordenadas desde DataTables
-    $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
-    $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
-    $orderColumn = $columns[$orderColumnIndex] ?? 'num_certificado'; // Por defecto
+    $orderColumnIndex = $request->input('order.0.column');
+    $orderDirection = $request->input('order.0.dir') ?? 'asc';
+    $orderColumn = $columns[$orderColumnIndex] ?? 'num_certificado';// Por defecto
     
-    $search = $request->input('search.value');//Define la búsqueda global.
+    $search = $request->input('search.value');
 
 
     $query = CertificadosGranel::query()
@@ -73,6 +67,7 @@ public function index(Request $request)
     ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_granel.id_inspeccion')
     ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+    ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
     ->select('certificados_granel.*', 'empresa.razon_social');
 
 
@@ -84,7 +79,9 @@ public function index(Request $request)
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
             ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
-            ->orWhereRaw("DATE_FORMAT(certificados_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+            ->orWhereRaw("DATE_FORMAT(certificados_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
+            ->orWhere('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
+            ->orWhere('lotes_granel.folio_fq', 'LIKE', "%{$search}%");
         });
 
         $totalFiltered = $query->count();
