@@ -18,6 +18,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
@@ -51,9 +52,10 @@ class DictamenInstalacionesController extends Controller
 
 public function index(Request $request)
 {
+    //Permiso de empresa
     $empresaId = null;
-    if (auth()->check() && auth()->user()->tipo == 3) {
-        $empresaId = auth()->user()->empresa?->id_empresa;
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaId = Auth::user()->empresa?->id_empresa;
     }
 
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
@@ -140,7 +142,6 @@ public function index(Request $request)
         $totalFiltered = $totalData;
     }
 
-
     // Ordenamiento especial para num_dictamen con formato 'UMC-###'
     if ($orderColumn === 'num_dictamen') {
         $query->orderByRaw("
@@ -155,6 +156,7 @@ public function index(Request $request)
         $query->orderBy($orderColumn, $orderDirection);
     }
 
+    
     // Paginación
     $dictamenes = $query
         ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
@@ -46,9 +47,10 @@ class DictamenGranelController extends Controller  {
 
 public function index(Request $request)
 {
+    //Permiso de empresa
     $empresaId = null;
-    if (auth()->check() && auth()->user()->tipo == 3) {
-        $empresaId = auth()->user()->empresa?->id_empresa;
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaId = Auth::user()->empresa?->id_empresa;
     }
 
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
@@ -100,7 +102,6 @@ public function index(Request $request)
         $totalFiltered = $totalData;
     }
 
-    
     // Ordenamiento especial para num_dictamen con formato 'UMG-###'
     if ($orderColumn === 'num_dictamen') {
         $query->orderByRaw("
@@ -115,6 +116,7 @@ public function index(Request $request)
         $query->orderBy($orderColumn, $orderDirection);
     }
 
+
     // Paginación
     $dictamenes = $query
         ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
@@ -126,72 +128,72 @@ public function index(Request $request)
 
 
         
-        //MANDA LOS DATOS AL JS
-        $data = [];
-        if (!empty($dictamenes)) {
-            foreach ($dictamenes as $dictamen) {
-                $nestedData['id_dictamen'] = $dictamen->id_dictamen ?? 'No encontrado';
-                $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
-                $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
-                $id_sustituye = json_decode($dictamen->observaciones, true) ['id_sustituye'] ?? null;
-                $nestedData['sustituye'] = $id_sustituye ? Dictamen_Granel::find($id_sustituye)->num_dictamen ?? 'No encontrado' : null;
-                $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
-                $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
-                $nestedData['num_servicio'] = $dictamen->inspeccione->num_servicio ?? 'No encontrado';
-                $nestedData['folio_solicitud'] = $dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
-                ///numero y nombre empresa
-                $empresa = $dictamen->inspeccione->solicitud->empresa ?? null;
-                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                    ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
-                    ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
-                $nestedData['numero_cliente'] = $numero_cliente;
-                $nestedData['razon_social'] = $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
-                ///dias vigencia
-                $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
-                $nestedData['fecha_actual'] = $fechaActual;
-                $nestedData['vigencia'] = $dictamen->fecha_vigencia;
-                $fechaVigencia = Carbon::parse($dictamen->fecha_vigencia)->startOfDay();
-                    if ($fechaActual->isSameDay($fechaVigencia)) {
-                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
-                    } else {
-                        $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
-                        if ($diasRestantes > 0) {
-                            if ($diasRestantes > 15) {
-                                $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
-                            } else {
-                                $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
-                            }
-                            $nestedData['diasRestantes'] = $res;
+    //MANDA LOS DATOS AL JS
+    $data = [];
+    if (!empty($dictamenes)) {
+        foreach ($dictamenes as $dictamen) {
+            $nestedData['id_dictamen'] = $dictamen->id_dictamen ?? 'No encontrado';
+            $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
+            $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
+            $id_sustituye = json_decode($dictamen->observaciones, true) ['id_sustituye'] ?? null;
+            $nestedData['sustituye'] = $id_sustituye ? Dictamen_Granel::find($id_sustituye)->num_dictamen ?? 'No encontrado' : null;
+            $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
+            $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
+            $nestedData['num_servicio'] = $dictamen->inspeccione->num_servicio ?? 'No encontrado';
+            $nestedData['folio_solicitud'] = $dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
+            ///numero y nombre empresa
+            $empresa = $dictamen->inspeccione->solicitud->empresa ?? null;
+            $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+                ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+            $nestedData['numero_cliente'] = $numero_cliente;
+            $nestedData['razon_social'] = $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
+            ///dias vigencia
+            $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
+            $nestedData['fecha_actual'] = $fechaActual;
+            $nestedData['vigencia'] = $dictamen->fecha_vigencia;
+            $fechaVigencia = Carbon::parse($dictamen->fecha_vigencia)->startOfDay();
+                if ($fechaActual->isSameDay($fechaVigencia)) {
+                    $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
+                } else {
+                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+                    if ($diasRestantes > 0) {
+                        if ($diasRestantes > 15) {
+                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
                         } else {
-                            $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
                         }
+                        $nestedData['diasRestantes'] = $res;
+                    } else {
+                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
                     }
-                ///solicitud y acta
-                $nestedData['id_solicitud'] = $dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
-                $urls = $dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray() ?? null;
-                $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
+                }
+            ///solicitud y acta
+            $nestedData['id_solicitud'] = $dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
+            $urls = $dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray() ?? null;
+            $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
 
-                ///caractetisticas->id_lote_granel->nombre_lote
-                $nestedData['id_lote_granel'] = $dictamen->lote_granel->nombre_lote ?? 'N/A';
-                $nestedData['folio_fq'] = $dictamen->lote_granel->folio_fq ?? 'N/A';
-                $caracteristicas = json_decode($dictamen->inspeccione->solicitud->caracteristicas, true);
-                $idLoteGranel = $caracteristicas['id_lote_granel'] ?? null;
-                $loteGranel = LotesGranel::find($idLoteGranel); // Busca el lote a granel
-                $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'No encontrado';
-                $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
+            ///caractetisticas->id_lote_granel->nombre_lote
+            $nestedData['id_lote_granel'] = $dictamen->lote_granel->nombre_lote ?? 'N/A';
+            $nestedData['folio_fq'] = $dictamen->lote_granel->folio_fq ?? 'N/A';
+            $caracteristicas = json_decode($dictamen->inspeccione->solicitud->caracteristicas, true);
+            $idLoteGranel = $caracteristicas['id_lote_granel'] ?? null;
+            $loteGranel = LotesGranel::find($idLoteGranel); // Busca el lote a granel
+            $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'No encontrado';
+            $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
 
 
-              $data[] = $nestedData;
-            }
+            $data[] = $nestedData;
         }
+    }
 
-        return response()->json([//Devuelve los datos y el total de registros filtrados
-            'draw' => intval($request->input('draw')),
-            'recordsTotal' => intval($totalData),
-            'recordsFiltered' => intval($totalFiltered),
-            'code' => 200,
-            'data' => $data,
-        ]);
+    return response()->json([//Devuelve los datos y el total de registros filtrados
+        'draw' => intval($request->input('draw')),
+        'recordsTotal' => intval($totalData),
+        'recordsFiltered' => intval($totalFiltered),
+        'code' => 200,
+        'data' => $data,
+    ]);
 }
 
 
