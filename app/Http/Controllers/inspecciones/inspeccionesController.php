@@ -134,9 +134,9 @@ class inspeccionesController extends Controller
             foreach ($solicitudes as $solicitud) {
                 $empresa = $solicitud->empresa;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                ? $empresa->empresaNumClientes
+                    ? $empresa->empresaNumClientes
                     ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-                : 'N/A';
+                    : 'N/A';
                 $nestedData['numero_cliente'] = $numero_cliente;
                 $nestedData['id_inspeccion'] = $solicitud->inspeccion->id_inspeccion ?? '0';
                 $nestedData['id_empresa'] = $solicitud->empresa->id_empresa ?? '0';
@@ -144,8 +144,8 @@ class inspeccionesController extends Controller
                 $nestedData['id_acta'] = $solicitud->inspeccion->actas_inspeccion->id_acta ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids  ?? 'N/A';
                 $nestedData['folio'] = '<b class="text-primary">' . $solicitud->folio . '</b>';
-                $nestedData['folio_info']=$solicitud->folio;
-                $nestedData['num_servicio_info']= $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
+                $nestedData['folio_info'] = $solicitud->folio;
+                $nestedData['num_servicio_info'] = $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
                 $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</apan>';
                 $nestedData['razon_social'] = $solicitud->empresa->razon_social  ?? 'N/A';
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
@@ -159,42 +159,50 @@ class inspeccionesController extends Controller
                 $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo ?? 'N/A';
 
                 $nestedData['fecha_servicio'] = $nestedData['fecha_servicio'] = $solicitud->inspeccion && $solicitud->inspeccion->fecha_servicio
-                ? Helpers::formatearFechaHora($solicitud->inspeccion->fecha_servicio)
-                : '<span class="badge bg-danger">Sin asignar</span>';
+                    ? Helpers::formatearFechaHora($solicitud->inspeccion->fecha_servicio)
+                    : '<span class="badge bg-danger">Sin asignar</span>';
 
                 $urls = $solicitud->documentacion(69)->pluck('url')->toArray();
-                switch ($solicitud->inspeccion?->dictamen?->tipo_dictamen) {
-                    case 1:
-                        $tipo_dictamen = 'dictamen_productor';
-                        break;
-                    case 2:
-                        $tipo_dictamen = 'dictamen_envasador';
-                        break;
-
-                    case 3:
-                        $tipo_dictamen = 'dictamen_comercializador';
-                        break;
-                    case 4:
-                        $tipo_dictamen = 'dictamen_almacen';
-                        break;
-                    default:
-                        $tipo_dictamen = 'Sin tipo';
-                        break;
+                if ($solicitud->inspeccion?->dictamen) {
+                    switch ($solicitud->inspeccion->dictamen->tipo_dictamen) {
+                        case 1:
+                            $tipo_dictamen = 'dictamen_productor';
+                            break;
+                        case 2:
+                            $tipo_dictamen = 'dictamen_envasador';
+                            break;
+                        case 3:
+                            $tipo_dictamen = 'dictamen_comercializador';
+                            break;
+                        case 4:
+                            $tipo_dictamen = 'dictamen_almacen';
+                            break;
+                        default:
+                            $tipo_dictamen = 'Sin tipo';
+                            break;
+                    }
+                } elseif ($solicitud->inspeccion?->dictamenGranel) {
+                    $tipo_dictamen = 'dictamen_granel';
+                } elseif ($solicitud->inspeccion?->dictamenEnvasado) {
+                    $tipo_dictamen = 'dictamen_envasado';
+                } else {
+                    $tipo_dictamen = 'Sin dictamen';
                 }
+
 
                 $nestedData['url_dictamen'] = $solicitud->inspeccion?->dictamen?->id_dictamen
                     ? $tipo_dictamen . '/' . $solicitud->inspeccion->dictamen->id_dictamen
                     : 'Sin subir';
 
 
-            // Comprobamos si $urls está vacío
-            if (empty($urls)) {
-                // Si está vacío, asignamos la etiqueta de "Sin subir"
-                $nestedData['url_acta'] = 'Sin subir';
-            } else {
-                // Si hay URLs, las unimos en una cadena separada por comas
-                $nestedData['url_acta'] = implode(', ', $urls);
-            }
+                // Comprobamos si $urls está vacío
+                if (empty($urls)) {
+                    // Si está vacío, asignamos la etiqueta de "Sin subir"
+                    $nestedData['url_acta'] = 'Sin subir';
+                } else {
+                    // Si hay URLs, las unimos en una cadena separada por comas
+                    $nestedData['url_acta'] = implode(', ', $urls);
+                }
 
 
 
@@ -280,8 +288,8 @@ class inspeccionesController extends Controller
         $datos = inspecciones::with(['inspector', 'solicitud.instalacion', 'solicitud.tipo_solicitud'])->find($id_inspeccion);
 
         $fecha_servicio = !empty($datos->fecha_servicio)
-        ? Helpers::formatearFecha($datos->fecha_servicio)
-        : null;
+            ? Helpers::formatearFecha($datos->fecha_servicio)
+            : null;
 
         $pdf = Pdf::loadView('pdfs.oficioDeComision', ['datos' => $datos, 'fecha_servicio' => $fecha_servicio]);
         return $pdf->stream('F-UV-02-09 Oficio de Comisión Ed.5, Vigente.pdf');
@@ -291,8 +299,8 @@ class inspeccionesController extends Controller
     {
         $datos = inspecciones::with(['inspector', 'solicitud.instalacion', 'solicitud.empresa.empresaNumClientes'])->find($id_inspeccion);
         $fecha_servicio = !empty($datos->fecha_servicio)
-        ? Helpers::formatearFecha($datos->fecha_servicio)
-        : null;
+            ? Helpers::formatearFecha($datos->fecha_servicio)
+            : null;
         $pdf = Pdf::loadView('pdfs.ordenDeServicio', ['datos' => $datos, 'fecha_servicio' => $fecha_servicio]);
         return $pdf->stream('F-UV-02-01 Orden de servicio Ed. 5, Vigente.pdf');
     }
@@ -333,7 +341,7 @@ class inspeccionesController extends Controller
 
                     // Procesar el nuevo archivo
                     $filename = str_replace('/', '-', $request->nombre_documento[$index]) . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $filePath = $file->storeAs('uploads/' . $numeroCliente.'/actas/', $filename, 'public');
+                    $filePath = $file->storeAs('uploads/' . $numeroCliente . '/actas/', $filename, 'public');
 
                     // Actualizar los datos del registro
                     $documentacion_url->nombre_documento = str_replace('/', '-', $request->nombre_documento[$index]);
@@ -369,8 +377,15 @@ class inspeccionesController extends Controller
     {
         try {
             // Aquí obtienes el acta de inspección junto con sus testigos
-            $acta = actas_inspeccion::with('actas_testigo', 'acta_produccion_mezcal', 'actas_equipo_mezcal', 'actas_unidad_envasado', 'actas_unidad_comercializacion',
-             'actas_equipo_envasado','actas_produccion')->findOrFail($id_acta);
+            $acta = actas_inspeccion::with(
+                'actas_testigo',
+                'acta_produccion_mezcal',
+                'actas_equipo_mezcal',
+                'actas_unidad_envasado',
+                'actas_unidad_comercializacion',
+                'actas_equipo_envasado',
+                'actas_produccion'
+            )->findOrFail($id_acta);
 
             return response()->json($acta);
         } catch (\Exception $e) {
@@ -382,8 +397,8 @@ class inspeccionesController extends Controller
     {
         try {
             // Aquí obtienes el acta de inspección junto con sus testigos
-            $datos = solicitudesModel::with('inspeccion','empresa')->where('id_solicitud',$id_solicitud)->first();
-            return response()->json(['success' => true, 'data' =>$datos]);
+            $datos = solicitudesModel::with('inspeccion', 'empresa')->where('id_solicitud', $id_solicitud)->first();
+            return response()->json(['success' => true, 'data' => $datos]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener los datos de la inspección'], 500);
         }
@@ -577,7 +592,8 @@ class inspeccionesController extends Controller
         $totalPaginas = $dompdf->get_canvas()->get_page_count();
         // Pasar el total de páginas a la vista para la segunda renderización
         $pdfFinal = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', [
-            'totalPaginas' => $totalPaginas, 'datos' => $datos
+            'totalPaginas' => $totalPaginas,
+            'datos' => $datos
         ]);
 
         // Retornar el PDF final
@@ -593,9 +609,9 @@ class inspeccionesController extends Controller
 
     public function etiqueta($id_inspeccion)
     {
-      $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
+        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
 
-      $pdf = Pdf::loadView('pdfs.Etiquetas_tapas_sellado',  ['datos' => $datos]);
-      return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
+        $pdf = Pdf::loadView('pdfs.Etiquetas_tapas_sellado',  ['datos' => $datos]);
+        return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
 }

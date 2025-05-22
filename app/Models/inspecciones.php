@@ -49,6 +49,16 @@ class inspecciones extends Model
         return $this->hasOne(Dictamen_instalaciones::class, 'id_inspeccion', 'id_inspeccion');
     }
 
+     public function dictamenGranel()
+    {
+        return $this->hasOne(Dictamen_Granel::class, 'id_inspeccion', 'id_inspeccion');
+    }
+
+      public function dictamenEnvasado()
+    {
+        return $this->hasOne(Dictamen_Envasado::class, 'id_inspeccion', 'id_inspeccion');
+    }
+
 
     public function actas_inspeccion()
     {
