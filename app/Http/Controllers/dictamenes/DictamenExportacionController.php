@@ -77,7 +77,7 @@ public function index(Request $request)
     
     // Columnas ordenadas desde DataTables
     $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
-    $orderDirection = $request->input('order.0.dir') ?? 'desc';// Dirección de ordenamiento
+    $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
     $orderColumn = $columns[$orderColumnIndex] ?? 'num_dictamen'; // Por defecto
     
     $search = $request->input('search.value');//Define la búsqueda global.
@@ -132,8 +132,8 @@ public function index(Request $request)
                 WHEN num_dictamen LIKE 'UMEXP%' THEN 0
                 ELSE 1
             END ASC,
-            CAST(SUBSTRING(num_dictamen, 7, 2) AS UNSIGNED) $orderDirection, -- año (por ejemplo, 25 de UMEXP25-045)
-            CAST(SUBSTRING_INDEX(num_dictamen, '-', -1) AS UNSIGNED) $orderDirection -- número (por ejemplo, 045)
+            CAST(SUBSTRING(num_dictamen, 7, 2) AS UNSIGNED) $orderDirection, -- Año: '25' de 'UMEXP25-559'
+            CAST(SUBSTRING_INDEX(num_dictamen, '-', -1) AS UNSIGNED) $orderDirection -- Número: '559'
         ");
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
