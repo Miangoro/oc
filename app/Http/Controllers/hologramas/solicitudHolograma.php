@@ -76,11 +76,16 @@ class solicitudHolograma extends Controller
         $orderColumnIndex = $request->input('order.0.column');
         $order = $columns[$orderColumnIndex] ?? 'id_solicitud';
         $dir = $request->input('order.0.dir');
-
         $searchValue = $request->input('search.value');
-
-        $query = ModelsSolicitudHolograma::with(['empresa.empresaNumClientes', 'user', 'marcas']);
-
+        if (auth()->user()->tipo == 3) {
+            $empresaId = auth()->user()->id_empresa;
+        } else {
+            $empresaId = null;
+        }
+        $query = ModelsSolicitudHolograma::with(['empresa.empresaNumClientes', 'user', 'marcas'])
+        ->when($empresaId, function ($q) use ($empresaId) {
+            $q->where('id_empresa', $empresaId);
+        });
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('estatus', 'LIKE', "%{$searchValue}%")
@@ -105,7 +110,9 @@ class solicitudHolograma extends Controller
             });
         }
 
-        $totalData = ModelsSolicitudHolograma::count();
+        $totalData = ModelsSolicitudHolograma::when($empresaId, function ($q) use ($empresaId) {
+            $q->where('id_empresa', $empresaId);
+        })->count();
         $totalFiltered = $query->count();
 
         $users = $query->offset($start)
@@ -123,7 +130,7 @@ class solicitudHolograma extends Controller
                 ->whereNotNull('numero_cliente')
                 ->value('numero_cliente');
 
-                
+
                 $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
                 $name = \App\Models\User::where('id', $user->id_solicitante)->value('name');
 
@@ -263,7 +270,7 @@ class solicitudHolograma extends Controller
             $holograma->id_direccion = $request->input('edit_id_direccion');
             $holograma->comentarios = $request->input('edit_comentarios');
             // Solo modificar el folio_final si el folio_inicial es 1
-     
+
                 // Si no es el primer registro, recalcular folio_inicial y folio_final basado en el último registro de la misma empresa y marca
                 $ultimoFolio = ModelsSolicitudHolograma::where('id_empresa', $request->input('edit_id_empresa'))
                     ->where('id_marca', $request->input('edit_id_marca'))
@@ -272,11 +279,11 @@ class solicitudHolograma extends Controller
                     ->orderBy('folio_final', 'desc') // Ordenar por el folio_final más alto
                     ->value('folio_final'); // Obtener el valor del folio_final más alto
                 // Si existe un registro previo, usar su folio_final + 1 como el nuevo folio_inicial
-               
+
                 $folioInicial = $ultimoFolio ? $ultimoFolio + 1 : 1;
                 $holograma->folio_inicial = $folioInicial;
                 $holograma->folio_final = $folioInicial + $request->input('edit_cantidad_hologramas') - 1;
-            
+
             // Guarda los cambios en la base de datos
             $holograma->save();
             // Retorna una respuesta exitosa
@@ -409,7 +416,7 @@ class solicitudHolograma extends Controller
 
             $holograma->save();
             //metodo para guardar pdf
-            
+
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
             return !empty($numero);
@@ -454,7 +461,7 @@ class solicitudHolograma extends Controller
         return $pdf->stream($datos->folio.'.pdf');
     }
 
-    
+
     //Ver activos
     public function editActivos($id)
     {
@@ -548,5 +555,5 @@ class solicitudHolograma extends Controller
 
 
 
-    
+
 }
