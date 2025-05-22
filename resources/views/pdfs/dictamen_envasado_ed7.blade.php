@@ -69,7 +69,7 @@
         .title {
             font-family: 'Arial Negrita', Gadget, sans-serif;
             text-align: center;
-            font-size: 22px;
+            font-size: 20px;
             line-height: 20px;
             margin-top: -35px;
         }
@@ -98,7 +98,7 @@
             font-size: 17px;
             margin-top: -25px;
             margin-left: 0px;
-            margin-right: 5px;
+            margin-right: 15px;
             line-height: 0.8;
         }
 
@@ -106,7 +106,7 @@
             text-align: justify;
             font-size: 15px;
             margin-left: 5px;
-            margin-right: 30px;
+            margin-right: 80px;
             margin-top: -1px;
             line-height: 0.8;
         }
@@ -280,12 +280,18 @@
             z-index: -1;
         }
         .primera-tabla {
-    border: 2px solid #1e6364; /* Cambia el color del borde (ejemplo: rojo) */
+    border: 2px solid #1e6364;
+     width: 98% !important; 
 }
 
 .primera-tabla td, .primera-tabla th {
-    border: 2px solid #1e6364; /* Asegura que también cambie en las celdas */
+    border: 2px solid #1e6364; 
 }
+.segunda-tabla {
+    width: 100% !important;
+    max-width: none;
+    margin-left: 0;
+    margin-right:0;}
     </style>
 </head>
 
@@ -320,27 +326,27 @@
             <td colspan="3" style="width: 80%; vertical-align: middle;">{{ $data->inspeccion?->solicitud?->empresa?->razon_social ?? 'No encontrado' }}</td>
         </tr>
         <tr>
-            <td class="column" style="width: 23%; vertical-align: middle;">Representante legal</td>
-            <td style="width: 37%; vertical-align: middle;">{{ $data->inspeccion?->solicitud?->empresa?->representante ?? 'No encontrado' }}</td>
-            <td class="column" style="width: 15%; vertical-align: middle;">Número de dictamen</td>
+            <td class="column" style="width: 20%; vertical-align: middle;">Representante legal</td>
+            <td style="width: 39%; vertical-align: middle;">{{ $data->inspeccion?->solicitud?->empresa?->representante ?? 'No encontrado' }}</td>
+            <td class="column" style="width: 16%; vertical-align: middle;">Número de dictamen</td>
             <td style="width: 25%; vertical-align: middle;">{{ $data->num_dictamen ?? 'No encontrado' }}</td>
         </tr>
         <tr>
-            <td class="column" style="width: 23%; vertical-align: middle; ">Dirección</td>
-            <td style="width: 37%; vertical-align: middle; text-align: left;">{{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }}</td>
-            <td class="column" style="width: 15%; vertical-align: middle;">Fecha de emisión</td>
+            <td class="column" style="width: 20%; vertical-align: middle; ">Dirección</td>
+            <td style="width: 39%; vertical-align: middle; text-align: left;">{{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }}</td>
+            <td class="column" style="width: 16%; vertical-align: middle;">Fecha de emisión</td>
             <td style="width: 25%; vertical-align: middle;">{{ $fecha_emision ?? '' }}</td>
         </tr>
         <tr>
-            <td class="column" style="width: 23%; vertical-align: middle;">RFC</td>
-            <td style="width: 37%; vertical-align: middle;">{{ $data->inspeccion?->solicitud?->empresa?->rfc ?? 'No encontrado' }}</td>
-            <td class="column" style="width: 15%; vertical-align: middle;">Fecha de vencimiento</td>
+            <td class="column" style="width: 20%; vertical-align: middle;">RFC</td>
+            <td style="width: 39%; vertical-align: middle;">{{ $data->inspeccion?->solicitud?->empresa?->rfc ?? 'No encontrado' }}</td>
+            <td class="column" style="width: 16%; vertical-align: middle;">Fecha de vencimiento</td>
             <td style="width: 25%; vertical-align: middle;">{{ $fecha_vigencia ?? '' }}</td>
         </tr>
         <tr>
-            <td class="column" style="width: 23%; vertical-align: middle;">No. servicio</td>
-            <td style="width: 37%; vertical-align: middle;">{{ $data->inspeccion?->num_servicio ?? 'No encontrado' }}</td>
-            <td class="column" style="width: 15%; vertical-align: middle;">Fecha del servicio</td>
+            <td class="column" style="width: 20%; vertical-align: middle;">No. servicio</td>
+            <td style="width: 39%; vertical-align: middle;">{{ $data->inspeccion?->num_servicio ?? 'No encontrado' }}</td>
+            <td class="column" style="width: 16%; vertical-align: middle;">Fecha del servicio</td>
             <td style="width: 25%; vertical-align: middle;">{{ $fecha_servicio }}</td>
         </tr>
     </tbody>
@@ -349,7 +355,7 @@
 </table>
         <p class="subtema2">II. &nbsp;&nbsp;&nbsp;&nbsp;Descripción del producto</p>
 
-     <table>
+     <table class="segunda-tabla">
     <tbody>
         <tr>
             <td colspan="8" class="colum-title"><strong>PRODUCTO:</strong>
