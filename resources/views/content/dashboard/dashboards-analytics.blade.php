@@ -7,25 +7,7 @@
 
 @section('title', 'Inicio')
 
-<!-- Vendor Styles -->
-@section('vendor-style')
-@vite(['resources/assets/vendor/libs/swiper/swiper.scss'])
-@endsection
 
-<!-- Page Styles -->
-@section('page-style')
-@vite(['resources/assets/vendor/scss/pages/ui-carousel.scss'])
-@endsection
-
-<!-- Vendor Scripts -->
-@section('vendor-script')
-@vite(['resources/assets/vendor/libs/swiper/swiper.js'])
-@endsection
-
-<!-- Page Scripts -->
-@section('page-script')
-@vite(['resources/assets/js/ui-carousel.js'])
-@endsection
 
 @section('vendor-style')
     @vite(['resources/assets/vendor/libs/apex-charts/apex-charts.scss', 'resources/assets/vendor/libs/swiper/swiper.scss'])
@@ -33,15 +15,15 @@
 
 @section('page-style')
     <!-- Page -->
-    @vite(['resources/assets/vendor/scss/pages/cards-statistics.scss', 'resources/assets/vendor/scss/pages/cards-analytics.scss'])
+    @vite(['resources/assets/vendor/scss/pages/cards-statistics.scss', 'resources/assets/vendor/scss/pages/cards-analytics.scss','resources/assets/vendor/scss/pages/ui-carousel.scss'])
 @endsection
 
 @section('vendor-script')
-    @vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js', 'resources/assets/vendor/libs/swiper/swiper.js'])
+    @vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js', 'resources/assets/vendor/libs/swiper/swiper.js','resources/assets/vendor/libs/swiper/swiper.js'])
 @endsection
 
 @section('page-script')
-    @vite(['resources/assets/js/dashboards-analytics.js'])
+    @vite(['resources/assets/js/dashboards-analytics.js','resources/assets/js/ui-carousel.js'])
 @endsection
 
 
