@@ -189,37 +189,44 @@
         {
           "url": "catalogo/marcas",
           "name": "Marcas",
-          "slug": "catalogo-marcas"
+          "slug": "catalogo-marcas",
+          "can" : "Visualizar marcas"
         },
         {
           "url": "catalogo/etiquetas",
           "name": "Etiquetas",
-          "slug": "catalogo-etiquetas"
+          "slug": "catalogo-etiquetas",
+          "can" : "Visualizar etiquetas"
         },
         {
           "url": "catalogo/categorias",
           "name": "Categorías de mezcal",
-          "slug": "catalogo-categorias"
+          "slug": "catalogo-categorias",
+          "can" : "Visualizar categorías de mezcal"
         },
         {
           "url": "catalogo/clases",
           "name": "Clases de mezcal",
-          "slug": "catalogo-clases"
+          "slug": "catalogo-clases",
+          "can" : "Visualizar clases de mezcal"
         },
         {
           "url": "/catalogo/tipos",
           "name": "Tipos de agave",
-          "slug": "catalogo-tipos"
+          "slug": "catalogo-tipos",
+          "can" : "Visualizar tipos de agave"
         },
         {
           "url": "/documentos",
          "name": "Documentación",
-          "slug": "catalogo-documentos"
+          "slug": "catalogo-documentos",
+          "can" : "Visualizar catálogos de documentos"
         },
         {
           "url": "/catalogo/equipos",
           "name": "Equipos",
-          "slug": "catalogo-equipos"
+          "slug": "catalogo-equipos",
+          "can" : "Visualizar catálogo de equipos"
         }
       ]
     },
