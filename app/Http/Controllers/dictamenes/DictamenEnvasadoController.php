@@ -5,11 +5,11 @@ namespace App\Http\Controllers\dictamenes;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\Helpers;
-use App\Models\inspecciones; 
+use App\Models\inspecciones;
 use App\Models\User;
-use App\Models\empresa; 
+use App\Models\empresa;
 use App\Models\lotes_envasado;
-use App\Models\Dictamen_Envasado; 
+use App\Models\Dictamen_Envasado;
 use App\Models\marcas;
 use App\Models\LotesGranel;
 ///Extensiones
@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Storage;
 
 class DictamenEnvasadoController extends Controller
 {
-    
+
     public function UserManagement()
     {
         $inspecciones = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
@@ -51,92 +51,88 @@ class DictamenEnvasadoController extends Controller
 
     public function index(Request $request)
     {
-        $columns = [
-            1 => 'id_dictamen_envasado',
-            2 => 'id_inspeccion',
-            3 => '',
-            4 => '',
-            5 => 'fecha_emision',
-            6 => 'estatus',
-        ];
-    
-        $search = $request->input('search.value');
-        $totalData = Dictamen_envasado::count();
-        $totalFiltered = $totalData;
-    
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
-        /*$order = $columns[$request->input('order.0.column')] ?? 'id_dictamen_envasado';
-        $dir = $request->input('order.0.dir', 'asc');
-    
-        $query = dictamen_envasado::with(['inspeccion', 'empresa', 'lote_envasado']);
-        if (!empty($search)) {
-            $query = $query->where(function ($q) use ($search) {
-                $q->where('id_dictamen_envasado', 'LIKE', "%{$search}%")
-                    ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-                    ->orWhereHas('empresa', function ($q) use ($search) {
-                        $q->where('razon_social', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('inspeccion', function ($q) use ($search) {
-                        $q->where('num_servicio', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('lote_envasado', function ($q) use ($search) {
-                        $q->where('nombre_lote', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhere('estatus', 'LIKE', "%{$search}%");
-            });
-            $totalFiltered = $query->count();
-        }*/
+        DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
 
-        $order = isset($columns[$order]) ? $columns[$order] : 'id_dictamen_envasado';//Por defecto ordenar por 'id_dictamen'
+    // Mapear las columnas según el orden DataTables (índice JS)
+    $columns = [
+        0 => '',               
+        1 => 'num_dictamen',
+        2 => 'folio', //nombre de mi tabla y atributo
+        3 => 'razon_social', 
+        4 => '', //caracteristicas
+        5 => 'fecha_emision',
+        6 => 'estatus',            
+        7 => '',// acciones
+    ];
 
-        // Si el índice de la columna es 2 (id_inspeccion), ignoramos la ordenación
-        if ($order === 'id_inspeccion') {
-            $order = 'id_dictamen_envasado';  // Cambiar a id_dictamen si la columna es id_inspeccion
-        }
+    $totalData = Dictamen_Envasado::count();
+    $totalFiltered = $totalData;
 
-        $query = Dictamen_envasado::with(['inspeccion.solicitud.empresa']);
-        //Buscador
-        if (!empty($search)) {
-            $query = $query->where(function ($q) use ($search) {
-                $q->where('id_dictamen_envasado', 'LIKE', "%{$search}%")
-                    ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-                    ->orWhere('estatus', 'LIKE', "%{$search}%")
-                    //empresa
-                    ->orWhereHas('inspeccion.solicitud.empresa', function ($q) use ($search) {
-                        $q->where('razon_social', 'LIKE', "%{$search}%");
-                    })
-                    //inspecciones
-                    ->orWhereHas('inspeccion', function ($q) use ($search) {
-                        $q->where('num_servicio', 'LIKE', "%{$search}%")
-                        ->orWhere('id_inspeccion', 'LIKE', "%{$search}%");
-                    })
-                    //num-cliente
-                    ->orWhereHas('inspeccion.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
-                        $q->where('numero_cliente', 'LIKE', "%{$search}%");
-                    })
-                    //solicitudes
-                    ->orWhereHas('inspeccion.solicitud', function ($q) use ($search) {
-                        $q->where('folio', 'LIKE', "%{$search}%")
-                        ->orWhere('caracteristicas', 'LIKE', "%{$search}%");
-                    });
-            });
-            // Calcular el total filtrado
-            $totalFiltered = $query->count();
-        }
+    $limit = $request->input('length');
+    $start = $request->input('start');
+
+    // Columnas ordenadas desde DataTables
+    $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
+    $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
+    $orderColumn = $columns[$orderColumnIndex] ?? 'num_dictamen'; // Por defecto
     
-        $res = $query->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir)
-            ->get();
-    
+    $search = $request->input('search.value');//Define la búsqueda global.
 
+
+    $query = Dictamen_Envasado::query()
+    ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_envasado.id_inspeccion')
+    ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+    ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+    ->select('dictamenes_envasado.*', 'empresa.razon_social');
+
+
+    // Búsqueda Global
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('dictamenes_envasado.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhereRaw("DATE_FORMAT(dictamenes_envasado.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+        });
+
+
+        $totalFiltered = $query->count();
+    }
+
+    // Ordenamiento especial para num_certificado con formato 'UME-###'
+    if ($orderColumn === 'num_dictamen') {
+        $query->orderByRaw("
+            CASE
+                WHEN num_dictamen LIKE 'UME-%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(
+                SUBSTRING_INDEX(
+                    SUBSTRING(num_dictamen, LOCATE('UME-', num_dictamen) + 4),
+                    '-', 1
+                ) AS UNSIGNED
+            ) $orderDirection
+        ");
+    } elseif (!empty($orderColumn)) {
+        $query->orderBy($orderColumn, $orderDirection);
+    }
+
+    // Paginación
+    $dictamenes = $query
+        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
+            'inspeccion',// Relación anidada: dictamen > inspeccione
+            'inspeccion.solicitud',// dictamen > inspeccione > solicitud
+            // solicitud > empresa > empresaNumClientes
+            'inspeccion.solicitud.empresa',
+            'inspeccion.solicitud.empresa.empresaNumClientes',
+        ])->offset($start)->limit($limit)->get();
+
+    
         //MANDA LOS DATOS AL JS
         $data = [];
-        if (!empty($res)) {
-            foreach ($res as $dictamen) {
+        if (!empty($dictamenes)) {
+            foreach ($dictamenes as $dictamen) {
                 $nestedData['id_dictamen_envasado'] = $dictamen->id_dictamen_envasado ?? 'No encontrado';
                 $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
                 $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
@@ -185,7 +181,7 @@ class DictamenEnvasadoController extends Controller
                 $data[] = $nestedData;
             }
         }
-    
+
         return response()->json([//Devuelve los datos y el total de registros filtrados
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
@@ -216,7 +212,7 @@ public function store(Request $request)
         $new->fecha_vigencia = $validated['fecha_vigencia'];
         $new->id_firmante = $validated['id_firmante'];
         $new->save();
-    
+
         return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
         Log::error('Error al registrar', [
@@ -230,7 +226,7 @@ public function store(Request $request)
 
 
 ///FUNCION ELIMINAR
-public function destroy($id_dictamen_envasado) 
+public function destroy($id_dictamen_envasado)
 {
     try {
         $eliminar = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
@@ -249,7 +245,7 @@ public function destroy($id_dictamen_envasado)
 
 
 ///FUNCION PARA OBTENER LOS REGISTROS
-public function edit($id_dictamen_envasado) 
+public function edit($id_dictamen_envasado)
 {
     try {
         $editar = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
@@ -272,7 +268,7 @@ public function edit($id_dictamen_envasado)
 }
 
 ///FUNCION ACTUALIZAR
-public function update(Request $request, $id_dictamen_envasado) 
+public function update(Request $request, $id_dictamen_envasado)
 {
     try {
         $validated = $request->validate([
@@ -303,9 +299,9 @@ public function update(Request $request, $id_dictamen_envasado)
 }
 
 
-     
-///FUNCION REEXPEDIR 
-public function reexpedir(Request $request) 
+
+///FUNCION REEXPEDIR
+public function reexpedir(Request $request)
 {
     try {
         $request->validate([
@@ -327,10 +323,10 @@ public function reexpedir(Request $request)
         $reexpedir = Dictamen_Envasado::findOrFail($request->id_dictamen_envasado);
 
         if ($request->accion_reexpedir == '1') {
-            $reexpedir->estatus = 1; 
+            $reexpedir->estatus = 1;
                 $observacionesActuales = json_decode($reexpedir->observaciones, true);
                 $observacionesActuales['observaciones'] = $request->observaciones;//Actualiza solo 'observaciones'
-            $reexpedir->observaciones = json_encode($observacionesActuales); 
+            $reexpedir->observaciones = json_encode($observacionesActuales);
             $reexpedir->save();
 
             return response()->json(['message' => 'Cancelado correctamente.']);
@@ -340,7 +336,7 @@ public function reexpedir(Request $request)
                 $observacionesActuales = json_decode($reexpedir->observaciones, true);
                 $observacionesActuales['observaciones'] = $request->observaciones;
             $reexpedir->observaciones = json_encode($observacionesActuales);
-            $reexpedir->save(); 
+            $reexpedir->save();
 
             // Crear un nuevo registro de reexpedición
             $new = new Dictamen_Envasado();
@@ -408,29 +404,7 @@ public function MostrarDictamenEnvasado($id_dictamen)
     if($data->id_firmante == 14){ //Mario
         $pass = 'v921009villa';
     }
-  $firmaDigital = Helpers::firmarCadena(
-    $data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccion?->num_servicio,
-    $pass,
-    $data->id_firmante
-);
-
-// 📌 Convertir JsonResponse en array válido
-if ($firmaDigital instanceof JsonResponse) {
-    $firmaDigitalArray = json_decode($firmaDigital->getContent(), true) ?? [];
-
-    if (isset($firmaDigitalArray['error'])) {
-        Log::error('Error en la firma digital: ' . $firmaDigitalArray['error']);
-        $firmaDigital = [
-            'cadena_original' => 'No disponible',
-            'firma' => 'Error al generar firma'
-        ]; 
-    } else {
-        $firmaDigital = $firmaDigitalArray; // ✅ Ahora es un array accesible en el Blade
-    }
-}
-
-// Depuración: Ver qué contiene firmaDigital antes de pasarlo a Blade
-
+    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccion?->num_servicio, $pass, $data->id_firmante);
 
     $loteEnvasado = $data->lote_envasado ?? null;
     $marca = $loteEnvasado ? $loteEnvasado->marca : null;
@@ -442,7 +416,7 @@ if ($firmaDigital instanceof JsonResponse) {
     $id_sustituye = json_decode($data->observaciones, true)['id_sustituye'] ?? null;
     $nombre_id_sustituye = $id_sustituye ? Dictamen_Envasado::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
 
-    
+
     // Renderizar el PDF con los lotes a granel
     //$pdf = Pdf::loadView('pdfs.dictamen_envasado_ed6', [
     $pdf = [
@@ -469,7 +443,7 @@ if ($firmaDigital instanceof JsonResponse) {
 
 }
 
-   
+
 
 
 

@@ -85,7 +85,7 @@
 
         .subtema2 {
             font-size: 14px;
-            margin-top: -5px;
+            margin-top: 0px;
             margin-bottom: 15px;
             margin-left: 0px;
             margin-right: 30px;
@@ -95,17 +95,17 @@
 
         .text {
             text-align: justify;
-            font-size: 15px;
+            font-size: 17px;
             margin-top: -25px;
-            margin-left: 10px;
-            margin-right: 30px;
+            margin-left: 0px;
+            margin-right: 5px;
             line-height: 0.8;
         }
 
         .text2 {
             text-align: justify;
             font-size: 15px;
-            margin-left: 10px;
+            margin-left: 5px;
             margin-right: 30px;
             margin-top: -1px;
             line-height: 0.8;
@@ -126,9 +126,11 @@
         td,
         th {
             border: 2px solid #003300;
-            padding: 5px;
+            padding: 3px;
             vertical-align: top;
             word-wrap: break-word;
+            text-align: center;
+            vertical-align: middle;
         }
 
         td {
@@ -277,6 +279,13 @@
             white-space: nowrap;
             z-index: -1;
         }
+        .primera-tabla {
+    border: 2px solid #1e6364; /* Cambia el color del borde (ejemplo: rojo) */
+}
+
+.primera-tabla td, .primera-tabla th {
+    border: 2px solid #1e6364; /* Asegura que también cambie en las celdas */
+}
     </style>
 </head>
 
@@ -304,46 +313,46 @@
 
         <p class="subtema" >I. &nbsp;&nbsp;&nbsp;&nbsp;Datos de la empresa</p>
 
-      <table style=" text-align: center; ">
+      <table class="primera-tabla" style=" text-align: center; ">
     <tbody>
         <tr>
             <td class="column" style="width: 20%; vertical-align: middle;">Nombre de la empresa</td>
             <td colspan="3" style="width: 80%; vertical-align: middle;">{{ $data->inspeccion?->solicitud?->empresa?->razon_social ?? 'No encontrado' }}</td>
         </tr>
         <tr>
-            <td class="column" style="width: 20%; vertical-align: middle;">Representante legal</td>
-            <td style="width: 40%; vertical-align: middle;">{{ $data->inspeccion?->solicitud?->empresa?->representante ?? 'No encontrado' }}</td>
+            <td class="column" style="width: 23%; vertical-align: middle;">Representante legal</td>
+            <td style="width: 37%; vertical-align: middle;">{{ $data->inspeccion?->solicitud?->empresa?->representante ?? 'No encontrado' }}</td>
             <td class="column" style="width: 15%; vertical-align: middle;">Número de dictamen</td>
             <td style="width: 25%; vertical-align: middle;">{{ $data->num_dictamen ?? 'No encontrado' }}</td>
         </tr>
         <tr>
-            <td class="column" style="width: 20%; vertical-align: middle;">Dirección</td>
-            <td style="width: 40%; vertical-align: middle;">{{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }}</td>
+            <td class="column" style="width: 23%; vertical-align: middle; ">Dirección</td>
+            <td style="width: 37%; vertical-align: middle; text-align: left;">{{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }}</td>
             <td class="column" style="width: 15%; vertical-align: middle;">Fecha de emisión</td>
             <td style="width: 25%; vertical-align: middle;">{{ $fecha_emision ?? '' }}</td>
         </tr>
         <tr>
-            <td class="column" style="width: 20%; vertical-align: middle;">RFC</td>
-            <td style="width: 40%; vertical-align: middle;">{{ $data->inspeccion?->solicitud?->empresa?->rfc ?? 'No encontrado' }}</td>
+            <td class="column" style="width: 23%; vertical-align: middle;">RFC</td>
+            <td style="width: 37%; vertical-align: middle;">{{ $data->inspeccion?->solicitud?->empresa?->rfc ?? 'No encontrado' }}</td>
             <td class="column" style="width: 15%; vertical-align: middle;">Fecha de vencimiento</td>
             <td style="width: 25%; vertical-align: middle;">{{ $fecha_vigencia ?? '' }}</td>
         </tr>
         <tr>
-            <td class="column" style="width: 20%; vertical-align: middle;">No. servicio</td>
-            <td style="width: 40%; vertical-align: middle;">{{ $data->inspeccion?->num_servicio ?? 'No encontrado' }}</td>
+            <td class="column" style="width: 23%; vertical-align: middle;">No. servicio</td>
+            <td style="width: 37%; vertical-align: middle;">{{ $data->inspeccion?->num_servicio ?? 'No encontrado' }}</td>
             <td class="column" style="width: 15%; vertical-align: middle;">Fecha del servicio</td>
             <td style="width: 25%; vertical-align: middle;">{{ $fecha_servicio }}</td>
         </tr>
     </tbody>
 </table>
-<br>
+
 </table>
         <p class="subtema2">II. &nbsp;&nbsp;&nbsp;&nbsp;Descripción del producto</p>
 
      <table>
     <tbody>
         <tr>
-            <td colspan="6" class="colum-title"><strong>PRODUCTO:</strong>
+            <td colspan="8" class="colum-title"><strong>PRODUCTO:</strong>
                 @if ($lotesGranel->isNotEmpty())
                     @foreach ($lotesGranel as $loteGranel)
                         {{ $loteGranel->categoria->categoria ?? 'No encontrado' }}
@@ -394,7 +403,7 @@
             </td>
         </tr>
       <tr>
-            <td class="column2" style="text-align: center;">Categoría y Clase</td>
+            <td class="column2" style="text-align: center; height: 30px; padding: 3px; line-height: 1;">Categoría y Clase</td>
             <td style="text-align: center;">
                 @if ($lotesGranel->isNotEmpty())
                     @foreach ($lotesGranel as $loteGranel)
@@ -514,7 +523,7 @@
         {{ $firmaDigital['firma'] }}
     </p>
 @else
-    <p>Error: No se pudo generar la firma digital</p>
+    
 @endif
             </span>
         </p>
