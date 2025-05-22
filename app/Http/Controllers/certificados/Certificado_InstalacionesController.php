@@ -44,35 +44,45 @@ public function index(Request $request)
     $columns = [
         1 => 'num_certificado',
         2 => 'folio',
-        3 => 'razon_social', 
-        4 => '', 
+        3 => 'razon_social',
+        4 => '',
         5 => 'fecha_emision',
-        6 => 'estatus',            
+        6 => 'estatus',
     ];
 
-    $totalData = Certificados::count();
-    $totalFiltered = $totalData;
+      $empresaId = null;
+      if (auth()->check() && auth()->user()->tipo == 3) {
+          $empresaId = auth()->user()->empresa?->id_empresa;
+      }
+
     $limit = $request->input('length');
     $start = $request->input('start');
     $orderColumnIndex = $request->input('order.0.column');
     $orderDirection = $request->input('order.0.dir') ?? 'asc';
     $orderColumn = $columns[$orderColumnIndex] ?? 'num_certificado';// Por defecto
-    
+
     $search = $request->input('search.value');
 
 
     $query = Certificados::query()
+
     ->leftJoin('dictamenes_instalaciones', 'dictamenes_instalaciones.id_dictamen', '=', 'certificados.id_dictamen')
     ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_instalaciones.id_inspeccion')
     ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
     ->leftJoin('instalaciones', 'instalaciones.id_instalacion', '=', 'dictamenes_instalaciones.id_instalacion')
     ->select('certificados.*', 'empresa.razon_social');
-
+      if ($empresaId) {
+          $query->where('solicitudes.id_empresa', $empresaId);
+      }
+      // Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
+      $baseQuery = clone $query;
+      // totalData (sin búsqueda)
+      $totalData = $baseQuery->count();
 
     // Búsqueda Global
     if (!empty($search)) {
-        $query->where(function ($q) use ($search) {
+        $query->where(function ($q) use ($search){
             $q->where('certificados.num_certificado', 'LIKE', "%{$search}%")
             ->orWhere('dictamenes_instalaciones.num_dictamen', 'LIKE', "%{$search}%")
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
@@ -83,7 +93,9 @@ public function index(Request $request)
         });
 
         $totalFiltered = $query->count();
-    }
+    }   else {
+    $totalFiltered = $totalData;
+}
 
     // Ordenamiento especial para num_certificado con formato 'CIDAM C-INS25-###'
     if ($orderColumn === 'num_certificado') {
@@ -126,12 +138,12 @@ public function index(Request $request)
 
                 $fechaActual = Carbon::now()->startOfDay(); // Asegúrate de trabajar solo con fechas, sin horas
                 $fechaVigencia = Carbon::parse($certificado->fecha_vencimiento)->startOfDay();
-                
+
                 if ($fechaActual->isSameDay($fechaVigencia)) {
                     $restantes = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
                 } else {
                     $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
-                
+
                     if ($diasRestantes > 0) {
                         if($diasRestantes > 15){
                             $res = "<span class='badge bg-label-success'>$diasRestantes días de vigencia.</span>";
@@ -143,7 +155,7 @@ public function index(Request $request)
                         $restantes = "<span class='badge bg-label-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
                     }
                 }
-        
+
             return [
                 'id_certificado' => $certificado->id_certificado,
                 'id_dictamen' => $certificado->id_dictamen,
@@ -254,7 +266,7 @@ public function index(Request $request)
             'id_firmante' => 'required|integer',
         ]);
 
-        //$certificado = 
+        //$certificado =
         Certificados::create([
             'id_dictamen' => $validatedData['id_dictamen'],
             'num_certificado' => $validatedData['num_certificado'],
@@ -281,9 +293,9 @@ public function index(Request $request)
                 $directory = 'uploads/' . $numeroCliente;
                 $path = storage_path('app/public/' . $directory);
                 if (!file_exists($path)) {
-                    mkdir($path, 0777, true); 
-                }  
-                
+                    mkdir($path, 0777, true);
+                }
+
                     $nombreDocumento =  'Certificado '.str_replace('/', '-', $certificado->num_certificado);
 
                     $filename = $nombreDocumento .  '.pdf' ;
@@ -304,11 +316,11 @@ public function index(Request $request)
                     $documentacion_url = new Documentacion_url();
                     $documentacion_url->id_relacion =  $certificado->dictamen->id_instalacion;
                     $documentacion_url->id_documento = $id_documento ?? null;
-                    $documentacion_url->nombre_documento = $nombreDocumento;  
-                    $documentacion_url->url = $filename;  
+                    $documentacion_url->nombre_documento = $nombreDocumento;
+                    $documentacion_url->url = $filename;
                     $documentacion_url->id_empresa =  $certificado->dictamen->instalaciones->id_empresa;
                     $documentacion_url->save();
-                
+
         */
         return response()->json(['message' => 'Registrado correctamente.']);
     }
@@ -391,20 +403,20 @@ public function index(Request $request)
             $directory = 'uploads/' . $numeroCliente;
                 $path = storage_path('app/public/' . $directory);
                 if (!file_exists($path)) {
-                    mkdir($path, 0777, true); 
-                }  
-            
+                    mkdir($path, 0777, true);
+                }
+
             $nombreDocumento =  'Certificado '.str_replace('/', '-', $certificado->num_certificado);
             $certificado_actual = Documentacion_url::where('nombre_documento', $nombreDocumento)->first();
             // dd($certificado_actual);
 
             if ($certificado_actual) {
                 // Elimina el archivo físico si existe
-                
+
                 if (Storage::exists('public/' . $directory . '/' . $certificado_actual->url)) {
                     Storage::delete('public/' . $directory . '/' . $certificado_actual->url);
                 }
-            
+
                 // Elimina el registro de la base de datos
                 $certificado_actual->delete();
             }
@@ -427,7 +439,7 @@ public function index(Request $request)
             $instalaciones->fecha_vigencia = $certificado->fecha_vigencia;
             $instalaciones->save();
 
-                
+
                 $nombreDocumento =  'Certificado '.str_replace('/', '-', $certificado->num_certificado);
                 $filename = $nombreDocumento.'.pdf' ;
                 $filePath = storage_path('app/public/' . $directory . '/' . $filename);
@@ -443,13 +455,13 @@ public function index(Request $request)
                 $id_documento =128;
                 $this->pdf_certificado_comercializador($certificado->id_certificado,true,$filePath);
                 }
-                
+
 
                 $documentacion_url = new Documentacion_url();
                 $documentacion_url->id_relacion =  $certificado->dictamen->id_instalacion;
                 $documentacion_url->id_documento = $id_documento ?? null;
-                $documentacion_url->nombre_documento = $nombreDocumento;  
-                $documentacion_url->url = $filename;  
+                $documentacion_url->nombre_documento = $nombreDocumento;
+                $documentacion_url->url = $filename;
                 $documentacion_url->id_empresa =  $certificado->dictamen->instalaciones->id_empresa;
                 $documentacion_url->save();
             */
@@ -466,7 +478,7 @@ public function index(Request $request)
 
 
 
-    ///FUNCION REEXPEDIR 
+    ///FUNCION REEXPEDIR
     public function reexpedir(Request $request)
     {
         try {
@@ -596,7 +608,7 @@ public function index(Request $request)
             $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
             $revisor->observaciones = $validatedData['observaciones'] ?? '';
             $revisor->save();
-            
+
 
             $empresa = $certificado->dictamen->inspeccione->solicitud->empresa;
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
@@ -606,14 +618,14 @@ public function index(Request $request)
             if ($request->hasFile('url')) {
             if ($revisor->id_revision) {
                 // Buscar el registro existente
-        
-            
+
+
                     // Si no existe, crea una nueva instancia
                     $documentacion_url = new Documentacion_url();
                     $documentacion_url->id_relacion = $revisor->id_revision;
                     $documentacion_url->id_documento = $request->id_documento;
                     $documentacion_url->id_empresa = $empresa->id_empresa;
-                
+
 
                 // Procesar el nuevo archivo
                 $file = $request->file('url');
@@ -726,7 +738,7 @@ public function index(Request $request)
             'categorias' => $datos->dictamen?->inspeccione?->solicitud?->categorias_mezcal()?->pluck('categoria')->implode(', ') ?? 'No encontrado',
             'clases' => $datos->dictamen?->inspeccione?->solicitud?->clases_agave()?->pluck('clase')->implode(', ') ?? 'No encontrado',
         ];
-        
+
         /*if ($guardar && $rutaGuardado) {
             $pdf = Pdf::loadView('pdfs.certificado_productor_mezcal', $pdfData);
             $pdf->save($rutaGuardado);
@@ -865,7 +877,7 @@ public function index(Request $request)
         }else{
             $edicion = 'pdfs.certificado_comercializador_ed5';
         }
-       
+
         return Pdf::loadView($edicion, $pdfData)->stream('Certificado como Comercializador de Mezcal NOM-070-SCFI-2016 F7.1-01-37.pdf');
     }
 

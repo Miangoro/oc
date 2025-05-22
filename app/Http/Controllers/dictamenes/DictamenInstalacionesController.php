@@ -69,11 +69,11 @@ class DictamenInstalacionesController extends Controller
       if (auth()->check() && auth()->user()->tipo == 3) {
           $empresaId = auth()->user()->empresa?->id_empresa;
       }
-            $totalData = Dictamen_instalaciones::when($empresaId, function ($q) use ($empresaId) {
-            $q->whereHas('inspeccione.solicitud.empresa', function ($q2) use ($empresaId) {
-              $q2->where('id_empresa', $empresaId);
-              });
-              })->count();
+                $totalData = Dictamen_instalaciones::when($empresaId, function ($q) use ($empresaId) {
+              $q->whereHas('inspeccione.solicitud.empresa', function ($q2) use ($empresaId) {
+                  $q2->where('id_empresa', $empresaId);
+                });
+          })->count();
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');

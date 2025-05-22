@@ -85,13 +85,7 @@ class DictamenGranelController extends Controller  {
     }
 
         //Declara la relacion
-        $query = Dictamen_Granel::with(['inspeccione.solicitud.empresa'])
-    ->when($empresaId, function ($q) use ($empresaId) {
-        $q->whereHas('inspeccione.solicitud.empresa', function ($q2) use ($empresaId) {
-            $q2->where('id_empresa', $empresaId);
-        });
-    });
-
+        $query = Dictamen_Granel::with(['inspeccione.solicitud.empresa']);
 
         //Buscador
         if (!empty($search)) {
