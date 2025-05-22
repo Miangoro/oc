@@ -2532,7 +2532,13 @@ $(function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(formDictaminacion);
+      $('#btnEditExport').prop('disabled', true);
 
+      $('#btnEditExport').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+      setTimeout(function () {
+        $('#btnEditExport').prop('disabled', false);
+        $('#btnEditExport').html('<i class="ri-add-line"></i> Editar');
+      }, 3000);
       // Construir las características como un JSON completo
       const caracteristicas = {
         tipo_solicitud: $('#tipo_solicitud_edit').val(),
@@ -3230,7 +3236,7 @@ $(function () {
         }
       });
     });
-        $('#id_empresa_barricada, #fecha_visita_ingreso_barrica, #id_instalacion_barricada, #id_lote_granel_barricada, #fecha_inicio_ingreso_barrica').on('change', function () {
+    $('#id_empresa_barricada, #fecha_visita_ingreso_barrica, #id_instalacion_barricada, #id_lote_granel_barricada, #fecha_inicio_ingreso_barrica').on('change', function () {
       fvBarricada.revalidateField($(this).attr('name'));
     });
   });
@@ -3405,7 +3411,7 @@ $(function () {
             }
           }
         },
-        instalacion_vigilancia:{
+        instalacion_vigilancia: {
           validators: {
             notEmpty: {
               message: 'Por favor seleccione una dirección de destino.'
@@ -3952,7 +3958,12 @@ $(function () {
     }).on('core.form.valid', function () {
       // Recolectar el resto de los datos del formulario
       const formData = new FormData(addPedidoExportacionForm);
-
+      $('#btnAddExport').prop('disabled', true);
+      $('#btnAddExport').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnAddExport').prop('disabled', false);
+        $('#btnAddExport').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
       // Construir las características como un JSON completo
       const caracteristicas = {
         tipo_solicitud: $('#tipo_solicitud').val(),
@@ -4012,6 +4023,9 @@ $(function () {
           });
         }
       });
+    });
+    $('#id_empresa_solicitud_exportacion, #fecha_visita_exportacion, #id_instalacion_exportacion, #direccion_destinatario_ex, #id_instalacion_envasado_2').on('change', function () {
+      fv.revalidateField($(this).attr('name'));
     });
   });
 

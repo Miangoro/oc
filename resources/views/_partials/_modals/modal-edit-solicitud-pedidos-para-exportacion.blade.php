@@ -46,7 +46,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input id="fecha_visita_edit_exportacion" placeholder="YYYY-MM-DD" class="form-control"
+                                <input id="fecha_visita_edit_exportacion" placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
                                     type="datetime-local" name="fecha_visita" />
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
