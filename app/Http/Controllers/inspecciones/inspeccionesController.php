@@ -181,18 +181,20 @@ class inspeccionesController extends Controller
                             $tipo_dictamen = 'Sin tipo';
                             break;
                     }
+                    $id = $solicitud->inspeccion->dictamen->id_dictamen;
                 } elseif ($solicitud->inspeccion?->dictamenGranel) {
                     $tipo_dictamen = 'dictamen_granel';
+                    $id = $solicitud->inspeccion->dictamenGranel->id_dictamen;
                 } elseif ($solicitud->inspeccion?->dictamenEnvasado) {
                     $tipo_dictamen = 'dictamen_envasado';
+                    $id = $solicitud->inspeccion->dictamenEnvasado->id_dictamen;
                 } else {
-                    $tipo_dictamen = 'Sin dictamen';
+                    $tipo_dictamen = null;
+                    $id = null;
                 }
 
+                $nestedData['url_dictamen'] = $id ? $tipo_dictamen . '/' . $id : 'Sin subir';
 
-                $nestedData['url_dictamen'] = $solicitud->inspeccion?->dictamen?->id_dictamen
-                    ? $tipo_dictamen . '/' . $solicitud->inspeccion->dictamen->id_dictamen
-                    : 'Sin subir';
 
 
                 // Comprobamos si $urls está vacío
