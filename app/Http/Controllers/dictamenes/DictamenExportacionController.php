@@ -125,16 +125,16 @@ public function index(Request $request)
     }
 
 
-    // Ordenamiento especial para num_dictamen con formato 'UMEXP-###'
+    // Ordenamiento especial para num_dictamen con formato 'UMEXP25-###'
     if ($orderColumn === 'num_dictamen') {
         $query->orderByRaw("
             CASE
-                WHEN num_dictamen LIKE 'UMEXP-%' THEN 0
+                WHEN num_dictamen LIKE 'UMEXP25-%' THEN 0
                 ELSE 1
             END ASC,
             CAST(
                 SUBSTRING_INDEX(
-                    SUBSTRING(num_dictamen, LOCATE('UMEXP-', num_dictamen) + 6),
+                    SUBSTRING(num_dictamen, LOCATE('UMEXP25-', num_dictamen) + 8),
                     '-', 1
                 ) AS UNSIGNED
             ) $orderDirection

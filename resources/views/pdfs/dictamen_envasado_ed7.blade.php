@@ -11,6 +11,7 @@
             font-family: 'calibri';
             margin-left: 20px;
             margin-right: 20px;
+            font-size: 13px;
         }
 
         .header {
@@ -38,8 +39,8 @@
             text-align: right;
         }
         .description-container {
-     margin-top: 20px; /* 🔹 Espacio entre el logo y el texto */
-    width: 80%; /* 🔹 Controla el ancho del texto */
+     margin-top: 20px; /*  Espacio entre el logo y el texto */
+    width: 80%; /*  Controla el ancho del texto */
     text-align: center;
 }
 
@@ -95,7 +96,7 @@
 
         .text {
             text-align: justify;
-            font-size: 17px;
+            font-size: 16px;
             margin-top: -25px;
             margin-left: 0px;
             margin-right: 15px;
@@ -118,13 +119,11 @@
             margin: auto;
             margin-left: 0px;
             margin-top: -15px;
-            font-size: 12px;
             line-height: 1;
             vertical-align: top;
         }
 
-        td,
-        th {
+        td, th {
             border: 2px solid #003300;
             padding: 3px;
             vertical-align: top;
@@ -281,7 +280,7 @@
         }
         .primera-tabla {
     border: 2px solid #1e6364;
-     width: 98% !important; 
+    width: 100% !important;
 }
 
 .primera-tabla td, .primera-tabla th {
@@ -333,7 +332,10 @@
         </tr>
         <tr>
             <td class="column" style="width: 20%; vertical-align: middle; ">Dirección</td>
-            <td style="width: 39%; vertical-align: middle; text-align: left;">{{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }}</td>
+            <td style="width: 39%; vertical-align: middle; text-align: justify;">
+                <b>Domicilio Fiscal:</b> {{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }}
+                <br><b>Domicilio de Instalaciones:</b> {{ $data->inspeccion?->solicitud?->instalacion?->direccion_completa ?? 'No encontrado' }}
+            </td>
             <td class="column" style="width: 16%; vertical-align: middle;">Fecha de emisión</td>
             <td style="width: 25%; vertical-align: middle;">{{ $fecha_emision ?? '' }}</td>
         </tr>
@@ -361,14 +363,14 @@
             <td colspan="8" class="colum-title"><strong>PRODUCTO:</strong>
                 @if ($lotesGranel->isNotEmpty())
                     @foreach ($lotesGranel as $loteGranel)
-                        {{ $loteGranel->categoria->categoria ?? 'No encontrado' }}
+                        {{ strtoupper($loteGranel->categoria->categoria ?? 'No encontrado') }}
                         @if (!$loop->last), @endif
                     @endforeach
                 @else
                     --
                 @endif
                 <br><strong>ORIGEN:</strong> 
-                {{ $data->inspeccion->solicitud->instalacion->estados->nombre ?? 'N/A' }}
+                {{ strtoupper($data->inspeccion->solicitud->instalacion->estados->nombre ?? 'N/A') }}
             </td>
         </tr>
         <tr>
@@ -430,7 +432,7 @@
         </tr>
         <tr>
             <td class="column2" style="text-align: center;">Tipo de Maguey</td>
-            <td style="text-align: center;">
+            <td style="text-align: center; font-size: 11px;">
                 @if ($lotesGranel->isNotEmpty())
                     @foreach ($lotesGranel as $loteGranel)
                         @php
