@@ -83,7 +83,7 @@ public function index(Request $request)
     ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
     ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
-    ->select('certificados_exportacion.*', 'empresa.razon_social')
+    ->select('certificados_exportacion.*', 'empresa.razon_social')//especifica la columna obtenida
     /*->where(function ($q) use ($search) {
         $q->where('empresa.razon_social', 'LIKE', "%{$search}%")
           ->orWhere('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")

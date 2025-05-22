@@ -20,6 +20,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 
 class Certificado_InstalacionesController extends Controller
@@ -36,72 +37,84 @@ class Certificado_InstalacionesController extends Controller
     }
 
 
-    public function index(Request $request)
-    {
-        $columns = [
-            1 => 'id_certificado',
-            2 => 'id_dictamen',
-            3 => '',
-            4 => '',
-            5 => 'fechas',
-            6 => 'estatus',
-        ];
+public function index(Request $request)
+{
+    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
+    // Mapear las columnas según el orden DataTables (índice JS)
+    $columns = [
+        1 => 'num_certificado',
+        2 => 'folio',
+        3 => 'razon_social', 
+        4 => '', 
+        5 => 'fecha_emision',
+        6 => 'estatus',            
+    ];
 
-        $search = $request->input('search.value');
-        $totalData = Certificados::count();
+    $totalData = Certificados::count();
+    $totalFiltered = $totalData;
+    $limit = $request->input('length');
+    $start = $request->input('start');
+    $orderColumnIndex = $request->input('order.0.column');
+    $orderDirection = $request->input('order.0.dir') ?? 'asc';
+    $orderColumn = $columns[$orderColumnIndex] ?? 'num_certificado';// Por defecto
+    
+    $search = $request->input('search.value');
 
-        $orderIndex = $request->input('order.0.column');
-        $orderDir = $request->input('order.0.dir');
-        $order = $columns[$orderIndex] ?? 'num_certificado';
-        $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
 
-        // Base query with eager loading
-        $query = Certificados::with([
-            'dictamen.inspeccione.solicitud.instalaciones.empresa.empresaNumClientes',
-            'dictamen.instalaciones',
-            'dictamen.inspeccione.inspector',
-            'firmante'
-        ]);
+    $query = Certificados::query()
+    ->leftJoin('dictamenes_instalaciones', 'dictamenes_instalaciones.id_dictamen', '=', 'certificados.id_dictamen')
+    ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_instalaciones.id_inspeccion')
+    ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+    ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+    ->leftJoin('instalaciones', 'instalaciones.id_instalacion', '=', 'dictamenes_instalaciones.id_instalacion')
+    ->select('certificados.*', 'empresa.razon_social');
 
-        // Apply search filter if present
-        if ($search) {
-            $query->where('num_certificado', 'LIKE', "%{$search}%")
-                ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
-                ->orWhereHas('firmante', function ($q) use ($search) {
-                    $q->where('name', 'LIKE', "%{$search}%");
-                })->orWhereHas('dictamen.instalaciones', function ($q) use ($search) {
-                    $q->where('direccion_completa', 'LIKE', "%{$search}%");
-                });
-        }
 
-        // Calculate filtered records
+    // Búsqueda Global
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('certificados.num_certificado', 'LIKE', "%{$search}%")
+            ->orWhere('dictamenes_instalaciones.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhereRaw("DATE_FORMAT(certificados.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
+            ->orWhere('instalaciones.direccion_completa', 'LIKE', "%{$search}%");
+        });
+
         $totalFiltered = $query->count();
+    }
 
-        // Apply sorting and pagination
-        $query->offset($request->input('start'))
-            ->limit($request->input('length'))
-            //->where('num_certificado', 'like', 'CIDAM C-INS25-%')
-            /*->orderByRaw("
-            CAST(SUBSTRING_INDEX(num_certificado, '/', -1) AS UNSIGNED) {$dir}, -- Ordena el año
-            CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_certificado, '-', -1), '/', 1) AS UNSIGNED) {$dir} -- Ordena el consecutivo
-            ");*/
-            ->orderByRaw("
-          -- 1. Prioriza certificados con formato 'CIDAM C-INS25-'
-          CASE
-              WHEN num_certificado LIKE 'CIDAM C-INS25-%' THEN 0
-              ELSE 1
-          END ASC,
+    // Ordenamiento especial para num_certificado con formato 'CIDAM C-INS25-###'
+    if ($orderColumn === 'num_certificado') {
+        $query->orderByRaw("
+            CASE
+                WHEN num_certificado LIKE 'CIDAM C-INS25-%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(
+                SUBSTRING_INDEX(
+                    SUBSTRING(num_certificado, LOCATE('CIDAM C-INS25-', num_certificado) + 14),
+                    '-', 1
+                ) AS UNSIGNED
+            ) $orderDirection
+        ");
+    } elseif (!empty($orderColumn)) {
+        $query->orderBy($orderColumn, $orderDirection);
+    }
 
-          -- 2. Extrae el número después de 'CIDAM C-INS25-' ignorando cualquier sufijo (-A, etc.)
-          CAST(
-              SUBSTRING_INDEX(
-                  SUBSTRING(num_certificado, LOCATE('CIDAM C-INS25-', num_certificado) + 15),
-                  '-', 1
-              ) AS UNSIGNED
-          ) DESC
-      ");
+    // Paginación
+    $certificados = $query
+        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
+            'dictamen',// Relación directa
+            'dictamen.inspeccione',// Relación anidada: dictamen > inspeccione
+            'dictamen.inspeccione.solicitud',
+            'dictamen.inspeccione.solicitud.empresa',
+            'dictamen.inspeccione.solicitud.empresa.empresaNumClientes',
+            'revisorPersonal.user',
+            'revisorConsejo.user',
+        ])->offset($start)->limit($limit)->get();
 
-        $certificados = $query->get();
 
         // Map data for DataTables
         /*$data = $certificados->map(function ($certificado, $index) use ($request) {
@@ -221,6 +234,7 @@ class Certificado_InstalacionesController extends Controller
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
             'recordsFiltered' => intval($totalFiltered),
+            'code' => 200,
             'data' => $data,
         ]);
     }

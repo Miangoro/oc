@@ -82,7 +82,7 @@ var dataTable = $('.datatables-users').DataTable({
     { data: '' }, // (0)
     { data: 'num_certificado' },//(1)
     { data: ''},
-    {data: null, // Se usará null porque combinaremos varios valores
+    {data: null, orderable: false,// Se usará null porque combinaremos varios valores
       render: function(data, type, row) {
           return `
           <strong>${data.numero_cliente}</strong><br>
@@ -166,7 +166,7 @@ var dataTable = $('.datatables-users').DataTable({
     }, 
     {
       targets: 4,
-      searchable: false,
+      searchable: true,
       orderable: false,
       responsivePriority: 4, 
       render: function (data, type, full, meta) {
