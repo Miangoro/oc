@@ -51,18 +51,16 @@ class DictamenEnvasadoController extends Controller
 
     public function index(Request $request)
     {
-        DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
+        DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
 
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
-        0 => '',               
         1 => 'num_dictamen',
-        2 => 'folio', //nombre de mi tabla y atributo
+        2 => 'folio', 
         3 => 'razon_social', 
-        4 => '', //caracteristicas
+        4 => '', 
         5 => 'fecha_emision',
-        6 => 'estatus',            
-        7 => '',// acciones
+        6 => 'estatus',
     ];
 
     $totalData = Dictamen_Envasado::count();
@@ -100,7 +98,7 @@ class DictamenEnvasadoController extends Controller
         $totalFiltered = $query->count();
     }
 
-    // Ordenamiento especial para num_certificado con formato 'UME-###'
+    // Ordenamiento especial para num_dictamen con formato 'UME-###'
     if ($orderColumn === 'num_dictamen') {
         $query->orderByRaw("
             CASE

@@ -87,7 +87,7 @@ initializeSelect2(select2Elements);
         { data: '' }, // (0)
         { data: 'num_certificado' },//(1)
         { data: ''},
-        {data: null, // Se usará null porque combinaremos varios valores
+        {data: null, orderable: false,// Se usará null porque combinaremos varios valores
          render: function(data, type, row) {
              return `
              <strong>${data.numero_cliente}</strong><br>
@@ -102,17 +102,19 @@ initializeSelect2(select2Elements);
        ],
        columnDefs: [
          {
+           targets: 0,
            className: 'control',
            searchable: false,
            orderable: false,
            responsivePriority: 2,
-           targets: 0,
            render: function (data, type, full, meta) {
              return '';
            }
          },
          {
           targets: 1,
+          searchable: true,
+          orderable: true,
           render: function (data, type, full, meta) {
             var $num_certificado = full['num_certificado'];
             var $tipo =full['tipo_dictamen'];
@@ -165,7 +167,7 @@ initializeSelect2(select2Elements);
         }, 
         {
           targets: 4,
-          searchable: false,
+          searchable: true,
           orderable: false,
           responsivePriority: 4, 
           render: function (data, type, full, meta) {
@@ -205,10 +207,10 @@ initializeSelect2(select2Elements);
                 ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''} </small>`;
           }  
         },
-        {
+        {//fechas
           targets: 5,
-          searchable: false,
-          orderable: false,
+          searchable: true,
+          orderable: true,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
@@ -223,7 +225,7 @@ initializeSelect2(select2Elements);
         },
         {
           targets: 6,
-          searchable: true,
+          searchable: false,
           orderable: true,
           className: 'text-center',
           render: function (data, type, full, meta) {
@@ -333,7 +335,7 @@ initializeSelect2(select2Elements);
            }
          }
        ],
-       order: [[2, 'desc']],
+       order: [[1, 'desc']],
        dom:
          '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
          '<"me-5 ms-n2"f>' +

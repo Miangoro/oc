@@ -1987,7 +1987,7 @@ $(function () {
           $('#editInspeccionEnvasado').modal('hide'); // Oculta el modal
           $('#editInspeccionEnvasadoForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
-          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false);// Recarga la tabla
 
           Swal.fire({
             icon: 'success',
