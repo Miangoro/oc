@@ -18,7 +18,7 @@ use App\Notifications\GeneralNotification;
 //Enviar Correo
 use App\Mail\CorreoCertificado;
 use App\Models\Documentacion_url;
-use Illuminate\Support\Facades\Mail; 
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -28,44 +28,40 @@ class Certificado_GranelController extends Controller
 {
     public function UserManagement()
     {
-        $certificados = CertificadosGranel::all(); 
+        $certificados = CertificadosGranel::all();
         $dictamenes = Dictamen_Granel::where('estatus','!=',1)
             ->orderBy('id_dictamen', 'desc')
             ->get();
         $users = User::where('tipo',1)->get();
-        $revisores = Revisor::all(); 
+        $revisores = Revisor::all();
         return view('certificados.find_certificados_granel', compact('certificados' , 'dictamenes' , 'users', 'revisores'));
     }
 
-    
+
 public function index(Request $request)
 {
-    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
-
+    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
-        0 => '',               
         1 => 'num_certificado',
         2 => 'folio',
-        3 => 'razon_social', 
-        4 => '', 
+        3 => 'razon_social',
+        4 => '',
         5 => 'fecha_emision',
-        6 => 'estatus',            
-        7 => '',// acciones
+        6 => 'estatus',
     ];
-
-    $totalData = CertificadosGranel::count();
-    $totalFiltered = $totalData;
+      $empresaId = null;
+      if (auth()->check() && auth()->user()->tipo == 3) {
+          $empresaId = auth()->user()->empresa?->id_empresa;
+      }
 
     $limit = $request->input('length');
     $start = $request->input('start');
+    $orderColumnIndex = $request->input('order.0.column');
+    $orderDirection = $request->input('order.0.dir') ?? 'asc';
+    $orderColumn = $columns[$orderColumnIndex] ?? 'num_certificado';// Por defecto
 
-    // Columnas ordenadas desde DataTables
-    $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
-    $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
-    $orderColumn = $columns[$orderColumnIndex] ?? 'num_certificado'; // Por defecto
-    
-    $search = $request->input('search.value');//Define la búsqueda global.
+    $search = $request->input('search.value');
 
 
     $query = CertificadosGranel::query()
@@ -73,9 +69,14 @@ public function index(Request $request)
     ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_granel.id_inspeccion')
     ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+    ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
     ->select('certificados_granel.*', 'empresa.razon_social');
-
-
+      if ($empresaId) {
+          $query->where('solicitudes.id_empresa', $empresaId);
+      }
+      $baseQuery = clone $query;
+      // totalData (sin búsqueda)
+      $totalData = $baseQuery->count();
     // Búsqueda Global
     if (!empty($search)) {
         $query->where(function ($q) use ($search) {
@@ -84,10 +85,14 @@ public function index(Request $request)
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
             ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
-            ->orWhereRaw("DATE_FORMAT(certificados_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+            ->orWhereRaw("DATE_FORMAT(certificados_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
+            ->orWhere('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
+            ->orWhere('lotes_granel.folio_fq', 'LIKE', "%{$search}%");
         });
 
         $totalFiltered = $query->count();
+    } else {
+        $totalFiltered = $totalData;
     }
 
     // Ordenamiento especial para num_certificado con formato 'CIDAM C-GRA25-###'
@@ -120,7 +125,7 @@ public function index(Request $request)
             'revisorConsejo.user',
         ])->offset($start)->limit($limit)->get();
 
-    
+
     $data = [];
     if (!empty($certificados)) {
         foreach ($certificados as $certificado) {
@@ -128,7 +133,7 @@ public function index(Request $request)
             $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
             $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
             $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
-            $nestedData['pdf_firmado'] = $certificado->url_pdf_firmado 
+            $nestedData['pdf_firmado'] = $certificado->url_pdf_firmado
                 ? asset("storage/certificados_granel_pdf/{$certificado->url_pdf_firmado}") : null;
             $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
             $id_sustituye = json_decode($certificado->observaciones, true) ['id_sustituye'] ?? null;
@@ -227,7 +232,7 @@ public function store(Request $request)
     $lote = LotesGranel::find($idLoteGranel);
     $lote->folio_certificado = $validated['num_certificado'];
     $lote->update();
-    
+
         return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
         Log::error('Error al registrar', [
@@ -276,7 +281,7 @@ public function edit($id)
 
     return response()->json(['error' => 'Error al obtener los datos.'], 500);
 }
-    
+
 ///FUNCION ACTUALIZAR
 public function update(Request $request, $id_certificado)
 {
@@ -293,8 +298,8 @@ public function update(Request $request, $id_certificado)
 
         $dictamen = Dictamen_Granel::with('inspeccione.solicitud')->find($validated['id_dictamen']);
         $idLoteGranel = $dictamen->inspeccione->solicitud->id_lote_granel ?? null;
-    
-        
+
+
         $actualizar->update([
             'id_firmante' => $validated['id_firmante'],
             'id_dictamen' => $validated['id_dictamen'],
@@ -332,7 +337,7 @@ public function storeRevisor(Request $request)
             'observaciones' => 'nullable|string|max:255',
             'id_certificado' => 'required|integer|exists:certificados_granel,id_certificado',
         ]);
-        
+
         $user = User::find($validatedData['nombreRevisor']);
         if (!$user) {
             return response()->json(['message' => 'El revisor no existe.'], 404);
@@ -367,7 +372,7 @@ public function storeRevisor(Request $request)
                 $message = 'Revisor asignado exitosamente.';
             }
         // Guardar los datos del revisor
-        
+
         $revisor->decision = 'Pendiente';
         $revisor->numero_revision = $validatedData['numeroRevision'];
         $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
@@ -382,14 +387,14 @@ public function storeRevisor(Request $request)
             if ($request->hasFile('url')) {
             if ($revisor->id_revision) {
                 // Buscar el registro existente
-        
-            
+
+
                     // Si no existe, crea una nueva instancia
                     $documentacion_url = new Documentacion_url();
                     $documentacion_url->id_relacion = $revisor->id_revision;
                     $documentacion_url->id_documento = $request->id_documento;
                     $documentacion_url->id_empresa = $empresa->id_empresa;
-                
+
 
                 // Procesar el nuevo archivo
                 $file = $request->file('url');
@@ -408,13 +413,13 @@ public function storeRevisor(Request $request)
         // Preparar datos para el correo
         $data1 = [
             'title' => 'Nuevo registro de solicitud',
-            'message' => 'Se ha asignado el revisor (' . $user->name . ') al certificado número ' . $certificado->num_certificado, 
+            'message' => 'Se ha asignado el revisor (' . $user->name . ') al certificado número ' . $certificado->num_certificado,
             'url' => 'solicitudes-historial',
             'nombreRevisor' => $user->name,
             'emailRevisor' => $user->email,
             'num_certificado' => $certificado->num_certificado,
             'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
-            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia), 
+            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
             'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar',
             'numero_cliente' => $certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar',
             'tipo_certificado' => $certificado->id_dictamen
@@ -434,10 +439,10 @@ public function storeRevisor(Request $request)
                 return response()->json(['message' => 'El correo del revisor no está disponible.'], 404);
             }
 
-            Mail::to($user->email)->send(new CorreoCertificado($data1)); 
+            Mail::to($user->email)->send(new CorreoCertificado($data1));
             info('Correo enviado a: ' . $user->email);
         } catch (\Exception $e) {
-            Log::error('Error al enviar el correo: ' . $e->getMessage()); 
+            Log::error('Error al enviar el correo: ' . $e->getMessage());
             return response()->json(['message' => 'Error al enviar el correo: ' . $e->getMessage()], 500);
         } */
 
@@ -454,7 +459,7 @@ public function storeRevisor(Request $request)
 
 
 
-///FUNCION REEXPEDIR 
+///FUNCION REEXPEDIR
 public function reexpedir(Request $request)
 {
     try {
@@ -477,10 +482,10 @@ public function reexpedir(Request $request)
         $reexpedir = CertificadosGranel::findOrFail($request->id_certificado);
 
         if ($request->accion_reexpedir == '1') {
-            $reexpedir->estatus = 1; 
+            $reexpedir->estatus = 1;
             $observacionesActuales = json_decode($reexpedir->observaciones, true);
                 $observacionesActuales['observaciones'] = $request->observaciones;
-            $reexpedir->observaciones = json_encode($observacionesActuales); 
+            $reexpedir->observaciones = json_encode($observacionesActuales);
             $reexpedir->save();
             return response()->json(['message' => 'Cancelado correctamente.']);
 
@@ -489,7 +494,7 @@ public function reexpedir(Request $request)
                 $observacionesActuales = json_decode($reexpedir->observaciones, true);
                 $observacionesActuales['observaciones'] = $request->observaciones;
             $reexpedir->observaciones = json_encode($observacionesActuales);
-            $reexpedir->save(); 
+            $reexpedir->save();
 
             // Crear un nuevo registro de certificado (reexpedición)
             $new = new CertificadosGranel();
@@ -527,7 +532,7 @@ public function CertificadoGranel($id_certificado)
         return abort(404, 'Registro no encontrado.');
         //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
     }
-    
+
     $watermarkText = $certificado->estatus === 1;
     $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ? CertificadosGranel::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';

@@ -82,7 +82,7 @@ if (dt_user_table.length) {
           { data: '' },
           { data: 'num_dictamen' },
           { data: 'num_servicio' },
-          { data: null,
+          { data: null, orderable: false,
             render: function(data, type, row) {
                 return `
                 <strong>${data.numero_cliente}</strong>
@@ -248,7 +248,7 @@ if (dt_user_table.length) {
               "sPrevious": "Anterior"
           }
       },
-      // Buttons with Dropdown
+      // Opciones Exportar Documentos
       buttons: [
         {
           extend: 'collection',

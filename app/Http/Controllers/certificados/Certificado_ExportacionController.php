@@ -14,15 +14,14 @@ use App\Models\lotes_envasado;
 use App\Models\activarHologramasModelo;
 use App\Models\Documentacion_url;
 use App\Models\solicitudesModel;
+//Clase de exportacion
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CertificadosExport;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-//Clase de exportacion
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\CertificadosExport;
-
 
 
 class Certificado_ExportacionController extends Controller
@@ -43,7 +42,6 @@ class Certificado_ExportacionController extends Controller
         return view('certificados.find_certificados_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores', 'hologramas'))
         ;//->with('dictamenes', $dictamen); // Pasamos el dictamen como un JSON;
     }
-
 
 public function index(Request $request)
 {
@@ -83,7 +81,7 @@ public function index(Request $request)
     ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
     ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
-    ->select('certificados_exportacion.*', 'empresa.razon_social')
+    ->select('certificados_exportacion.*', 'empresa.razon_social')//especifica la columna obtenida
     /*->where(function ($q) use ($search) {
         $q->where('empresa.razon_social', 'LIKE', "%{$search}%")
           ->orWhere('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
@@ -99,12 +97,10 @@ public function index(Request $request)
         $query->where(function ($q) use ($search) {
             $q->where('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
             ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
-            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
-            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
-            ->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
-        });
+->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
 
+        });
 
         $totalFiltered = $query->count();
     }
@@ -131,7 +127,7 @@ public function index(Request $request)
     // Paginación
     //1)$certificados = $query->offset($start)->limit($limit)->get();
     $certificados = $query
-        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
+        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda de query adicionales en BD)
             'dictamen',// Relación directa
             'dictamen.inspeccione',// Relación anidada: dictamen > inspeccione
             'dictamen.inspeccione.solicitud',// dictamen > inspeccione > solicitud
@@ -228,20 +224,16 @@ public function index(Request $request)
         'data' => $data,
     ]);
 }
-
-
-
 public function exportar(Request $request)
 {
     try {
         $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes']);
         return Excel::download(new CertificadosExport($filtros), 'reporte_certificados.xlsx');
     } catch (\Exception $e) {
-        Log::error('Error al generar el reporte: ' . $e->getMessage());
+        \Log::error('Error al generar el reporte: ' . $e->getMessage());
         return response()->json(['message' => 'Error al generar el reporte. Verifica los filtros e intenta nuevamente.', 'code' => 500]);
     }
 }
-
 
 
 ///FUNCION REGISTRAR
@@ -275,7 +267,6 @@ public function store(Request $request)
 }
 
 
-
 ///FUNCION ELIMINAR
 public function destroy($id_certificado)
 {
@@ -292,7 +283,6 @@ public function destroy($id_certificado)
         return response()->json(['error' => 'Error al eliminar.'], 500);
     }
 }
-
 
 
 ///FUNCION PARA OBTENER LOS REGISTROS
@@ -348,7 +338,6 @@ public function update(Request $request, $id_certificado)
         return response()->json(['error' => 'Error al actualizar.'], 500);
     }
 }
-
 
 
 ///FUNCION REEXPEDIR 
@@ -417,7 +406,6 @@ public function reexpedir(Request $request)
 }
 
 
-
 ///FUNCION AGREGAR REVISOR
 public function storeRevisor(Request $request)
 {
@@ -445,7 +433,6 @@ public function storeRevisor(Request $request)
                 ->where('tipo_certificado', 3)
                 ->where('tipo_revision', $validatedData['tipoRevisor']) // buscar según tipo de revisión
                 ->first();
-
 
             $message = ''; // Inicializar el mensaje
 
@@ -550,7 +537,6 @@ public function storeRevisor(Request $request)
 }
 
 
-
 ///PDF CERTIFICADO
 public function MostrarCertificadoExportacion($id_certificado) 
 {
@@ -606,7 +592,6 @@ public function MostrarCertificadoExportacion($id_certificado)
        
     //return response()->json(['message' => 'No se encontraron características.', $data], 404)
 
-
     $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
         'lotes' =>$lotes,
@@ -638,7 +623,6 @@ public function MostrarCertificadoExportacion($id_certificado)
     //nombre al descargar
     return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
 }
-
 
 ///PDF SOLICITUD CERTIFICADO
 public function MostrarSolicitudCertificadoExportacion($id_certificado) 
@@ -681,7 +665,6 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
 
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
 
-
     $pdf = Pdf::loadView('pdfs.solicitud_certificado_exportacion_ed10', [//formato del PDF
         'data' => $data,
         'lotes' =>$lotes,
@@ -720,8 +703,6 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
     //nombre al descargar
     return $pdf->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');
 }
-
-
 
 
 
