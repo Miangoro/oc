@@ -62,8 +62,13 @@ public function index(Request $request)
         6 => 'estatus',
     ];
 
-    $totalData = Dictamen_Envasado::count();
-    $totalFiltered = $totalData;
+    $empresaId = null;
+    if (auth()->check() && auth()->user()->tipo == 3) {
+        $empresaId = auth()->user()->empresa?->id_empresa;
+    }
+
+    /*$totalData = Dictamen_Envasado::count();
+    $totalFiltered = $totalData;*/
     $limit = $request->input('length');
     $start = $request->input('start');
     // Columnas ordenadas desde DataTables
@@ -81,6 +86,13 @@ public function index(Request $request)
     ->leftJoin('lotes_envasado', 'lotes_envasado.id_lote_envasado', '=', 'dictamenes_envasado.id_lote_envasado')
     ->select('dictamenes_envasado.*', 'empresa.razon_social');
 
+    if ($empresaId) {
+        $query->where('solicitudes.id_empresa', $empresaId);
+    }
+    $baseQuery = clone $query;
+      // totalData (sin búsqueda)
+    $totalData = $baseQuery->count();
+
 
     // Búsqueda Global
     if (!empty($search)) {
@@ -95,7 +107,10 @@ public function index(Request $request)
 
 
         $totalFiltered = $query->count();
+    } else {
+        $totalFiltered = $totalData;
     }
+
 
     // Ordenamiento especial para num_dictamen con formato 'UME-###'
     if ($orderColumn === 'num_dictamen') {
