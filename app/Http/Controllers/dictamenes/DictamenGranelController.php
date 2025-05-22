@@ -114,7 +114,7 @@ public function index(Request $request)
         ])->offset($start)->limit($limit)->get();
 
 
-
+        
         //MANDA LOS DATOS AL JS
         $data = [];
         if (!empty($dictamenes)) {

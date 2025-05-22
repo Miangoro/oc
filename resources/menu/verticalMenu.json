@@ -178,12 +178,13 @@
           "url": "catalogo/lotes_granel",
           "name": "Lotes a granel",
           "slug": "catalogo-lotes-granel",
-          "can" : "Visualizar usuarios"
+          "can" : "Visualizar lotes a granel"
         },
         {
           "url": "catalogo/lotes",
           "name": "Lotes envasados",
-          "slug": "catalogo-lotes"
+          "slug": "catalogo-lotes",
+           "can" : "Visualizar lotes envasados"
         },
         {
           "url": "catalogo/marcas",
