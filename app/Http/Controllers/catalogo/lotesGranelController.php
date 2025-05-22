@@ -57,19 +57,26 @@ class lotesGranelController extends Controller
                 15 => 'fecha_vigencia',
                 16 => 'estatus',
             ];
+              if (auth()->user()->tipo == 3) {
+                  $empresaId = auth()->user()->empresa?->id_empresa;
+              } else {
+                  $empresaId = null;
+              }
 
             $search = $request->input('search.value');
             $totalData = LotesGranel::count();
             $totalFiltered = $totalData;
-
             $limit = $request->input('length');
             $start = $request->input('start');
             $order = $columns[$request->input('order.0.column')];
             $dir = $request->input('order.0.dir');
-
-            $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'tipos', 'Organismo'])
-    ->when($search, function ($query, $search) {
-        return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
+          $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'tipos', 'Organismo'])
+              ->when($empresaId, function ($query) use ($empresaId) {
+                  $query->where('id_empresa', $empresaId);
+              })
+        ->when($search, function ($query, $search) {
+            $query->where(function ($q) use ($search) {
+            $q->where('id_lote_granel', 'LIKE', "%{$search}%")
             ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
             ->orWhere('folio_fq', 'LIKE', "%{$search}%")
             ->orWhere('volumen', 'LIKE', "%{$search}%")
@@ -97,6 +104,7 @@ class lotesGranelController extends Controller
                 WHEN tipo_lote = 1 THEN 'Certificado por OC CIDAM'
                 WHEN tipo_lote = 2 THEN 'Certificado por otro organismo'
             END LIKE ?", ["%{$search}%"]);
+             });
     })
     ->offset($start)
     ->limit($limit)
@@ -104,7 +112,10 @@ class lotesGranelController extends Controller
     ->get();
 
 
-            $totalFiltered = LotesGranel::when($search, function ($query, $search) {
+            $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId) {
+        return $query->where('id_empresa', $empresaId);
+    })
+    ->when($search, function ($query, $search) {
                 return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
                     ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
                     ->orWhere('folio_fq', 'LIKE', "%{$search}%")
@@ -132,6 +143,8 @@ class lotesGranelController extends Controller
                 END LIKE ?", ["%{$search}%"]);
 
             })->count();
+
+
 
             $data = [];
             if (!empty($LotesGranel)) {
@@ -189,7 +202,7 @@ class lotesGranelController extends Controller
                           $nombresLotes = LotesGranel::whereIn('id_lote_granel', $lotesOriginales['lotes'])
                           ->get(['nombre_lote', 'cont_alc']) // Trae ambas columnas
                           ->toArray();
-                      
+
 
                           $nestedData['lote_procedencia'] = implode(', ', array_map(fn($lote) => "{$lote['nombre_lote']} ({$lote['cont_alc']} % Alc. Vol.)", $nombresLotes));
 
@@ -630,7 +643,7 @@ class lotesGranelController extends Controller
           'fecha_vigencia' => $validated['fecha_vigencia'],
           'volumen' => $validated['volumen'],
           'volumen_restante' => $validated['volumen'],
-        
+
       ]);
         // Actualizar lotes relacionados solo si hay datos de 'edit_lotes' y 'edit_volumenes'
         if ($request->has('edit_lotes') && $request->has('edit_volumenes')) {
