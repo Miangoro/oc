@@ -63,10 +63,17 @@ class EtiquetasController extends Controller
             4 => 'unidad',
             5 => 'alc_vol',
         ];
+        if (auth()->user()->tipo == 3) {
+            $empresaId = auth()->user()->empresa?->id_empresa;
+        } else {
+            $empresaId = null;
+        }
 
-        $search = [];
-
-        $totalData = etiquetas::count();
+     $totalData = etiquetas::when($empresaId, function ($q) use ($empresaId) {
+        $q->whereHas('marca', function ($q2) use ($empresaId) {
+            $q2->where('id_empresa', $empresaId);
+        });
+      })->count();
 
         $totalFiltered = $totalData;
 
@@ -74,17 +81,27 @@ class EtiquetasController extends Controller
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
+        $search = $request->input('search.value');
 
-        if (empty($request->input('search.value'))) {
-            $sql = etiquetas::with('destinos', 'marca') // Incluye la relación empresa
-                ->offset($start)
-                ->limit($limit)
-                //  ->orderBy($order, $dir)
-                ->get();
+        if (empty($search)) {
+        $sql = etiquetas::with('destinos', 'marca', 'categoria', 'clase', 'tipo', 'marca.empresa.empresaNumClientes', 'url_etiqueta')
+            ->when($empresaId, function ($q) use ($empresaId) {
+                $q->whereHas('marca', function ($q2) use ($empresaId) {
+                    $q2->where('id_empresa', $empresaId);
+                });
+            })
+            ->offset($start)
+            ->limit($limit)
+            ->get();
         } else {
-            $search = $request->input('search.value');
-            $sql = etiquetas::with('destinos', 'marca') // Incluye la relación empresa
-                ->where('sku', 'LIKE', "%{$search}%")
+              $filteredQuery = etiquetas::with('destinos', 'marca')
+        ->when($empresaId, function ($q) use ($empresaId) {
+            $q->whereHas('marca', function ($q2) use ($empresaId) {
+                $q2->where('id_empresa', $empresaId);
+            });
+        })
+        ->where(function ($q) use ($search) {
+            $q->where('sku', 'LIKE', "%{$search}%")
                 ->orWhere('presentacion', 'LIKE', "%{$search}%")
                 ->orWhere('alc_vol', 'LIKE', "%{$search}%")
                 ->orWhereHas('marca', function ($q) use ($search) {
@@ -101,30 +118,15 @@ class EtiquetasController extends Controller
                 })
                 ->orWhereHas('tipo', function ($q) use ($search) {
                     $q->where('nombre', 'LIKE', "%{$search}%");
-                })
-                ->offset($start)
-                ->limit($limit)
-                //  ->orderBy($order, $dir)
-                ->get();
-            $totalFiltered = etiquetas::where('sku', 'LIKE', "%{$search}%")
-                ->orWhere('unidad', 'LIKE', "%{$search}%")
-                ->orWhere('presentacion', 'LIKE', "%{$search}%")
-                ->orWhereHas('marca', function ($q) use ($search) {
-                    $q->where('marca', 'LIKE', "%{$search}%");
-                })
-                ->orWhereHas('destinos', function ($q) use ($search) {
-                    $q->where('direccion', 'LIKE', "%{$search}%");
-                })
-                ->orWhereHas('categoria', function ($q) use ($search) {
-                    $q->where('categoria', 'LIKE', "%{$search}%");
-                })
-                ->orWhereHas('clase', function ($q) use ($search) {
-                    $q->where('clase', 'LIKE', "%{$search}%");
-                })
-                ->orWhereHas('tipo', function ($q) use ($search) {
-                    $q->where('nombre', 'LIKE', "%{$search}%");
-                })
-                ->count();
+                });
+        });
+
+    $sql = $filteredQuery
+        ->offset($start)
+        ->limit($limit)
+        ->get();
+
+    $totalFiltered = $filteredQuery->count();
         }
 
         $data = [];
@@ -152,7 +154,7 @@ class EtiquetasController extends Controller
                 $direcciones = $etiqueta->destinos->map(function ($destino) {
                     return '• ' . $destino->direccion; // Agregar viñeta antes de la dirección
                 })->toArray(); // Convertimos la colección en un array
-                
+
                 $nestedData['destinos'] = implode('<br>', $direcciones); // Unimos las direcciones con un salto de línea
                 $data[] = $nestedData;
             }
@@ -329,7 +331,7 @@ class EtiquetasController extends Controller
         $etiqueta->destinos()->delete();
         $etiqueta->url_etiqueta()->delete();
         $etiqueta->url_corrugado()->delete();
-    
+
         // Eliminar la etiqueta principal
         $etiqueta->delete();
         return response()->json(['success' => 'Etiqueta eliminada correctamente']);
