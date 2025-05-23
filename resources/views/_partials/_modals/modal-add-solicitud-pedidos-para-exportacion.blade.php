@@ -580,4 +580,31 @@
             $('#tabla_marcas tbody').html('<tr><td colspan="8">Seleccione una empresa para ver los datos</td></tr>');
         }
     }
+
+    function cargarDetallesLoteEnvasadoDinamico(select, sectionCount) {
+  var idLoteEnvasado = $(select).val();
+  if (idLoteEnvasado) {
+    $.ajax({
+      url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+      method: 'GET',
+      success: function(response) {
+        // Rellena los campos de la sección correspondiente
+        $(`#lote_granel_${sectionCount}`).val(
+          response.detalle && response.detalle.length > 0
+            ? response.detalle.map(lote => lote.nombre_lote).join(', ')
+            : ''
+        );
+        $(`#cantidad_botellas${sectionCount}`).val(response.lote_envasado?.cant_botellas || '');
+        $(`#presentacion${sectionCount}`).val(
+          response.lote_envasado
+            ? response.lote_envasado.presentacion + ' ' + response.lote_envasado.unidad
+            : ''
+        );
+      },
+      error: function() {
+        console.error('Error al cargar el detalle del lote envasado.');
+      }
+    });
+  }
+}
 </script>

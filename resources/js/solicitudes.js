@@ -3717,7 +3717,7 @@ $(function () {
                 <div class="row caracteristicas-row">
                     <div class="col-md-8">
                         <div class="form-floating form-floating-outline mb-4">
-                            <select name="lote_envasado[${sectionCount}]" class="select2 form-select evasado_export">
+                            <select name="lote_envasado[${sectionCount}]" class="select2 form-select evasado_export" onchange="cargarDetallesLoteEnvasadoDinamico(this, ${sectionCount})">
                                 <option value="" disabled selected>Selecciona un lote envasado</option>
                                 <!-- Opciones dinámicas -->
                             </select>
@@ -3744,7 +3744,7 @@ $(function () {
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating form-floating-outline mb-4">
-                            <input type="text" class="form-control" name="presentacion[${sectionCount}]" placeholder="Ej. 750ml">
+                            <input type="text" class="form-control" id="presentacion${sectionCount}" name="presentacion[${sectionCount}]" placeholder="Ej. 750ml">
                             <label for="presentacion">Presentación</label>
                         </div>
                     </div>
@@ -3770,7 +3770,6 @@ $(function () {
     });
 
     // Función para cargar los lotes dinámicamente en la nueva sección
-    // Función para cargar los lotes dinámicamente en la nueva sección
     function cargarLotes(empresaSeleccionada, sectionCount) {
       $.ajax({
         url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
@@ -3782,18 +3781,20 @@ $(function () {
           var dictamenEnvasado = response.lotesEnvasado;
 
           for (let index = 0; index < response.lotes_envasado.length; index++) {
-            var skuLimpio = limpiarSku(response.lotes_envasado[index].sku);
+            var lote = response.lotes_envasado[index];
+            var skuLimpio = limpiarSku(lote.sku);
             var marcaEncontrada = marcas.find(function (marca) {
-              return marca.id_marca === response.lotes_envasado[index].id_marca;
+              return marca.id_marca === lote.id_marca;
             });
             var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
-
-            var num_dictamen = dictamenEnvasado ? dictamenEnvasado[index].dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
+            var num_dictamen = lote.dictamen_envasado
+              ? lote.dictamen_envasado.num_dictamen
+              : 'Sin dictamen de envasado';
 
             contenidoLotesEnvasado += `
-          <option value="${response.lotes_envasado[index].id_lote_envasado}">
-            ${skuLimpio} | ${response.lotes_envasado[index].nombre} | ${nombreMarca} | ${num_dictamen}
-          </option>`;
+              <option value="${lote.id_lote_envasado}">
+                ${skuLimpio} | ${lote.nombre} | ${nombreMarca} | ${num_dictamen}
+              </option>`;
           }
 
           if (response.lotes_envasado.length == 0) {
@@ -3816,8 +3817,6 @@ $(function () {
         }
       });
     }
-
-
 
     // Eliminar la última sección
     $('#delete-characteristics').click(function () {
