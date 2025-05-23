@@ -1168,18 +1168,30 @@ $(function () {
                 modal.find('.lote_envasado_id').val(lotesEnvasado.join(','));
                 var cantidadDeLotes = response.caracteristicas.detalles.length;
 
-                // Primero eliminar todos los bloques extras si es necesario
                 if (cantidadDeLotes === 1) {
                   // Mantener solo el primer bloque
                   $('#sections-container2').not(':first').remove();
-                  modal.find('#cantidad_cajas0').val(response.caracteristicas.detalles[0].cantidad_cajas);
-                  modal.find('#cantidad_botellas0').val(response.caracteristicas.detalles[0].cantidad_botellas);
+                    modal.find(`#cantidad_cajas_edit0`).val(response.caracteristicas.detalles[0].cantidad_cajas);
+                    modal.find(`#cantidad_botellas_edit0`).val(response.caracteristicas.detalles[0].cantidad_botellas);
+                    modal.find(`#presentacion_edit0`).val(response.caracteristicas.detalles[0].presentacion || '');
+                    modal.find(`#lote_granel_edit_0`).val(response.caracteristicas.detalles[0].lote_granel || '');
+                    modal.find(`select[name="lote_envasado_edit[0]"]`).val(response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
                 } else {
                   // Si hay más de uno, agregamos los que faltan
                   for (var i = 1; i < cantidadDeLotes; i++) {
-                    $('#add-characteristics').click();
-                    modal.find('#cantidad_cajas' + (i - 1)).val(response.caracteristicas.detalles[i - 1].cantidad_cajas);
-                    modal.find('#cantidad_botellas' + (i - 1)).val(response.caracteristicas.detalles[i - 1].cantidad_botellas);
+                    $('#add-characteristics_edit').click();
+                    // Llenar el primer bloque (índice 0)
+                    modal.find('#cantidad_cajas_edit0').val(response.caracteristicas.detalles[0].cantidad_cajas);
+                    modal.find('#cantidad_botellas_edit0').val(response.caracteristicas.detalles[0].cantidad_botellas);
+                    modal.find('#presentacion_edit0').val(response.caracteristicas.detalles[0].presentacion || '');
+                    modal.find('#lote_granel_edit_0').val(response.caracteristicas.detalles[0].lote_granel || '');modal.find('#lote_envasado_edit_0')
+                    .val(response.caracteristicas.detalles[0].id_lote_envasado)
+                    .trigger('change');                    // Espera a que el select esté disponible antes de llenarlo
+                    modal.find(`select[name="lote_envasado_edit[${i}]"]`).val(response.caracteristicas.detalles[i].id_lote_envasado).trigger('change');
+                    modal.find(`#cantidad_cajas_edit${i}`).val(response.caracteristicas.detalles[i].cantidad_cajas);
+                    modal.find(`#cantidad_botellas_edit${i}`).val(response.caracteristicas.detalles[i].cantidad_botellas);
+                    modal.find(`#presentacion_edit${i}`).val(response.caracteristicas.detalles[i].presentacion || '');
+                    modal.find(`#lote_granel_edit_${i}`).val(response.caracteristicas.detalles[i].lote_granel || '');
                   }
                 }
               }
@@ -3681,166 +3693,258 @@ $(function () {
       }
     });
   });
+$(document).ready(function () {
+$('#editPedidoExportacion').on('hidden.bs.modal', function () {
+  // Elimina todas las tarjetas menos la primera dentro de sections-container2
+  $('#sections-container2 .card').not(':first').remove();
+  sectionCountEdit = 1;
+});
+});
 
   $(document).ready(function () {
-    // Contador para las secciones dinámicas
-    let sectionCount = 1;
+  var $tipoSolicitudEdit = $('#tipo_solicitud_edit');
+  var $botonesCharacteristicsEdit = $('#botones_characteristics_edit');
 
-    // Función para agregar una nueva sección dinámica
-    $('#add-characteristics').click(function () {
-      // Validar que se haya seleccionado una empresa
-      let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val()
-        ? $('#id_empresa_solicitud_exportacion').val()
-        : $('#id_empresa_solicitud_exportacion_edit').val();
-
-
-
-
-      if (!empresaSeleccionada) {
-        // Mostrar alerta si no se seleccionó ninguna empresa
-        Swal.fire({
-          icon: 'warning',
-          title: 'Advertencia',
-          text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
-          customClass: {
-            confirmButton: 'btn btn-warning'
-          }
-        });
-        return; // Salir del evento si no se seleccionó una empresa
-      }
-
-      // Crear una nueva sección dinámica
-      var newSection = `
-        <div class="card mt-4" id="caracteristicas_Ex_${sectionCount}">
-            <div class="card-body">
-                <h5>Características del Producto</h5>
-                <div class="row caracteristicas-row">
-                    <div class="col-md-8">
-                        <div class="form-floating form-floating-outline mb-4">
-                            <select name="lote_envasado[${sectionCount}]" class="select2 form-select evasado_export" onchange="cargarDetallesLoteEnvasadoDinamico(this, ${sectionCount})">
-                                <option value="" disabled selected>Selecciona un lote envasado</option>
-                                <!-- Opciones dinámicas -->
-                            </select>
-                            <label for="lote_envasado">Selecciona el lote envasado</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-4">
-                            <input type="text" disabled class="form-control" name="lote_granel[${sectionCount}]" id="lote_granel_${sectionCount}" placeholder="Lote a granel">
-                            <label for="lote_granel">Lote a granel</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-4">
-                            <input type="number" class="form-control" id="cantidad_botellas${sectionCount}" name="cantidad_botellas[${sectionCount}]" placeholder="Cantidad de botellas">
-                            <label for="cantidad_botellas">Cantidad de botellas</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-4">
-                            <input type="number" class="form-control" id="cantidad_cajas${sectionCount}" name="cantidad_cajas[${sectionCount}]" placeholder="Cantidad de cajas">
-                            <label for="cantidad_cajas">Cantidad de cajas</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-4">
-                            <input type="text" class="form-control" id="presentacion${sectionCount}" name="presentacion[${sectionCount}]" placeholder="Ej. 750ml">
-                            <label for="presentacion">Presentación</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-      `;
-
-      // Agregar la nueva sección al contenedor
-      $('#sections-container').append(newSection);
-      $('#sections-container2').append(newSection);
-
-      // Cargar opciones dinámicas para los selects de la nueva sección
-      cargarLotes(empresaSeleccionada, sectionCount);
-
-
-      // Inicializar Select2 en los nuevos selects
-      var select2Elements = $('.select2');
-      initializeSelect2(select2Elements);
-
-      // Incrementar el contador para la siguiente sección
-      sectionCount++;
-    });
-
-    // Función para cargar los lotes dinámicamente en la nueva sección
-    function cargarLotes(empresaSeleccionada, sectionCount) {
-      $.ajax({
-        url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
-        method: 'GET',
-        success: function (response) {
-          // Lote envasado
-          var contenidoLotesEnvasado = '';
-          var marcas = response.marcas;
-          var dictamenEnvasado = response.lotesEnvasado;
-
-          for (let index = 0; index < response.lotes_envasado.length; index++) {
-            var lote = response.lotes_envasado[index];
-            var skuLimpio = limpiarSku(lote.sku);
-            var marcaEncontrada = marcas.find(function (marca) {
-              return marca.id_marca === lote.id_marca;
-            });
-            var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
-            var num_dictamen = lote.dictamen_envasado
-              ? lote.dictamen_envasado.num_dictamen
-              : 'Sin dictamen de envasado';
-
-            contenidoLotesEnvasado += `
-              <option value="${lote.id_lote_envasado}">
-                ${skuLimpio} | ${lote.nombre} | ${nombreMarca} | ${num_dictamen}
-              </option>`;
-          }
-
-          if (response.lotes_envasado.length == 0) {
-            contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
-          }
-
-          // Actualizar las opciones del select para la nueva sección
-          $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
-        },
-        error: function () {
-          console.error('Error al cargar los lotes.');
-          Swal.fire({
-            icon: 'error',
-            title: 'Error al cargar los datos',
-            text: 'Hubo un problema al intentar cargar los lotes. Intenta nuevamente más tarde.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
-        }
-      });
+  // Mostrar/ocultar los botones al cambiar el tipo en el modal de editar
+  $tipoSolicitudEdit.on('change', function () {
+    if ($(this).val() === '2') {
+      $botonesCharacteristicsEdit.removeClass('d-none');
+    } else {
+      $botonesCharacteristicsEdit.addClass('d-none');
     }
-
-    // Eliminar la última sección
-    $('#delete-characteristics').click(function () {
-      var totalSections = $('#sections-container .card').length; // Total de secciones en el contenedor
-      var lastSection = $('#sections-container .card').last(); // Última sección
-
-      // Solo eliminar si hay más de una sección (no borrar la sección original)
-      if (totalSections > 1) {
-        lastSection.remove(); // Eliminar la última sección
-        sectionCount--; // Decrementar el contador
-      } else {
-        // Mensaje de advertencia con SweetAlert
-        Swal.fire({
-          icon: 'warning',
-          title: 'Advertencia',
-          text: 'No se puede eliminar la sección original.',
-          customClass: {
-            confirmButton: 'btn btn-warning'
-          }
-        });
-      }
-    });
   });
 
+  // Al abrir el modal de editar, asegúrate de mostrar/ocultar según el valor actual
+  if ($tipoSolicitudEdit.length) {
+    if ($tipoSolicitudEdit.val() === '2') {
+      $botonesCharacteristicsEdit.removeClass('d-none');
+    } else {
+      $botonesCharacteristicsEdit.addClass('d-none');
+    }
+  }
+});
+
+$(document).ready(function () {
+  let sectionCount = 1;
+
+  $('#add-characteristics').click(function () {
+    let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val();
+    if (!empresaSeleccionada) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Advertencia',
+        text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
+        customClass: { confirmButton: 'btn btn-warning' }
+      });
+      return;
+    }
+
+    var newSection = `
+      <div class="card mt-4" id="caracteristicas_Ex${sectionCount}">
+        <div class="card-body">
+          <h5>Características del Producto</h5>
+          <div class="row caracteristicas-row">
+            <div class="col-md-8">
+              <div class="form-floating form-floating-outline mb-4">
+                <select name="lote_envasado[${sectionCount}]" class="select2 form-select evasado_export" onchange="cargarDetallesLoteEnvasadoDinamico(this, ${sectionCount})">
+                  <option value="" disabled selected>Selecciona un lote envasado</option>
+                </select>
+                <label for="lote_envasado">Selecciona el lote envasado</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="text" disabled class="form-control" name="lote_granel[${sectionCount}]" id="lote_granel_${sectionCount}" placeholder="Lote a granel">
+                <label for="lote_granel">Lote a granel</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="number" class="form-control" id="cantidad_botellas${sectionCount}" name="cantidad_botellas[${sectionCount}]" placeholder="Cantidad de botellas">
+                <label for="cantidad_botellas">Cantidad de botellas</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="number" class="form-control" id="cantidad_cajas${sectionCount}" name="cantidad_cajas[${sectionCount}]" placeholder="Cantidad de cajas">
+                <label for="cantidad_cajas">Cantidad de cajas</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="text" class="form-control" id="presentacion${sectionCount}" name="presentacion[${sectionCount}]" placeholder="Ej. 750ml">
+                <label for="presentacion">Presentación</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    $('#sections-container').append(newSection);
+    cargarLotes(empresaSeleccionada, sectionCount);
+    initializeSelect2($('.select2'));
+    sectionCount++;
+  });
+
+  function cargarLotes(empresaSeleccionada, sectionCount) {
+    $.ajax({
+      url: '/getDatos/' + empresaSeleccionada,
+      method: 'GET',
+      success: function (response) {
+        var contenidoLotesEnvasado = '';
+        var marcas = response.marcas;
+        for (let index = 0; index < response.lotes_envasado.length; index++) {
+          var lote = response.lotes_envasado[index];
+          var skuLimpio = limpiarSku(lote.sku);
+          var marcaEncontrada = marcas.find(marca => marca.id_marca === lote.id_marca);
+          var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
+          var num_dictamen = lote.dictamen_envasado ? lote.dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
+          contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} | ${lote.nombre} | ${nombreMarca} | ${num_dictamen}</option>`;
+        }
+        if (response.lotes_envasado.length == 0) {
+          contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+        }
+        $(`#caracteristicas_Ex${sectionCount} .evasado_export`).html(contenidoLotesEnvasado);
+      },
+      error: function () {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al cargar los datos',
+          text: 'Hubo un problema al intentar cargar los lotes.',
+          customClass: { confirmButton: 'btn btn-danger' }
+        });
+      }
+    });
+  }
+
+  $('#delete-characteristics').click(function () {
+    var totalSections = $('#sections-container .card').length;
+    var lastSection = $('#sections-container .card').last();
+    if (totalSections > 1) {
+      lastSection.remove();
+      sectionCount--;
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Advertencia',
+        text: 'No se puede eliminar la sección original.',
+        customClass: { confirmButton: 'btn btn-warning' }
+      });
+    }
+  });
+});
+/* seccion de editar solicitudes exportacion */
+// ==================== EDITAR ====================
+  let sectionCountEdit = 1;
+$(document).ready(function () {
+  $('#add-characteristics_edit').click(function () {
+    let empresaSeleccionada = $('#id_empresa_solicitud_exportacion_edit').val();
+    if (!empresaSeleccionada) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Advertencia',
+        text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
+        customClass: { confirmButton: 'btn btn-warning' }
+      });
+      return;
+    }
+
+    var newSection = `
+      <div class="card mt-4" id="caracteristicas_Ex_edit_${sectionCountEdit}">
+        <div class="card-body">
+          <h5>Características del Producto</h5>
+          <div class="row caracteristicas-row">
+            <div class="col-md-8">
+              <div class="form-floating form-floating-outline mb-4">
+                <select name="lote_envasado_edit[${sectionCountEdit}]" class="select2 form-select evasado_export_edit" onchange="cargarDetallesLoteEnvasadoDinamicoEdit(this, ${sectionCountEdit})">
+                  <option value="" disabled selected>Selecciona un lote envasado</option>
+                </select>
+                <label for="lote_envasado">Selecciona el lote envasado</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="text" disabled class="form-control" name="lote_granel_edit[${sectionCountEdit}]" id="lote_granel_edit_${sectionCountEdit}" placeholder="Lote a granel">
+                <label for="lote_granel">Lote a granel</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="number" class="form-control" id="cantidad_botellas_edit${sectionCountEdit}" name="cantidad_botellas_edit[${sectionCountEdit}]" placeholder="Cantidad de botellas">
+                <label for="cantidad_botellas">Cantidad de botellas</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="number" class="form-control" id="cantidad_cajas_edit${sectionCountEdit}" name="cantidad_cajas_edit[${sectionCountEdit}]" placeholder="Cantidad de cajas">
+                <label for="cantidad_cajas">Cantidad de cajas</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="text" class="form-control" id="presentacion_edit${sectionCountEdit}" name="presentacion_edit[${sectionCountEdit}]" placeholder="Ej. 750ml">
+                <label for="presentacion">Presentación</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    $('#sections-container2').append(newSection);
+    cargarLotesEdit(empresaSeleccionada, sectionCountEdit);
+    initializeSelect2($('.select2'));
+    sectionCountEdit++;
+  });
+
+  function cargarLotesEdit(empresaSeleccionada, sectionCountEdit) {
+    $.ajax({
+      url: '/getDatos/' + empresaSeleccionada,
+      method: 'GET',
+      success: function (response) {
+        var contenidoLotesEnvasado = '';
+        var marcas = response.marcas;
+        for (let index = 0; index < response.lotes_envasado.length; index++) {
+          var lote = response.lotes_envasado[index];
+          var skuLimpio = limpiarSku(lote.sku);
+          var marcaEncontrada = marcas.find(marca => marca.id_marca === lote.id_marca);
+          var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
+          var num_dictamen = lote.dictamen_envasado ? lote.dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
+          contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} | ${lote.nombre} | ${nombreMarca} | ${num_dictamen}</option>`;
+        }
+        if (response.lotes_envasado.length == 0) {
+          contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+        }
+        $(`#caracteristicas_Ex_edit_${sectionCountEdit} .evasado_export_edit`).html(contenidoLotesEnvasado);
+      },
+      error: function () {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al cargar los datos',
+          text: 'Hubo un problema al intentar cargar los lotes.',
+          customClass: { confirmButton: 'btn btn-danger' }
+        });
+      }
+    });
+  }
+
+  // Eliminar la última sección (editar)
+  $('#delete-characteristics_edit').click(function () {
+    var totalSections = $('#sections-container2 .card').length;
+    var lastSection = $('#sections-container2 .card').last();
+    if (totalSections > 1) {
+      lastSection.remove();
+      sectionCountEdit--;
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Advertencia',
+        text: 'No se puede eliminar la sección original.',
+        customClass: { confirmButton: 'btn btn-warning' }
+      });
+    }
+  });
+});
+/* fin de la seccion de editar solicitudes exportacion */
   /* Enviar formulario store add exportacion */
   $(function () {
     // Configuración de CSRF para las solicitudes AJAX
