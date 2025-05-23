@@ -568,9 +568,9 @@
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">3) No. de análisis de
                 laboratorio:</td>
-            <td colspan="3">{{ $datos->lote_granel->folio_fq ?? '---------------' }}</td>
+            <td colspan="3">@if($muestreo_granel != 'X') {{ $datos->lote_granel->folio_fq ?? '---------------' }} @else --------------- @endif</td>
             <td class="con-negra" colspan="4" style="text-align: left">8) Contenido Alcohólico:</td>
-            <td colspan="4">{{ $datos->lote_granel->cont_alc ?? '---------------' }}</td>
+            <td colspan="4">@if($muestreo_granel != 'X') {{ $datos->lote_granel->cont_alc ?? '---------------' }} @else --------------- @endif</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">4) Marca:</td>
