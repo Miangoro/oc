@@ -289,9 +289,9 @@
     <div class="header">
         <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo CIDAM">
         <div class="header-text">
-            <p class="large-text">Unidad de Inspección No. UVNOM-129</p>
-            <p class="small-text">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</p>
-            <p class="normal-text">Acreditados ante la Entidad Mexicana de Acreditación, A.C.</p>
+            <p class="large-text" style="text-align: center">Unidad de Inspección No. UVNOM-129</p>
+            <p class="small-text" style="text-align: center; margin-top: -4px;">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</p>
+            <p class="normal-text" style="text-align: center">Acreditados ante la Entidad Mexicana de Acreditación, A.C.</p>
         </div>
 
     </div>
@@ -412,9 +412,6 @@
         </div>
         <p class="textx" style="font-size: 9px;">
             <strong>AUTORIZÓ</strong>
-            {{-- <span style="margin-left: 50px;">
-                <strong>{{ $data->firmante->puesto }} | {{ $data->firmante->name }}</strong>
-            </span> --}}
             <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
                 @php
                     use Illuminate\Support\Facades\Storage;
@@ -445,8 +442,7 @@
         <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
             {{ $firmaDigital['firma'] }}
         </p>
-
-    </div>
+</div>
 
 
     <p class="pie">
@@ -459,5 +455,4 @@
 
 
 </body>
-
 </html>

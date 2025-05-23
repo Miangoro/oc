@@ -7,102 +7,99 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dictamen de Cumplimiento NOM de Mezcal Envasado</title>
     <style>
-        body {
-            font-family: 'calibri';
-            margin-left: 20px;
-            margin-right: 20px;
-            font-size: 13px;
-        }
+    @page {
+        size: 227mm 292mm;/*Tamaño carta*/
+    }
+    @font-face {
+        font-family: 'fuenteNegrita';
+        src: url('{{ storage_path('fonts/LSANSD.ttf') }}');
+    }
 
-        .header {
-            margin-top: -30px;
-            width: 100%;
-        }
+    body {
+        margin-top: 9%;
+        font-family: 'calibri';
+        margin-left: 15px;
+        margin-right: 20px;
+        font-size: 13px;
+    }
 
-        .header img {
-            display: block;
-            width: 275px;
-            
-        }
+    .title {
+        font-family: 'Arial Negrita', Gadget, sans-serif;
+        text-align: center;
+        font-size: 22px;
+    }
 
-        .container {
-            margin-top: 0px;
-            position: relative;
-        }
+    .text {
+        margin-top: 1px; 
+        text-align: justify;
+        font-size: 16px;
+        line-height: 0.9;
+    }
 
-        .description1,
-        .description2,
-        .description3,
-        .textimg {
-            position: absolute;
-            right: 10px;
-            text-align: right;
-        }
-        .description-container {
-     margin-top: 20px; /*  Espacio entre el logo y el texto */
-    width: 80%; /*  Controla el ancho del texto */
-    text-align: center;
-}
+    .subtema {
+        font-size: 14px;
+        margin-top: -7px; 
+        margin-left: 0px;
+        margin-right: 30px;
+        color: #002800;
+        font-family: 'Arial Negrita'
+    }
 
-        .description1 {
-            font-size: 18px;
-            color: #151442;
-            font-family: 'Arial Negrita' !important;
-            top: 5px;
-            
-        }
+    .subtema2 {
+        margin-top: 12px;
+        font-size: 14px;
+        margin-bottom: 15px;
+        margin-left: 0px;
+        margin-right: 30px;
+        color: #002800;
+        font-family: 'Arial Negrita'
+    }
 
-        .description2 {
-            color: #151442;
-            font-family: 'Arial Negrita' !important;
-            font-size: 9.5px;
-            top: 30px;
-           
-        }
+    /*inicia firma digital DIV*/
+    .images-container {
+        position: relative;
+        width: 100%;
+        /*vertical-align: bottom;*/
+    }
+    .image-right {
+        position: absolute;
+        width: 200px;
+        right: 10px;
+        margin-top: -5px;
+    }
+    .sello {
+        position: absolute;
+        right: 5%;
+        margin-top: -13px;
+        font-size: 11px;
+        font-family: 'Arial Negrita' !important;
+    }
+    .textx {
+        line-height: 0.5;
+        font-size: 9px;
+        font-family: Arial, Helvetica, Verdana;
+    }
+    .textsello {
+        width: 85%; 
+        text-align: left;
+        word-wrap: break-word;
+        margin-top: -5px;
+        line-height: 1.2;
+        font-size: 8px;
+        font-family: Arial, Helvetica, Verdana;
+    }
 
-        .description3 {
-            font-size: 10px;
-            top: 42px;
-            margin-right: 60px;
-            
-        }
+    .pie {
+        position: fixed;
+        right: 12px;
+        bottom: 4px;
+        text-align: right;
+        line-height: 0.9;
+        font-family: 'Lucida Sans Unicode';
+        font-size: 9px;
+    }
 
-        .title {
-            font-family: 'Arial Negrita', Gadget, sans-serif;
-            text-align: center;
-            font-size: 20px;
-            line-height: 20px;
-            margin-top: -35px;
-        }
-
-        .subtema {
-            font-size: 14px;
-            margin-top: -25px;
-            margin-left: 0px;
-            margin-right: 30px;
-            color: #002800;
-            font-family: 'Arial Negrita'
-        }
-
-        .subtema2 {
-            font-size: 14px;
-            margin-top: 0px;
-            margin-bottom: 15px;
-            margin-left: 0px;
-            margin-right: 30px;
-            color: #002800;
-            font-family: 'Arial Negrita'
-        }
-
-        .text {
-            text-align: justify;
-            font-size: 16px;
-            margin-top: -25px;
-            margin-left: 0px;
-            margin-right: 15px;
-            line-height: 0.8;
-        }
-
+    
         .text2 {
             text-align: justify;
             font-size: 15px;
@@ -136,104 +133,6 @@
             width: 50%;
         }
 
-        .images-container {
-            position: relative;
-            display: flex;
-            margin-top: 12px;
-            margin-left: 30px;
-            width: 100%;
-        }
-
-        .image-left {
-            margin-right: 60%;
-            width: 12%;
-        }
-
-        .textsello {
-            text-align: left;
-            font-size: 8px;
-            margin: 0;
-            padding: 0;
-        }
-
-        .numpag {
-            font-size: 10px;
-            position: fixed;
-            bottom: 10px;
-            right: 15px;
-            margin: 0;
-            padding: 0;
-        }
-
-        .sello {
-            text-align: right;
-            font-size: 11px;
-            margin: 0;
-            padding: 0;
-            position: absolute;
-            right: 20px;
-            top: 860px;
-            font-family: 'Arial Negrita' !important;
-        }
-
-        .container {
-            margin-top: 0px;
-            position: relative;
-        }
-
-        .textx,
-        .textsello {
-            line-height: 1.2;
-            font-family: Arial, Helvetica, Verdana;
-            margin-left: 30px;
-        }
-
-        .image-right {
-            position: absolute;
-            right: 10px;
-            top: -20px;
-            width: 240px;
-        }
-
-
-        .footer-bar {
-            position: fixed;
-            bottom: -55px;
-            left: -70px;
-            right: -70px;
-            width: calc(100% - 40px);
-            height: 45px;
-            background-color: #158F60;
-            color: white;
-            font-size: 10px;
-            text-align: center;
-            padding: 10px 0px;
-        }
-
-        .footer-bar p {
-            margin: 0;
-            line-height: 1;
-        }
-
-        .font-lucida-sans-seminegrita {
-            font-family: 'Lucida Sans Seminegrita', sans-serif;
-        }
-
-        .pie {
-            text-align: right;
-            font-size: 9px;
-            line-height: 1;
-            position: fixed;
-            bottom: -12;
-            left: 0;
-            right: 0;
-            width: calc(100% - 40px);
-            height: 45px;
-            margin-right: 30px;
-            padding: 10px 0px;
-            font-family: 'Lucida Sans Unicode';
-        }
-
         .column {
             text-align: center;
             font-family: 'lucida sans seminegrita';
@@ -245,9 +144,7 @@
             text-align: center;
             font-family: 'Calibri', sans-serif;
             font-weight: normal; 
-            
         }
-       
 
         .column2 {
             color: #003366;
@@ -255,71 +152,118 @@
             font-family: 'lucida sans seminegrita';
         }
 
-
-        .textimg {
-            font-weight: bold;
-            position: absolute;
-            top: 100px;
-            left: 10px;
-            text-align: left;
-            font-size: 13px;
-        }
-
-        .watermark {
-            color: red;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
-            opacity: 0.5;
-            /* Opacidad predeterminada */
-            letter-spacing: 3px;
-            font-size: 150px;
-            white-space: nowrap;
-            z-index: -1;
-        }
         .primera-tabla {
-    border: 2px solid #1e6364;
-    width: 100% !important;
-}
+            border: 2px solid #1e6364;
+            width: 100% !important;
+        }
 
-.primera-tabla td, .primera-tabla th {
-    border: 2px solid #1e6364; 
-}
-.segunda-tabla {
-    width: 100% !important;
-    max-width: none;
-    margin-left: 0;
-    margin-right:0;}
+        .primera-tabla td, .primera-tabla th {
+            border: 2px solid #1e6364; 
+        }
+        .segunda-tabla {
+            width: 100% !important;
+            max-width: none;
+            margin-left: 0;
+            margin-right:0;
+        }
+
+        
+    /*inicia header DIV*/
+    .header {
+        position: fixed;
+        width: 100%;
+        top: -12px;
+    }
+    .header-text {
+        color: #151442;
+        display: inline-block;
+        text-align: center;
+        margin-left: 16%;
+    }
+    .header-text p {
+        margin: 5px;
+    }
+
+    .large-text {
+        font-size: 16px;
+        font-family: 'Arial Negrita', Gadget, sans-serif;
+        line-height: 0.8;
+    }
+    .small-text {
+        font-size: 11px;
+        font-family: 'Arial Negrita', Gadget, sans-serif;
+        line-height: 0.8;
+    }
+    .normal-text {
+        font-family: sans-serif;
+        font-size: 11px;
+    }
+
+    .footer {
+        position: fixed;
+        bottom: -55px;
+        left: -70px;
+        right: -70px;
+        width: calc(100% - 40px);
+        height: 45px;
+        background-color: #158F60;
+        color: white;
+        font-size: 10px;
+        text-align: center;
+        padding: 10px 0px;
+    }
+    .footer p {
+        margin: 0;
+        line-height: 1;
+    }
+
+    .watermark {
+        color: red;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
+        opacity: 0.5;
+        /* Opacidad predeterminada */
+        letter-spacing: 3px;
+        font-size: 150px;
+        white-space: nowrap;
+        z-index: -1;
+    }
+
     </style>
 </head>
 
 <body>
 
-    @if ($watermarkText)
-        <div class="watermark">
-            Cancelado
-        </div>
-    @endif
+@if ($watermarkText)
+    <div class="watermark">
+        Cancelado
+    </div>
+@endif
 
-    <div class="container">
+<div class="header">
+    <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="width: 255px; height: 95px; padding-left:6px" alt="Logo CIDAM">
+    <div class="header-text">
+        <p class="large-text">Unidad de Inspección<br>No. UVNOM-129</p>
+        <p class="small-text">Centro de Innovación y Desarrollo Agroalimentario de<br>Michoacán, A.C.</p>
+        <p class="normal-text">Acreditados ante la Entidad Mexicana de Acreditación, A.C.</p>
+    </div>
+</div>
 
-        <div class="header">
-            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="275px">
-        </div>
-       <br>
-    <div class="description1" >Unidad de Inspección  No. UVNOM-129</div>
-<div class="description2" >Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
-<div class="description3" >Acreditados ante la Entidad Mexicana de Acreditación, A.C.</div>
+<div class="footer">
+    <p style="font-family: Lucida Sans Seminegrita;">www.cidam.org . unidadverificacion@cidam.org</p>
+    <p style="font-family: Lucida Sans Unicode; font-size: 10px;">Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341.
+        Morelia Michoacán</p>
+</div> 
 
 
 
-        <div class="title">Dictamen de Cumplimiento NOM de Mezcal Envasado </div>
-
-        <p class="text" style="margin-bottom: 30px;"> La Unidad de Inspección CIDAMA.C. con domicilio en Kilómetro 8 Antigua Carretera a Pátzcuaro,
+    <div class="title">Dictamen de Cumplimiento NOM de Mezcal Envasado </div>
+    <p class="text"> La Unidad de Inspección CIDAMA.C. con domicilio en Kilómetro 8 Antigua Carretera a Pátzcuaro,
      S/N Colonia Otra no Especificada en el Catálogo, C.P. 58341, Morelia, Michoacán. Unidad de Inspección tipo A.</p>
 
-        <p class="subtema" >I. &nbsp;&nbsp;&nbsp;&nbsp;Datos de la empresa</p>
+    <p class="subtema" >I. &nbsp;&nbsp;&nbsp;&nbsp;Datos de la empresa</p>
 
 <table class="primera-tabla" style=" text-align: center; ">
     <tbody>
@@ -336,8 +280,8 @@
         <tr>
             <td class="column" style="width: 20%; vertical-align: middle; ">Dirección</td>
             <td style="width: 39%; vertical-align: middle; text-align: justify; line-height: 0.8;">
-                <b>Domicilio Fiscal:</b> {{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }}
-                <br><b>Domicilio de Instalaciones:</b> {{ $data->inspeccion?->solicitud?->instalacion?->direccion_completa ?? 'No encontrado' }}
+                <span style="font-family: fuenteNegrita; font-size: 11px;">Domicilio Fiscal:</span> {{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }}
+                <br><span style="font-family: fuenteNegrita; font-size: 11px;">Domicilio de Instalaciones:</span> {{ $data->inspeccion?->solicitud?->instalacion?->direccion_completa ?? 'No encontrado' }}
             </td>
             <td class="column" style="width: 16%; vertical-align: middle;">Fecha de emisión</td>
             <td style="width: 25%; vertical-align: middle;">{{ $fecha_emision ?? '' }}</td>
@@ -414,7 +358,7 @@
         </tr>
       <tr>
             <td class="column2" style="text-align: center; height: 30px; padding: 3px; line-height: 1;">Categoría y Clase</td>
-            <td style="text-align: center;">
+            <td style="text-align: center; font-size: 12px;">
                 @if ($lotesGranel->isNotEmpty())
                     @foreach ($lotesGranel as $loteGranel)
                         {{ $loteGranel->categoria->categoria ?? 'N/A' }},
@@ -430,7 +374,7 @@
             <td rowspan="2" class="column2" style="text-align: center; vertical-align: middle;">No. de Botellas</td>
             <td rowspan="2" style="text-align: center; vertical-align: middle;">{{ $data->lote_envasado->cant_botellas ?? 'N/A' }}</td>
             <td rowspan="2" class="column2" style="text-align: center; vertical-align: middle;">Presentación</td>
-            <td rowspan="2" style="text-align: center; vertical-align: middle;">{{ $data->lote_envasado->presentacion ?? 'N/A' }}</td>
+            <td rowspan="2" style="text-align: center; vertical-align: middle;">{{ $data->lote_envasado->presentacion ?? 'N/A' }} {{ $data->lote_envasado->unidad ?? 'N/A' }}</td>
         </tr>
         <tr>
             <td class="column2" style="text-align: center;">Tipo de Maguey</td>
@@ -492,72 +436,53 @@
 
 
 <!--FIRMA DIGITAL-->
-<div style="margin-left: -5px;">
+<div>
+    <div class="images-container">
+        <img src="{{ $qrCodeBase64 }}" alt="QR" width="75px">
+        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Sello UI" class="image-right">
+    </div>
     <p class="sello">Sello de Unidad de Inspección</p>
-        <div class="images-container">
-            <img src="{{ $qrCodeBase64 }}" alt="QR" width="90px">
-            <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Logo UI" class="image-right">
-        </div>
-        <p class="textx" style="font-size: 9px; margin-bottom:-8px; margin-top:-2px; position: relative;">
-            <strong>AUTORIZÓ</strong>
-            <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
-                @php
-                    use Illuminate\Support\Facades\Storage;
-                    $firma = $data->firmante->firma ?? null;
-                    $firmaPath = $firma ? 'firmas/' . $firma : null;
-                @endphp
-        
-                @if ($firma && Storage::disk('public')->exists($firmaPath))
-                    <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
-                        {{-- src="{{ asset('storage/' . $firmaPath) }}"> --}}
-                        src="{{ public_path('storage/' . $firmaPath) }}">
-                @endif
-        
-                <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
-            </span>
-        </p>
-        
-        <p class="textx" style="font-size: 9px; margin-bottom:-8px">
-            <strong>CADENA ORIGINAL</strong>
-            <span style="margin-left: 14px;">
-       @if (isset($firmaDigital['firma']))
+    
+
+        @php
+            use Illuminate\Support\Facades\Storage;
+            $firma = $data->firmante->firma ?? null;
+            $firmaPath = $firma ? 'firmas/' . $firma : null;
+        @endphp
+
+        @if ($firma && Storage::disk('public')->exists($firmaPath))
+            <img style="position: absolute; margin-top: -10%; left: 45%;" height="60px"
+            src="{{ public_path('storage/' . $firmaPath) }}">
+        @endif
+
+    <p class="textx" style="margin-top: -5px">
+        <strong>AUTORIZÓ</strong>
+        <span style="margin-left: 54px; display: inline-block; text-align: center; position: relative;">
+            <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
+        </span>
+    </p>
+    <p class="textx">
+        <strong>CADENA ORIGINAL</strong>
+        <span style="margin-left: 14px;">
+            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+        </span>
+    </p>
+    <p class="textx">
+        <strong>SELLO DIGITAL</strong>
+    </p>
     <p class="textsello">
         {{ $firmaDigital['firma'] }}
     </p>
-@else
-    
-@endif
-            </span>
-        </p>
-
-
-        <p class="textx" style="font-size: 9px; margin-bottom:1px">
-            <strong>SELLO DIGITAL</strong>
-        </p>
-
-       @if (isset($firmaDigital['firma']))
-    <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
-        {{ $firmaDigital['firma'] }}
-    </p>
-@else
-    <p class="textsello">FALTA</p>
-@endif
-
-
-    <div class="footer-bar">
-        <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
-        <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341.
-            Morelia Michoacán</p>
-    </div> 
-
-    <p class="pie">Entrada en vigor: 10-12-2024<br>
-        F-UV-04-17 Ver 7.
-    </p>
-    
-
-
 </div>
 
+    
+    <p class="pie">
+        @if ($id_sustituye)
+        Este dictamen sustituye al: {{ $id_sustituye }}
+        @endif
+        <br>F-UV-04-17 Dictamen de Cumplimiento NOM de Mezcal Envasado Ed. 7
+        <br>Entrada en vigor: 10-12-2024
+    </p>
 
 
 </body>
