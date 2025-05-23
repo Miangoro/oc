@@ -303,6 +303,7 @@
     @endif
 
     <div class="container">
+
         <div class="header">
             <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="275px">
         </div>
@@ -311,6 +312,8 @@
 <div class="description2" >Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
 <div class="description3" >Acreditados ante la Entidad Mexicana de Acreditación, A.C.</div>
 
+
+
         <div class="title">Dictamen de Cumplimiento NOM de Mezcal Envasado </div>
 
         <p class="text" style="margin-bottom: 30px;"> La Unidad de Inspección CIDAMA.C. con domicilio en Kilómetro 8 Antigua Carretera a Pátzcuaro,
@@ -318,7 +321,7 @@
 
         <p class="subtema" >I. &nbsp;&nbsp;&nbsp;&nbsp;Datos de la empresa</p>
 
-      <table class="primera-tabla" style=" text-align: center; ">
+<table class="primera-tabla" style=" text-align: center; ">
     <tbody>
         <tr>
             <td class="column" style="width: 20%; vertical-align: middle;">Nombre de la empresa</td>
@@ -332,7 +335,7 @@
         </tr>
         <tr>
             <td class="column" style="width: 20%; vertical-align: middle; ">Dirección</td>
-            <td style="width: 39%; vertical-align: middle; text-align: justify;">
+            <td style="width: 39%; vertical-align: middle; text-align: justify; line-height: 0.8;">
                 <b>Domicilio Fiscal:</b> {{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }}
                 <br><b>Domicilio de Instalaciones:</b> {{ $data->inspeccion?->solicitud?->instalacion?->direccion_completa ?? 'No encontrado' }}
             </td>
@@ -354,10 +357,9 @@
     </tbody>
 </table>
 
-</table>
-        <p class="subtema2">II. &nbsp;&nbsp;&nbsp;&nbsp;Descripción del producto</p>
+    <p class="subtema2">II. &nbsp;&nbsp;&nbsp;&nbsp;Descripción del producto</p>
 
-     <table class="segunda-tabla">
+<table class="segunda-tabla">
     <tbody>
         <tr>
             <td colspan="8" class="colum-title"><strong>PRODUCTO:</strong>
@@ -485,9 +487,8 @@
 </table>
 
 
-        <p class="text2">Este dictamen de cumplimiento de lote de mezcal envasado se expide de acuerdo a la
-            Norma Oficial Mexicana NOM-070-SCFI-2016. Bebidas alcohólicas -mezcal-
-            especificaciones.</p>
+    <p class="text2">Este dictamen de cumplimiento de lote de mezcal envasado se expide de acuerdo a la
+        Norma Oficial Mexicana NOM-070-SCFI-2016. Bebidas alcohólicas -mezcal-especificaciones.</p>
 
 
 <!--FIRMA DIGITAL-->
@@ -529,6 +530,7 @@
             </span>
         </p>
 
+
         <p class="textx" style="font-size: 9px; margin-bottom:1px">
             <strong>SELLO DIGITAL</strong>
         </p>
@@ -538,8 +540,9 @@
         {{ $firmaDigital['firma'] }}
     </p>
 @else
-    <p class="textsello">Error: No se pudo generar la firma digital</p>
+    <p class="textsello">FALTA</p>
 @endif
+
 
     <div class="footer-bar">
         <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
@@ -551,8 +554,9 @@
         F-UV-04-17 Ver 7.
     </p>
     
-</div>
 
+
+</div>
 
 
 
