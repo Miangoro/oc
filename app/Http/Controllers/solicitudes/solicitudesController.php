@@ -1819,7 +1819,8 @@ class solicitudesController extends Controller
         $datos = solicitudesValidacionesModel::find($id_validacion);
         $datos['validacion'] = json_decode($datos['validacion'], true);
         $fecha = Helpers::formatearFechaHora($datos->fecha_realizo);
-        $pdf = Pdf::loadView('pdfs.pdf_validar_solicitud', compact('datos', 'fecha'))->setPaper('letter');;
-        return $pdf->stream('Validación de solicitud.pdf');
+        //$pdf = Pdf::loadView('pdfs.pdf_validar_solicitud', compact('datos', 'fecha'))->setPaper('letter');;
+        //return $pdf->stream('Validación de solicitud.pdf');
+        return view('pdfs.pdf_validar_solicitud', compact('datos', 'fecha'));
     }
 }

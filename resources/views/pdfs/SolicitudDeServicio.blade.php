@@ -748,8 +748,21 @@
             <td class="sin-negrita" colspan="4">Se cuenta con todos los medios para realizar todas las actividades
                 de evaluación para la <br>
                 Certificación:</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
+          <td>
+            @if (isset($datos->ultima_validacion_oc->estatus) && strtolower($datos->ultima_validacion_oc->estatus) === 'validada')
+                X
+            @else
+                ---------
+            @endif
+        </td>
+
+            <td>
+            @if (isset($datos->ultima_validacion_oc->estatus) && strtolower($datos->ultima_validacion_oc->estatus) === 'rechazada')
+                X
+            @else
+                ---------
+            @endif
+        </td>
             <td rowspan="2" colspan="3">
                 @if ($datos->ultima_validacion_oc)
                     {{ $datos->ultima_validacion_oc->responsable->name }}
@@ -762,15 +775,39 @@
         <tr>
             <td class="sin-negrita" colspan="4">El organismo de Certificación tiene la competencia para realizar la
                 Certificación</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
+           <td>
+            @if (isset($datos->ultima_validacion_oc->estatus) && strtolower($datos->ultima_validacion_oc->estatus) === 'validada')
+                X
+            @else
+                ---------
+            @endif
+        </td>
+         <td>
+            @if (isset($datos->ultima_validacion_oc->estatus) && strtolower($datos->ultima_validacion_oc->estatus) === 'rechazada')
+                X
+            @else
+                ---------
+            @endif
+        </td>
         </tr>
         <tr>
             <td class="sin-negrita" colspan="4">El organismo de Certificación tiene la capacidad para llevar a cabo
                 las actividades de <br>
                 certificación</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
+            <td>
+            @if (isset($datos->ultima_validacion_oc->estatus) && strtolower($datos->ultima_validacion_oc->estatus) === 'validada')
+                X
+            @else
+                ---------
+            @endif
+        </td>
+           <td>
+            @if (isset($datos->ultima_validacion_oc->estatus) && strtolower($datos->ultima_validacion_oc->estatus) === 'rechazada')
+                X
+            @else
+                ---------
+            @endif
+        </td>
             <td colspan="3" rowspan="2" style="padding-top: 0; margin-top: 0; vertical-align: top">Nombre y
                 firma<br>
                 @php
