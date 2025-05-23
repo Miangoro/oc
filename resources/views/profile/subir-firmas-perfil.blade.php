@@ -19,15 +19,15 @@
           reader.readAsDataURL($refs.file.files[0]);
         " />
 
-      <!-- Vista previa de la firma actual -->
-      <div class="mt-2" x-show="!filePreview">
-        <p>{{ __('Firma actual:') }}</p>
-
-          <img class="img-thumbnail" width="200">
-
-          <p>{{ __('No se ha subido ninguna firma aún.') }}</p>
-
-      </div>
+        <!-- Vista previa de la firma actual -->
+        <div class="mt-2" x-show="!filePreview">
+          <p>{{ __('Firma actual:') }}</p>
+          @if($signatureUrl)
+            <img src="{{ $signatureUrl }}" class="img-thumbnail" width="200">
+          @else
+            <p>{{ __('No se ha subido ninguna firma aún.') }}</p>
+          @endif
+        </div>
 
       <!-- Vista previa de la nueva firma -->
       <div class="mt-2" x-show="filePreview">
