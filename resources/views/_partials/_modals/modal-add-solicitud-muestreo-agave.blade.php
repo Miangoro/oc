@@ -12,7 +12,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange="obtenerInstalacionesMuestreoAgave(); obtenerlasguias();"
-                                    name="id_empresa" id="id_empresa_dic2mues" class="select2 form-select id_empresa_dic2" >
+                                    name="id_empresa" id="id_empresa_dic2mues" class="select2 form-select" >
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">
@@ -72,10 +72,8 @@
 
 <script>
     function obtenerInstalacionesMuestreoAgave() {
-        var empresa = $(".id_empresa_dic2").val();
-
+        var empresa = $("#id_empresa_dic2mues").val();
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
-
             // Hacer una petición AJAX para obtener los detalles de la empresa
             $.ajax({
                 url: '/getDatos/' + empresa,
@@ -86,7 +84,6 @@
                     for (let index = 0; index < response.instalaciones_produccion.length; index++) {
                         // Limpia el campo tipo usando la función limpiarTipo
                         var tipoLimpio = limpiarTipo(response.instalaciones_produccion[index].tipo);
-
                         contenido = '<option value="' + response.instalaciones_produccion[index]
                             .id_instalacion + '">' +
                             tipoLimpio + ' | ' + response.instalaciones_produccion[index]
@@ -117,7 +114,7 @@
 
 
     function obtenerlasguias() {
-        var empresa = $(".id_empresa_dic2").val();
+        var empresa = $("#id_empresa_dic2mues").val();
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
 
             // Hacer una petición AJAX para obtener los detalles de la empresa
@@ -135,7 +132,7 @@
                     if (response.guias.length == 0) {
                         contenido = '';
                     }
-                    $('.guiass').html(contenido);
+                    $('#guiasmuestreo').html(contenido);
                 },
                 error: function() {
                     //alert('Error al cargar los lotes a granel.');

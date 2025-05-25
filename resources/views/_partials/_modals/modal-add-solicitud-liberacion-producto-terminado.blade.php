@@ -15,8 +15,9 @@
                                     name="id_empresa" class="select2 form-select">
                                     <option disabled selected value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
-                                        </option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -30,8 +31,6 @@
                             </div>
                         </div>
                     </div>
-
-
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
@@ -227,7 +226,7 @@
                 method: 'GET',
                 success: function(response) {
                     console.log(response);
-                    cargarLotesEnvasado(response.lotes_envasado, response.marcas);
+                    /* cargarLotesEnvasado(response.lotes_envasado, response.marcas); */
                     // Cargar los detalles de instalaciones en el modal
                     var contenidoInstalaciones = "";
                     for (let index = 0; index < response.instalaciones.length; index++) {
