@@ -620,7 +620,8 @@ class RevisionPersonalController extends Controller
         // Asegurar que "Revisión 1" existe en el array
         $respuestas = collect(array_merge(
             $respuestasJson["Revision 1"] ?? [],
-            $respuestasJson["Revision 2"] ?? []
+            $respuestasJson["Revision 2"] ?? [],
+            $respuestasJson["Revision 3"] ?? []
         ));
 
 
