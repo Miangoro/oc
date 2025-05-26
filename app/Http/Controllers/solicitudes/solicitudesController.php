@@ -40,7 +40,20 @@ class solicitudesController extends Controller
         $solicitudesTipos = solicitudTipo::all();
         $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
         $estados = estados::all(); // Obtener todos los estados
-        $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+       // $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get();// Obtener solo las empresas tipo '2'
+           // FILTRO DE EMPRESAS SEGÚN EL USUARIO
+        if (auth()->user()->tipo == 3) {
+            // Solo la empresa del usuario
+            $empresas = empresa::with('empresaNumClientes')
+                ->where('tipo', 2)
+                ->where('id_empresa', auth()->user()->empresa?->id_empresa)
+                ->get();
+        } else {
+            // Todas las empresas tipo 2
+            $empresas = empresa::with('empresaNumClientes')
+                ->where('tipo', 2)
+                ->get();
+        }
         $organismos = organismos::all(); // Obtener todos los estados
         $LotesGranel = lotesGranel::all();
         $categorias = categorias::all();

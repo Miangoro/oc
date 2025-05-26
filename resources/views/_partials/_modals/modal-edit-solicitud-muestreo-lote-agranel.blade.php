@@ -15,7 +15,7 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="edit_id_empresa_muestreo"
                                     onchange="EditobtenerInstalacionesMuestreo(); editobtenerGranelesMuestreo(this.value);"
-                                    name="id_empresa" class="id_empresa_muestreo select2 form-select" required>
+                                    name="id_empresa" class="select2 form-select">
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">
@@ -38,7 +38,7 @@
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class=" form-select select2" id="edit_id_instalacion_muestreo"
-                                    name="id_instalacion" aria-label="id_instalacion" required>
+                                    name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
                             </div>
@@ -194,7 +194,7 @@
 
                     // Mantener el dato del select
                     const idloteSeleccionada = $('#edit_id_lote_granel_muestreo').data('selected');
-                    console.log('el lote seleccionado es el: ' + idloteSeleccionada);
+                    console.log('El lote seleccionado es el: ' + idloteSeleccionada);
                     if (idloteSeleccionada) {
                         $('#edit_id_lote_granel_muestreo')
                             .val(idloteSeleccionada)

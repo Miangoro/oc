@@ -30,13 +30,8 @@
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">
-                                            {{ isset($empresa->empresaNumClientes[0])
-                                                ? $empresa->empresaNumClientes[0]->numero_cliente
-                                                : (isset($empresa->empresaNumClientes[1])
-                                                    ? $empresa->empresaNumClientes[1]->numero_cliente
-                                                    : 'Sin número') }}
-                                            | {{ $empresa->razon_social }}
-                                        </option>
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -47,7 +42,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input id="fecha_visita_edit_exportacion" placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
-                                    type="datetime-local" name="fecha_visita" />
+                                    type="datetime-local" name="fecha_visita" autocomplete="off" />
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -128,15 +123,15 @@
                     </div>
                     <div id="sections-container2">
                         <!-- Sección original: Características del Producto -->
-                        <div class="card mt-4" id="caracteristicas_Ex">
+                        <div class="card mt-4" id="caracteristicas_Ex_edit_">
                             <div class="card-body">
                                 <h6>Características del Producto</h6>
                                 <div class="row caracteristicas-row">
                                     <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select onchange="cargarDetallesLoteEnvasadoEdit(this.value)"
-                                                name="lote_envasado[0]"
-                                                class="select2 form-select evasado_export evasado_export_edit">
+                                                name="lote_envasado[0]" id="lote_envasado_edit_0"
+                                                class="select2 form-select evasado_export_edit lote-envasado-edit">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
                                                 <!-- Opciones dinámicas -->
@@ -146,29 +141,29 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" disabled name="lote_granel[0]"
-                                                class="form-control lotes_granel_export">
+                                            <input type="text" disabled name="lote_granel[0]" id="lote_granel_edit_0"
+                                                class="form-control lotes_granel_export_edit">
                                             </input>
                                             <label for="lote_granel">Lote a granel</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" class="form-control" id="cantidad_botellas0"
+                                            <input type="number" class="form-control" id="cantidad_botellas_edit0"
                                                 name="cantidad_botellas[0]" placeholder="Cantidad de botellas">
                                             <label for="cantidad_botellas">Cantidad de botellas</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" class="form-control" id="cantidad_cajas0"
+                                            <input type="number" class="form-control" id="cantidad_cajas_edit0"
                                                 name="cantidad_cajas[0]" placeholder="Cantidad de cajas">
                                             <label for="cantidad_cajas">Cantidad de cajas</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" class="form-control presentacion"
+                                            <input type="text" class="form-control presentacion" id="presentacion_edit0"
                                                 name="presentacion[0]" placeholder="Ej. 750ml">
                                             <label for="presentacion">Presentación</label>
                                         </div>
@@ -182,7 +177,7 @@
 
 
                     <!-- Botones -->
-                    <div id="botones_characteristics" class="d-none">
+                    <div id="botones_characteristics_edit" class="d-none">
                         <button type="button" id="add-characteristics_edit" class="btn btn-primary btn-sm mt-1">
                             <i class="ri-add-line"></i> Agregar Tabla
                         </button>
@@ -280,10 +275,10 @@
                     cargarInstalacionesEdit(response.instalaciones_comercializadora);
                     cargarInstalacionesEnvasadoEdit(response.instalaciones_envasadora);
                     cargarDireccionesEdit(response.direcciones);
-                    cargarLotesEnvasado(response.lotes_envasado, response.marcas);
+                    cargarLotesEnvasadoEdit(response.lotes_envasado, response.marcas);
                     cargarMarcasEdit();
-                    compararLotesConSelects();
-                    cargarLotesGranel(response.lotes_granel);
+                    /* compararLotesConSelects(); */
+                    cargarLotesGranelEdit(response.lotes_granel);
 
                 },
                 error: function() {
@@ -388,7 +383,7 @@
 
 
     // Función para cargar lotes envasados
-    function cargarLotesEnvasado(lotesEnvasado, marcas) {
+    function cargarLotesEnvasadoEdit(lotesEnvasado, marcas) {
         var contenidoLotes = "";
         for (let index = 0; index < lotesEnvasado.length; index++) {
             var skuLimpiot = limpiarSku(lotesEnvasado[index].sku);
@@ -407,10 +402,14 @@
         if (lotesEnvasado.length === 0) {
             contenidoLotes = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
         }
-        $('.evasado_export').html(contenidoLotes);
+        $('.evasado_export_edit').html(contenidoLotes);
+                            const idlotePrevio = $('#lote_envasado_edit_0').data('selected');
+                    if (idlotePrevio) {
+                        $('#lote_envasado_edit_0').val(idlotePrevio);
+                    } else if (response.lotesEnvasado.length == 0) {
+                    }
 
-
-        cargarDetallesLoteEnvasadoEdit($(".evasado_export").val());
+        cargarDetallesLoteEnvasadoEdit($(".evasado_export_edit").val());
 
 
 
@@ -447,7 +446,7 @@
 
 
     // Función para cargar lotes a granel
-    function cargarLotesGranel(lotesGranel) {
+    function cargarLotesGranelEdit(lotesGranel) {
         if (lotesGranel !== "" && lotesGranel !== null && lotesGranel !== undefined) {
             var contenidoLotesGraneles = "";
             for (let index = 0; index < lotesGranel.length; index++) {
@@ -459,7 +458,7 @@
             if (lotesGranel.length === 0) {
                 contenidoLotesGraneles = '<option value="" disabled selected>Sin lotes granel registrados</option>';
             }
-            $('.lotes_granel_export').html(contenidoLotesGraneles);
+            $('.lotes_granel_export_edit').html(contenidoLotesGraneles);
         }
     }
 
@@ -521,7 +520,7 @@
                             nombre_lote_granel += lote.nombre_lote;
                         });
 
-                        $('.lotes_granel_export').val(nombre_lote_granel);
+                        $('.lotes_granel_export_edit').val(nombre_lote_granel);
                     } else {
                         tbody.append(
                             `<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`
@@ -656,5 +655,32 @@
         } else {
             $('#tabla_marcas tbody').html('<tr><td colspan="8">Seleccione una empresa para ver los datos</td></tr>');
         }
+    }
+
+    // Función para llenar campos en editar
+    function cargarDetallesLoteEnvasadoDinamicoEdit(select, sectionCountEdit) {
+      var idLoteEnvasado = $(select).val();
+      if (idLoteEnvasado) {
+        $.ajax({
+          url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+          method: 'GET',
+          success: function (response) {
+            $(`#lote_granel_edit_${sectionCountEdit}`).val(
+              response.detalle && response.detalle.length > 0
+                ? response.detalle.map(lote => lote.nombre_lote).join(', ')
+                : ''
+            );
+            $(`#cantidad_botellas_edit${sectionCountEdit}`).val(response.lote_envasado?.cant_botellas || '');
+            $(`#presentacion_edit${sectionCountEdit}`).val(
+              response.lote_envasado
+                ? response.lote_envasado.presentacion + ' ' + response.lote_envasado.unidad
+                : ''
+            );
+          },
+          error: function () {
+            console.error('Error al cargar el detalle del lote envasado.');
+          }
+        });
+      }
     }
 </script>

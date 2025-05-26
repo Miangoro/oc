@@ -59,7 +59,7 @@
 
 
 
-                    
+
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
@@ -109,25 +109,25 @@
                                 </td>
                                 <td>
                                     <input type="text" class="form-control form-control-sm"
-                                        name="volumen_parcial[]" id="volumen_parcial"> 
+                                        name="volumen_parcial[]" id="volumen_parcial">
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="row">
-                        <div class="col-md-12 mb-6">
+                        <div class="col-md-12 mb-4">
                             <label class="form-label" for="basic-default-password42">Instalación de envasado certificada</label>
-                            <div class="input-group">
-                                <select placeholder="Selecciona el cliente" class="form-select id_instalacion"
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select placeholder="Selecciona el cliente" class="form-select select2 id_instalacion"
                                     id="lugar_envasado" name="lugar_envasado" aria-label="Default select example">
                                     <option value="" disabled selected>Seleccione un cliente</option>
                                 </select>
-                               
+
                                 <!--<a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect"
                                     type="button"><i class="ri-add-circle-fill"></i> Registrar instalación de
                                     envasado</a>-->
                             </div>
-                            
+
                         </div>
                     </div>
                     <div class="row">
@@ -166,7 +166,7 @@
                             </tbody>
                         </table>
                     </div>-->
-                    
+
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
@@ -203,11 +203,11 @@
     });
 
     //Limpia en cancelar
-    document.addEventListener('DOMContentLoaded', function() {
+/*     document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#addlostesEnvasado .btn-outline-secondary').addEventListener('click',
             function() {
                 document.getElementById('addNewLoteForm').reset();
                 $('.select2').val(null).trigger('change'); // Reset select2 fields
             });
-    });
+    }); */
 </script>

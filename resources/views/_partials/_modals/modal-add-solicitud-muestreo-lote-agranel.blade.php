@@ -178,11 +178,6 @@
                 error: function() {}
             });
         }
-        else {
-            console.warn('No se seleccionó ninguna empresa.');
-            $('#id_instalacion_muestreoLo').html('<option value="">Seleccione una empresa primero</option>');
-            $('#id_lote_granel_muestreo').html('<option value="">Seleccione una instalación primero</option>');
-        }
     }
 
     function limpiarTipo(tipo) {

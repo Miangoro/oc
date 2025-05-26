@@ -27,13 +27,8 @@
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">
-                                            {{ isset($empresa->empresaNumClientes[0])
-                                                ? $empresa->empresaNumClientes[0]->numero_cliente
-                                                : (isset($empresa->empresaNumClientes[1])
-                                                    ? $empresa->empresaNumClientes[1]->numero_cliente
-                                                    : 'Sin número') }}
-                                            | {{ $empresa->razon_social }}
-                                        </option>
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -272,6 +267,7 @@
                     cargarInstalacionesEnvasado(response.instalaciones_envasadora);
                     cargarDirecciones(response.direcciones);
                     cargarLotesEnvasado(response.lotes_envasado, response.marcas);
+
                     cargarLotesGranel(response.lotes_granel);
 
                 },
@@ -494,7 +490,8 @@
 
     function cargarMarcas() {
         var id_empresa = $('#id_empresa_solicitud_exportacion').val();
-       var id_marca = $('.evasado_export_edit').find(':selected').data('id-marca-edit');
+        /* var id_marca = $('.evasado_export_edit').find(':selected').data('id-marca-edit'); */
+        var id_marca = $('.evasado_export option:selected').data('id-marca') || 0;
         var id_direccion = $('#direccion_destinatario_ex').val();
         //alert('/marcas/' + id_marca + '/' + id_direccion)
         if (id_empresa) {

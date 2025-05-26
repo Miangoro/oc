@@ -226,6 +226,20 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                         $envasado->id_lote_granel = $request->id_lote_granel[$i];
                         $envasado->volumen_parcial = $request->volumen_parcial[$i] ?? $request->volumen_total;
                         $envasado->save();
+
+                        $loteGranel = LotesGranel::find($request->id_lote_granel[$i]);
+                        if ($loteGranel) {
+                          $volumenParcial = $request->volumen_parcial[$i] ?? 0;
+                          $loteGranel->volumen_restante -= $volumenParcial;
+                          if ($loteGranel->volumen_restante < 0) {
+                              return response()->json([
+                                  'success' => false,
+                                  'message' => 'El volumen del lote a granel no puede ser negativo.'
+                              ], 400);
+                          }
+                          $loteGranel->save();
+                      }
+
                     }
                 }
             }
@@ -252,6 +266,8 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener el lote envasado'], 500);
         }
+
+
     }
 
     //Actualizar lotes envasados
@@ -261,6 +277,17 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
             // Buscar el lote existente
             $lotes = lotes_envasado::findOrFail($request->input('id'));
 
+            // 1. Restaurar volumen_restante de los lotes a granel originales
+            $relacionesOriginales = lotes_envasado_granel::where('id_lote_envasado', $lotes->id_lote_envasado)->get();
+            foreach ($relacionesOriginales as $relacion) {
+                $loteGranel = LotesGranel::find($relacion->id_lote_granel);
+                if ($loteGranel) {
+                    $loteGranel->volumen_restante += $relacion->volumen_parcial;
+                    $loteGranel->save();
+                }
+            }
+
+            lotes_envasado_granel::where('id_lote_envasado', $lotes->id_lote_envasado)->delete();
 
             // Actualizar los campos del lote envasado
             $lotes->id_empresa = $request->edit_cliente;
@@ -273,7 +300,7 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
             // Re-codificar el array a JSON y guardarlo en el campo 'sku'
             $lotes->sku = json_encode($skuData);
             // Guardar los cambios en la base de datos
-            $lotes->save();
+            /* $lotes->save(); */
 
             $lotes->id_marca = $request->edit_marca;
             $lotes->destino_lote = $request->edit_destino_lote;
@@ -286,21 +313,34 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
             $lotes->save();
 
             // Eliminar los registros de `lotes_envasado_granel` relacionados con este lote
-            lotes_envasado_granel::where('id_lote_envasado', $lotes->id_lote_envasado)->delete();
+            /* lotes_envasado_granel::where('id_lote_envasado', $lotes->id_lote_envasado)->delete(); */
 
             // Guardar los testigos relacionados si existen
-            if ($request->has('id_lote_granel') && is_array($request->id_lote_granel) && $request->has('volumen_parcial') && is_array($request->volumen_parcial)) {
-                for ($i = 0; $i < count($request->id_lote_granel); $i++) {
-                    // Verificar que ambos arrays tengan el mismo tamaño
-                    if (isset($request->id_lote_granel[$i]) && isset($request->volumen_parcial[$i])) {
-                        $envasado = new lotes_envasado_granel();
-                        $envasado->id_lote_envasado = $lotes->id_lote_envasado;  // Relacionar con el lote envasado
-                        $envasado->id_lote_granel = $request->id_lote_granel[$i];
-                        $envasado->volumen_parcial = $request->volumen_parcial[$i];
-                        $envasado->save();
+        // 4. Guardar los nuevos testigos relacionados y actualizar volumen_restante
+        if ($request->has('id_lote_granel') && is_array($request->id_lote_granel) && $request->has('volumen_parcial') && is_array($request->volumen_parcial)) {
+            for ($i = 0; $i < count($request->id_lote_granel); $i++) {
+                if (isset($request->id_lote_granel[$i]) && isset($request->volumen_parcial[$i])) {
+                    $envasado = new lotes_envasado_granel();
+                    $envasado->id_lote_envasado = $lotes->id_lote_envasado;
+                    $envasado->id_lote_granel = $request->id_lote_granel[$i];
+                    $envasado->volumen_parcial = $request->volumen_parcial[$i];
+                    $envasado->save();
+
+                    // Restar el nuevo volumen parcial al lote a granel
+                    $loteGranel = LotesGranel::find($request->id_lote_granel[$i]);
+                    if ($loteGranel) {
+                        $loteGranel->volumen_restante -= $request->volumen_parcial[$i];
+                        if ($loteGranel->volumen_restante < 0) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'El volumen del lote a granel no puede ser negativo.'
+                            ], 400);
+                        }
+                        $loteGranel->save();
                     }
                 }
             }
+        }
 
             return response()->json(['success' => 'Lote envasado actualizado exitosamente.']);
         } catch (\Exception $e) {
