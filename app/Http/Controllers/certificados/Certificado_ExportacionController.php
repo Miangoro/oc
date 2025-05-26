@@ -610,7 +610,8 @@ public function MostrarCertificadoExportacion($id_certificado)
 
     //return response()->json(['message' => 'No se encontraron características.', $data], 404)
 
-    $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
+    //$pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
+    $pdf =  [
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
         'lotes' =>$lotes,
         'expedicion' => $fecha1 ?? "",
@@ -635,11 +636,18 @@ public function MostrarCertificadoExportacion($id_certificado)
         'botellas' => $botellas ?? 'No encontrado',
         'cajas' => $cajas ?? 'No encontrado',
         'presentacion' => $presentacion ?? 'No encontrado',
+    ];
 
-    ]);
-
+    if ( $data->fecha_emision >= '2025-05-26' ) {
+        $edicion = 'pdfs.certificado_exportacion_ed13';
+    /*}else if ($lotes->count() > 1) {
+        $edicion = 'pdfs.certificado_exportacion_ed12';*/
+    }else{
+        $edicion = 'pdfs.certificado_exportacion_ed12';
+    }
     //nombre al descargar
-    return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
+    //return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
+    return Pdf::loadView($edicion, $pdf)->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
 }
 
 ///PDF SOLICITUD CERTIFICADO
@@ -683,7 +691,8 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
 
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
 
-    $pdf = Pdf::loadView('pdfs.solicitud_certificado_exportacion_ed10', [//formato del PDF
+    //$pdf = Pdf::loadView('pdfs.solicitud_certificado_exportacion_ed10', [//formato del PDF
+    $pdf = [
         'data' => $data,
         'lotes' =>$lotes,
         'fecha_solicitud' => Helpers::formatearFecha($data->dictamen->inspeccione->solicitud->fecha_solicitud) ?? 'No encontrado',
@@ -717,9 +726,18 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         'botellas' => $botellas ?? 'No encontrado',
         'cajas' => $cajas ?? 'No encontrado',
         //'presentacion' => $presentacion ?? 'No encontrado', se tomara directod el lote
-    ]);
+    ];
+
+    if ( $data->fecha_emision >= '2025-05-26' ) {
+        $edicion = 'pdfs.solicitud_certificado_exportacion_ed10';
+    /*}else if ($lotes->count() > 1) {
+        $edicion = 'pdfs.solicitud_certificado_exportacion_ed10';*/
+    }else{
+        $edicion = 'pdfs.solicitud_certificado_exportacion_ed10';
+    }
     //nombre al descargar
-    return $pdf->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');
+    //return $pdf->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');
+    return Pdf::loadView($edicion, $pdf)->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');
 }
 
 
