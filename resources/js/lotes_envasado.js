@@ -48,7 +48,7 @@ $(function () {
               '<span class="fw-bold text-dark">' +
               row.id_empresa +
               '</span> <br><span class="small">'+ row.razon_social+'</span>'
-             
+
             );
           }
         },
@@ -521,6 +521,7 @@ $(function () {
         url: '/getDatos/' + empresa,
         method: 'GET',
         success: function (response) {
+
           var contenido = "";
           for (let index = 0; index < response.lotes_granel.length; index++) {
             contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
@@ -531,6 +532,32 @@ $(function () {
           }
           $('.id_lote_granel').html(contenido);
           //fv.revalidateField('id_lote_granel');
+          /* contenido marcas */
+           var Macontenido = "";
+          for (let index = 0; index < response.marcas.length; index++) {
+            Macontenido = '<option value="' + response.marcas[index].id_marca + '">' + response
+              .marcas[index].marca + '</option>' + Macontenido;
+          }
+          if (response.marcas.length == 0) {
+            Macontenido = '<option value="">Sin marcas registradas</option>';
+          }
+          $('#id_marca').html(Macontenido);
+          //fv.revalidateField('id_marca');
+          /* contenido direcciones */
+          var Direcontenido = "";
+          for (let index = 0; index < response.instalaciones.length; index++) {
+            // Verifica si la palabra 'Envasadora' está en la cadena
+            if (response.instalaciones[index].tipo.includes('Envasadora')) {
+              Direcontenido += '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                response.instalaciones[index].direccion_completa + '</option>';
+            }
+          }
+          if (Direcontenido === "") {
+            Direcontenido = '<option value="">Sin instalaciones de envasado registrados</option>';
+          }
+          $('.id_instalacion').html(Direcontenido);
+          //fv.revalidateField('lugar_envasado');
+
 
         },
         error: function () { }
@@ -538,22 +565,16 @@ $(function () {
     }
 
     //Obtener marcas
-    function obtenerMarcas() {
+/*     function obtenerMarcas() {
       var empresa = $("#id_empresa").val();
       $.ajax({
         url: '/getDatos/' + empresa,
         method: 'GET',
         success: function (response) {
-          var contenido = "";
-          for (let index = 0; index < response.marcas.length; index++) {
-            contenido = '<option value="' + response.marcas[index].id_marca + '">' + response
-              .marcas[index].marca + '</option>' + contenido;
-          }
-          if (response.marcas.length == 0) {
-            contenido = '<option value="">Sin marcas registradas</option>';
-          }
-          $('#id_marca').html(contenido);
-          //fv.revalidateField('id_marca');
+
+
+
+
 
         },
         error: function () { }
@@ -567,37 +588,25 @@ $(function () {
         url: '/getDatos/' + empresa,
         method: 'GET',
         success: function (response) {
-          var contenido = "";
-          for (let index = 0; index < response.instalaciones.length; index++) { 
-            // Verifica si la palabra 'Envasadora' está en la cadena
-            if (response.instalaciones[index].tipo.includes('Envasadora')) {
-              contenido += '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                response.instalaciones[index].direccion_completa + '</option>';
-            }
-          }
 
-          if (contenido === "") {
-            contenido = '<option value="">Sin instalaciones de envasado registrados</option>';
-          }
-          $('.id_instalacion').html(contenido);
-          //fv.revalidateField('lugar_envasado');
+
 
         },
         error: function () { }
       });
     }
+ */
 
- 
     function cargarMarcas() {
       var id_empresa = $('#id_empresa').val();
-  
+
       if (id_empresa) {
           $.ajax({
               url: '/marcas/' + id_empresa,
               method: 'GET',
               success: function(marcas) {
                   var tbody = '';
-  
+
                   marcas.forEach(function(marca) {
                       // Verifica que 'etiquetado' sea un objeto válido
                       if (marca.etiquetado && typeof marca.etiquetado === 'object') {
@@ -611,31 +620,31 @@ $(function () {
                               tbody += `<td>${marca.categoria_nombre[i] || 'N/A'}</td>`;
 /*                               tbody += '<td>' + (marca.etiquetado.etiqueta || 'N/A') + '</td>';
                               tbody += '<td>' + (marca.etiquetado.corrugado || 'N/A') + '</td>'; */
-  
+
                               // Agregar documento de etiquetas si existe
                               var documentoEtiquetas = marca.documentos.find(function(doc) {
                                   return doc.nombre_documento === "Etiquetas";
                               });
-  
+
                               if (documentoEtiquetas) {
                                   var rutaArchivo = '/files/' + marca.numero_cliente + '/' + documentoEtiquetas.url;
                                   tbody += `<td><a href="${rutaArchivo}" target="_blank" class="btn btn-sm btn-primary"><i class="ri-file-pdf-2-fill"></i> Visualizar</a></td>`;
                               } else {
                                   tbody += '<td>No disponible</td>';
                               }
-  
+
                               tbody += '</tr>';
                           }
                       } else {
                           tbody += '<tr><td colspan="9" class="text-center">Datos de etiquetado no disponibles.</td></tr>';
                       }
                   });
-  
+
                   // Si no hay filas, mostrar mensaje
                   if (!tbody) {
                       tbody = '<tr><td colspan="9" class="text-center">No hay datos disponibles.</td></tr>';
                   }
-  
+
                   // Agregar las filas a la tabla
                   $('#tabla_marcas tbody').html(tbody);
               },
@@ -648,14 +657,13 @@ $(function () {
           $('#tabla_marcas tbody').html('<tr><td colspan="9">Seleccione una empresa para ver los datos</td></tr>');
       }
   }
-  
-  
+
+
     $('#id_empresa').on('change', function () {
       obtenerGraneles();  // Cargar las marcas
-      obtenerMarcas();  // Cargar las direcciones
+     /*  obtenerMarcas();  */ // Cargar las direcciones
       cargarMarcas();  // Cargar las direcciones
-
-      obtenerDirecciones();  // Cargar las direcciones
+      /* obtenerDirecciones();  */ // Cargar las direcciones
       //fv.revalidateField('id_empresa');  // Revalidar el campo de empresa
     });
 
@@ -780,7 +788,7 @@ $(function () {
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al registrar el lote envasado',
+            text: xhr.responseJSON.message,
             customClass: {
               confirmButton: 'btn btn-danger'
             }
@@ -880,8 +888,8 @@ $(function () {
       $('#edit_presentacion').val(data.presentacion);
       $('#edit_unidad').val(data.unidad);
       $('#edit_volumen_total').val(data.volumen_total);
-      $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
-      $('#edit_marca').val(data.id_marca).trigger('change');
+      $('#edit_Instalaciones').data('selected',data.lugar_envasado).trigger('change');
+      $('#edit_marca').data('selected',data.id_marca).trigger('change');
 
       // Limpiar contenido previo de lotes de envasado de granel
       $('#edit_contenidoGraneles').empty();
@@ -1112,7 +1120,7 @@ $(function () {
   }).on('core.form.valid', function (e) {
     //e.preventDefault();
     var formData = new FormData(editLoteEnvasadoForm);
-    
+
 
     $.ajax({
       url: '/lotes-envasado/update', // Actualiza con la URL correcta
