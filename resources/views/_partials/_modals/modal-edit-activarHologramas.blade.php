@@ -40,7 +40,7 @@
 
                         <div class="col-md-10">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="cargarInfoServicio();" id="edit_id_inspeccion" name="edit_id_inspeccion"
+                                <select onchange="cargarInfoServicioEdit();" id="edit_id_inspeccion" name="edit_id_inspeccion"
                                     class="form-select select2" aria-label="Default select example">
                                     <option value="" disabled selected>Elige un numero de inspección</option>
                                     @foreach ($inspeccion as $insp)
@@ -233,7 +233,7 @@
 </div>
 
 <script>
-    function cargarInfoServicio() {
+    function cargarInfoServicioEdit() {
         var id_inspeccion = $('#id_inspeccion').val();
         if (id_inspeccion) {
             $.ajax({
@@ -248,16 +248,16 @@
             </a>
             `);
 
-                    // $('#no_lote_agranel').val(response.solicitud.lote_granel.nombre_lote || '').val();
-                    // $('#categoria').val(response.solicitud.lote_granel.id_categoria).trigger('change');
-                    // $('#clase').val(response.solicitud.lote_granel.id_clase).trigger('change');
-                    // $('#id_tipo').val(response.solicitud.lote_granel.tipo_lote).trigger('change');
-                    $('#cont_neto').val(response.solicitud.lote_envasado.presentacion).val();
-                    $('#unidad').val(response.solicitud.lote_envasado.unidad).val();
-                    //$('#no_analisis').val(response.solicitud.lote_granel.folio_fq).val();
-                    //$('#contenido').val(response.solicitud.lote_granel.cont_alc).val();
-                    $('#no_lote_envasado').val(response.solicitud.lote_envasado.nombre).val();
-                    $('#lugar_envasado').val(response.solicitud.instalacion.direccion_completa).val();
+                      $('#no_lote_agranel').val(response.solicitud.lote_envasado.lotes_granel[0].nombre_lote);
+                     $('#categoria').val(response.solicitud.lote_envasado.lotes_granel[0].id_categoria).trigger('change');
+                     $('#clase').val(response.solicitud.lote_envasado.lotes_granel[0].id_clase).trigger('change');
+                     $('#id_tipo').val(response.solicitud.lote_envasado.lotes_granel[0].tipo_lote).trigger('change');
+                    $('#cont_neto').val(response.solicitud.lote_envasado.presentacion);
+                    $('#unidad').val(response.solicitud.lote_envasado.unidad).trigger('change');
+                    $('#no_analisis').val(response.solicitud.lote_envasado.lotes_granel[0].folio_fq);
+                    $('#contenido').val(response.solicitud.lote_envasado.lotes_granel[0].cont_alc);
+                    $('#no_lote_envasado').val(response.solicitud.lote_envasado.nombre);
+                    $('#lugar_envasado').val(response.solicitud.instalacion?.direccion_completa);
 
                 },
                 error: function(xhr) {

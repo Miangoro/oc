@@ -191,7 +191,7 @@ class hologramasActivar extends Controller
     public function getDatosInpeccion($id_inspeccion)
     {
 
-        $datos = inspecciones::with('solicitud.lote_envasado')->find($id_inspeccion);
+        $datos = inspecciones::with('solicitud.lote_envasado.lotesGranel')->find($id_inspeccion);
 
         $numeroCliente = $datos->solicitud->empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
             return !empty($numero);
