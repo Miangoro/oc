@@ -1148,57 +1148,65 @@ $(function () {
               modal.find('#edit_info_adicional_geo').val(response.data.info_adicional);
               // Otros campos específicos para tipo 10
             }
-            else if (id_tipo === 11) {
+              else if (id_tipo === 11) {
+                modal.find('.id_solicitud').val(id_solicitud);
+                modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
+                modal.find('#fecha_visita_edit_exportacion').val(response.data.fecha_visita);
+                modal.find('.instalacion_id').val(response.data.id_instalacion);
 
-              modal.find('.id_solicitud').val(id_solicitud);
-              modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
-              modal.find('#fecha_visita_edit_exportacion').val(response.data.fecha_visita);
-              modal.find('.instalacion_id').val(response.data.id_instalacion);
-              if (response.caracteristicas) {
-                modal.find('#tipo_solicitud_edit').val(response.caracteristicas.tipo_solicitud).trigger('change');
-                modal.find('.direccion_id').val(response.caracteristicas.direccion_destinatario);
-                modal.find('.aduana_salida').val(response.caracteristicas.aduana_salida);
-                modal.find('.no_pedido').val(response.caracteristicas.no_pedido);
-                modal.find('.instalacion_envasado_id').val(response.caracteristicas.id_instalacion_envasado);
-                modal.find('.etiqueta_id').val(response.caracteristicas.id_etiqueta);
-                var lotesEnvasado = response.caracteristicas.detalles.map(function (detalle) {
-                  return detalle.id_lote_envasado;
-                });
+                if (response.caracteristicas) {
+                  modal.find('#tipo_solicitud_edit').val(response.caracteristicas.tipo_solicitud).trigger('change');
+                  modal.find('.direccion_id').val(response.caracteristicas.direccion_destinatario);
+                  modal.find('.aduana_salida').val(response.caracteristicas.aduana_salida);
+                  modal.find('.no_pedido').val(response.caracteristicas.no_pedido);
+                  modal.find('.instalacion_envasado_id').val(response.caracteristicas.id_instalacion_envasado);
+                  modal.find('.etiqueta_id').val(response.caracteristicas.id_etiqueta);
 
-                modal.find('.lote_envasado_id').val(lotesEnvasado.join(','));
-                var cantidadDeLotes = response.caracteristicas.detalles.length;
+                  var lotesEnvasado = response.caracteristicas.detalles.map(function (detalle) {
+                    return detalle.id_lote_envasado;
+                  });
 
-                if (cantidadDeLotes === 1) {
-                  // Mantener solo el primer bloque
-                  $('#sections-container2').not(':first').remove();
-                    modal.find(`#cantidad_cajas_edit0`).val(response.caracteristicas.detalles[0].cantidad_cajas);
-                    modal.find(`#cantidad_botellas_edit0`).val(response.caracteristicas.detalles[0].cantidad_botellas);
-                    modal.find(`#presentacion_edit0`).val(response.caracteristicas.detalles[0].presentacion || '');
-                    modal.find(`#lote_granel_edit_0`).val(response.caracteristicas.detalles[0].lote_granel || '');
-                    modal.find(`select[name="lote_envasado_edit[0]"]`).val(response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
-                } else {
-                  // Si hay más de uno, agregamos los que faltan
-                  for (var i = 1; i < cantidadDeLotes; i++) {
-                    $('#add-characteristics_edit').click();
-                    // Llenar el primer bloque (índice 0)
+                  modal.find('.lote_envasado_id').val(lotesEnvasado.join(','));
+
+                  var cantidadDeLotes = response.caracteristicas.detalles.length;
+
+                  if (cantidadDeLotes === 1) {
+                    $('#sections-container2').not(':first').remove();
                     modal.find('#cantidad_cajas_edit0').val(response.caracteristicas.detalles[0].cantidad_cajas);
                     modal.find('#cantidad_botellas_edit0').val(response.caracteristicas.detalles[0].cantidad_botellas);
                     modal.find('#presentacion_edit0').val(response.caracteristicas.detalles[0].presentacion || '');
-                    modal.find('#lote_granel_edit_0').val(response.caracteristicas.detalles[0].lote_granel || '');modal.find('#lote_envasado_edit_0')
-                    .val(response.caracteristicas.detalles[0].id_lote_envasado)
-                    .trigger('change');                    // Espera a que el select esté disponible antes de llenarlo
-                    modal.find(`select[name="lote_envasado_edit[${i}]"]`).val(response.caracteristicas.detalles[i].id_lote_envasado).trigger('change');
-                    modal.find(`#cantidad_cajas_edit${i}`).val(response.caracteristicas.detalles[i].cantidad_cajas);
-                    modal.find(`#cantidad_botellas_edit${i}`).val(response.caracteristicas.detalles[i].cantidad_botellas);
-                    modal.find(`#presentacion_edit${i}`).val(response.caracteristicas.detalles[i].presentacion || '');
-                    modal.find(`#lote_granel_edit_${i}`).val(response.caracteristicas.detalles[i].lote_granel || '');
+                    modal.find('#lote_granel_edit_0').val(response.caracteristicas.detalles[0].lote_granel || '');
+                    modal.find('#lote_envasado_edit_0').data('selected',response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
+                  } else {
+                    for (var i = 1; i < cantidadDeLotes; i++) {
+                      $('#add-characteristics_edit').click();
+
+                      // Primero actualiza el índice 0 (parece error: debería ser i)
+                      modal.find(`#cantidad_cajas_edit0`).val(response.caracteristicas.detalles[0].cantidad_cajas);
+                      modal.find(`#cantidad_botellas_edit0`).val(response.caracteristicas.detalles[0].cantidad_botellas);
+                      modal.find(`#presentacion_edit0`).val(response.caracteristicas.detalles[0].presentacion || '');
+                      modal.find(`#lote_granel_edit_0`).val(response.caracteristicas.detalles[0].lote_granel || '');
+                      setTimeout(function () {
+                        modal.find('#lote_envasado_edit_0').val(response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
+                      }, 300);
+
+                      // Luego actualiza el actual i
+                      modal.find(`#cantidad_cajas_edit${i}`).val(response.caracteristicas.detalles[i].cantidad_cajas);
+                      modal.find(`#cantidad_botellas_edit${i}`).val(response.caracteristicas.detalles[i].cantidad_botellas);
+                      modal.find(`#presentacion_edit${i}`).val(response.caracteristicas.detalles[i].presentacion || '');
+                      modal.find(`#lote_granel_edit_${i}`).val(response.caracteristicas.detalles[i].lote_granel || '');
+                      setTimeout((function (i) {
+                        return function () {
+                          modal.find(`select[name="lote_envasado_edit[${i}]"]`).val(response.caracteristicas.detalles[i].id_lote_envasado).trigger('change');
+                        };
+                      })(i), 300);
+                    }
                   }
                 }
+
+                modal.find('#comentarios_edit').val(response.data.info_adicional);
               }
-
-              modal.find('#comentarios_edit').val(response.data.info_adicional);
-
-            } else if (id_tipo === 14) {
+              else if (id_tipo === 14) {
               // Aquí va el tipo correspondiente para tu caso
               // Llenar los campos del modal con los datos de la solicitud
               modal.find('#edit_id_solicitud').val(id_solicitud);
@@ -3693,36 +3701,37 @@ $(function () {
       }
     });
   });
-$(document).ready(function () {
-$('#editPedidoExportacion').on('hidden.bs.modal', function () {
-  // Elimina todas las tarjetas menos la primera dentro de sections-container2
-  $('#sections-container2 .card').not(':first').remove();
-  sectionCountEdit = 1;
-});
-});
 
-  $(document).ready(function () {
-  var $tipoSolicitudEdit = $('#tipo_solicitud_edit');
-  var $botonesCharacteristicsEdit = $('#botones_characteristics_edit');
+      $(document).ready(function () {
+      $('#editPedidoExportacion').on('hidden.bs.modal', function () {
+        // Elimina todas las tarjetas menos la primera dentro de sections-container2
+        $('#sections-container2 .card').not(':first').remove();
+        sectionCountEdit = 1;
+        });
+    });
 
-  // Mostrar/ocultar los botones al cambiar el tipo en el modal de editar
-  $tipoSolicitudEdit.on('change', function () {
-    if ($(this).val() === '2') {
-      $botonesCharacteristicsEdit.removeClass('d-none');
-    } else {
-      $botonesCharacteristicsEdit.addClass('d-none');
+    $(document).ready(function () {
+    var $tipoSolicitudEdit = $('#tipo_solicitud_edit');
+    var $botonesCharacteristicsEdit = $('#botones_characteristics_edit');
+
+    // Mostrar/ocultar los botones al cambiar el tipo en el modal de editar
+    $tipoSolicitudEdit.on('change', function () {
+      if ($(this).val() === '2') {
+        $botonesCharacteristicsEdit.removeClass('d-none');
+      } else {
+        $botonesCharacteristicsEdit.addClass('d-none');
+      }
+    });
+
+    // Al abrir el modal de editar, asegúrate de mostrar/ocultar según el valor actual
+    if ($tipoSolicitudEdit.length) {
+      if ($tipoSolicitudEdit.val() === '2') {
+        $botonesCharacteristicsEdit.removeClass('d-none');
+      } else {
+        $botonesCharacteristicsEdit.addClass('d-none');
+      }
     }
   });
-
-  // Al abrir el modal de editar, asegúrate de mostrar/ocultar según el valor actual
-  if ($tipoSolicitudEdit.length) {
-    if ($tipoSolicitudEdit.val() === '2') {
-      $botonesCharacteristicsEdit.removeClass('d-none');
-    } else {
-      $botonesCharacteristicsEdit.addClass('d-none');
-    }
-  }
-});
 
 $(document).ready(function () {
   let sectionCount = 1;
@@ -3832,6 +3841,7 @@ $(document).ready(function () {
       });
     }
   });
+
 });
 /* seccion de editar solicitudes exportacion */
 // ==================== EDITAR ====================
@@ -3896,36 +3906,7 @@ $(document).ready(function () {
     sectionCountEdit++;
   });
 
-  function cargarLotesEdit(empresaSeleccionada, sectionCountEdit) {
-    $.ajax({
-      url: '/getDatos/' + empresaSeleccionada,
-      method: 'GET',
-      success: function (response) {
-        var contenidoLotesEnvasado = '';
-        var marcas = response.marcas;
-        for (let index = 0; index < response.lotes_envasado.length; index++) {
-          var lote = response.lotes_envasado[index];
-          var skuLimpio = limpiarSku(lote.sku);
-          var marcaEncontrada = marcas.find(marca => marca.id_marca === lote.id_marca);
-          var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
-          var num_dictamen = lote.dictamen_envasado ? lote.dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
-          contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} | ${lote.nombre} | ${nombreMarca} | ${num_dictamen}</option>`;
-        }
-        if (response.lotes_envasado.length == 0) {
-          contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
-        }
-        $(`#caracteristicas_Ex_edit_${sectionCountEdit} .evasado_export_edit`).html(contenidoLotesEnvasado);
-      },
-      error: function () {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error al cargar los datos',
-          text: 'Hubo un problema al intentar cargar los lotes.',
-          customClass: { confirmButton: 'btn btn-danger' }
-        });
-      }
-    });
-  }
+
 
   // Eliminar la última sección (editar)
   $('#delete-characteristics_edit').click(function () {
@@ -3944,6 +3925,42 @@ $(document).ready(function () {
     }
   });
 });
+
+  function cargarLotesEdit(empresaSeleccionada, sectionCountEdit) {
+    $.ajax({
+      url: '/getDatos/' + empresaSeleccionada,
+      method: 'GET',
+      success: function (response) {
+        var contenidoLotesEnvasado = '';
+        var marcas = response.marcas;
+        for (let index = 0; index < response.lotes_envasado.length; index++) {
+          var lote = response.lotes_envasado[index];
+          var skuLimpio = limpiarSku(lote.sku);
+          var marcaEncontrada = marcas.find(marca => marca.id_marca === lote.id_marca);
+          var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
+          var num_dictamen = lote.dictamen_envasado ? lote.dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
+          contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} | ${lote.nombre} | ${nombreMarca} | ${num_dictamen}</option>`;
+        }
+        if (response.lotes_envasado.length == 0) {
+          contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+        }
+        $(`#caracteristicas_Ex_edit_${sectionCount} .evasado_export_edit`).html(contenidoLotesEnvasado);
+      // Aquí selecciona el valor y dispara el change SOLO después de llenar las opciones
+      if (idLoteSeleccionado) {
+        $select.val(idLoteSeleccionado).trigger('change');
+      }
+      /*  */
+      },
+      error: function () {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al cargar los datos',
+          text: 'Hubo un problema al intentar cargar los lotes.',
+          customClass: { confirmButton: 'btn btn-danger' }
+        });
+      }
+    });
+  }
 /* fin de la seccion de editar solicitudes exportacion */
   /* Enviar formulario store add exportacion */
   $(function () {

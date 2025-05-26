@@ -277,7 +277,7 @@
                     cargarDireccionesEdit(response.direcciones);
                     cargarLotesEnvasadoEdit(response.lotes_envasado, response.marcas);
                     cargarMarcasEdit();
-                    compararLotesConSelects();
+                    /* compararLotesConSelects(); */
                     cargarLotesGranelEdit(response.lotes_granel);
 
                 },
@@ -403,7 +403,11 @@
             contenidoLotes = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
         }
         $('.evasado_export_edit').html(contenidoLotes);
-
+                            const idlotePrevio = $('#lote_envasado_edit_0').data('selected');
+                    if (idlotePrevio) {
+                        $('#lote_envasado_edit_0').val(idlotePrevio);
+                    } else if (response.lotesEnvasado.length == 0) {
+                    }
 
         cargarDetallesLoteEnvasadoEdit($(".evasado_export_edit").val());
 
@@ -412,7 +416,7 @@
     }
 
     function compararLotesConSelects() {
-        var idsLotes = $('.lote_envasado_id_edit').val().split(',');
+        var idsLotes = $('.lote_envasado_id').val().split(',');
 
         $('.evasado_export').each(function() {
             var $select = $(this);
@@ -654,30 +658,29 @@
     }
 
     // Función para llenar campos en editar
-function cargarDetallesLoteEnvasadoDinamicoEdit(select, sectionCountEdit) {
-  var idLoteEnvasado = $(select).val();
-  if (idLoteEnvasado) {
-    $.ajax({
-      url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
-      method: 'GET',
-      success: function (response) {
-        $(`#lote_granel_edit_${sectionCountEdit}`).val(
-          response.detalle && response.detalle.length > 0
-            ? response.detalle.map(lote => lote.nombre_lote).join(', ')
-            : ''
-        );
-        $(`#cantidad_botellas_edit${sectionCountEdit}`).val(response.lote_envasado?.cant_botellas || '');
-        $(`#cantidad_cajas_edit${sectionCountEdit}`).val(response.lote_envasado?.cant_cajas || '');
-        $(`#presentacion_edit${sectionCountEdit}`).val(
-          response.lote_envasado
-            ? response.lote_envasado.presentacion + ' ' + response.lote_envasado.unidad
-            : ''
-        );
-      },
-      error: function () {
-        console.error('Error al cargar el detalle del lote envasado.');
+    function cargarDetallesLoteEnvasadoDinamicoEdit(select, sectionCountEdit) {
+      var idLoteEnvasado = $(select).val();
+      if (idLoteEnvasado) {
+        $.ajax({
+          url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+          method: 'GET',
+          success: function (response) {
+            $(`#lote_granel_edit_${sectionCountEdit}`).val(
+              response.detalle && response.detalle.length > 0
+                ? response.detalle.map(lote => lote.nombre_lote).join(', ')
+                : ''
+            );
+            $(`#cantidad_botellas_edit${sectionCountEdit}`).val(response.lote_envasado?.cant_botellas || '');
+            $(`#presentacion_edit${sectionCountEdit}`).val(
+              response.lote_envasado
+                ? response.lote_envasado.presentacion + ' ' + response.lote_envasado.unidad
+                : ''
+            );
+          },
+          error: function () {
+            console.error('Error al cargar el detalle del lote envasado.');
+          }
+        });
       }
-    });
-  }
-}
+    }
 </script>
