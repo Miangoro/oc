@@ -36,7 +36,7 @@
     <div class="container mt-3 mb-3">
         <div class="card shadow-sm border-0 rounded-3" style="max-width: 100%; margin: auto;">
             <div class="card-header bg-primary text-white text-center py-2">
-                <h5 class="mb-0">Revisión de certificado</h5>
+                <h5 class="mb-0">Editar revisión de certificado</h5>
             </div>
             <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-start">
@@ -104,9 +104,10 @@
 
 
     <!-- DataTable with Buttons -->
-    <form id="formulario" method="POST">
+    <form id="formularioEditar" action="/editar_revision" method="POST">
         @csrf
         <input type="hidden" id="id_revision" name="id_revision" value="{{ $datos->id_revision }}">
+        <input type="hidden" name="numero_revision" value="{{ $datos->numero_revision }}">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -456,7 +457,7 @@
 
                                         <td>
                                             <textarea name="observaciones[{{ $index }}]" rows="1" name="" id="" class="form-control"
-                                                placeholder="Observaciones">{{ $respuesta['observacion'] }}</textarea>
+                                                placeholder="Observaciones">{{ $respuesta['observacion'] ?? '' }}</textarea>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -473,7 +474,7 @@
                                         </div>-->
 
             <div class="d-flex justify-content-center mt-3">
-                <button type="submit" class="btn btn-primary me-2 waves-effect waves-light"><i class="ri-pencil-fill"></i> Editar {{ $datos->numero_revision }}ª revisión</button>
+                <button  type="submit" class="btn btn-primary me-2 waves-effect waves-light"><i class="ri-pencil-fill"></i> Editar {{ $datos->numero_revision }}ª revisión</button>
                 <a href="/revision/personal" class="btn btn-danger waves-effect"><i class="ri-close-line"></i>Cancelar</a>
             </div>
 

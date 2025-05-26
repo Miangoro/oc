@@ -847,6 +847,7 @@ Route::middleware(['auth'])->controller(RevisionPersonalController::class)->grou
     Route::get('/add_revision/{id_revision}', 'add_revision');
     Route::post('registrar_revision', 'registrar_revision')->name('registrar_revision');
     Route::get('/edit_revision/{id_revision}', 'edit_revision');
+    Route::post('editar_revision', 'editar_revision')->name('editar_revision');
     Route::get('/pdf_bitacora_revision_personal/{id}', 'pdf_bitacora_revision_personal');
 });
 

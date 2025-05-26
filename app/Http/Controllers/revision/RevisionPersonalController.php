@@ -407,16 +407,12 @@ class RevisionPersonalController extends Controller
                 default:
                     $tipo = 'Desconocido';
             }
-        } 
-        elseif ($datos->tipo_certificado == 2) { //Granel
+        } elseif ($datos->tipo_certificado == 2) { //Granel
             $url = "/Pre-certificado/" . $datos->id_certificado;
             $tipo = "Granel";
-        }
-        elseif ($datos->tipo_certificado == 3) { //Exportación
+        } elseif ($datos->tipo_certificado == 3) { //Exportación
             $url = "/certificado_exportacion/" . $datos->id_certificado;
             $tipo = "Exportación";
-
-            
         }
         return view('certificados.add_revision', compact('datos', 'preguntas', 'url', 'tipo'));
     }
@@ -488,14 +484,14 @@ class RevisionPersonalController extends Controller
     {
 
         $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
-        $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->get();
+        $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->get();
 
         $respuestas_json = json_decode($datos->respuestas, true); // Convierte el campo JSON a array PHP
-        $respuestas_revision = $respuestas_json['Revision 1'] ?? []; // O la clave correspondiente
-
+        $respuestas_revision = $respuestas_json['Revision '.$datos->numero_revision] ?? []; // O la clave correspondiente
+        
         // Crear un array indexado por id_pregunta para fácil acceso
         $respuestas_map = collect($respuestas_revision)->keyBy('id_pregunta');
-
+       
         $id_dictamen = $datos->certificado->dictamen->tipo_dictamen ?? '';
 
 
@@ -539,8 +535,78 @@ class RevisionPersonalController extends Controller
             $url = "/certificado_exportacion/" . $datos->id_certificado;
             $tipo = "Exportación";
         }
-        return view('certificados.edit_revision', compact('datos', 'preguntas', 'url', 'tipo','respuestas_map'));
+        return view('certificados.edit_revision', compact('datos', 'preguntas', 'url', 'tipo', 'respuestas_map'));
     }
+
+    public function editar_revision(Request $request)
+{
+    try {
+        $request->validate([
+            'id_revision' => 'required|integer',
+            'respuesta' => 'required|array',
+            'observaciones' => 'nullable|array',
+            'id_pregunta' => 'required|array',
+          // Número de la revisión a editar
+        ]);
+
+        $revisor = Revisor::where('id_revision', $request->id_revision)->first();
+        if (!$revisor) {
+            return response()->json(['message' => 'El registro no fue encontrado.'], 404);
+        }
+
+        // Obtener el historial de respuestas como array
+        $historialRespuestas = $revisor->respuestas ?? [];
+
+        // Asegurarse de que es un array, por si viene como JSON string
+        if (is_string($historialRespuestas)) {
+            $historialRespuestas = json_decode($historialRespuestas, true);
+        }
+
+        $revisionKey = "Revision " . $request->numero_revision;
+
+        // Verificar que la revisión exista
+        if (!array_key_exists($revisionKey, $historialRespuestas)) {
+            return response()->json(['message' => "La $revisionKey no existe."], 404);
+        }
+
+        $nuevoRegistro = [];
+        $todasLasRespuestasSonC = true;
+
+        foreach ($request->respuesta as $key => $nuevaRespuesta) {
+            $nuevaObservacion = $request->observaciones[$key] ?? null;
+            $nuevaIdPregunta = $request->id_pregunta[$key] ?? null;
+
+            if ($nuevaRespuesta == 'NC') {
+                $todasLasRespuestasSonC = false;
+            }
+
+            $nuevoRegistro[] = [
+                'id_pregunta' => $nuevaIdPregunta,
+                'respuesta' => $nuevaRespuesta,
+                'observacion' => $nuevaObservacion,
+            ];
+        }
+
+        // Actualizar la revisión específica
+        $historialRespuestas[$revisionKey] = $nuevoRegistro;
+
+        $revisor->fill([
+            'respuestas' => $historialRespuestas,
+            'decision' => $todasLasRespuestasSonC ? 'positiva' : 'negativa',
+        ]);
+
+        $revisor->save();
+
+      return redirect('/revision/personal');
+
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Ocurrió un error al editar la revisión: ' . $e->getMessage(),
+        ], 500);
+    }
+}
+
 
 
     public function pdf_bitacora_revision_personal($id)
@@ -552,10 +618,10 @@ class RevisionPersonalController extends Controller
         $respuestasJson = json_decode($revisor->respuestas, true);
 
         // Asegurar que "Revisión 1" existe en el array
-$respuestas = collect(array_merge(
-    $respuestasJson["Revision 1"] ?? [],
-    $respuestasJson["Revision 2"] ?? []
-));
+        $respuestas = collect(array_merge(
+            $respuestasJson["Revision 1"] ?? [],
+            $respuestasJson["Revision 2"] ?? []
+        ));
 
 
         $preguntas = preguntas_revision::whereIn('id_pregunta', $respuestas->pluck('id_pregunta'))->get();
@@ -626,7 +692,7 @@ $respuestas = collect(array_merge(
         $numero_cliente = $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar';
 
         $pdfData = [
-            'numero_revision' =>$revisor->numero_revision,
+            'numero_revision' => $revisor->numero_revision,
             'num_certificado' => $revisor->certificado->num_certificado,
             'tipo_certificado' => $tipo_certificado,
             'decision' => $decision,

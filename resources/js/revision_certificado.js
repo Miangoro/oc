@@ -47,7 +47,7 @@ $(function () {
                 Swal.fire({
                     icon: 'success',
                     title: '¡Éxito!',
-                    text: 'Aprobación registrada exitosamente.',
+                    text: 'Revisión registrada exitosamente.',
                     customClass: {
                         confirmButton: 'btn btn-success'
                     }
@@ -69,4 +69,5 @@ $(function () {
         });
         
     });
+ 
 });
