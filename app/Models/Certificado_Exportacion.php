@@ -24,6 +24,10 @@ class Certificado_Exportacion extends Model
         'observaciones',
       ];
 
+      protected $casts = [
+    'hologramas' => 'array',
+];
+
     // Método para obtener el nombre del registro que sirve para la trazabilidad
     public function getLogName2(): string
     {

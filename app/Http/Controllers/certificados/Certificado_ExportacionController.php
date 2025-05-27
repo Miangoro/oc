@@ -265,6 +265,30 @@ public function store(Request $request)
         'fecha_vigencia' => 'nullable|date',
         'id_firmante' => 'required|exists:users,id',
     ]);
+
+      $hologramas = [];
+
+    foreach ($request->id_activacion as $id) {
+        $activacion = activarHologramasModelo::find($id);
+        $folios = json_decode($activacion->folios, true);
+
+        if (!empty($folios['folio_inicial']) && !empty($folios['folio_final'])) {
+            $totalRangos = count($folios['folio_inicial']);
+
+            for ($i = 0; $i < $totalRangos; $i++) {
+                $inicio = $folios['folio_inicial'][$i] ?? null;
+                $fin = $folios['folio_final'][$i] ?? null;
+
+                if ($inicio && $fin) {
+                    $hologramas[] = [
+                        'id_activacion' => $id,
+                        'folio_inicial' => $inicio,
+                        'folio_final' => $fin,
+                    ];
+                }
+            }
+        }
+    }
         // Crear un registro
         $new = new Certificado_Exportacion();
         $new->id_dictamen = $validated['id_dictamen'];
@@ -272,15 +296,13 @@ public function store(Request $request)
         $new->fecha_emision = $validated['fecha_emision'];
         $new->fecha_vigencia = $validated['fecha_vigencia'];
         $new->id_firmante = $validated['id_firmante'];
+        $new->hologramas = $hologramas;
         $new->save();
 
         return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
-        Log::error('Error al registrar', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        return response()->json(['error' => 'Error al registrar.'], 500);
+        
+        return response()->json(['error' => 'Error al registrar.'. $e], 500);
     }
 }
 

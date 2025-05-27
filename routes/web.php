@@ -922,6 +922,7 @@ Route::middleware(['auth'])->group(function () {//agrupa distintos controladores
     //Route::get('/dictamenes/granel/{id_dictamen}/foliofq', [DictamenGranelController::class, 'foliofq'])->name('dictamenes.foliofq');
     Route::post('/registrar/reexpedir-granel', [DictamenGranelController::class, 'reexpedir'])->name('dic-granel.reex');
     Route::get('/dictamen_granel/{id_dictamen}', [DictamenGranelController::class, 'MostrarDictamenGranel'])->name('formato-dictamen-granel');
+      Route::get('/getDatosLotes/{id_inspeccion}', [DictamenGranelController::class, 'getDatosLotes'])->name('getDatosLotes');
 });
 
 //-------------------DICTAMEN ENVASADO-------------------

@@ -13,22 +13,24 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="form-select select2" id="id_dictamen" name="id_dictamen" data-placeholder="Selecciona un dictamen">
+                                <select class="form-select select2" id="id_dictamen" name="id_dictamen"
+                                    data-placeholder="Selecciona un dictamen">
                                     <option value="" disabled selected>NULL</option>
                                     @foreach ($dictamen as $dic)
-                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | {{ $dic->inspeccione->solicitud->folio }}</option>
+                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} |
+                                            {{ $dic->inspeccione->solicitud->folio }}</option>
                                     @endforeach
                                 </select>
                                 <label for="">No. de dictamen</label>
                             </div>
                         </div>
                     </div>
-                
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" name="num_certificado" placeholder="No. de certificado"
-                                    value="CIDAM C-EXP25-">
+                                <input type="text" class="form-control" name="num_certificado"
+                                    placeholder="No. de certificado" value="CIDAM C-EXP25-">
                                 <label for="">No. de certificado</label>
                             </div>
                         </div>
@@ -36,7 +38,7 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <select class="select2 form-select" name="id_firmante">
                                     <option value="" disabled selected>Selecciona un firmante</option>
-                                    @foreach($users as $user)
+                                    @foreach ($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
                                 </select>
@@ -49,7 +51,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control flatpickr-datetime" id="fecha_emision" name="fecha_emision"
-                                placeholder="YYYY-MM-DD">
+                                    placeholder="YYYY-MM-DD">
                                 <label for="">Fecha de emisión</label>
                             </div>
                         </div>
@@ -63,7 +65,7 @@
                     </div>
 
 
-                    
+
                     {{-- <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
@@ -78,21 +80,45 @@
                     </div> --}}
                     <div class="row">
                         <div class="col-md-12">
-                    <select class="form-select select2" multiple name="hologramas" data-placeholder="Selecciona un holograma">
-                        @foreach ($hologramas as $hol)
-                            <option value="{{ $hol->id }}">{{ $hol->folio_activacion }} </option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-                    
+                            <select class="form-select select2" multiple name="id_activacion[]"
+                                data-placeholder="Selecciona un holograma">
+                                @foreach ($hologramas as $hol)
+                                    @php
+                                        // Decodificar el campo JSON
+                                        $folios = is_string($hol->folios)
+                                            ? json_decode($hol->folios, true)
+                                            : $hol->folios;
+
+                                        $iniciales = $folios['folio_inicial'] ?? [];
+                                        $finales = $folios['folio_final'] ?? [];
+                                    @endphp
+
+                                    @for ($i = 0; $i < count($iniciales); $i++)
+                                        @php
+                                            $inicio = $iniciales[$i] ?? null;
+                                            $fin = $finales[$i] ?? null;
+                                        @endphp
+
+                                        @if ($inicio && $fin)
+                                            <option value="{{ $hol->id }}">
+                                                {{ $hol->folio_activacion }} ({{ $inicio }} a {{ $fin }})
+                                            </option>
+                                        @endif
+                                    @endfor
+                                @endforeach
+
+                            </select>
+                        </div>
+                    </div>
+
 
 
 
                     <div class="d-flex mt-6 justify-content-center">
-                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i> Registrar</button>
-                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
-                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
+                            Registrar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -119,10 +145,10 @@
 
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="form-select select2" name="id_dictamen" 
-                                    id="edit_id_dictamen">
+                                <select class="form-select select2" name="id_dictamen" id="edit_id_dictamen">
                                     @foreach ($dictamen as $dic)
-                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | {{ $dic->inspeccione->solicitud->folio }}</option>
+                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} |
+                                            {{ $dic->inspeccione->solicitud->folio }}</option>
                                     @endforeach
                                 </select>
                                 <label for="">No. de dictamen</label>
@@ -133,16 +159,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" name="num_certificado" 
-                                    id="edit_num_certificado"  placeholder="no. certificado">
+                                <input type="text" class="form-control" name="num_certificado"
+                                    id="edit_num_certificado" placeholder="no. certificado">
                                 <label for="">No. de certificado</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select class="select2 form-select" name="id_firmante"
-                                    id="edit_id_firmante">
-                                    @foreach($users as $user)
+                                <select class="select2 form-select" name="id_firmante" id="edit_id_firmante">
+                                    @foreach ($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
                                 </select>
@@ -154,8 +179,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control flatpickr-datetime" id="edit_fecha_emision" name="fecha_emision"
-                                    placeholder="YYYY-MM-DD">
+                                <input class="form-control flatpickr-datetime" id="edit_fecha_emision"
+                                    name="fecha_emision" placeholder="YYYY-MM-DD">
                                 <label for="">Fecha de emisión</label>
                             </div>
                         </div>
@@ -170,13 +195,13 @@
 
 
                     <div class="d-flex mt-6 justify-content-center">
-                        <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i> Editar</button>
-                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
-                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i>
+                            Editar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
