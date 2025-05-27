@@ -158,7 +158,7 @@
         </p>
     </div>
 
-    <div class="titulos" style="margin-top: -2%;">CERTIFICADO DE AUTENTICIDAD DE EXPORTACIÓN DE MEZCAL 13</div>
+    <div class="titulos" style="margin-top: -2%;">CERTIFICADO DE AUTENTICIDAD DE EXPORTACIÓN DE MEZCAL</div>
     <table>
       <tr>
         <td style="font-weight: bold; text-align: center; border:none">

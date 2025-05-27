@@ -638,7 +638,7 @@ public function MostrarCertificadoExportacion($id_certificado)
         'presentacion' => $presentacion ?? 'No encontrado',
     ];
 
-    if ( $data->fecha_emision >= '2025-05-26' ) {
+    if ( $data->fecha_emision >= '2025-06-01' ) {
         $edicion = 'pdfs.certificado_exportacion_ed13';
     /*}else if ($lotes->count() > 1) {
         $edicion = 'pdfs.certificado_exportacion_ed12';*/
@@ -701,7 +701,7 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         'domicilio_inspeccion' => $data->dictamen->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrado',
         'fecha_propuesta' => Helpers::formatearFecha($data->dictamen->inspeccione->solicitud->fecha_visita) ?? 'No encontrado',
         'resp_instalacion' => $data->dictamen->inspeccione->solicitud->instalacion->responsable ?? 'No encontrado',
-        'info_adicional' => $data->dictamen->inspeccione->solicitud->info_adicional ?? 'No encontrado',
+        'info_adicional' => $data->dictamen->inspeccione->solicitud->info_adicional ?? ' ',
 
 
         'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? 'No encontrado',
@@ -728,7 +728,7 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         //'presentacion' => $presentacion ?? 'No encontrado', se tomara directod el lote
     ];
 
-    if ( $data->fecha_emision >= '2025-05-26' ) {
+    if ( $data->fecha_emision >= '2025-06-01' ) {
         $edicion = 'pdfs.solicitud_certificado_exportacion_ed10';
     /*}else if ($lotes->count() > 1) {
         $edicion = 'pdfs.solicitud_certificado_exportacion_ed10';*/

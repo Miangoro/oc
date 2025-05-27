@@ -90,19 +90,7 @@
     </div>
 @endif
 
-<div class="footer">
-    <p style="text-align: right; font-size: 8px; margin-bottom: 1px;">
-        @if ($id_sustituye)<!-- Aparece solo si tiene valor -->
-            Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
-        @endif
-        <br>Solicitud de emisión de Certificado para Exportación NOM-070-S SCFI-2016 F7.1-01-21<br>
-        Edición 10 Entrada en vigor: 26/08/2024
-    </p>
-    <div class="img-footer">
-            <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705">
-    </div>
-</div>
-    
+<!--ENCABEZADO-->
 <div class="encabezado">
     {{-- <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" style="width: 160px; margin-right: 30px;" alt="logo de CIDAM">
     <b style="font-size: 16px; display: inline-block; margin-right: 30px;">CENTRO DE INNOVACION Y DESARROLLO<br>AGROALIMENTARIO DE MICHOACÁN A.C.</b>
@@ -114,10 +102,26 @@
     </div>
 </div>
 
+<!--PIE DE PAGINAS-->
+<div class="footer">
+    <p style="text-align: right; font-size: 8px; margin-bottom: 1px;">
+        @if ($id_sustituye)<!-- Aparece solo si tiene valor -->
+            Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
+        @endif
+        <br>Solicitud de emisión de Certificado {{ $lotes->count() > 1 ? 'Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55' : 'para Exportación NOM-070-SCFI-2016 F7.1-01-21' }}<br>
+        Edición {{ $lotes->count() > 1 ? '1' : '10' }} Entrada en vigor: 26/08/2024
+    </p>
+    <div class="img-footer">
+            <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705">
+    </div>
+</div>
+
+
 
     <div style="text-align: center; font-weight: bold; font-size: 13px; padding: 9px;" >
         SOLICITUD DE EMISIÓN DEL CERTIFICADO NOM PARA EXPORTACIÓN
     </div>
+    <!--PUNTO 1-->
     <table>
         <tr>
             <td class="amarillo" style="width: 70px; text-align:center;"><b>I: </td>
@@ -126,14 +130,14 @@
     </table>
     <table>
         <tr>
-            <td style="padding:8px;"> Fecha de solicitud:</td>
+            <td style="padding:8px;">Fecha de solicitud:</td>
             <td style="font-weight: bold;">{{ $fecha_solicitud}}</td>
             <td>N° de cliente:</td>
             <td><b>{{ $n_cliente}}</b></td>
         </tr>
         <tr>
             <td style="padding-top:16px; padding-bottom:16px">Domicilio donde se<br>encuentra el producto:</td>
-            <td style="font-weight: bold; width: 500px" colspan="3"> {{ $domicilio_inspeccion}}</td>
+            <td style="font-weight: bold; width: 500px" colspan="3"> {{ mb_strtoupper($domicilio_inspeccion) }}</td>
         </tr>
     </table>
 
@@ -192,22 +196,28 @@
         <tr><td colspan="5" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
     </table>
 
-    <!--PUNTO 3-->
+
+
+<!--INICIO DE TABLAS LOTES-->
+@if ($lotes->count() <= 1)<!--si es 1 lote-->
+
+
+<!--PUNTO 3 CERTIFICADO NORMAL-->
 @foreach($lotes as $lote) 
     <table>
         <tr>
             <td class="amarillo" style="width: 70px; text-align:center;"><b>III: </td>
-            <td class="amarillo"><b>&nbsp;&nbsp; CARACTERISTICAS DEL PRODUCTO @if( $lotes->count() > 0 ) COMBINADO @endif</b></td>
+            <td class="amarillo"><b>&nbsp;&nbsp; CARACTERISTICAS DEL PRODUCTO</b></td>
         </tr>
     </table>
 
     <table>
         <tr>
-            <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">&nbsp;&nbsp;Marca:</td>
+            <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">&nbsp;&nbsp;1) Marca:</td>
             <td style="font-weight: bold; width: 30%;"> 
                 {{ $lote->marca->marca ?? "No encontrado"}}
             </td>
-            <td style="text-align: left;  width: 20%;" colspan="3">&nbsp;&nbsp;Categoría y Clase:</td>
+            <td style="text-align: left;  width: 20%;" colspan="3">&nbsp;&nbsp;8) Categoría y Clase:</td>
             <td style="font-weight: bold; width: 30%;" colspan="3"> 
                 {{ $lote->lotesGranel->first()->categoria->categoria ?? "No encontrado"}}, 
                 {{ $lote->lotesGranel->first()->clase->clase ?? "No encontrado"}} 
@@ -215,13 +225,13 @@
         </tr>
         <tr>
             <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
-                &nbsp;&nbsp;Certificado NOM a Granel:
+                &nbsp;&nbsp;2) Certificado NOM a &nbsp;&nbsp;Granel:
             </td>
             <td style="font-weight: bold; width: 30%;"> 
                 {{ $lote->lotesGranel->first()->folio_certificado ?? "No encontrado" }}
             </td>
             <td style="text-align: left;  width: 20%;" colspan="3">
-                &nbsp;&nbsp;Edad:
+                &nbsp;&nbsp;9) Edad:
             </td>
             <td style="font-weight: bold; width: 30%;" colspan="3"> 
                 {{ $lote->lotesGranel->first()->edad ?? "NA"}}  
@@ -234,33 +244,33 @@
     @endphp
         <tr>
             <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
-                &nbsp;&nbsp;No. de análisis:
+                &nbsp;&nbsp;3) No. de análisis:
             </td>
             <td style="font-weight: bold; width: 30%;"> 
                 {{ $folio1 }} 
             </td>
             <td style="text-align: left;  width: 20%;" colspan="3">
-                &nbsp;&nbsp;Contenido Alcohólico:</td>
+                &nbsp;&nbsp;10) Contenido Alcohólico:</td>
             <td style="font-weight: bold; width: 30%;" colspan="3"> 
                 {{ $lote->lotesGranel->first()->cont_alc ?? "No encontrado" }}% 
             </td>
         </tr>
         <tr>
             <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
-                &nbsp;&nbsp;No. de análisis de ajuste:
+                &nbsp;&nbsp;4) No. de análisis de ajuste:
             </td>
             <td style="font-weight: bold; width: 30%;"> 
                {{ $folio2 }}
             </td>
             <td style="text-align: left;  width: 20%;" colspan="3">
-                &nbsp;&nbsp; No. de lote a granel:</td>
+                &nbsp;&nbsp;11) No. de lote a granel:</td>
             <td style="font-weight: bold; width: 30%;" colspan="3"> 
                 {{ $lote->lotesGranel->first()->nombre_lote ?? "N" }}
             </td>
         </tr>
         <tr>
             <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
-                &nbsp;&nbsp;Tipo de Maguey: 
+                &nbsp;&nbsp;5) Tipo de Maguey: 
             </td>
             <td style="font-weight: bold; width: 30%;"> 
                {!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
@@ -268,14 +278,29 @@
                 })->implode(', ') !!}
             </td>
             <td style="text-align: left;  width: 20%;" colspan="3">
-                &nbsp;&nbsp;No. de lote envasado:</td>
+                &nbsp;&nbsp;12) No. de lote envasado:</td>
             <td style="font-weight: bold; width: 30%;" colspan="3"> 
                 {{ $lote->nombre ?? "No encontrado" }}
             </td>
         </tr>
+
         <tr>
             <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
-                &nbsp;&nbsp;Contenido neto por
+                &nbsp;&nbsp;6) No. de cajas: 
+            </td>
+            <td style="font-weight: bold; width: 30%;"> 
+                {{$cajas}}
+            </td>
+            <td style="text-align: left;  width: 20%;" colspan="3">
+                &nbsp;&nbsp;13) No. de botellas: </td>
+            <td style="font-weight: bold; width: 30%;" colspan="3"> 
+                {{$botellas}}
+            </td>
+        </tr>
+
+        <tr>
+            <td style="text-align: left; padding-top:8px; padding-bottom:8px; width: 20%;">
+                &nbsp;&nbsp;7) Contenido neto por
             </td>
             <td style="font-weight: bold; width: 30%;"> 
                {{ $lote->presentacion ?? 'No encontrado'}}
@@ -289,70 +314,149 @@
         </tr>
     </table>
 
-    <br><br>
-    <table>
-        
-<!--Si es 1 tabla, agregamos la ultima-->
-@if( $lotes->count() == 1 )
-        <tr>
-            <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
-                &nbsp;&nbsp;No. de cajas: 
-            </td>
-            <td style="font-weight: bold; width: 30%;"> 
-                {{$cajas}}
-            </td>
-            <td style="text-align: left;  width: 20%;">
-                &nbsp;&nbsp;No. de botellas: </td>
-            <td style="font-weight: bold; width: 30%;"> 
-                {{$botellas}}
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
-                &nbsp;&nbsp;Contenido neto por
-            </td>
-            <td style="font-weight: bold; width: 30%;"> 
-               xxxx
-            </td>
-            <td style="text-align: left;  width: 20%;">
-                &nbsp;&nbsp;xxxx</td>
-            <td style="font-weight: bold; width: 30%;"> 
-                xxxx
-            </td>
-        </tr>
-@endif
+    <div style="page-break-before: always;"></div><!--SALTO-->
 
+@endforeach
+
+
+@else<!--si hay mas de 1 lote (multiple)-->
+
+
+<!--PUNTO 3 CERTIFICADO COMBINADO-->
+@foreach($lotes as $lote) 
+    <table>
+        <tr>
+            <td class="amarillo" style="width: 70px; text-align:center;"><b>III: </td>
+            <td class="amarillo"><b>&nbsp;&nbsp; CARACTERISTICAS DEL PRODUCTO COMBINADO</b></td>
+        </tr>
     </table>
 
-@if($loop->iteration == 1)<!--Salto de pag después de tabla 2-->
+    <table>
+        <tr>
+            <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">&nbsp;&nbsp;1) Marca:</td>
+            <td style="font-weight: bold; width: 30%;"> 
+                {{ $lote->marca->marca ?? "No encontrado"}}
+            </td>
+            <td style="text-align: left;  width: 20%;" colspan="3">&nbsp;&nbsp;7) Categoría y Clase:</td>
+            <td style="font-weight: bold; width: 30%;" colspan="3"> 
+                {{ $lote->lotesGranel->first()->categoria->categoria ?? "No encontrado"}}, 
+                {{ $lote->lotesGranel->first()->clase->clase ?? "No encontrado"}} 
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
+                &nbsp;&nbsp;2) Certificado NOM a &nbsp;&nbsp;Granel:
+            </td>
+            <td style="font-weight: bold; width: 30%;"> 
+                {{ $lote->lotesGranel->first()->folio_certificado ?? "No encontrado" }}
+            </td>
+            <td style="text-align: left;  width: 20%;" colspan="3">
+                &nbsp;&nbsp;8) Edad:
+            </td>
+            <td style="font-weight: bold; width: 30%;" colspan="3"> 
+                {{ $lote->lotesGranel->first()->edad ?? "NA"}}  
+            </td>
+        </tr>
+    @php
+        $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
+        $folio1 = trim($folios[0] ?? '');
+        $folio2 = trim($folios[1] ?? 'NA');
+    @endphp
+        <tr>
+            <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
+                &nbsp;&nbsp;3) No. de análisis:
+            </td>
+            <td style="font-weight: bold; width: 30%;"> 
+                {{ $folio1 }} 
+            </td>
+            <td style="text-align: left;  width: 20%;" colspan="3">
+                &nbsp;&nbsp;9) Contenido Alcohólico:</td>
+            <td style="font-weight: bold; width: 30%;" colspan="3"> 
+                {{ $lote->lotesGranel->first()->cont_alc ?? "No encontrado" }}% 
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
+                &nbsp;&nbsp;4) No. de análisis de ajuste:
+            </td>
+            <td style="font-weight: bold; width: 30%;"> 
+               {{ $folio2 }}
+            </td>
+            <td style="text-align: left;  width: 20%;" colspan="3">
+                &nbsp;&nbsp;10) No. de lote a granel:</td>
+            <td style="font-weight: bold; width: 30%;" colspan="3"> 
+                {{ $lote->lotesGranel->first()->nombre_lote ?? "N" }}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
+                &nbsp;&nbsp;5) Tipo de Maguey: 
+            </td>
+            <td style="font-weight: bold; width: 30%;"> 
+               {!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
+                    return $tipo->nombre . ' (<i>' . $tipo->cientifico . '</i>)';
+                })->implode(', ') !!}
+            </td>
+            <td style="text-align: left;  width: 20%;" colspan="3">
+                &nbsp;&nbsp;11) No. de lote envasado:</td>
+            <td style="font-weight: bold; width: 30%;" colspan="3"> 
+                {{ $lote->nombre ?? "No encontrado" }}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
+                &nbsp;&nbsp;6) Contenido neto por
+            </td>
+            <td style="font-weight: bold; width: 30%;"> 
+               {{ $lote->presentacion ?? 'No encontrado'}}
+            </td>
+            <td>mL</td>
+            <td><b>{{ $lote->unidad === 'mL' ? 'X' : '' }}</b></td>
+            <td>cL</td>
+            <td><b>{{ $lote->unidad === 'cL' ? 'X' : '' }}</b></td>
+            <td>L</td>
+            <td><b>{{ $lote->unidad === 'L' ? 'X' : '' }}</b></td>
+        </tr>
+
+        @if($loop->iteration == 1)
+            <tr>
+                <td style="padding-top:12px; padding-bottom:12px;">Cantidad total del<br>producto combinado: </td>
+                <td colspan="7"></td>
+            </tr>
+        @endif
+    </table>
+
+
+@if($loop->iteration == 1 OR $loop->iteration == 3)<!--Salto de pag después de tabla 2-->
     <div style="page-break-before: always;"></div> 
 @endif
 
-<!--si hay más de un lote, agregar al final una nueva-->
-@if($loop->iteration > 1 && $loop->last)
-    <br>
-    <table>
-        <tr>
-            <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
-                &nbsp;&nbsp;No. de cajas: 
-            </td>
-            <td style="font-weight: bold; width: 30%;"> 
-                {{$cajas}}
-            </td>
-            <td style="text-align: left;  width: 20%;">
-                &nbsp;&nbsp;No. de botellas: </td>
-            <td style="font-weight: bold; width: 30%;"> 
-                {{$botellas}}
-            </td>
-        </tr>
-    </table>
-@endif
+    <!--si hay más de un lote, agregar al final una nueva-->
+    {{-- @if($loop->iteration > 1 && $loop->last)
+        <br>
+        <table>
+            <tr>
+                <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
+                    &nbsp;&nbsp;No. de cajas: 
+                </td>
+                <td style="font-weight: bold; width: 30%;"> 
+                    {{$cajas}}
+                </td>
+                <td style="text-align: left;  width: 20%;">
+                    &nbsp;&nbsp;No. de botellas: </td>
+                <td style="font-weight: bold; width: 30%;"> 
+                    {{$botellas}}
+                </td>
+            </tr>
+        </table>
+    @endif --}}
+@endforeach <!-- FIN DE TABLAS LOTES -->
 
-@endforeach <!-- Fin del for lotes -->
+@endif<!--FIN del IF si es uno o multiple-->
+
 
 
     <!--PUNTO 4-->
-    <br>
     <table>
         <tr>
             <td class="amarillo" style="width: 70px; text-align:center;"><b>IV: </td>
@@ -395,12 +499,12 @@
     </table>
     <table>
         <tr>
-            <td style="font-weight: bold; padding-top:16px; padding-bottom:16px; width: 50%; border-top: none">
+            <td style="font-weight: bold; padding-top:16px; padding-bottom:16px; width: 50%; border-top: none; border-bottom: none">
                 {{$resp_instalacion}}
                 <br><br>
                 Nombre del responsable de instalaciones
             </td>
-            <td style="font-weight: bold; width: 50%; border-top: none">
+            <td style="font-weight: bold; width: 50%; border-top: none; border-bottom: none">
                  {{$empresa}}
                 <br><br>
                 Nombre del solicitante de exportación
@@ -413,9 +517,13 @@
                 INFORMACIÓN ADICIONAL SOBRE LA ACTIVIDAD:
             </td>
             <td>{{$info_adicional}}</td>
-        <tr>
+        </tr>
     </table>
 
+
+@if (in_array($lotes->count(), [2, 4]))<!--Salto de pag después de tabla 2 o tabla 4-->
+    <div style="page-break-before: always;"></div> 
+@endif
     <!--PUNTO 5-->
     <table>
         <tr>
@@ -423,8 +531,9 @@
             <td class="amarillo" style=""><b>&nbsp;&nbsp;ANEXOS</b></td>
         </tr>
     </table>
-<div style="page-break-before: always;"></div> 
-<br><br><br><br>
+{{-- <div style="page-break-before: always;"></div> 
+<br><br><br><br> --}}
+
     <table>
         <tr>
             <td colspan="3" style="padding:6px; border-bottom:none; color: red">Adjuntar a la solicitud los documentos que a continuación se enlistan:</td>
@@ -434,9 +543,9 @@
             <td style="width: 13%;">X</td>
             <td style="text-align: left; border-top:none; border-bottom:none; border-left:none;">
                 Copia del análisis de laboratorio de cada uno de los lotes en cumplimiento con el apartado 4.3 de
-la NOM-070-SCFI-2016 o de la NOM-199-SCFI-2017. En caso de producto cuente con ajuste de
-grado alcohólico, reposado o añejo adjuntar copia de los analisis de laboratorio posteriores al
-proceso en cumplimiento con el numeral 5 de la NOM-070-SCFI-2016.
+                la NOM-070-SCFI-2016 o de la NOM-199-SCFI-2017. En caso de producto cuente con ajuste de
+                grado alcohólico, reposado o añejo adjuntar copia de los analisis de laboratorio posteriores al
+                proceso en cumplimiento con el numeral 5 de la NOM-070-SCFI-2016.
             </td>
         </tr>
         <tr><td colspan="3" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
@@ -473,17 +582,14 @@ proceso en cumplimiento con el numeral 5 de la NOM-070-SCFI-2016.
             </td>
         </tr>
         <tr><td colspan="3" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
-    
     </table>
-
-
 
     <table>
         <tr>
             <td style="padding:3px; text-align: justify; border-bottom: none" colspan="3">
-        La empresa se da por enterada que: la Unidad de Verificación establecerá una vigilancia de cumplimiento con la NOM
-        permanente a sus instalaciones una vez que el Certificado NOM sea emitido. Para validar la información el OC podrá solicitar
-        los documentos originales para su cotejo respectivo.
+                La empresa se da por enterada que: la Unidad de Verificación establecerá una vigilancia de cumplimiento con la NOM
+                permanente a sus instalaciones una vez que el Certificado NOM sea emitido. Para validar la información el OC podrá solicitar
+                los documentos originales para su cotejo respectivo.
             </td>
         </tr>
         <tr>
@@ -498,7 +604,6 @@ proceso en cumplimiento con el numeral 5 de la NOM-070-SCFI-2016.
             </td>
         </tr>
     </table>
-
 
 
 
