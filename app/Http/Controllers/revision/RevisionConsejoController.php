@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\revision;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Revisor;
 use App\Models\RevisorGranel;
 use App\Models\RevisorExportacion; //EXPORTACION
@@ -13,38 +12,36 @@ use App\Models\User;
 use App\Models\empresaNumCliente;
 use App\Helpers\Helpers;
 use App\Models\preguntas_revision;
-use Illuminate\Support\Facades\Schema;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
-class RevisionPersonalController extends Controller
+class RevisionConsejoController extends Controller
 {
-    public function userManagement()
+        public function userManagement()
     {
         $userId = auth()->id();
-        $EstadisticasInstalaciones = $this->calcularCertificados($userId, 1); // Estadisticas Instalaciones
-        $EstadisticasGranel = $this->calcularCertificados($userId, 2); // Estadisticas Granel
+        $EstadisticasInstalaciones = $this->calcularCertificados($userId, 1, 2); // Estadisticas Instalaciones
+        $EstadisticasGranel = $this->calcularCertificados($userId, 2, 2); // Estadisticas Granel
 
-        $revisorQuery = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where('tipo_revision', 1); // Tipo Revisor
+        $revisorQuery = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')
+            ->where('tipo_revision', 2); // Solo revisiones de miembro
+
         if ($userId != 1) {
             $revisorQuery->where('id_revisor', $userId);
         }
         $revisor = $revisorQuery->first();
 
-
-
         //EXPORTACION
-        $EstadisticasExportacion = $this->calcularCertificados($userId, 3);
-
+        $EstadisticasExportacion = $this->calcularCertificados($userId, 3, 2);
 
         $users = User::where('tipo', 1)->get(); // Select Aprobacion
-        $preguntasRevisor = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 1)->get(); // Preguntas Instalaciones
-        $preguntasRevisorGranel = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 2)->get(); // Preguntas Granel
+        $preguntasRevisor = preguntas_revision::where('tipo_revisor', 2)->where('tipo_certificado', 1)->get(); // Preguntas Instalaciones
+        $preguntasRevisorGranel = preguntas_revision::where('tipo_revisor', 2)->where('tipo_certificado', 2)->get(); // Preguntas Granel
         $noCertificados = (!$revisor || !$revisor->certificado); // Alerta si no hay Certificados Asignados al Revisor
 
-        return view('revision.revision_certificados-personal_view', compact('revisor', 'preguntasRevisor', 'preguntasRevisorGranel', 'EstadisticasInstalaciones', 'EstadisticasGranel', 'users', 'noCertificados', 'EstadisticasExportacion'));
+        return view('revision.revision_certificados_consejo_view', compact('revisor', 'preguntasRevisor', 'preguntasRevisorGranel', 'EstadisticasInstalaciones', 'EstadisticasGranel', 'users', 'noCertificados', 'EstadisticasExportacion'));
     }
 
-    public function index(Request $request)
+        public function index(Request $request)
     {
         $columns = [
             1 => 'id_revisor',
@@ -65,7 +62,7 @@ class RevisionPersonalController extends Controller
             'certificadoNormal.dictamen',
             'certificadoGranel.dictamen',
             'certificadoExportacion.dictamen'
-        ])->where('tipo_revision', 1); // Tipo Revisor
+        ])->where('tipo_revision', 2); // Solo revisiones de miembro
 
 
         // Filtrar por usuario si no es admin (ID 8)
@@ -254,10 +251,10 @@ class RevisionPersonalController extends Controller
 
 
 
-    public function calcularCertificados($userId, $tipo_certificado)
+    public function calcularCertificados($userId, $tipo_certificado, $tipo_revision = 2)
     {
-        $totalCertificados = Revisor::where('id_revisor', $userId)->where('tipo_certificado', $tipo_certificado)->where('tipo_revision', 1)->count();
-        $totalCertificadosGlobal = Revisor::where('tipo_certificado', $tipo_certificado)->where('tipo_revision', 1)->count();
+        $totalCertificados = Revisor::where('id_revisor', $userId)->where('tipo_certificado', $tipo_certificado)->where('tipo_revision', $tipo_revision)->count();
+        $totalCertificadosGlobal = Revisor::where('tipo_certificado', $tipo_certificado)->where('tipo_revision', $tipo_revision)->count();
         $porcentaje = $totalCertificados > 0 ? ($totalCertificados / $totalCertificadosGlobal) * 100 : 0;
 
         $certificadosPendientes = Revisor::where('id_revisor', $userId)->where('tipo_certificado', $tipo_certificado)
@@ -387,7 +384,7 @@ class RevisionPersonalController extends Controller
 
 
 
-    public function add_revision($id_revision)
+    public function add_revision_consejo($id_revision)
     {
 
         $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
@@ -431,7 +428,7 @@ class RevisionPersonalController extends Controller
             $url = "/certificado_exportacion/" . $datos->id_certificado;
             $tipo = "Exportación";
         }
-        return view('certificados.add_revision', compact('datos', 'preguntas', 'url', 'tipo'));
+        return view('certificados.add_revision_consejo', compact('datos', 'preguntas', 'url', 'tipo'));
     }
     public function registrar_revision(Request $request)
     {
@@ -497,7 +494,7 @@ class RevisionPersonalController extends Controller
         }
     }
 
-    public function edit_revision($id_revision)
+    public function edit_revision_consejo($id_revision)
     {
 
         $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
@@ -552,7 +549,7 @@ class RevisionPersonalController extends Controller
             $url = "/certificado_exportacion/" . $datos->id_certificado;
             $tipo = "Exportación";
         }
-        return view('certificados.edit_revision', compact('datos', 'preguntas', 'url', 'tipo', 'respuestas_map'));
+        return view('certificados.edit_revision_consejo', compact('datos', 'preguntas', 'url', 'tipo', 'respuestas_map'));
     }
 
     public function editar_revision(Request $request)
@@ -614,7 +611,7 @@ class RevisionPersonalController extends Controller
 
         $revisor->save();
 
-      return redirect('/revision/personal');
+      return redirect('/revision/consejo');
 
 
     } catch (\Exception $e) {
@@ -787,4 +784,5 @@ class RevisionPersonalController extends Controller
             ], 500);
         }
     }
-}//end
+
+}

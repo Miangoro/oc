@@ -9,7 +9,7 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: '/revision-personal-list',
+        url: '/revision-consejo-list',
       },
       columns: [
         { data: '#' },                //0
@@ -172,7 +172,7 @@ $(function () {
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               // Botón para revisar
               `<a class="dropdown-item waves-effect text-info cuest" ` +
-              `href="/add_revision/${full['id_revision']}" ` +
+              `href="/add_revision_consejo/${full['id_revision']}" ` +
               `data-id="${full['id_revision']}" ` +
               `data-revisor-id="${full['id_revisor']}" ` +
               `data-dictamen-id="${full['id_certificado']}" ` +
@@ -189,7 +189,7 @@ $(function () {
               '</a>' +
               // Botón para editar revisión
               `<a class="dropdown-item waves-effect text-primary editar-revision" ` +
-              `href="/edit_revision/${full['id_revision']}" ` +
+              `href="/edit_revision_consejo/${full['id_revision']}" ` +
               `data-id="${full['id_revision']}" ` +
               `data-tipo="${full['tipo_dictamen']}" ` +
               `data-tipo_revision="${full['tipo_revision']}" ` +
@@ -236,6 +236,9 @@ $(function () {
           "sPrevious": "Anterior"
         }
       },
+
+      // Opciones Exportar Documentos
+
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({
@@ -431,7 +434,7 @@ $(document).on('click', '#registrarRevision', function () {
   });
 
   $.ajax({
-    url: '/revisor/registrar-respuestas',
+    url: '/revisor/registrar-respuestas-consejo',
     type: 'POST',
     contentType: 'application/json',
     headers: {
@@ -485,7 +488,7 @@ $(document).on('hidden.bs.modal', '#fullscreenModal', function () {
 
 function cargarRespuestas(id_revision) {
   $.ajax({
-      url: `/revisor/obtener-respuestas/${id_revision}`,
+      url: `/revisor/obtener-respuestas-consejo/${id_revision}`,
       type: 'GET',
       success: function (response) {
           const respuestasGuardadas = response.respuestas || {};
@@ -532,7 +535,7 @@ $(document).on('click', '.pdf', function () {
   console.log('Número de Certificado:', num_certificado);
 
   // Definir URL según el tipo de revisión
-  var url_pdf = '../pdf_bitacora_revision_personal/' + id_revisor;
+  var url_pdf = '../pdf_bitacora_revision_consejo/' + id_revisor;
 
 
   console.log('URL del PDF:', url_pdf);
@@ -574,7 +577,7 @@ $(document).on('click', '.Aprobacion-record', function() {
 
   // Cargar los datos de aprobación
   $.ajax({
-      url: `/aprobacion/${idRevision}`,
+      url: `/aprobacion-consejo/${idRevision}`,
       method: 'GET',
       success: function(data) {
           $('#id_firmante').val(data.revisor.id_aprobador || '').trigger('change');
@@ -647,7 +650,7 @@ $(function () {
       const idAprobador = $('#id_firmante').val();
 
       $.ajax({
-          url: '/registrar-aprobacion',
+          url: '/registrar-aprobacion-consejo',
           type: 'POST',
           data: {
               _token: $('meta[name="csrf-token"]').attr('content'),
@@ -718,7 +721,7 @@ function cargarHistorial(id_revision) {
   $('#respuestasContainer').html('');
 
   $.ajax({
-      url: `/obtener/historial/${id_revision}`,
+      url: `/obtener/historial-consejo/${id_revision}`,
       method: 'GET',
       success: function(data) {
           console.log('Datos recibidos:', data);

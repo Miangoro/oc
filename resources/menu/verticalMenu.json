@@ -268,9 +268,9 @@
           "can" : "Visualizar revisión del personal"
         },
         {
-          "url": "/hologramas/",
+          "url": "/revision/consejo",
           "name": "Consejo",
-          "slug": "hologramas-",
+          "slug": "revision-consejo",
           "can" : "Visualizar revisión del consejo"
         }
       ]
@@ -339,6 +339,6 @@
       "slug": "find_permisos",
       "can" : "Visualizar permisos"
     }
-    
+
  ]
 }

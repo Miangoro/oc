@@ -199,6 +199,7 @@ use App\Http\Controllers\solicitudes\solicitudesController;
 use App\Http\Controllers\TrazabilidadController;
 use App\Http\Controllers\pdf_llenado\PdfController;
 use App\Http\Controllers\revision\RevisionPersonalController;
+use App\Http\Controllers\revision\RevisionConsejoController;
 use App\Http\Controllers\revision\catalogo_personal_seleccion_preguntas_controller;
 use App\Http\Controllers\Bitacoras\BitacoraMezcalController;
 use App\Http\Controllers\Bitacoras\BitacoraProductoMaduracionController;
@@ -852,6 +853,26 @@ Route::middleware(['auth'])->controller(RevisionPersonalController::class)->grou
 });
 
 
+//-------------------REVISION CONSEJO-------------------
+Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group(function () {
+    Route::get('/revision/consejo', 'UserManagement')->name('revision-consejo');
+    Route::resource('/revision-consejo-list', RevisionConsejoController::class);
+    Route::post('/revisor/registrar-respuestas-consejo', 'registrarRespuestasConsejo')->name('registrar.respuestas.consejo');
+    Route::get('/revisor/obtener-respuestas-consejo/{id_revision}', 'obtenerRespuestasConsejo');
+    Route::get('/get-certificado-url-consejo/{id_revision}/{tipo}', 'getCertificadoUrlConsejo');
+    Route::get('/bitacora_revisionConsejo_Instalaciones/{id}', 'Bitacora_revisionConsejo_Instalaciones');
+    Route::post('/registrar-aprobacion-consejo', 'registrarAprobacionConsejo')->name('registrar.aprobacion.consejo');
+    Route::get('/aprobacion-consejo/{id}', 'cargarAprobacionConsejo');
+    Route::get('/obtener/historial-consejo/{id_revision}', 'cargarHistorialConsejo');
+    Route::post('/editar-respuestas-consejo', 'editinsertarCertificadosGranelDesdeAPIarRespuestasConsejo');
+    // -Granel-
+    Route::get('/bitacora_revisionConsejo_Granel/{id}', 'Bitacora_revisionConsejo_Granel');
+    Route::get('/add_revision_consejo/{id_revision}', 'add_revision_consejo');
+    Route::post('registrar_revision_consejo', 'registrar_revision_consejo')->name('registrar_revision_consejo');
+    Route::get('/edit_revision_consejo/{id_revision}', 'edit_revision_consejo');
+    Route::post('editar_revision_consejo', 'editar_revision_consejo')->name('editar_revision_consejo');
+    Route::get('/pdf_bitacora_revision_consejo/{id}', 'pdf_bitacora_revision_consejo');
+});
 
 // Pdfs Bitacoras
 Route::get('/bitacora_maduracion', [CartaAsignacionController::class, 'BitacoraMaduracion'])->name('bitacora_maduracion');
