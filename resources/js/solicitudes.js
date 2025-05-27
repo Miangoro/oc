@@ -1167,6 +1167,35 @@ $(function () {
                   var lotesEnvasado = response.caracteristicas.detalles.map(function (detalle) {
                     return detalle.id_lote_envasado;
                   });
+                                  // Mostrar Factura Proforma
+                let facturaProforma = null;
+                let facturaProformaCont = null;
+                var numeroCliente = response.numero_cliente;
+
+                if (response.documentos && Array.isArray(response.documentos)) {
+                  facturaProforma = response.documentos.find(
+                    doc => doc.nombre_documento && doc.nombre_documento.toLowerCase().includes('proforma') && !doc.nombre_documento.toLowerCase().includes('continuación')
+                  );
+                  facturaProformaCont = response.documentos.find(
+                    doc => doc.nombre_documento && doc.nombre_documento.toLowerCase().includes('continuación')
+                  );
+                }
+
+                if (facturaProforma && facturaProforma.url) {
+                  $('#factura_proforma_display').html(
+                    'Factura actual: <a href="/storage/uploads/'  + numeroCliente + '/' + facturaProforma.url + '" target="_blank">' + facturaProforma.url + '</a>'
+                  );
+                } else {
+                  $('#factura_proforma_display').html('<span class="text-danger">No hay factura proforma cargada.</span>');
+                }
+
+                if (facturaProformaCont && facturaProformaCont.url) {
+                  $('#factura_proforma_cont_display').html(
+                    'Factura (Continuación) actual: <a href="/storage/uploads/'  + numeroCliente + '/' + facturaProformaCont.url + '" target="_blank">' + facturaProformaCont.url + '</a>'
+                  );
+                } else {
+                 $('#factura_proforma_cont_display').html('<span class="text-danger">No hay factura proforma (continuación) cargada.</span>');
+                }
 
                   modal.find('.lote_envasado_id').val(lotesEnvasado.join(','));
 

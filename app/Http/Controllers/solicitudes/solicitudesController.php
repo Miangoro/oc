@@ -387,7 +387,10 @@ class solicitudesController extends Controller
         $documentos = $solicitud->documentacion_completa;
         // Obtener instalaciones relacionadas con la empresa de la solicitud
         $instalaciones = Instalaciones::where('id_empresa', $solicitud->id_empresa)->get();
-
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $solicitud->id_empresa)->first();
+        $numero_cliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
         // Obtener las características decodificadas (si existen)
         $caracteristicas = $solicitud->caracteristicas
             ? json_decode($solicitud->caracteristicas, true)
@@ -425,6 +428,7 @@ class solicitudesController extends Controller
             'instalaciones' => $instalaciones,
             'factura_proforma' => $facturaProforma,
             'documentos' => $documentos,
+            'numero_cliente' => $numero_cliente,
         ]);
     }
 
@@ -1419,49 +1423,61 @@ class solicitudesController extends Controller
                 $solicitud->save();
 
                 // Almacenar archivos si se enviaron
-                if ($request->hasFile('factura_proforma')) {
-                    $file = $request->file('factura_proforma');
-                    $uniqueId = uniqid();
-                    $filename = 'FacturaProforma_' . $uniqueId . '.' . $file->getClientOriginalExtension();
-                    $directory = $empresaNumCliente;
-                    $path = storage_path('app/public/uploads/' . $directory);
+                    if ($request->hasFile('factura_proforma')) {
+                        // Elimina el anterior
+                        Documentacion_url::where('id_relacion', $solicitud->id_solicitud)
+                            ->where('id_documento', 55)
+                            ->where('nombre_documento', 'Factura Proforma')
+                            ->delete();
 
-                    if (!file_exists($path)) {
-                        mkdir($path, 0777, true);
+                        $file = $request->file('factura_proforma');
+                        $uniqueId = uniqid();
+                        $filename = 'FacturaProforma_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+                        $directory = $empresaNumCliente;
+                        $path = storage_path('app/public/uploads/' . $directory);
+
+                        if (!file_exists($path)) {
+                            mkdir($path, 0777, true);
+                        }
+
+                        $filePath = $file->storeAs($directory, $filename, 'public_uploads');
+                        Documentacion_url::create([
+                            'id_empresa' => $validated['id_empresa'],
+                            'url' => basename($filePath),
+                            'id_relacion' => $solicitud->id_solicitud,
+                            'id_documento' => 55, // ID de factura
+                            'nombre_documento' => 'Factura Proforma',
+                        ]);
+                        $data['factura_proforma'] = $filename;
                     }
 
-                    $filePath = $file->storeAs($directory, $filename, 'public_uploads');
-                    Documentacion_url::create([
-                        'id_empresa' => $validated['id_empresa'],
-                        'url' => basename($filePath),
-                        'id_relacion' => $solicitud->id_solicitud,
-                        'id_documento' => 55, // ID de factura
-                        'nombre_documento' => 'Factura Proforma',
-                    ]);
-                    $data['factura_proforma'] = $filename;
-                }
+                    if ($request->hasFile('factura_proforma_cont')) {
+                        // Elimina el anterior
+                        Documentacion_url::where('id_relacion', $solicitud->id_solicitud)
+                            ->where('id_documento', 55)
+                            ->where('nombre_documento', 'Factura Proforma (Continuación)')
+                            ->delete();
 
-                if ($request->hasFile('factura_proforma_cont')) {
-                    $file = $request->file('factura_proforma_cont');
-                    $uniqueId = uniqid();
-                    $filename = 'FacturaProformaCont_' . $uniqueId . '.' . $file->getClientOriginalExtension();
-                    $directory = $empresaNumCliente;
-                    $path = storage_path('app/public/uploads/' . $directory);
+                        $file = $request->file('factura_proforma_cont');
+                        $uniqueId = uniqid();
+                        $filename = 'FacturaProformaCont_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+                        $directory = $empresaNumCliente;
+                        $path = storage_path('app/public/uploads/' . $directory);
 
-                    if (!file_exists($path)) {
-                        mkdir($path, 0777, true);
+                        if (!file_exists($path)) {
+                            mkdir($path, 0777, true);
+                        }
+
+                        $filePath = $file->storeAs($directory, $filename, 'public_uploads');
+                        Documentacion_url::create([
+                            'id_empresa' => $validated['id_empresa'],
+                            'url' => basename($filePath),
+                            'id_relacion' => $solicitud->id_solicitud,
+                            'id_documento' => 55, // ID de factura
+                            'nombre_documento' => 'Factura Proforma (Continuación)',
+                        ]);
+                        $data['factura_proforma_cont'] = $filename;
                     }
-
-                    $filePath = $file->storeAs($directory, $filename, 'public_uploads');
-                    Documentacion_url::create([
-                        'id_empresa' => $validated['id_empresa'],
-                        'url' => basename($filePath),
-                        'id_relacion' => $solicitud->id_solicitud,
-                        'id_documento' => 55, // ID de factura
-                        'nombre_documento' => 'Factura Proforma (Continuación)',
-                    ]);
-                    $data['factura_proforma_cont'] = $filename;
-                }
 
                 $solicitud->caracteristicas = json_encode($data); // Ahora incluye las rutas de los archivos
                 $solicitud->save();

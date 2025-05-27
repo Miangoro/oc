@@ -41,8 +41,9 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input id="fecha_visita_edit_exportacion" placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
-                                    type="datetime-local" name="fecha_visita" autocomplete="off" />
+                                <input id="fecha_visita_edit_exportacion" placeholder="YYYY-MM-DD"
+                                    class="form-control flatpickr-datetime" type="datetime-local" name="fecha_visita"
+                                    autocomplete="off" />
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -93,6 +94,7 @@
                                         <label for="factura_proforma">Adjuntar Factura/Proforma</label>
                                         <div id="factura_proforma_display"></div>
                                     </div>
+
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
@@ -103,8 +105,9 @@
                                             value="Factura proforma (Continuación)">
                                         <label for="factura_proforma_cont">Adjuntar Factura/Proforma
                                             (Continuación)</label>
-                                            <div id="factura_proforma_cont_display"></div>
+                                        <div id="factura_proforma_cont_display"></div>
                                     </div>
+
                                 </div>
 
                             </div>
@@ -143,8 +146,8 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" disabled name="lote_granel[0]" id="lote_granel_edit_0"
-                                                class="form-control lotes_granel_export_edit">
+                                            <input type="text" disabled name="lote_granel[0]"
+                                                id="lote_granel_edit_0" class="form-control lotes_granel_export_edit">
                                             </input>
                                             <label for="lote_granel">Lote a granel</label>
                                         </div>
@@ -165,8 +168,9 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" class="form-control presentacion" id="presentacion_edit0"
-                                                name="presentacion[0]" placeholder="Ej. 750ml">
+                                            <input type="text" class="form-control presentacion"
+                                                id="presentacion_edit0" name="presentacion[0]"
+                                                placeholder="Ej. 750ml">
                                             <label for="presentacion">Presentación</label>
                                         </div>
                                     </div>
@@ -188,7 +192,7 @@
                             <i class="ri-delete-bin-6-fill"></i> Eliminar tabla
                         </button>
                     </div>
-                   <div id="botones_characteristics_edit_1" class="d-none">
+                    <div id="botones_characteristics_edit_1" class="d-none">
                         <button type="button" id="add-characteristics_edit_1" class="btn btn-primary btn-sm mt-1">
                             <i class="ri-add-line"></i> Agregar Tabla
                         </button>
@@ -261,9 +265,10 @@
                     <input type="hidden" class="lote_envasado_id">
                     <input type="hidden" class="etiqueta_id">
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnEditExport"><i class="ri-pencil-fill"></i> Editar</button>
-                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
-                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="btnEditExport"><i
+                                class="ri-pencil-fill"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -414,11 +419,10 @@
             contenidoLotes = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
         }
         $('.evasado_export_edit').html(contenidoLotes);
-                            const idlotePrevio = $('#lote_envasado_edit_0').data('selected');
-                    if (idlotePrevio) {
-                        $('#lote_envasado_edit_0').val(idlotePrevio);
-                    } else if (response.lotesEnvasado.length == 0) {
-                    }
+        const idlotePrevio = $('#lote_envasado_edit_0').data('selected');
+        if (idlotePrevio) {
+            $('#lote_envasado_edit_0').val(idlotePrevio);
+        } else if (response.lotesEnvasado.length == 0) {}
 
         cargarDetallesLoteEnvasadoEdit($(".evasado_export_edit").val());
     }
@@ -454,7 +458,8 @@
 
 
     // Función para cargar lotes a granel
-    function cargarLotesGranelEdit(lotesGranel) { /* ESTA FUNCION NO SE OCUPA */
+    function cargarLotesGranelEdit(lotesGranel) {
+        /* ESTA FUNCION NO SE OCUPA */
         if (lotesGranel !== "" && lotesGranel !== null && lotesGranel !== undefined) {
             var contenidoLotesGraneles = "";
             for (let index = 0; index < lotesGranel.length; index++) {
@@ -667,51 +672,52 @@
 
     // Función para llenar campos en editar
     function cargarDetallesLoteEnvasadoDinamicoEdit(select, sectionCountEdit) {
-      var idLoteEnvasado = $(select).val();
-      if (idLoteEnvasado) {
-        $.ajax({
-          url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
-          method: 'GET',
-          success: function (response) {
-            $(`#lote_granel_edit_${sectionCountEdit}`).val(
-              response.detalle && response.detalle.length > 0
-                ? response.detalle.map(lote => lote.nombre_lote).join(', ')
-                : ''
-            );
+        var idLoteEnvasado = $(select).val();
+        if (idLoteEnvasado) {
+            $.ajax({
+                url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+                method: 'GET',
+                success: function(response) {
+                    $(`#lote_granel_edit_${sectionCountEdit}`).val(
+                        response.detalle && response.detalle.length > 0 ?
+                        response.detalle.map(lote => lote.nombre_lote).join(', ') :
+                        ''
+                    );
 
-          },
-          error: function () {
-            console.error('Error al cargar el detalle del lote envasado.');
-          }
-        });
-      }
+                },
+                error: function() {
+                    console.error('Error al cargar el detalle del lote envasado.');
+                }
+            });
+        }
     }
 
-        // Función para llenar campos en editar
+    // Función para llenar campos en editar
     function cargarDetallesLoteEnvasadoDinamicoEdit2(select, sectionCountEdit) {
-      var idLoteEnvasado = $(select).val();
-      if (idLoteEnvasado) {
-        $.ajax({
-          url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
-          method: 'GET',
-          success: function (response) {
-            $(`#lote_granel_edit_${sectionCountEdit}`).val(
-              response.detalle && response.detalle.length > 0
-                ? response.detalle.map(lote => lote.nombre_lote).join(', ')
-                : ''
-            );
-            $(`#cantidad_botellas_edit${sectionCountEdit}`).val(response.lote_envasado?.cant_botellas || '');
-            $(`#presentacion_edit${sectionCountEdit}`).val(
-              response.lote_envasado
-                ? response.lote_envasado.presentacion + ' ' + response.lote_envasado.unidad
-                : ''
-            );
+        var idLoteEnvasado = $(select).val();
+        if (idLoteEnvasado) {
+            $.ajax({
+                url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+                method: 'GET',
+                success: function(response) {
+                    $(`#lote_granel_edit_${sectionCountEdit}`).val(
+                        response.detalle && response.detalle.length > 0 ?
+                        response.detalle.map(lote => lote.nombre_lote).join(', ') :
+                        ''
+                    );
+                    $(`#cantidad_botellas_edit${sectionCountEdit}`).val(response.lote_envasado
+                        ?.cant_botellas || '');
+                    $(`#presentacion_edit${sectionCountEdit}`).val(
+                        response.lote_envasado ?
+                        response.lote_envasado.presentacion + ' ' + response.lote_envasado.unidad :
+                        ''
+                    );
 
-          },
-          error: function () {
-            console.error('Error al cargar el detalle del lote envasado.');
-          }
-        });
-      }
+                },
+                error: function() {
+                    console.error('Error al cargar el detalle del lote envasado.');
+                }
+            });
+        }
     }
 </script>
