@@ -91,6 +91,7 @@
                                         <input type="hidden" name="id_documento_factura" value="55">
                                         <input type="hidden" name="nombre_documento_factura" value="Factura proforma">
                                         <label for="factura_proforma">Adjuntar Factura/Proforma</label>
+                                        <div id="factura_proforma_display"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -102,6 +103,7 @@
                                             value="Factura proforma (Continuación)">
                                         <label for="factura_proforma_cont">Adjuntar Factura/Proforma
                                             (Continuación)</label>
+                                            <div id="factura_proforma_cont_display"></div>
                                     </div>
                                 </div>
 
@@ -186,6 +188,15 @@
                             <i class="ri-delete-bin-6-fill"></i> Eliminar tabla
                         </button>
                     </div>
+                   <div id="botones_characteristics_edit_1" class="d-none">
+                        <button type="button" id="add-characteristics_edit_1" class="btn btn-primary btn-sm mt-1">
+                            <i class="ri-add-line"></i> Agregar Tabla
+                        </button>
+                        <button type="button" id="delete-characteristics_edit_1"
+                            class="btn btn-danger btn-sm mt-1 float-end">
+                            <i class="ri-delete-bin-6-fill"></i> Eliminar tabla
+                        </button>
+                    </div>
 
                     <div class="card mt-2">
                         <div class="card-body">
@@ -247,11 +258,11 @@
                     <input type="hidden" class="instalacion_id">
                     <input type="hidden" class="direccion_id">
                     <input type="hidden" class="instalacion_envasado_id">
-                    <input type="text" class="lote_envasado_id">
+                    <input type="hidden" class="lote_envasado_id">
                     <input type="hidden" class="etiqueta_id">
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary" id="btnEditExport"><i class="ri-pencil-fill"></i> Editar</button>
-                        <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
@@ -278,7 +289,7 @@
                     cargarLotesEnvasadoEdit(response.lotes_envasado, response.marcas);
                     cargarMarcasEdit();
                     /* compararLotesConSelects(); */
-                    cargarLotesGranelEdit(response.lotes_granel);
+                    /* cargarLotesGranelEdit(response.lotes_granel); */
 
                 },
                 error: function() {
@@ -410,9 +421,6 @@
                     }
 
         cargarDetallesLoteEnvasadoEdit($(".evasado_export_edit").val());
-
-
-
     }
 
     function compararLotesConSelects() {
@@ -446,7 +454,7 @@
 
 
     // Función para cargar lotes a granel
-    function cargarLotesGranelEdit(lotesGranel) {
+    function cargarLotesGranelEdit(lotesGranel) { /* ESTA FUNCION NO SE OCUPA */
         if (lotesGranel !== "" && lotesGranel !== null && lotesGranel !== undefined) {
             var contenidoLotesGraneles = "";
             for (let index = 0; index < lotesGranel.length; index++) {
@@ -670,12 +678,35 @@
                 ? response.detalle.map(lote => lote.nombre_lote).join(', ')
                 : ''
             );
+
+          },
+          error: function () {
+            console.error('Error al cargar el detalle del lote envasado.');
+          }
+        });
+      }
+    }
+
+        // Función para llenar campos en editar
+    function cargarDetallesLoteEnvasadoDinamicoEdit2(select, sectionCountEdit) {
+      var idLoteEnvasado = $(select).val();
+      if (idLoteEnvasado) {
+        $.ajax({
+          url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+          method: 'GET',
+          success: function (response) {
+            $(`#lote_granel_edit_${sectionCountEdit}`).val(
+              response.detalle && response.detalle.length > 0
+                ? response.detalle.map(lote => lote.nombre_lote).join(', ')
+                : ''
+            );
             $(`#cantidad_botellas_edit${sectionCountEdit}`).val(response.lote_envasado?.cant_botellas || '');
             $(`#presentacion_edit${sectionCountEdit}`).val(
               response.lote_envasado
                 ? response.lote_envasado.presentacion + ' ' + response.lote_envasado.unidad
                 : ''
             );
+
           },
           error: function () {
             console.error('Error al cargar el detalle del lote envasado.');

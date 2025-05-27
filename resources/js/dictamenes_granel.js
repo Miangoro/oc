@@ -779,6 +779,8 @@ $(function () {
     var id_dictamen = $(this).data('id');
     $('#edit_id_dictamen').val(id_dictamen);
 
+    cargarLotes();
+
     $.ajax({
       url: '/dictamenes/granel/' + id_dictamen + '/edit',
       method: 'GET',
@@ -897,6 +899,16 @@ $(document).ready(function () {
       $('#rex_fecha_emision').val('');
       $('#rex_fecha_vigencia').val('');
       $('#rex_observaciones').val('');
+       $('.nombre_lote').val('');
+      $('.folio_fq').val('');
+      $('.volumen').val('');
+      $('.cont_alc').val('');
+      $('.edad').val('');
+      $('.ingredientes').val('');
+      $('.id_categoria').val('');
+      $('.id_clase').val('');
+      $('.id_tipo').val([]).change();
+      $('#id_inspeccion').val('').change();
   }
 
   function showError(message) {
@@ -910,7 +922,17 @@ $(document).ready(function () {
       });
   }
 
-  $('#ModalReexpedir').on('hidden.bs.modal', function () {
+  $('#ModalAgregar').on('hidden.bs.modal', function () {
+      clearFields();
+      fieldsValidated = []; 
+  });
+
+  $('#ModalEditar').on('hidden.bs.modal', function () {
+      clearFields();
+      fieldsValidated = []; 
+  });
+
+    $('#ModalReexpedir').on('hidden.bs.modal', function () {
       $('#FormReexpedir')[0].reset();
       clearFields();
       $('#campos_condicionales').hide();

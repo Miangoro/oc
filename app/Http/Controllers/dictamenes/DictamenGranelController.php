@@ -5,11 +5,14 @@ namespace App\Http\Controllers\dictamenes;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\Helpers;
+use App\Models\categorias;
+use App\Models\clases;
 use App\Models\inspecciones;
 use App\Models\empresa;
 use App\Models\Documentacion_url;
 use App\Models\LotesGranel;
 use App\Models\Dictamen_Granel;
+use App\Models\tipos;
 use App\Models\User;
 ///Extensiones
 use Illuminate\Support\Facades\Log;
@@ -39,9 +42,12 @@ class DictamenGranelController extends Controller  {
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $inspectores = User::where('tipo', 2)->get(); // Obtener solo los usuarios con tipo '2' (inspectores)
         $lotesGranel = LotesGranel::all();
+        $categorias = categorias::all();
+        $clases = clases::all();
+        $tipos = tipos::all(); // Obtén todos los tipos de agave
 
         // Pasar los datos a la vista
-        return view('dictamenes.find_dictamen_granel', compact('inspecciones', 'empresas', 'lotesGranel', 'inspectores'));
+        return view('dictamenes.find_dictamen_granel', compact('inspecciones', 'empresas', 'lotesGranel', 'inspectores','categorias','clases','tipos'));
     }
 
 
@@ -219,6 +225,26 @@ public function store(Request $request)
         $new->id_firmante = $validated['id_firmante'];
         $new->save();
 
+        $inspeccion = Inspecciones::with('solicitud.lote_granel')->find($new->id_inspeccion);
+
+        $id_lote_granel = null;
+        if ($inspeccion && $inspeccion->solicitud && $inspeccion->solicitud->lote_granel) {
+            $id_lote_granel = $inspeccion->solicitud->lote_granel->id_lote_granel;
+            $lote = LotesGranel::find($id_lote_granel);
+            $lote->nombre_lote = $request->nombre_lote;
+            $lote->folio_fq = rtrim($request->folio_fq, ', ');
+            $lote->volumen = $request->volumen;
+            $lote->cont_alc = $request->cont_alc;
+            $lote->edad = $request->edad;
+            $lote->ingredientes = $request->ingredientes;
+            $lote->id_categoria = $request->id_categoria;
+            $lote->id_clase = $request->id_clase;
+            $lote->id_tipo = json_encode($request->id_tipo); 
+            $lote->save(); 
+        }
+
+
+
         return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
         Log::error('Error al registrar', [
@@ -294,6 +320,24 @@ public function update(Request $request, $id_dictamen)
             'fecha_vigencia' => $validated['fecha_vigencia'],
             'id_firmante' => $validated['id_firmante'],
         ]);
+
+        $inspeccion = Inspecciones::with('solicitud.lote_granel')->find($validated['id_inspeccion']);
+
+        $id_lote_granel = null;
+        if ($inspeccion && $inspeccion->solicitud && $inspeccion->solicitud->lote_granel) {
+            $id_lote_granel = $inspeccion->solicitud->lote_granel->id_lote_granel;
+            $lote = LotesGranel::find($id_lote_granel);
+            $lote->nombre_lote = $request->nombre_lote;
+            $lote->folio_fq = rtrim($request->folio_fq, ', ');
+            $lote->volumen = $request->volumen;
+            $lote->cont_alc = $request->cont_alc;
+            $lote->edad = $request->edad;
+            $lote->ingredientes = $request->ingredientes;
+            $lote->id_categoria = $request->id_categoria;
+            $lote->id_clase = $request->id_clase;
+            $lote->id_tipo = json_encode($request->id_tipo); 
+            $lote->save(); 
+        }
 
         return response()->json(['message' => 'Actualizado correctamente.']);
     } catch (\Exception $e) {
@@ -506,6 +550,12 @@ public function foliofq($id_dictamen)
 }
 */
 
+    public function getDatosLotes($id_inspeccion)
+    {
+
+        $datos = inspecciones::with('solicitud.lote_granel')->find($id_inspeccion);
+        return response()->json($datos); // Retorna en formato JSON
+    }
 
 
 
