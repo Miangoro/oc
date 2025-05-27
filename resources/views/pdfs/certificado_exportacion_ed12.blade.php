@@ -138,58 +138,61 @@
 </head>
 
 <body>
-    <!-- Aparece la marca de agua solo si la variable 'watermarkText' tiene valor -->
-    @if ($watermarkText)
-        <div class="watermark-cancelado">
-            Cancelado
-        </div>
-    @endif
+<!-- Aparece la marca de agua solo si la variable 'watermarkText' tiene valor -->
+@if ($watermarkText)
+    <div class="watermark-cancelado">
+        Cancelado
+    </div>
+@endif
 
-    <div class="img-fondo"></div>
-    <div class="img-exportacion"></div>
+<div class="img-fondo"></div>
+<div class="img-exportacion"></div>
 
-    <div class="footer">
-        <p style="text-align: right; font-size: 8px; margin-bottom: 1px; line-height: 1.3;">
-            @if ($id_sustituye)
-                <!-- Aparece solo si tiene valor -->
-                Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
-            @endif
-            <br>Certificado de Exportación NOM-070-SCFI-2016 F7.1-01-23 Ed 12<br>
-            Entrada en vigor: 26-08-2024
+<!--ENCABEZADO-->
+<div class="encabezado">
+    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}"
+        style="width: 340px; vertical-align: top; margin-left: -13px" alt="logo de CIDAM 3D">
+    <div class="cidam">
+        <b style="font-size: 17.5px;">CENTRO DE INNOVACIÓN Y DESARROLLO <br>AGROALIMENTARIO DE MICHOACÁN A.C.</b>
+        <p style="font-size: 11px; margin-top: 0px;">Organismo de Certificación de producto acreditado ante la
+            <br>entidad mexicana de acreditación ema A.C. con <b>No. 144/18</b>
         </p>
-        <div class="img-footer">
-            <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705">
-        </div>
     </div>
 
-    <div class="encabezado">
-        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}"
-            style="width: 340px; vertical-align: top; margin-left: -13px" alt="logo de CIDAM 3D">
+    <div class="titulos" style="margin-top: -2%;">CERTIFICADO DE AUTENTICIDAD DE EXPORTACIÓN DE MEZCAL 12.2</div>
+    <table>
+        <tr>
+            <td style="font-weight: bold; text-align: center; border:none">
+                Número de Certificado:</td>
+            <td style="font-weight:bold; font-size: 11px; text-align: left;border:none">
+                {{ $data->num_certificado }}</td>
+            <td style="font-weight: bold; text-align: right;padding-right: 20px; border:none">
+                Fecha de <br> expedición:</td>
+            <td style="font-weight: bold; text-align: right; border:none">
+                {{ $expedicion }}</td>
+            <td style="font-weight: bold;  text-align: right; padding-right: 20px; border:none">
+                Vigencia de 90 días <br> naturales:</td>
+            <td style="font-weight: bold; text-align: right;padding-right: 20px; border:none">
+                {{ $vigencia }}</td>
+        </tr>
+    </table>
+</div>
 
-        <div class="cidam">
-            <b style="font-size: 17.5px;">CENTRO DE INNOVACIÓN Y DESARROLLO <br>AGROALIMENTARIO DE MICHOACÁN A.C.</b>
-            <p style="font-size: 11px; margin-top: 0px;">Organismo de Certificación de producto acreditado ante la
-                <br>entidad mexicana de acreditación ema A.C. con <b>No. 144/18</b></p>
-        </div>
-
-        <div class="titulos" style="margin-top: -2%;">CERTIFICADO DE AUTENTICIDAD DE EXPORTACIÓN DE MEZCAL</div>
-        <table>
-            <tr>
-                <td style="font-weight: bold; text-align: center; border:none">
-                    Número de Certificado:</td>
-                <td style="font-weight:bold; font-size: 11px; text-align: left;border:none">
-                    {{ $data->num_certificado }}</td>
-                <td style="font-weight: bold; text-align: right;padding-right: 20px; border:none">
-                    Fecha de <br> expedición:</td>
-                <td style="font-weight: bold; text-align: right; border:none">
-                    {{ $expedicion }}</td>
-                <td style="font-weight: bold;  text-align: right; padding-right: 20px; border:none">
-                    Vigencia de 90 días <br> naturales:</td>
-                <td style="font-weight: bold; text-align: right;padding-right: 20px; border:none">
-                    {{ $vigencia }}</td>
-            </tr>
-        </table>
+<!--PIE DE PAGINAS-->
+<div class="footer">
+    <p style="text-align: right; font-size: 8px; margin-bottom: 1px; line-height: 1.3;">
+        @if ($id_sustituye)
+            <!-- Aparece solo si tiene valor -->
+            Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
+        @endif
+        <br>Certificado de Exportación NOM-070-SCFI-2016 F7.1-01-23 {{ $lotes->count() > 1 ? 'Ed 2' : 'Ed 12' }}
+        <br>Entrada en vigor: 26-08-2024
+    </p>
+    <div class="img-footer">
+        <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705">
     </div>
+</div>
+
 
 
     <div class="titulos">DATOS GENERALES DEL EXPORTADOR</div>
@@ -198,7 +201,7 @@
             <td class="td-margins"
                 style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">
                 Nombre o razón social:</td>
-            <td class="td-margins" style="text-align: left">{{ $empresa }}</td>
+            <td class="td-margins" style="text-align: left">{{ mb_strtoupper($empresa) }}</td>
             <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;">
                 Número de Cliente:</td>
             <td class="td-margins" style="text-align: left">{{ $n_cliente }}</td>
@@ -208,8 +211,8 @@
                 style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px; padding-top: 8px;padding-bottom: 8px;">
                 Domicilio:</td>
             <td class="td-margins" style="font-size: 11px; text-align: left; padding-top: 8px;padding-bottom: 8px;" colspan="3">
-                GUILLERMO GONZÁLEZ CAMARENA #800 PISO 2, SANTA FE ÁLVARO OBREGÓN, CIUDAD DE MÉXICO
-</td>
+                {{ mb_strtoupper($domicilio) }}
+            </td>
         </tr>
         <tr>
             <td class="td-margins"
@@ -242,7 +245,136 @@
     </table>
 
 
+<!--INICIO DE TABLAS LOTES-->
+@if ($lotes->count() <= 1)<!--si es 1 lote-->
 
+
+<!--CERTIFICADO NORMAL-->
+    @foreach ($lotes as $lote)
+        <div class="titulos">DESCRIPCIÓN DEL EMBARQUE QUE AMPARA EL CERTIFICADO</div>
+        <table>
+            
+        <tr>
+            <td
+                style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px; width: 12%;">
+                Marca:</td>
+            <td style="text-align: left; padding-left: 4px; width: 22%;">
+                {{ mb_strtoupper($lote->marca->marca) ?? 'N' }}
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
+                Categoría y Clase:</td>
+            <td style="text-align: left; padding-left: 4px; width: 22%;">
+                {{ mb_strtoupper($lote->lotesGranel->first()->categoria->categoria) ?? 'No encontrado' }},
+                {{ mb_strtoupper($lote->lotesGranel->first()->clase->clase) ?? 'No encontrado' }}
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">Edad:</td>
+            <td style="text-align: left; padding-left: 4px;">
+                {{-- {{ mb_strtoupper($lote->lotesGranel->first()->edad) ?? '-----' }} --}}
+                {{ in_array(optional($lote->lotesGranel->first())->id_clase, [2, 3]) 
+                    ? (filled(optional($lote->lotesGranel->first())->edad) 
+                        ? mb_strtoupper(optional($lote->lotesGranel->first())->edad) 
+                        : 'No encontrado') 
+                    : 'NA' }}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px;">
+                Certificado <br> NOM a <br>Granel:</td>
+            <td style="text-align: left; padding-left: 4px;">
+                {{ $lote->lotesGranel->first()->folio_certificado ?? 'No encontrado' }}&nbsp;
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Volumen:</td>
+            <td style="text-align: left; padding-left: 4px;">
+                {{ $lote->presentacion . ' ' . $lote->unidad }}
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">%Alc. Vol.:</td>
+            <td style="text-align: left; padding-left: 4px;">
+                {{ round($lote->lotesGranel->first()->cont_alc) ?? 'No encontrado' }}%
+            </td>
+        </tr>
+        @php
+            $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
+            $folio1 = trim($folios[0] ?? '');
+            $folio2 = trim($folios[1] ?? 'NA');
+        @endphp
+        <tr>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de análisis:
+            </td>
+            <td style="text-align: left; padding-left: 4px;">
+                {{ $folio1 }}
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. lote granel:
+            </td>
+            <td style="text-align: left; padding-left: 4px;">
+                {{ $lote->lotesGranel->first()->nombre_lote ?? 'No encontrado' }}
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
+                Botellas</td>
+            <td style="text-align: left; padding-left: 4px;">
+                {{ $botellas }}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px">No.
+                de análisis ajuste:</td>
+            <td style="text-align: left; padding-left: 4px;">
+                {{ $folio2 }} &nbsp;</td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
+                No. de lote Envasado:
+            </td>
+            <td style="text-align: left; padding-left: 4px;">
+                {{ $lote->nombre ?? 'No encontrado' }}
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
+                Cajas
+            </td>
+            <td style="text-align: left; padding-left: 4px;">
+                {{ $cajas }}
+            </td>
+        </tr>
+
+        <tr>
+            <td
+                style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">
+                Tipo de maguey:</td>
+            <td style="text-align: left; padding-left: 2px; font-size: 10.6px;">
+                {!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
+                    return $tipo->nombre . ' (<i>' . $tipo->cientifico . '</i>)';
+                })->implode(', ') !!}
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
+                Envasado<br>en:</td>
+            <td style="text-align: justify; font-size: 9px; padding-left: 4px; padding-right: 2px; width: 22%;">
+                {{ mb_strtoupper($envasadoEN) }}
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
+                Folio Hologramas:</td>
+            <td style="text-align: left; padding-left: 4px;">
+                
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 35px;">
+                Aduana de despacho:</td>
+            <td style="text-align: left; padding-left: 4px;">
+                {{ mb_strtoupper($aduana) }}
+            </td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Fracción
+                Arancelaria:</td>
+            <td style="text-align: left; padding-left: 4px;">2208.90.05.00</td>
+            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de
+                <br>pedido:</td>
+            <td style="text-align: left; padding-left: 4px;">{{ $n_pedido }}</td>
+        </tr>
+
+        </table>
+    @endforeach
+
+
+@else<!--si hay mas de 1 lote (multiple)-->
+
+
+<!--CERTIFICADO COMBINADO-->
     @foreach ($lotes as $lote)
         <div class="titulos">DESCRIPCIÓN DEL EMBARQUE QUE AMPARA EL CERTIFICADO</div>
         <table>
@@ -313,7 +445,7 @@
                     {{ $folio2 }} &nbsp;</td>
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Tipo de Maguey:
                 </td>
-                <td style="text-align: left; padding-left: 4px;">
+                <td style="text-align: left; padding-left: 2px; font-size: 10.6px;">
                     {!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
                         return $tipo->nombre . ' (<i>' . $tipo->cientifico . '</i>)';
                     })->implode(', ') !!}
@@ -323,42 +455,12 @@
                 </td>
                 <td style="text-align: left; font-size: 9px; padding-left: 4px;"></td>
             </tr>
-
-            <!--Si es 1 tabla, agregamos la ultima-->
-            @if ($lotes->count() == 1)
-                <tr>
-                    <td
-                        style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">
-                        Envasado en:</td>
-                    <td style="text-align: justify; font-size: 9px; padding-left: 4px; padding-right: 2px; width: 22%;">
-                        {{ mb_strtoupper($envasadoEN) }}</td>
-                    <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
-                        Cajas:</td>
-                    <td style="text-align: left; padding-left: 4px; width: 22%;">{{ $cajas }}</td>
-                    <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
-                        Botellas:</td>
-                    <td style="text-align: left; padding-left: 4px;">{{ $botellas }}</td>
-                </tr>
-                <tr>
-                    <td
-                        style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 35px;">
-                        Aduana de despacho:</td>
-                    <td style="text-align: left; padding-left: 4px;">{{ mb_strtoupper($aduana) }}</td>
-                    <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Fracción
-                        Arancelaria:</td>
-                    <td style="text-align: left; padding-left: 4px;">2208.90.05.00</td>
-                    <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de
-                        <br>pedido:</td>
-                    <td style="text-align: left; padding-left: 4px;">{{ $n_pedido }}</td>
-                </tr>
-            @endif
-
         </table>
 
-        @if ($loop->iteration == 2)
-            <!--Salto de pag después de tabla 2-->
-            <div style="page-break-before: always;"></div>
-        @endif
+    @if ($loop->iteration == 2)
+        <!--Salto de pag después de tabla 2-->
+        <div style="page-break-before: always;"></div>
+    @endif
 
         <!--si hay más de un lote, agregar al final una nueva-->
         @if ($loop->iteration > 1 && $loop->last)
@@ -367,7 +469,7 @@
                 <tr>
                     <td
                         style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">
-                        Envasado en:</td>
+                        Envasado<br>en:</td>
                     <td style="text-align: justify; font-size: 9px; padding-left: 4px; padding-right: 2px; width: 22%;">
                         {{ $envasadoEN }}&nbsp;</td>
                     <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
@@ -391,34 +493,36 @@
                 </tr>
             </table>
         @endif
-    @endforeach <!-- Fin del for lotes -->
+    @endforeach <!-- FIN DE TABLAS LOTES -->
 
+
+@endif<!--FIN del IF si es uno o multiple-->
 
 
     <div class="titulos" style="padding:14px">DESTINATARIO</div>
     <table>
-        <tr>
-            <td class="td-margins"
-                style="text-align: right; font-weight: bold; font-size: 12px; border-top: none; width: 12%;">
-                Nombre:</td>
-            <td class="td-margins" style="text-align: left; border-top: none; padding-left: 6px;">
-                {{ $nombre_destinatario }}
-            </td>
-        </tr>
-        <tr>
-            <td class=" td-margins"
-                style="text-align: right; font-weight: bold; font-size: 12px; padding-top: 8px; padding-bottom: 8px;">
-                Domicilio:</td>
-            <td class="td-margins" style="text-align: left; padding-left: 6px;">
-                {{ $dom_destino }}</td>
-        </tr>
-        <tr>
-            <td class="td-margins" style="text-align: right; font-weight: bold; font-size: 12px;">
-                País destino:</td>
-            <td class="td-margins" style="text-align: left; padding-left: 6px;">
-                {{ $pais }}
-            </td>
-        </tr>
+    <tr>
+        <td class="td-margins"
+            style="text-align: right; font-weight: bold; font-size: 12px; border-top: none; width: 12%;">
+            Nombre:</td>
+        <td class="td-margins" style="text-align: left; border-top: none; padding-left: 6px;">
+            {{ $nombre_destinatario }}
+        </td>
+    </tr>
+    <tr>
+        <td class=" td-margins"
+            style="text-align: right; font-weight: bold; font-size: 12px; padding-top: 8px; padding-bottom: 8px;">
+            Domicilio:</td>
+        <td class="td-margins" style="text-align: left; padding-left: 6px;">
+            {{ $dom_destino }}</td>
+    </tr>
+    <tr>
+        <td class="td-margins" style="text-align: right; font-weight: bold; font-size: 12px;">
+            País destino:</td>
+        <td class="td-margins" style="text-align: left; padding-left: 6px;">
+            {{ $pais }}
+        </td>
+    </tr>
     </table>
 
     <div>
@@ -427,6 +531,7 @@
             en cumplimiento con lo dispuesto en la Ley Federal de Infraestructura de la Calidad.
             Este documento no debe ser reproducido en forma parcial.</p>
     </div>
+
 
     <div class="titulo2"><b>AUTORIZÓ</b></div>
     <div class="titulo2" style="margin-top: 0;">
@@ -437,5 +542,4 @@
 
 
 </body>
-
 </html>
