@@ -30,8 +30,8 @@ class CertificadosExport implements FromCollection, WithHeadings, WithEvents, Wi
             ->leftJoin('dictamenes_exportacion', 'dictamenes_exportacion.id_dictamen', '=', 'certificados_exportacion.id_dictamen')
             ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
             ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
-            ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
-            ->select('empresa.razon_social', 'certificados_exportacion.num_certificado', 'certificados_exportacion.fecha_emision', 'certificados_exportacion.fecha_vigencia', 'certificados_exportacion.estatus');
+            ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa');
+            //->select('empresa.razon_social', 'certificados_exportacion.num_certificado', 'certificados_exportacion.fecha_emision', 'certificados_exportacion.fecha_vigencia', 'certificados_exportacion.estatus');
 
         // Aplicar filtros
         if (!empty($this->filtros['id_empresa'])) {
@@ -58,34 +58,50 @@ class CertificadosExport implements FromCollection, WithHeadings, WithEvents, Wi
 {
     return [
         ['Reporte de Certificados de Exportación'],
-        ['ESTATUS', 'FECHA DE EXPEDICIÓN', 'No. DE CERTIFICADO', 'CONTACTO', 'EMPRESA', 'LOTE GRANEL', 'LOTE ENVASADO', 'MARCA', 'PAÍS DESTINO', 'No. DE BOTELLAS', 'CONTENIDO', 'TOTAL DE LITROS', '% ALC. VOL']
+        ['ESTATUS', 'FECHA DE EXPEDICIÓN', 'No. DE CERTIFICADO', 'EMPRESA', 'LOTE ENVASADO', 'LOTE GRANEL', 'MARCA', 'PAÍS DESTINO', 'No. DE BOTELLAS', 'CONTENIDO', 'TOTAL DE LITROS', '% ALC. VOL']
     ];
 }
 
 
     public function map($certificado): array
 {
-    $certificado = Certificado_Exportacion::find($certificado);
+    //dd($certificado->estatus);
+    //dd($certificado->pluck('estatus')->unique()); 
 
+//Lote envasado
+$lotes_env = $certificado->dictamen?->inspeccione?->solicitud?->lotesEnvasadoDesdeJson();//obtener todos los lotes
+$lotes_envasados = $lotes_env?->pluck('nombre')->implode(', ') ?? 'No encontrado';
+$marca = $lotes_env?->first()?->marca->marca ?? 'No encontrado';
+$presentacion = $lotes_env?->first()
+    ? $lotes_env->first()->presentacion . ($lotes_env->first()->unidad ? ' ' . $lotes_env->first()->unidad : '')
+    : 'No encontrado';
+//Lote granel
+$lotes_gra = $lotes_env?->flatMap(function ($lote) {
+    return $lote->lotesGranel; // Relación definida en el modelo lotes_envasado
+    })->unique('id_lote_granel');//elimina duplicados
+$lotes_granel = $lotes_gra?->pluck('nombre_lote')->implode(', ') ?? 'No encontrado';
+$cont_alc = $lotes_gra?->first()?->cont_alc?? 'No encontrado';
+$caracteristicas = $certificado->dictamen?->inspeccione?->solicitud?->caracteristicasDecodificadas() ?? [];
+
+$estado= $certificado->estatus; // <-- Muestra el valor original
     return [
-        /*match ($certificado->estatus) {
+        match ((int) $estado) {
             0 => 'Emitido',
             1 => 'Cancelado',
             2 => 'Reexpedido',
             default => 'No encontrado',
-        },*/
-        Carbon::parse($certificado->fecha_expedicion)->translatedFormat('d \d\e F \d\e Y h:i A'),
+        },
+        Carbon::parse($certificado->fecha_expedicion)->translatedFormat('d \d\e F \d\e Y'),
         $certificado->num_certificado ?? 'No encontrado',
-        $certificado->contacto ?? 'quien hace la soli',
         $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
-        $certificado->lote_granel ?? 'No encontrado',
-        $certificado->lote_envasado ?? 'No encontrado',
-        $certificado->marca ?? 'No encontrado',
-        $certificado->pais_destino ?? 'No encontrado',
-        $certificado->num_botellas ?? 'No encontrado',
-        $certificado->contenido ?? 'No encontrado',
-        $certificado->total_litros ?? 'No encontrado',
-        $certificado->porcentaje_alcohol_vol ?? 'No encontrado',
+        $lotes_envasados,
+        $lotes_granel,
+        $marca,
+        $certificado->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado',
+        collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado',
+        $presentacion,
+        'pendiente',
+        $cont_alc,
     ];
 }
 
@@ -96,16 +112,16 @@ class CertificadosExport implements FromCollection, WithHeadings, WithEvents, Wi
             $sheet = $event->sheet->getDelegate();
 
             // **Título**
-            $sheet->mergeCells('A1:M1');
-            $sheet->getStyle('A1:M1')
+            $sheet->mergeCells('A1:L1');
+            $sheet->getStyle('A1:L1')
                 ->getFont()->setBold(true)->setSize(14)->getColor()->setARGB('000000');
-            $sheet->getStyle('A1:M1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A1:L1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
             // **Encabezados**
-            $sheet->getStyle('A2:M2')
+            $sheet->getStyle('A2:L2')
                 ->getFont()->setBold(true)->getColor()->setARGB('000000');
-            $sheet->getStyle('A2:M2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle('A2:M2')
+            $sheet->getStyle('A2:L2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A2:L2')
                 ->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('8eaadc');
 
             // **Color Verde para "No. DE CERTIFICADO"**
@@ -119,11 +135,11 @@ class CertificadosExport implements FromCollection, WithHeadings, WithEvents, Wi
             $sheet->getStyle('E2')->getFont()->setBold(true)->setSize(12);
 
             // **Formato general para las columnas**
-            foreach (range('A', 'M') as $column) {
+            foreach (range('A', 'L') as $column) {
                 $sheet->getColumnDimension($column)->setAutoSize(true);
             }
 
-            $sheet->getStyle('A2:M' . ($event->sheet->getHighestRow()))
+            $sheet->getStyle('A2:L' . ($event->sheet->getHighestRow()))
                 ->getBorders()->getAllBorders()
                 ->setBorderStyle(Border::BORDER_THIN);
         }
