@@ -1186,7 +1186,7 @@ $(function () {
                     'Factura actual: <a href="/storage/uploads/'  + numeroCliente + '/' + facturaProforma.url + '" target="_blank">' + facturaProforma.url + '</a>'
                   );
                 } else {
-                  $('#factura_proforma_display').html('<span class="text-danger">No hay factura proforma cargada.</span>');
+                  $('#factura_proforma_display').html('<span class="text-danger">No hay factura proforma.</span>');
                 }
 
                 if (facturaProformaCont && facturaProformaCont.url) {
@@ -1194,7 +1194,7 @@ $(function () {
                     'Factura (Continuación) actual: <a href="/storage/uploads/'  + numeroCliente + '/' + facturaProformaCont.url + '" target="_blank">' + facturaProformaCont.url + '</a>'
                   );
                 } else {
-                 $('#factura_proforma_cont_display').html('<span class="text-danger">No hay factura proforma (continuación) cargada.</span>');
+                 $('#factura_proforma_cont_display').html('<span class="text-danger">No hay factura proforma (continuación).</span>');
                 }
 
                   modal.find('.lote_envasado_id').val(lotesEnvasado.join(','));
