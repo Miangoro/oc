@@ -65,17 +65,19 @@ class CertificadosExport implements FromCollection, WithHeadings, WithEvents, Wi
 
     public function map($certificado): array
 {
+    $certificado = Certificado_Exportacion::find($certificado);
+
     return [
-        match ($certificado->estatus) {
+        /*match ($certificado->estatus) {
             0 => 'Emitido',
             1 => 'Cancelado',
             2 => 'Reexpedido',
             default => 'No encontrado',
-        },
+        },*/
         Carbon::parse($certificado->fecha_expedicion)->translatedFormat('d \d\e F \d\e Y h:i A'),
         $certificado->num_certificado ?? 'No encontrado',
-        $certificado->contacto ?? 'No encontrado',
-        $certificado->empresa ?? 'No encontrado',
+        $certificado->contacto ?? 'quien hace la soli',
+        $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         $certificado->lote_granel ?? 'No encontrado',
         $certificado->lote_envasado ?? 'No encontrado',
         $certificado->marca ?? 'No encontrado',

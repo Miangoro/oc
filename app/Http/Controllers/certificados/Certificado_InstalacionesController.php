@@ -223,8 +223,6 @@ public function index(Request $request)
                 $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
                 $nestedData['tipo_dictamen'] = $certificado->dictamen->tipo_dictamen ?? 'No encontrado';
                 $nestedData['direccion_completa'] = $certificado->dictamen->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrado';
-                $nestedData['pdf_firmado'] = $certificado->url_pdf_firmado
-                    ? asset("storage/certificados_instalaciones_pdf/{$certificado->url_pdf_firmado}") : null;
                 $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
                 $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null;
                 $nestedData['sustituye'] = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
@@ -271,6 +269,12 @@ public function index(Request $request)
                 $nestedData['id_solicitud'] = $certificado->dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
                 $urls = $certificado->dictamen?->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
                 $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
+
+                //Certificado Firmado
+                $documentacion = Documentacion_url::where('id_relacion', $certificado?->dictamen?->inspeccione?->solicitud?->id_instalacion)
+                    ->where('id_documento', 59) ->first();
+                $nestedData['pdf_firmado'] = $documentacion?->url
+                    ? asset("storage/certificados_instalaciones_pdf/{$documentacion->url}") : null;
 
 
                 $data[] = $nestedData;
@@ -939,20 +943,45 @@ public function index(Request $request)
         // Ruta de carpeta física donde se guardará
         $rutaCarpeta = "public/certificados_instalaciones_pdf/{$anio}";
 
-        // Eliminar archivo anterior si existe
-        if ($certificado->url_pdf_firmado) {
-            $rutaAnterior = "public/certificados_instalaciones_pdf/{$certificado->url_pdf_firmado}";
-            if (Storage::exists($rutaAnterior)) {
-                Storage::delete($rutaAnterior);
+        // Guardar nuevo archivo
+        $upload = Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
+        if (!$upload) {
+            return response()->json(['message' => 'Error al subir el archivo.'], 500);
+        }
+
+        $id_instalacion = $certificado->dictamen?->inspeccione?->solicitud?->id_instalacion;
+
+        // Validar que el id_lote_granel exista
+        if (is_null($id_instalacion)) {
+            return response()->json([
+                'message' => 'No se encontró el ID de lote relacionado. No se puede continuar.'
+            ], 422);
+        }
+
+        // Buscar si ya existe un registro para ese lote y tipo de documento
+        $documentacion_url = Documentacion_url::where('id_relacion', $id_instalacion)
+            ->where('id_documento', 59)
+            ->first();
+
+        if ($documentacion_url) {
+            $ArchivoAnterior = "public/certificados_instalaciones_pdf/{$documentacion_url->url}";
+            if (Storage::exists($ArchivoAnterior)) {
+                Storage::delete($ArchivoAnterior);
             }
         }
 
-        // Guardar nuevo archivo
-        Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
-
-        // Guardar solo el nombre del archivo en la BD
-        $certificado->url_pdf_firmado = "{$anio}/{$nombreArchivo}";
-        $certificado->save();
+        // Crear o actualizar registro
+        Documentacion_url::updateOrCreate(
+            [
+                'id_relacion' => $id_instalacion,
+                'id_documento' => 59,
+            ],
+            [
+                'nombre_documento' => "Certificado instalaciones",
+                'url' => "{$anio}/{$nombreArchivo}",
+                'id_empresa' => $certificado->dictamen?->inspeccione?->solicitud?->id_empresa,
+            ]
+        );
 
         return response()->json(['message' => 'Documento actualizado correctamente.']);
     }
@@ -962,17 +991,31 @@ public function index(Request $request)
     {
         $certificado = Certificados::findOrFail($id);
 
-        if ($certificado->url_pdf_firmado) {
-            // Construir la ruta completa dentro del storage
-            $rutaArchivo = "certificados_instalaciones_pdf/{$certificado->url_pdf_firmado}";
+        // Obtener la instalacion
+        $id_instalacion = $certificado->dictamen?->inspeccione?->solicitud?->id_instalacion;
 
-            // Comprobar si el archivo existe
+        if (is_null($id_instalacion)) {
+            return response()->json([
+                'documento_url' => null,
+                'nombre_archivo' => null,
+                'message' => 'No se encontró el ID de lote relacionado.',
+            ], 404);
+        }
+
+        // Buscar documento asociado a instalacion
+        $documentacion = Documentacion_url::where('id_relacion', $id_instalacion)
+            ->where('id_documento', 59)
+            ->first();
+
+        if ($documentacion) {
+            $rutaArchivo = "certificados_instalaciones_pdf/{$documentacion->url}";
+
             if (Storage::exists("public/{$rutaArchivo}")) {
                 return response()->json([
-                    'documento_url' => Storage::url($rutaArchivo),  // URL correcta
-                    'nombre_archivo' => $certificado->url_pdf_firmado, // Nombre del archivo
+                    'documento_url' => Storage::url($rutaArchivo), // genera URL pública
+                    'nombre_archivo' => basename($documentacion->url),
                 ]);
-            } else {
+            }else {
                 return response()->json([
                     'documento_url' => null,
                     'nombre_archivo' => null,
@@ -985,4 +1028,10 @@ public function index(Request $request)
             'nombre_archivo' => null,
         ]);
     }
+
+
+
+
+
+
 }//end-classController

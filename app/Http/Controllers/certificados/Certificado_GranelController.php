@@ -141,8 +141,6 @@ public function index(Request $request)
             $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
             $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
             $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
-            $nestedData['pdf_firmado'] = $certificado->url_pdf_firmado
-                ? asset("storage/certificados_granel_pdf/{$certificado->url_pdf_firmado}") : null;
             $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
             $id_sustituye = json_decode($certificado->observaciones, true) ['id_sustituye'] ?? null;
             $nestedData['sustituye'] = $id_sustituye ? CertificadosGranel::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
@@ -195,8 +193,13 @@ public function index(Request $request)
             $loteGranel = LotesGranel::find($idLote);
             $nestedData['nombre_lote'] = $loteGranel?->nombre_lote ?? 'No encontrado';
             $nestedData['n_analisis'] = $loteGranel?->folio_fq ?? 'No encontrado';
-
-
+            //Certificado Firmado
+            $documentacion = Documentacion_url::where('id_relacion', $idLote)
+                ->where('id_documento', 58) ->first();
+            $nestedData['pdf_firmado'] = $documentacion?->url
+                ? asset("storage/certificados_granel_pdf/{$documentacion->url}") : null;
+            
+        
             $data[] = $nestedData;
         }
     }
@@ -611,22 +614,48 @@ public function subirCertificado(Request $request)
     // Ruta de carpeta física donde se guardará
     $rutaCarpeta = "public/certificados_granel_pdf/{$anio}";
 
-    // Eliminar archivo anterior si existe
-    if ($certificado->url_pdf_firmado) {
-        //$rutaAnterior = "{$rutaCarpeta}/{$certificado->url_pdf_firmado}";
-        $rutaAnterior = "public/certificados_granel_pdf/{$certificado->url_pdf_firmado}";
-        if (Storage::exists($rutaAnterior)) {
-            Storage::delete($rutaAnterior);
+   
+    // Guardar nuevo archivo
+    $upload = Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
+    if (!$upload) {
+        return response()->json(['message' => 'Error al subir el archivo.'], 500);
+    }
+
+     // Eliminar archivo y registro anterior si existe
+    $caracteristicas = json_decode($certificado->dictamen?->inspeccione?->solicitud?->caracteristicas, true);
+        $idLote = $caracteristicas['id_lote_granel'] ?? null;
+
+    // Validar que el id_lote_granel exista
+    if (is_null($idLote)) {
+        return response()->json([
+            'message' => 'No se encontró el ID de lote relacionado. No se puede continuar.'
+        ], 422);
+    }
+
+    // Buscar si ya existe un registro para ese lote y tipo de documento
+    $documentacion_url = Documentacion_url::where('id_relacion', $idLote)
+        ->where('id_documento', 58)
+        ->first();
+
+     if ($documentacion_url) {
+        $ArchivoAnterior = "public/certificados_granel_pdf/{$documentacion_url->url}";
+        if (Storage::exists($ArchivoAnterior)) {
+            Storage::delete($ArchivoAnterior);
         }
     }
 
-    // Guardar nuevo archivo
-    Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
-
-    // Guardar solo el nombre del archivo en la BD
-    //$certificado->url_pdf_firmado = $nombreArchivo;
-    $certificado->url_pdf_firmado = "{$anio}/{$nombreArchivo}";
-    $certificado->save();
+    // Crear o actualizar registro
+    Documentacion_url::updateOrCreate(
+        [
+            'id_relacion' => $idLote,
+            'id_documento' => 58,
+        ],
+        [
+            'nombre_documento' => "Certificado NOM a granel",
+            'url' => "{$anio}/{$nombreArchivo}",
+            'id_empresa' => $certificado->dictamen?->inspeccione?->solicitud?->id_empresa,
+        ]
+    );
 
     return response()->json(['message' => 'Documento actualizado correctamente.']);
 }
@@ -636,21 +665,32 @@ public function CertificadoFirmado($id)
 {
     $certificado = CertificadosGranel::findOrFail($id);
 
-    if ($certificado->url_pdf_firmado) {
-        // Obtener año actual desde el archivo
-        //$anio = now()->year;
+    // Obtener id_lote_granel desde las características
+    $caracteristicas = json_decode($certificado->dictamen?->inspeccione?->solicitud?->caracteristicas, true);
+    $idLote = $caracteristicas['id_lote_granel'] ?? null;
 
-        // Construir la ruta completa dentro del storage
-        //$rutaArchivo = "certificados_granel_pdf/{$anio}/" . $certificado->url_pdf_firmado;
-        $rutaArchivo = "certificados_granel_pdf/{$certificado->url_pdf_firmado}";
+    /*if (is_null($idLote)) {
+        return response()->json([
+            'documento_url' => null,
+            'nombre_archivo' => null,
+            'message' => 'No se encontró el ID de lote relacionado.',
+        ], 404);
+    }*/
 
-        // Comprobar si el archivo existe
+    // Buscar documento asociado al lote
+    $documentacion = Documentacion_url::where('id_relacion', $idLote)
+        ->where('id_documento', 58)
+        ->first();
+
+    if ($documentacion) {
+        $rutaArchivo = "certificados_granel_pdf/{$documentacion->url}";
+
         if (Storage::exists("public/{$rutaArchivo}")) {
             return response()->json([
-                'documento_url' => Storage::url($rutaArchivo),  // URL correcta
-                'nombre_archivo' => $certificado->url_pdf_firmado, // Nombre del archivo
+                'documento_url' => Storage::url($rutaArchivo), // genera URL pública
+                'nombre_archivo' => basename($documentacion->url),
             ]);
-        } else {
+        }else {
             return response()->json([
                 'documento_url' => null,
                 'nombre_archivo' => null,
@@ -661,10 +701,9 @@ public function CertificadoFirmado($id)
     return response()->json([
         'documento_url' => null,
         'nombre_archivo' => null,
+        //'message' => 'Documento no encontrado.',
     ]);
 }
-
-
 
 
 

@@ -520,7 +520,7 @@ if (dt_user_table.length) {
           ]
         },*///BOTONES EXPORTAR
 
-        {
+        {//EXPORTAR EXCEL
           text: '<i class="ri-file-excel-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
           className: 'btn btn-primary waves-effect waves-light me-2',
           attr: {
@@ -529,14 +529,14 @@ if (dt_user_table.length) {
             'data-bs-target': '#exportarExcelCertificados'
           }
         },
-        {
+        {//FIRMAR DOCUSIGN
           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Firmar Docusign</span>',
           className: 'btn btn-info waves-effect waves-light me-2',
           action: function (e, dt, node, config) {
             window.location.href = '/add_firmar_docusign';
           }
         },
-        {
+        {//BOTON AGREGAR
           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Certificado</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
@@ -546,7 +546,6 @@ if (dt_user_table.length) {
           }
         }
       ],
-
 
       ///PAGINA RESPONSIVA
       responsive: {
@@ -583,87 +582,87 @@ if (dt_user_table.length) {
         }
       }
 
-
-    });//var DataTable
-
-    $(document).ready(function () {
-      $('#reporteForm').on('submit', function (e) {
-        e.preventDefault(); // Prevenir el envío tradicional del formulario
-        const exportUrl = $(this).attr('action'); // Obtener la URL del formulario
-        const formData = $(this).serialize(); // Serializa los datos del formulario
-
-        // Mostrar el SweetAlert de "Generando Reporte"
-        Swal.fire({
-          title: 'Generando Reporte...',
-          text: 'Por favor espera mientras se genera el reporte.',
-          icon: 'info',
-          didOpen: () => {
-            Swal.showLoading(); // Muestra el ícono de carga
-          },
-          customClass: {
-            confirmButton: false
-          }
-        });
-
-        // Realizar la solicitud GET para descargar el archivo
-        $.ajax({
-          url: exportUrl,
-          type: 'GET',
-          data: formData,
-          xhrFields: {
-            responseType: 'blob' // Necesario para manejar la descarga de archivos
-          },
-          success: function (response) {
-            const link = document.createElement('a');
-            const url = window.URL.createObjectURL(response);
-            link.href = url;
-            link.download = 'reporte_certificados_exportacion.xlsx';
-            link.click();
-            window.URL.revokeObjectURL(url);
-
-            $('#exportarExcelCertificados').modal('hide');
-            Swal.fire({
-              title: '¡Éxito!',
-              text: 'El reporte se generó exitosamente.',
-              icon: 'success',
-              customClass: {
-                confirmButton: 'btn btn-success'
-              }
-            });
-          },
-          error: function (xhr, status, error) {
-            console.error('Error al generar el reporte:', error);
-            $('#exportarExcelCertificados').modal('hide');
-            Swal.fire({
-              title: '¡Error!',
-              text: 'Ocurrió un error al generar el reporte.',
-              icon: 'error',
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          }
-        });
-      });
-    });
-
-    $(document).ready(function () {
-      $('#restablecerFiltros').on('click', function () {
-        $('#reporteForm')[0].reset();
-        $('.select2').val('').trigger('change');
-        console.log('Filtros restablecidos.');
-      });
-    });
-
+  });//var DataTable
 }// end-datatable
 
 
 
+///EXPORTAR EXCEL
+$(document).ready(function () {
+    $('#reporteForm').on('submit', function (e) {
+      e.preventDefault(); // Prevenir el envío tradicional del formulario
+      const exportUrl = $(this).attr('action'); // Obtener la URL del formulario
+      const formData = $(this).serialize(); // Serializa los datos del formulario
 
-  ///AGREGAR NUEVO REGISTRO
-  //const form = document.getElementById('FormAgregar');
-  //Validación del formulario por "name"
-  const fv = FormValidation.formValidation(FormAgregar, {
+      // Mostrar el SweetAlert de "Generando Reporte"
+      Swal.fire({
+        title: 'Generando Reporte...',
+        text: 'Por favor espera mientras se genera el reporte.',
+        icon: 'info',
+        didOpen: () => {
+          Swal.showLoading(); // Muestra el ícono de carga
+        },
+        customClass: {
+          confirmButton: false
+        }
+      });
+
+      // Realizar la solicitud GET para descargar el archivo
+      $.ajax({
+        url: exportUrl,
+        type: 'GET',
+        data: formData,
+        xhrFields: {
+          responseType: 'blob' // Necesario para manejar la descarga de archivos
+        },
+        success: function (response) {
+          const link = document.createElement('a');
+          const url = window.URL.createObjectURL(response);
+          link.href = url;
+          link.download = 'reporte_certificados_exportacion.xlsx';
+          link.click();
+          window.URL.revokeObjectURL(url);
+
+          $('#exportarExcelCertificados').modal('hide');
+          Swal.fire({
+            title: '¡Éxito!',
+            text: 'El reporte se generó exitosamente.',
+            icon: 'success',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error('Error al generar el reporte:', error);
+          $('#exportarExcelCertificados').modal('hide');
+          Swal.fire({
+            title: '¡Error!',
+            text: 'Ocurrió un error al generar el reporte.',
+            icon: 'error',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+  });
+
+$(document).ready(function () {
+  $('#restablecerFiltros').on('click', function () {
+    $('#reporteForm')[0].reset();
+    $('.select2').val('').trigger('change');
+    console.log('Filtros restablecidos.');
+  });
+});
+
+
+
+///AGREGAR NUEVO REGISTRO
+//const form = document.getElementById('FormAgregar');
+//Validación del formulario por "name"
+const fv = FormValidation.formValidation(FormAgregar, {
     fields: {
       id_dictamen: {
         validators: {
@@ -713,7 +712,7 @@ if (dt_user_table.length) {
       submitButton: new FormValidation.plugins.SubmitButton(),
       autoFocus: new FormValidation.plugins.AutoFocus()
     }
-  }).on('core.form.valid', function (e) {
+}).on('core.form.valid', function (e) {
 
     var formData = new FormData(FormAgregar);
     $.ajax({
@@ -753,12 +752,12 @@ if (dt_user_table.length) {
         });
       }
     });
-  });
+});
 
 
 
-  ///ELIMINAR REGISTRO
-  $(document).on('click', '.eliminar', function () {//clase del boton "eliminar"
+///ELIMINAR REGISTRO
+$(document).on('click', '.eliminar', function () {//clase del boton "eliminar"
     var id_certificado = $(this).data('id'); //ID de la clase
     var dtrModal = $('.dtr-bs-modal.show');
 
@@ -828,12 +827,12 @@ if (dt_user_table.length) {
         });
       }
     });
-  });
+});
 
 
 
-  ///EDITAR
-  $(document).ready(function () {
+///EDITAR
+$(document).ready(function () {
     // Función para cargar los datos
     $(document).on('click', '.editar', function () {//clase del boton "editar"
       var id_certificado = $(this).data('id');
@@ -932,7 +931,7 @@ if (dt_user_table.length) {
       });
     });
 
-  });
+});
 
 
 
@@ -1441,49 +1440,49 @@ if (dt_user_table.length) {
 
 
 
-  ///VER TRAZABILIDAD
-  $(document).on('click', '.trazabilidad', function () {
-    // Función para cargar los datos
-    var id_certificado = $(this).data('id');
-    $('.num_certificado').text($(this).data('folio'));
+///VER TRAZABILIDAD
+$(document).on('click', '.trazabilidad', function () {
+  // Función para cargar los datos
+  var id_certificado = $(this).data('id');
+  $('.num_certificado').text($(this).data('folio'));
 
-    var url = '/trazabilidad-certificados/' + id_certificado;//ruta de la informacion/controller trazabilidad
+  var url = '/trazabilidad-certificados/' + id_certificado;//ruta de la informacion/controller trazabilidad
 
-    // Hacer la solicitud AJAX para obtener los logs
-    $.get(url, function (data) {
-      if (data.success) {
-        console.log('datos:', data);
-        // Recibir los logs y mostrarlos en el modal
-        var logs = data.logs;
-        var contenedor = $('#ListTracking');
-        contenedor.empty(); // Limpiar el contenedor de logs
+  // Hacer la solicitud AJAX para obtener los logs
+  $.get(url, function (data) {
+    if (data.success) {
+      console.log('datos:', data);
+      // Recibir los logs y mostrarlos en el modal
+      var logs = data.logs;
+      var contenedor = $('#ListTracking');
+      contenedor.empty(); // Limpiar el contenedor de logs
 
-        // Iterar sobre los logs y agregarlos al contenedor
-        logs.forEach(function (log) {
-          contenedor.append(`
-                <li class="timeline-item timeline-item-transparent">
-                    <span class="timeline-point timeline-point-primary"></span>
-                    <div class="timeline-event">
-                        <div class="timeline-header mb-3">
-                        <h6 class="mb-0">${log.description}</h6>
-                        <small class="text-muted">${log.created_at}</small>
-                        </div>
-                        <p class="mb-2">  ${log.contenido}</p>
-                        <div class="d-flex align-items-center mb-1">
+      // Iterar sobre los logs y agregarlos al contenedor
+      logs.forEach(function (log) {
+        contenedor.append(`
+              <li class="timeline-item timeline-item-transparent">
+                  <span class="timeline-point timeline-point-primary"></span>
+                  <div class="timeline-event">
+                      <div class="timeline-header mb-3">
+                      <h6 class="mb-0">${log.description}</h6>
+                      <small class="text-muted">${log.created_at}</small>
+                      </div>
+                      <p class="mb-2">  ${log.contenido}</p>
+                      <div class="d-flex align-items-center mb-1">
 
-                        </div>
-                    </div>
-                    </li><hr>
-                `);
-        });
+                      </div>
+                  </div>
+                  </li><hr>
+              `);
+      });
 
-        // Mostrar el modal
-        $('#ModalTracking').modal('show');
-      }
-    }).fail(function (xhr) {
-      console.error(xhr.responseText);
-    });
+      // Mostrar el modal
+      $('#ModalTracking').modal('show');
+    }
+  }).fail(function (xhr) {
+    console.error(xhr.responseText);
   });
+});
 
 
 
