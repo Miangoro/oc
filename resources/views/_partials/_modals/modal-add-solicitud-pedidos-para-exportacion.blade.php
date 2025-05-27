@@ -361,6 +361,8 @@
         if (lotesEnvasado.length === 0) {
             contenidoLotes = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
         }
+        contenidoLotes =
+            '<option value="" disabled selected>Seleccione un lote envasado</option>' + contenidoLotes;
         $('.evasado_export').html(contenidoLotes);
 
         cargarMarcas();

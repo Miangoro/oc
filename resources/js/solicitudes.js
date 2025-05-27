@@ -1160,6 +1160,8 @@ $(function () {
                   modal.find('.aduana_salida').val(response.caracteristicas.aduana_salida);
                   modal.find('.no_pedido').val(response.caracteristicas.no_pedido);
                   modal.find('.instalacion_envasado_id').val(response.caracteristicas.id_instalacion_envasado);
+                  modal.find('#direccion_destinatario_ex_edit').val(response.caracteristicas.id_instalacion_envasado).trigger('change');
+
                   modal.find('.etiqueta_id').val(response.caracteristicas.id_etiqueta);
 
                   var lotesEnvasado = response.caracteristicas.detalles.map(function (detalle) {
@@ -3712,7 +3714,7 @@ $(function () {
 
     $(document).ready(function () {
     var $tipoSolicitudEdit = $('#tipo_solicitud_edit');
-    var $botonesCharacteristicsEdit = $('#botones_characteristics_edit');
+    var $botonesCharacteristicsEdit = $('#botones_characteristics_edit_1');
 
     // Mostrar/ocultar los botones al cambiar el tipo en el modal de editar
     $tipoSolicitudEdit.on('change', function () {
@@ -3846,6 +3848,69 @@ $(document).ready(function () {
 /* seccion de editar solicitudes exportacion */
 // ==================== EDITAR ====================
   let sectionCountEdit = 1;
+  $(document).ready(function () {
+
+  $('#add-characteristics_edit_1').click(function () {
+    let empresaSeleccionada = $('#id_empresa_solicitud_exportacion_edit').val();
+    if (!empresaSeleccionada) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Advertencia',
+        text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
+        customClass: { confirmButton: 'btn btn-warning' }
+      });
+      return;
+    }
+
+    var newSection = `
+      <div class="card mt-4" id="caracteristicas_Ex_edit_${sectionCountEdit}">
+        <div class="card-body">
+          <h5>Características del Producto</h5>
+          <div class="row caracteristicas-row">
+            <div class="col-md-8">
+              <div class="form-floating form-floating-outline mb-4">
+                <select name="lote_envasado_edit[${sectionCountEdit}]" class="select2 form-select evasado_export_edit" onchange="cargarDetallesLoteEnvasadoDinamicoEdit2(this, ${sectionCountEdit})">
+                  <option value="" disabled selected>Selecciona un lote envasado</option>
+                </select>
+                <label for="lote_envasado">Selecciona el lote envasado</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="text" disabled class="form-control" name="lote_granel_edit[${sectionCountEdit}]" id="lote_granel_edit_${sectionCountEdit}" placeholder="Lote a granel">
+                <label for="lote_granel">Lote a granel</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="number" class="form-control" id="cantidad_botellas_edit${sectionCountEdit}" name="cantidad_botellas_edit[${sectionCountEdit}]" placeholder="Cantidad de botellas">
+                <label for="cantidad_botellas">Cantidad de botellas</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="number" class="form-control" id="cantidad_cajas_edit${sectionCountEdit}" name="cantidad_cajas_edit[${sectionCountEdit}]" placeholder="Cantidad de cajas">
+                <label for="cantidad_cajas">Cantidad de cajas</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="text" class="form-control" id="presentacion_edit${sectionCountEdit}" name="presentacion_edit[${sectionCountEdit}]" placeholder="Ej. 750ml">
+                <label for="presentacion">Presentación</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    $('#sections-container2').append(newSection);
+     cargarLotesEdit2(empresaSeleccionada, sectionCountEdit);
+    initializeSelect2($('.select2'));
+    sectionCountEdit++;
+  });
+
+  });
+
 $(document).ready(function () {
   $('#add-characteristics_edit').click(function () {
     let empresaSeleccionada = $('#id_empresa_solicitud_exportacion_edit').val();
@@ -3901,7 +3966,7 @@ $(document).ready(function () {
       </div>
     `;
     $('#sections-container2').append(newSection);
-    cargarLotesEdit(empresaSeleccionada, sectionCountEdit);
+   /*  cargarLotesEdit(empresaSeleccionada, sectionCountEdit); */
     initializeSelect2($('.select2'));
     sectionCountEdit++;
   });
@@ -3909,7 +3974,7 @@ $(document).ready(function () {
 
 
   // Eliminar la última sección (editar)
-  $('#delete-characteristics_edit').click(function () {
+  $('#delete-characteristics_edit_1').click(function () {
     var totalSections = $('#sections-container2 .card').length;
     var lastSection = $('#sections-container2 .card').last();
     if (totalSections > 1) {
@@ -3926,7 +3991,7 @@ $(document).ready(function () {
   });
 });
 
-  function cargarLotesEdit(empresaSeleccionada, sectionCountEdit) {
+  function cargarLotesEdit2(empresaSeleccionada, sectionCountEdit) {
     $.ajax({
       url: '/getDatos/' + empresaSeleccionada,
       method: 'GET',
@@ -3944,12 +4009,7 @@ $(document).ready(function () {
         if (response.lotes_envasado.length == 0) {
           contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
         }
-        $(`#caracteristicas_Ex_edit_${sectionCount} .evasado_export_edit`).html(contenidoLotesEnvasado);
-      // Aquí selecciona el valor y dispara el change SOLO después de llenar las opciones
-      if (idLoteSeleccionado) {
-        $select.val(idLoteSeleccionado).trigger('change');
-      }
-      /*  */
+ $(`#caracteristicas_Ex_edit_${sectionCountEdit} .evasado_export_edit`).html(contenidoLotesEnvasado);
       },
       error: function () {
         Swal.fire({

@@ -17,6 +17,7 @@ use App\Models\solicitudesModel;
 use App\Models\clases;
 use App\Models\solicitudTipo;
 use App\Models\Documentacion_url;
+use App\Models\Documentos;
 use App\Models\User;
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -379,7 +380,11 @@ class solicitudesController extends Controller
                 'message' => 'Solicitud no encontrada.',
             ], 404);
         }
+        // Obtener solo la factura proforma
+        $facturaProforma = $solicitud->documentacion(55)->first();
 
+        // Obtener todos los documentos
+        $documentos = $solicitud->documentacion_completa;
         // Obtener instalaciones relacionadas con la empresa de la solicitud
         $instalaciones = Instalaciones::where('id_empresa', $solicitud->id_empresa)->get();
 
@@ -418,6 +423,8 @@ class solicitudesController extends Controller
             'data' => $solicitud,
             'caracteristicas' => $caracteristicas,
             'instalaciones' => $instalaciones,
+            'factura_proforma' => $facturaProforma,
+            'documentos' => $documentos,
         ]);
     }
 
