@@ -132,7 +132,7 @@ class hologramasActivar extends Controller
                     '<a target="_blank" href="/holograma/' . $numero_cliente . '-' .$dato->solicitudHolograma->tipo. $folioMarca.str_pad($folios['folio_inicial'][$i], 6, '0', STR_PAD_LEFT) . '">' .
                     $numero_cliente . '-'  .$dato->solicitudHolograma->tipo. $folioMarca. str_pad($folios['folio_inicial'][$i], 6, '0', STR_PAD_LEFT) .
                     '</a> a ' .
-                    '<a target="_blank" href="/holograma/' . $numero_cliente .$dato->solicitudHolograma->tipo. $folioMarca. '-' . str_pad($folios['folio_final'][$i], 6, '0', STR_PAD_LEFT) . '">' .
+                    '<a target="_blank" href="/holograma/' . $numero_cliente . '-' .$dato->solicitudHolograma->tipo. $folioMarca. str_pad($folios['folio_final'][$i], 6, '0', STR_PAD_LEFT) . '">' .
                     $numero_cliente . '-' .$dato->solicitudHolograma->tipo. $folioMarca. str_pad($folios['folio_final'][$i], 6, '0', STR_PAD_LEFT) .
                     '</a>';
 
@@ -191,7 +191,7 @@ class hologramasActivar extends Controller
     public function getDatosInpeccion($id_inspeccion)
     {
 
-        $datos = inspecciones::with('solicitud.lote_envasado.lotesGranel')->find($id_inspeccion);
+        $datos = inspecciones::with('solicitud.lote_envasado.lotesGranel.certificadoGranel')->find($id_inspeccion);
 
         $numeroCliente = $datos->solicitud->empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
             return !empty($numero);
@@ -253,6 +253,8 @@ class hologramasActivar extends Controller
         $loteEnvasado->folio_activacion = $request->folio_activacion;
         $loteEnvasado->id_inspeccion = $request->id_inspeccion;
         $loteEnvasado->no_lote_agranel = $request->no_lote_agranel;
+        $loteEnvasado->certificado_granel = $request->certificado_granel;
+        $loteEnvasado->edad = $request->edad;
         $loteEnvasado->categoria = $request->categoria;
         $loteEnvasado->no_analisis = $request->no_analisis;
         $loteEnvasado->cont_neto = $request->cont_neto;
@@ -307,6 +309,8 @@ class hologramasActivar extends Controller
             $loteEnvasado->id_solicitud = $request->edit_id_solicitudActivacion;
             $loteEnvasado->id_inspeccion = $request->edit_id_inspeccion;
             $loteEnvasado->no_lote_agranel = $request->edit_no_lote_agranel;
+            $loteEnvasado->certificado_granel = $request->edit_certificado_granel;
+            $loteEnvasado->edad = $request->edit_edad;
             $loteEnvasado->categoria = $request->edit_categoria;
             $loteEnvasado->no_analisis = $request->edit_no_analisis;
             $loteEnvasado->cont_neto = $request->edit_cont_neto;

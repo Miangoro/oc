@@ -30,7 +30,7 @@ class lotesGranelController extends Controller
         $tipos = tipos::all(); // Obtén todos los tipos de agave
         $organismos = organismos::all(); // Obtén todos los organismos, aquí usa 'organismos' en minúscula
         $guias = Guias::all(); // Obtén todas las guías
-        $lotes = LotesGranel::with('empresa', 'categoria', 'clase', 'tipos', 'organismo', 'guias')->get();
+        $lotes = LotesGranel::with('empresa', 'categoria', 'clase', 'tipos', 'organismo', 'guias','certificadoGranel')->get();
         $documentos = Documentacion::where('id_documento', '=', '58')->get();
         return view('catalogo.lotes_granel', compact('lotes', 'empresas', 'categorias', 'clases', 'tipos', 'organismos', 'guias', 'documentos'));
     }
@@ -70,7 +70,7 @@ class lotesGranelController extends Controller
             $start = $request->input('start');
             $order = $columns[$request->input('order.0.column')];
             $dir = $request->input('order.0.dir');
-          $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'tipos', 'Organismo'])
+          $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'tipos', 'Organismo','certificadoGranel','fqs'])
               ->when($empresaId, function ($query) use ($empresaId) {
                   $query->where('id_empresa', $empresaId);
               })
@@ -192,6 +192,22 @@ class lotesGranelController extends Controller
                     $nestedData['fecha_emision'] = Helpers::formatearFecha($lote->fecha_emision) ?? 'N/A';
                     $nestedData['fecha_vigencia'] = Helpers::formatearFecha($lote->fecha_vigencia) ?? 'N/A';
                     $nestedData['estatus'] = $lote->estatus;
+                    $nestedData['folio_certificado_oc'] = $lote->certificadoGranel->num_certificado ?? 'N/A';
+                    $folios = explode(',', $lote->folio_fq); // Divide los folios en un array
+
+                    $nestedData['folio_fq_completo'] = $folios[0] ?? 'N/A';
+                    $nestedData['folio_fq_ajuste'] = $folios[1] ?? 'N/A';
+
+                    $nestedData['url_fq_completo'] = !empty($lote->fqs[0]->url)
+                        ? '/files/' . $numeroCliente . '/fqs/' . $lote->fqs[0]->url
+                        : '';
+
+                    $nestedData['url_fq_ajuste'] = !empty($lote->fqs[1]->url)
+                        ? '/files/' . $numeroCliente . '/fqs/' . $lote->fqs[1]->url
+                        : '';
+
+
+
                     // Procesar lote_original_id para mostrar los nombres de los lotes de procedencia
                     if ($lote->lote_original_id) {
                       $lotesOriginales = json_decode($lote->lote_original_id, true);
@@ -466,7 +482,7 @@ class lotesGranelController extends Controller
                 // Generar un nombre único para el archivo
                 $uniqueId = uniqid(); // Genera un identificador único
                 $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); // Aquí se guarda en la ruta definida storage/public
+                $filePath = $file->storeAs('uploads/' . $numeroCliente.'/fqs', $filename, 'public'); // Aquí se guarda en la ruta definida storage/public
 
                 $documentacion_url = new Documentacion_url();
                 $documentacion_url->id_relacion = $lote->id_lote_granel;
@@ -513,7 +529,13 @@ class lotesGranelController extends Controller
             }
 
             // Obtener los documentos asociados
-            $documentos = Documentacion_url::where('id_relacion', $id_lote_granel)->where('id_documento',59)->get();
+            $documentos = Documentacion_url::where('id_relacion', $id_lote_granel)
+    ->where(function ($query) {
+        $query->where('id_documento', 58)
+              ->orWhere('id_documento', 134);
+    })
+    ->get();
+
 
             // Extraer la URL de los documentos
             $documentosConUrl = $documentos->map(function ($documento) {
@@ -713,7 +735,7 @@ class lotesGranelController extends Controller
           // Eliminar archivos antiguos
           $documentacionUrls = Documentacion_url::where('id_relacion', $id_lote_granel)->get();
           foreach ($documentacionUrls as $documentacionUrl) {
-              $filePath = 'uploads/' . $numeroCliente . '/' . $documentacionUrl->url;
+              $filePath = 'uploads/' . $numeroCliente .'/fqs/' . $documentacionUrl->url;
               if (Storage::disk('public')->exists($filePath)) {
                   Storage::disk('public')->delete($filePath);
               }
@@ -737,7 +759,7 @@ class lotesGranelController extends Controller
 
                   // Intentar guardar el archivo
                   try {
-                      $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+                      $filePath = $file->storeAs('uploads/' . $numeroCliente.'/fqs', $filename, 'public');
                       Log::info('Archivo guardado:', ['path' => $filePath, 'filename' => $filename]);
                   } catch (\Exception $e) {
                       Log::error('Error al guardar el archivo:', ['error' => $e->getMessage()]);

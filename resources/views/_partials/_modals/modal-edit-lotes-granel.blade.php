@@ -222,32 +222,32 @@
                                     </tr>
 
                                     <!-- Segundo bloque para Ajuste de grado -->
-                                    <tr id="documento-row-{{ $documento->id_documento }}-2">
+                                    <tr id="documento-row-134-2">
                                         <td>
                                             <span>Ajuste de grado</span>
                                             <input hidden readonly value="Ajuste de grado" type="text"
                                                 class="form-control form-control-sm"
-                                                id="tipo_analisis_{{ $documento->id_documento }}-2"
+                                                id="tipo_analisis_134}-2"
                                                 name="tipo_analisis[]">
                                         </td>
                                         <td>
                                             <input type="text" class="form-control form-control-sm"
-                                                id="folio_fq_ajuste_{{ $documento->id_documento }}"
+                                                id="folio_fq_ajuste_134"
                                                 name="folio_fq_ajuste"
                                                 value="{{ $documento->folio_fq_ajuste ?? '' }}">
                                         </td>
                                         <td>
                                             <input class="form-control form-control-sm" type="file"
-                                                id="file_ajuste_{{ $documento->id_documento }}" name="url[]">
-                                            <input value="{{ $documento->id_documento }}" class="form-control"
+                                                id="file_ajuste_134" name="url[]">
+                                            <input value="134" class="form-control"
                                                 type="hidden" name="id_documento[]">
-                                            <input value="{{ $documento->nombre }}" class="form-control"
+                                            <input value="134" class="form-control"
                                                 type="hidden" name="nombre_documento[]" >
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="3"
-                                            id="archivo_url_display_ajuste_{{ $documento->id_documento }}">
+                                            id="archivo_url_display_ajuste_134">
                                             <!-- La URL del documento de ajuste se mostrará aquí -->
                                         </td>
                                     </tr>

@@ -206,6 +206,7 @@ $solicitudQuery = solicitudesModel::with([
     'lote_envasado.lotes_envasado_granel.lotes_granel.categoria',
     'lote_envasado.marca',
     'lote_envasado.dictamenEnvasado',
+    'lote_envasado.lotes_envasado_granel.lotes_granel.certificadoGranel'
 
 ]);
 
@@ -217,6 +218,7 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
     $solicitud->load([
         'lote_granel.categoria',
         'lote_granel.clase',
+        'lote_granel.certificadoGranel',
 
     ]);
 }

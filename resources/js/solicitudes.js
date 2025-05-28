@@ -4335,7 +4335,11 @@ $(document).ready(function () {
 
           $('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
           $('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
-          $('.certificadoGranel').text(response?.data?.lote_granel?.certificadoGranel?.num_certificado || 'No disponible');
+          $('.certificadoGranel').text(response?.data?.lote_granel?.certificado_granel?.num_certificado || 
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.certificado_granel?.num_certificado ||
+            'No disponible');
+
+          
 
           $('.tipos').text(response?.tipos_agave || 'No disponible');
 

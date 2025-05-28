@@ -96,7 +96,36 @@ $(function () {
         }
 
       },
-      { data: 'folio_fq' },
+     
+     {
+    data: 'folio_fq',
+    render: function(data, type, row) {
+        // Separar los folios
+        const folios = data ? data.split(',') : [];
+        const folioCompleto = folios[0] ?? '';
+        const folioAjuste = folios[1] ?? '';
+
+        let html = '';
+
+        // Análisis completo
+        if (row.url_fq_completo && folioCompleto) {
+            html += `<div><strong>Completo:</strong> <a class="cursor-pointer pdf text-primary" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${row.url_fq_completo}">${folioCompleto}</a></div>`;
+        } else if (folioCompleto) {
+            html += `<div><strong>Completo:</strong> ${folioCompleto}</div>`;
+        }
+
+        // Ajuste de grado
+        if (row.url_fq_ajuste && folioAjuste) {
+            html += `<div><strong>Ajuste:</strong> <a class="cursor-pointer pdf text-primary" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${row.url_fq_ajuste}">${folioAjuste}</a></div>`;
+        } else if (folioAjuste) {
+            html += `<div><strong>Ajuste:</strong> ${folioAjuste}</div>`;
+        }
+
+        return html || 'N/A';
+    }
+},
+
+
       { data: 'cont_alc' },
       {
         data: 'volumen_restante',
@@ -392,6 +421,28 @@ $(function () {
     $('#loading-spinner1').hide(); // Ocultar el spinner
     $(this).show(); // Mostrar el iframe con el PDF
   });
+
+    // Reciben los datos del PDF
+$(document).on('click', '.pdf', function ()  {
+  var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
+  var pdfUrl = $(this).data('url');//Ruta del PDF
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+  
+    spinner.show();
+    iframe.hide();
+    
+    iframe.attr('src', pdfUrl);
+    $("#NewPestana").attr('href', pdfUrl).show();
+
+    $("#titulo_modal").text("Análisis fisicoquímico");
+   // $("#subtitulo_modal").text("PDF del Dictamen");
+
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
 
   // Delete Record
   $(document).on('click', '.delete-record', function () {
@@ -941,7 +992,7 @@ $(function () {
 
             var fqs = data.lote.folio_fq.split(',');
             $('#folio_fq_completo_58').val(fqs[0]);
-            $('#folio_fq_ajuste_58').val(fqs[1]);
+            $('#folio_fq_ajuste_134').val(fqs[1]);
 
             // Cargar las opciones estáticas (de $tipos)
             $.each(tipos, function (index, tipo) {
@@ -993,70 +1044,69 @@ $(function () {
               $('#edit_oc_cidam_fields').addClass('d-none');
               $('#edit_otro_organismo_fields').addClass('d-none');
             }
+            
+ var documentos = data.documentos;
 
-        // Actualizar la tabla de documentos
-        var documentos = data.documentos;
-        if (documentos && documentos.length > 0) {
-          var documentoCompletoUrlAsignado = false; // Variable para controlar la asignación del documento completo
-          var documentoAjusteUrlAsignado = false;   // Variable para controlar la asignación del documento de ajuste
-          var ultimoDocumentoCompletoId = null;     // Variable para almacenar el último ID de documento completo
-          var ultimoDocumentoAjusteId = null;       // Variable para almacenar el último ID de documento de ajuste
-  // Limpiar previamente los mensajes y valores en el modal antes de asignar nuevos documentos
-        documentos.forEach(function (documento) {
-          $('#archivo_url_display_completo_' + documento.id_documento).html(''); // Limpiar mensaje de "No hay archivo disponible"
-          $('#archivo_url_display_ajuste_' + documento.id_documento).html(''); // Limpiar mensaje de "No hay archivo disponible"
-          $('#folio_fq_completo_' + documento.id_documento).val(''); // Limpiar campo de folio completo
-          $('#folio_fq_ajuste_' + documento.id_documento).val(''); // Limpiar campo de folio ajuste
-        });
+if (Array.isArray(fqs)) {
+    // Asignar siempre los valores de los folios, aunque no haya documentos
+    if (fqs[0]) {
+        $('input[id^="folio_fq_completo_"]').val(fqs[0].split(',')[0]);
+    }
 
-        documentos.forEach(function (documento) {
-          var archivoUrlDisplayCompleto = $('#archivo_url_display_completo_' + documento.id_documento);
-          var archivoUrlDisplayAjuste = $('#archivo_url_display_ajuste_' + documento.id_documento);
-          var folioFqCompletoInput = $('#folio_fq_completo_' + documento.id_documento);
-          var folioFqAjusteInput = $('#folio_fq_ajuste_' + documento.id_documento);
+    if (fqs[1]) {
+        $('input[id^="folio_fq_ajuste_"]').val(fqs[1].split(',')[0]);
+    }
+}
 
-          var nombreExtraido = documento.nombre.split('-').pop().trim();
+if (documentos && documentos.length > 0) {
+    var documentoCompletoUrlAsignado = false;
+    var documentoAjusteUrlAsignado = false;
 
-          
-        
+    // Limpiar previamente los mensajes en el modal (ya no limpiamos inputs)
+    $('td[id^="archivo_url_display_completo_"]').html('');
+    $('td[id^="archivo_url_display_ajuste_"]').html('');
 
-          // Mostrar el documento completo
-          if (documento.tipo.includes('Análisis completo') && documento.url && !documentoCompletoUrlAsignado) {
-            var fileNameCompleto = documento.url.split('/').pop();
-            archivoUrlDisplayCompleto.html('Documento completo disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameCompleto + '</a>');
-            folioFqCompletoInput.val(fqs);
-            documentoCompletoUrlAsignado = true; // Marcar como asignado
-            ultimoDocumentoCompletoId = documento.id_documento; // Guardar el ID
-          }
+    documentos.forEach(function (documento) {
+        var id = documento.id_documento;
 
-          // Mostrar el documento de ajuste
-          if (documento.tipo.includes('Ajuste de grado') && documento.url && !documentoAjusteUrlAsignado) {
-            var fileNameAjuste = documento.url.split('/').pop();
-            archivoUrlDisplayAjuste.html('Documento ajuste disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameAjuste + '</a>');
-            folioFqAjusteInput.val(fqs);
-            documentoAjusteUrlAsignado = true; // Marcar como asignado
-            ultimoDocumentoAjusteId = documento.id_documento; // Guardar el ID
-          }
-        });
+        var archivoUrlDisplayCompleto = $('#archivo_url_display_completo_' + id);
+        var archivoUrlDisplayAjuste = $('#archivo_url_display_ajuste_' + id);
 
-        // Si no se asignó un documento completo, mostrar un mensaje
-        if (!documentoCompletoUrlAsignado && ultimoDocumentoCompletoId !== null) {
-          console.log('Mostrando mensaje de "No hay archivo completo disponible" para el ID: ', ultimoDocumentoCompletoId);
-          $('#archivo_url_display_completo_' + ultimoDocumentoCompletoId).html('No hay archivo completo disponible.');
+        // Validar que documento.url y documento.tipo existan
+        if (!documento.url || !documento.tipo) return;
+
+        var fileName = documento.url.split('/').pop();
+
+        // Documento completo
+        if (documento.tipo.includes('Análisis completo') && !documentoCompletoUrlAsignado) {
+            archivoUrlDisplayCompleto.html(
+                'Documento completo disponible: <a href="../files/' + data.numeroCliente + '/fqs/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'
+            );
+            documentoCompletoUrlAsignado = true;
         }
 
-        // Si no se asignó un documento de ajuste, mostrar un mensaje
-        if (!documentoAjusteUrlAsignado && ultimoDocumentoAjusteId !== null) {
-          console.log('Mostrando mensaje de "No hay archivo de ajuste disponible" para el ID: ', ultimoDocumentoAjusteId);
-          $('#archivo_url_display_ajuste_' + ultimoDocumentoAjusteId).html('No hay archivo de ajuste disponible.');
-          $('input[id^="folio_fq_completo_"]').val(''); // Limpiar todos los inputs de folio completo
-          $('input[id^="folio_fq_ajuste_"]').val('');   // Limpiar todos los inputs de folio ajuste
+        // Documento de ajuste
+        if (documento.tipo.includes('Ajuste de grado') && !documentoAjusteUrlAsignado) {
+            archivoUrlDisplayAjuste.html(
+                'Documento ajuste disponible: <a href="../files/' + data.numeroCliente + '/fqs/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'
+            );
+            documentoAjusteUrlAsignado = true;
         }
+    });
 
-      } else {
-        console.log('No hay documentos disponibles.');
-        $('td[id^="archivo_url_display_"]').html('No hay documentos disponibles.');
-      }
+    // Mostrar mensajes si no se asignó alguno
+    if (!documentoCompletoUrlAsignado) {
+        $('td[id^="archivo_url_display_completo_"]').html('No hay archivo completo disponible.');
+    }
+    if (!documentoAjusteUrlAsignado) {
+        $('td[id^="archivo_url_display_ajuste_"]').html('No hay archivo de ajuste disponible.');
+    }
+
+} else {
+    console.log('No hay documentos disponibles.');
+    $('td[id^="archivo_url_display_"]').html('No hay documentos disponibles.');
+}
+
 
             // Mostrar el modal
             $('#offcanvasEditLote').modal('show');

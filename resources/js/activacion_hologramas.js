@@ -33,7 +33,7 @@ $(function () {
         { 
           data: 'folios', 
           render: function (data, type, row) {
-            return '<span style="font-size:10px">' + data + '</span>';
+            return '<span style="font-size:12px">' + data + '</span>';
           }
         },
         { data: 'action' }
@@ -1081,6 +1081,13 @@ $('#addHologramas').on('hidden.bs.modal', function () {
           }
         }
       },
+      certificado_granel: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el número de certificado granel'
+          }
+        }
+      },
       categoria: {
         validators: {
           notEmpty: {
@@ -1434,6 +1441,8 @@ $('#addHologramas').on('hidden.bs.modal', function () {
       $('#edit_id_tipo').val(data.id_tipo).trigger('change');
       $('#edit_lugar_produccion').val(data.lugar_produccion);
       $('#edit_lugar_envasado').val(data.lugar_envasado);
+      $('#edit_certificado_granel').val(data.certificado_granel);
+      $('#edit_edad').val(data.edad);
       $('#edit_contenidoRango').empty();
       data.folio_inicial.forEach(function (folioInicial, index) {
         var folioFinal = data.folio_final[index];
