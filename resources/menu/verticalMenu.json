@@ -160,11 +160,16 @@
           "slug": "certificados-granel",
           "can" : "Visualizar certificado de granel"
         },
-
         {
           "url": "certificados/exportacion",
           "name": "Exportación",
           "slug": "certificados-exportacion",
+          "can" : "Visualizar certificado de instalaciones"
+        },
+        {
+          "url": "certificados/venta_nacional",
+          "name": "Venta Nacional",
+          "slug": "certificados-nacional",
           "can" : "Visualizar certificado de instalaciones"
         }
       ]

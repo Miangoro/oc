@@ -208,6 +208,7 @@ use App\Http\Controllers\Bitacoras\BitacoraProductoTerminadoController;
 use App\Http\Controllers\Bitacoras\BitacoraHologramasController;
 use App\Http\Controllers\catalogo\EtiquetasController;
 use App\Http\Controllers\certificados\Certificado_ExportacionController;
+use App\Http\Controllers\certificados\Certificado_NacionalController;
 use App\Http\Controllers\insertar_datos_bd_certificados;
 use App\Http\Controllers\insertar_datos_bd_dictamenes;
 use App\Http\Controllers\Tramite_impi\impiController;
@@ -1035,6 +1036,16 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::get('/certificados/exportar', 'exportar')->name('certificados.exportar');
 });
 
+//-------------------CERTIFICADO VENTA NACIONAL-------------------
+Route::middleware(['auth'])->controller(Certificado_NacionalController::class)->group(function () {
+    Route::get('certificados/venta_nacional', 'UserManagement')->name('certificados-nacional');
+    Route::resource('CerVentaNacional-list', Certificado_NacionalController::class);
+    Route::post('crear', 'store')->name('registrar-cer-nac');
+    Route::delete('eliminar/{id_certificado}',  'destroy')->name('eliminar-cer-nac');
+    Route::get('editar/{id_certificado}/edit', 'edit')->name('obtener-cer-na');
+    Route::put('actualizar/{id_certificado}', 'update')->name('actualizar-cer-na');
+    Route::get('/certificado_venta_nacional/{id}', 'certificado')->name('PDF-cer-na');
+});
 
 //-------------------TRAMITE IMPI-------------------
 Route::middleware(['auth'])->controller(impiController::class)->group(function () {
