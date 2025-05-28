@@ -268,7 +268,7 @@ class lotesGranelController extends Controller
                 'recordsTotal' => 0,
                 'recordsFiltered' => 0,
                 'data' => [],
-                'error' => 'Error al procesar la solicitud.'
+                'error' => 'Error al procesar la solicitud.'.$e
             ]);
         }
     }
