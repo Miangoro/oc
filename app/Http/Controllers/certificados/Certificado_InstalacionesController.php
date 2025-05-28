@@ -272,7 +272,7 @@ public function index(Request $request)
 
                 //Certificado Firmado
                 $documentacion = Documentacion_url::where('id_relacion', $certificado?->dictamen?->inspeccione?->solicitud?->id_instalacion)
-                    ->where('id_documento', 59) ->first();
+                    ->where('id_documento', 59)->where('id_doc', $certificado->id_certificado) ->first();
                 $nestedData['pdf_firmado'] = $documentacion?->url
                     ? asset("storage/certificados_instalaciones_pdf/{$documentacion->url}") : null;
 
@@ -961,6 +961,7 @@ public function index(Request $request)
         // Buscar si ya existe un registro para ese lote y tipo de documento
         $documentacion_url = Documentacion_url::where('id_relacion', $id_instalacion)
             ->where('id_documento', 59)
+            ->where('id_doc', $certificado->id_certificado)
             ->first();
 
         if ($documentacion_url) {
@@ -975,6 +976,7 @@ public function index(Request $request)
             [
                 'id_relacion' => $id_instalacion,
                 'id_documento' => 59,
+                'id_doc' => $certificado->id_certificado,
             ],
             [
                 'nombre_documento' => "Certificado instalaciones",
@@ -1005,6 +1007,7 @@ public function index(Request $request)
         // Buscar documento asociado a instalacion
         $documentacion = Documentacion_url::where('id_relacion', $id_instalacion)
             ->where('id_documento', 59)
+            ->where('id_doc', $certificado->id_certificado)
             ->first();
 
         if ($documentacion) {

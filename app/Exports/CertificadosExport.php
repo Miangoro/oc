@@ -51,7 +51,7 @@ class CertificadosExport implements FromCollection, WithHeadings, WithEvents, Wi
         }
 
         // Ordenar por empresa
-        return $query->orderBy('empresa.razon_social', 'asc')->get();
+        return $query->orderBy('certificados_exportacion.fecha_emision', 'asc')->get();
     }
 
     public function headings(): array
@@ -85,13 +85,14 @@ $caracteristicas = $certificado->dictamen?->inspeccione?->solicitud?->caracteris
 
 $estado= $certificado->estatus; // <-- Muestra el valor original
     return [
-        match ((int) $estado) {
+        /*match ((int) $estado) {
             0 => 'Emitido',
             1 => 'Cancelado',
             2 => 'Reexpedido',
             default => 'No encontrado',
-        },
-        Carbon::parse($certificado->fecha_expedicion)->translatedFormat('d \d\e F \d\e Y'),
+        },*/
+        $certificado->estatus,
+        Carbon::parse($certificado->fecha_emision)->translatedFormat('d \d\e F \d\e Y'),
         $certificado->num_certificado ?? 'No encontrado',
         $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         $lotes_envasados,
