@@ -58,7 +58,7 @@
                         <tbody>
                             <tr>
                                 <td class="td"><b>CERTIFICADO DE LOTE A GRANEL</b></td>
-                                <td class="td">Pendiente</td>
+                                <td class="td">{{ $datosHolograma->certificado_granel }}</td>
                             </tr>
                             
                             <tr>
@@ -78,7 +78,7 @@
                             </tr>
                             <tr>
                                 <td class="td"><b>Edad</b></td>
-                                <td class="td">Pendiente</td>
+                                <td class="td">{{ $datosHolograma->edad }}</td>
                             </tr>
                             <tr>
                                 <td class="td"><b>MARCA</b></td>
