@@ -192,8 +192,19 @@ class lotesGranelController extends Controller
                     $nestedData['fecha_emision'] = Helpers::formatearFecha($lote->fecha_emision) ?? 'N/A';
                     $nestedData['fecha_vigencia'] = Helpers::formatearFecha($lote->fecha_vigencia) ?? 'N/A';
                     $nestedData['estatus'] = $lote->estatus;
-                    $nestedData['folio_certificado_oc'] = $lote->certificadoGranel->num_certificado ?? 'N/A';
+                    //$nestedData['folio_certificado_oc'] = $lote->certificadoGranel->num_certificado ?? 'N/A';
                     $folios = explode(',', $lote->folio_fq); // Divide los folios en un array
+
+                    $nestedData['folio_fq_completo'] = $folios[0] ?? 'N/A';
+                    $nestedData['folio_fq_ajuste'] = $folios[1] ?? 'N/A';
+
+                    $nestedData['url_fq_completo'] = !empty($lote->fqs[0]->url)
+                        ? '/files/' . $numeroCliente . '/fqs/' . $lote->fqs[0]->url
+                        : '';
+
+                    $nestedData['url_fq_ajuste'] = !empty($lote->fqs[1]->url)
+                        ? '/files/' . $numeroCliente . '/fqs/' . $lote->fqs[1]->url
+                        : '';
 
 
 
@@ -257,7 +268,7 @@ class lotesGranelController extends Controller
                 'recordsTotal' => 0,
                 'recordsFiltered' => 0,
                 'data' => [],
-                'error' => 'Error al procesar la solicitud111111.'
+                'error' => 'Error al procesar la solicitud.'
             ]);
         }
     }
