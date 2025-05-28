@@ -104,7 +104,7 @@
 
 
     <!-- DataTable with Buttons -->
-    <form id="formulario" method="POST">
+    <form id="formularioConsejo" method="POST">
         @csrf
         <input type="hidden" id="id_revision" name="id_revision" value="{{ $datos->id_revision }}">
         <div class="row">

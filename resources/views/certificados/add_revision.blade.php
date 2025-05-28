@@ -13,7 +13,7 @@
 @endsection
 <!-- Page Scripts -->
 @section('page-script')
-    @vite(['resources/js/revision_certificado.js'])
+    @vite(['resources/js/certificados_personal.js'])
 @endsection
 
 @php

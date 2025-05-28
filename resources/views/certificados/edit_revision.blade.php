@@ -13,7 +13,7 @@
 @endsection
 <!-- Page Scripts -->
 @section('page-script')
-    @vite(['resources/js/revision_certificado.js'])
+    @vite(['resources/js/certificados_personal.js'])
 @endsection
 
 @php
@@ -104,7 +104,7 @@
 
 
     <!-- DataTable with Buttons -->
-    <form id="formularioEditar" action="/editar_revision" method="POST">
+    <form id="formularioEditar"  method="POST">
         @csrf
         <input type="hidden" id="id_revision" name="id_revision" value="{{ $datos->id_revision }}">
         <input type="hidden" name="numero_revision" value="{{ $datos->numero_revision }}">

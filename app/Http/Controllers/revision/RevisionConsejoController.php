@@ -196,7 +196,7 @@ class RevisionConsejoController extends Controller
 
 
 
-    public function obtenerRespuestas($id_revision)
+    public function obtenerRespuestasConsejo($id_revision)
     {
         try {
             $revisor = Revisor::where('id_revision', $id_revision)->first();
@@ -226,7 +226,7 @@ class RevisionConsejoController extends Controller
         }
     }
 
-    public function getCertificadoUrl($id_revision, $tipo)
+    public function getCertificadoUrlConsejo($id_revision, $tipo)
     {
         $revisor = Revisor::with('certificado')->where('id_revision', $id_revision)->first();
 
@@ -281,7 +281,7 @@ class RevisionConsejoController extends Controller
         ];
     }
 
-    public function registrarAprobacion(Request $request)
+    public function registrarAprobacionConsejo(Request $request)
     {
         $request->validate([
             'id_revisor' => 'required|exists:certificados_revision,id_revision',
@@ -309,7 +309,7 @@ class RevisionConsejoController extends Controller
         }
     }
 
-    public function cargarAprobacion($id)
+    public function cargarAprobacionConsejo($id)
     {
         try {
             $revisor = Revisor::findOrFail($id);
@@ -326,7 +326,7 @@ class RevisionConsejoController extends Controller
 
 
 
-    public function editarRespuestas(Request $request)
+    public function editarRespuestasConsejo(Request $request)
     {
         try {
             $request->validate([
@@ -430,7 +430,7 @@ class RevisionConsejoController extends Controller
         }
         return view('certificados.add_revision_consejo', compact('datos', 'preguntas', 'url', 'tipo'));
     }
-    public function registrar_revision(Request $request)
+    public function registrar_revision_consejo(Request $request)
     {
         try {
             $request->validate([
@@ -552,7 +552,7 @@ class RevisionConsejoController extends Controller
         return view('certificados.edit_revision_consejo', compact('datos', 'preguntas', 'url', 'tipo', 'respuestas_map'));
     }
 
-    public function editar_revision(Request $request)
+    public function editar_revision_consejo(Request $request)
 {
     try {
         $request->validate([
@@ -623,7 +623,7 @@ class RevisionConsejoController extends Controller
 
 
 
-    public function pdf_bitacora_revision_personal($id)
+    public function pdf_bitacora_revision_consejo($id)
     {
 
         $revisor = Revisor::findOrFail($id);
@@ -729,7 +729,7 @@ class RevisionConsejoController extends Controller
         return $pdf->stream('Bitácora de revisión documental.pdf');
     }
 
-    public function cargarHistorial($id_revision)
+    public function cargarHistorialConsejo($id_revision)
     {
         try {
             $revisores = Revisor::where('id_revision', $id_revision)->get();

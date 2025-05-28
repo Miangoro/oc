@@ -180,8 +180,8 @@
     </div>
 </div>
 
-{{-- @include('_partials/_modals/modal-cuest-certificados-personal') --}}
+{{-- @include('_partials/_modals/modal-cuest-certificados-consejo') --}}
 @include('_partials/_modals/modal-pdfs-frames')
-{{-- @include('_partials/_modals/modal-aprobacion-revision-personal')
-@include('_partials/_modals/modal-historial') --}}
+@include('_partials/_modals/modal_aprobacion_revision_consejo')
+@include('_partials/_modals/modal_historial_consejo')
 @endsection
