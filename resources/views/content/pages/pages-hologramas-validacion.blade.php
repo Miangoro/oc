@@ -76,10 +76,12 @@
                                 <td class="td"><b>CLASE</b></td>
                                 <td class="td">{{ $datosHolograma->clases->clase }}</td>
                             </tr>
-                            <tr>
-                                <td class="td"><b>Edad</b></td>
-                                <td class="td">{{ $datosHolograma->edad }}</td>
-                            </tr>
+                            @if($datosHolograma->edad)
+                                <tr>
+                                    <td class="td"><b>Edad</b></td>
+                                    <td class="td">{{ $datosHolograma->edad }}</td>
+                                </tr>
+                            @endif
                             <tr>
                                 <td class="td"><b>MARCA</b></td>
                                 <td class="td">{{ $marca->marca }}</td>
