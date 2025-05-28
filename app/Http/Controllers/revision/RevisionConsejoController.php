@@ -388,7 +388,7 @@ class RevisionConsejoController extends Controller
     {
 
         $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
-        $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->get();
+        $preguntas = preguntas_revision::where('tipo_revisor', 2)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->get();
 
         $id_dictamen = $datos->certificado->dictamen->tipo_dictamen ?? '';
 
