@@ -331,59 +331,38 @@ public function certificado($id_certificado)
         //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
     }
 
-    $fecha_emision = Carbon::parse($data->fecha_emision);
-        $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
-    $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
-        $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');
-    $empresa = $data->dictamen->inspeccione->solicitud->empresa ?? null;
+    $fecha_emision = date('d/m/Y', strtotime($data->fecha_emision));
+    $fecha_vigencia = date('d/m/Y', strtotime($data->fecha_vigencia));
+    $empresa = $data->dictamen->inspeccion->solicitud->empresa ?? null;
     $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
         ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
         ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
-    //Determinar si la marca de agua debe ser visible
-    $watermarkText = $data->estatus == 1;
-    //Obtener un valor específico del JSON
-    $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON actual
-    ['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
-    $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado
-    //Busca el registro del certificado que tiene el id igual a $id_sustituye
-    Certificado_Nacional::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
-
-    $datos = $data->dictamen->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
-        $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
-        $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
-        $no_pedido = $caracteristicas['no_pedido'] ?? '';
-        $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
-        // Acceder a los detalles
-        foreach ($detalles as $detalle) {
-            $botellas = $detalle['cantidad_botellas'] ?? '';
-            $cajas = $detalle['cantidad_cajas'] ?? '';
-            $presentacion = $detalle['presentacion'] ?? '';
-        }
-        // Obtener todos los IDs de los lotes
-        $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
-        // Buscar los lotes envasados
-        $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
-            : collect(); 
+    $id_sustituye = json_decode($data->observaciones, true) ['id_sustituye'] ?? null;
+    $nombre_id_sustituye = $id_sustituye ? Certificado_Nacional::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
+    //caracteristicas
+    $caracteristicas = $data->dictamen?->inspeccion?->solicitud?->caracteristicasDecodificadas() ?? [];
+    $cantidad_caja = $caracteristicas['cantidad_caja'] ?? 'No encontrado';
 
     $pdf =  [
         'data' => $data,
-        'lotes' =>$lotes,
-        'expedicion' => $fecha1 ?? "",
-        'vigencia' => $fecha2 ?? "",
+        'lote_envasado' =>$data->dictamen?->inspeccion?->solicitud?->lote_envasado->nombre ?? 'No encontrado',
+        'expedicion' => $fecha_emision ?? 'No encontrado',
+        'vigencia' => $fecha_vigencia ?? 'No encontrado',
+        'empresa' => $empresa->razon_social ?? 'No encontrado',
         'n_cliente' => $numero_cliente,
-        'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
-        'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'No encontrado',
-        'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? 'No encontrado',
-        'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
-        'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? 'No encontrado',
+        'domicilio' => $empresa->domicilio_fiscal ?? 'No encontrado',
+        'estado' => $empresa->estados->nombre ?? 'No encontrado',
+        'rfc' => $empresa->rfc ?? 'No encontrado',
+        'cp' => $empresa->cp ?? 'No encontrado',
+
         'convenio' =>  $lotes[0]->lotesGranel[0]->empresa->convenio_corresp ?? 'NA',
         'DOM' => $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? 'NA',
-        'watermarkText' => $watermarkText,
+        'watermarkText' => $data->estatus == 1,
         'id_sustituye' => $nombre_id_sustituye,
-        'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'No encontrado',
-        'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'No encontrado',
-        'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado',
-        'envasadoEN' => $data->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa ?? 'No encontrado',
+        'nombre_destinatario' => $data->dictamen->inspeccion->solicitud->direccion_destino->destinatario ?? 'No encontrado',
+        'dom_destino' => $data->dictamen->inspeccion->solicitud->direccion_destino->direccion ?? 'No encontrado',
+        'pais' => $data->dictamen->inspeccion->solicitud->direccion_destino->pais_destino ?? 'No encontrado',
+        'envasadoEN' => $data->dictamen->inspeccion->solicitud->instalacion_envasado->direccion_completa ?? 'No encontrado',
         ///caracteristicas
         'aduana' => $aduana_salida ?? 'No encontrado',
         'n_pedido' => $no_pedido ?? 'No encontrado',
@@ -392,14 +371,8 @@ public function certificado($id_certificado)
         'presentacion' => $presentacion ?? 'No encontrado',
     ];
 
-    if ( $data->fecha_emision >= '2025-06-01' ) {
-        $edicion = 'pdfs.certificado_nacional_ed1';
-    }else{
-        $edicion = 'pdfs.certificado_nacional_ed1';
-    }
     //nombre al descargar
-    //return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
-    return Pdf::loadView($edicion, $pdf)->stream('F7.1-01-23 Ver 1. Certificado de nacionalidad.pdf');
+    return Pdf::loadView('pdfs.certificado_nacional_ed1', $pdf)->stream('F7.1-01-23 Ver 1. Certificado de nacionalidad.pdf');
 }
 
 

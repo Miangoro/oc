@@ -36,8 +36,8 @@ class Certificado_Nacional extends Model
 
     // Relación con el modelo Dictamen_Exportacion (dictamenes)
     public function dictamen()
-    {
-        return $this->belongsTo(Dictamen_Envasado::class, 'id_dictamen_envasado', 'id_dictamen');
+    { //ID de tabla actual, ID de la relacion
+        return $this->belongsTo(Dictamen_Envasado::class, 'id_dictamen', 'id_dictamen_envasado');
     }
 
     // Relación con el modelo User (Firmante)

@@ -71,14 +71,14 @@
             opacity: 0.1;
         }
 
-        .img-exportacion {
+        .img-nacional {
             position: fixed;
             top: 130px;
-            left: -70px;
-            width: 87px;
+            left: -80px;
+            width: 100px;
             height: 740px;
             z-index: -1;
-            background-image: url('{{ public_path('img_pdf/exportacion.png') }}');
+            background-image: url('{{ public_path('img_pdf/nacional.png') }}');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -145,7 +145,7 @@
 @endif
 
 <div class="img-fondo"></div>
-<div class="img-exportacion"></div>
+<div class="img-nacional"></div>
 
 <!--ENCABEZADO-->
 <div class="encabezado">
@@ -164,7 +164,7 @@
         <td style="font-weight: bold; text-align: center; border:none">
             Número de Certificado:</td>
         <td style="font-weight:bold; font-size: 11px; text-align: left;border:none">
-            {{ $data->num_certificado }}
+            {{ $data->num_certificado ?? 'No encontrado' }}
         </td>
         <td style="font-weight: bold; text-align: right;padding-right: 20px; border:none">
             Fecha de<br>expedición:</td>
@@ -257,82 +257,69 @@
 
 
 <!--INICIO DE TABLAS LOTES-->
-    @foreach ($lotes as $lote)
         <div class="titulos">DESCRIPCIÓN DEL PRODUCTO QUE AMPARA EL CERTIFICADO</div>
         <table>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px; width: 12%;">
                 Marca:</td>
             <td style="text-align: left; padding-left: 4px; width: 22%;">
-                {{ mb_strtoupper($lote->marca->marca) ?? 'N' }}
+
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
                 Categoría y Clase:</td>
             <td style="text-align: left; padding-left: 4px;">
-                {{ mb_strtoupper($lote->lotesGranel->first()->categoria->categoria) ?? 'No encontrado' }},
-                {{ mb_strtoupper($lote->lotesGranel->first()->clase->clase) ?? 'No encontrado' }}
+                
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
                 Edad:</td>
             <td style="text-align: left; padding-left: 4px; width: 22%;">
-                {{ in_array(optional($lote->lotesGranel->first())->id_clase, [2, 3]) 
-                    ? (filled(optional($lote->lotesGranel->first())->edad) 
-                        ? mb_strtoupper(optional($lote->lotesGranel->first())->edad) 
-                        : 'No encontrado') 
-                    : 'NA' }}
+            
             </td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px;">
                 Certificado<br>NOM a<br>Granel:</td>
             <td style="text-align: left; padding-left: 4px;">
-                {{ $lote->lotesGranel->first()->folio_certificado ?? 'No encontrado' }}&nbsp;
+
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 Volumen:</td>
             <td style="text-align: left; padding-left: 4px;">
-                {{ $lote->presentacion . ' ' . $lote->unidad }}
+
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 %Alc. Vol.:</td>
             <td style="text-align: left; padding-left: 4px;">
-                {{ round($lote->lotesGranel->first()->cont_alc) ?? 'No encontrado' }}%
-            </td>
+             </td>
         </tr>
-        @php
-            $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
-            $folio1 = trim($folios[0] ?? '');
-            $folio2 = trim($folios[1] ?? 'NA');
-        @endphp
+ 
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 No. de análisis:</td>
             <td style="text-align: left; padding-left: 4px;">
-                {{ $folio1 }}
+ 
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 No. lote granel:</td>
             <td style="text-align: left; padding-left: 4px;">
-                {{ $lote->lotesGranel->first()->nombre_lote ?? 'No encontrado' }}
+ 
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 Tipo de Maguey:</td>
             <td style="text-align: left; padding-left: 4px;">
-                {!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
-                    return $tipo->nombre . ' (<i>' . $tipo->cientifico . '</i>)';
-                })->implode(', ') !!}
+                 
             </td>
         </tr>
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px">No.
                 de análisis ajuste:</td>
             <td style="text-align: left; padding-left: 4px;">
-                {{ $folio2 }} &nbsp;
+               
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 No. de lote envasado:</td>
             <td style="text-align: left; padding-left: 4px;">
-                {{ $lote->nombre ?? 'No encontrado' }}
+              
             </td> 
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 Folio Hologramas:</td>
@@ -342,13 +329,7 @@
         </tr>
         </table>
 
-
-        <!--Salto de pag después de tabla 2-->
-        @if ($loop->iteration == 2)
-            <div style="page-break-before: always;"></div>
-        @endif
-
-    @endforeach<!-- FIN DE TABLAS LOTES -->
+<!-- FIN DE TABLAS LOTES -->
 
 
 <br><br>
