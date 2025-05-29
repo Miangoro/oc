@@ -432,9 +432,9 @@
                                         </tr>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Acta de
+                                                Acta de dfsdf
                                                 Vigilancia de producción:</th>
-                                            <td id="actaVigilanciaRemuestreo"></td>
+                                            <td class="acta"></td>
                                             <td>
                                                 <select name="actaVigilanciaRemuestreo" class="form-control form-control-sm"
                                                     id="cumpleActaVigilanciaRemuestreo">
@@ -822,11 +822,10 @@
                                         </tr>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Tipo
-                                                (Sin/Con Etiqueta):</th>
-                                            <td id="tipoEtiquetaEnvasado"></td>
+                                                Tipo (Sin/Con Etiqueta):</th>
+                                            <td class="tipoEtiquetaEnvasado"></td>
                                             <td>
-                                                <select class="tipoEtiquetaEnvasado" class="form-control form-control-sm"
+                                                <select name="tipoEtiquetaEnvasado" class="form-control form-control-sm"
                                                     id="cumpleTipoEtiquetaEnvasado">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
@@ -838,7 +837,7 @@
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Inicio
                                                 y Término de Envasado:</th>
-                                            <td id="inicioTerminoEnvasado"></td>
+                                            <td class="inicioTerminoEnvasado"></td>
                                             <td>
                                                 <select name="inicioTerminoEnvasado" class="form-control form-control-sm"
                                                     id="cumpleInicioTerminoEnvasado">
@@ -852,7 +851,7 @@
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Destino
                                                 (Nacional/Internacional):</th>
-                                            <td id="destinoEnvasado"></td>
+                                            <td class="destinoEnvasado"></td>
                                             <td>
                                                 <select name="destinoEnvasado" class="form-control form-control-sm"
                                                     id="cumpleDestinoEnvasado">

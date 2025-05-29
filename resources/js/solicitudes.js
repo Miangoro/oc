@@ -1039,7 +1039,7 @@ $(function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_barricada').data('selected', response.data.id_instalacion);
               modal.find('#instalacion_ingreso').val(response.data.id_instalacion);
-              modal.find('#lote_ingreso').val(response.caracteristicas.id_lote_granel);
+              modal.find('#lote_ingreso').val(response.caracteristicas?.id_lote_granel || '');
 
               if (response.caracteristicas) {
                 modal.find('#edit_id_lote_granel_barricada').val(response.caracteristicas.id_lote_granel || '');
@@ -4368,9 +4368,23 @@ $(document).ready(function () {
           $('.volumenTrasladado').text(caracteristicas.id_vol_traslado);
           $('.volumenSobrante').text(caracteristicas.id_vol_res);
           $('.volumenIngresado').text(caracteristicas.volumen_ingresado);
+          $('.tipoEtiquetaEnvasado').text(response?.data?.lote_envasado.tipo);
+          $('.inicioTerminoEnvasado').text(caracteristicas.fecha_inicio + ' a '+caracteristicas.fecha_fin);
+          let destino;
+          if(response?.data?.lote_envasado.destino_lote==1){
+            destino = 'Nacional';
+          }
+          if(response?.data?.lote_envasado.destino_lote==2){
+            destino = 'Exportación';
+          }
+          if(response?.data?.lote_envasado.destino_lote==3){
+            destino = 'stock';
+          }
+
+          $('.destinoEnvasado').text(destino);
           $('.etiqueta').html('<a href="files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + response?.url_etiqueta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
           $('.dictamenEnvasado').html('<a href="/dictamen_envasado/' + response?.data?.lote_envasado?.dictamen_envasado?.id_dictamen_envasado + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-
+          $('.acta').html('<a href="/files/' + response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente  + '/actas/' + response?.url_acta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
           // Verificar si 'detalles' existe y es un arreglo
           if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
             // Recorrer cada elemento de 'detalles'
@@ -4383,7 +4397,7 @@ $(document).ready(function () {
             });
           } else {
             // Si 'detalles' no existe o no es un arreglo
-            $('.cajasBotellas').text('No hay detalles disponibles.');
+            $('.cajasBotellas').text(caracteristicas.cantidad_caja + ' Cajas y ' + response?.data?.lote_envasado.cant_botellas + ' Botellas');
           }
 
           // Estructura de configuración para los documentos
@@ -4440,28 +4454,39 @@ $(document).ready(function () {
             documentsFound[config.targetClass] = false;
           });
 
-          // Iterar sobre los documentos
-          $.each(response.documentos, function (index, documento) {
-            documentConfig.forEach(config => {
-              if (
-                config.ids.includes(documento.id_documento) &&
-                config.condition(documento, response) // Usar la condición dinámica
-              ) {
-                const link = $('<a>', {
-                  href: 'files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + documento.url,
-                  target: '_blank'
-                });
 
-                link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
-                if (documento.id_documento === 128) {
-                  $(config.targetClass).append(link);
-                } else {
-                  $(config.targetClass).empty().append(link);
-                }
-                documentsFound[config.targetClass] = true;
-              }
-            });
-          });
+      // Obtener el primer cliente válido
+const clientes = response.data.empresa.empresa_num_clientes || [];
+const clienteValido = clientes.find(c => c && c.numero_cliente);
+const numeroCliente = clienteValido ? clienteValido.numero_cliente : null;
+
+// Iterar sobre los documentos
+if (numeroCliente) {
+  $.each(response.documentos, function (index, documento) {
+    documentConfig.forEach(config => {
+      if (
+        config.ids.includes(documento.id_documento) &&
+        config.condition(documento, response) // Usar la condición dinámica
+      ) {
+        const link = $('<a>', {
+          href: 'files/' + numeroCliente + '/' + documento.url,
+          target: '_blank'
+        });
+
+        link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
+        if (documento.id_documento === 128) {
+          $(config.targetClass).append(link);
+        } else {
+          $(config.targetClass).empty().append(link);
+        }
+        documentsFound[config.targetClass] = true;
+      }
+    });
+  });
+} else {
+  console.warn('No se encontró un número de cliente válido.');
+}
+
 
           // Mostrar mensajes para documentos no encontrados
           documentConfig.forEach(config => {

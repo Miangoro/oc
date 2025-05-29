@@ -266,6 +266,36 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
 
     }
 
+ if ($solicitud && $solicitud->id_tipo == 3) {
+    $caracteristicas = is_string($solicitud->caracteristicas)
+        ? json_decode($solicitud->caracteristicas, true)
+        : $solicitud->caracteristicas;
+
+    $id_lote_granel = is_array($caracteristicas)
+        ? ($caracteristicas['id_lote_granel'] ?? null)
+        : ($caracteristicas->id_lote_granel ?? null);
+
+    if ($id_lote_granel) {
+        // Buscar solicitud con ese id_lote_granel dentro del campo json 'caracteristicas'
+        $id_solicitud = solicitudesModel::where('id_tipo', 3)
+            ->get()
+            ->first(function ($item) use ($id_lote_granel) {
+                $car = is_string($item->caracteristicas)
+                    ? json_decode($item->caracteristicas, true)
+                    : $item->caracteristicas;
+
+                return is_array($car) && ($car['id_lote_granel'] ?? null) == $id_lote_granel;
+            });
+
+        if ($id_solicitud) {
+            $url_acta = Documentacion_url::where('id_relacion', $id_solicitud->id_solicitud)
+                ->where('id_documento', 69)
+                ->value('url');
+        }
+    }
+}
+
+
 
     return response()->json([
         'success' => true,
@@ -273,6 +303,7 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
         'documentos' => $documentos,
         'url_etiqueta' => $url_etiqueta ?? '',
         'url_corrugado' => $url_corrugado ?? '',
+        'url_acta' => $url_acta ?? '',
         'fecha_visita_formateada' => Helpers::formatearFechaHora($solicitud->fecha_visita),
         'tipos_agave' => $tipos
     ]);
