@@ -240,9 +240,11 @@ public function store(Request $request)
         'id_lote_granel' => $idLoteGranel
     ]);
 
-    $lote = LotesGranel::find($idLoteGranel);
-    $lote->folio_certificado = $validated['num_certificado'];
-    $lote->update();
+        $lote = LotesGranel::find($idLoteGranel);
+        $lote->folio_certificado = $validated['num_certificado'];
+        $lote->fecha_emision = $validated['fecha_emision'];
+        $lote->fecha_vigencia = $validated['fecha_vigencia'];
+        $lote->update();
 
         return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {

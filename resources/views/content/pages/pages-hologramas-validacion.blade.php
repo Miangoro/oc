@@ -64,8 +64,11 @@
                             <tr>
                                 <td class="td"><b>TIPO DE AGAVE</b></td>
                                 <td class="td">
-                                    {{ optional($datosHolograma->tipos)->pluck('nombre')->implode(', ') }}
-                                </td>
+    {!! optional($datosHolograma->tipos)->map(function($tipo) {
+        return $tipo->nombre . ($tipo->cientifico ? ' (<i>' . $tipo->cientifico . '</i>)' : '');
+    })->implode(', ') !!}
+</td>
+
                                 
                             </tr>
                             <tr>
