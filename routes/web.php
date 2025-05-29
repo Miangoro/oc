@@ -724,6 +724,8 @@ Route::middleware(['auth'])->controller(inspeccionesController::class)->group(fu
     //pdf rutas
     Route::post('/acta-unidades', [inspeccionesController::class, 'store'])->name('acta.unidades.store');
     Route::get('/acta_circunstanciada_unidades_produccion/{id_inspeccion}', [inspeccionesController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');
+
+   /*  Route::get('/getDatosSolicitud/{id_solicitud}',  'getDatosSolicitud')->name('getDatosSolicitud'); */
 });
 
 //-------------------HOLOGRAMAS - SOLICITUD DE HOLOGRAMAS-------------------

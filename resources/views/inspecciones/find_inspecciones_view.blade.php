@@ -161,13 +161,14 @@
         <!-- Modal -->
         @include('_partials._modals.modal-pdfs-frames')
         @include('_partials._modals.modal-expediente-servicio')
+        @include('_partials._modals.modal-validad-solicitud')
         @include('_partials._modals.modal-add-asignar-inspector')
         @include('_partials._modals.modal-trazabilidad')
         @include('_partials._modals.modal-add-resultados-inspeccion')
-      
 
 
-       <!-- Modal -->
+
+        <!-- Modal -->
 
     </div>
 @endsection
@@ -275,7 +276,7 @@
             url: '/getInspeccion/' + id_solicitud,
             method: 'GET',
             success: function(response) {
-                if (response.success) { 
+                if (response.success) {
                     const data = response.data;
                     console.log(data);
 
@@ -285,7 +286,7 @@
                         const tabla = `
                         <div class="table-responsive">
                             <table class="table small table-hover table-bordered table-sm">
-                        
+
                                 <tbody>
                                     <tr>
                                         <td><b>Folio</b></td>
@@ -304,7 +305,7 @@
                                         <td><b>Fecha sugerida</b></td>
                                         <td>${solicitud.fecha_visita}</td>
                                     </tr>
-                                   
+
                             </table>
                         </div>`;
 
@@ -314,17 +315,17 @@
                             '<div class="alert alert-warning">No hay datos de la solicitud.</div>');
                     }
 
-                     if (data.inspeccion) {
+                    if (data.inspeccion) {
                         $("#id_inspector").val(data.inspeccion.id_inspector).change();
                         $("#num_servicio").val(data.inspeccion.num_servicio || '');
                         $("#fecha_servicio").val(data.inspeccion.fecha_servicio || '');
                         $("#observaciones").text(data.inspeccion.observaciones || '');
-                     }else{
-                       
+                    } else {
+
                         $("#num_servicio").val('');
                         $("#fecha_servicio").val('');
                         $("#observaciones").text('');
-                     }
+                    }
 
 
                 } else {

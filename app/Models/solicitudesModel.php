@@ -70,23 +70,24 @@ class solicitudesModel extends Model
         return $this->belongsTo(instalaciones::class, 'id_instalacion', 'id_instalacion');
     }
 
-    public function getIdLoteGranelAttribute()
-    {
-        $caracteristicas = json_decode($this->caracteristicas, true);
+public function getIdLoteGranelAttribute()
+{
+    $caracteristicas = json_decode($this->caracteristicas, true);
 
-        // Busca directamente en la raíz del JSON
-        if (isset($caracteristicas['id_lote_granel'])) {
-            return $caracteristicas['id_lote_granel'];
-        }
-
-        // Busca en los lotes relacionados a través de la tabla intermedia
-        if ($this->lotes_envasado_granel && $this->lotes_envasado_granel->isNotEmpty()) {
-            return $this->lotes_envasado_granel->pluck('id_lote_granel')->toArray();
-        }
-
-        // Devuelve null si no se encuentra
-        return null;
+    // Busca directamente en la raíz del JSON
+    if (isset($caracteristicas['id_lote_granel'])) {
+        return $caracteristicas['id_lote_granel'];
     }
+
+    // Busca en los lotes relacionados a través de la tabla intermedia
+    if ($this->lotes_envasado_granel && $this->lotes_envasado_granel->isNotEmpty()) {
+        // Devuelve SOLO el primer id_lote_granel, nunca un array
+        return $this->lotes_envasado_granel->pluck('id_lote_granel')->first();
+    }
+
+    // Devuelve null si no se encuentra
+    return null;
+}
 
     public function getTipoAnalisisAttribute()
     {

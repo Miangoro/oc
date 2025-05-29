@@ -180,9 +180,22 @@ $(function () {
             '<div class="dropdown-menu dropdown-menu-end m-0">' +
 
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Trazabilidad</a>` +
+                          // Botón de Validar Solicitud
+            `<a
+              data-id="${full['id']}"
+              data-id-solicitud="${full['id_solicitud']}"
+              data-tipo="${full['tipo']}"
+              data-razon-social="${full['razon_social']}"
+              data-bs-toggle="modal"
+              data-bs-target="#addSolicitudValidar"
+              class="dropdown-item text-dark waves-effect validar-solicitudes">
+                <i class="text-success ri-search-eye-line"></i> Validar solicitud
+            </a>` +
+
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalAsignarInspector(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
-            `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
+            `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['id_inspeccion']}', '${full['tipo']}', '${full['razon_social']}', '${full['id_tipo']}','${full['folio_info']}', '${full['num_servicio_info']}','${full['inspectorName']}')" href="javascript:;" class="dropdown-item"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
+
           //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['tipo_instalacion']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
           //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="editModalActaProduccion('${full['id_acta']}')" href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px textStatus"></i>Editar Acta</a>` +
 
@@ -1795,7 +1808,211 @@ $(function () {
     });
   });
 
+  // Manejar el clic en los enlaces con clase "validar-solicitudes"
+  $(document).on('click', '.validar-solicitudes', function () {
+    // Leer los datos desde los atributos data-*
+    var idTipo = $(this).data('id');
+    var id_solicitud = $(this).data('id-solicitud');
+    var tipoName = $(this).data('tipo');
+    var razon_social = $(this).data('razon-social');
+    $('#tipoSolicitud').text(tipoName);
 
+    // Manejar la visibilidad de divs si aplica
+    manejarVisibilidadDivs(idTipo);
+
+
+    $.ajax({
+      url: `/getDatosSolicitud/${id_solicitud}`,
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        if (response.success) {
+          $('#solicitud_id').val(id_solicitud);
+          $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
+          // Validar si `direccion_completa` no está vacío
+          if (response.data.instalacion) {
+            $('.domicilioInstalacion').html(response.data.instalacion.direccion_completa + " <b>Vigencia: </b>" + response.data.instalacion.fecha_vigencia);
+          } else {
+            // Si está vacío, usar `ubicacion_predio`
+            $('.domicilioInstalacion').text(response.data?.predios?.ubicacion_predio);
+            $('.nombrePredio').text(response.data?.predios?.nombre_predio);
+            $('.preregistro').html(
+              "<a target='_Blank' href='/pre-registro_predios/" +
+              response.data?.predios?.id_predio +
+              "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
+            );
+          }
+
+
+
+          $('.razonSocial').text(response?.data?.empresa?.razon_social || 'No disponible');
+          $('.fechaHora').text(response?.fecha_visita_formateada || 'No disponible');
+
+          $('.nombreLote').text(response?.data?.lote_granel?.nombre_lote || 'No disponible');
+
+
+          $('.guiasTraslado').text(response?.data?.caracteristicas?.guias || 'No disponible');
+
+          // Validar categoría
+          $('.categoria').text(
+            response?.data?.lote_granel?.categoria?.categoria ||
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
+            'No disponible'
+          );
+
+          // Validar clase
+          $('.clase').text(
+            response?.data?.lote_granel?.clase?.clase ||
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
+            'No disponible'
+          );
+
+          $('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
+          $('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
+          $('.certificadoGranel').text(response?.data?.lote_granel?.certificado_granel?.num_certificado ||
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.certificado_granel?.num_certificado ||
+            'No disponible');
+
+
+
+          $('.tipos').text(response?.tipos_agave || 'No disponible');
+
+
+          // Validar nombre del lote envasado
+          $('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
+
+          var caracteristicas = JSON.parse(response.data?.caracteristicas);
+          var tipos = {
+            1: 'Análisis completo',
+            2: 'Ajuste de grado alcohólico'
+          };
+
+          var texto = tipos[caracteristicas?.tipo_analisis] || 'No disponible';
+
+          $('.tipoAnalisis').text(texto);
+          $('.materialRecipiente').text(caracteristicas.material);
+          $('.capacidadRecipiente').text(caracteristicas.capacidad);
+          $('.numeroRecipiente').text(caracteristicas.num_recipientes);
+          $('.tiempoMaduracion').text(caracteristicas.tiempo_dura);
+          $('.tipoIngreso').text(caracteristicas.tipoIngreso);
+          $('.volumenLiberado').text(caracteristicas.volumen_liberacion);
+          $('.tipoLiberacion').text(caracteristicas.tipoLiberacion);
+          $('.volumenActual').text(caracteristicas.id_vol_actual);
+          $('.volumenTrasladado').text(caracteristicas.id_vol_traslado);
+          $('.volumenSobrante').text(caracteristicas.id_vol_res);
+          $('.volumenIngresado').text(caracteristicas.volumen_ingresado);
+          $('.etiqueta').html('<a href="files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + response?.url_etiqueta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          $('.dictamenEnvasado').html('<a href="/dictamen_envasado/' + response?.data?.lote_envasado?.dictamen_envasado?.id_dictamen_envasado + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+
+          // Verificar si 'detalles' existe y es un arreglo
+          if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
+            // Recorrer cada elemento de 'detalles'
+            $('.cajasBotellas').text('');
+            caracteristicas.detalles.forEach(function (detalle) {
+              // Asumiendo que '.cajasBotellas' es un contenedor de varias cajas, agregamos el texto en cada una
+              $('.cajasBotellas').append(
+                detalle.cantidad_cajas + ' Cajas y ' + detalle.cantidad_botellas + ' Botellas<br>'
+              );
+            });
+          } else {
+            // Si 'detalles' no existe o no es un arreglo
+            $('.cajasBotellas').text('No hay detalles disponibles.');
+          }
+
+          // Estructura de configuración para los documentos
+          const documentConfig = [
+            {
+              ids: [45, 66, 113],
+              targetClass: '.comprobantePosesion',
+              noDocMessage: 'No hay comprobante de posesión',
+              condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
+            },
+            {
+              ids: [34],
+              targetClass: '.comprobantePosesion',
+              noDocMessage: 'No hay contrato de arrendamiento',
+              condition: (documento, response) => documento.id_relacion == response.data.id_predio
+            },
+            {
+              ids: [43, 106, 112],
+              targetClass: '.planoDistribucion',
+              noDocMessage: 'No hay plan de distribución',
+              condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
+            },
+            {
+              ids: [76],
+              targetClass: '.csf',
+              noDocMessage: 'No hay CSF',
+              condition: (documento, response) => documento.id_empresa == response.data.id_empresa
+            },
+            {
+              ids: [1],
+              targetClass: '.actaConstitutiva',
+              noDocMessage: 'No hay acta constitutiva',
+              condition: (documento, response) => documento.id_empresa == response.data.id_empresa
+            },
+            {
+              ids: [55],
+              targetClass: '.proforma',
+              noDocMessage: 'No hay factura proforma',
+              condition: (documento, response) => documento.id_empresa == response.data.id_empresa
+            },
+            /*/  {
+                ids: [128],
+                targetClass: '.domicilioInstalacion',
+                noDocMessage: 'No hay dictamen de instalaciones',
+                condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
+              }*/
+          ];
+
+          // Variable para seguimiento de documentos encontrados
+          const documentsFound = {};
+
+          // Inicializamos cada grupo como no encontrado
+          documentConfig.forEach(config => {
+            documentsFound[config.targetClass] = false;
+          });
+
+          // Iterar sobre los documentos
+          $.each(response.documentos, function (index, documento) {
+            documentConfig.forEach(config => {
+              if (
+                config.ids.includes(documento.id_documento) &&
+                config.condition(documento, response) // Usar la condición dinámica
+              ) {
+                const link = $('<a>', {
+                  href: 'files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + documento.url,
+                  target: '_blank'
+                });
+
+                link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
+                if (documento.id_documento === 128) {
+                  $(config.targetClass).append(link);
+                } else {
+                  $(config.targetClass).empty().append(link);
+                }
+                documentsFound[config.targetClass] = true;
+              }
+            });
+          });
+
+          // Mostrar mensajes para documentos no encontrados
+          documentConfig.forEach(config => {
+            if (!documentsFound[config.targetClass]) {
+              $(config.targetClass).text(config.noDocMessage);
+            }
+          });
+        } else {
+          console.warn('No se encontró información para la solicitud.');
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error('Error al obtener los datos:', error);
+      }
+    });
+
+
+  });
   //end
 });
 
