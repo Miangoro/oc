@@ -2,30 +2,7 @@
  Page User List
  */
 'use strict';
-/*
-$(document).ready(function () {
-  $('.datepicker').datepicker({
-    format: 'yyyy-mm-dd',
-    autoclose: true,
-    todayHighlight: true,
-    language: 'es' // Configura el idioma a español
-  });
-});
 
-///FUNCION FECHAS
-$('#fecha_emision').on('change', function() {
-  var fechaInicial = new Date($(this).val());
-  fechaInicial.setDate(fechaInicial.getDate() + 91);//Sumar 90 días a la fecha inicial
-  $('#fecha_vigencia').datepicker("setDate", fechaInicial);
-});
-
-///FUNCION FECHAS EDIT
-$('#edit_fecha_emision').on('change', function() {
-  var fechaInicial = new Date($(this).val());
-  fechaInicial.setDate(fechaInicial.getDate() + 91);
-  $('#edit_fecha_vigencia').datepicker("setDate", fechaInicial);
-});
-*/
 
 $(document).ready(function () {///flatpickr
   flatpickr(".flatpickr-datetime", {
@@ -72,7 +49,6 @@ $('#edit_fecha_emision').on('change', function () {
 ///Datatable (jquery)
 $(function () {
 
-
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
@@ -107,7 +83,7 @@ if (dt_user_table.length) {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'CerExpo-list'
+        url: baseUrl + 'CerVentaNacional-list'
       },
       columns: [
         { data: '' }, // (0)
@@ -247,7 +223,7 @@ if (dt_user_table.length) {
             } else {
               estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
             }
-
+            /*
             ///revisores PERSONAL
             var $revisor_personal = full['revisor_personal'];
             var $numero_revision_personal = full['numero_revision_personal'];
@@ -303,19 +279,9 @@ if (dt_user_table.length) {
             } else if (decision_consejo === 'Pendiente') {
               colorClass2 = 'badge rounded-pill bg-warning text-dark';
             }
+            */
 
-
-            return estatus +
-              `<div style="flex-direction: column; margin-top: 2px;">
-              <div class="small"> <b>Personal:</b> 
-                <span class="${colorClass}">${revision_oc} ${revisor_oc}</span>${icono_oc}
-              </div>
-              <div style="display: inline;" class="small"> <b>Consejo:</b> 
-                <span class="${colorClass2}">${revision2} ${revisor2}</span>${icono2}
-              </div>
-            </div> `;
-            //'<span class="badge rounded-pill bg-info">Vo. Bo. Cliente</span>';
-            //<div style="display: flex; flex-direction: column; align-items: flex-start;">
+            return estatus ;
           }
         },
 
@@ -333,10 +299,6 @@ if (dt_user_table.length) {
               '</button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-              `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-dark"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
-              `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#Modal" href="javascript:;" class="dropdown-item text-dark"> <i class="ri-edit-box-line ri-20px text-light"></i> Vo. Bo. Cliente</a>` +
-              `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>` +
-              `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor" class="dropdown-item waves-effect text-black reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
               `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' + userView + '" class="dropdown-item">View</a>' +
@@ -520,22 +482,6 @@ if (dt_user_table.length) {
           ]
         },*///BOTONES EXPORTAR
 
-        {//EXPORTAR EXCEL
-          text: '<i class="ri-file-excel-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
-          className: 'btn btn-primary waves-effect waves-light me-2',
-          attr: {
-            'data-bs-toggle': 'modal',
-            'data-bs-dismiss': 'modal',
-            'data-bs-target': '#exportarExcelCertificados'
-          }
-        },
-        {//FIRMAR DOCUSIGN
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Firmar Docusign</span>',
-          className: 'btn btn-info waves-effect waves-light me-2',
-          action: function (e, dt, node, config) {
-            window.location.href = '/add_firmar_docusign';
-          }
-        },
         {//BOTON AGREGAR
           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Certificado</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
@@ -587,81 +533,7 @@ if (dt_user_table.length) {
 
 
 
-///EXPORTAR EXCEL
-$(document).ready(function () {
-    $('#reporteForm').on('submit', function (e) {
-      e.preventDefault(); // Prevenir el envío tradicional del formulario
-      const exportUrl = $(this).attr('action'); // Obtener la URL del formulario
-      const formData = $(this).serialize(); // Serializa los datos del formulario
-
-      // Mostrar el SweetAlert de "Generando Reporte"
-      Swal.fire({
-        title: 'Generando Reporte...',
-        text: 'Por favor espera mientras se genera el reporte.',
-        icon: 'info',
-        didOpen: () => {
-          Swal.showLoading(); // Muestra el ícono de carga
-        },
-        customClass: {
-          confirmButton: false
-        }
-      });
-
-      // Realizar la solicitud GET para descargar el archivo
-      $.ajax({
-        url: exportUrl,
-        type: 'GET',
-        data: formData,
-        xhrFields: {
-          responseType: 'blob' // Necesario para manejar la descarga de archivos
-        },
-        success: function (response) {
-          const link = document.createElement('a');
-          const url = window.URL.createObjectURL(response);
-          link.href = url;
-          link.download = 'reporte_certificados_exportacion.xlsx';
-          link.click();
-          window.URL.revokeObjectURL(url);
-
-          $('#exportarExcelCertificados').modal('hide');
-          Swal.fire({
-            title: '¡Éxito!',
-            text: 'El reporte se generó exitosamente.',
-            icon: 'success',
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-        },
-        error: function (xhr, status, error) {
-          console.error('Error al generar el reporte:', error);
-          $('#exportarExcelCertificados').modal('hide');
-          Swal.fire({
-            title: '¡Error!',
-            text: 'Ocurrió un error al generar el reporte.',
-            icon: 'error',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
-        }
-      });
-    });
-  });
-
-$(document).ready(function () {
-  $('#restablecerFiltros').on('click', function () {
-    $('#reporteForm')[0].reset();
-    $('.select2').val('').trigger('change');
-    console.log('Filtros restablecidos.');
-  });
-});
-
-
-
 ///AGREGAR NUEVO REGISTRO
-//const form = document.getElementById('FormAgregar');
-//Validación del formulario por "name"
 const fv = FormValidation.formValidation(FormAgregar, {
     fields: {
       id_dictamen: {
@@ -686,21 +558,27 @@ const fv = FormValidation.formValidation(FormAgregar, {
         }
       },
       fecha_emision: {
-        validators: {
-          date: {
-            format: 'YYYY-MM-DD',
-            message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-          }
+      validators: {
+        notEmpty: {
+            message: 'La fecha de emision es obligatoria.'
+        },
+        date: {
+          format: 'YYYY-MM-DD',
+          message: 'Ingresa una fecha válida (yyyy-mm-dd).'
         }
-      },
-      fecha_vigencia: {
-        validators: {
-          date: {
-            format: 'YYYY-MM-DD',
-            message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-          }
+      }
+    },
+    fecha_vigencia: {
+      validators: {
+        notEmpty: {
+            message: 'La fecha de vigencia es obligatoria.'
+        },
+        date: {
+          format: 'YYYY-MM-DD',
+          message: 'Ingresa una fecha válida (yyyy-mm-dd).'
         }
-      },
+      }
+    },
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -716,7 +594,7 @@ const fv = FormValidation.formValidation(FormAgregar, {
 
     var formData = new FormData(FormAgregar);
     $.ajax({
-      url: '/creaCerExp',
+      url: '/crear',
       type: 'POST',
       data: formData,
       processData: false,
@@ -784,7 +662,7 @@ $(document).on('click', '.eliminar', function () {//clase del boton "eliminar"
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}deletCerExp/${id_certificado}`,
+          url: `${baseUrl}eliminar/${id_certificado}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -839,7 +717,7 @@ $(document).ready(function () {
       $('#edit_id_certificado').val(id_certificado);
 
       $.ajax({
-        url: '/editCerExp/' + id_certificado + '/edit',
+        url: '/editar/' + id_certificado + '/edit',
         method: 'GET',
         success: function (datos) {
           // Asignar valores a los campos del formulario
@@ -881,7 +759,7 @@ $(document).ready(function () {
       var id_certificado = $('#edit_id_certificado').val();//Obtener el ID del registro desde el campo oculto
 
       $.ajax({
-        url: '/editCerExp/' + id_certificado,
+        url: '/actualizar/' + id_certificado,
         type: 'PUT',
         data: formData,
         success: function (response) {
@@ -930,562 +808,34 @@ $(document).ready(function () {
         }
       });
     });
-
 });
 
 
 
-  ///REEXPEDIR
-  let isLoadingData = false;
-  let fieldsValidated = [];
-  $(document).ready(function () {
-
-    $(document).on('click', '.reexpedir', function () {
-      var id_certificado = $(this).data('id');
-      console.log('ID para reexpedir:', id_certificado);
-      $('#rex_id_certificado').val(id_certificado);
-      $('#ModalReexpedir').modal('show');
-    });
-
-    //funcion fechas
-    $('#rex_fecha_emision').on('change', function () {
-      var fecha_emision = $(this).val();
-      if (fecha_emision) {
-        var fecha = moment(fecha_emision, 'YYYY-MM-DD');
-        var fecha_vigencia = fecha.add(90, 'days').format('YYYY-MM-DD');
-        $('#rex_fecha_vigencia').val(fecha_vigencia);
-      }
-    });
-
-    $(document).on('change', '#accion_reexpedir', function () {
-      var accionSeleccionada = $(this).val();
-      console.log('Acción seleccionada:', accionSeleccionada);
-      var id_certificado = $('#rex_id_certificado').val();
-
-      if (accionSeleccionada && !isLoadingData) {
-        isLoadingData = true;
-        cargarDatosReexpedicion(id_certificado);
-      }
-
-      if (accionSeleccionada === '2') {
-        $('#campos_condicionales').slideDown();
-      } else {
-        $('#campos_condicionales').slideUp();
-      }
-    });
-
-    function cargarDatosReexpedicion(id_certificado) {
-      console.log('Cargando datos para la reexpedición con ID:', id_certificado);
-      clearFields();
-
-      //cargar los datos
-      $.get(`/editCerExp/${id_certificado}/edit`).done(function (datos) {
-        console.log('Respuesta completa:', datos);
-
-        if (datos.error) {
-          showError(datos.error);
-          return;
-        }
-
-        $('#rex_id_dictamen').val(datos.id_dictamen).trigger('change');
-        $('#rex_numero_certificado').val(datos.num_certificado);
-        $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
-        $('#rex_fecha_emision').val(datos.fecha_emision);
-        $('#rex_fecha_vigencia').val(datos.fecha_vigencia);
-
-        $('#accion_reexpedir').trigger('change');
-        isLoadingData = false;
-
-        flatpickr("#rex_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
-          dateFormat: "Y-m-d",
-          enableTime: false,
-          allowInput: true,
-          locale: "es"
-        });
-
-      }).fail(function () {
-        showError('Error al cargar los datos.');
-        isLoadingData = false;
-      });
-    }
-
-    function clearFields() {
-      $('#rex_id_dictamen').val('');
-      $('#rex_numero_certificado').val('');
-      $('#rex_id_firmante').val('');
-      $('#rex_fecha_emision').val('');
-      $('#rex_fecha_vigencia').val('');
-      $('#rex_observaciones').val('');
-    }
-
-    function showError(message) {
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: message,
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    }
-
-    $('#ModalReexpedir').on('hidden.bs.modal', function () {
-      $('#FormReexpedir')[0].reset();
-      clearFields();
-      $('#campos_condicionales').hide();
-      fieldsValidated = [];
-    });
-
-    //validar formulario
-    const formReexpedir = document.getElementById('FormReexpedir');
-    const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
-      fields: {
-        'accion_reexpedir': {
-          validators: {
-            notEmpty: {
-              message: 'Debes seleccionar una acción.'
-            }
-          }
-        },
-        'observaciones': {
-          validators: {
-            notEmpty: {
-              message: 'El motivo de cancelación es obligatorio.'
-            }
-          }
-        },
-        'id_dictamen': {
-          validators: {
-            notEmpty: {
-              message: 'El número de dictamen es obligatorio.'
-            }
-          }
-        },
-        'num_certificado': {
-          validators: {
-            notEmpty: {
-              message: 'El número de certificado es obligatorio.'
-            },
-            stringLength: {
-              min: 8,
-              message: 'Debe tener al menos 8 caracteres.'
-            }
-          }
-        },
-        'id_firmante': {
-          validators: {
-            notEmpty: {
-              message: 'El nombre del firmante es obligatorio.'
-            }
-          }
-        },
-        'fecha_emision': {
-          validators: {
-            notEmpty: {
-              message: 'La fecha de emisión es obligatoria.'
-            },
-            date: {
-              format: 'YYYY-MM-DD',
-              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-            }
-          }
-        },
-        'fecha_vigencia': {
-          validators: {
-            notEmpty: {
-              message: 'La fecha de vigencia es obligatoria.'
-            },
-            date: {
-              format: 'YYYY-MM-DD',
-              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-            }
-          }
-        },
-      },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating'
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function () {
-      const formData = $(formReexpedir).serialize();
-
-      $.ajax({
-        url: $(formReexpedir).attr('action'),
-        method: 'POST',
-        data: formData,
-        success: function (response) {
-          $('#ModalReexpedir').modal('hide');
-          formReexpedir.reset();
-
-          dt_user_table.DataTable().ajax.reload();
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.message,
-            customClass: {
-              confirmButton: 'btn btn-primary'
-            }
-          });
-        },
-        error: function (jqXHR) {
-          console.log('Error en la solicitud:', jqXHR);
-          let errorMessage = 'No se pudo registrar. Por favor, verifica los datos.';
-          try {
-            let response = JSON.parse(jqXHR.responseText);
-            errorMessage = response.message || errorMessage;
-          } catch (e) {
-            console.error('Error al parsear la respuesta del servidor:', e);
-          }
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: errorMessage,
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
-        }
-      });
-    });
-
-  });
-
-
-
-  ///FORMATO PDF CERTIFICADO
-  $(document).on('click', '.pdfCertificado', function () {
-    var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
-    var pdfUrl = '/certificado_exportacion/' + id; //Ruta del PDF
-    var iframe = $('#pdfViewer');
-    var spinner = $('#cargando');
-
-    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-    spinner.show();
-    iframe.hide();
-
-    //Cargar el PDF con el ID
-    iframe.attr('src', pdfUrl);
-    //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', pdfUrl).show();
-
-    $("#titulo_modal").text("Certificado de Exportación");
-    $("#subtitulo_modal").text("PDF del Certificado");
-    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-    iframe.on('load', function () {
-      spinner.hide();
-      iframe.show();
-    });
-  });
-
-  ///FORMATO PDF SOLICITUD CERTIFICADO
-  $(document).on('click', '.pdfSolicitudCertificado', function () {
-    var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
-    var pdfUrl = '/solicitud_certificado_exportacion/' + id; //Ruta del PDF
-    var iframe = $('#pdfViewer');
-    var spinner = $('#cargando');
-
-    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-    spinner.show();
-    iframe.hide();
-
-    //Cargar el PDF con el ID
-    iframe.attr('src', pdfUrl);
-    //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', pdfUrl).show();
-
-    $("#titulo_modal").text("Solicitud de emisión de Certificado para Exportación");
-    $("#subtitulo_modal").text("PDF de la solicitud");
-    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-    iframe.on('load', function () {
-      spinner.hide();
-      iframe.show();
-    });
-  });
-
-  ///FORMATO PDF DICTAMEN
-  $(document).on('click', '.pdfDictamen', function () {
-    var id = $(this).data('id');
-    var pdfUrl = '/dictamen_exportacion/' + id; //Ruta del PDF
-    var iframe = $('#pdfViewer');
-    var spinner = $('#cargando');
-    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-    spinner.show();
-    iframe.hide();
-    //Cargar el PDF con el ID
-    iframe.attr('src', pdfUrl);
-    //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', pdfUrl).show();
-    $("#titulo_modal").text("Dictamen de Cumplimiento para Producto de Exportación");
-    $("#subtitulo_modal").text("PDF del Dictamen");
-    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-    iframe.on('load', function () {
-      spinner.hide();
-      iframe.show();
-    });
-  });
-
-  ///FORMATO PDF SOLICITUD SERVICIOS
-  $(document).on('click', '.pdfSolicitud', function () {
-    var id = $(this).data('id');
-    var folio = $(this).data('folio');
-    var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
-    var iframe = $('#pdfViewer');
-    var spinner = $('#cargando');
-
-    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-    spinner.show();
-    iframe.hide();
-
-    //Cargar el PDF con el ID
-    iframe.attr('src', pdfUrl);
-    //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', pdfUrl).show();
-
-    $("#titulo_modal").text("Solicitud de servicios");
-    $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
-    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-    iframe.on('load', function () {
-      spinner.hide();
-      iframe.show();
-    });
-  });
-
-  ///FORMATO PDF ACTA
-  $(document).on('click', '.pdfActa', function () {
-    var id_acta = $(this).data('id');
-    var empresa = $(this).data('empresa');
-    var iframe = $('#pdfViewer');
-    var spinner = $('#cargando');
-    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-    spinner.show();
-    iframe.hide();
-
-    //Cargar el PDF con el ID
-    iframe.attr('src', '/files/' + id_acta);
-    //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', '/files/' + id_acta).show();
-
-    $("#titulo_modal").text("Acta de inspección");
-    $("#subtitulo_modal").text(empresa);
-
-    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-    iframe.on('load', function () {
-      spinner.hide();
-      iframe.show();
-    });
-  });
-
-
-
-  ///OBTENER REVISORES
-  $(document).ready(function () {
-    $('#tipoRevisor').on('change', function () {
-      var tipoRevisor = $(this).val();
-
-      $('#nombreRevisor').empty().append('<option value="">Seleccione un revisor</option>');
-
-      if (tipoRevisor) {
-        var tipo = (tipoRevisor === '1') ? 1 : 4;
-
-        $.ajax({
-          url: '/ruta-para-obtener-revisores',
-          type: 'GET',
-          data: { tipo: tipo },
-          success: function (response) {
-
-            if (Array.isArray(response) && response.length > 0) {
-              response.forEach(function (revisor) {
-                $('#nombreRevisor').append('<option value="' + revisor.id + '">' + revisor.name + '</option>');
-              });
-            } else {
-              $('#nombreRevisor').append('<option value="">No hay revisores disponibles</option>');
-            }
-          },
-          error: function (xhr) {
-            console.log('Error:', xhr.responseText);
-            alert('Error al cargar los revisores. Inténtelo de nuevo.');
-          }
-        });
-      }
-    });
-  });
-
-  ///ASIGNAR REVISOR
-  $('#asignarRevisorForm').hide();
-
-  const form = document.getElementById('asignarRevisorForm');
-  const fv2 = FormValidation.formValidation(form, {
-    fields: {
-      'tipoRevisor': {
-        validators: {
-          notEmpty: {
-            message: 'Debe seleccionar una opción para la revisión.'
-          }
-        }
-      },
-      'nombreRevisor': {
-        validators: {
-          notEmpty: {
-            message: 'Debe seleccionar un nombre para el revisor.'
-          }
-        }
-      },
-      'numeroRevision': {
-        validators: {
-          notEmpty: {
-            message: 'Debe seleccionar un número de revisión.'
-          }
-        }
-      }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        eleInvalidClass: 'is-invalid',
-        rowSelector: '.mb-3'
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function (e) {
-    var formData = new FormData(form);
-    var id_certificado = $('#id_certificado').val();
-    var tipoRevisor = $('#tipoRevisor').val();
-    var revisorValue = $('#nombreRevisor').val();
-
-    console.log('ID Certificado:', id_certificado);
-    console.log('Tipo de Revisor:', tipoRevisor);
-    console.log('Valor del Revisor:', revisorValue);
-
-    if (tipoRevisor == '1') {
-      formData.append('id_revisor', revisorValue);
-      formData.append('id_revisor2', null);
-    } else if (tipoRevisor == '2') {
-      formData.append('id_revisor2', revisorValue);
-      formData.append('id_revisor', null);
-    }
-
-    // Añadir otros datos
-    formData.append('id_certificado', id_certificado);
-    var esCorreccion = $('#esCorreccion').is(':checked') ? 'si' : 'no';
-    formData.append('esCorreccion', esCorreccion);
-
-    console.log('FormData:', Array.from(formData.entries()));
-
-    $.ajax({
-      url: '/asignar_revisor_exportacion',
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        $('#asignarRevisorModal').modal('hide');
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: response.message,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        }).then(function () {
-          form.reset();
-          $('#nombreRevisor').val(null).trigger('change');
-          $('#esCorreccion').prop('checked', false);
-          fv.resetForm();
-          $('.datatables-users').DataTable().ajax.reload();
-        });
-      },
-      error: function (xhr) {
-        $('#asignarRevisorModal').modal('hide');
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Revisor asignado exitosamente',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        }).then(function () {
-          form.reset();
-          $('#nombreRevisor').val(null).trigger('change');
-          $('#esCorreccion').prop('checked', false);
-          fv.resetForm();
-          $('.datatables-users').DataTable().ajax.reload();
-        });
-      }
-    });
-  });
-
-  $('#nombreRevisor').on('change', function () {
-    fv.revalidateField($(this).attr('name'));
-  });
-
-  $('#asignarRevisorModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget);
-    var id_certificado = button.data('id');
-    $('#id_certificado').val(id_certificado);
-    console.log('ID Certificado al abrir modal:', id_certificado);
-    fv.resetForm();
-    form.reset();
-
-    $('#asignarRevisorForm').show();
-  });
-
-
-
-
-///VER TRAZABILIDAD
-$(document).on('click', '.trazabilidad', function () {
-  // Función para cargar los datos
-  var id_certificado = $(this).data('id');
-  $('.num_certificado').text($(this).data('folio'));
-
-  var url = '/trazabilidad-certificados/' + id_certificado;//ruta de la informacion/controller trazabilidad
-
-  // Hacer la solicitud AJAX para obtener los logs
-  $.get(url, function (data) {
-    if (data.success) {
-      console.log('datos:', data);
-      // Recibir los logs y mostrarlos en el modal
-      var logs = data.logs;
-      var contenedor = $('#ListTracking');
-      contenedor.empty(); // Limpiar el contenedor de logs
-
-      // Iterar sobre los logs y agregarlos al contenedor
-      logs.forEach(function (log) {
-        contenedor.append(`
-              <li class="timeline-item timeline-item-transparent">
-                  <span class="timeline-point timeline-point-primary"></span>
-                  <div class="timeline-event">
-                      <div class="timeline-header mb-3">
-                      <h6 class="mb-0">${log.description}</h6>
-                      <small class="text-muted">${log.created_at}</small>
-                      </div>
-                      <p class="mb-2">  ${log.contenido}</p>
-                      <div class="d-flex align-items-center mb-1">
-
-                      </div>
-                  </div>
-                  </li><hr>
-              `);
-      });
-
-      // Mostrar el modal
-      $('#ModalTracking').modal('show');
-    }
-  }).fail(function (xhr) {
-    console.error(xhr.responseText);
+///FORMATO PDF CERTIFICADO
+$(document).on('click', '.pdfCertificado', function () {
+  var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
+  var pdfUrl = '/certificado_venta_nacional/' + id; //Ruta del PDF
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+
+  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+  spinner.show();
+  iframe.hide();
+
+  //Cargar el PDF con el ID
+  iframe.attr('src', pdfUrl);
+  //Configurar el botón para abrir el PDF en una nueva pestaña
+  $("#NewPestana").attr('href', pdfUrl).show();
+
+  $("#titulo_modal").text("Certificado de venta nacional");
+  $("#subtitulo_modal").text("PDF del Certificado");
+  //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+  iframe.on('load', function () {
+    spinner.hide();
+    iframe.show();
   });
 });
-
-
-
 
 
 

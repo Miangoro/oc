@@ -1,0 +1,382 @@
+<?php
+
+namespace App\Http\Controllers\certificados;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Helpers\Helpers;
+use App\Models\Certificado_Nacional;
+use App\Models\Dictamen_Envasado;
+use App\Models\User;
+use App\Models\empresa;
+use App\Models\Revisor;
+use App\Models\lotes_envasado;
+use App\Models\activarHologramasModelo;
+///Extensiones
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
+
+class Certificado_NacionalController extends Controller
+{
+
+    public function UserManagement()
+    {
+        $dictamen = Dictamen_Envasado::where('estatus','!=',1)
+            ->orderBy('id_dictamen_envasado', 'desc')
+            ->get();
+        $users = User::where('tipo',1)->get(); //Solo Prrsonal OC
+        $empresa = empresa::where('tipo', 2)->get();
+        //$revisores = Revisor::all();
+        $hologramas = activarHologramasModelo::all();
+
+        return view('certificados.find_certificados_nacional', compact('dictamen', 'users', 'empresa', 'hologramas'));
+    }
+
+public function index(Request $request)
+{
+    //Permiso de empresa
+    $empresaId = null;
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaId = Auth::user()->empresa?->id_empresa;
+    }
+
+    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
+
+    // Mapear las columnas según el orden DataTables (índice JS)
+    $columns = [
+        0 => '',
+        1 => 'num_certificado',
+        2 => 'dictamenes_envasado.num_dictamen', //nombre de mi tabla y atributo
+        3 => 'razon_social',
+        4 => '', //caracteristicas
+        5 => 'certificados_nacional.fecha_emision',
+        6 => 'estatus',
+        7 => '',// acciones
+    ];
+      
+    /*$totalData = Certificado_Exportacion::count();
+    $totalFiltered = $totalData; */
+    $limit = $request->input('length');
+    $start = $request->input('start');
+
+    // Columnas ordenadas desde DataTables
+    $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
+    $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
+    $orderColumn = $columns[$orderColumnIndex] ?? 'num_certificado'; // Por defecto
+
+    $search = $request->input('search.value');//Define la búsqueda global.
+
+
+    $query = Certificado_Nacional::query()
+        ->leftJoin('dictamenes_envasado', 'dictamenes_envasado.id_dictamen_envasado', '=', 'certificados_nacional.id_dictamen')
+        ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_envasado.id_inspeccion')
+        ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+        ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+        ->select('certificados_nacional.*', 'empresa.razon_social');
+    if ($empresaId) {
+        $query->where('solicitudes.id_empresa', $empresaId);
+    }
+    $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
+    $totalData = $baseQuery->count();// totalData (sin búsqueda)
+
+
+    // Búsqueda Global
+    if (!empty($search)) {//solo se aplica si hay búsqueda global
+        $query->where(function ($q) use ($search) {
+            $q->where('certificados_nacional.num_certificado', 'LIKE', "%{$search}%")
+            ->orWhere('dictamenes_envasado.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhereRaw("DATE_FORMAT(certificados_nacional.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+        });
+
+        $totalFiltered = $query->count();
+    } else {
+        $totalFiltered = $totalData;
+    }
+
+
+    // Ordenamiento especial para num_certificado con formato 'CIDAM C-EXP25-###'
+    if ($orderColumn === 'num_certificado') {
+        $query->orderByRaw("
+            CASE
+                WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(
+                SUBSTRING_INDEX(
+                    SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14),
+                    '-', 1
+                ) AS UNSIGNED
+            ) $orderDirection
+        ");
+    } elseif (!empty($orderColumn)) {
+        $query->orderBy($orderColumn, $orderDirection);
+    }
+
+    
+    // Paginación
+    $certificados = $query
+        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda de query adicionales en BD)
+            'dictamen',// Relación directa
+            'dictamen.inspeccion',// Relación anidada: dictamen > inspeccion
+            'dictamen.inspeccion.solicitud',// dictamen > inspeccion > solicitud
+            // solicitud > empresa > empresaNumClientes
+            'dictamen.inspeccion.solicitud.empresa',
+            'dictamen.inspeccion.solicitud.empresa.empresaNumClientes',
+        ])->offset($start)->limit($limit)->get();
+
+
+
+    //MANDA LOS DATOS AL JS
+    $data = [];
+    if (!empty($certificados)) {
+        foreach ($certificados as $certificado) {
+            $nestedData['id_certificado'] = $certificado->id_certificado ?? 'No encontrado';
+            $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
+            $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
+            $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
+            $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
+            $id_sustituye = json_decode($certificado->observaciones, true) ['id_sustituye'] ?? null;
+            $nestedData['sustituye'] = $id_sustituye ? Certificado_Nacional::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
+            $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
+            $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
+            ///Folio y no. servicio
+            $nestedData['num_servicio'] = $certificado->dictamen->inspeccion->num_servicio ?? 'No encontrado';
+            $nestedData['folio_solicitud'] = $certificado->dictamen->inspeccion->solicitud->folio ?? 'No encontrado';
+            //Nombre y Numero empresa
+            $empresa = $certificado->dictamen->inspeccion->solicitud->empresa ?? null;
+            $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+                ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+            $nestedData['numero_cliente'] = $numero_cliente;
+            $nestedData['razon_social'] = $certificado->dictamen->inspeccion->solicitud->empresa->razon_social ?? 'No encontrado';
+            //Revisiones
+            /*$nestedData['revisor_personal'] = $certificado->revisorPersonal->user->name ?? null;
+            $nestedData['numero_revision_personal'] = $certificado->revisorPersonal->numero_revision ?? null;
+            $nestedData['decision_personal'] = $certificado->revisorPersonal->decision?? null;
+            $nestedData['respuestas_personal'] = $certificado->revisorPersonal->respuestas ?? null;
+            $nestedData['revisor_consejo'] = $certificado->revisorConsejo->user->name ?? null;
+            $nestedData['numero_revision_consejo'] = $certificado->revisorConsejo->numero_revision ?? null;
+            $nestedData['decision_consejo'] = $certificado->revisorConsejo->decision ?? null;
+            $nestedData['respuestas_consejo'] = $certificado->revisorConsejo->respuestas ?? null;
+            */
+            ///dias vigencia
+            $fechaActual = Carbon::now()->startOfDay();//Obtener la fecha actual sin horas
+            $fechaVigencia = Carbon::parse($certificado->fecha_vigencia)->startOfDay();
+                if ($fechaActual->isSameDay($fechaVigencia)) {
+                    $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este certificado</span>";
+                } else {
+                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);//diferencia de "dias" actual a vigencia
+                    if ($diasRestantes > 0) {
+                        if ($diasRestantes > 15) {
+                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
+                        } else {
+                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
+                        }
+                        $nestedData['diasRestantes'] = $res;
+                    } else {
+                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                    }
+                }
+            ///solicitud y acta
+            $nestedData['id_solicitud'] = $certificado->dictamen->inspeccion->solicitud->id_solicitud ?? 'No encontrado';
+            $urls = $certificado->dictamen?->inspeccion?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
+            $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
+            //Lote envasado
+            $lotes_env = $certificado->dictamen?->inspeccion?->solicitud?->lotesEnvasadoDesdeJson();//obtener todos los lotes
+            $nestedData['nombre_lote_envasado'] = $lotes_env?->pluck('nombre')->implode(', ') ?? 'No encontrado';
+            //Lote granel
+            $lotes_granel = $lotes_env?->flatMap(function ($lote) {
+                return $lote->lotesGranel; // Relación definida en el modelo lotes_envasado
+                })->unique('id_lote_granel');//elimina duplicados
+            $nestedData['nombre_lote_granel'] = $lotes_granel?->pluck('nombre_lote')//extrae cada "nombre"
+                ->implode(', ') ?? 'No encontrado';//une y separa por coma
+            //caracteristicas
+            $nestedData['marca'] = $lotes_env?->first()?->marca->marca ?? 'No encontrado';
+            $caracteristicas = $certificado->dictamen?->inspeccion?->solicitud?->caracteristicasDecodificadas() ?? [];
+            $nestedData['n_pedido'] = $caracteristicas['no_pedido'] ?? 'No encontrado';
+            $nestedData['cajas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_cajas'] ?? 'No encontrado';
+            $nestedData['botellas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado';
+
+
+            $data[] = $nestedData;
+        }
+    }
+
+    return response()->json([
+        'draw' => intval($request->input('draw')),
+        'recordsTotal' => intval($totalData),
+        'recordsFiltered' => intval($totalFiltered),
+        'code' => 200,
+        'data' => $data,
+    ]);
+}
+
+
+
+///FUNCION REGISTRAR
+public function store(Request $request)
+{
+    try {
+    $validated = $request->validate([
+        'id_dictamen' => 'required|exists:dictamenes_envasado,id_dictamen_envasado',
+        'num_certificado' => 'required|string|max:40',
+        'fecha_emision' => 'required|date',
+        'fecha_vigencia' => 'required|date',
+        'id_firmante' => 'required|exists:users,id',
+    ]);
+
+    // Crear un registro
+    $new = new Certificado_Nacional();
+    $new->id_dictamen = $validated['id_dictamen'];
+    $new->num_certificado = $validated['num_certificado'];
+    $new->fecha_emision = $validated['fecha_emision'];
+    $new->fecha_vigencia = $validated['fecha_vigencia'];
+    $new->id_firmante = $validated['id_firmante'];
+    $new->save();
+
+        return response()->json(['message' => 'Registrado correctamente.']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al registrar.'. $e], 500);
+    }
+}
+
+
+///FUNCION ELIMINAR
+public function destroy($id_certificado)
+{
+    try {
+        $eliminar = Certificado_Nacional::findOrFail($id_certificado);
+        $eliminar->delete();
+
+        return response()->json(['message' => 'Eliminado correctamente.']);
+    } catch (\Exception $e) {
+        Log::error('Error al eliminar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al eliminar.'], 500);
+    }
+}
+
+
+///FUNCION PARA OBTENER LOS REGISTROS
+public function edit($id_certificado)
+{
+    try {
+        $editar = Certificado_Nacional::findOrFail($id_certificado);
+
+        return response()->json([
+            'id_certificado' => $editar->id_certificado,
+            'id_dictamen' => $editar->id_dictamen,
+            'num_certificado' => $editar->num_certificado,
+            'fecha_emision' => $editar->fecha_emision,
+            'fecha_vigencia' => $editar->fecha_vigencia,
+            'id_firmante' => $editar->id_firmante,
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Error al obtener', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al obtener los datos.'], 500);
+    }
+}
+
+///FUNCION ACTUALIZAR
+public function update(Request $request, $id_certificado)
+{
+    $request->validate([
+        'num_certificado' => 'required|string|max:40',
+        'id_dictamen' => 'required|integer',
+        'fecha_emision' => 'required|date',
+        'fecha_vigencia' => 'required|date',
+        'id_firmante' => 'required|integer',
+    ]);
+
+    try {
+        $actualizar = Certificado_Nacional::findOrFail($id_certificado);
+
+        $actualizar->num_certificado = $request->num_certificado;
+        $actualizar->id_dictamen = $request->id_dictamen;
+        $actualizar->fecha_emision = $request->fecha_emision;
+        $actualizar->fecha_vigencia = $request->fecha_vigencia;
+        $actualizar->id_firmante = $request->id_firmante;
+        $actualizar->save();
+
+        return response()->json(['message' => 'Actualizado correctamente.']);
+    } catch (\Exception $e) {
+        Log::error('Error al actualizar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al actualizar.'], 500);
+    }
+}
+
+
+///PDF CERTIFICADO
+public function certificado($id_certificado)
+{
+    $data = Certificado_Nacional::find($id_certificado);//Obtener datos del certificado
+
+    if (!$data) {
+        return abort(404, 'Registro no encontrado.');
+        //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
+    }
+
+    $fecha_emision = date('d/m/Y', strtotime($data->fecha_emision));
+    $fecha_vigencia = date('d/m/Y', strtotime($data->fecha_vigencia));
+    $empresa = $data->dictamen->inspeccion->solicitud->empresa ?? null;
+    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+        ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
+    $id_sustituye = json_decode($data->observaciones, true) ['id_sustituye'] ?? null;
+    $nombre_id_sustituye = $id_sustituye ? Certificado_Nacional::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
+    //caracteristicas
+    $caracteristicas = $data->dictamen?->inspeccion?->solicitud?->caracteristicasDecodificadas() ?? [];
+    $cantidad_caja = $caracteristicas['cantidad_caja'] ?? 'No encontrado';
+
+    $pdf =  [
+        'data' => $data,
+        'lote_envasado' =>$data->dictamen?->inspeccion?->solicitud?->lote_envasado->nombre ?? 'No encontrado',
+        'expedicion' => $fecha_emision ?? 'No encontrado',
+        'vigencia' => $fecha_vigencia ?? 'No encontrado',
+        'empresa' => $empresa->razon_social ?? 'No encontrado',
+        'n_cliente' => $numero_cliente,
+        'domicilio' => $empresa->domicilio_fiscal ?? 'No encontrado',
+        'estado' => $empresa->estados->nombre ?? 'No encontrado',
+        'rfc' => $empresa->rfc ?? 'No encontrado',
+        'cp' => $empresa->cp ?? 'No encontrado',
+
+        'convenio' =>  $lotes[0]->lotesGranel[0]->empresa->convenio_corresp ?? 'NA',
+        'DOM' => $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? 'NA',
+        'watermarkText' => $data->estatus == 1,
+        'id_sustituye' => $nombre_id_sustituye,
+        'nombre_destinatario' => $data->dictamen->inspeccion->solicitud->direccion_destino->destinatario ?? 'No encontrado',
+        'dom_destino' => $data->dictamen->inspeccion->solicitud->direccion_destino->direccion ?? 'No encontrado',
+        'pais' => $data->dictamen->inspeccion->solicitud->direccion_destino->pais_destino ?? 'No encontrado',
+        'envasadoEN' => $data->dictamen->inspeccion->solicitud->instalacion_envasado->direccion_completa ?? 'No encontrado',
+        ///caracteristicas
+        'aduana' => $aduana_salida ?? 'No encontrado',
+        'n_pedido' => $no_pedido ?? 'No encontrado',
+        'botellas' => $botellas ?? 'No encontrado',
+        'cajas' => $cajas ?? 'No encontrado',
+        'presentacion' => $presentacion ?? 'No encontrado',
+    ];
+
+    //nombre al descargar
+    return Pdf::loadView('pdfs.certificado_nacional_ed1', $pdf)->stream('F7.1-01-23 Ver 1. Certificado de nacionalidad.pdf');
+}
+
+
+
+
+
+}//end-classController
