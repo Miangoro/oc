@@ -570,9 +570,9 @@ const fv = FormValidation.formValidation(FormAgregar, {
     },
     fecha_vigencia: {
       validators: {
-        notEmpty: {
+        /*notEmpty: {
             message: 'La fecha de vigencia es obligatoria.'
-        },
+        },*/
         date: {
           format: 'YYYY-MM-DD',
           message: 'Ingresa una fecha válida (yyyy-mm-dd).'
@@ -600,7 +600,7 @@ const fv = FormValidation.formValidation(FormAgregar, {
       processData: false,
       contentType: false,
       success: function (response) {
-        console.log('Error222:', response);
+        console.log('Correcto:', response);
         $('#ModalAgregar').modal('hide');//modal
         $('#FormAgregar')[0].reset();//formulario
 
