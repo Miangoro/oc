@@ -188,7 +188,7 @@ class lotesGranelController extends Controller
                     $nestedData['ingredientes'] = $lote->ingredientes ?? 'N/A';
                     $nestedData['edad'] = $lote->edad ?? 'N/A';
                     $nestedData['folio_certificado'] = $lote->folio_certificado ?? 'N/A';
-                    $nestedData['id_organismo'] = $lote->organismo->organismo ?? 'N/A';
+                    $nestedData['id_organismo'] = $lote->organismo->organismo ?? '';
                     $nestedData['fecha_emision'] = Helpers::formatearFecha($lote->fecha_emision) ?? 'N/A';
                     $nestedData['fecha_vigencia'] = Helpers::formatearFecha($lote->fecha_vigencia) ?? 'N/A';
                     $nestedData['estatus'] = $lote->estatus;

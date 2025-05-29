@@ -64,8 +64,11 @@
                             <tr>
                                 <td class="td"><b>TIPO DE AGAVE</b></td>
                                 <td class="td">
-                                    {{ optional($datosHolograma->tipos)->pluck('nombre')->implode(', ') }}
+                                    {!! optional($datosHolograma->tipos)->map(function($tipo) {
+                                        return $tipo->nombre . ($tipo->cientifico ? ' (<i>' . $tipo->cientifico . '</i>)' : '');
+                                    })->implode(', ') !!}
                                 </td>
+
                                 
                             </tr>
                             <tr>
@@ -108,12 +111,12 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;"class="alert">
+                   <!-- <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;"class="alert">
                         <strong>CERTIFICADO
                             VENTA
                             NACIONAL Y/O EXPORTACIÓN: <br>
                             CIDAM C-EXP-497/2024</strong>
-                    </div>
+                    </div>-->
                     @else
                     <div class="alert alert-danger text-center fw-bold fs-4">
                         HOLOGRAMA NO ACTIVADO

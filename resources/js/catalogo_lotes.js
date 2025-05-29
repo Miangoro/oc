@@ -139,7 +139,7 @@ $(function () {
         orderable: false,
         render: function (data, type, row) {
           if (row.folio_certificado !== 'N/A') {
-            return '<span class="fw-bold text-dark small">Organismo:</span> <span class="small">' + row.id_organismo +
+            return '<span class="fw-bold text-dark small">Organismo:</span> <span class="small">' + (row.id_organismo || 'CIDAM') +
               '</span><br><span class="fw-bold text-dark small">Certificado:</span><span class="small"> ' +
               // Verifica si hay URL del certificado
               (row.url_certificado ?
@@ -149,8 +149,8 @@ $(function () {
                   data-url="${row.url_certificado}">${row.folio_certificado}</a>`
                 : row.folio_certificado) +
               '</span>' +
-              '<br><span class="fw-bold text-dark small">Fecha de emisión:</span><span class="small"> ' + row.fecha_emision +
-              '</span><br><span class="fw-bold text-dark small">Fecha de vigencia:</span><span class="small"> ' + row.fecha_vigencia +
+              '<br><span class="fw-bold text-dark small">Emisión:</span><span class="small"> ' + row.fecha_emision +
+              '</span><br><span class="fw-bold text-dark small">Vigencia:</span><span class="small"> ' + row.fecha_vigencia +
               '</span>';
           } else {
             return '<span class="badge rounded-pill bg-danger">Sin certificado</span>';

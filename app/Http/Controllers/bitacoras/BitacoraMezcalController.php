@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Bitacoras;
+namespace App\Http\Controllers\bitacoras;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
