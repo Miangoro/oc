@@ -892,12 +892,21 @@ class RevisionConsejoController extends Controller
         return $pdf->stream('Bitácora de revisión de certificados de Instalaciones NOM-070-SCFI-2016.pdf');
     }
 
-        public function pdf_bitacora_revision_certificado_granel($id)
+    public function pdf_bitacora_revision_certificado_granel($id)
     {
 
             $pdf = Pdf::loadView('pdfs.pdf_bitacora_revision_certificado_granel')
             ->setPaper('letter'); // Define tamaño carta
 
         return $pdf->stream('Bitácora de revisión de certificado NOM a Granel NOM-070-SCFI-2016 F7.1-01-34.pdf');
+    }
+
+    public function pdf_bitacora_revision_certificado_exportacion($id)
+    {
+
+            $pdf = Pdf::loadView('pdfs.pdf_bitacora_revision_certificado_exportacion')
+            ->setPaper('letter'); // Define tamaño carta
+
+        return $pdf->stream('Bitácora de revisión de certificado de exportación NOM-070-SCFI-2016 F7.1-01-33.pdf');
     }
 }

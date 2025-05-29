@@ -322,6 +322,9 @@
                 documento, por
                 consiguiente, se toma la decisión para otorgar la certificación de instalaciones como envasador.
                 <div style="padding: 30px"></div>
+                            <div style="width: 100%; text-align: right; position: fixed; margin-top: -30px; right: 20px;">
+                <img src="{{ public_path('img_pdf/2-s.png') }}" alt="Firma" style="width: 120px; height: auto;">
+            </div>
                 Miguel Ángel Gómez Romero <br>
                 Miembro del Consejo para la decisión de la certificación (Vocal):
             </td>

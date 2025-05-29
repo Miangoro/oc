@@ -877,7 +877,7 @@ Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group
     Route::get('/pdf_bitacora_revision_consejo/{id}', 'pdf_bitacora_revision_consejo');
     Route::get('/pdf_bitacora_revision_certificado_instalaciones/{id}', 'pdf_bitacora_revision_certificado_instalaciones');
     Route::get('/pdf_bitacora_revision_certificado_granel/{id}', 'pdf_bitacora_revision_certificado_granel');
-    Route::get('/pdf_bitacora_revision_personal22/{id}', 'pdf_bitacora_revision_personal');
+    Route::get('/pdf_bitacora_revision_certificado_exportacion/{id}', 'pdf_bitacora_revision_certificado_exportacion');
 });
 
 // Pdfs Bitacoras

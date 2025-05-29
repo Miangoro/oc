@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Bitácora de revisión de certificado NOM a Granel NOM-070-SCFI-2016 F7.1-01-34 </title>
+    <title>Bitácora de revisión de certificado de exportación NOM-070-SCFI-2016 F7.1-01-33</title>
     <style>
         body {
             font-weight: 12px;
@@ -37,7 +37,7 @@
         .header {
             font-family: 'Century Gothic';
             text-align: right;
-            font-size: 13px;
+            font-size: 14px;
             margin-right: -30px;
 
         }
@@ -45,14 +45,6 @@
         .title {
             text-align: center;
             font-size: 17px;
-        }
-
-        .footer {
-            position: absolute;
-            transform: translate(0px, 180px);
-            /* Mueve el elemento 50px en X y 50px en Y */
-            text-align: center;
-            font-size: 11px;
         }
 
         /*Tablas*/
@@ -64,13 +56,12 @@
         th,
         td {
             border: 2px solid black;
-            padding: 3px;
+            padding: 5px;
+/*             padding-bottom: 6px;
+            padding-top: 6px; */
             font-size: 11px;
             text-align: center;
             font-family: 'Century Gothic';
-
-
-
         }
 
         th {
@@ -132,8 +123,18 @@
             font-family: 'Century Gothic negrita';
             color: black;
             font-size: 12px;
-            background-color: #8eaadb;
+            background-color: #9FC5E8;
             text-align: center;
+
+        }
+
+        .letra-title {
+            font-family: 'Century Gothic negrita';
+            color: black;
+            font-size: 15px;
+            background-color: #9FC5E8;
+            text-align: left;
+            padding: 3px;
 
         }
 
@@ -153,19 +154,20 @@
             float: left;
             max-width: 165px;
             padding: 0;
-            margin-top: -40px;
-            margin-left: -30px;
+            margin-top: -30px;
+            margin-left: -50px;
 
 
         }
 
         /* Estilo para el texto de fondo */
         .background-text {
-            padding-top: 15px;
+            padding-top: -15px;
             margin-left: auto;
             margin-right: 0;
-            width: 60%; /* o el ancho que desees */
-            font-family: 'Century Gothic';
+            width: 65%;
+            /* o el ancho que desees */
+            font-family: 'Century Gothic Negrita';
             border: #000000 1px solid;
             color: #000000;
             font-size: 12px;
@@ -174,8 +176,7 @@
         }
 
         .espacio_letras td {
-            padding-top: 1px;
-            padding-bottom: 1px;
+
         }
 
         .sin-border td {
@@ -183,36 +184,28 @@
             padding-bottom: 10px;
             border: none;
         }
-          #footer {
-              position: fixed;
-              left: 0;
-              bottom: 0;
-              width: 100%;
-              font-size: 12px;
-          }
-          .recuadro_certificacion {
-              width: 100%;
-              border: 2px solid black;
-              font-size: 12px;
-              margin-bottom: 10px;
-          }
-          .td-negrita {
-              font-size: 11px;
-              color: #000000;
-               text-align: left;
-          }
+
+        .td-negrita {
+            font-size: 12.5px;
+            color: #000000;
+            text-align: left;
+            padding: 0;
+            padding-right: 5px;
+        }
     </style>
 
 
     <div class="header">
         <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
-        <div> Bitácora de revisión de certificado NOM a Granel NOM-070-SCFI-2016<br> F7.1-01-34 <br>Ed 3 Entrada en
-            vigor 08/11/2023<br>_______________________________________________________________________________________
+        <div> Bitácora de revisión de certificado de exportación NOM-070-SCFI-2016 F7.1-01-33<br> Ed. 6 Entrada en vigor
+            07/11/2023<br>
         </div>
-    </div>
 </head>
 
 <body>
+    <div>
+        <p class="letra-title">PRIMERA REVISIÓN POR PARTE DEL CONSEJO PARA LA DECISIÓN DE LA CERTIFICACIÓN</p>
+    </div>
 
     <table>
         <tr>
@@ -222,7 +215,7 @@
         <tr>
             <td class="letra-fondo" style="text-align: left" colspan="2">No. Cliente:</td>
             <td colspan="2">NOM-070-270C</td>
-            <td class="letra-fondo" style="text-align: left">Fecha de revisión:</td>
+            <td class="letra-fondo" style="text-align: left">Fecha de primera revisión:</td>
             <td>2024-07-25 11:35:43</td>
         </tr>
         <tr>
@@ -235,14 +228,25 @@
     </table>
     <br>
 
+    <table class="background-text">
+        <tr>
+            <td class="td-negrita">
+                Nota: Para el llenado de la bitácora colocar {{-- <br>  --}}C= Cumple, NC= No Cumple, NA= No
+                Aplica o {{-- <br> --}} bien una X en
+                el recuadro correspondiente en {{-- <br> --}}cada uno de los requisitos y datos que estipula
+                {{-- <br>  --}}la bitácora.
+            </td>
+        </tr>
+    </table>
+    <br>
     <table style="width:100%; border: none;">
         <tr class="sin-padding">
             <td style="vertical-align: top; text-align: left; border: none;">
                 <table style="display: inline-table; width: 200px;" {{-- class="espacio_letras tabla-1" --}}>
                     <!-- ...contenido de la primera tabla... -->
                     <tr>
-                        <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 110px;">Datos de la
-                            Empresa
+                        <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 110px;">Datos
+                            generales del exportador
                         </td>
                         <td class="letra-fondo" style="width: 50px">C </td>
                         <td class="letra-fondo" style="width: 50px">N/C </td>
@@ -250,40 +254,46 @@
                     </tr>
 
                     <tr>
-                        <td style="text-align: left"> Nombre de la empresa</td>
+                        <td style="text-align: left"> Número de certificado</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left">Representante legal</td>
+                        <td style="text-align: left">Domicilio </td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left">Dirección</td>
+                        <td style="text-align: left">País</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left">RFC</td>
+                        <td style="text-align: left">Código postal</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left">Fecha de emisión</td>
+                        <td style="text-align: left"> Registro de productor autorizado (Uso de la DOM)</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left">Fecha de vencimiento</td>
+                        <td style="text-align: left"> Certificado de cumplimiento de la norma (NOM a Granel)</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left">No. De convenio de corresponsabilidad </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     <tr class="sin-border">
                         <td></td>
@@ -302,6 +312,33 @@
                         <td></td>
                         <td></td>
                         <td></td>
+                    </tr>
+
+                    <tr>
+                        <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 110px;">Destinatario
+                        </td>
+                        <td class="letra-fondo" style="width: 45px">C </td>
+                        <td class="letra-fondo" style="width: 45px">N/C </td>
+                        <td class="letra-fondo"style="width: 45px">N/A</td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align: left"> Nombre</td>
+                        <td>C</td>
+                        <td>- -</td>
+                        <td>- -</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left"> Domicilio </td>
+                        <td>C</td>
+                        <td>- -</td>
+                        <td>- -</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left"> país de destino </td>
+                        <td>C</td>
+                        <td>- -</td>
+                        <td>- -</td>
                     </tr>
                 </table>
                 {{-- segunda tabla --}}
@@ -311,68 +348,98 @@
                 <table style="display: inline-table; width: 300px;" {{-- class="tabla-2" --}}>
                     <!-- ...contenido de la segunda tabla... -->
                     <tr>
-                        <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 110px;">Descripción
-                            del producto</td>
+                        <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 110px;">Descripción del embarque que ampara el certificado
+                    </td>
                         <td class="letra-fondo" style="width: 50px">C </td>
                         <td class="letra-fondo" style="width: 50px">N/C </td>
                         <td class="letra-fondo" style="width: 50px">N/A</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left"> Producto y Origen</td>
+                        <td style="text-align: left"> Categoría</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left"> Categoría y Clase</td>
+                        <td style="text-align: left"> Marca</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left">NO. de lote</td>
+                        <td style="text-align: left">Clase</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left"> No. De Análisis</td>
+                        <td style="text-align: left"> Volumen</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left"> Ingredientes</td>
+                        <td style="text-align: left">% Alcohol volumen</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left"> Volumen de lote</td>
+                        <td style="text-align: left"> Cantidad de botellas / cajas</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left"> Conteido Alcohólico</td>
+                        <td style="text-align: left"> Lugar de envasado</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left"> Tipo de Maguey</td>
+                        <td style="text-align: left"> No. De lote a granel y envasado</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left"> Edad</td>
+                        <td style="text-align: left"> Número de análisis</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
                     </tr>
                     <tr>
-                        <td style="text-align: left"> No De Dictamen</td>
+                        <td style="text-align: left"> Aduana de despacho </td>
+                        <td>C</td>
+                        <td>- -</td>
+                        <td>- -</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left"> Fracción arancelaria</td>
+                        <td>C</td>
+                        <td>- -</td>
+                        <td>- -</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left"> Número de factura proforma</td>
+                        <td>C</td>
+                        <td>- -</td>
+                        <td>- -</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left"> Tipo de maguey </td>
+                        <td>C</td>
+                        <td>- -</td>
+                        <td>- -</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left"> Etiquetas </td>
+                        <td>C</td>
+                        <td>- -</td>
+                        <td>- -</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left"> Corrugado</td>
                         <td>C</td>
                         <td>- -</td>
                         <td>- -</td>
@@ -381,76 +448,7 @@
             </td>
         </tr>
     </table>
-
-    <table style="display: inline-table; width: 300px;" class="espacio_letras tabla-1">
-
-        <tr>
-            <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 110px;">Descripción del producto
-            </td>
-            <td class="letra-fondo" style="width: 45px">C </td>
-            <td class="letra-fondo" style="width: 45px">N/C </td>
-            <td class="letra-fondo"style="width: 45px">N/A</td>
-        </tr>
-
-        <tr>
-            <td style="text-align: left"> No. De Acta</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left"> Fecha de inicio y cierre del muestreo </td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left">Nombre y firma del interesado </td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left"> Nombre y firma del inspector</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-    </table>
-    <br>
-
-      <table class="background-text">
-        <tr>
-          <td class="td-negrita">
-        Nota: Para el llenado de la bitácora colocar {{-- <br>  --}}C= Cumple, NC= No Cumple, NA= No Aplica o {{-- <br> --}} bien una X en
-        el recuadro correspondiente en {{-- <br> --}}cada uno de los requisitos y datos que estipula {{-- <br>  --}}la bitácora.
-          </td>
-        </tr>
-      </table>
-
-    <br>
-   <div id="footer">
-<table class="recuadro_certificacion">
-    <tr>
-        <td>
-            Derivado de la revisión minuciosa y con la documentación completa entregada de manera digital por
-            personal del OC CIDAM se revisa que el certificado cumple con cada uno de los requisitos mencionados en este
-            documento, por consiguiente, se toma la decisión para otorgar la certificación de producto.
-            <div style="height: 20px;"></div>
-            <div style="width: 100%; text-align: right; position: fixed; margin-top: -30px; right: 20px;">
-                <img src="{{ public_path('img_pdf/2-s.png') }}" alt="Firma" style="width: 120px; height: auto;">
-            </div>
-            <div style="height: 20px;"></div>
-            Miguel Ángel Gómez Romero <br>
-            Miembro del Consejo para la decisión de la certificación (Vocal):
-        </td>
-    </tr>
-</table>
-    <p style="font-size: 11px; margin-top: 10px; text-align: center; font-family: 'Century Gothic';">
-        Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser <br>
-        distribuido externamente sin la autorización escrita del Director Ejecutivo.
-    </p>
-</div>
+    </div>
 </body>
 
 </html>
