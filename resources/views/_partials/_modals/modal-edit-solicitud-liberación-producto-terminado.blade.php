@@ -228,7 +228,7 @@
                 method: 'GET',
                 success: function(response) {
                     console.log(response);
-                    cargarLotesEnvasado(response.lotes_envasado, response.marcas);
+                    /* cargarLotesEnvasado(response.lotes_envasado, response.marcas); */
                     // Cargar los detalles de instalaciones en el modal
                     var contenidoInstalaciones = "";
                     for (let index = 0; index < response.instalaciones.length; index++) {
@@ -249,7 +249,7 @@
                     $('#edit_id_instalacion_lib_ter').html(contenidoInstalaciones);
 
                     // Si hay un valor previo, seleccionarlo automáticamente
-                    const idInstalacionPrevio = $('#id_instalacion_lib_ter').data('selected');
+                    const idInstalacionPrevio = $('#edit_id_instalacion_lib_ter').data('selected');
                     if (idInstalacionPrevio) {
                         $('#edit_id_instalacion_lib_ter').val(idInstalacionPrevio).trigger('change');
                     }

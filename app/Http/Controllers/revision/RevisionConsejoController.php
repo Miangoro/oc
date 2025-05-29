@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\empresaNumCliente;
 use App\Helpers\Helpers;
 use App\Models\preguntas_revision;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class RevisionConsejoController extends Controller
@@ -785,4 +786,118 @@ class RevisionConsejoController extends Controller
         }
     }
 
+        public function pdf_bitacora_revision_certificado_instalaciones($id)
+    {
+
+      /*   $revisor = Revisor::findOrFail($id);
+
+        // Decodificar el JSON correctamente
+        $respuestasJson = json_decode($revisor->respuestas, true);
+
+        // Asegurar que "Revisión 1" existe en el array
+        $respuestas = collect(array_merge(
+            $respuestasJson["Revision 1"] ?? [],
+            $respuestasJson["Revision 2"] ?? [],
+            $respuestasJson["Revision 3"] ?? []
+        ));
+
+
+        $preguntas = preguntas_revision::whereIn('id_pregunta', $respuestas->pluck('id_pregunta'))->get();
+
+
+        // Unir las preguntas con sus respuestas
+        $preguntasConRespuestas = $preguntas->map(function ($pregunta) use ($respuestas) {
+            $respuesta = $respuestas->firstWhere('id_pregunta', $pregunta->id_pregunta);
+            return [
+                'id_pregunta' => $pregunta->id_pregunta,
+                'pregunta' => $pregunta->pregunta,
+                'respuesta' => $respuesta['respuesta'] ?? null,
+                'observacion' => $respuesta['observacion'] ?? null,
+            ];
+        });
+
+
+
+        $id_dictamen = $revisor->certificado->dictamen->tipo_dictamen;
+
+        $tipo_certificado = '';
+        if ($revisor->tipo_certificado == 1) { //Instalaciones
+
+            switch ($id_dictamen) {
+                case 1:
+                    $tipo_certificado = 'Instalaciones de productor';
+                    break;
+                case 2:
+                    $tipo_certificado = 'Instalaciones de envasador';
+                    break;
+                case 3:
+                    $tipo_certificado = 'Instalaciones de comercializador';
+                    break;
+                case 4:
+                    $tipo_certificado = 'Instalaciones de almacén y bodega';
+                    break;
+                case 5:
+                    $tipo_certificado = 'Instalaciones de área de maduración';
+
+                    break;
+                default:
+                    $tipo_certificado = 'Desconocido';
+            }
+        }
+        if ($revisor->tipo_certificado == 2) { //Granel
+
+            $tipo_certificado = "NOM a Granel";
+        }
+        if ($revisor->tipo_certificado == 3) { //Exportación
+
+            $tipo_certificado = "Exportación";
+        }
+
+
+
+
+
+        $decision = $revisor->decision;
+        $nameRevisor = $revisor->user->name ?? null;
+        $firmaRevisor = $revisor->user->firma ?? '';
+        $puestoRevisor = $revisor->user->puesto ?? null;
+        $fecha = $revisor->updated_at;
+        $id_aprobador = $revisor->aprobador->name ?? 'Sin asignar';
+        $aprobacion = $revisor->aprobacion ?? 'Pendiente de aprobar';
+        $fecha_aprobacion = $revisor->fecha_aprobacion;
+
+        $razonSocial = $revisor->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar';
+        $numero_cliente = $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar';
+
+        $pdfData = [
+            'numero_revision' => $revisor->numero_revision,
+            'num_certificado' => $revisor->certificado->num_certificado,
+            'tipo_certificado' => $tipo_certificado,
+            'decision' => $decision,
+            'id_revisor' => $nameRevisor,
+            'firmaRevisor' => $firmaRevisor,
+            'puestoRevisor' => $puestoRevisor,
+            'razon_social' => $razonSocial,
+            'fecha' => Helpers::formatearFecha($fecha),
+            'numero_cliente' => $numero_cliente,
+            'aprobacion' => $aprobacion,
+            'id_aprobador' => $id_aprobador,
+            'fecha_aprobacion' => Helpers::formatearFecha($fecha_aprobacion),
+            'preguntas' => $preguntasConRespuestas
+        ]; */
+
+        $pdf = Pdf::loadView('pdfs.pdf_bitacora_revision_certificado_instalaciones')
+            ->setPaper('letter'); // Define tamaño carta
+
+        return $pdf->stream('Bitácora de revisión de certificados de Instalaciones NOM-070-SCFI-2016.pdf');
+    }
+
+        public function pdf_bitacora_revision_certificado_granel($id)
+    {
+
+            $pdf = Pdf::loadView('pdfs.pdf_bitacora_revision_certificado_granel')
+            ->setPaper('letter'); // Define tamaño carta
+
+        return $pdf->stream('Bitácora de revisión de certificado NOM a Granel NOM-070-SCFI-2016 F7.1-01-34.pdf');
+    }
 }
