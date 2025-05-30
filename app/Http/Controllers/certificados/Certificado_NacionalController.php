@@ -10,8 +10,8 @@ use App\Models\solicitudesModel;
 use App\Models\User;
 use App\Models\empresa;
 use App\Models\Revisor;
-use App\Models\lotes_envasado;
 use App\Models\activarHologramasModelo;
+use App\Models\Documentacion_url;
 use App\Models\Dictamen_Envasado;
 ///Extensiones
 use Carbon\Carbon;
@@ -160,7 +160,7 @@ public function index(Request $request)
             $nestedData['numero_cliente'] = $numero_cliente;
             $nestedData['razon_social'] = $certificado->dictamen->inspeccion->solicitud->empresa->razon_social ?? 'No encontrado';
             //Revisiones
-            /*$nestedData['revisor_personal'] = $certificado->revisorPersonal->user->name ?? null;
+            $nestedData['revisor_personal'] = $certificado->revisorPersonal->user->name ?? null;
             $nestedData['numero_revision_personal'] = $certificado->revisorPersonal->numero_revision ?? null;
             $nestedData['decision_personal'] = $certificado->revisorPersonal->decision?? null;
             $nestedData['respuestas_personal'] = $certificado->revisorPersonal->respuestas ?? null;
@@ -168,7 +168,6 @@ public function index(Request $request)
             $nestedData['numero_revision_consejo'] = $certificado->revisorConsejo->numero_revision ?? null;
             $nestedData['decision_consejo'] = $certificado->revisorConsejo->decision ?? null;
             $nestedData['respuestas_consejo'] = $certificado->revisorConsejo->respuestas ?? null;
-            */
             ///dias vigencia
             $fechaActual = Carbon::now()->startOfDay();//Obtener la fecha actual sin horas
             $fechaVigencia = Carbon::parse($certificado->fecha_vigencia)->startOfDay();
@@ -336,6 +335,190 @@ public function update(Request $request, $id_certificado)
         return response()->json(['error' => 'Error al actualizar.'], 500);
     }
 }
+
+
+///FUNCION REEXPEDIR
+public function reexpedir(Request $request)
+{
+    //try {
+        $request->validate([
+            'accion_reexpedir' => 'required|in:1,2',
+            'observaciones' => 'nullable|string',
+        ]);
+
+        if ($request->accion_reexpedir == '2') {
+            $request->validate([
+                'id_solicitud' => 'required|exists:solicitudes,id_solicitud',
+                //'id_dictamen' => 'required|integer',
+                'num_certificado' => 'required|string|min:8',
+                'fecha_emision' => 'required|date',
+                'fecha_vigencia' => 'nullable|date',
+                'id_firmante' => 'required|integer',
+            ]);
+        }
+
+        $reexpedir = Certificado_Nacional::findOrFail($request->id_certificado);
+
+        // Obtener dictamen a partir de id_solicitud
+        $solicitud = solicitudesModel::with('lote_envasado.dictamenEnvasado')->findOrFail($request['id_solicitud']);
+        $dictamen = $solicitud->lote_envasado->dictamenEnvasado;
+        if (!$dictamen) {
+            return response()->json(['error' => 'No se encontró dictamen para el lote envasado.'], 404);
+        }
+
+
+        if ($request->accion_reexpedir == '1') {
+            $reexpedir->estatus = 1;
+            
+            $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales);
+            $reexpedir->save();
+            return response()->json(['message' => 'Cancelado correctamente.']);
+
+        } elseif ($request->accion_reexpedir == '2') {
+            $reexpedir->estatus = 1;
+                $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales);
+            $reexpedir->save();
+
+            // Crear un nuevo registro de reexpedición
+            $new = new Certificado_Nacional();
+            $new->id_solicitud = $request->id_solicitud;
+            $new->num_certificado = $request->num_certificado;
+            $new->id_dictamen = $dictamen->id_dictamen_envasado;
+            $new->fecha_emision = $request->fecha_emision;
+            $new->fecha_vigencia = $request->fecha_vigencia;
+            $new->id_firmante = $request->id_firmante;
+            $new->estatus = 2;
+            $new->observaciones = json_encode(['id_sustituye' => $request->id_certificado]);
+            $new->save();
+
+            return response()->json(['message' => 'Registrado correctamente.']);
+        }
+
+        return response()->json(['message' => 'Procesado correctamente.']);
+    /*} catch (\Exception $e) {
+        Log::error('Error al reexpedir', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al procesar.'], 500);
+    }*/
+}
+
+
+///FUNCION AGREGAR REVISOR
+public function storeRevisor(Request $request)
+{
+    try {
+        $validatedData = $request->validate([
+            'tipoRevisor' => 'required|string|in:1,2',
+            'nombreRevisor' => 'required|integer|exists:users,id',
+            'numeroRevision' => 'required|string|max:50',
+            'esCorreccion' => 'nullable|in:si,no',
+            'observaciones' => 'nullable|string|max:255',
+            'id_certificado' => 'required|integer|exists:certificados_nacional,id_certificado',
+        ]);
+
+        $user = User::find($validatedData['nombreRevisor']);
+        if (!$user) {
+            return response()->json(['message' => 'El revisor no existe.'], 404);
+        }
+
+        $certificado = Certificado_Nacional::find($validatedData['id_certificado']);
+        if (!$certificado) {
+            return response()->json(['message' => 'El certificado no existe.'], 404);
+        }
+
+        $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])
+                ->where('tipo_certificado', 3)
+                ->where('tipo_revision', $validatedData['tipoRevisor']) // buscar según tipo de revisión
+                ->first();
+
+            $message = ''; // Inicializar el mensaje
+
+            if ($revisor) {
+                if ($revisor->id_revisor == $validatedData['nombreRevisor']) {
+                    $message = 'Revisor reasignado.';
+                } else {
+                    $revisor->id_revisor = $validatedData['nombreRevisor'];
+                    $message = 'Revisor asignado exitosamente.';
+                }
+            } else {
+                $revisor = new Revisor();
+                $revisor->id_certificado = $validatedData['id_certificado'];
+                $revisor->tipo_certificado = 4; //El 4 corresponde al certificado de venta nacional
+                $revisor->tipo_revision = $validatedData['tipoRevisor'];
+                $revisor->id_revisor = $validatedData['nombreRevisor'];
+                $message = 'Revisor asignado exitosamente.';
+            }
+        // Guardar los datos del revisor
+        $revisor->decision = 'Pendiente';
+        $revisor->numero_revision = $validatedData['numeroRevision'];
+        $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
+        $revisor->observaciones = $validatedData['observaciones'] ?? '';
+        $revisor->save();
+
+        $empresa = $certificado->solicitud->empresa;
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
+
+            if ($request->hasFile('url')) {
+            if ($revisor->id_revision) {
+                // Buscar el registro existente
+
+
+                    // Si no existe, crea una nueva instancia
+                    $documentacion_url = new Documentacion_url();
+                    $documentacion_url->id_relacion = $revisor->id_revision;
+                    $documentacion_url->id_documento = $request->id_documento;
+                    $documentacion_url->id_empresa = $empresa->id_empresa;
+
+
+                // Procesar el nuevo archivo
+                $file = $request->file('url');
+                $nombreLimpio = str_replace('/', '-', $request->nombre_documento);
+                $filename = $nombreLimpio . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $filePath = $file->storeAs('revisiones/', $filename, 'public');
+
+                // Actualizar los datos del registro
+                $documentacion_url->nombre_documento = $nombreLimpio;
+                $documentacion_url->url = $filename;
+                $documentacion_url->save();
+
+            }
+        }
+
+        // Preparar datos para el correo
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud',
+            'message' => 'Se ha asignado el revisor (' . $user->name . ') al certificado número ' . $certificado->num_certificado,
+            'url' => 'solicitudes-historial',
+            'nombreRevisor' => $user->name,
+            'emailRevisor' => $user->email,
+            'num_certificado' => $certificado->num_certificado,
+            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+            'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
+            'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar',
+            'numero_cliente' => $certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar',
+            'tipo_certificado' => $certificado->id_dictamen
+        ];
+
+
+        return response()->json([
+            'message' => $message ?? 'Revisor del OC asignado exitosamente',
+        ]);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json(['message' => $e->validator->errors()->first()], 422);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Ocurrió un error al asignar el revisor: ' . $e->getMessage()], 500);
+    }
+}
+
 
 
 ///PDF CERTIFICADO

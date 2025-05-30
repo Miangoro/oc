@@ -398,7 +398,7 @@ public function reexpedir(Request $request)
                 'id_dictamen' => 'required|integer',
                 'num_certificado' => 'required|string|min:8',
                 'fecha_emision' => 'required|date',
-                'fecha_vigencia' => 'required|date',
+                'fecha_vigencia' => 'nullable|date',
                 'id_firmante' => 'required|integer',
             ]);
         }
