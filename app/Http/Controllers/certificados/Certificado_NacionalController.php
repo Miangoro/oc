@@ -140,6 +140,8 @@ public function index(Request $request)
         foreach ($certificados as $certificado) {
             $nestedData['id_certificado'] = $certificado->id_certificado ?? 'No encontrado';
             $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
+            $nestedData['id_solicitud_nacional'] = $certificado->solicitud->id_solicitud ?? 'No encontrado';
+            $nestedData['folio_solicitud_nacional'] = $certificado->solicitud->folio ?? 'No encontrado';
             $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen_envasado ?? 'No encontrado';
             $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
             $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
@@ -192,9 +194,7 @@ public function index(Request $request)
             //caracteristicas
             $nestedData['nombre_lote_envasado'] = $certificado->dictamen->lote_envasado->nombre ?? 'No encontrado';
             $nestedData['nombre_lote_granel'] = $certificado->dictamen->lote_envasado->lotesGranel->first()->nombre_lote ?? 'No encontrado';
-            //caracteristicas
             $nestedData['marca'] = $certificado->dictamen->lote_envasado->marca->marca ?? 'No encontrado';
-
             $caracteristicas = json_decode($certificado->solicitud->caracteristicas ?? '', true);
             $nestedData['cajas'] = $caracteristicas['cajas'] ?? 'No encontrado';
             $nestedData['botellas'] = $caracteristicas['botellas'] ?? 'No encontrado';
@@ -373,11 +373,12 @@ public function certificado($id_certificado)
         'cp' => $empresa->cp ?? 'No encontrado',
         'convenio' =>  $empresa->convenio_corresp ?? 'NA',
         'DOM' => $empresa->registro_productor ?? 'NA',
-        'envasado_en' =>$data->dictamen->inspeccion->solicitud->instalacion->direccion_completa ?? 'No encontrado',
         'watermarkText' => $data->estatus == 1,
         'id_sustituye' => $nombre_id_sustituye,
-
-        //lote
+        'botellas' =>$botellas,
+        'cajas' =>$cajas,
+        'hologramas' =>'Falta',
+        //datos del dictamen (lote)
         'dictamen_envasado' =>$data->dictamen->num_dictamen ?? 'No encontrado',
         'certificado_granel' => $data->dictamen->inspeccion->solicitud->lote_envasado->lotesGranel->first()->folio_certificado ?? 'No encontrado',
         'lote_envasado' =>$data->dictamen->inspeccion->solicitud->lote_envasado->nombre ?? 'No encontrado',
@@ -390,13 +391,10 @@ public function certificado($id_certificado)
         'unidad' =>$data->dictamen->inspeccion->solicitud->lote_envasado->unidad ?? 'No encontrado',
         'analisis_fq' =>$data->dictamen->inspeccion->solicitud->lote_envasado->lotesGranel->first()->folio_fq ?? 'No encontrado',
         'sku' =>json_decode($data->dictamen->inspeccion->solicitud->lote_envasado->sku ?? '{}', true)['inicial'] ?? 'Sin sku',
-
-        'botellas' =>$botellas,
-        'cajas' =>$cajas,
-        'hologramas' =>'Falta',
+        'envasado_en' =>$data->dictamen->inspeccion->solicitud->instalacion->direccion_completa ?? 'No encontrado',
     ];
 
-    return Pdf::loadView('pdfs.certificado_nacional_ed1', $pdf)->stream('F7.1-01-23 Ver 1. Certificado de nacionalidad.pdf');
+    return Pdf::loadView('pdfs.certificado_nacional_ed1', $pdf)->stream('F7.1-01-23 Ver 1. Certificado de venta nacional.pdf');
 }
 
 
