@@ -822,6 +822,8 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::get('/Etiqueta-2401ESPTOB/{id_solicitud}', 'Etiqueta_240');
     Route::post('/registrarValidarSolicitud', 'registrarValidarSolicitud');
     Route::get('/pdf_validar_solicitud/{id_validacion}', 'pdf_validar_solicitud');
+
+    Route::get('/obtener_dictamenes_envasado/{empresa}', [getFuncionesController::class, 'getDictamenesEnvasado'])->name('getDictamenesEnvasado');
 });
 
 //-------------------CATALOGO EQUIPOS-------------------
