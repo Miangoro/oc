@@ -277,6 +277,8 @@ $navbarDetached = ($navbarDetached ?? '');
                       <small class="text-primary"> 
                         @if (Auth::check() and Auth::user()->puesto)
                         {{ Auth::user()->puesto }}
+                        @elseif(Auth::user()->empresa)
+                                {{ Auth::user()->empresa->razon_social }}
                         @else
                           {{ Auth::user()->empresa->razon_social }}
                         @endif
