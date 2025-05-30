@@ -57,7 +57,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" id="fecha_vigencia" name="fecha_vigencia" readonly
+                                <input class="form-control flatpickr-datetime" id="fecha_vigencia" name="fecha_vigencia"
                                     placeholder="YYYY-MM-DD">
                                 <label for="">Fecha de vigencia</label>
                             </div>
@@ -131,10 +131,10 @@
 
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="form-select select2" name="id_dictamen" id="edit_id_dictamen">
+                                <select class="form-select select2" name="id_solicitud" id="edit_id_solicitud">
                                     @foreach ($solicitud as $soli)
                                         <option value="{{ $soli->id_solicitud }}">
-                                            {{ $soli->folio }}</option>
+                                            {{ $soli->folio }} | {{ $soli->lote_envasado->nombre }}</option>
                                     @endforeach
                                 </select>
                                 <label for="">Folio de solicitud</label>
@@ -172,7 +172,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" readonly
+                                <input class="form-control flatpickr-datetime" id="edit_fecha_vigencia" name="fecha_vigencia"
                                     placeholder="YYYY-MM-DD">
                                 <label for="">Vigencia hasta</label>
                             </div>

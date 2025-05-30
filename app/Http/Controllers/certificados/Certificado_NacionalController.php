@@ -140,7 +140,7 @@ public function index(Request $request)
         foreach ($certificados as $certificado) {
             $nestedData['id_certificado'] = $certificado->id_certificado ?? 'No encontrado';
             $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
-            $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
+            $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen_envasado ?? 'No encontrado';
             $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
             $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
             $id_sustituye = json_decode($certificado->observaciones, true) ['id_sustituye'] ?? null;
@@ -189,21 +189,15 @@ public function index(Request $request)
             $nestedData['id_solicitud'] = $certificado->dictamen->inspeccion->solicitud->id_solicitud ?? 'No encontrado';
             $urls = $certificado->dictamen?->inspeccion?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
             $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
-            //Lote envasado
-            $lotes_env = $certificado->dictamen?->inspeccion?->solicitud?->lotesEnvasadoDesdeJson();//obtener todos los lotes
-            $nestedData['nombre_lote_envasado'] = $lotes_env?->pluck('nombre')->implode(', ') ?? 'No encontrado';
-            //Lote granel
-            $lotes_granel = $lotes_env?->flatMap(function ($lote) {
-                return $lote->lotesGranel; // Relación definida en el modelo lotes_envasado
-                })->unique('id_lote_granel');//elimina duplicados
-            $nestedData['nombre_lote_granel'] = $lotes_granel?->pluck('nombre_lote')//extrae cada "nombre"
-                ->implode(', ') ?? 'No encontrado';//une y separa por coma
             //caracteristicas
-            $nestedData['marca'] = $lotes_env?->first()?->marca->marca ?? 'No encontrado';
-            $caracteristicas = $certificado->dictamen?->inspeccion?->solicitud?->caracteristicasDecodificadas() ?? [];
-            $nestedData['n_pedido'] = $caracteristicas['no_pedido'] ?? 'No encontrado';
-            $nestedData['cajas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_cajas'] ?? 'No encontrado';
-            $nestedData['botellas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado';
+            $nestedData['nombre_lote_envasado'] = $certificado->dictamen->lote_envasado->nombre ?? 'No encontrado';
+            $nestedData['nombre_lote_granel'] = $certificado->dictamen->lote_envasado->lotesGranel->first()->nombre_lote ?? 'No encontrado';
+            //caracteristicas
+            $nestedData['marca'] = $certificado->dictamen->lote_envasado->marca->marca ?? 'No encontrado';
+
+            $caracteristicas = json_decode($certificado->solicitud->caracteristicas ?? '', true);
+            $nestedData['cajas'] = $caracteristicas['cajas'] ?? 'No encontrado';
+            $nestedData['botellas'] = $caracteristicas['botellas'] ?? 'No encontrado';
 
 
             $data[] = $nestedData;
@@ -225,28 +219,27 @@ public function index(Request $request)
 public function store(Request $request)
 {
     try {
-
-    // Cargar solicitud con relaciones encadenadas
-    $solicitud = solicitudesModel::with('lote_envasado.dictamenEnvasado')->findOrFail($request['id_solicitud']);
-
-    // Obtener el dictamen directamente
-    $dictamen = $solicitud->lote_envasado->dictamenEnvasado;
-
-    if (!$dictamen) {
-        return response()->json(['error' => 'No se encontró dictamen para el lote envasado.'], 404);
-    }
-
-
+    
     $validated = $request->validate([
-        //'id_solicitud' => 'required|exists:solicitudes, id_solicitud',
+        'id_solicitud' => 'required|exists:solicitudes,id_solicitud',
         'num_certificado' => 'required|string|max:40',
         'fecha_emision' => 'required|date',
         'fecha_vigencia' => 'nullable|date',
         'id_firmante' => 'required|exists:users,id',
     ]);
 
+    // Cargar solicitud con relaciones encadenadas
+    $solicitud = solicitudesModel::with('lote_envasado.dictamenEnvasado')->findOrFail($validated['id_solicitud']);
+
+    // Obtener el dictamen directamente
+    $dictamen = $solicitud->lote_envasado->dictamenEnvasado;
+    if (!$dictamen) {
+        return response()->json(['error' => 'No se encontró dictamen para el lote envasado.'], 404);
+    }
+
     // Crear un registro
     $new = new Certificado_Nacional();
+    $new->id_solicitud = $validated['id_solicitud'];
     $new->id_dictamen = $dictamen->id_dictamen_envasado;
     //$new->id_dictamen = $validated['id_dictamen'];
     $new->num_certificado = $validated['num_certificado'];
@@ -288,6 +281,7 @@ public function edit($id_certificado)
 
         return response()->json([
             'id_certificado' => $editar->id_certificado,
+            'id_solicitud' => $editar->id_solicitud,
             'id_dictamen' => $editar->id_dictamen,
             'num_certificado' => $editar->num_certificado,
             'fecha_emision' => $editar->fecha_emision,
@@ -307,8 +301,8 @@ public function edit($id_certificado)
 public function update(Request $request, $id_certificado)
 {
     $request->validate([
+        'id_solicitud' => 'required|exists:solicitudes,id_solicitud',
         'num_certificado' => 'required|string|max:40',
-        'id_dictamen' => 'required|integer',
         'fecha_emision' => 'required|date',
         'fecha_vigencia' => 'nullable|date',
         'id_firmante' => 'required|integer',
@@ -317,8 +311,17 @@ public function update(Request $request, $id_certificado)
     try {
         $actualizar = Certificado_Nacional::findOrFail($id_certificado);
 
+        // Obtener dictamen a partir de id_solicitud
+        $solicitud = solicitudesModel::with('lote_envasado.dictamenEnvasado')->findOrFail($request['id_solicitud']);
+        $dictamen = $solicitud->lote_envasado->dictamenEnvasado;
+
+        if (!$dictamen) {
+            return response()->json(['error' => 'No se encontró dictamen para el lote envasado.'], 404);
+        }
+
+        $actualizar->id_solicitud = $request->id_solicitud;
+        $actualizar->id_dictamen = $dictamen->id_dictamen_envasado;
         $actualizar->num_certificado = $request->num_certificado;
-        $actualizar->id_dictamen = $request->id_dictamen;
         $actualizar->fecha_emision = $request->fecha_emision;
         $actualizar->fecha_vigencia = $request->fecha_vigencia;
         $actualizar->id_firmante = $request->id_firmante;
@@ -347,14 +350,14 @@ public function certificado($id_certificado)
 
     $fecha_emision = date('d/m/Y', strtotime($data->fecha_emision));
     $fecha_vigencia = $data->fecha_vigencia ? date('d/m/Y', strtotime($data->fecha_vigencia)) : null;
-    $empresa = $data->dictamen->inspeccion->solicitud->empresa ?? null;
+    $empresa = $data->solicitud->empresa ?? null;
     $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
         ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
         ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
     $id_sustituye = json_decode($data->observaciones, true) ['id_sustituye'] ?? null;
     $nombre_id_sustituye = $id_sustituye ? Certificado_Nacional::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
     //caracteristicas
-    $caracteristicas = $data->dictamen?->inspeccion?->solicitud?->caracteristicasDecodificadas() ?? [];
+    $caracteristicas = json_decode($data->solicitud->caracteristicas ?? '', true);
     $cajas = $caracteristicas['cajas'] ?? 'No encontrado';
     $botellas = $caracteristicas['botellas'] ?? 'No encontrado';
 
@@ -395,6 +398,9 @@ public function certificado($id_certificado)
 
     return Pdf::loadView('pdfs.certificado_nacional_ed1', $pdf)->stream('F7.1-01-23 Ver 1. Certificado de nacionalidad.pdf');
 }
+
+
+
 
 
 
