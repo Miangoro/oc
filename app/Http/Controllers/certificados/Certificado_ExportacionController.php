@@ -754,9 +754,7 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
     ];
 
     if ( $data->fecha_emision >= '2025-06-01' ) {
-        $edicion = 'pdfs.solicitud_certificado_exportacion_ed10';
-    /*}else if ($lotes->count() > 1) {
-        $edicion = 'pdfs.solicitud_certificado_exportacion_ed10';*/
+        $edicion = 'pdfs.solicitud_certificado_exportacion_ed11';
     }else{
         $edicion = 'pdfs.solicitud_certificado_exportacion_ed10';
     }
