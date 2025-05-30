@@ -536,7 +536,7 @@ $(function () {
     console.log('Número de Certificado:', num_certificado);
 
     // Definir URL según el tipo de revisión
-    var url_pdf = '../pdf_bitacora_revision_consejo/' + id_revisor;
+    var url_pdf = '../pdf_bitacora_revision_certificado_instalaciones/' + id_revisor;
 
 
     console.log('URL del PDF:', url_pdf);

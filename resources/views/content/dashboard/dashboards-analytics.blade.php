@@ -121,8 +121,10 @@
                         <p class="text-muted fs-5">
                             @if (Auth::check() && Auth::user()->puesto)
                                 {{ Auth::user()->puesto }}
-                            @else
+                            @elseif(Auth::user()->empresa->razon_social)
                                 {{ Auth::user()->empresa->razon_social }}
+                            @else
+                                Miembro del consejo
                             @endif
                         </p>
                     </div>

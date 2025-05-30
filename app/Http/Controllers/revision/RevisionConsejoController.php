@@ -789,7 +789,7 @@ class RevisionConsejoController extends Controller
         public function pdf_bitacora_revision_certificado_instalaciones($id)
     {
 
-      /*   $revisor = Revisor::findOrFail($id);
+         $revisor = Revisor::findOrFail($id);
 
         // Decodificar el JSON correctamente
         $respuestasJson = json_decode($revisor->respuestas, true);
@@ -884,9 +884,9 @@ class RevisionConsejoController extends Controller
             'id_aprobador' => $id_aprobador,
             'fecha_aprobacion' => Helpers::formatearFecha($fecha_aprobacion),
             'preguntas' => $preguntasConRespuestas
-        ]; */
+        ]; 
 
-        $pdf = Pdf::loadView('pdfs.pdf_bitacora_revision_certificado_instalaciones')
+        $pdf = Pdf::loadView('pdfs.pdf_bitacora_revision_certificado_instalaciones',$pdfData)
             ->setPaper('letter'); // Define tamaño carta
 
         return $pdf->stream('Bitácora de revisión de certificados de Instalaciones NOM-070-SCFI-2016.pdf');

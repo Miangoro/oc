@@ -196,17 +196,17 @@
     <table>
         <tr>
             <td class="letra-fondo" style="text-align: left" colspan="4">Razón social del cliente:</td>
-            <td class="leftLetter" colspan="2">ALBERTO FRANCO MORGADO</td>
+            <td class="leftLetter" colspan="2">{{ $razon_social }}</td>
         </tr>
         <tr>
             <td class="letra-fondo" style="text-align: left" colspan="2">No. Cliente:</td>
-            <td colspan="2">NOM-070-270C</td>
+            <td colspan="2">{{ $numero_cliente }}</td>
             <td class="letra-fondo" style="text-align: left">Fecha de revisión:</td>
-            <td>2024-07-25 11:35:43</td>
+            <td>{{ $fecha }}</td>
         </tr>
         <tr>
             <td class="letra-fondo" style="text-align: left" colspan="2">No. De certificado:</td>
-            <td colspan="2">CIDAM C-INS-088/2024</td>
+            <td colspan="2">{{ $num_certificado }}</td>
             <td class="td-no-border"></td>
             <td class="td-no-border"></td>
         </tr>
