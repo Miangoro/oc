@@ -42,6 +42,7 @@ $(function () {
         { data: 'id' },
         { data: 'name' },
         { data: 'email' },
+        { data: 'puesto' },
         { data: 'password_original' },
         {
           data: 'firma',
@@ -136,7 +137,7 @@ $(function () {
         },
         {
           // contraseña
-          targets: 4,
+          targets: 5,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $pass = full['password_original'];
@@ -461,6 +462,7 @@ $(function () {
       $('#user_id').val(data.id);
       $('#add-user-fullname').val(data.name);
       $('#add-user-email').val(data.email);
+      $('#add-puesto').val(data.puesto);
       $('#add-estatus').val(data.estatus).change();
       $('#id_empresa').val(data.id_empresa).prop('selected', true).change();
       $('#rol_id').val(data.rol).prop('selected', true).change();
@@ -496,6 +498,13 @@ $(function () {
           },
           emailAddress: {
             message: 'Correo inválido'
+          }
+        }
+      },
+      puesto: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor introduce el puesto'
           }
         }
       }
