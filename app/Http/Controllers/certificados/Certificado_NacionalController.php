@@ -26,7 +26,7 @@ class Certificado_NacionalController extends Controller
 
     public function UserManagement()
     {
-        $solicitud = solicitudesModel::where('id_tipo',50)
+        $solicitud = solicitudesModel::where('id_tipo',13)
             ->orderBy('id_solicitud', 'desc')
             ->get();
         $users = User::where('tipo',1)->get(); //Solo Personal OC
