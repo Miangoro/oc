@@ -1077,13 +1077,9 @@ $(function () {
               if (response.caracteristicas) {
                 modal.find('#edit_id_lote_envasado_lib_ter').data('selected', response.caracteristicas.id_lote_envasado || '');
                 modal.find('#edit_id_categoria_lib_ter').val(response.caracteristicas.categoria || '');
-                modal.find('#edit_id_categoria_lib_ter_id').val(response.caracteristicas.id_categoria || '');
                 modal.find('#edit_id_clase_lib_ter').val(response.caracteristicas.clase || '');
-                modal.find('#edit_id_clase_lib_ter_id').val(response.caracteristicas.id_clase || '');
                 modal.find('#edit_id_tipo_maguey_lib_ter').val(response.caracteristicas.nombre || '');
-                modal.find('#edit_id_tipo_maguey_lib_ter_ids').val(response.caracteristicas.id_tipo_maguey || '');
                 modal.find('#edit_marca_lib_ter').val(response.caracteristicas.marca || '');
-                modal.find('#edit_marca_lib_ter_id').val(response.caracteristicas.id_marca || '');
                 modal.find('#edit_porcentaje_alcohol_lib_ter').val(response.caracteristicas.cont_alc || '');
                 modal.find('#edit_analisis_fisiq_lib_ter').val(response.caracteristicas.analisis || '');
                 modal.find('#edit_can_botellas_lib_ter').val(response.caracteristicas.cantidad_botellas || '');
@@ -2369,10 +2365,6 @@ $(function () {
       $('#btneditlib').prop('disabled', true);
 
       $('#btneditlib').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
-      setTimeout(function () {
-        $('#btneditlib').prop('disabled', false);
-        $('#btneditlib').html('<i class="ri-add-line"></i> Editar');
-      }, 3000);
       // Hacer la solicitud AJAX
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_liberacion_terminado').val(),
@@ -2382,6 +2374,8 @@ $(function () {
         contentType: false,
         success: function (response) {
           $('#editLiberacionProducto').modal('hide'); // Oculta el modal
+          $('#btneditlib').prop('disabled', false);
+          $('#btneditlib').html('<i class="ri-add-line"></i> Editar');
           $('#editLiberacionProductoForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
           $('.datatables-solicitudes').DataTable().ajax.reload(null, false); // Recarga la tabla
@@ -3606,13 +3600,7 @@ $(function () {
       // Validar el formulario
       var formData = new FormData(formDictaminacion);
       $('#btnRegistrarlib').prop('disabled', true);
-
       $('#btnRegistrarlib').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
-      setTimeout(function () {
-        $('#btnRegistrarlib').prop('disabled', false);
-        $('#btnRegistrarlib').html('<i class="ri-add-line"></i> Registrar');
-      }, 3000);
-
       $.ajax({
         url: '/registrar-solicitud-lib-prod-term',
         type: 'POST',
@@ -3621,6 +3609,8 @@ $(function () {
         contentType: false,
         success: function (response) {
           $('#addLiberacionProducto').modal('hide');
+          $('#btnRegistrarlib').prop('disabled', false);
+          $('#btnRegistrarlib').html('<i class="ri-add-line"></i> Registrar');
           $('#addLiberacionProductoForm')[0].reset();
           $('.select2').val(null).trigger('change');
           $('.datatables-solicitudes').DataTable().ajax.reload();

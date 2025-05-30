@@ -13,15 +13,15 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="form-select select2" id="id_dictamen" name="id_dictamen"
-                                    data-placeholder="Selecciona un dictamen">
+                                <select class="form-select select2" id="id_solicitud" name="id_solicitud"
+                                    data-placeholder="Selecciona una solicitud">
                                     <option value="" disabled selected>NULL</option>
-                                    @foreach ($dictamen as $dic)
-                                        <option value="{{ $dic->id_dictamen_envasado }}">{{ $dic->num_dictamen }} |
-                                            {{ $dic->inspeccion->solicitud->folio }}</option>
+                                    @foreach ($solicitud as $soli)
+                                        <option value="{{ $soli->id_solicitud }}">
+                                            {{ $soli->folio }} | {{ $soli->lote_envasado->nombre }}</option>
                                     @endforeach
                                 </select>
-                                <label for="">No. de dictamen</label>
+                                <label for="">Folio de solicitud</label>
                             </div>
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" id="fecha_vigencia" name="fecha_vigencia" readonly
+                                <input class="form-control flatpickr-datetime" id="fecha_vigencia" name="fecha_vigencia"
                                     placeholder="YYYY-MM-DD">
                                 <label for="">Fecha de vigencia</label>
                             </div>
@@ -131,13 +131,13 @@
 
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="form-select select2" name="id_dictamen" id="edit_id_dictamen">
-                                    @foreach ($dictamen as $dic)
-                                        <option value="{{ $dic->id_dictamen_envasado }}">{{ $dic->num_dictamen }} |
-                                            {{ $dic->inspeccion->solicitud->folio }}</option>
+                                <select class="form-select select2" name="id_solicitud" id="edit_id_solicitud">
+                                    @foreach ($solicitud as $soli)
+                                        <option value="{{ $soli->id_solicitud }}">
+                                            {{ $soli->folio }} | {{ $soli->lote_envasado->nombre }}</option>
                                     @endforeach
                                 </select>
-                                <label for="">No. de dictamen</label>
+                                <label for="">Folio de solicitud</label>
                             </div>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" readonly
+                                <input class="form-control flatpickr-datetime" id="edit_fecha_vigencia" name="fecha_vigencia"
                                     placeholder="YYYY-MM-DD">
                                 <label for="">Vigencia hasta</label>
                             </div>

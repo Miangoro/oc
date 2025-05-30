@@ -16,6 +16,7 @@ class Certificado_Nacional extends Model
     protected $fillable = [
         'id_certificado',
         'num_certificado',
+        'id_solicitud',
         'id_dictamen',
         'fecha_emision',
         'fecha_vigencia',
@@ -34,10 +35,15 @@ class Certificado_Nacional extends Model
         return 'certificado de venta nacional'; // Devuelve el nombre que desees
     }
 
-    // Relación con el modelo Dictamen_Exportacion (dictamenes)
-    public function dictamen()
+    public function dictamen()// Relación con el modelo Dictamen_Envasado 
     { //ID de tabla actual, ID de la relacion
         return $this->belongsTo(Dictamen_Envasado::class, 'id_dictamen', 'id_dictamen_envasado');
+    }
+
+    public function solicitud()
+    {
+        return $this->hasOne(solicitudesModel::class, 'id_solicitud', 'id_solicitud');
+  
     }
 
     // Relación con el modelo User (Firmante)
@@ -50,6 +56,7 @@ class Certificado_Nacional extends Model
     {
         return $this->belongsTo(User::class, 'id_firmante', 'id'); 
     }
+
 
     //PENDIENTES
     /*public function revisorPersonal()
@@ -65,6 +72,7 @@ class Certificado_Nacional extends Model
             ->where('tipo_revision', 2)
             ->where('tipo_certificado', 3);
     }*/
+
 
 
 }

@@ -550,15 +550,6 @@ public function CertificadoGranel($id_certificado)
     $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ? CertificadosGranel::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
-    // Procesar los nombres de los tipos
-    $tipoNombres = 'N/A';
-    /*if ($certificado->dictamen->lote_granel->id_tipo) {
-        $idTipos = json_decode($certificado->dictamen->lote_granel->id_tipo, true);
-        if (is_array($idTipos)) {
-            $tipoNombresArray = tipos::whereIn('id_tipo', $idTipos)->pluck('nombre')->toArray();
-            $tipoNombres = implode(', ', $tipoNombresArray);
-        }
-    }*/
 
     // Datos para el PDF
     $pdfData = [

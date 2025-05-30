@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Certificado de venta</title>
+    <title>Certificado de venta nacional</title>
     <style>
         @page {
             size: 227mm 292mm;
@@ -199,57 +199,54 @@
     <div class="titulos">DATOS GENERALES</div>
     <table>
     <tr>
-        <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 10px;padding-bottom: 10px;">
+        <td class="td-margins" style="width: 25%; font-weight: bold; font-size: 12px; padding-top: 10px;padding-bottom: 10px;">
             Nombre o razón social:</td>
-        <td class="td-margins" style="text-align: left">
+        <td colspan="3" class="td-margins">
             {{ mb_strtoupper($empresa) }}
         </td>
-        <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;">
-            Número de Cliente:</td>
-        <td class="td-margins" style="text-align: left">
-            {{ $n_cliente }}
-        </td>
     </tr>
     <tr>
-        <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px; padding-top: 8px;padding-bottom: 8px;">
+        <td class="td-margins" style="font-weight: bold; font-size: 12px; padding-top: 8px;padding-bottom: 8px;">
             Domicilio:</td>
-        <td class="td-margins" style="font-size: 11px; text-align: left; padding-top: 8px;padding-bottom: 8px;" colspan="3">
+        <td class="td-margins" style="width: 45%; font-size: 10.6px; padding-top: 8px; padding-bottom: 8px;">
             {{ mb_strtoupper($domicilio) }}
         </td>
-    </tr>
-    <tr>
-        <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px; padding-top: 10px;padding-bottom: 10px;">
-            Código Postal:</td>
-        <td class="td-margins" style="text-align: left">
-            {{ $cp }}&nbsp;
-        </td>
-        <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
-            Estado:</td>
-        <td class="td-margins" style="text-align: left; padding-right: 4px;">
-            {{ mb_strtoupper($estado) }}
+        <td class="td-margins" style="font-weight: bold; font-size: 12px;">
+            código Postal:</td>
+        <td class="td-margins">
+            {{ $cp }}
         </td>
     </tr>
     <tr>
-        <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;">
+        <td class="td-margins" style="font-weight: bold; font-size: 12px; padding-top: 8px;padding-bottom: 8px;">
+            País</td>
+        <td colspan="3" class="td-margins" style="padding-right: 8%;">
+            MÉXICO&nbsp;
+        </td>
+    </tr>
+    </table>
+    <table>
+    <tr>
+        <td class="td-margins" style="width: 25%; font-weight: bold; font-size: 12px; padding-top: 6px;padding-bottom: 6px;">
             Registro Federal de Contribuyentes:</td>
-        <td class="td-margins" style="text-align: left">
+        <td class="td-margins">
             {{ $rfc }}
         </td>
-        <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
-            País:</td>
-        <td class="td-margins" style="text-align: left">
-            MÉXICO
+        <td class="td-margins" style="font-weight: bold; font-size: 12px;">
+            Registro de productor Autorizado:</td>
+        <td class="td-margins">
+            {{ $DOM }}
         </td>
     </tr>
     <tr>
-        <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;">
-            Registro de Productor<br>Autorizado (Uso de la <br> DOM):</td>
-        <td class="td-margins" style="text-align: left">
-            {{ $DOM }}
+        <td class="td-margins" style="font-weight: bold; font-size: 12px; padding-top: 6px;padding-bottom: 6px;">
+            Certificado de cumplimiento con la norma:</td>
+        <td class="td-margins">
+            {{ $certificado_granel }}
         </td>
-        <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 4px;">
+        <td class="td-margins" style="font-weight: bold; font-size: 12px;">
             Número de Convenio de corresponsabilidad:</td>
-        <td class="td-margins" style="text-align: left">
+        <td class="td-margins">
             {{ $convenio }}
         </td>
     </tr>
@@ -257,111 +254,130 @@
 
 
 <!--INICIO DE TABLAS LOTES-->
-        <div class="titulos">DESCRIPCIÓN DEL PRODUCTO QUE AMPARA EL CERTIFICADO</div>
-        <table>
-        <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px; width: 12%;">
-                Marca:</td>
-            <td style="text-align: left; padding-left: 4px; width: 22%;">
+    <div class="titulos">DESCRIPCIÓN DEL PRODUCTO QUE AMPARA EL CERTIFICADO</div>
+    <table>
+        
+    <tr>
+        <td
+            style="font-weight: bold; font-size: 12px; height: 30px; width: 12%;">
+            Categoría:</td>
+        <td style="width: 22%;">
+            {{ $categoria }}
+        </td>
+        <td style="font-weight: bold; font-size: 12px; width: 12%;">
+             Clase:</td>
+        <td style="width: 22%;">
+            {{ $clase }}
+        </td>
+        <td style="font-weight: bold; font-size: 12px; width: 12%;">
+            % Alc. Vol. en etiqueta: </td>
+        <td>
+            {{ $cont_alc }}
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="2" style="font-weight: bold; font-size: 12px; height: 30px;">
+            Marca:</td>
+        <td rowspan="2">
+            &nbsp;{{ $marca }}
+        </td>
+        <td rowspan="2" style="font-weight: bold; font-size: 12px;">
+            Presentación:</td>
+        <td rowspan="2">
+            {{ $presentacion }} {{ $unidad }}
+        </td>
+        <td style="font-weight: bold; font-size: 12px; padding: 6px">
+            Botellas:</td>
+        <td>
+            {{ $botellas }}
+        </td>
+    </tr>
 
-            </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
-                Categoría y Clase:</td>
-            <td style="text-align: left; padding-left: 4px;">
-                
-            </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
-                Edad:</td>
-            <td style="text-align: left; padding-left: 4px; width: 22%;">
-            
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px;">
-                Certificado<br>NOM a<br>Granel:</td>
-            <td style="text-align: left; padding-left: 4px;">
+    <tr>
+        <td style="font-weight: bold; font-size: 12px; padding: 6px">
+            Cajas:</td>
+        <td>
+            {{ $cajas }}
+        </td>
+    </tr>
 
-            </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
-                Volumen:</td>
-            <td style="text-align: left; padding-left: 4px;">
+    <tr>
+        <td style="font-weight: bold; font-size: 12px; padding: 6px;">
+            Folios de holograma:</td>
+        <td colspan="5">
+            {{ $hologramas }}
+        </td>
+    </tr>
 
-            </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
-                %Alc. Vol.:</td>
-            <td style="text-align: left; padding-left: 4px;">
-             </td>
-        </tr>
- 
-        <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
-                No. de análisis:</td>
-            <td style="text-align: left; padding-left: 4px;">
- 
-            </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
-                No. lote granel:</td>
-            <td style="text-align: left; padding-left: 4px;">
- 
-            </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
-                Tipo de Maguey:</td>
-            <td style="text-align: left; padding-left: 4px;">
-                 
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px">No.
-                de análisis ajuste:</td>
-            <td style="text-align: left; padding-left: 4px;">
-               
-            </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
-                No. de lote envasado:</td>
-            <td style="text-align: left; padding-left: 4px;">
-              
-            </td> 
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
-                Folio Hologramas:</td>
-            <td style="text-align: left; font-size: 9px; padding-left: 4px;">
+    <tr>
+        <td style="font-weight: bold; font-size: 12px; height: 30px">
+            Dictamen envasado:</td>
+        <td>
+            &nbsp;{{ $dictamen_envasado }}</td>
+        <td style="font-weight: bold; font-size: 12px;">
+            No Lote envasado</td>
+        <td>
+            {{ $lote_envasado }}
+        </td>
+        <td style="font-weight: bold; font-size: 12px;">
+            Número de análisis:</td>
+        <td>
+            {{ $analisis_fq }}
+        </td>
+    </tr>
 
-            </td>
-        </tr>
-        </table>
-
+    <tr>
+        <td style="font-weight: bold; font-size: 12px; height: 45px; width: 12%;">
+            Envasado en:</td>
+        <td style="text-align: justify; font-size: 10.6px;">
+            {{ $envasado_en }}
+        </td>
+        <td style="font-weight: bold; font-size: 12px; width: 12%;">
+            No. Lote granel:</td>
+        <td style="font-size: 12px; width: 22%;">
+            {{ $lote_granel }}
+        </td>
+        <td style="font-weight: bold; font-size: 12px; width: 12%;">
+            Número de SKU:
+        </td>
+        <td>
+            {{ $sku }}
+        </td>
+    </tr>
+    
+    </table>
 <!-- FIN DE TABLAS LOTES -->
 
 
-<br><br>
-
+<br>
     <div class="titulos" style="padding:14px">DESTINATARIO</div>
     <table>
     <tr>
         <td class="td-margins" style="text-align: right; font-weight: bold; font-size: 12px; border-top: none; width: 12%;">
             Nombre:</td>
         <td class="td-margins" style="text-align: left; border-top: none; padding-left: 6px;">
-            {{ $nombre_destinatario }}
+            VENTA NACIONAL
         </td>
     </tr>
     <tr>
         <td class=" td-margins" style="text-align: right; font-weight: bold; font-size: 12px; padding-top: 8px; padding-bottom: 8px;">
             Domicilio:</td>
         <td class="td-margins" style="text-align: left; padding-left: 6px;">
-            {{ $dom_destino }}
+           VENTA EN TERRITORIO NACIONAL
         </td>
     </tr>
     <tr>
         <td class="td-margins" style="text-align: right; font-weight: bold; font-size: 12px;">
-            País destino:</td>
+            Estado:</td>
         <td class="td-margins" style="text-align: left; padding-left: 6px;">
-            {{ $pais }}
+            REPUBLICA MEXICANA
         </td>
     </tr>
     </table>
 
-    <p style="font-size: 7.5px">
-        El presente certificado se emite para fines de exportación conforme a la norma oficial mexicana de
-        mezcal NOM-070-SCFI-2016. Bebidas Alcohólicas-Mezcal-Especificaciones, en cumplimiento con lo
+    <p style="font-size: 8px">
+        El presente certificado se emite para fines de venta nacional conforme a la norma oficial Mexicana
+        de mezcal NOM-070-SCFI-2016. Bebidas Alcohólicas-MezcalEspecificaciones, en cumplimiento con lo 
         dispuesto en la Ley Federal de Infraestructura de la Calidad.
         Este documento no debe ser reproducido en forma parcial.
     </p>

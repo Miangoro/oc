@@ -152,9 +152,14 @@ if (dt_user_table.length) {
           render: function (data, type, full, meta) {
             var $num_certificado = full['num_certificado'];
             var $id = full['id_certificado'];
+            //var $folio_solicitud = full['folio_solicitud'];
+            var $folio_solicitud = full['folio_solicitud']?.match(/^([A-Z\-]+)(\d+)$/)?.slice(1).reduce((prefix, number) =>
+                  prefix + String(Number(number) + 1).padStart(number.length, '0')
+              ) ?? 'No encontrado';
+
             return '<small class="fw-bold">' + $num_certificado + '</small>' +
               '<i data-id="' + $id + '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
-              `<br><span class="fw-bold">Solicitud:</span> <i data-id="${full['id_certificado']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitudCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+              `<br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud} <i data-id="${full['id_certificado']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitudCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
           }
         },
         {

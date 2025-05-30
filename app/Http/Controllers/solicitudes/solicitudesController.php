@@ -1153,12 +1153,6 @@ class solicitudesController extends Controller
 
                 $caracteristicasJson = [
                     'id_lote_envasado' => $request->id_lote_envasado,
-                    'id_categoria' => $request->id_categoria,
-                    'id_clase' => $request->id_clase,
-                    'id_tipo_maguey' => $request->id_tipo,
-                    'id_marca' => $request->marca,
-                    'cont_alc' => $request->porcentaje_alcohol,
-                    'analisis' => $request->analisis_fisicoquimicos,
                     'cantidad_botellas' => $request->cantidad_botellas,
                     'presentacion' => $request->presentacion,
                     'cantidad_pallets' => $request->cantidad_pallets,
@@ -1166,7 +1160,6 @@ class solicitudesController extends Controller
                     'botellas_por_caja' => $request->botellas_por_caja,
                     'hologramas_utilizados' => $request->hologramas_utilizados,
                     'hologramas_mermas' => $request->hologramas_mermas,
-                    'certificado_nom_granel' => $request->certificado_nom_granel,
                 ];
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
@@ -1695,22 +1688,9 @@ class solicitudesController extends Controller
         $solicitud->id_instalacion = $request->id_instalacion;
         $solicitud->info_adicional = $request->info_adicional;
         // Guardar el nuevo registro en la base de datos
-        $idTipoMaguey = $request->id_tipo;
-
-        // Verifica que es un array
-        if (!is_array($idTipoMaguey)) {
-            $idTipoMaguey = [];
-        }
-
 
         $caracteristicas = [
             'id_lote_envasado' => $request->id_lote_envasado,
-            'id_categoria' => $request->id_categoria,
-            'id_clase' => $request->id_clase,
-            'id_tipo_maguey' => $idTipoMaguey,
-            'id_marca' => $request->marca,
-            'cont_alc' => $request->porcentaje_alcohol,
-            'analisis' => $request->analisis_fisicoquimicos,
             'cantidad_botellas' => $request->cantidad_botellas,
             'presentacion' => $request->presentacion,
             'cantidad_pallets' => $request->cantidad_pallets,
@@ -1718,7 +1698,6 @@ class solicitudesController extends Controller
             'botellas_por_caja' => $request->botellas_por_caja,
             'hologramas_utilizados' => $request->hologramas_utilizados,
             'hologramas_mermas' => $request->hologramas_mermas,
-            'certificado_nom_granel' => $request->certificado_nom_granel
         ];
         // Convertir el array a JSON y guardarlo en la columna 'caracteristicas'
         $solicitud->caracteristicas = json_encode($caracteristicas);

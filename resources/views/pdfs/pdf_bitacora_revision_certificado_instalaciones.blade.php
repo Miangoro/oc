@@ -199,6 +199,7 @@
             <td class="leftLetter" colspan="2">{{ $razon_social }}</td>
         </tr>
         <tr>
+<<<<<<< HEAD
             <td class="letra-fondo" style="text-align: left" colspan="2">No. Cliente:</td>
             <td colspan="2">{{ $numero_cliente }}</td>
             <td class="letra-fondo" style="text-align: left">Fecha de revisión:</td>
@@ -207,6 +208,16 @@
         <tr>
             <td class="letra-fondo" style="text-align: left" colspan="2">No. De certificado:</td>
             <td colspan="2">{{ $num_certificado }}</td>
+=======
+            <td class="letra-fondo" style="text-align: left; height: 30px" colspan="2">No. Cliente:</td>
+            <td colspan="2">NOM-070-270C</td>
+            <td class="letra-fondo" style="text-align: left ">Fecha de revisión:</td>
+            <td>2024-07-25 11:35:43</td>
+        </tr>
+        <tr>
+            <td class="letra-fondo" style="text-align: left; height: 20px" colspan="2">No. De certificado:</td>
+            <td colspan="2">CIDAM C-INS-088/2024</td>
+>>>>>>> 35c83d8800b49876c0307b803784d53ebe528659
             <td class="td-no-border"></td>
             <td class="td-no-border"></td>
         </tr>
@@ -238,6 +249,12 @@
             <td>- -</td>
         </tr>
         <tr>
+            <td style="text-align: left">Carta de asignación número de cliente</td>
+            <td>C</td>
+            <td>- -</td>
+            <td>- -</td>
+        </tr>
+        <tr>
             <td style="text-align: left">Dictamen de la unidad de
                 inspección (fecha de emisión,</td>
             <td>C</td>
@@ -252,7 +269,7 @@
             <td>- -</td>
         </tr>
         <tr>
-            <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 180px;">Datos del certificado</td>
+            <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 180px; height: 30px">Datos del certificado</td>
             <td class="letra-fondo">C </td>
             <td class="letra-fondo">N/C </td>
             <td class="letra-fondo">N/A</td>
@@ -320,15 +337,18 @@
                 personal del
                 OC CIDAM se revisa que el certificado cumple con cada uno de los requisitos mencionados en este
                 documento, por
-                consiguiente, se toma la decisión para otorgar la certificación de instalaciones como envasador.
+                consiguiente, se toma la decisión para otorgar la certificación de instalaciones como comercializador.
                 <div style="padding: 30px"></div>
+                <div style="width: 100%; text-align: right; position: fixed; margin-top: -35px; right: 20px;">
+                <img src="{{ public_path('img_pdf/2-s.png') }}" alt="Firma" style="width: 120px; height: auto;">
+            </div>
                 Miguel Ángel Gómez Romero <br>
                 Miembro del Consejo para la decisión de la certificación (Vocal):
             </td>
         </tr>
     </table>
     <div style="margin-bottom: 15px">
-        <p style="font-size: 11px; margin-top: 25px; text-align: center;  font-family: 'Century Gothic';">Este documento es propiedad del Centro de
+        <p style="font-size: 11px; margin-top: 20px; text-align: center;  font-family: 'Century Gothic';">Este documento es propiedad del Centro de
             Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser <br>
             distribuido externamente sin la autorización escrita del Director Ejecutivo.</p>
     </div>
