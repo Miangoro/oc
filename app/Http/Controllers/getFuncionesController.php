@@ -13,6 +13,7 @@ use App\Models\lotes_envasado;
 use App\Models\maquiladores_model;
 use App\Models\normas;
 use App\Models\solicitudesModel;
+use App\Models\Dictamen_Envasado;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -130,6 +131,33 @@ class getFuncionesController extends Controller
     ]);
 
     }
+
+public function getDictamenesEnvasado($id_empresa)
+{
+    $dictamenes = Dictamen_Envasado::with(['inspeccion.solicitud', 'lote_envasado'])
+        ->whereHas('lote_envasado', function ($query) use ($id_empresa) {
+            $query->where('id_empresa', $id_empresa);
+        })
+        ->get();
+
+    $formateados = $dictamenes->map(function ($d) {
+        $solicitud = $d->inspeccion->solicitud ?? null;
+
+        return [
+            'id_dictamen_envasado' => $d->id_dictamen_envasado,
+            'num_dictamen' => $d->num_dictamen,
+            'folio' => $solicitud->folio ?? 'Sin folio',
+            'lote_nombre' => $d->lote_envasado->nombre ?? 'Sin nombre',
+            'id_instalacion' => $solicitud->id_instalacion ?? '',
+            'fecha_visita' => $solicitud->fecha_visita ?? '',
+        ];
+    });
+
+    return response()->json($formateados);
+}
+
+
+
     public function getDatosLoteEnvasado($idLoteEnvasado)
     {
         // Obtener el lote envasado específico por ID, con las relaciones necesarias

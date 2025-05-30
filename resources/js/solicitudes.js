@@ -247,6 +247,26 @@ $(function () {
         }
       },
       {
+        targets: 2,
+        searchable: false,
+        orderable: false,
+      },
+            {
+        targets: 3,
+        searchable: false,
+        orderable: false,
+      },
+            {
+        targets: 5,
+        searchable: false,
+        orderable: false,
+      },
+            {
+        targets: 6,
+        searchable: false,
+        orderable: false,
+      },
+      {
         // User full name
         targets: 9,
         responsivePriority: 4,
@@ -280,6 +300,11 @@ $(function () {
         }
       },
       {
+        targets: 10,
+        searchable: false,
+        orderable: false,
+      },
+      {
         targets: 12,
         className: 'text-center',
         searchable: false,
@@ -287,6 +312,11 @@ $(function () {
         render: function (data, type, full, meta) {
           return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['folio']}"></i>`;
         }
+      },
+      {
+        targets: 13, // o el índice correcto de la columna 'estatus'
+        orderable: false,
+        searchable: false
       },
       {
         // Acciones
@@ -3543,6 +3573,124 @@ $(function () {
     });
   });
 
+  /* envio de emision de certificado de venta nacional */
+  ///
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    // Inicializar FormValidation para la solicitud de dictaminación de instalaciones
+    const form = document.getElementById('addEmisionCetificadoVentaNacionalForm');
+    const fv = FormValidation.formValidation(form, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la fecha sugerida para la inspección.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la instalación.'
+            }
+          }
+        },
+        renovacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una opción.'
+            }
+          }
+        },
+        'clases[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una clase'
+            }
+          }
+        },
+        'categorias[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una categoria'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      var formData = new FormData(form);
+      $('#btnRegistrarDicIns').prop('disabled', true);
+
+      $('#btnRegistrarDicIns').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnRegistrarDicIns').prop('disabled', false);
+        $('#btnRegistrarDicIns').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
+
+      $.ajax({
+        url: '/solicitudes-list',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#addSolicitudDictamen').modal('hide');
+          $('#addRegistrarSolicitud')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+          console.log(response);
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Solicitud registrada correctamente',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la solicitud',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+    // Inicializar select2 y manejar eventos de cambio por "name"
+    $('#id_empresa_solicitudes, #fechaSoliInstalacion, #id_instalacion_dic, #categoriaDictamenIns, #clasesDicIns, #renovacion').on('change', function () {
+      fv.revalidateField($(this).attr('name'));
+    });
+
+  });
 
   /*funcion para solicitud de liberacion producto termiando  */
   $(function () {

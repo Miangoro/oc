@@ -12,9 +12,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_solicitud" onchange="obtenerInstalacion();" name="id_empresa"
-                                    class="id_empresa select2 form-select" required>
-                                    <option value="">Selecciona cliente</option>
+                                <select id="id_empresa_solicitud_emision_venta" onchange="obtenerDictamenesEnvasados();"
+                                    name="id_empresa" class="id_empresa select2 form-select">
+                                    <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">
                                             {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
@@ -24,31 +24,36 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
+
+
                         <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    name="fecha_visita" />
-                                <label for="num_anterior">Fecha y hora sugerida para la inspección</label>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select select2" id="id_instalacion" name="id_instalacion"
-                                    aria-label="id_instalacion" required>
-                                    <option value="" selected>Lista de instalaciones</option>
-                                    <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
+                                <select id="id_dictamen_envasado" name="id_dictamen_envasado"
+                                    class="select2 form-select">
                                 </select>
+                                <label for="id_dictamen_envasado">Dictamen envasado</label>
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input type="number" id="num_cajas" name="num_cajas" class="form-control">
+                                <label for="num_cajas">No. de Cajas</label>
+                            </div>
+                        </div>
 
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input type="number" id="num_botellas" name="num_botellas" class="form-control"
+                                    required>
+                                <label for="num_botellas">No. de Botellas</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-150" id="comentarios"
+                            <textarea name="info_adicional" class="form-control h-px-150" id="comentarios_e_venta_n"
                                 placeholder="Información adicional sobre la actividad..."></textarea>
                             <label for="comentarios">Información adicional sobre la actividad</label>
                         </div>
@@ -67,33 +72,25 @@
 
 
 <script>
-    function obtenerInstalacion() {
-        var empresa = $(".id_empresa").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
+    function obtenerDictamenesEnvasados() {
+        var empresa = $("#id_empresa_solicitud_emision_venta").val();
+
         $.ajax({
-            url: '/getDatos/' + empresa,
+            url: '/obtener_dictamenes_envasado/' + empresa,
             method: 'GET',
             success: function(response) {
-                console.log(response);
-                // Cargar los detalles en el modal
-                var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        response
-                        .instalaciones[index].tipo + ' | ' + response
-                        .instalaciones[index].direccion_completa + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
-
-                } else {
-
-                }
-                $('#id_instalacion').html(contenido);
+                let opciones = '<option value="" disabled selected>Selecciona dictamen</option>';
+                response.forEach(function(dictamen) {
+                    opciones += '<option value="' + dictamen.id_dictamen_envasado + '">' +
+                        'Dictamen: ' + dictamen.num_dictamen + ' | ' +
+                        'Solicitud: ' + dictamen.folio + ' | ' +
+                        'Lote envasado: ' + dictamen.lote_nombre +
+                        '</option>';
+                });
+                $('#id_dictamen_envasado').html(opciones).trigger('change');
             },
             error: function() {
-                //alert('Error al cargar los lotes a granel.');
+                alert('Error al obtener dictámenes envasados.');
             }
         });
     }
