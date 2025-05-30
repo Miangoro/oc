@@ -280,7 +280,7 @@ $navbarDetached = ($navbarDetached ?? '');
                         @elseif(Auth::user()->empresa)
                                 {{ Auth::user()->empresa->razon_social }}
                         @else
-                          {{ Auth::user()->empresa->razon_social }}
+                           Miembro del consejo
                         @endif
                     </small>
                     </div>
