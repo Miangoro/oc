@@ -64,30 +64,27 @@
                         <!-- Categoría -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
-                                <input type="text" id="edit_id_categoria_lib_ter" name="" disabled readonly
+                                <input type="text" id="edit_id_categoria_lib_ter" disabled readonly
                                     class="bg-light text-muted form-control" placeholder="Categoría" />
                                 <label for="categoria" class="text-muted">Categoría</label>
                             </div>
-                            <input type="hidden" id="edit_id_categoria_lib_ter_id" name="id_categoria">
                         </div>
 
                         <!-- Clase -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
-                                <input type="text" id="edit_id_clase_lib_ter"disabled readonly name=""
+                                <input type="text" id="edit_id_clase_lib_ter"disabled readonly
                                     class="bg-light text-muted form-control" placeholder="Clase" />
                                 <label for="clase" class="text-muted">Clase</label>
                             </div>
-                            <input type="hidden" id="edit_id_clase_lib_ter_id" name="id_clase">
                         </div>
                         <!-- Tipo de Maguey -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
-                                <input type="text" id="edit_id_tipo_maguey_lib_ter" disabled readonly name=""
+                                <input type="text" id="edit_id_tipo_maguey_lib_ter" disabled readonly
                                     class="bg-light text-muted  form-control" placeholder="Tipo de Maguey" />
                                 <label for="tipo_maguey" class="text-muted">Tipo de Maguey</label>
                             </div>
-                            <input type="hidden" id="edit_id_tipo_maguey_lib_ter_ids" name="id_tipo[]">
                         </div>
                     </div>
 
@@ -95,31 +92,39 @@
                         <!-- Marca -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
-                                <input type="text" id="edit_marca_lib_ter" name="" disabled readonly
+                                <input type="text" id="edit_marca_lib_ter"  disabled readonly
                                     class="bg-light text-muted  form-control" placeholder="Marca" />
                                 <label for="marca" class="text-muted">Marca</label>
                             </div>
-                            <input type="hidden" id="edit_marca_lib_ter_id" name="marca">
                         </div>
                         <!-- % Alc. Vol. -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
-                                <input type="number" id="edit_porcentaje_alcohol_lib_ter" name="porcentaje_alcohol"
-                                    step="0.1" class="form-control" placeholder="% Alc. Vol." />
+                                <input type="number" id="edit_porcentaje_alcohol_lib_ter" disabled name="porcentaje_alcohol"
+                                    step="0.1" class="form-control bg-light text-muted" placeholder="% Alc. Vol." />
                                 <label for="porcentaje_alcohol">% Alc. Vol.</label>
                             </div>
                         </div>
                         <!-- Análisis Fisicoquímicos -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
-                                <input type="text" id="edit_analisis_fisiq_lib_ter" name="analisis_fisicoquimicos"
-                                    class="form-control" placeholder="Análisis fisicoquímicos" />
+                                <input type="text" id="edit_analisis_fisiq_lib_ter" disabled name="analisis_fisicoquimicos"
+                                    class="form-control bg-light text-muted" placeholder="Análisis fisicoquímicos" readonly/>
                                 <label for="analisis_fisicoquimicos">Análisis Fisicoquímicos</label>
                             </div>
                         </div>
+
                     </div>
                     <div class="row">
-
+                        <!-- Certificado de NOM a Granel -->
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input type="text" id="edit_certificado_nom_granel_lib_ter"
+                                    name="certificado_nom_granel" disabled class="form-control bg-light tex-muted"
+                                    placeholder="Certificado de NOM a Granel" readonly/>
+                                <label for="certificado_nom_granel">Certificado de NOM a Granel</label>
+                            </div>
+                        </div>
                         <!-- Cantidad de Botellas -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
@@ -137,6 +142,11 @@
                                 <label for="presentacion">Presentación</label>
                             </div>
                         </div>
+
+                    </div>
+
+
+                    <div class="row">
                         <!-- Cantidad de Pallets -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
@@ -145,10 +155,6 @@
                                 <label for="cantidad_pallets">Cantidad de Pallets</label>
                             </div>
                         </div>
-                    </div>
-
-
-                    <div class="row">
                         <!-- Cantidad de Cajas por Pallet -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
@@ -166,8 +172,10 @@
                                 <label for="botellas_por_caja">Cantidad de Botellas por Caja</label>
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
                         <!-- Hologramas Utilizados -->
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <input type="number" id="edit_hologramas_utilizados_lib_ter"
                                     name="hologramas_utilizados" class="form-control"
@@ -175,24 +183,12 @@
                                 <label for="hologramas_utilizados">Hologramas Utilizados</label>
                             </div>
                         </div>
-
-                    </div>
-                    <div class="row">
                         <!-- Hologramas de Mermas -->
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <input type="text" id="edit_hologramas_mermas_lib_ter" name="hologramas_mermas"
                                     class="form-control" placeholder="Hologramas de Mermas" />
                                 <label for="hologramas_mermas">Hologramas de Mermas</label>
-                            </div>
-                        </div>
-                        <!-- Certificado de NOM a Granel -->
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <input type="text" id="edit_certificado_nom_granel_lib_ter"
-                                    name="certificado_nom_granel" class="form-control"
-                                    placeholder="Certificado de NOM a Granel" />
-                                <label for="certificado_nom_granel">Certificado de NOM a Granel</label>
                             </div>
                         </div>
                     </div>
@@ -281,10 +277,46 @@
                     } else if (response.lotes_envasado.length == 0) {
                         $('#edit_id_lote_envasado_lib_ter').val("");
                     }
-
+                    editObtenerDatosLoteEnvPrimero();
                 },
                 error: function() {
                     console.error('Error al cargar los datos de la empresa.');
+                }
+            });
+        }
+    }
+
+        function editObtenerDatosLoteEnvPrimero() {
+        var idLoteEnvasado = $("#edit_id_lote_envasado_lib_ter").val();
+        if (idLoteEnvasado !== "" && idLoteEnvasado !== null && idLoteEnvasado !== undefined) {
+            $.ajax({
+                url: '/getDatosLoteEnvasado/' + idLoteEnvasado,
+                method: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    $('#edit_id_categoria_lib_ter').val(response.primer_lote_granel.nombre_categoria || '');
+                    $('#edit_id_clase_lib_ter').val(response.primer_lote_granel.nombre_clase || '');
+                    if (response.primer_lote_granel && response.primer_lote_granel.tipos) {
+                        // Convertir el array de tipos en una lista separada por comas (texto visible)
+                        const tiposTexto = response.primer_lote_granel.tipos
+                            .map(tipo => tipo.nombre) // Extraer el campo 'nombre'
+                            .join(', '); // Unir los nombres con comas
+
+                        // Asignar el texto al campo visible
+                        $('#edit_id_tipo_maguey_lib_ter').val(tiposTexto);
+                        // Asignar los IDs al campo oculto como una lista separada por comas
+                    } else {
+                        // Limpiar los campos si no hay tipos
+                        $('#edit_id_tipo_maguey_lib_ter').val('');
+                    }
+                    $('#edit_marca_lib_ter').val(response.lotes_envasado.marca.marca || '');
+                    $('#edit_porcentaje_alcohol_lib_ter').val(response.primer_lote_granel.cont_alc || '');
+                    $('#edit_analisis_fisiq_lib_ter').val(response.primer_lote_granel.folio_fq || '');
+                    $('#edit_certificado_nom_granel_lib_ter').val(response.primer_lote_granel
+                        .folio_certificado || '');
+                },
+                error: function() {
+                    console.error('Error al cargar los datos del lote envasado.');
                 }
             });
         }
@@ -303,10 +335,9 @@
 
                     // Asignar los valores de los datos al formulario
                     $('#edit_id_categoria_lib_ter').val(response.primer_lote_granel.nombre_categoria || '');
-                    $('#edit_id_categoria_lib_ter_id').val(response.primer_lote_granel.id_categoria || '');
                     //aqui va ir otrro pero con el id
                     $('#edit_id_clase_lib_ter').val(response.primer_lote_granel.nombre_clase || '');
-                    $('#edit_id_clase_lib_ter_id').val(response.primer_lote_granel.id_clase || '');
+
                     //aqui va ir otrro pero con el id
 
                     if (response.primer_lote_granel && response.primer_lote_granel.tipos) {
@@ -317,23 +348,19 @@
 
                         // Asignar el texto al campo visible
                         $('#edit_id_tipo_maguey_lib_ter').val(tiposTexto);
-
-                        // Extraer solo los IDs de los tipos
-                        const tiposIds = response.primer_lote_granel.tipos.map(tipo => tipo.id_tipo);
                         // Asignar los IDs al campo oculto como una lista separada por comas
-                        $('#edit_id_tipo_maguey_lib_ter_ids').val(tiposIds.join(','));
                     } else {
                         // Limpiar los campos si no hay tipos
                         $('#edit_id_tipo_maguey_lib_ter').val('');
-                        $('#edit_id_tipo_maguey_lib_ter_ids').val('');
                     }
 
                     $('#edit_marca_lib_ter').val(response.lotes_envasado.marca.marca || '');
-                    $('#edit_marca_lib_ter_id').val(response.lotes_envasado.id_marca || '');
+
                     $('#edit_porcentaje_alcohol_lib_ter').val(response.primer_lote_granel.cont_alc || '');
                     $('#edit_analisis_fisiq_lib_ter').val(response.primer_lote_granel.folio_fq || '');
                     $('#edit_certificado_nom_granel_lib_ter').val(response.primer_lote_granel
                         .folio_certificado || '');
+
                     $('#edit_can_botellas_lib_ter').val(response.lotes_envasado.cant_botellas || '');
                     $('#edit_presentacion_lib_ter').val(response.lotes_envasado.presentacion || '');
 
