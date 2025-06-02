@@ -44,7 +44,7 @@ class solicitudesController extends Controller
         $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
         $estados = estados::all(); // Obtener todos los estados
        // $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get();// Obtener solo las empresas tipo '2'
-           
+
        // FILTRO DE EMPRESAS SEGÚN EL USUARIO
         //if (auth()->user()->tipo == 3) {
         if (Auth::check() && Auth::user()->tipo == 3) {
@@ -58,7 +58,7 @@ class solicitudesController extends Controller
             // Todas las empresas tipo 2
             $empresas = empresa::with('empresaNumClientes')
                 ->where('tipo', 2)
-                ->get();   
+                ->get();
         }
 
         $organismos = organismos::all(); // Obtener todos los estados
@@ -241,7 +241,7 @@ class solicitudesController extends Controller
 
         }
 
-        
+
 
 
         $data = [];
@@ -514,8 +514,10 @@ class solicitudesController extends Controller
         $emisionCertificado->info_adicional = $request->info_adicional;
 
         $emisionCertificado->caracteristicas = json_encode([
+            'id_dictamen_envasado' => $request->id_dictamen_envasado,
             'cantidad_cajas' => $request->cantidad_cajas,
             'cantidad_botellas' => $request->cantidad_botellas,
+
         ]);
 
         $emisionCertificado->save();
@@ -1531,6 +1533,29 @@ class solicitudesController extends Controller
                 $solicitud->caracteristicas = json_encode($data); // Ahora incluye las rutas de los archivos
                 $solicitud->save();
                 break;
+                /* emision certificado venta nacional */
+            case 'emisionCertificadoVentaNacional':
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'nullable|integer|exists:instalaciones,id_instalacion',
+                    'info_adicional' => 'nullable|string'
+                ]);
+                $caracteristicasJson = [
+                  'id_dictamen_envasado' => $request->id_dictamen_envasado,
+                  'cantidad_cajas' => $request->cantidad_cajas,
+                  'cantidad_botellas' => $request->cantidad_botellas,
+                ];
+                $jsonContent = json_encode($caracteristicasJson);
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
+                ]);
+                break;
+                /* fin de los case */
 
 
             default:
