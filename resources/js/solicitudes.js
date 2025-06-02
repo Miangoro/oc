@@ -1282,6 +1282,9 @@ $(function () {
               if (caracteristicas.id_dictamen_envasado) {
                 modal.find('#edit_id_dictamen_envasado').data('selected', caracteristicas.id_dictamen_envasado || '');
               }
+              if (caracteristicas.id_lote_envasado) {
+                modal.find('#edit_id_lote_envasado_emision_v').val(caracteristicas.id_lote_envasado || '');
+              }
               if (caracteristicas.cantidad_cajas) {
                 modal.find('#edit_num_cajas').val(caracteristicas.cantidad_cajas);
               }

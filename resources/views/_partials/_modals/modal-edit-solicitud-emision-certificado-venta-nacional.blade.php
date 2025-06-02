@@ -40,6 +40,7 @@
                         </div>
                     </div>
                     <div class="mb-4">
+                      <input type="hidden" id="edit_id_lote_envasado_emision_v" name="id_lote_envasado">
                         <input type="datetime-local" id="edit_fecha_visita_emision_v" name="fecha_visita"
                             class="form-control d-none">
                         <input type="hidden" id="edit_id_instalacion_emision_v" name="id_instalacion">
@@ -125,6 +126,7 @@
             method: 'GET',
             success: function(response) {
                 // Asignación de los datos
+                $('#edit_id_lote_envasado_emision_v').val(response.id_lote_envasado);
                 $('#edit_id_instalacion_emision_v').val(response.id_instalacion);
                 $('#edit_fecha_visita_emision_v').val(response.fecha_visita);
             },

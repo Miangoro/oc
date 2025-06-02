@@ -28,14 +28,15 @@
 
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_dictamen_envasado" name="id_dictamen_envasado"
-                                    class="select2 form-select" onchange="obtenerDatosDictamenesEnvasados();">
+                                <select id="id_dictamen_envasado" name="id_dictamen_envasado" class="select2 form-select"
+                                    onchange="obtenerDatosDictamenesEnvasados();">
                                 </select>
                                 <label for="id_dictamen_envasado">Dictamen envasado</label>
                             </div>
                         </div>
                     </div>
                     <div class="mb-4">
+                        <input type="text" id="id_lote_envasado_emision_v" name="id_lote_envasado" class="d-none">
                         <input type="datetime-local" id="fecha_visita_emision_v" name="fecha_visita"
                             class="form-control d-none">
                         <input type="hidden" id="id_instalacion_emision_v" name="id_instalacion">
@@ -87,7 +88,7 @@
             url: '/obtener_dictamenes_envasado/' + empresa,
             method: 'GET',
             success: function(response) {
-                let opciones  = '<option disabled selected value="">Selecciona un dictamen</option>';
+                let opciones = '<option disabled selected value="">Selecciona un dictamen</option>';
                 response.forEach(function(dictamen) {
                     opciones += '<option value="' + dictamen.id_dictamen_envasado + '">' +
                         'Dictamen: ' + dictamen.num_dictamen + ' | ' +
@@ -105,15 +106,16 @@
 
     function obtenerDatosDictamenesEnvasados() {
         var idDictamen = $('#id_dictamen_envasado').val();
-    if (!idDictamen) {
-        // No hacer nada si no hay dictamen seleccionado
-        return;
-    }
+        if (!idDictamen) {
+            // No hacer nada si no hay dictamen seleccionado
+            return;
+        }
         $.ajax({
             url: '/obtener_datos_inspeccion_dictamen/' + idDictamen,
             method: 'GET',
             success: function(response) {
                 // Asignación de los datos
+                $('#id_lote_envasado_emision_v').val(response.id_lote_envasado);
                 $('#id_instalacion_emision_v').val(response.id_instalacion);
                 $('#fecha_visita_emision_v').val(response.fecha_visita);
             },

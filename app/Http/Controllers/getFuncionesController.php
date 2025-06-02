@@ -176,6 +176,7 @@ public function getDictamenesEnvasado($id_empresa)
         'observaciones' => $inspeccion->observaciones ?? null,
         'id_instalacion' => $solicitud->id_instalacion ?? null,
         'fecha_visita' => $solicitud->fecha_visita ?? null,
+        'id_lote_envasado' => $dictamen->id_lote_envasado,
     ]);
     }
 
