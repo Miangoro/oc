@@ -756,10 +756,13 @@ class lotesGranelController extends Controller
                   $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
 
                   Log::info('Procesando archivo:', ['file' => $file->getClientOriginalName(), 'numeroCliente' => $numeroCliente]);
-
+                $carpeta = '';
+                if($request->id_documento[$index] != 59){
+                    $carpeta = '/fqs';
+                }
                   // Intentar guardar el archivo
                   try {
-                      $filePath = $file->storeAs('uploads/' . $numeroCliente.'/fqs', $filename, 'public');
+                      $filePath = $file->storeAs('uploads/' . $numeroCliente.$carpeta, $filename, 'public');
                       Log::info('Archivo guardado:', ['path' => $filePath, 'filename' => $filename]);
                   } catch (\Exception $e) {
                       Log::error('Error al guardar el archivo:', ['error' => $e->getMessage()]);
