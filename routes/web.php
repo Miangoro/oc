@@ -1052,9 +1052,14 @@ Route::middleware(['auth'])->controller(Certificado_NacionalController::class)->
     Route::resource('CerVentaNacional-list', Certificado_NacionalController::class);
     Route::post('crear', 'store')->name('registrar-cer-nac');
     Route::delete('eliminar/{id_certificado}',  'destroy')->name('eliminar-cer-nac');
-    Route::get('editar/{id_certificado}/edit', 'edit')->name('obtener-cer-na');
-    Route::put('actualizar/{id_certificado}', 'update')->name('actualizar-cer-na');
-    Route::get('/certificado_venta_nacional/{id}', 'certificado')->name('PDF-cer-na');
+    Route::get('editar/{id_certificado}/edit', 'edit')->name('obtener-cer-nac');
+    Route::put('actualizar/{id_certificado}', 'update')->name('actualizar-cer-nac');
+    Route::get('/certificado_venta_nacional/{id}', 'certificado')->name('PDF-cer-nac');
+
+    //Reexpedir
+    Route::post('reexpedir', 'reexpedir')->name('reexpedir-cer-nac');
+    //Asignar revisor
+    Route::post('asignar_revisor_nacional', 'storeRevisor')->name('asignarRevisor-cer-nac');
 });
 
 //-------------------TRAMITE IMPI-------------------

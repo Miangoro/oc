@@ -59,19 +59,19 @@ class Certificado_Nacional extends Model
 
 
     //PENDIENTES
-    /*public function revisorPersonal()
+    public function revisorPersonal()
     {
         return $this->hasOne(Revisor::class, 'id_certificado')
             ->where('tipo_revision', 1)
-            ->where('tipo_certificado', 3);
+            ->where('tipo_certificado', 4);
     }
 
     public function revisorConsejo()
     {
         return $this->hasOne(Revisor::class, 'id_certificado')
             ->where('tipo_revision', 2)
-            ->where('tipo_certificado', 3);
-    }*/
+            ->where('tipo_certificado', 4);
+    }
 
 
 

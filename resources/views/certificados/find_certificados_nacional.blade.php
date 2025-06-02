@@ -83,9 +83,10 @@
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-certificado-nacional')
+@include('_partials/_modals/modal-reexpedir-certificado-nacional')
+@include('_partials/_modals/modal-add-asignar-revisor')
 
-{{-- @include('_partials/_modals/modal-add-asignar-revisor')
-@include('_partials/_modals/modal-reexpedir-certificado-exportacion')
+{{-- 
 @include('_partials/_modals/modal-trazabilidad-certificados') --}}
 <!-- /Modal -->
 

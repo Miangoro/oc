@@ -161,10 +161,10 @@
 
         /* Estilo para el texto de fondo */
         .background-text {
-           font-family: 'Century Gothic';
+            font-family: 'Century Gothic';
             position: absolute;
             top: 450px;
-            left: 380px;
+            left: 410px;
             z-index: -1;
             color: #000000;
             font-size: 12px;
@@ -172,11 +172,11 @@
             white-space: nowrap;
             text-align: left;
         }
+
         .espacio_letras td {
             padding-top: 1px;
             padding-bottom: 1px;
         }
-
     </style>
 
 
@@ -199,7 +199,6 @@
             <td class="leftLetter" colspan="2">{{ $razon_social }}</td>
         </tr>
         <tr>
-<<<<<<< HEAD
             <td class="letra-fondo" style="text-align: left" colspan="2">No. Cliente:</td>
             <td colspan="2">{{ $numero_cliente }}</td>
             <td class="letra-fondo" style="text-align: left">Fecha de revisión:</td>
@@ -208,16 +207,6 @@
         <tr>
             <td class="letra-fondo" style="text-align: left" colspan="2">No. De certificado:</td>
             <td colspan="2">{{ $num_certificado }}</td>
-=======
-            <td class="letra-fondo" style="text-align: left; height: 30px" colspan="2">No. Cliente:</td>
-            <td colspan="2">NOM-070-270C</td>
-            <td class="letra-fondo" style="text-align: left ">Fecha de revisión:</td>
-            <td>2024-07-25 11:35:43</td>
-        </tr>
-        <tr>
-            <td class="letra-fondo" style="text-align: left; height: 20px" colspan="2">No. De certificado:</td>
-            <td colspan="2">CIDAM C-INS-088/2024</td>
->>>>>>> 35c83d8800b49876c0307b803784d53ebe528659
             <td class="td-no-border"></td>
             <td class="td-no-border"></td>
         </tr>
@@ -225,109 +214,43 @@
     </table>
     <br>
 
-    <table style="width: 355px" class="espacio_letras">
+    <table style="width: 395px" class="espacio_letras">
         <tr>
             <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 180px;">Requisitos documentales
                 <br>
-                para certificación</td>
+                para certificación
+            </td>
             <td class="letra-fondo" style="width: 45px">C </td>
             <td class="letra-fondo">N/C </td>
             <td class="letra-fondo">N/A</td>
         </tr>
-
+        @foreach ($preguntas as $pregunta)
+            @if ($pregunta['id_pregunta'] >= 91 && $pregunta['id_pregunta'] <= 95)
+                <tr>
+                    <td style="text-align: left">{{ $pregunta['pregunta'] }}</td>
+                    <td>{{ $pregunta['respuesta'] == 'C' ? 'C' : '------' }}</td>
+                    <td>{{ $pregunta['respuesta'] == 'NC' ? 'NC' : '------' }}</td>
+                    <td>{{ $pregunta['respuesta'] == 'NA' ? 'NA' : '------' }}</td>
+                </tr>
+            @endif
+        @endforeach
         <tr>
-            <td style="text-align: left">Solicitud del servicio</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left">Contrato de prestación de
-                servicios</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left">Carta de asignación número de cliente</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left">Dictamen de la unidad de
-                inspección (fecha de emisión,</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left">Acta de la Unidad de
-                Inspección (fecha de inicio y</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 180px; height: 30px">Datos del certificado</td>
+            <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 180px; height: 30px">Datos del
+                certificado</td>
             <td class="letra-fondo">C </td>
             <td class="letra-fondo">N/C </td>
             <td class="letra-fondo">N/A</td>
         </tr>
-        <tr>
-            <td style="text-align: left">Nombre de la empresa o
-                persona física </td>
-            <td></td>
-            <td>NC</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td style="text-align: left">Domicilio fiscal y de las
-                instalaciones.</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left">Fecha de vigencia y
-                vencimiento</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left">Alcance de la certificación</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left">Nombre y puesto del
-                responsable de la emisión</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left">Número de dictamen
-                emitido por la UVEM</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left">Nombre y dirección del
-                organismo certificador</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left">No. De Certificado</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
+        @foreach ($preguntas as $pregunta)
+            @if ($pregunta['id_pregunta'] >= 96 && $pregunta['id_pregunta'] <= 103)
+                <tr>
+                    <td style="text-align: left">{{ $pregunta['pregunta'] }}</td>
+                    <td>{{ $pregunta['respuesta'] == 'C' ? 'C' : '------' }}</td>
+                    <td>{{ $pregunta['respuesta'] == 'NC' ? 'NC' : '------' }}</td>
+                    <td>{{ $pregunta['respuesta'] == 'NA' ? 'NA' : '------' }}</td>
+                </tr>
+            @endif
+        @endforeach
     </table>
     <br>
     <table>
@@ -340,15 +263,18 @@
                 consiguiente, se toma la decisión para otorgar la certificación de instalaciones como comercializador.
                 <div style="padding: 30px"></div>
                 <div style="width: 100%; text-align: right; position: fixed; margin-top: -35px; right: 20px;">
-                <img src="{{ public_path('img_pdf/2-s.png') }}" alt="Firma" style="width: 120px; height: auto;">
-            </div>
-                Miguel Ángel Gómez Romero <br>
-                Miembro del Consejo para la decisión de la certificación (Vocal):
+                    @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
+                    <img src="{{ public_path('storage/' . $firmaPath) }}" alt="Firma" style="width: 120px; height: auto;">
+                    @endif
+                </div>
+                {{ $id_revisor }} <br>
+                {{ $puestoRevisor }}:
             </td>
         </tr>
     </table>
     <div style="margin-bottom: 15px">
-        <p style="font-size: 11px; margin-top: 20px; text-align: center;  font-family: 'Century Gothic';">Este documento es propiedad del Centro de
+        <p style="font-size: 11px; margin-top: 20px; text-align: center;  font-family: 'Century Gothic';">Este documento
+            es propiedad del Centro de
             Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser <br>
             distribuido externamente sin la autorización escrita del Director Ejecutivo.</p>
     </div>
