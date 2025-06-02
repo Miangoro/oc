@@ -505,6 +505,7 @@ $(function () {
         $('#etiquetasForm').find('select').val(null).trigger('change'); 
         $('#doc_etiqueta').html(''); 
         $('#doc_corrugado').html('');
+         $('#id_etiqueta').val('');
     }
 
     $('#etiquetas').on('hidden.bs.modal', function () {

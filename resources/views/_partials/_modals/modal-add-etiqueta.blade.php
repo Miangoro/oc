@@ -9,7 +9,7 @@
                 </div>
                 <form id="etiquetasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
-                        <input type="hidden" id="id_etiqueta" name="id_etiqueta">
+                        <input type="text" id="id_etiqueta" name="id_etiqueta">
                         <input type="hidden" id="modo_formulario" value="registrar"> 
 
                         
