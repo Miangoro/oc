@@ -739,6 +739,11 @@ class lotesGranelController extends Controller
               if (Storage::disk('public')->exists($filePath)) {
                   Storage::disk('public')->delete($filePath);
               }
+
+               $filePath = 'uploads/' . $numeroCliente .'/certificados_granel/' . $documentacionUrl->url;
+              if (Storage::disk('public')->exists($filePath)) {
+                  Storage::disk('public')->delete($filePath);
+              }
               $documentacionUrl->delete();
           }
 
@@ -756,7 +761,7 @@ class lotesGranelController extends Controller
                   $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
 
                   Log::info('Procesando archivo:', ['file' => $file->getClientOriginalName(), 'numeroCliente' => $numeroCliente]);
-                $carpeta = '';
+                $carpeta = 'certificados_granel';
                 if($request->id_documento[$index] != 59){
                     $carpeta = '/fqs';
                 }
