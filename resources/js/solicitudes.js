@@ -787,6 +787,8 @@ $(function () {
         modal = $('#editClienteModalTipo10');
       } else if (id_tipo === 11) {
         modal = $('#editPedidoExportacion');
+      } else if (id_tipo === 13) {
+        modal = $('#editSolicitudEmisionCertificado');
       } else if (id_tipo === 14) {
         modal = $('#editSolicitudDictamen');
       } else {
@@ -1262,6 +1264,32 @@ $(function () {
               }
 
               modal.find('#comentarios_edit').val(response.data.info_adicional);
+            }
+            else if (id_tipo === 13) {
+              modal.find('#id_solicitud_emision_v').val(id_solicitud);
+              modal.find('#edit_id_empresa_solicitud_emision_venta').val(response.data.id_empresa).trigger('change');
+              modal.find('#edit_fecha_visita_emision_v').val(response.data.fecha_visita);
+              modal.find('#edit_id_instalacion_emision_v').val(response.data.id_instalacion);
+
+              let caracteristicas = {};
+              if (typeof response.data.caracteristicas === 'string') {
+                try {
+                  caracteristicas = JSON.parse(response.data.caracteristicas);
+                } catch (e) {
+                  console.error("Error al parsear caracteristicas:", e);
+                }
+              }
+              if (caracteristicas.id_dictamen_envasado) {
+                modal.find('#edit_id_dictamen_envasado').data('selected', caracteristicas.id_dictamen_envasado || '');
+              }
+              if (caracteristicas.cantidad_cajas) {
+                modal.find('#edit_num_cajas').val(caracteristicas.cantidad_cajas);
+              }
+              if (caracteristicas.cantidad_botellas) {
+                modal.find('#edit_num_botellas').val(caracteristicas.cantidad_botellas);
+              }
+
+              modal.find('#edit_comentarios_e_venta_n').val(response.data.info_adicional);
             }
             else if (id_tipo === 14) {
               // Aquí va el tipo correspondiente para tu caso
@@ -2652,6 +2680,101 @@ $(function () {
           $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
 
 
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la solicitud',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+  });
+  /* editar emision certificado venta nacional */
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation para el formulario de actualización
+    const formUpdate = document.getElementById('editEmisionCetificadoVentaNacionalForm');
+    const fvUpdate = FormValidation.formValidation(formUpdate, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa.'
+            }
+          }
+        },
+        id_dictamen_envasado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un dictamen de envasado.'
+            }
+          }
+        },
+        cantidad_botellas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad de botellas.'
+            }
+          }
+        },
+        cantidad_cajas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad de cajas.'
+            }
+          }
+        }
+
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      var formData = new FormData(formUpdate);
+      $('#btnEditremi').prop('disabled', true);
+      $('#btnEditremi').html('<span class="spinner-border spinner-border-sm me-2"></span> Actualizando...');
+      // Hacer la solicitud AJAX
+      $.ajax({
+        url: '/actualizar-solicitudes/' + $('#id_solicitud_emision_v').val(),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#editSolicitudEmisionCertificado').modal('hide'); // Oculta el modal
+          $('#btnEditremi').prop('disabled', false);
+          $('#btnEditremi').html('<i class="ri-add-line"></i> Editar');
+          $('#editEmisionCetificadoVentaNacionalForm')[0].reset(); // Resetea el formulario
+          $('.select2').val(null).trigger('change'); // Resetea los select2
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
