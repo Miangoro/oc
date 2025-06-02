@@ -515,6 +515,7 @@ class solicitudesController extends Controller
 
         $emisionCertificado->caracteristicas = json_encode([
             'id_dictamen_envasado' => $request->id_dictamen_envasado,
+            'id_lote_envasado' => $request->id_lote_envasado,
             'cantidad_cajas' => $request->cantidad_cajas,
             'cantidad_botellas' => $request->cantidad_botellas,
 
@@ -1543,6 +1544,7 @@ class solicitudesController extends Controller
                 ]);
                 $caracteristicasJson = [
                   'id_dictamen_envasado' => $request->id_dictamen_envasado,
+                  'id_lote_envasado' => $request->id_lote_envasado,
                   'cantidad_cajas' => $request->cantidad_cajas,
                   'cantidad_botellas' => $request->cantidad_botellas,
                 ];
