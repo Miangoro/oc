@@ -328,7 +328,7 @@ class EtiquetasController extends Controller
         $etiqueta = etiquetas::findOrFail($id_etiqueta);
 
         // Eliminar relaciones
-        $etiqueta->destinos()->delete();
+        //$etiqueta->destinos()->delete();
         $etiqueta->url_etiqueta()->delete();
         $etiqueta->url_corrugado()->delete();
 
