@@ -481,6 +481,41 @@ class solicitudesController extends Controller
         return response()->json(['message' => 'Vigilancia en producción de lote registrada exitosamente']);
     }
 
+        public function storeEmisionCertificadoVentaNacional(Request $request)
+    {
+        $emisionCertificado = new solicitudesModel();
+        $emisionCertificado->folio = Helpers::generarFolioSolicitud();
+        $emisionCertificado->id_empresa = $request->id_empresa;
+        $emisionCertificado->id_tipo = 13;
+        $emisionCertificado->id_predio = 0;
+        $emisionCertificado->fecha_visita = $request->fecha_visita;
+        $emisionCertificado->id_instalacion = $request->id_instalacion;
+        $emisionCertificado->info_adicional = $request->info_adicional;
+
+        $emisionCertificado->caracteristicas = json_encode([
+            'cantidad_cajas' => $request->cantidad_cajas,
+            'cantidad_botellas' => $request->cantidad_botellas,
+        ]);
+
+        $emisionCertificado->save();
+
+        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+        // Notificación 1
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud Emison de certificado de venta nacional',
+            'message' => $emisionCertificado->folio . " " . $emisionCertificado->tipo_solicitud->tipo,
+            'url' => 'solicitudes-historial',
+        ];
+
+        // Iterar sobre cada usuario y enviar la notificación
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+        return response()->json(['message' => 'Emision de certificado venta nacional registrada exitosamente']);
+    }
+
+
     public function storeMuestreoLote(Request $request)
     {
         $MuestreoLote = new solicitudesModel();

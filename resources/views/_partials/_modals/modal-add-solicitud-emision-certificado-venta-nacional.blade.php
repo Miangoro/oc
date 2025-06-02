@@ -29,23 +29,31 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="id_dictamen_envasado" name="id_dictamen_envasado"
-                                    class="select2 form-select">
+                                    class="select2 form-select" onchange="obtenerDatosDictamenesEnvasados();">
                                 </select>
                                 <label for="id_dictamen_envasado">Dictamen envasado</label>
                             </div>
                         </div>
                     </div>
+                    <div class="mb-4">
+<input type="datetime-local" id="fecha_visita_emision_v" name="fecha_visita" class="form-control d-none">
+{{--     <input type="" id="id_solicitud_emision_v" name="id_solicitud">
+    <input type="" id="id_inspector_emision_v" name="id_inspector"> --}}
+    <input type="hidden" id="id_instalacion_emision_v" name="id_instalacion">
+                    </div>
+
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <input type="number" id="num_cajas" name="num_cajas" class="form-control">
+                                <input type="number" id="num_cajas" name="cantidad_cajas" class="form-control">
                                 <label for="num_cajas">No. de Cajas</label>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <input type="number" id="num_botellas" name="num_botellas" class="form-control"
+                                <input type="number" id="num_botellas" name="cantidad_botellas" class="form-control"
                                     required>
                                 <label for="num_botellas">No. de Botellas</label>
                             </div>
@@ -59,7 +67,7 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="submit" class="btn btn-primary" id="btnRegistraremi"><i class="ri-add-line"></i> Registrar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
@@ -79,7 +87,7 @@
             url: '/obtener_dictamenes_envasado/' + empresa,
             method: 'GET',
             success: function(response) {
-                let opciones = '<option value="" disabled selected>Selecciona dictamen</option>';
+                let opciones;
                 response.forEach(function(dictamen) {
                     opciones += '<option value="' + dictamen.id_dictamen_envasado + '">' +
                         'Dictamen: ' + dictamen.num_dictamen + ' | ' +
@@ -91,6 +99,25 @@
             },
             error: function() {
                 alert('Error al obtener dictámenes envasados.');
+            }
+        });
+    }
+
+    function obtenerDatosDictamenesEnvasados() {
+        var idDictamen = $('#id_dictamen_envasado').val();
+            console.log("ID dictamen seleccionado:", idDictamen);
+
+        $.ajax({
+            url: '/obtener_datos_inspeccion_dictamen/' + idDictamen,
+            method: 'GET',
+            success: function(response) {
+                // Asignación de los datos
+                console.log("Datos obtenidos:", response);
+                $('#id_instalacion_emision_v').val(response.id_instalacion);
+                $('#fecha_visita_emision_v').val(response.fecha_visita);
+            },
+            error: function() {
+                console.log('Error al obtener datos de inspección.');
             }
         });
     }
