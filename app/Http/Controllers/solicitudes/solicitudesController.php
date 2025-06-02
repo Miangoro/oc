@@ -129,6 +129,8 @@ class solicitudesController extends Controller
             // Si se necesita ordenar por nombre del inspector
             if ($order === 'inspector') {
                 $query->orderBy('inspector_name', $dir);
+            } elseif ($order === 'folio') {
+                $query->orderByRaw("CAST(SUBSTRING(folio, 5) AS UNSIGNED) $dir");
             } else {
                 $query->orderBy($order, $dir);
             }
@@ -183,7 +185,12 @@ class solicitudesController extends Controller
 
                 $solicitudes = $solicitudes->offset($start)
                     ->limit($limit)
-                    ->orderBy("solicitudes.id_solicitud", $dir)
+                    //->orderBy("solicitudes.id_solicitud", $dir)
+                    ->when($order === 'folio', function ($q) use ($dir) {
+                        return $q->orderByRaw("CAST(SUBSTRING(folio, 5) AS UNSIGNED) $dir");
+                    }, function ($q) use ($order, $dir) {
+                        return $q->orderBy($order, $dir);
+                    })
                     ->get();
 
 
@@ -223,6 +230,10 @@ class solicitudesController extends Controller
                 $totalFiltered = $totalFiltered->count();
 
         }
+
+        
+
+
         $data = [];
 
         if (!empty($solicitudes)) {
