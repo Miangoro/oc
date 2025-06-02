@@ -40,7 +40,7 @@ $(function () {
           `;
         }
       },
-      { data: 'fecha_solicitud' },
+      //{ data: 'fecha_solicitud' },
       {
         data: function (row) {
           return row.tipo + (row.tipo_instalacion ? ' - ' + row.tipo_instalacion : '');
@@ -121,7 +121,7 @@ $(function () {
       },*/
 
       {
-        targets: 11,
+        targets: 10,
         className: 'text-center',
         render: function (data, type, full, meta) {
           const acta = full['url_acta'];

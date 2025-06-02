@@ -241,7 +241,7 @@ class lotesGranelController extends Controller
 
                       // Ahora puedes usar el número de cliente en la URL
                       if ($lote->tipo_lote == 2 && $documentacion) {
-                          $nestedData['url_certificado'] = '/files/' . $numeroCliente . '/' . rawurlencode($documentacion->url);
+                          $nestedData['url_certificado'] = '/files/' . $numeroCliente . '/certificados_granel/' . rawurlencode($documentacion->url);
                       } else {
                           $nestedData['url_certificado'] = null;
                       }
@@ -739,6 +739,11 @@ class lotesGranelController extends Controller
               if (Storage::disk('public')->exists($filePath)) {
                   Storage::disk('public')->delete($filePath);
               }
+
+               $filePath = 'uploads/' . $numeroCliente .'/certificados_granel/' . $documentacionUrl->url;
+              if (Storage::disk('public')->exists($filePath)) {
+                  Storage::disk('public')->delete($filePath);
+              }
               $documentacionUrl->delete();
           }
 
@@ -756,10 +761,13 @@ class lotesGranelController extends Controller
                   $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
 
                   Log::info('Procesando archivo:', ['file' => $file->getClientOriginalName(), 'numeroCliente' => $numeroCliente]);
-
+                $carpeta = '/certificados_granel';
+                if($request->id_documento[$index] != 59){
+                    $carpeta = '/fqs';
+                }
                   // Intentar guardar el archivo
                   try {
-                      $filePath = $file->storeAs('uploads/' . $numeroCliente.'/fqs', $filename, 'public');
+                      $filePath = $file->storeAs('uploads/' . $numeroCliente.$carpeta, $filename, 'public');
                       Log::info('Archivo guardado:', ['path' => $filePath, 'filename' => $filename]);
                   } catch (\Exception $e) {
                       Log::error('Error al guardar el archivo:', ['error' => $e->getMessage()]);
