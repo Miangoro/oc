@@ -235,6 +235,7 @@
         @include('_partials._modals.modal-edit-solicitud-pedidos-para-exportacion')
         @include('_partials._modals.modal-edit-solicitud-muestreo-agave')
         @include('_partials._modals.modal-edit-solicitud-liberación-producto-terminado')
+        @include('_partials._modals.modal-edit-solicitud-emision-certificado-venta-nacional')
 
 
         <!-- /Modal -->

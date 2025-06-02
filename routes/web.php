@@ -809,6 +809,7 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::post('/hologramas/storeInspeccionBarricada', 'storeInspeccionBarricada');
     Route::post('/hologramas/storeInspeccionBarricadaLiberacion', 'storeInspeccionBarricadaLiberacion');
     Route::post('/hologramas/storeInspeccionEnvasado', 'storeInspeccionEnvasado');
+    Route::post('/storeEmisionCertificadoVentaNacional', 'storeEmisionCertificadoVentaNacional');
     Route::get('/getDetalleLoteTipo/{id_tipo}', 'getDetalleLoteTipo');
     Route::delete('/solicitudes-lista/{id_solicitud}', 'destroy')->name('solicitudes-list.destroy');
     Route::get('/getDetalleLoteEnvasado/{id_lote_envasado}', 'getDetalleLoteEnvasado');
@@ -824,6 +825,8 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::get('/pdf_validar_solicitud/{id_validacion}', 'pdf_validar_solicitud');
 
     Route::get('/obtener_dictamenes_envasado/{empresa}', [getFuncionesController::class, 'getDictamenesEnvasado'])->name('getDictamenesEnvasado');
+    Route::get('/obtener_datos_inspeccion_dictamen/{id}', [getFuncionesController::class, 'obtenerDatosInspeccion']);
+
 });
 
 //-------------------CATALOGO EQUIPOS-------------------

@@ -251,17 +251,17 @@ $(function () {
         searchable: false,
         orderable: false,
       },
-            {
+      {
         targets: 3,
         searchable: false,
         orderable: false,
       },
-            {
+      {
         targets: 5,
         searchable: false,
         orderable: false,
       },
-            {
+      {
         targets: 6,
         searchable: false,
         orderable: false,
@@ -361,7 +361,7 @@ $(function () {
         }
       }
     ],
-    order: [[1, 'desc']],
+    order: [[2, 'desc']],
     dom:
       '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
       '<"me-5 ms-n2"f>' +
@@ -787,6 +787,8 @@ $(function () {
         modal = $('#editClienteModalTipo10');
       } else if (id_tipo === 11) {
         modal = $('#editPedidoExportacion');
+      } else if (id_tipo === 13) {
+        modal = $('#editSolicitudEmisionCertificado');
       } else if (id_tipo === 14) {
         modal = $('#editSolicitudDictamen');
       } else {
@@ -1174,26 +1176,26 @@ $(function () {
               modal.find('#edit_info_adicional_geo').val(response.data.info_adicional);
               // Otros campos específicos para tipo 10
             }
-              else if (id_tipo === 11) {
-                modal.find('.id_solicitud').val(id_solicitud);
-                modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
-                modal.find('#fecha_visita_edit_exportacion').val(response.data.fecha_visita);
-                modal.find('.instalacion_id').val(response.data.id_instalacion);
+            else if (id_tipo === 11) {
+              modal.find('.id_solicitud').val(id_solicitud);
+              modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
+              modal.find('#fecha_visita_edit_exportacion').val(response.data.fecha_visita);
+              modal.find('.instalacion_id').val(response.data.id_instalacion);
 
-                if (response.caracteristicas) {
-                  modal.find('#tipo_solicitud_edit').val(response.caracteristicas.tipo_solicitud).trigger('change');
-                  modal.find('.direccion_id').val(response.caracteristicas.direccion_destinatario);
-                  modal.find('.aduana_salida').val(response.caracteristicas.aduana_salida);
-                  modal.find('.no_pedido').val(response.caracteristicas.no_pedido);
-                  modal.find('.instalacion_envasado_id').val(response.caracteristicas.id_instalacion_envasado);
-                  modal.find('#direccion_destinatario_ex_edit').val(response.caracteristicas.id_instalacion_envasado).trigger('change');
+              if (response.caracteristicas) {
+                modal.find('#tipo_solicitud_edit').val(response.caracteristicas.tipo_solicitud).trigger('change');
+                modal.find('.direccion_id').val(response.caracteristicas.direccion_destinatario);
+                modal.find('.aduana_salida').val(response.caracteristicas.aduana_salida);
+                modal.find('.no_pedido').val(response.caracteristicas.no_pedido);
+                modal.find('.instalacion_envasado_id').val(response.caracteristicas.id_instalacion_envasado);
+                modal.find('#direccion_destinatario_ex_edit').val(response.caracteristicas.id_instalacion_envasado).trigger('change');
 
-                  modal.find('.etiqueta_id').val(response.caracteristicas.id_etiqueta);
+                modal.find('.etiqueta_id').val(response.caracteristicas.id_etiqueta);
 
-                  var lotesEnvasado = response.caracteristicas.detalles.map(function (detalle) {
-                    return detalle.id_lote_envasado;
-                  });
-                                  // Mostrar Factura Proforma
+                var lotesEnvasado = response.caracteristicas.detalles.map(function (detalle) {
+                  return detalle.id_lote_envasado;
+                });
+                // Mostrar Factura Proforma
                 let facturaProforma = null;
                 let facturaProformaCont = null;
                 var numeroCliente = response.numero_cliente;
@@ -1209,7 +1211,7 @@ $(function () {
 
                 if (facturaProforma && facturaProforma.url) {
                   $('#factura_proforma_display').html(
-                    'Factura actual: <a href="/storage/uploads/'  + numeroCliente + '/' + facturaProforma.url + '" target="_blank">' + facturaProforma.url + '</a>'
+                    'Factura actual: <a href="/storage/uploads/' + numeroCliente + '/' + facturaProforma.url + '" target="_blank">' + facturaProforma.url + '</a>'
                   );
                 } else {
                   $('#factura_proforma_display').html('<span class="text-danger">No hay factura proforma.</span>');
@@ -1217,53 +1219,79 @@ $(function () {
 
                 if (facturaProformaCont && facturaProformaCont.url) {
                   $('#factura_proforma_cont_display').html(
-                    'Factura (Continuación) actual: <a href="/storage/uploads/'  + numeroCliente + '/' + facturaProformaCont.url + '" target="_blank">' + facturaProformaCont.url + '</a>'
+                    'Factura (Continuación) actual: <a href="/storage/uploads/' + numeroCliente + '/' + facturaProformaCont.url + '" target="_blank">' + facturaProformaCont.url + '</a>'
                   );
                 } else {
-                 $('#factura_proforma_cont_display').html('<span class="text-danger">No hay factura proforma (continuación).</span>');
+                  $('#factura_proforma_cont_display').html('<span class="text-danger">No hay factura proforma (continuación).</span>');
                 }
 
-                  modal.find('.lote_envasado_id').val(lotesEnvasado.join(','));
+                modal.find('.lote_envasado_id').val(lotesEnvasado.join(','));
 
-                  var cantidadDeLotes = response.caracteristicas.detalles.length;
+                var cantidadDeLotes = response.caracteristicas.detalles.length;
 
-                  if (cantidadDeLotes === 1) {
-                    $('#sections-container2').not(':first').remove();
-                    modal.find('#cantidad_cajas_edit0').val(response.caracteristicas.detalles[0].cantidad_cajas);
-                    modal.find('#cantidad_botellas_edit0').val(response.caracteristicas.detalles[0].cantidad_botellas);
-                    modal.find('#presentacion_edit0').val(response.caracteristicas.detalles[0].presentacion || '');
-                    modal.find('#lote_granel_edit_0').val(response.caracteristicas.detalles[0].lote_granel || '');
-                    modal.find('#lote_envasado_edit_0').data('selected',response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
-                  } else {
-                    for (var i = 1; i < cantidadDeLotes; i++) {
-                      $('#add-characteristics_edit').click();
+                if (cantidadDeLotes === 1) {
+                  $('#sections-container2').not(':first').remove();
+                  modal.find('#cantidad_cajas_edit0').val(response.caracteristicas.detalles[0].cantidad_cajas);
+                  modal.find('#cantidad_botellas_edit0').val(response.caracteristicas.detalles[0].cantidad_botellas);
+                  modal.find('#presentacion_edit0').val(response.caracteristicas.detalles[0].presentacion || '');
+                  modal.find('#lote_granel_edit_0').val(response.caracteristicas.detalles[0].lote_granel || '');
+                  modal.find('#lote_envasado_edit_0').data('selected', response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
+                } else {
+                  for (var i = 1; i < cantidadDeLotes; i++) {
+                    $('#add-characteristics_edit').click();
 
-                      // Primero actualiza el índice 0 (parece error: debería ser i)
-                      modal.find(`#cantidad_cajas_edit0`).val(response.caracteristicas.detalles[0].cantidad_cajas);
-                      modal.find(`#cantidad_botellas_edit0`).val(response.caracteristicas.detalles[0].cantidad_botellas);
-                      modal.find(`#presentacion_edit0`).val(response.caracteristicas.detalles[0].presentacion || '');
-                      modal.find(`#lote_granel_edit_0`).val(response.caracteristicas.detalles[0].lote_granel || '');
-                      setTimeout(function () {
-                        modal.find('#lote_envasado_edit_0').val(response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
-                      }, 300);
+                    // Primero actualiza el índice 0 (parece error: debería ser i)
+                    modal.find(`#cantidad_cajas_edit0`).val(response.caracteristicas.detalles[0].cantidad_cajas);
+                    modal.find(`#cantidad_botellas_edit0`).val(response.caracteristicas.detalles[0].cantidad_botellas);
+                    modal.find(`#presentacion_edit0`).val(response.caracteristicas.detalles[0].presentacion || '');
+                    modal.find(`#lote_granel_edit_0`).val(response.caracteristicas.detalles[0].lote_granel || '');
+                    setTimeout(function () {
+                      modal.find('#lote_envasado_edit_0').val(response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
+                    }, 300);
 
-                      // Luego actualiza el actual i
-                      modal.find(`#cantidad_cajas_edit${i}`).val(response.caracteristicas.detalles[i].cantidad_cajas);
-                      modal.find(`#cantidad_botellas_edit${i}`).val(response.caracteristicas.detalles[i].cantidad_botellas);
-                      modal.find(`#presentacion_edit${i}`).val(response.caracteristicas.detalles[i].presentacion || '');
-                      modal.find(`#lote_granel_edit_${i}`).val(response.caracteristicas.detalles[i].lote_granel || '');
-                      setTimeout((function (i) {
-                        return function () {
-                          modal.find(`select[name="lote_envasado_edit[${i}]"]`).val(response.caracteristicas.detalles[i].id_lote_envasado).trigger('change');
-                        };
-                      })(i), 300);
-                    }
+                    // Luego actualiza el actual i
+                    modal.find(`#cantidad_cajas_edit${i}`).val(response.caracteristicas.detalles[i].cantidad_cajas);
+                    modal.find(`#cantidad_botellas_edit${i}`).val(response.caracteristicas.detalles[i].cantidad_botellas);
+                    modal.find(`#presentacion_edit${i}`).val(response.caracteristicas.detalles[i].presentacion || '');
+                    modal.find(`#lote_granel_edit_${i}`).val(response.caracteristicas.detalles[i].lote_granel || '');
+                    setTimeout((function (i) {
+                      return function () {
+                        modal.find(`select[name="lote_envasado_edit[${i}]"]`).val(response.caracteristicas.detalles[i].id_lote_envasado).trigger('change');
+                      };
+                    })(i), 300);
                   }
                 }
-
-                modal.find('#comentarios_edit').val(response.data.info_adicional);
               }
-              else if (id_tipo === 14) {
+
+              modal.find('#comentarios_edit').val(response.data.info_adicional);
+            }
+            else if (id_tipo === 13) {
+              modal.find('#id_solicitud_emision_v').val(id_solicitud);
+              modal.find('#edit_id_empresa_solicitud_emision_venta').val(response.data.id_empresa).trigger('change');
+              modal.find('#edit_fecha_visita_emision_v').val(response.data.fecha_visita);
+              modal.find('#edit_id_instalacion_emision_v').val(response.data.id_instalacion);
+
+              let caracteristicas = {};
+              if (typeof response.data.caracteristicas === 'string') {
+                try {
+                  caracteristicas = JSON.parse(response.data.caracteristicas);
+                } catch (e) {
+                  console.error("Error al parsear caracteristicas:", e);
+                }
+              }
+              if (caracteristicas.id_dictamen_envasado) {
+                modal.find('#edit_id_dictamen_envasado').data('selected', caracteristicas.id_dictamen_envasado || '');
+              }
+              if (caracteristicas.cantidad_cajas) {
+                modal.find('#edit_num_cajas').val(caracteristicas.cantidad_cajas);
+              }
+              if (caracteristicas.cantidad_botellas) {
+                modal.find('#edit_num_botellas').val(caracteristicas.cantidad_botellas);
+              }
+
+              modal.find('#edit_comentarios_e_venta_n').val(response.data.info_adicional);
+            }
+            else if (id_tipo === 14) {
               // Aquí va el tipo correspondiente para tu caso
               // Llenar los campos del modal con los datos de la solicitud
               modal.find('#edit_id_solicitud').val(id_solicitud);
@@ -2676,6 +2704,101 @@ $(function () {
       });
     });
   });
+  /* editar emision certificado venta nacional */
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation para el formulario de actualización
+    const formUpdate = document.getElementById('editEmisionCetificadoVentaNacionalForm');
+    const fvUpdate = FormValidation.formValidation(formUpdate, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa.'
+            }
+          }
+        },
+        id_dictamen_envasado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un dictamen de envasado.'
+            }
+          }
+        },
+        cantidad_botellas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad de botellas.'
+            }
+          }
+        },
+        cantidad_cajas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad de cajas.'
+            }
+          }
+        }
+
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      var formData = new FormData(formUpdate);
+      $('#btnEditremi').prop('disabled', true);
+      $('#btnEditremi').html('<span class="spinner-border spinner-border-sm me-2"></span> Actualizando...');
+      // Hacer la solicitud AJAX
+      $.ajax({
+        url: '/actualizar-solicitudes/' + $('#id_solicitud_emision_v').val(),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#editSolicitudEmisionCertificado').modal('hide'); // Oculta el modal
+          $('#btnEditremi').prop('disabled', false);
+          $('#btnEditremi').html('<i class="ri-add-line"></i> Editar');
+          $('#editEmisionCetificadoVentaNacionalForm')[0].reset(); // Resetea el formulario
+          $('.select2').val(null).trigger('change'); // Resetea los select2
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la solicitud',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+  });
 
   ///
   $(function () {
@@ -3593,41 +3716,29 @@ $(function () {
             }
           }
         },
-        fecha_visita: {
+        id_dictamen_envasado: {
           validators: {
             notEmpty: {
-              message: 'Por favor seleccione la fecha sugerida para la inspección.'
+              message: 'Por favor seleccione un dictamen de envasado.'
             }
           }
         },
-        id_instalacion: {
+        cantidad_botellas: {
           validators: {
             notEmpty: {
-              message: 'Por favor seleccione la instalación.'
+              message: 'Por favor ingrese la cantidad de botellas.'
             }
           }
         },
-        renovacion: {
+        cantidad_cajas: {
           validators: {
             notEmpty: {
-              message: 'Por favor seleccione una opción.'
-            }
-          }
-        },
-        'clases[]': {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una clase'
-            }
-          }
-        },
-        'categorias[]': {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una categoria'
+              message: 'Por favor ingrese la cantidad de cajas.'
             }
           }
         }
+
+
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -3641,27 +3752,22 @@ $(function () {
       }
     }).on('core.form.valid', function (e) {
       var formData = new FormData(form);
-      $('#btnRegistrarDicIns').prop('disabled', true);
+      $('#btnRegistraremi').prop('disabled', true);
 
-      $('#btnRegistrarDicIns').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
-      setTimeout(function () {
-        $('#btnRegistrarDicIns').prop('disabled', false);
-        $('#btnRegistrarDicIns').html('<i class="ri-add-line"></i> Registrar');
-      }, 3000);
-
+      $('#btnRegistraremi').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
       $.ajax({
-        url: '/solicitudes-list',
+        url: '/storeEmisionCertificadoVentaNacional', // Cambia a la URL correcta
         type: 'POST',
         data: formData,
         processData: false,
         contentType: false,
         success: function (response) {
-          $('#addSolicitudDictamen').modal('hide');
-          $('#addRegistrarSolicitud')[0].reset();
+          $('#addEmisionCetificadoVentaNacional').modal('hide');
+          $('#btnRegistraremi').prop('disabled', false);
+          $('#btnRegistraremi').html('<i class="ri-add-line"></i> Registrar');
+          $('#addEmisionCetificadoVentaNacionalForm')[0].reset();
           $('.select2').val(null).trigger('change');
           $('.datatables-solicitudes').DataTable().ajax.reload();
-          console.log(response);
-
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -3871,15 +3977,15 @@ $(function () {
     });
   });
 
-      $(document).ready(function () {
-      $('#editPedidoExportacion').on('hidden.bs.modal', function () {
-        // Elimina todas las tarjetas menos la primera dentro de sections-container2
-        $('#sections-container2 .card').not(':first').remove();
-        sectionCountEdit = 1;
-        });
+  $(document).ready(function () {
+    $('#editPedidoExportacion').on('hidden.bs.modal', function () {
+      // Elimina todas las tarjetas menos la primera dentro de sections-container2
+      $('#sections-container2 .card').not(':first').remove();
+      sectionCountEdit = 1;
     });
+  });
 
-    $(document).ready(function () {
+  $(document).ready(function () {
     var $tipoSolicitudEdit = $('#tipo_solicitud_edit');
     var $botonesCharacteristicsEdit = $('#botones_characteristics_edit_1');
 
@@ -3902,22 +4008,22 @@ $(function () {
     }
   });
 
-$(document).ready(function () {
-  let sectionCount = 1;
+  $(document).ready(function () {
+    let sectionCount = 1;
 
-  $('#add-characteristics').click(function () {
-    let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val();
-    if (!empresaSeleccionada) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Advertencia',
-        text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
-        customClass: { confirmButton: 'btn btn-warning' }
-      });
-      return;
-    }
+    $('#add-characteristics').click(function () {
+      let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val();
+      if (!empresaSeleccionada) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Advertencia',
+          text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
+          customClass: { confirmButton: 'btn btn-warning' }
+        });
+        return;
+      }
 
-    var newSection = `
+      var newSection = `
       <div class="card mt-4" id="caracteristicas_Ex${sectionCount}">
         <div class="card-body">
           <h5>Características del Producto</h5>
@@ -3958,78 +4064,78 @@ $(document).ready(function () {
         </div>
       </div>
     `;
-    $('#sections-container').append(newSection);
-    cargarLotes(empresaSeleccionada, sectionCount);
-    initializeSelect2($('.select2'));
-    sectionCount++;
-  });
+      $('#sections-container').append(newSection);
+      cargarLotes(empresaSeleccionada, sectionCount);
+      initializeSelect2($('.select2'));
+      sectionCount++;
+    });
 
-  function cargarLotes(empresaSeleccionada, sectionCount) {
-    $.ajax({
-      url: '/getDatos/' + empresaSeleccionada,
-      method: 'GET',
-      success: function (response) {
-        var contenidoLotesEnvasado = '';
-        var marcas = response.marcas;
-        for (let index = 0; index < response.lotes_envasado.length; index++) {
-          var lote = response.lotes_envasado[index];
-          var skuLimpio = limpiarSku(lote.sku);
-          var marcaEncontrada = marcas.find(marca => marca.id_marca === lote.id_marca);
-          var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
-          var num_dictamen = lote.dictamen_envasado ? lote.dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
-          contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} | ${lote.nombre} | ${nombreMarca} | ${num_dictamen}</option>`;
+    function cargarLotes(empresaSeleccionada, sectionCount) {
+      $.ajax({
+        url: '/getDatos/' + empresaSeleccionada,
+        method: 'GET',
+        success: function (response) {
+          var contenidoLotesEnvasado = '';
+          var marcas = response.marcas;
+          for (let index = 0; index < response.lotes_envasado.length; index++) {
+            var lote = response.lotes_envasado[index];
+            var skuLimpio = limpiarSku(lote.sku);
+            var marcaEncontrada = marcas.find(marca => marca.id_marca === lote.id_marca);
+            var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
+            var num_dictamen = lote.dictamen_envasado ? lote.dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
+            contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} | ${lote.nombre} | ${nombreMarca} | ${num_dictamen}</option>`;
+          }
+          if (response.lotes_envasado.length == 0) {
+            contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+          }
+          $(`#caracteristicas_Ex${sectionCount} .evasado_export`).html(contenidoLotesEnvasado);
+        },
+        error: function () {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al cargar los datos',
+            text: 'Hubo un problema al intentar cargar los lotes.',
+            customClass: { confirmButton: 'btn btn-danger' }
+          });
         }
-        if (response.lotes_envasado.length == 0) {
-          contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
-        }
-        $(`#caracteristicas_Ex${sectionCount} .evasado_export`).html(contenidoLotesEnvasado);
-      },
-      error: function () {
+      });
+    }
+
+    $('#delete-characteristics').click(function () {
+      var totalSections = $('#sections-container .card').length;
+      var lastSection = $('#sections-container .card').last();
+      if (totalSections > 1) {
+        lastSection.remove();
+        sectionCount--;
+      } else {
         Swal.fire({
-          icon: 'error',
-          title: 'Error al cargar los datos',
-          text: 'Hubo un problema al intentar cargar los lotes.',
-          customClass: { confirmButton: 'btn btn-danger' }
+          icon: 'warning',
+          title: 'Advertencia',
+          text: 'No se puede eliminar la sección original.',
+          customClass: { confirmButton: 'btn btn-warning' }
         });
       }
     });
-  }
 
-  $('#delete-characteristics').click(function () {
-    var totalSections = $('#sections-container .card').length;
-    var lastSection = $('#sections-container .card').last();
-    if (totalSections > 1) {
-      lastSection.remove();
-      sectionCount--;
-    } else {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Advertencia',
-        text: 'No se puede eliminar la sección original.',
-        customClass: { confirmButton: 'btn btn-warning' }
-      });
-    }
   });
-
-});
-/* seccion de editar solicitudes exportacion */
-// ==================== EDITAR ====================
+  /* seccion de editar solicitudes exportacion */
+  // ==================== EDITAR ====================
   let sectionCountEdit = 1;
   $(document).ready(function () {
 
-  $('#add-characteristics_edit_1').click(function () {
-    let empresaSeleccionada = $('#id_empresa_solicitud_exportacion_edit').val();
-    if (!empresaSeleccionada) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Advertencia',
-        text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
-        customClass: { confirmButton: 'btn btn-warning' }
-      });
-      return;
-    }
+    $('#add-characteristics_edit_1').click(function () {
+      let empresaSeleccionada = $('#id_empresa_solicitud_exportacion_edit').val();
+      if (!empresaSeleccionada) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Advertencia',
+          text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
+          customClass: { confirmButton: 'btn btn-warning' }
+        });
+        return;
+      }
 
-    var newSection = `
+      var newSection = `
       <div class="card mt-4" id="caracteristicas_Ex_edit_${sectionCountEdit}">
         <div class="card-body">
           <h5>Características del Producto</h5>
@@ -4070,28 +4176,28 @@ $(document).ready(function () {
         </div>
       </div>
     `;
-    $('#sections-container2').append(newSection);
-     cargarLotesEdit2(empresaSeleccionada, sectionCountEdit);
-    initializeSelect2($('.select2'));
-    sectionCountEdit++;
-  });
+      $('#sections-container2').append(newSection);
+      cargarLotesEdit2(empresaSeleccionada, sectionCountEdit);
+      initializeSelect2($('.select2'));
+      sectionCountEdit++;
+    });
 
   });
 
-$(document).ready(function () {
-  $('#add-characteristics_edit').click(function () {
-    let empresaSeleccionada = $('#id_empresa_solicitud_exportacion_edit').val();
-    if (!empresaSeleccionada) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Advertencia',
-        text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
-        customClass: { confirmButton: 'btn btn-warning' }
-      });
-      return;
-    }
+  $(document).ready(function () {
+    $('#add-characteristics_edit').click(function () {
+      let empresaSeleccionada = $('#id_empresa_solicitud_exportacion_edit').val();
+      if (!empresaSeleccionada) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Advertencia',
+          text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
+          customClass: { confirmButton: 'btn btn-warning' }
+        });
+        return;
+      }
 
-    var newSection = `
+      var newSection = `
       <div class="card mt-4" id="caracteristicas_Ex_edit_${sectionCountEdit}">
         <div class="card-body">
           <h5>Características del Producto</h5>
@@ -4132,31 +4238,31 @@ $(document).ready(function () {
         </div>
       </div>
     `;
-    $('#sections-container2').append(newSection);
-   /*  cargarLotesEdit(empresaSeleccionada, sectionCountEdit); */
-    initializeSelect2($('.select2'));
-    sectionCountEdit++;
+      $('#sections-container2').append(newSection);
+      /*  cargarLotesEdit(empresaSeleccionada, sectionCountEdit); */
+      initializeSelect2($('.select2'));
+      sectionCountEdit++;
+    });
+
+
+
+    // Eliminar la última sección (editar)
+    $('#delete-characteristics_edit_1').click(function () {
+      var totalSections = $('#sections-container2 .card').length;
+      var lastSection = $('#sections-container2 .card').last();
+      if (totalSections > 1) {
+        lastSection.remove();
+        sectionCountEdit--;
+      } else {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Advertencia',
+          text: 'No se puede eliminar la sección original.',
+          customClass: { confirmButton: 'btn btn-warning' }
+        });
+      }
+    });
   });
-
-
-
-  // Eliminar la última sección (editar)
-  $('#delete-characteristics_edit_1').click(function () {
-    var totalSections = $('#sections-container2 .card').length;
-    var lastSection = $('#sections-container2 .card').last();
-    if (totalSections > 1) {
-      lastSection.remove();
-      sectionCountEdit--;
-    } else {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Advertencia',
-        text: 'No se puede eliminar la sección original.',
-        customClass: { confirmButton: 'btn btn-warning' }
-      });
-    }
-  });
-});
 
   function cargarLotesEdit2(empresaSeleccionada, sectionCountEdit) {
     $.ajax({
@@ -4176,7 +4282,7 @@ $(document).ready(function () {
         if (response.lotes_envasado.length == 0) {
           contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
         }
- $(`#caracteristicas_Ex_edit_${sectionCountEdit} .evasado_export_edit`).html(contenidoLotesEnvasado);
+        $(`#caracteristicas_Ex_edit_${sectionCountEdit} .evasado_export_edit`).html(contenidoLotesEnvasado);
       },
       error: function () {
         Swal.fire({
@@ -4188,7 +4294,7 @@ $(document).ready(function () {
       }
     });
   }
-/* fin de la seccion de editar solicitudes exportacion */
+  /* fin de la seccion de editar solicitudes exportacion */
   /* Enviar formulario store add exportacion */
   $(function () {
     // Configuración de CSRF para las solicitudes AJAX
@@ -4507,22 +4613,22 @@ $(document).ready(function () {
           $('.volumenSobrante').text(caracteristicas.id_vol_res);
           $('.volumenIngresado').text(caracteristicas.volumen_ingresado);
           $('.tipoEtiquetaEnvasado').text(response?.data?.lote_envasado.tipo);
-          $('.inicioTerminoEnvasado').text(caracteristicas.fecha_inicio + ' a '+caracteristicas.fecha_fin);
+          $('.inicioTerminoEnvasado').text(caracteristicas.fecha_inicio + ' a ' + caracteristicas.fecha_fin);
           let destino;
-          if(response?.data?.lote_envasado.destino_lote==1){
+          if (response?.data?.lote_envasado.destino_lote == 1) {
             destino = 'Nacional';
           }
-          if(response?.data?.lote_envasado.destino_lote==2){
+          if (response?.data?.lote_envasado.destino_lote == 2) {
             destino = 'Exportación';
           }
-          if(response?.data?.lote_envasado.destino_lote==3){
+          if (response?.data?.lote_envasado.destino_lote == 3) {
             destino = 'stock';
           }
 
           $('.destinoEnvasado').text(destino);
           $('.etiqueta').html('<a href="files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + response?.url_etiqueta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
           $('.dictamenEnvasado').html('<a href="/dictamen_envasado/' + response?.data?.lote_envasado?.dictamen_envasado?.id_dictamen_envasado + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-          $('.acta').html('<a href="/files/' + response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente  + '/actas/' + response?.url_acta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          $('.acta').html('<a href="/files/' + response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente + '/actas/' + response?.url_acta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
           // Verificar si 'detalles' existe y es un arreglo
           if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
             // Recorrer cada elemento de 'detalles'
@@ -4593,37 +4699,37 @@ $(document).ready(function () {
           });
 
 
-      // Obtener el primer cliente válido
-const clientes = response.data.empresa.empresa_num_clientes || [];
-const clienteValido = clientes.find(c => c && c.numero_cliente);
-const numeroCliente = clienteValido ? clienteValido.numero_cliente : null;
+          // Obtener el primer cliente válido
+          const clientes = response.data.empresa.empresa_num_clientes || [];
+          const clienteValido = clientes.find(c => c && c.numero_cliente);
+          const numeroCliente = clienteValido ? clienteValido.numero_cliente : null;
 
-// Iterar sobre los documentos
-if (numeroCliente) {
-  $.each(response.documentos, function (index, documento) {
-    documentConfig.forEach(config => {
-      if (
-        config.ids.includes(documento.id_documento) &&
-        config.condition(documento, response) // Usar la condición dinámica
-      ) {
-        const link = $('<a>', {
-          href: 'files/' + numeroCliente + '/' + documento.url,
-          target: '_blank'
-        });
+          // Iterar sobre los documentos
+          if (numeroCliente) {
+            $.each(response.documentos, function (index, documento) {
+              documentConfig.forEach(config => {
+                if (
+                  config.ids.includes(documento.id_documento) &&
+                  config.condition(documento, response) // Usar la condición dinámica
+                ) {
+                  const link = $('<a>', {
+                    href: 'files/' + numeroCliente + '/' + documento.url,
+                    target: '_blank'
+                  });
 
-        link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
-        if (documento.id_documento === 128) {
-          $(config.targetClass).append(link);
-        } else {
-          $(config.targetClass).empty().append(link);
-        }
-        documentsFound[config.targetClass] = true;
-      }
-    });
-  });
-} else {
-  console.warn('No se encontró un número de cliente válido.');
-}
+                  link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
+                  if (documento.id_documento === 128) {
+                    $(config.targetClass).append(link);
+                  } else {
+                    $(config.targetClass).empty().append(link);
+                  }
+                  documentsFound[config.targetClass] = true;
+                }
+              });
+            });
+          } else {
+            console.warn('No se encontró un número de cliente válido.');
+          }
 
 
           // Mostrar mensajes para documentos no encontrados

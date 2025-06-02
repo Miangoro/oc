@@ -156,7 +156,28 @@ public function getDictamenesEnvasado($id_empresa)
     return response()->json($formateados);
 }
 
+      public function obtenerDatosInspeccion($idDictamen)
+    {
 
+  $dictamen = Dictamen_Envasado::with([
+        'inspeccion.solicitud' // Asegúrate de tener bien definidas las relaciones
+    ])->findOrFail($idDictamen);
+
+    $inspeccion = $dictamen->inspeccion;
+    $solicitud = $inspeccion->solicitud ?? null;
+
+    return response()->json([
+        'id_inspeccion' => $inspeccion->id ?? null,
+        'id_solicitud' => $inspeccion->id_solicitud ?? null,
+        'id_inspector' => $inspeccion->id_inspector ?? null,
+        'num_servicio' => $inspeccion->num_servicio ?? null,
+        'fecha_servicio' => $inspeccion->fecha_servicio ?? null,
+        'estatus_inspeccion' => $inspeccion->estatus_inspeccion ?? null,
+        'observaciones' => $inspeccion->observaciones ?? null,
+        'id_instalacion' => $solicitud->id_instalacion ?? null,
+        'fecha_visita' => $solicitud->fecha_visita ?? null,
+    ]);
+    }
 
     public function getDatosLoteEnvasado($idLoteEnvasado)
     {

@@ -33,6 +33,8 @@ use App\Exports\SolicitudesExport;
 use App\Models\etiquetas;
 use App\Models\solicitudesValidacionesModel;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;//Permisos de empresa
+use Illuminate\Support\Facades\DB;
 
 class solicitudesController extends Controller
 {
@@ -42,12 +44,15 @@ class solicitudesController extends Controller
         $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
         $estados = estados::all(); // Obtener todos los estados
        // $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get();// Obtener solo las empresas tipo '2'
-           // FILTRO DE EMPRESAS SEGÚN EL USUARIO
-        if (auth()->user()->tipo == 3) {
+
+       // FILTRO DE EMPRESAS SEGÚN EL USUARIO
+        //if (auth()->user()->tipo == 3) {
+        if (Auth::check() && Auth::user()->tipo == 3) {
             // Solo la empresa del usuario
             $empresas = empresa::with('empresaNumClientes')
                 ->where('tipo', 2)
-                ->where('id_empresa', auth()->user()->empresa?->id_empresa)
+                //->where('id_empresa', auth()->user()->empresa?->id_empresa)
+                ->where('id_empresa', Auth::user()->empresa?->id_empresa)
                 ->get();
         } else {
             // Todas las empresas tipo 2
@@ -55,6 +60,7 @@ class solicitudesController extends Controller
                 ->where('tipo', 2)
                 ->get();
         }
+
         $organismos = organismos::all(); // Obtener todos los estados
         $LotesGranel = lotesGranel::all();
         $categorias = categorias::all();
@@ -74,6 +80,12 @@ class solicitudesController extends Controller
 
     public function index(Request $request)
     {
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
+        }
+
         $columns = [
             1 => 'id_solicitud',
             2 => 'folio',
@@ -90,13 +102,11 @@ class solicitudesController extends Controller
 
         $search = [];
 
-
-        if (auth()->user()->tipo == 3) {
+        /*if (auth()->user()->tipo == 3) {
             $empresaId = auth()->user()->empresa?->id_empresa;
         } else {
             $empresaId = null;
-        }
-
+        }*/
 
         $query = solicitudesModel::query();
 
@@ -129,6 +139,8 @@ class solicitudesController extends Controller
             // Si se necesita ordenar por nombre del inspector
             if ($order === 'inspector') {
                 $query->orderBy('inspector_name', $dir);
+            } elseif ($order === 'folio') {
+                $query->orderByRaw("CAST(SUBSTRING(folio, 5) AS UNSIGNED) $dir");
             } else {
                 $query->orderBy($order, $dir);
             }
@@ -183,7 +195,12 @@ class solicitudesController extends Controller
 
                 $solicitudes = $solicitudes->offset($start)
                     ->limit($limit)
-                    ->orderBy("solicitudes.id_solicitud", $dir)
+                    //->orderBy("solicitudes.id_solicitud", $dir)
+                    ->when($order === 'folio', function ($q) use ($dir) {
+                        return $q->orderByRaw("CAST(SUBSTRING(folio, 5) AS UNSIGNED) $dir");
+                    }, function ($q) use ($order, $dir) {
+                        return $q->orderBy($order, $dir);
+                    })
                     ->get();
 
 
@@ -223,6 +240,10 @@ class solicitudesController extends Controller
                 $totalFiltered = $totalFiltered->count();
 
         }
+
+
+
+
         $data = [];
 
         if (!empty($solicitudes)) {
@@ -480,6 +501,43 @@ class solicitudesController extends Controller
         }
         return response()->json(['message' => 'Vigilancia en producción de lote registrada exitosamente']);
     }
+
+        public function storeEmisionCertificadoVentaNacional(Request $request)
+    {
+        $emisionCertificado = new solicitudesModel();
+        $emisionCertificado->folio = Helpers::generarFolioSolicitud();
+        $emisionCertificado->id_empresa = $request->id_empresa;
+        $emisionCertificado->id_tipo = 13;
+        $emisionCertificado->id_predio = 0;
+        $emisionCertificado->fecha_visita = $request->fecha_visita;
+        $emisionCertificado->id_instalacion = $request->id_instalacion;
+        $emisionCertificado->info_adicional = $request->info_adicional;
+
+        $emisionCertificado->caracteristicas = json_encode([
+            'id_dictamen_envasado' => $request->id_dictamen_envasado,
+            'cantidad_cajas' => $request->cantidad_cajas,
+            'cantidad_botellas' => $request->cantidad_botellas,
+
+        ]);
+
+        $emisionCertificado->save();
+
+        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+        // Notificación 1
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud Emison de certificado de venta nacional',
+            'message' => $emisionCertificado->folio . " " . $emisionCertificado->tipo_solicitud->tipo,
+            'url' => 'solicitudes-historial',
+        ];
+
+        // Iterar sobre cada usuario y enviar la notificación
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+        return response()->json(['message' => 'Emision de certificado venta nacional registrada exitosamente']);
+    }
+
 
     public function storeMuestreoLote(Request $request)
     {
@@ -1475,6 +1533,29 @@ class solicitudesController extends Controller
                 $solicitud->caracteristicas = json_encode($data); // Ahora incluye las rutas de los archivos
                 $solicitud->save();
                 break;
+                /* emision certificado venta nacional */
+            case 'emisionCertificadoVentaNacional':
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'nullable|integer|exists:instalaciones,id_instalacion',
+                    'info_adicional' => 'nullable|string'
+                ]);
+                $caracteristicasJson = [
+                  'id_dictamen_envasado' => $request->id_dictamen_envasado,
+                  'cantidad_cajas' => $request->cantidad_cajas,
+                  'cantidad_botellas' => $request->cantidad_botellas,
+                ];
+                $jsonContent = json_encode($caracteristicasJson);
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
+                ]);
+                break;
+                /* fin de los case */
 
 
             default:
@@ -1787,8 +1868,6 @@ class solicitudesController extends Controller
 
     public function registrarValidarSolicitud(Request $request)
     {
-
-
         $validar = new solicitudesValidacionesModel();
 
         // Extraer solo los datos dinámicos enviados, excluyendo el ID de la solicitud
@@ -1806,7 +1885,8 @@ class solicitudesController extends Controller
         }
         $validar->estatus = $estatus;
         $validar->tipo_validacion = 'oc';
-        $validar->id_usuario = auth()->id();
+        //$validar->id_usuario = auth()->id();
+        $validar->id_usuario = Auth::id();
 
         // Guardar los cambios en la base de datos
         $validar->save();
