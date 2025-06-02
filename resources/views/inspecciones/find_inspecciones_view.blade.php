@@ -141,7 +141,7 @@
                         <th>Folio</th>
                         <th>No. de servicio</th>
                         <th>Cliente</th>
-                        <th>Fecha de solicitud</th>
+                        {{-- <th>Fecha de solicitud</th> --}}
                         <th>Solicitud</th>
                         <th>Domicilio de inspección</th>
                         <th>Fecha y hora de visita estimada</th>

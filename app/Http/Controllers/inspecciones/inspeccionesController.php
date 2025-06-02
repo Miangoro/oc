@@ -58,7 +58,7 @@ class inspeccionesController extends Controller
             2 => 'folio',
             3 => 'num_servicio',
             4 => 'razon_social',
-            5 => 'fecha_solicitud',
+            5 => '',//fecha_solicitud
             6 => 'tipo',
             7 => 'direccion_completa',
             8 => 'inspector',
