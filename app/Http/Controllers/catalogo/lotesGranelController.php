@@ -241,7 +241,7 @@ class lotesGranelController extends Controller
 
                       // Ahora puedes usar el número de cliente en la URL
                       if ($lote->tipo_lote == 2 && $documentacion) {
-                          $nestedData['url_certificado'] = '/files/' . $numeroCliente . '/' . rawurlencode($documentacion->url);
+                          $nestedData['url_certificado'] = '/files/' . $numeroCliente . '/certificados_granel/' . rawurlencode($documentacion->url);
                       } else {
                           $nestedData['url_certificado'] = null;
                       }
