@@ -761,7 +761,7 @@ class lotesGranelController extends Controller
                   $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
 
                   Log::info('Procesando archivo:', ['file' => $file->getClientOriginalName(), 'numeroCliente' => $numeroCliente]);
-                $carpeta = 'certificados_granel';
+                $carpeta = '/certificados_granel';
                 if($request->id_documento[$index] != 59){
                     $carpeta = '/fqs';
                 }
