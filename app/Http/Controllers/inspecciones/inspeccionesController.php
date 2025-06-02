@@ -104,7 +104,14 @@ class inspeccionesController extends Controller
         $solicitudes = $query->get();
 
         // Ordenar manualmente si es un campo de relación
-        if (in_array($orderColumn, ['num_servicio', 'razon_social', 'tipo', 'name'])) {
+        if ($orderColumn === 'folio') {
+            // Ordenar por la parte numérica del folio "SOL-#####"
+            $solicitudes = $solicitudes->sortBy(function ($item) {
+                // Extraemos el número, asumiendo formato 'SOL-#####'
+                return intval(substr($item->folio, 4));
+            }, SORT_NUMERIC, $dir === 'desc');
+
+        } elseif (in_array($orderColumn, ['num_servicio', 'razon_social', 'tipo', 'name'])) {
             $solicitudes = $solicitudes->sortBy(function ($item) use ($orderColumn) {
                 switch ($orderColumn) {
                     case 'num_servicio':
@@ -117,6 +124,7 @@ class inspeccionesController extends Controller
                         return $item->inspector->name ?? '';
                 }
             }, SORT_REGULAR, $dir === 'desc');
+
         } else {
             // Ordenar campos propios del modelo
             $solicitudes = $solicitudes->sortBy($orderColumn, SORT_REGULAR, $dir === 'desc');
@@ -124,6 +132,9 @@ class inspeccionesController extends Controller
 
         // Paginar manualmente
         $solicitudes = $solicitudes->slice($start, $limit)->values();
+
+
+
 
 
         $data = [];

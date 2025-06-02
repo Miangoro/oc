@@ -271,7 +271,7 @@ public function store(Request $request)
 
       $hologramas = [];
 
-    foreach ($request->id_activacion as $id) {
+    /*foreach ($request->id_activacion as $id) {
         $activacion = activarHologramasModelo::find($id);
         $folios = json_decode($activacion->folios, true);
 
@@ -291,7 +291,7 @@ public function store(Request $request)
                 }
             }
         }
-    }
+    }*/
         // Crear un registro
         $new = new Certificado_Exportacion();
         $new->id_dictamen = $validated['id_dictamen'];
@@ -299,7 +299,7 @@ public function store(Request $request)
         $new->fecha_emision = $validated['fecha_emision'];
         $new->fecha_vigencia = $validated['fecha_vigencia'];
         $new->id_firmante = $validated['id_firmante'];
-        $new->hologramas = $hologramas;
+        //$new->hologramas = $hologramas;
         $new->save();
 
         return response()->json(['message' => 'Registrado correctamente.']);

@@ -206,7 +206,7 @@ $(function () {
         }
       }
     ],
-    order: [[1, 'desc']],
+    order: [[2, 'desc']],
     dom: '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
       '<"me-5 ms-n2"f>' +
       '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
