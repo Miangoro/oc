@@ -91,8 +91,8 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <select id="id_tipo" name="id_tipo[]" class="select2 form-select color: red" multiple required>
+                            <div class="form-floating form-floating-outline mb-5 select2-primary">
+                                <select id="id_tipo" name="id_tipo[]" class="select2 form-select" multiple required>
                                     <option value="" disabled >Tipos de agave</option>
                                     @foreach ($tipos as $tipo)
                                         <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
