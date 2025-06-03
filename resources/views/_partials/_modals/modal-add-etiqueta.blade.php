@@ -66,7 +66,8 @@
                                 <label for="alc_vol">%Alc. Vol.</label>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+
+                        <div class="col-sm-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <select id="id_categoria" name="id_categoria" class="form-select" required>
                                     <option value="" disabled selected>Categoría de mezcal</option>
@@ -77,7 +78,7 @@
                                 <label for="id_norma">Categoría de mezcal</label>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <select id="id_clase" name="id_clase" class="select2 form-select" required>
                                     <option value="" disabled selected>Clase de mezcal</option>
@@ -88,9 +89,10 @@
                                 <label for="id_norma">Clase de agave</label>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+
+                        <div class="col-sm-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select id="id_tipo" name="id_tipo[]" class="select2 form-select" multiple required>
+                                <select id="id_tipo" name="id_tipo[]" class="select2 form-select color: red" multiple required>
                                     <option value="" disabled >Tipos de agave</option>
                                     @foreach ($tipos as $tipo)
                                         <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
@@ -99,6 +101,13 @@
                                 <label for="id_tipo">Tipos de agave</label>
                             </div>
                         </div>
+                        <div class="col-sm-6">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input id="botellas_caja" name="botellas_caja" type="number" min="1" class="form-control" placeholder="Botellas por caja" />
+                                <label for="botellas_caja">Botellas por caja</label>
+                            </div>
+                        </div>
+
             
                         <div class="col-md-10  mb-5">
                             <label for="file60" class="form-label">Etiqueta</label>

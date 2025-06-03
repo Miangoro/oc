@@ -390,8 +390,15 @@ $(function () {
                 message: 'Por favor seleccione un tipo de agave'
               }
             }
-          }
+          },
+          botellas_caja: {
+            validators: {
+            digits: {
+              message: 'Solo se permiten números enteros'
+            },
+          },
         },
+      },
         
         plugins: {
           trigger: new FormValidation.plugins.Trigger(),
@@ -534,6 +541,8 @@ $(function () {
         $('#id_clase').val(datos.id_clase).trigger('change');
         //$('#id_tipo').val(datos.etiqueta.id_tipo).trigger('change');
         $('#id_tipo').val(tipos).trigger('change');
+        $('#botellas_caja').val(datos.botellas_caja);
+
         $('#doc_etiqueta').html(`<div style="display: flex; align-items: center; gap: 8px;">
         <a href="/files/${numCliente}/${documentacion_urls[0].url}" target="_blank">
             <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i>
