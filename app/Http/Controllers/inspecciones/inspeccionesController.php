@@ -390,20 +390,7 @@ class inspeccionesController extends Controller
         }
 
 
-        // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
-
-        // Notificación 1
-        $data1 = [
-            'title' => 'Adjuntó resultados de inspección',
-            'message' => $mensaje,
-            'url' => 'inspecciones',
-        ];
-
-        // Iterar sobre cada usuario y enviar la notificación
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
-        }
+  
     }
 
     // Método para obtener una guía por ID
