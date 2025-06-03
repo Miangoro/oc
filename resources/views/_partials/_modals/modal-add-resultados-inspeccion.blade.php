@@ -34,7 +34,7 @@
                     <tbody id="contenidoGraneles">
                         <tr>
                             <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled> <i
+                                <button type="button" class="btn btn-danger remove-row" > <i
                                         class="ri-delete-bin-5-fill"></i> </button>
                             </th>
                             <td>

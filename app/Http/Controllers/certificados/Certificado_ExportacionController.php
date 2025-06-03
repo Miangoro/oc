@@ -17,12 +17,15 @@ use App\Models\solicitudesModel;
 //Clase de exportacion
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CertificadosExport;
+use App\Mail\CorreoCertificado;
+use App\Notifications\GeneralNotification;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 
 class Certificado_ExportacionController extends Controller
@@ -547,26 +550,26 @@ public function storeRevisor(Request $request)
             'tipo_certificado' => $certificado->id_dictamen
         ];
 
-        // Notificación Local
-        /*$users = User::whereIn('id', [18, 19, 20])->get();
-        foreach ($users as $notifiedUser) {
-            $notifiedUser->notify(new GeneralNotification($data1));
-        }*/
-
-/*             // Correo a Revisores
-        try {
-            info('Enviando correo a: ' . $user->email);
-
-            if (empty($user->email)) {
-                return response()->json(['message' => 'El correo del revisor no está disponible.'], 404);
+       // Notificación Local
+            $users = User::whereIn('id', [$validatedData['nombreRevisor']])->get();
+            foreach ($users as $notifiedUser) {
+                $notifiedUser->notify(new GeneralNotification($data1));
             }
 
-            Mail::to($user->email)->send(new CorreoCertificado($data1));
-            info('Correo enviado a: ' . $user->email);
-        } catch (\Exception $e) {
-            Log::error('Error al enviar el correo: ' . $e->getMessage());
-            return response()->json(['message' => 'Error al enviar el correo: ' . $e->getMessage()], 500);
-        } */
+            // Correo a Revisores
+            try {
+                info('Enviando correo a: ' . $user->email);
+
+                if (empty($user->email)) {
+                    return response()->json(['message' => 'El correo del revisor no está disponible.'], 404);
+                }
+
+                Mail::to($user->email)->send(new CorreoCertificado($data1));
+                info('Correo enviado a: ' . $user->email);
+            } catch (\Exception $e) {
+                Log::error('Error al enviar el correo: ' . $e->getMessage());
+                return response()->json(['message' => 'Error al enviar el correo: ' . $e->getMessage()], 500);
+            }
 
         return response()->json([
             'message' => $message ?? 'Revisor del OC asignado exitosamente',
