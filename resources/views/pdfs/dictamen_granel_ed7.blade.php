@@ -365,7 +365,7 @@
             </tr>
             <tr>
                 <td class="negrita" style="color: #17365D; width: 16%;">Categoría y clase</td>
-                <td>{{ $data->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'NA' }} {{$data->inspeccione->solicitud->lote_granel->clase->clase ?? 'NA' }}</td>
+                <td style="font-size: 12px">{{ $data->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'NA' }}<br> {{$data->inspeccione->solicitud->lote_granel->clase->clase ?? 'NA' }}</td>
                 <td class="negrita" style="color: #17365D;  width: 19%">No. de lote a granel</td>
                 <td>{{ $data->inspeccione->solicitud->lote_granel->nombre_lote ?? '------' }}</td>
                 <td class="negrita" style="color: #17365D; width: 14%;">No. de análisis</td>
