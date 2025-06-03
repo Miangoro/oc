@@ -251,8 +251,8 @@
 
 
     <p class="text1">
-      Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. — Acreditado como organismo de
-      certificación de producto con número de acreditación 144/18 ante la Entidad Mexicana de Acreditación, A.C. —
+      Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditado como organismo de
+      certificación de producto con número de acreditación 144/18 ante la Entidad Mexicana de Acreditación, A.C.
       otorga el siguiente:
     </p>
 

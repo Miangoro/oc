@@ -65,7 +65,7 @@
         td {
             border: 2px solid black;
             padding: 3px;
-            font-size: 11px;
+            font-size: 10.5px;
             text-align: center;
             font-family: 'Century Gothic';
 

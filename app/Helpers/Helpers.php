@@ -85,10 +85,11 @@ class Helpers
         $count = solicitudesModel::count() + 1; // Sumar 1 al número actual para el siguiente consecutivo
 
         // Formatear el consecutivo con ceros a la izquierda (5 dígitos)
-        $consecutivo = str_pad($count, 5, '0', STR_PAD_LEFT);
+        //$consecutivo = str_pad($count, 5, '0', STR_PAD_LEFT);
+        $consecutivo =  str_pad($count + 8106, 5, '0', STR_PAD_LEFT);
 
         // Retornar el folio en el formato SOL-año-consecutivo
-        return "SOL-$year-$consecutivo";
+        return "SOL-$consecutivo";
     }
     public static function formatearFecha($fecha)
     {

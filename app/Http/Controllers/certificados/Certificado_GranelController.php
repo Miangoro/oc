@@ -362,7 +362,7 @@ public function storeRevisor(Request $request)
         }
 
          $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])
-                ->where('tipo_certificado', 1)
+                ->where('tipo_certificado', 2)
                 ->where('tipo_revision', $validatedData['tipoRevisor']) // buscar según tipo de revisión
                 ->first();
 
@@ -379,13 +379,13 @@ public function storeRevisor(Request $request)
             } else {
                 $revisor = new Revisor();
                 $revisor->id_certificado = $validatedData['id_certificado'];
-                $revisor->tipo_certificado = 2; //El 2 corresponde al certificado de granel
+               
                 $revisor->tipo_revision = $validatedData['tipoRevisor'];
                 $revisor->id_revisor = $validatedData['nombreRevisor'];
                 $message = 'Revisor asignado exitosamente.';
             }
         // Guardar los datos del revisor
-
+         $revisor->tipo_certificado = 2; //El 2 corresponde al certificado de granel
         $revisor->decision = 'Pendiente';
         $revisor->numero_revision = $validatedData['numeroRevision'];
         $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
