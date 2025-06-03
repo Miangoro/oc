@@ -196,7 +196,7 @@ public function index(Request $request)
             $nestedData['n_analisis'] = $loteGranel?->folio_fq ?? 'No encontrado';
             //Certificado Firmado
             $documentacion = Documentacion_url::where('id_relacion', $idLote)
-                ->where('id_documento', 58)->where('id_doc', $certificado->id_certificado) ->first();
+                ->where('id_documento', 59)->where('id_doc', $certificado->id_certificado) ->first();
             $nestedData['pdf_firmado'] = $documentacion?->url
                 ? asset("files/{$numero_cliente}/certificados_granel/{$documentacion->url}") : null;
             
@@ -633,7 +633,7 @@ public function subirCertificado(Request $request)
 
     // Buscar si ya existe un registro para ese lote y tipo de documento
     $documentacion_url = Documentacion_url::where('id_relacion', $idLote)
-        ->where('id_documento', 58)
+        ->where('id_documento', 59)
         ->where('id_doc', $certificado->id_certificado)//id del certificado
         ->first();
 
@@ -654,7 +654,7 @@ public function subirCertificado(Request $request)
     Documentacion_url::updateOrCreate(
         [
             'id_relacion' => $idLote,
-            'id_documento' => 58,
+            'id_documento' => 59,
             'id_doc' => $certificado->id_certificado,//id del certificado
         ],
         [
@@ -686,7 +686,7 @@ public function CertificadoFirmado($id)
 
     // Buscar documento asociado al lote
     $documentacion = Documentacion_url::where('id_relacion', $idLote)
-        ->where('id_documento', 58)
+        ->where('id_documento', 59)
         ->where('id_doc', $certificado->id_certificado)
         ->first();
 

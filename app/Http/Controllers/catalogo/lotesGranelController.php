@@ -231,7 +231,7 @@ class lotesGranelController extends Controller
                     /*  */
                         // Consulta la URL en la tabla Documentacion_url
                     // Obtén la URL del certificado desde la tabla Documentacion_url
-                    $documentacion = Documentacion_url::where('id_relacion', $lote->id_lote_granel)->first();
+                    $documentacion = Documentacion_url::where('id_relacion', $lote->id_lote_granel)->where('id_certificado',59)->first();
                       // Obtener el número de cliente
                       $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
 
@@ -478,15 +478,10 @@ class lotesGranelController extends Controller
                     : $request->folio_fq_ajuste;
                 $tipo_analisis = $request->tipo_analisis[$index] ?? '';
 
-                $carpeta = '/fqs';
-                  if ($request->id_documento[$index] == 59) { // Cambia 59 por el ID real de certificado a granel
-                      $carpeta = '/certificados_granel';
-                  }
-
                 // Generar un nombre único para el archivo
                 $uniqueId = uniqid(); // Genera un identificador único
                 $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('uploads/' . $numeroCliente . $carpeta, $filename, 'public'); // Aquí se guarda en la ruta definida storage/public
+                $filePath = $file->storeAs('uploads/' . $numeroCliente.'/fqs', $filename, 'public'); // Aquí se guarda en la ruta definida storage/public
 
                 $documentacion_url = new Documentacion_url();
                 $documentacion_url->id_relacion = $lote->id_lote_granel;
@@ -505,7 +500,7 @@ class lotesGranelController extends Controller
         ]);
 
     }
-
+    
 
 
       public function getVolumen($id_lote_granel){
@@ -624,7 +619,7 @@ class lotesGranelController extends Controller
             $validated = $request->validate([
                 'nombre_lote' => 'required|string|max:255',
                 'id_empresa' => 'required|integer|exists:empresa,id_empresa',
-                'id_tanque' => 'nullable|string|max:100',
+                'id_tanque' => 'nullable|integer',
                 'tipo_lote' => 'required|integer',
                 'id_guia' => 'nullable|array',
                 'id_guia.*' => 'integer|exists:guias,id_guia',
