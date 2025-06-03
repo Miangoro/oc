@@ -4028,8 +4028,10 @@ $(function () {
 
       var newSection = `
       <div class="card mt-4" id="caracteristicas_Ex${sectionCount}">
+                              <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
+                                Características del Producto
+                            </div>
         <div class="card-body">
-          <h5>Características del Producto</h5>
           <div class="row caracteristicas-row">
             <div class="col-md-8">
               <div class="form-floating form-floating-outline mb-4">
@@ -4140,8 +4142,10 @@ $(function () {
 
       var newSection = `
       <div class="card mt-4" id="caracteristicas_Ex_edit_${sectionCountEdit}">
+                              <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
+                                Características del Producto
+                            </div>
         <div class="card-body">
-          <h5>Características del Producto</h5>
           <div class="row caracteristicas-row">
             <div class="col-md-8">
               <div class="form-floating form-floating-outline mb-4">
@@ -4425,6 +4429,7 @@ $(function () {
         tipo_solicitud: $('#tipo_solicitud').val(),
         direccion_destinatario: $('#direccion_destinatario_ex').val(),
         aduana_salida: $('[name="aduana_salida"]').val(),
+        cont_alc: $('[name="cont_alc"]').val(),
         no_pedido: $('[name="no_pedido"]').val(),
         factura_proforma: $('[name="factura_proforma"]')[0].files[0], // Archivo
         factura_proforma_cont: $('[name="factura_proforma_cont"]')[0].files[0], // Archivo

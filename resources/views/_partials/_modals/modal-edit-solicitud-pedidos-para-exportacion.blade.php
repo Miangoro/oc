@@ -5,62 +5,68 @@
                 <h5 class="modal-title text-white">Editar solicitud de pedidos para exportación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-8">
+            <div class="modal-body p-8 bg-light">
                 <p class="solicitud badge bg-primary"></p>
                 <form id="editPedidoExportacionForm">
                     <input type="hidden" name="id_solicitud" class="id_solicitud" id="solicitud_id_pedidos">
                     <input type="hidden" name="form_type" value="pedidosExportacion">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <select id="tipo_solicitud_edit" class="form-select" name="tipo_solicitud">
-                                    <option value="1">Inspección y certificado de exportación</option>
-                                    <!--<option value="2">Inspección</option>-->
-                                    <option value="2">Inspección y certificado de exportación (Combinado)</option>
-                                    <!--<option value="4">Certificado de exportación</option>
-                                    <option value="5">Certificado de exportación (combinado)</option>-->
-                                </select>
-                                <label for="tipo_solicitud">Tipo de solicitud</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_solicitud_exportacion_edit" name="id_empresa"
-                                    class="select2 form-select" onchange="cargarDatosClienteEdit()">
-                                    <option value="" disabled selected>Selecciona cliente</option>
-                                    @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">
-                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
-                                            | {{ $empresa->razon_social }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="id_empresa">Cliente</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input id="fecha_visita_edit_exportacion" placeholder="YYYY-MM-DD"
-                                    class="form-control flatpickr-datetime" type="datetime-local" name="fecha_visita"
-                                    autocomplete="off" />
-                                <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <select class="select2 form-select" id="id_instalacion_exportacion_edit"
-                                    name="id_instalacion" aria-label="id_instalacion" required>
-                                    <option value="" selected>Lista de instalaciones</option>
-                                </select>
-                                <label for="id_predio">Domicilio de inspección</label>
-                            </div>
-                        </div>
-
-                    </div>
-                    <!-- Sección: Pedidos para exportación -->
                     <div class="card" id="pedidos_Ex">
+                        <div class="badge rounded-2 bg-label-primary  fw-bold fs-6 px-4 py-4 mb-5">
+                            Información de la solicitud
+                        </div>
                         <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline mb-6">
+                                        <select id="tipo_solicitud_edit" class="form-select" name="tipo_solicitud">
+                                            <option value="1">Inspección y certificado de exportación</option>
+                                            <!--<option value="2">Inspección</option>-->
+                                            <option value="2">Inspección y certificado de exportación (Combinado)
+                                            </option>
+                                            <!--<option value="4">Certificado de exportación</option>
+                                    <option value="5">Certificado de exportación (combinado)</option>-->
+                                        </select>
+                                        <label for="tipo_solicitud">Tipo de solicitud</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline mb-6">
+                                        <select id="id_empresa_solicitud_exportacion_edit" name="id_empresa"
+                                            class="select2 form-select" onchange="cargarDatosClienteEdit()">
+                                            <option value="" disabled selected>Selecciona cliente</option>
+                                            @foreach ($empresas as $empresa)
+                                                <option value="{{ $empresa->id_empresa }}">
+                                                    {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                                    | {{ $empresa->razon_social }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="id_empresa">Cliente</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-floating form-floating-outline mb-5">
+                                        <input id="fecha_visita_edit_exportacion" placeholder="YYYY-MM-DD"
+                                            class="form-control flatpickr-datetime" type="datetime-local"
+                                            name="fecha_visita" autocomplete="off" />
+                                        <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-floating form-floating-outline mb-5">
+                                        <select class="select2 form-select" id="id_instalacion_exportacion_edit"
+                                            name="id_instalacion" aria-label="id_instalacion" required>
+                                            <option value="" selected>Lista de instalaciones</option>
+                                        </select>
+                                        <label for="id_predio">Domicilio de inspección</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Sección: Pedidos para exportación -->
+
+
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-floating form-floating-outline mb-4">
@@ -129,8 +135,11 @@
                     <div id="sections-container2">
                         <!-- Sección original: Características del Producto -->
                         <div class="card mt-4" id="caracteristicas_Ex_edit_">
+                            <div class="badge rounded-2 bg-label-primary  fw-bold fs-6 px-4 py-4 mb-5">
+                                Características del Producto
+                            </div>
                             <div class="card-body">
-                                <h6>Características del Producto</h6>
+
                                 <div class="row caracteristicas-row">
                                     <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
@@ -184,27 +193,30 @@
 
                     <!-- Botones -->
                     <div id="botones_characteristics_edit" class="d-none">
-                        <button type="button" id="add-characteristics_edit" class="btn btn-primary btn-sm mt-1">
+                        <button type="button" id="add-characteristics_edit" class="btn btn-primary btn-sm mb-2">
                             <i class="ri-add-line"></i> Agregar Tabla
                         </button>
                         <button type="button" id="delete-characteristics_edit"
-                            class="btn btn-danger btn-sm mt-1 float-end">
+                            class="btn btn-danger btn-sm mb-2 float-end">
                             <i class="ri-delete-bin-6-fill"></i> Eliminar tabla
                         </button>
                     </div>
                     <div id="botones_characteristics_edit_1" class="d-none">
-                        <button type="button" id="add-characteristics_edit_1" class="btn btn-primary btn-sm mt-1">
+                        <button type="button" id="add-characteristics_edit_1" class="btn btn-primary btn-sm mb-2">
                             <i class="ri-add-line"></i> Agregar Tabla
                         </button>
                         <button type="button" id="delete-characteristics_edit_1"
-                            class="btn btn-danger btn-sm mt-1 float-end">
+                            class="btn btn-danger btn-sm mb-2 float-end">
                             <i class="ri-delete-bin-6-fill"></i> Eliminar tabla
                         </button>
                     </div>
 
                     <div class="card mt-2">
+                        <div class="badge rounded-2 bg-label-primary  fw-bold fs-6 px-4 py-4 mb-5">
+                            Información del lote envasado
+                        </div>
                         <div class="card-body">
-                            <h6>Información del lote envasado</h6>
+
                             <div class="row">
                                 <table id="tablaLotes" class="table table-bordered mb-2 table-sm"
                                     style="width: 100%; border-collapse: collapse;">
@@ -229,8 +241,11 @@
 
                     <!-- Sección: Elegir Etiquetas y Corrugados -->
                     <div class="card mt-4" id="etiquetas_Ex">
+                        <div class="badge rounded-2 bg-label-primary  fw-bold fs-6 px-4 py-4 mb-5">
+                            <span id="encabezado_etiquetas_edit">Elegir Etiquetas y Corrugados</span>
+                        </div>
                         <div class="card-body table-responsive text-nowrap">
-                            <h6 id="encabezado_etiquetas_edit">Elegir Etiquetas y Corrugados</h6>
+
                             <table class="table table-striped small table-sm" id="tabla_marcas">
                                 <thead>
                                     <tr>
@@ -251,25 +266,31 @@
                             </table>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="form-floating form-floating-outline mb-5 mt-4">
-                            <textarea name="info_adicional" class="form-control h-px-150" id="comentarios_edit"
-                                placeholder="Información adicional sobre la actividad..."></textarea>
-                            <label for="comentarios">Información adicional sobre la actividad</label>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="form-floating form-floating-outline mb-5 mt-4">
+                                    <textarea name="info_adicional" class="form-control h-px-150" id="comentarios_edit"
+                                        placeholder="Información adicional sobre la actividad..."></textarea>
+                                    <label for="comentarios">Información adicional sobre la actividad</label>
+                                </div>
+                            </div>
+                            <input type="hidden" class="instalacion_id">
+                            <input type="hidden" class="direccion_id">
+                            <input type="hidden" class="instalacion_envasado_id">
+                            <input type="hidden" class="lote_envasado_id">
+                            <input type="hidden" class="etiqueta_id">
+                            <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+                                <button type="submit" class="btn btn-primary" id="btnEditExport"><i
+                                        class="ri-pencil-fill"></i> Editar</button>
+                                <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
+                                    aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                            </div>
                         </div>
                     </div>
-                    <input type="hidden" class="instalacion_id">
-                    <input type="hidden" class="direccion_id">
-                    <input type="hidden" class="instalacion_envasado_id">
-                    <input type="hidden" class="lote_envasado_id">
-                    <input type="hidden" class="etiqueta_id">
-                    <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnEditExport"><i
-                                class="ri-pencil-fill"></i> Editar</button>
-                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
-                                class="ri-close-line"></i> Cancelar</button>
-                    </div>
+
+
+
                 </form>
             </div>
         </div>
@@ -520,8 +541,12 @@
                                 <b>Certificado: </b>
                                 ${lote.certificado_granel ? lote.certificado_granel.num_certificado : 'Sin definir'}
                                 </td>
-                                <td>${lote.folio_fq || 'N/A'}</td>
-                                <td>${lote.cont_alc || 'N/A'}</td>
+<td>
+  <input type="text" class="form-control form-control-sm" name="folio_fq[]" value="${lote.folio_fq || ''}" />
+</td>
+<td>
+  <input type="text" class="form-control form-control-sm" name="cont_alc[]" value="${lote.cont_alc || ''}" />
+</td>
                                <td>
                                 ${lote.categoria.categoria || 'N/A'}<br>
                                 ${lote.clase.clase || 'N/A'}<br>

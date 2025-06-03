@@ -1629,6 +1629,7 @@ class solicitudesController extends Controller
 
     public function storePedidoExportacion(Request $request)
     {
+      /* dd($request->all()); */
         // Validación de datos del formulario
         $validated = $request->validate([
             'id_empresa' => 'required|integer',
@@ -1647,6 +1648,8 @@ class solicitudesController extends Controller
             'cantidad_cajas' => 'array',  // Asegurarse de que las cantidades sean arrays
             'presentacion' => 'array',  // Asegurarse de que las presentaciones sean arrays
             'id_etiqueta' => 'nullable|integer',
+            'cont_alc' => 'array',
+            'cont_alc.*' => 'nullable|numeric',
         ]);
 
         // Procesar características
@@ -1659,6 +1662,8 @@ class solicitudesController extends Controller
         $data['direccion_destinatario'] = $validated['direccion_destinatario'];  // Solo si es enviado
         $data['id_etiqueta'] = $validated['id_etiqueta'];  // Solo si es enviado
         $data['id_instalacion_envasado'] = $validated['id_instalacion_envasado_2'];  // Solo si es enviado
+        $data['cont_alc'] = $validated['cont_alc'];
+
         // Preparar los detalles
         $detalles = [];
         $totalLotes = count($validated['lote_envasado']);  // Suponiendo que todos los arrays tienen el mismo tamaño

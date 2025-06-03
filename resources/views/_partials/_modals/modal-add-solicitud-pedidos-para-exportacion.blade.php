@@ -1,62 +1,69 @@
 <div class="modal fade" id="addPedidoExportacion" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-                                    <div class="modal-header bg-primary pb-4">
+            <div class="modal-header bg-primary pb-4">
                 <h5 class="modal-title text-white">Registrar nueva solicitud de pedidos para exportación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-8">
+            <div class="modal-body p-8 bg-light">
                 <form id="addPedidoExportacionForm">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <select id="tipo_solicitud" class="form-select" name="tipo_solicitud">
-                                    <option value="1">Inspección y certificado de exportación</option>
-                                    <!--<option value="2">Inspección</option>-->
-                                    <option value="2">Inspección y certificado de exportación (Combinado)</option>
-                                    <!--<option value="4">Certificado de exportación</option>
-                                    <option value="5">Certificado de exportación (combinado)</option>-->
-                                </select>
-                                <label for="tipo_solicitud">Tipo de solicitud</label>
-                            </div>
+                    <div class="card {{-- border border-primary-subtle shadow-sm mb-2 --}}" id="pedidos_Ex">
+                        <div class="badge rounded-2 bg-label-primary  fw-bold fs-6 px-4 py-4 mb-5">
+                            Información de la solicitud
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_solicitud_exportacion" onchange="cargarDatosCliente();"
-                                    name="id_empresa" class="select2 form-select">
-                                    <option value="" disabled selected>Selecciona cliente</option>
-                                    @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">
-                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
-                                            | {{ $empresa->razon_social }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="id_empresa">Cliente</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="datetime-local"
-                                    name="fecha_visita" id="fecha_visita_exportacion"/>
-                                <label for="num_anterior">Fecha y hora sugerida para la inspección</label>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <select class="select2 form-select" id="id_instalacion_exportacion"
-                                    name="id_instalacion" aria-label="id_instalacion" required>
-                                    <option value="" selected>Lista de instalaciones</option>
-                                </select>
-                                <label for="id_predio">Domicilio de inspección</label>
-                            </div>
-                        </div>
-
-                    </div>
-                    <!-- Sección: Pedidos para exportación -->
-                    <div class="card" id="pedidos_Ex">
                         <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline mb-6">
+                                        <select id="tipo_solicitud" class="form-select" name="tipo_solicitud">
+                                            <option value="1">Inspección y certificado de exportación</option>
+                                            <!--<option value="2">Inspección</option>-->
+                                            <option value="2">Inspección y certificado de exportación (Combinado)
+                                            </option>
+                                            <!--<option value="4">Certificado de exportación</option>
+                                    <option value="5">Certificado de exportación (combinado)</option>-->
+                                        </select>
+                                        <label for="tipo_solicitud">Tipo de solicitud</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline mb-6">
+                                        <select id="id_empresa_solicitud_exportacion" onchange="cargarDatosCliente();"
+                                            name="id_empresa" class="select2 form-select">
+                                            <option value="" disabled selected>Selecciona cliente</option>
+                                            @foreach ($empresas as $empresa)
+                                                <option value="{{ $empresa->id_empresa }}">
+                                                    {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                                    | {{ $empresa->razon_social }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="id_empresa">Cliente</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-floating form-floating-outline mb-5">
+                                        <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
+                                            type="datetime-local" name="fecha_visita" id="fecha_visita_exportacion"
+                                            autocomplete="off" />
+                                        <label for="num_anterior">Fecha y hora sugerida para la inspección</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-floating form-floating-outline mb-5">
+                                        <select class="select2 form-select" id="id_instalacion_exportacion"
+                                            name="id_instalacion" aria-label="id_instalacion" required>
+                                            <option value="" selected>Lista de instalaciones</option>
+                                        </select>
+                                        <label for="id_predio">Domicilio de inspección</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sección: Pedidos para exportación -->
+
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-floating form-floating-outline mb-4">
@@ -70,14 +77,14 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
                                         <input type="text" class="form-control" name="aduana_salida"
-                                            placeholder="Ej. Aduana de salida">
+                                            placeholder="Ej. Aduana de salida" autocomplete="off">
                                         <label for="aduana_salida">Aduana de salida</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
                                         <input type="text" class="form-control" name="no_pedido"
-                                            placeholder="Ej. Número de pedido">
+                                            placeholder="Ej. Número de pedido" autocomplete="off">
                                         <label for="no_pedido">No. de pedido</label>
                                     </div>
                                 </div>
@@ -121,13 +128,17 @@
                     <div id="sections-container">
                         <!-- Sección original: Características del Producto -->
                         <div class="card mt-4" id="caracteristicas_Ex">
+                            <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
+                                Características del Producto
+                            </div>
                             <div class="card-body">
-                                <h6>Características del Producto</h6>
+
+                                {{-- <h6>o</h6> --}}
                                 <div class="row caracteristicas-row">
                                     <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select onchange="cargarDetallesLoteEnvasadoex(this.value)" name="lote_envasado[0]"
-                                                class="select2 form-select evasado_export">
+                                            <select onchange="cargarDetallesLoteEnvasadoex(this.value)"
+                                                name="lote_envasado[0]" class="select2 form-select evasado_export">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
                                                 <!-- Opciones dinámicas -->
@@ -145,8 +156,8 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" class="form-control cantidad_botellas0" name="cantidad_botellas[0]"
-                                                placeholder="Cantidad de botellas">
+                                            <input type="number" class="form-control cantidad_botellas0"
+                                                name="cantidad_botellas[0]" placeholder="Cantidad de botellas">
                                             <label for="cantidad_botellas">Cantidad de botellas</label>
                                         </div>
                                     </div>
@@ -174,18 +185,24 @@
 
                     <!-- Botones -->
                     <div id="botones_characteristics" class="d-none">
-                        <button type="button" id="add-characteristics" class="btn btn-primary btn-sm mt-1">
+                        <button type="button" id="add-characteristics" class="btn btn-primary btn-sm mb-2">
                             <i class="ri-add-line"></i> Agregar Tabla
                         </button>
                         <button type="button" id="delete-characteristics"
-                            class="btn btn-danger btn-sm mt-1 float-end">
+                            class="btn btn-danger btn-sm mb-2 float-end">
                             <i class="ri-delete-bin-6-fill"></i> Eliminar tabla
                         </button>
                     </div>
 
                     <div class="card mt-2">
+                        <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
+                            Información del lote envasado
+                        </div>
                         <div class="card-body">
-                            <h6>Información del lote envasado</h6>
+
+
+
+                            {{--  <h6>Información del lote envasado</h6> --}}
                             <div class="row">
                                 <table id="tablaLotes" class="table table-bordered mb-2 table-sm"
                                     style="width: 100%; border-collapse: collapse;">
@@ -210,8 +227,12 @@
 
                     <!-- Sección: Elegir Etiquetas y Corrugados -->
                     <div class="card mt-4" id="etiquetas_Ex">
+                        <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
+                            <span id="encabezado_etiquetas">Elegir Etiquetas y Corrugados</span>
+                        </div>
                         <div class="card-body table-responsive text-nowrap">
-                            <h6 id="encabezado_etiquetas">Elegir Etiquetas y Corrugados</h6>
+
+
                             <table class="table table-striped small table-sm" id="tabla_marcas">
                                 <thead>
                                     <tr>
@@ -233,18 +254,26 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="form-floating form-floating-outline mb-5 mt-4">
-                            <textarea name="info_adicional" class="form-control h-px-150" id="comentarios"
-                                placeholder="Información adicional sobre la actividad..."></textarea>
-                            <label for="comentarios">Información adicional sobre la actividad</label>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="form-floating form-floating-outline mb-5 mt-4">
+                                    <textarea name="info_adicional" class="form-control h-px-150" id="comentarios"
+                                        placeholder="Información adicional sobre la actividad..."></textarea>
+                                    <label for="comentarios">Información adicional sobre la actividad</label>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+                                <button type="submit" class="btn btn-primary" id="btnAddExport"><i
+                                        class="ri-add-line"></i>
+                                    Registrar</button>
+                                <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
+                                    aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnAddExport"><i class="ri-add-line"></i> Registrar</button>
-                        <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
-                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
-                    </div>
+
+
                 </form>
             </div>
         </div>
@@ -438,9 +467,12 @@
                                 <b>Certificado: </b>
                                 ${lote.certificado_granel ? lote.certificado_granel.num_certificado : 'Sin definir'}
                                 </td>
-
-                                <td>${lote.folio_fq || 'N/A'}</td>
-                                <td>${lote.cont_alc || 'N/A'}</td>
+                                <td>
+                                  <input type="text" class="form-control form-control-sm" name="folio_fq[]" value="${lote.folio_fq || ''}" />
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control form-control-sm" name="cont_alc[]" value="${lote.cont_alc || ''}" />
+                                </td>
                                <td>
                                 ${lote.categoria.categoria || 'N/A'}<br>
                                 ${lote.clase.clase || 'N/A'}<br>
@@ -456,7 +488,7 @@
                     } else {
                         tbody.append(
                             `<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`
-                            );
+                        );
                     }
                 },
                 error: function() {
@@ -572,7 +604,7 @@
                 error: function(xhr) {
                     console.error('Error al obtener marcas:', xhr);
                     $('#tabla_marcas tbody').html(
-                    '<tr><td colspan="8">Error al cargar los datos</td></tr>');
+                        '<tr><td colspan="8">Error al cargar los datos</td></tr>');
                 }
             });
         } else {
@@ -581,29 +613,29 @@
     }
 
     function cargarDetallesLoteEnvasadoDinamico(select, sectionCount) {
-  var idLoteEnvasado = $(select).val();
-  if (idLoteEnvasado) {
-    $.ajax({
-      url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
-      method: 'GET',
-      success: function(response) {
-        // Rellena los campos de la sección correspondiente
-        $(`#lote_granel_${sectionCount}`).val(
-          response.detalle && response.detalle.length > 0
-            ? response.detalle.map(lote => lote.nombre_lote).join(', ')
-            : ''
-        );
-        $(`#cantidad_botellas${sectionCount}`).val(response.lote_envasado?.cant_botellas || '');
-        $(`#presentacion${sectionCount}`).val(
-          response.lote_envasado
-            ? response.lote_envasado.presentacion + ' ' + response.lote_envasado.unidad
-            : ''
-        );
-      },
-      error: function() {
-        console.error('Error al cargar el detalle del lote envasado.');
-      }
-    });
-  }
-}
+        var idLoteEnvasado = $(select).val();
+        if (idLoteEnvasado) {
+            $.ajax({
+                url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+                method: 'GET',
+                success: function(response) {
+                    // Rellena los campos de la sección correspondiente
+                    $(`#lote_granel_${sectionCount}`).val(
+                        response.detalle && response.detalle.length > 0 ?
+                        response.detalle.map(lote => lote.nombre_lote).join(', ') :
+                        ''
+                    );
+                    $(`#cantidad_botellas${sectionCount}`).val(response.lote_envasado?.cant_botellas || '');
+                    $(`#presentacion${sectionCount}`).val(
+                        response.lote_envasado ?
+                        response.lote_envasado.presentacion + ' ' + response.lote_envasado.unidad :
+                        ''
+                    );
+                },
+                error: function() {
+                    console.error('Error al cargar el detalle del lote envasado.');
+                }
+            });
+        }
+    }
 </script>
