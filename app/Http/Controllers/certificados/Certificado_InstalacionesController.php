@@ -770,7 +770,7 @@ public function index(Request $request)
             'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa ?? 'No encontrado',
             'razon_social' => $empresa->razon_social ?? 'No encontrado',
             'maestro_mezcalero' => is_null($datos->maestro_mezcalero)
-                ? 'No encontrado'
+                ? '---------------------------------------------------------------------------------------------------------------------'
                 : (trim($datos->maestro_mezcalero) === '' 
                 ? '---------------------------------------------------------------------------------------------------------------------' 
                 : $datos->maestro_mezcalero),
