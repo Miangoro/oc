@@ -1,12 +1,20 @@
 <div class="modal fade" id="etiquetas" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-custom-size  modal-lg modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-lg  modal-add-new-address">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2"> Subir etiquetas</h4>
                     <p class="subtitulo badge bg-primary"></p>
-                </div>
+                </div> --}}
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Subir etiquetas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
                 <form id="etiquetasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
                         <input type="hidden" id="id_etiqueta" name="id_etiqueta">
@@ -131,11 +139,18 @@
 
                     </div>
                         
-                        <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+                        {{-- <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                             <button type="submit" class="btn btn-primary">Registrar</button>
                             <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
                                 aria-label="Close">Cancelar</button>
-                        </div>
+                        </div> --}}
+                    <div class="d-flex mt-6 justify-content-center">
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
+                            Registrar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-line"></i> Cancelar</button>
+                    </div>
+                    
                 </form>
             </div>
         </div>
