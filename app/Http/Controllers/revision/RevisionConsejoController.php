@@ -423,7 +423,7 @@ class RevisionConsejoController extends Controller
                     $tipo = 'Desconocido';
             }
         } elseif ($datos->tipo_certificado == 2) { //Granel
-            $url = "/Pre-certificado/" . $datos->id_certificado;
+            $url = "/Pre-certificado-granel/" . $datos->id_certificado;
             $tipo = "Granel";
         } elseif ($datos->tipo_certificado == 3) { //Exportación
             $url = "/certificado_exportacion/" . $datos->id_certificado;

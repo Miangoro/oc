@@ -617,7 +617,7 @@ $(function () {
         }
       }
     },
-    /*'maestro_mezcalero': {
+    'maestro_mezcalero': {
       validators: {
         stringLength: {
           max: 60,
@@ -625,7 +625,7 @@ $(function () {
         }
       }
     },
-    'num_autorizacion': {
+   /* 'num_autorizacion': {
       validators: {
         regexp: {
           regexp: /^[0-9]*$/,

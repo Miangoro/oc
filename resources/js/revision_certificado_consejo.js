@@ -536,7 +536,16 @@ $(function () {
     console.log('Número de Certificado:', num_certificado);
 
     // Definir URL según el tipo de revisión
-    var url_pdf = '../pdf_bitacora_revision_certificado_instalaciones/' + id_revisor;
+     if (tipoRevision === 'Instalaciones de productor' || tipoRevision === 'Instalaciones de envasador' || tipoRevision === 'Instalaciones de comercializador' || tipoRevision === 'Instalaciones de almacén o bodega' || tipoRevision === 'Instalaciones de área de maduración') {
+        var url_pdf = '../pdf_bitacora_revision_certificado_instalaciones/' + id_revisor;
+     }
+
+    if (tipoRevision === 'Granel') {
+          var url_pdf = '../pdf_bitacora_revision_certificado_granel/' + id_revisor;
+        }
+        if (tipoRevision === 'Exportación') {
+          var url_pdf = '../pdf_bitacora_revision_certificado_exportacion/' + id_revisor;
+        }
 
 
     console.log('URL del PDF:', url_pdf);
