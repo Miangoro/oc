@@ -155,9 +155,21 @@ public function editarCliente($id)
         WHERE nc.numero_cliente="' . $id . '" GROUP BY nc.numero_cliente');
 
        $fecha_registro = Carbon::parse($res[0]->created_at)->translatedFormat('j \d\e F \d\e\l Y');
+       
+       // Obtener ID de la empresa
+    $empresa_id = DB::table('empresa_num_cliente')->where('numero_cliente', $id)->value('id_empresa');
+    // Contar cuántas empresas se registraron antes (puedes ajustar la lógica si lo deseas más estricto)
+    $consecutivo = DB::table('empresa')->where('id_empresa', '<=', $empresa_id)->count();
+    // Año de registro
+    $anio_registro = Carbon::parse($res[0]->created_at)->format('Y');
+    // Formatear el número con ceros
+    $codigo_oficio = 'CIDAM/OC/' . str_pad($consecutivo, 3, '0', STR_PAD_LEFT) . '/' . $anio_registro;
+
+
         $pdf = Pdf::loadView('pdfs.CartaAsignacion', [
             'datos' => $res,
             'fecha_registro' => $fecha_registro ?? 'No encontrado',
+            'codigo_oficio' => $codigo_oficio,
         ]);
         return $pdf->stream('Carta de asignación de número de cliente.pdf');
     }
