@@ -18,6 +18,7 @@ use App\Notifications\GeneralNotification;
 //Enviar Correo
 use App\Mail\CorreoCertificado;
 use App\Models\Documentacion_url;
+use App\Models\empresa;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -197,7 +198,7 @@ public function index(Request $request)
             $documentacion = Documentacion_url::where('id_relacion', $idLote)
                 ->where('id_documento', 58)->where('id_doc', $certificado->id_certificado) ->first();
             $nestedData['pdf_firmado'] = $documentacion?->url
-                ? asset("storage/certificados_granel_pdf/{$documentacion->url}") : null;
+                ? asset("files/{$numero_cliente}/certificados_granel/{$documentacion->url}") : null;
             
         
             $data[] = $nestedData;
@@ -605,8 +606,13 @@ public function subirCertificado(Request $request)
     $nombreArchivo = $nombreCertificado.'_'. uniqid() .'.pdf'; //uniqid() para asegurar nombre único
 
     // Ruta de carpeta física donde se guardará
-    $rutaCarpeta = "public/certificados_granel_pdf/{$anio}";
+   
+      $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)->first();
+      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
 
+     $rutaCarpeta = "public/uploads/{$numeroCliente}/certificados_granel";
    
     // Guardar nuevo archivo
     $upload = Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
@@ -631,8 +637,14 @@ public function subirCertificado(Request $request)
         ->where('id_doc', $certificado->id_certificado)//id del certificado
         ->first();
 
+    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)->first();
+      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+
+
      if ($documentacion_url) {
-        $ArchivoAnterior = "public/certificados_granel_pdf/{$documentacion_url->url}";
+        $ArchivoAnterior = "public/uploads/{$numeroCliente}/certificados_granel/{$documentacion_url->url}";
         if (Storage::exists($ArchivoAnterior)) {
             Storage::delete($ArchivoAnterior);
         }
@@ -647,7 +659,7 @@ public function subirCertificado(Request $request)
         ],
         [
             'nombre_documento' => "Certificado NOM a granel",
-            'url' => "{$anio}/{$nombreArchivo}",
+            'url' => "{$nombreArchivo}",
             'id_empresa' => $certificado->dictamen?->inspeccione?->solicitud?->id_empresa,
         ]
     );
@@ -678,10 +690,16 @@ public function CertificadoFirmado($id)
         ->where('id_doc', $certificado->id_certificado)
         ->first();
 
-    if ($documentacion) {
-        $rutaArchivo = "certificados_granel_pdf/{$documentacion->url}";
+    
+    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)->first();
+      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
 
-        if (Storage::exists("public/{$rutaArchivo}")) {
+    if ($documentacion) {
+        $rutaArchivo = "{$numeroCliente}/certificados_granel/{$documentacion->url}";
+
+        if (Storage::exists("public/uploads/{$rutaArchivo}")) {
             return response()->json([
                 'documento_url' => Storage::url($rutaArchivo), // genera URL pública
                 'nombre_archivo' => basename($documentacion->url),
