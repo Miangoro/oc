@@ -599,20 +599,18 @@ public function subirCertificado(Request $request)
 
     $certificado = CertificadosGranel::findOrFail($request->id_certificado);
 
-    $anio = now()->year;// Obtener año actual
     // Limpiar num_certificado para evitar crear carpetas por error
     $nombreCertificado = preg_replace('/[^A-Za-z0-9_\-]/', '_', $certificado->num_certificado ?? 'No encontrado');
     // Generar nombre de archivo con num_certificado + cadena aleatoria
     $nombreArchivo = $nombreCertificado.'_'. uniqid() .'.pdf'; //uniqid() para asegurar nombre único
 
-    // Ruta de carpeta física donde se guardará
-   
-      $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)->first();
-      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+    
+    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)->first();
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
         return !empty($numero);
     });
-
-     $rutaCarpeta = "public/uploads/{$numeroCliente}/certificados_granel";
+    // Ruta de carpeta física donde se guardará
+    $rutaCarpeta = "public/uploads/{$numeroCliente}/certificados_granel";
    
     // Guardar nuevo archivo
     $upload = Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
