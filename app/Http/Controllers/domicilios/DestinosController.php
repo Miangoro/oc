@@ -238,18 +238,7 @@ class DestinosController extends Controller
                 // Obtener el tipo de dirección basado en el valor de tipo_direccion
                 $tipoDireccion = isset($tipoDireccionMap[$destino->tipo_direccion]) ? $tipoDireccionMap[$destino->tipo_direccion] : 'Tipo desconocido';
 
-                // Datos de la notificación
-                $data1 = [
-                    'title' => 'Nuevo registro de destinos',
-                    'message' => 'Se ha registrado un nuevo destino de tipo: ' . $tipoDireccion . '.',
-                    'url' => 'destinos-historial',
-                ];
-
-                // Enviar la notificación a cada usuario
-                foreach ($users as $user) {
-                    $user->notify(new GeneralNotification($data1));
-                }
-
+              
 
                 // Retornar una respuesta
                 return response()->json([
