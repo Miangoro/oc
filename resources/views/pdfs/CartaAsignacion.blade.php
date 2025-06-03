@@ -131,7 +131,7 @@
 
     </div>
     <div style="margin-bottom: 50px; text-align: center">
-        <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_mayra.png') }}">
+        <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_Q.F.B._Mayra_Gutiérrez_Romero_1739201715.png') }}">
         <p class="text_al text-center">GERENTE TÉCNICO DEL ORGANISMO</p>
         <p class="text_al text-center">CERTIFICADOR CIDAM A.C.</p>
     </div>
