@@ -96,34 +96,34 @@ $(function () {
         }
 
       },
-     
-     {
-    data: 'folio_fq',
-    render: function(data, type, row) {
-        // Separar los folios
-        const folios = data ? data.split(',') : [];
-        const folioCompleto = folios[0] ?? '';
-        const folioAjuste = folios[1] ?? '';
 
-        let html = '';
+      {
+        data: 'folio_fq',
+        render: function (data, type, row) {
+          // Separar los folios
+          const folios = data ? data.split(',') : [];
+          const folioCompleto = folios[0] ?? '';
+          const folioAjuste = folios[1] ?? '';
 
-        // Análisis completo
-        if (row.url_fq_completo && folioCompleto) {
+          let html = '';
+
+          // Análisis completo
+          if (row.url_fq_completo && folioCompleto) {
             html += `<div><strong>Completo:</strong> <a class="cursor-pointer pdf text-primary" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${row.url_fq_completo}">${folioCompleto}</a></div>`;
-        } else if (folioCompleto) {
+          } else if (folioCompleto) {
             html += `<div><strong>Completo:</strong> ${folioCompleto}</div>`;
-        }
+          }
 
-        // Ajuste de grado
-        if (row.url_fq_ajuste && folioAjuste) {
+          // Ajuste de grado
+          if (row.url_fq_ajuste && folioAjuste) {
             html += `<div><strong>Ajuste:</strong> <a class="cursor-pointer pdf text-primary" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${row.url_fq_ajuste}">${folioAjuste}</a></div>`;
-        } else if (folioAjuste) {
+          } else if (folioAjuste) {
             html += `<div><strong>Ajuste:</strong> ${folioAjuste}</div>`;
-        }
+          }
 
-        return html || 'N/A';
-    }
-},
+          return html || 'N/A';
+        }
+      },
 
 
       { data: 'cont_alc' },
@@ -422,27 +422,27 @@ $(function () {
     $(this).show(); // Mostrar el iframe con el PDF
   });
 
-    // Reciben los datos del PDF
-$(document).on('click', '.pdf', function ()  {
-  var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
-  var pdfUrl = $(this).data('url');//Ruta del PDF
-  var iframe = $('#pdfViewer');
-  var spinner = $('#cargando');
-  
+  // Reciben los datos del PDF
+  $(document).on('click', '.pdf', function () {
+    var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
+    var pdfUrl = $(this).data('url');//Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+
     spinner.show();
     iframe.hide();
-    
+
     iframe.attr('src', pdfUrl);
     $("#NewPestana").attr('href', pdfUrl).show();
 
     $("#titulo_modal").text("Análisis fisicoquímico");
-   // $("#subtitulo_modal").text("PDF del Dictamen");
+    // $("#subtitulo_modal").text("PDF del Dictamen");
 
     iframe.on('load', function () {
       spinner.hide();
       iframe.show();
     });
-});
+  });
 
   // Delete Record
   $(document).on('click', '.delete-record', function () {
@@ -919,7 +919,6 @@ $(document).on('click', '.pdf', function ()  {
     $(document).on('click', '.edit-record', function () {
       var loteId = $(this).data('id');
       $('#edit_lote_id').val(loteId);
-
       $.ajax({
         url: '/lotes-a-granel/' + loteId + '/edit',
         method: 'GET',
@@ -933,9 +932,9 @@ $(document).on('click', '.pdf', function ()  {
             var organismoId = data.organismo;
             var tipos = data.tipos;
             var lote_original_id = data.lote.lote_original_id;
-            if(lote_original_id){
+            if (lote_original_id) {
               $('#edit_es_creado_a_partir').val('si').trigger('change');
-            }else{
+            } else {
               $('#edit_es_creado_a_partir').val('no').trigger('change');
             }
 
@@ -1044,68 +1043,68 @@ $(document).on('click', '.pdf', function ()  {
               $('#edit_oc_cidam_fields').addClass('d-none');
               $('#edit_otro_organismo_fields').addClass('d-none');
             }
-            
- var documentos = data.documentos;
 
-if (Array.isArray(fqs)) {
-    // Asignar siempre los valores de los folios, aunque no haya documentos
-    if (fqs[0]) {
-        $('input[id^="folio_fq_completo_"]').val(fqs[0].split(',')[0]);
-    }
+            var documentos = data.documentos;
 
-    if (fqs[1]) {
-        $('input[id^="folio_fq_ajuste_"]').val(fqs[1].split(',')[0]);
-    }
-}
+            if (Array.isArray(fqs)) {
+              // Asignar siempre los valores de los folios, aunque no haya documentos
+              if (fqs[0]) {
+                $('input[id^="folio_fq_completo_"]').val(fqs[0].split(',')[0]);
+              }
 
-if (documentos && documentos.length > 0) {
-    var documentoCompletoUrlAsignado = false;
-    var documentoAjusteUrlAsignado = false;
+              if (fqs[1]) {
+                $('input[id^="folio_fq_ajuste_"]').val(fqs[1].split(',')[0]);
+              }
+            }
 
-    // Limpiar previamente los mensajes en el modal (ya no limpiamos inputs)
-    $('td[id^="archivo_url_display_completo_"]').html('');
-    $('td[id^="archivo_url_display_ajuste_"]').html('');
+            if (documentos && documentos.length > 0) {
+              var documentoCompletoUrlAsignado = false;
+              var documentoAjusteUrlAsignado = false;
 
-    documentos.forEach(function (documento) {
-        var id = documento.id_documento;
+              // Limpiar previamente los mensajes en el modal (ya no limpiamos inputs)
+              $('td[id^="archivo_url_display_completo_"]').html('');
+              $('td[id^="archivo_url_display_ajuste_"]').html('');
 
-        var archivoUrlDisplayCompleto = $('#archivo_url_display_completo_' + id);
-        var archivoUrlDisplayAjuste = $('#archivo_url_display_ajuste_' + id);
+              documentos.forEach(function (documento) {
+                var id = documento.id_documento;
 
-        // Validar que documento.url y documento.tipo existan
-        if (!documento.url || !documento.tipo) return;
+                var archivoUrlDisplayCompleto = $('#archivo_url_display_completo_' + id);
+                var archivoUrlDisplayAjuste = $('#archivo_url_display_ajuste_' + id);
 
-        var fileName = documento.url.split('/').pop();
+                // Validar que documento.url y documento.tipo existan
+                if (!documento.url || !documento.tipo) return;
 
-        // Documento completo
-        if (documento.tipo.includes('Análisis completo') && !documentoCompletoUrlAsignado) {
-            archivoUrlDisplayCompleto.html(
-                'Documento completo disponible: <a href="../files/' + data.numeroCliente + '/fqs/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'
-            );
-            documentoCompletoUrlAsignado = true;
-        }
+                var fileName = documento.url.split('/').pop();
 
-        // Documento de ajuste
-        if (documento.tipo.includes('Ajuste de grado') && !documentoAjusteUrlAsignado) {
-            archivoUrlDisplayAjuste.html(
-                'Documento ajuste disponible: <a href="../files/' + data.numeroCliente + '/fqs/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'
-            );
-            documentoAjusteUrlAsignado = true;
-        }
-    });
+                // Documento completo
+                if (documento.tipo.includes('Análisis completo') && !documentoCompletoUrlAsignado) {
+                  archivoUrlDisplayCompleto.html(
+                    'Documento completo disponible: <a href="../files/' + data.numeroCliente + '/fqs/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'
+                  );
+                  documentoCompletoUrlAsignado = true;
+                }
 
-    // Mostrar mensajes si no se asignó alguno
-    if (!documentoCompletoUrlAsignado) {
-        $('td[id^="archivo_url_display_completo_"]').html('No hay archivo completo disponible.');
-    }
-    if (!documentoAjusteUrlAsignado) {
-        $('td[id^="archivo_url_display_ajuste_"]').html('No hay archivo de ajuste disponible.');
-    }
+                // Documento de ajuste
+                if (documento.tipo.includes('Ajuste de grado') && !documentoAjusteUrlAsignado) {
+                  archivoUrlDisplayAjuste.html(
+                    'Documento ajuste disponible: <a href="../files/' + data.numeroCliente + '/fqs/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'
+                  );
+                  documentoAjusteUrlAsignado = true;
+                }
+              });
 
-} else {
-    console.log('No hay documentos disponibles.');
-    $('td[id^="archivo_url_display_"]').html('No hay documentos disponibles.');
-}
+              // Mostrar mensajes si no se asignó alguno
+              if (!documentoCompletoUrlAsignado) {
+                $('td[id^="archivo_url_display_completo_"]').html('No hay archivo completo disponible.');
+              }
+              if (!documentoAjusteUrlAsignado) {
+                $('td[id^="archivo_url_display_ajuste_"]').html('No hay archivo de ajuste disponible.');
+              }
+
+            } else {
+              console.log('No hay documentos disponibles.');
+              $('td[id^="archivo_url_display_"]').html('No hay documentos disponibles.');
+            }
 
 
             // Mostrar el modal
@@ -1329,6 +1328,7 @@ if (documentos && documentos.length > 0) {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         success: function (response) {
+          $('#edit_certificado_lote').val('');
           dt_user.ajax.reload();
           $('#offcanvasEditLote').modal('hide');
           Swal.fire({
