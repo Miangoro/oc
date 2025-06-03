@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Log;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -145,9 +146,25 @@ class EtiquetasController extends Controller
                 $nestedData['alc_vol'] = $etiqueta->alc_vol." %Alc.Vol.";
                 $nestedData['categoria'] = $etiqueta->categoria->categoria;
                 $nestedData['clase'] = $etiqueta->clase->clase;
-                $nestedData['tipo'] = $etiqueta->tipo
+                /* $nestedData['tipo'] = $etiqueta->tipo
     ? $etiqueta->tipo->nombre . " (" . $etiqueta->tipo->cientifico . ")"
-    : 'No especificado';
+    : 'No especificado'; */
+$tiposNombres = tipos::pluck(DB::raw("CONCAT(nombre, ' (', cientifico, ')')"), 'id_tipo')->toArray();
+
+// Procesar id_tipo JSON
+if ($etiqueta->id_tipo && $etiqueta->id_tipo !== 'N/A') {
+    $idTipos = json_decode($etiqueta->id_tipo, true);
+
+    if (is_array($idTipos)) {
+        $nombresTipos = array_map(fn($id) => $tiposNombres[$id] ?? 'Desconocido', $idTipos);
+        $nestedData['tipo'] = implode(', ', $nombresTipos);
+    } else {
+        $nestedData['tipo'] = 'Desconocido';
+    }
+} else {
+    $nestedData['tipo'] = 'No especificado';
+}
+
                 $nestedData['numero_cliente'] = $etiqueta->marca->empresa->empresaNumClientes
                     ?->pluck('numero_cliente')
                     ?->first(fn($num) => !empty($num)) ?? "";

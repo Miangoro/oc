@@ -519,8 +519,8 @@ $(function () {
         var documentacion_urls = data.documentacion_urls;
         var documentacion_urls_corrugado = data.documentacion_urls_corrugado;
         var numCliente = data.numeroCliente;
-
-        console.log(data.etiqueta.id_tipo);
+        var tipos = JSON.parse(data.etiqueta.id_tipo);
+        
         // Rellenar el formulario con los datos obtenidos
         $('#id_etiqueta').val(datos.id_etiqueta);
         let valores = datos.destinos.map(d => d.id_direccion);
@@ -532,8 +532,8 @@ $(function () {
         $('#id_marca').val(datos.id_marca).trigger('change');
         $('#id_categoria').val(datos.id_categoria).trigger('change');
         $('#id_clase').val(datos.id_clase).trigger('change');
-        $('#id_tipo').select2(); 
-        $('#id_tipo').val(datos.etiqueta.id_tipo).trigger('change');
+        //$('#id_tipo').val(datos.etiqueta.id_tipo).trigger('change');
+        $('#id_tipo').val(tipos).trigger('change');
         $('#doc_etiqueta').html(`<div style="display: flex; align-items: center; gap: 8px;">
         <a href="/files/${numCliente}/${documentacion_urls[0].url}" target="_blank">
             <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i>
