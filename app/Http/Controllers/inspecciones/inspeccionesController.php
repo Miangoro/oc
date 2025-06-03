@@ -292,8 +292,26 @@ class inspeccionesController extends Controller
                 'observaciones' => $request->observaciones ?? '',
             ]
         );
+
+                // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
+        $users = User::whereIn('id', [$request->id_inspector])->get(); // IDs de los usuarios
+
+        // Notificación 1
+        $data1 = [
+            'title' => 'Nueva inspección',
+            'message' => 'Se te asignó la inspección '.$request->num_servicio,
+            'url' => 'inspecciones',
+        ];
+
+        // Iterar sobre cada usuario y enviar la notificación
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+
+
     }
 
+    
 
 
     //Pdfs de inspecciones
