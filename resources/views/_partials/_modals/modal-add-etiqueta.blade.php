@@ -9,7 +9,7 @@
                 </div>
                 <form id="etiquetasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
-                        <input type="text" id="id_etiqueta" name="id_etiqueta">
+                        <input type="hidden" id="id_etiqueta" name="id_etiqueta">
                         <input type="hidden" id="modo_formulario" value="registrar"> 
 
                         
@@ -90,8 +90,8 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select id="id_tipo" name="id_tipo" class="select2 form-select" required>
-                                    <option value="" disabled selected>Tipos de agave</option>
+                                <select id="id_tipo" name="id_tipo[]" class="select2 form-select" multiple required>
+                                    <option value="" disabled >Tipos de agave</option>
                                     @foreach ($tipos as $tipo)
                                         <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
                                     @endforeach

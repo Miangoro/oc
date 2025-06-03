@@ -327,7 +327,6 @@ class lotesGranelController extends Controller
 
     public function store(Request $request)
     {
-
         $validatedData = $request->validate([
             'id_empresa' => 'required|exists:empresa,id_empresa',
             'nombre_lote' => 'required|string|max:70',
@@ -501,6 +500,7 @@ class lotesGranelController extends Controller
         ]);
 
     }
+    
 
 
       public function getVolumen($id_lote_granel){

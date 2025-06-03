@@ -145,7 +145,9 @@ class EtiquetasController extends Controller
                 $nestedData['alc_vol'] = $etiqueta->alc_vol." %Alc.Vol.";
                 $nestedData['categoria'] = $etiqueta->categoria->categoria;
                 $nestedData['clase'] = $etiqueta->clase->clase;
-                $nestedData['tipo'] = $etiqueta->tipo->nombre . " (" . $etiqueta->tipo->cientifico . ")";
+                $nestedData['tipo'] = $etiqueta->tipo
+    ? $etiqueta->tipo->nombre . " (" . $etiqueta->tipo->cientifico . ")"
+    : 'No especificado';
                 $nestedData['numero_cliente'] = $etiqueta->marca->empresa->empresaNumClientes
                     ?->pluck('numero_cliente')
                     ?->first(fn($num) => !empty($num)) ?? "";
@@ -173,7 +175,6 @@ class EtiquetasController extends Controller
     /*Metodo para actualizar*/
     public function store(Request $request)
     {
-
         // Verificar si estamos editando o creando una nueva etiqueta
         $etiqueta = $request->id_etiqueta ? etiquetas::find($request->id_etiqueta) : new etiquetas();
 
@@ -193,7 +194,8 @@ class EtiquetasController extends Controller
         $etiqueta->sku = $request->sku ?? '';
         $etiqueta->id_categoria = $request->id_categoria;
         $etiqueta->id_clase = $request->id_clase;
-        $etiqueta->id_tipo = $request->id_tipo;
+        //$etiqueta->id_tipo = $request->id_tipo;
+        $etiqueta->id_tipo = json_encode($request['id_tipo']);
         $etiqueta->presentacion = $request->presentacion;
         $etiqueta->unidad = $request->unidad;
         $etiqueta->alc_vol = $request->alc_vol;
@@ -280,6 +282,7 @@ class EtiquetasController extends Controller
 
         return response()->json(['success' => $request->id_etiqueta ? 'Etiqueta actualizada exitosamente.' : 'Etiqueta registrada exitosamente.']);
     }
+
 
     //Metodo para editar las marcas
     public function edit_etiqueta($id_etiqueta)

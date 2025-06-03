@@ -10,6 +10,7 @@ use App\Models\solicitudTipo;
 use App\Models\User;
 use App\Models\Certificado_Exportacion;
 use App\Models\Dictamen_Exportacion;
+use App\Models\Revisor;
 
 use Illuminate\Http\Request;
 use Spatie\Activitylog\Models\Activity;
@@ -174,6 +175,7 @@ class TrazabilidadController extends Controller
         ->map(function($log) {
         
          $attributes = $log->properties['attributes'] ?? [];//todas las propiedades
+         $evento = $log->event ?? '';
     
             // Buscar los objetos solo si los IDs están presentes
             $num_certificado = $attributes['num_certificado'] ?? null;
@@ -197,6 +199,34 @@ class TrazabilidadController extends Controller
 
             //revisiones
             $num_revision = $attributes['numero_revision'] ?? null;
+            
+            $revisor = isset($attributes['id_revisor']) 
+                ? User::find($attributes['id_revisor'])->name ?? null 
+                : null;
+
+            //para el PDF BITACORA
+            $certificadoRevision = null;
+            $id_revision = null;
+                if (isset($attributes['id_certificado'], $attributes['id_revisor'])) {
+                    $certificadoRevision = Revisor::where([
+                        ['id_certificado', $attributes['id_certificado']],
+                        ['id_revisor', $attributes['id_revisor']]
+                    ])->first();
+
+                    $id_revision = $certificadoRevision->id_revision ?? null;
+                }
+            $decision = $attributes['decision'] ?? null;
+            $tipo_revision = $attributes['tipo_revision'] ?? null;
+            $tipo = null;
+             if ($tipo_revision == 2) {
+                $tipo = 'Granel';
+            }
+            if ($tipo_revision == 3) {
+                $tipo = 'Exportación';
+            }
+
+
+
             $obs = $attributes['observaciones'] ?? null;
                 $observaciones = null;
                 if ($obs) {
@@ -222,17 +252,52 @@ class TrazabilidadController extends Controller
             if ($empresa) {
                 $contenido .= ", <b>Cliente:</b> $empresa ";
             }
-            if ($num_dictamen) {
-                $contenido .= ", <b>Número de dictamen:</b> <span class='badge bg-secondary'>$num_dictamen</span> ";
-            }
+ 
+            
             
             //revisiones
+        if ( $evento === 'created' ){
             if ($num_revision) {
-                $contenido .= "<b>Revisión:</b> $num_revision ";
+                $contenido .= "<b>Revisión:</b> $num_revision";
             }
+            if ($revisor) {
+                $contenido .= ", <b>Persona asignada:</b> $revisor";
+            }
+        
             if ($observaciones) {
-                $contenido .= ", <b>Observaciones:</b> $observaciones ";
+                $contenido .= ", <b>Observaciones para el revisor:</b> $observaciones";
             }
+        }
+
+
+        $bitacora = '';
+        if ( $evento === 'updated' ){
+            if ($num_revision) {
+                $contenido .= "<b>Revisión:</b> $num_revision "." realizada";
+            }
+            if ($decision) {
+                $contenido .= ", <b>Resultado:</b> $decision";
+            }
+        
+            if ($obs) {
+                $contenido .= ", <b>Observaciones:</b> $obs";
+            }
+
+            
+            //if ($num_certificado) {
+                $bitacora .= "
+                    <i class='ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdf'
+                        data-bs-target='#mostrarPdf'
+                        data-bs-toggle='modal'
+                        data-bs-dismiss='modal'
+                        data-num-certificado='$num_certificado'
+                        data-id='$id_revision'
+                        data-tipo_revision='$tipo_revision'>
+                    </i>";
+            //}
+
+        }
+
 
 
             // Retornar los datos con el contenido construido
@@ -241,6 +306,7 @@ class TrazabilidadController extends Controller
                 'properties' => $log->properties, 
                 'created_at' => $log->created_at->toDateTimeString(),
                 'contenido' => trim($contenido),  // Eliminar posibles espacios extra
+                'bitacora' => $bitacora,
             ];
         });
     

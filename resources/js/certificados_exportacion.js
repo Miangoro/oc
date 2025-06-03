@@ -1445,11 +1445,46 @@ $(document).ready(function () {
 
 
 
+
+  //Abrir PDF Bitacora
+$(document).on('click', '.pdf', function () {
+  var id_revisor = $(this).data('id'); // <-- ¡Esta línea es clave!
+  var num_certificado = $(this).data('num-certificado');
+  var tipoRevision = $(this).data('tipo_revision');
+
+  console.log('ID del Revisor:', id_revisor);
+  console.log('Tipo de Revisión:', tipoRevision);
+  console.log('Número de Certificado:', num_certificado);
+  
+  // Definir URL según el tipo de revisión
+  var url_pdf = '../pdf_bitacora_revision_personal/' + id_revisor;
+
+  console.log('URL del PDF:', url_pdf);
+
+  // Configurar encabezados del modal
+  $('#titulo_modal_Dictamen').text("Bitácora de revisión documental");
+  $('#subtitulo_modal_Dictamen').text(num_certificado);
+
+  // Configurar botón para abrir PDF
+  var openPdfBtn = $('#openPdfBtnDictamen');
+  openPdfBtn.attr('href', url_pdf);
+  openPdfBtn.show();
+
+  // Mostrar modal de PDF
+  $('#mostrarPdf').modal('show');
+  $('#cargando').show();
+  $('#pdfViewer').hide();
+
+  // Cargar PDF en iframe
+  $('#pdfViewer').attr('src', url_pdf);
+});
+
 ///VER TRAZABILIDAD
 $(document).on('click', '.trazabilidad', function () {
   // Función para cargar los datos
   var id_certificado = $(this).data('id');
   $('.num_certificado').text($(this).data('folio'));
+
 
   var url = '/trazabilidad-certificados/' + id_certificado;//ruta de la informacion/controller trazabilidad
 
@@ -1467,15 +1502,19 @@ $(document).on('click', '.trazabilidad', function () {
         contenedor.append(`
               <li class="timeline-item timeline-item-transparent">
                   <span class="timeline-point timeline-point-primary"></span>
+
                   <div class="timeline-event">
+
                       <div class="timeline-header mb-3">
                       <h6 class="mb-0">${log.description}</h6>
                       <small class="text-muted">${log.created_at}</small>
                       </div>
+
                       <p class="mb-2">  ${log.contenido}</p>
                       <div class="d-flex align-items-center mb-1">
-
+                      ${log.bitacora}
                       </div>
+                      
                   </div>
                   </li><hr>
               `);
@@ -1488,6 +1527,7 @@ $(document).on('click', '.trazabilidad', function () {
     console.error(xhr.responseText);
   });
 });
+
 
 
 

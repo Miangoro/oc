@@ -751,6 +751,8 @@ public function index(Request $request)
 
         $watermarkText = $datos->estatus == 1;
 
+        
+
         // Preparar los datos para el PDF
         $pdfData = [
             'datos' => $datos,
@@ -767,8 +769,12 @@ public function index(Request $request)
             ///
             'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa ?? 'No encontrado',
             'razon_social' => $empresa->razon_social ?? 'No encontrado',
-            'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
-            'num_autorizacion' => $empresa->num_autorizacion ?? 'No encontrado',
+            'maestro_mezcalero' => is_null($datos->maestro_mezcalero)
+                ? 'No encontrado'
+                : (trim($datos->maestro_mezcalero) === '' 
+                ? '---------------------------------------------------------------------------------------------------------------------' 
+                : $datos->maestro_mezcalero),
+            'num_autorizacion' => $empresa->registro_productor ?? 'No encontrado',
             'numero_cliente' => $numero_cliente,
             'representante_legal' => $empresa->representante ?? 'No encontrado',
             'nombre_firmante' => $datos->firmante->name ?? 'No encontrado',

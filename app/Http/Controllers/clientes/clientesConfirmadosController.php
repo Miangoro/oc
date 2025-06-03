@@ -18,6 +18,7 @@ use App\Models\empresa_actividad;
 use App\Models\maquiladores_model;
 use App\Notifications\GeneralNotification;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
@@ -140,16 +141,24 @@ public function editarCliente($id)
     }
 }
 //Aqui termina editar cliente
+
+
+///PDF's
     public function pdfCartaAsignacion($id)
     {
-        $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro,
+        $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, e.created_at, info_procesos, s.fecha_registro,
         e.correo, e.telefono, p.id_producto, nc.id_norma, a.id_actividad, e.estado
         FROM empresa e LEFT JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
         LEFT JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
         JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa) JOIN catalogo_actividad_cliente ac
         ON (a.id_actividad = ac.id_actividad) JOIN empresa_num_cliente nc ON (nc.id_empresa = e.id_empresa)
         WHERE nc.numero_cliente="' . $id . '" GROUP BY nc.numero_cliente');
-        $pdf = Pdf::loadView('pdfs.CartaAsignacion', ['datos' => $res]);
+
+       $fecha_registro = Carbon::parse($res[0]->created_at)->translatedFormat('j \d\e F \d\e\l Y');
+        $pdf = Pdf::loadView('pdfs.CartaAsignacion', [
+            'datos' => $res,
+            'fecha_registro' => $fecha_registro ?? 'No encontrado',
+        ]);
         return $pdf->stream('Carta de asignación de número de cliente.pdf');
     }
 
@@ -200,6 +209,8 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
     return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 VIGENTE.pdf');
     }
 
+
+
     public function registrarValidacion(Request $request)
     {
         $solicitud = solicitud_informacion::find($request->id_solicitud);
@@ -213,8 +224,6 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
 
     public function store(Request $request)
     {
-
-
         $solicitud = solicitud_informacion::where('id_empresa', $request->id_empresa)->first();
         $solicitud->medios = $request->medios;
         $solicitud->competencia = $request->competencia;
