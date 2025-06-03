@@ -231,7 +231,7 @@ class lotesGranelController extends Controller
                     /*  */
                         // Consulta la URL en la tabla Documentacion_url
                     // Obtén la URL del certificado desde la tabla Documentacion_url
-                    $documentacion = Documentacion_url::where('id_relacion', $lote->id_lote_granel)->where('id_certificado',59)->first();
+                    $documentacion = Documentacion_url::where('id_relacion', $lote->id_lote_granel)->where('id_documento',59)->first();
                       // Obtener el número de cliente
                       $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
 
