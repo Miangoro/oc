@@ -379,7 +379,6 @@
             NOM-070-SCFI-2016. Bebidas alcohólicas -mezcal-especificaciones.</p>
     </div>
 
-<br><br>
 
 
 <!--FIRMA DIGITAL-->
