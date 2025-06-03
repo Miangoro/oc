@@ -302,8 +302,9 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
                 ->count();
         }
 
-        $data = [];
+        
 
+        $data = [];
         if (!empty($users)) {
             // providing a dummy id instead of database ids
             $ids = $start;
