@@ -91,7 +91,7 @@ class solicitudesController extends Controller
             2 => 'folio',
             3 => 'num_servicio',
             4 => 'razon_social',
-            5 => 'fecha_solicitud',
+            5 => 'created_at',
             6 => 'tipo',
             7 => 'direccion_completa',
             8 => 'fecha_visita',
@@ -257,7 +257,7 @@ class solicitudesController extends Controller
                 $nestedData['folio'] = $solicitud->folio;
                 $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['razon_social'] = $solicitud->empresa->razon_social ?? 'N/A';
-                $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud) ?? 'N/A';
+                $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->created_at) ?? 'N/A';
                 $nestedData['tipo'] = $solicitud->tipo_solicitud->tipo ?? 'N/A';
                 $nestedData['direccion_completa'] = $solicitud->instalacion->direccion_completa ?? $solicitud->predios->ubicacion_predio ?? 'N/A';
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita) ?? '<span class="badge bg-danger">Sin asignar</span>';

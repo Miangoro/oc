@@ -118,7 +118,7 @@
         </tr>
         <tr>
             <td class="con-negra" colspan="2">Fecha de solicitud:</td>
-            <td colspan="4">{{ $datos->fecha_solicitud }}</td>
+            <td colspan="4">{{ $datos->created_at }}</td>
             <td class="con-negra" colspan="3">Teléfono:</td>
             <td colspan="4">{{ $datos->empresa->telefono }}</td>
         </tr>
