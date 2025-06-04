@@ -261,7 +261,7 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b>
-                                                 @foreach ($datos->certificado->dictamen->inspeccione->solicitud->documentacion(58)->get() as $documento)
+                                                 @foreach ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs as $documento)
                                                         <a target="_blank"
                                                             href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
                                                                 'numero_cliente',
