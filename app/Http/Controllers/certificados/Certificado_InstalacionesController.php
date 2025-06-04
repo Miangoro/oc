@@ -680,14 +680,18 @@ public function index(Request $request)
             }
         }
 
-
+            if($validatedData['tipoRevisor']==1){
+                $url_clic = '/add_revision/' . $revisor->id_revision;
+            }else{
+                 $url_clic = '/add_revision_consejo/' . $revisor->id_revision;
+            }
 
             // Preparar datos para el correo
             $data1 = [
                 'asunto' => 'Revisión de certificado ' . $certificado->num_certificado,
                 'title' => 'Revisión de certificado',
                 'message' => 'Se te ha asignado el certificado ' . $certificado->num_certificado,
-                'url' => '/add_revision/' . $revisor->id_revision,
+                'url' => $url_clic,
                 'nombreRevisor' => $user->name,
                 'emailRevisor' => $user->email,
                 'num_certificado' => $certificado->num_certificado,
