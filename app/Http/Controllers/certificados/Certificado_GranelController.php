@@ -558,9 +558,9 @@ public function CertificadoGranel($id_certificado)
     $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ? CertificadosGranel::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
     //origen
-    if ( empty($certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id) ){
+    //if ( empty($certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id) ){
         $estado = $certificado->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado';
-    }else{
+    /*}else{
         //$estado = $certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id->lotes;
         $id_lote = json_decode($certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id, true);
         // Paso 2: Obtener el primer ID del array 'lotes'
@@ -574,7 +574,7 @@ public function CertificadoGranel($id_certificado)
                 $estado = "S/C-G";
                 //return response()->json([ 'message' => 'No se encontró Certificado Granel con ese lote granel.' ]);
             }
-    }
+    }*/
 
     // Datos para el PDF
     $pdfData = [
