@@ -499,7 +499,7 @@ class RevisionConsejoController extends Controller
     {
 
         $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
-        $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->get();
+        $preguntas = preguntas_revision::where('tipo_revisor', 2)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->get();
 
         $respuestas_json = json_decode($datos->respuestas, true); // Convierte el campo JSON a array PHP
         $respuestas_revision = $respuestas_json['Revision '.$datos->numero_revision] ?? []; // O la clave correspondiente
@@ -793,7 +793,9 @@ class RevisionConsejoController extends Controller
     }
 
     public function pdf_bitacora_revision_certificado_granel($id)
-    {   $revisor = Revisor::findOrFail($id);
+    {   
+        
+        $revisor = Revisor::findOrFail($id);
 
         // Decodificar el JSON correctamente
         $respuestasJson = json_decode($revisor->respuestas, true);
@@ -808,7 +810,6 @@ class RevisionConsejoController extends Controller
 
         $preguntas = preguntas_revision::whereIn('id_pregunta', $respuestas->pluck('id_pregunta'))->get();
 
-
         // Unir las preguntas con sus respuestas
         $preguntasConRespuestas = $preguntas->map(function ($pregunta) use ($respuestas) {
             $respuesta = $respuestas->firstWhere('id_pregunta', $pregunta->id_pregunta);
@@ -820,9 +821,6 @@ class RevisionConsejoController extends Controller
             ];
         });
 
-
-
-        $id_dictamen = $revisor->certificado->dictamen->tipo_dictamen;
 
         $tipo_certificado = "NOM a Granel";
  
@@ -866,9 +864,71 @@ class RevisionConsejoController extends Controller
     }
 
     public function pdf_bitacora_revision_certificado_exportacion($id)
-    {
+    {   
+        $revisor = Revisor::findOrFail($id);
 
-            $pdf = Pdf::loadView('pdfs.pdf_bitacora_revision_certificado_exportacion')
+        // Decodificar el JSON correctamente
+        $respuestasJson = json_decode($revisor->respuestas, true);
+
+        // Asegurar que "Revisión 1" existe en el array
+        $respuestas = collect(array_merge(
+            $respuestasJson["Revision 1"] ?? [],
+            $respuestasJson["Revision 2"] ?? [],
+            $respuestasJson["Revision 3"] ?? []
+        ));
+
+
+        $preguntas = preguntas_revision::whereIn('id_pregunta', $respuestas->pluck('id_pregunta'))->get();
+
+        // Unir las preguntas con sus respuestas
+        $preguntasConRespuestas = $preguntas->map(function ($pregunta) use ($respuestas) {
+            $respuesta = $respuestas->firstWhere('id_pregunta', $pregunta->id_pregunta);
+            return [
+                'id_pregunta' => $pregunta->id_pregunta,
+                'pregunta' => $pregunta->pregunta,
+                'respuesta' => $respuesta['respuesta'] ?? null,
+                'observacion' => $respuesta['observacion'] ?? null,
+            ];
+        });
+
+
+        $tipo_certificado = "NOM a Granel";
+ 
+        $decision = $revisor->decision;
+        $nameRevisor = $revisor->user->name ?? null;
+        $firmaRevisor = $revisor->user->firma ?? '';
+        $puestoRevisor = $revisor->user->puesto ?? null;
+        $fecha = $revisor->updated_at;
+        $id_aprobador = $revisor->aprobador->name ?? 'Sin asignar';
+        $aprobacion = $revisor->aprobacion ?? 'Pendiente de aprobar';
+        $fecha_aprobacion = $revisor->fecha_aprobacion;
+
+        $razonSocial = $revisor->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar';
+        $numero_cliente = $revisor->certificado->dictamen->inspeccione->solicitud->empresa
+        ->empresaNumClientes
+        ->firstWhere('numero_cliente', '!=', null)
+        ->numero_cliente ?? 'Sin asignar';
+
+
+        $pdfData = [
+            'numero_revision' => $revisor->numero_revision,
+            'num_certificado' => $revisor->certificado->num_certificado,
+            'tipo_certificado' => $tipo_certificado,
+            'decision' => $decision,
+            'id_revisor' => $nameRevisor,
+            'firmaRevisor' => $firmaRevisor,
+            'puestoRevisor' => $puestoRevisor,
+            'razon_social' => $razonSocial,
+            'fecha' => Helpers::formatearFecha($fecha),
+            'numero_cliente' => $numero_cliente,
+            'aprobacion' => $aprobacion,
+            'id_aprobador' => $id_aprobador,
+            'fecha_aprobacion' => Helpers::formatearFecha($fecha_aprobacion),
+            'preguntas' => $preguntasConRespuestas
+        ]; 
+            
+
+            $pdf = Pdf::loadView('pdfs.pdf_bitacora_revision_certificado_exportacion',$pdfData)
             ->setPaper('letter'); // Define tamaño carta
 
         return $pdf->stream('Bitácora de revisión de certificado de exportación NOM-070-SCFI-2016 F7.1-01-33.pdf');

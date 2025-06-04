@@ -198,10 +198,7 @@ $(function () {
               `>` +
               '<i class="ri-pencil-fill ri-20px text-primary"></i> Editar Revisión' +
               '</a>' +
-              // Botón para Aprobación
-              `<a data-id='${full['id_revision']}' data-num-certificado="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAprobacionConsejo" class="dropdown-item Aprobacion-record waves-effect text-success">` +
-              '<i class="ri-checkbox-circle-line text-success"></i> Aprobación' +
-              '</a>' +
+             
               // Botón para Historial
               `<a data-id='${full['id_revision']}' class="dropdown-item waves-effect text-warning abrir-historial" ` +
               `data-bs-toggle="modal" data-bs-target="#historialModal">` +
@@ -555,7 +552,7 @@ $(function () {
     $('#subtitulo_modal_Dictamen').text(num_certificado);
 
     // Configurar botón para abrir PDF
-    var openPdfBtn = $('#openPdfBtnDictamen');
+    var openPdfBtn = $('#NewPestana');
     openPdfBtn.attr('href', url_pdf);
     openPdfBtn.show();
 
@@ -565,6 +562,7 @@ $(function () {
     $('#pdfViewer').hide();
 
     // Cargar PDF en iframe
+    
     $('#pdfViewer').attr('src', url_pdf);
   });
 

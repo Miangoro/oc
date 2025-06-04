@@ -138,7 +138,8 @@
                                     <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select onchange="cargarDetallesLoteEnvasadoex(this.value)"
-                                                name="lote_envasado[0]" class="select2 form-select evasado_export">
+                                                id="lote_envasadoExportPe" name="lote_envasado[0]"
+                                                class="select2 form-select evasado_export">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
                                                 <!-- Opciones dinámicas -->
@@ -392,16 +393,14 @@
         }
         contenidoLotes =
             '<option value="" disabled selected>Seleccione un lote envasado</option>' + contenidoLotes;
-        $('.evasado_export').html(contenidoLotes);
+        $('#lote_envasadoExportPe').html(contenidoLotes);
 
         cargarMarcas();
-        cargarDetallesLoteEnvasado($(".evasado_export").val());
+        cargarDetallesLoteEnvasado($("#lote_envasadoExportPe").val());
 
         // Añadir evento change a los select de lotes envasados
-        $('.evasado_export').on('change', function() {
-            var idLoteEnvasado = $(this).val(); // Obtén el id seleccionado
-            cargarDetallesLoteEnvasado(idLoteEnvasado); // Llamar a la función con el id seleccionado
-
+        $('#lote_envasadoExportPe').on('change', function() {
+            var idLoteEnvasado = $(this).val();
             cargarMarcas();
         });
     }
@@ -490,6 +489,7 @@
                             `<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`
                         );
                     }
+                    cargarMarcas(); // Cargar marcas después de obtener los detalles del lote envasado
                 },
                 error: function() {
                     console.error('Error al cargar el detalle del lote envasado.');
@@ -524,8 +524,7 @@
 
     function cargarMarcas() {
         var id_empresa = $('#id_empresa_solicitud_exportacion').val();
-        /* var id_marca = $('.evasado_export_edit').find(':selected').data('id-marca-edit'); */
-        var id_marca = $('.evasado_export option:selected').data('id-marca') || 0;
+        var id_marca = $('#lote_envasadoExportPe option:selected').data('id-marca') || 0;
         var id_direccion = $('#direccion_destinatario_ex').val();
         //alert('/marcas/' + id_marca + '/' + id_direccion)
         if (id_empresa) {
@@ -563,7 +562,16 @@
                         tbody += `<td>${marcas[i].sku || 'N/A'}</td>`;
 
                         // Tipo
-                        tbody += `<td>${marcas[i].tipo.nombre|| 'N/A'}</td>`;
+                        // Si tipos_nombres es un array, únelos con coma
+                     // Si tipos_info es un array, únelos con coma y nombre científico
+                        tbody +=
+                          `<td>${
+                            marcas[i].tipos_info && marcas[i].tipos_info.length
+                              ? marcas[i].tipos_info.map(
+                                  tipo => `${tipo.nombre} (<i>${tipo.cientifico}</i>)`
+                                ).join(', ')
+                              : 'N/A'
+                          }</td>`;
 
                         // Presentación
                         tbody += `<td>${marcas[i].presentacion || 'N/A'} ${marcas[i].unidad || ''}</td>`;

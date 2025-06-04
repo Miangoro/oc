@@ -248,14 +248,16 @@
                         <td class="letra-fondo" style="width: 50px">N/C </td>
                         <td class="letra-fondo" style="width: 50px">N/A</td>
                     </tr>
-                    @if ($pregunta['id_pregunta'] >= 104 && $pregunta['id_pregunta'] <= 105)
+                     @foreach ($preguntas as $pregunta)
+                    @if ($pregunta['id_pregunta'] >= 104 && $pregunta['id_pregunta'] <= 109)
                     <tr>
-                        <td style="text-align: left"> Nombre de la empresa</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
+                        <td style="text-align: left">{{ $pregunta['pregunta'] }}</td>
+                        <td>{{ $pregunta['respuesta'] == 'C' ? 'C' : '------' }}</td>
+                        <td>{{ $pregunta['respuesta'] == 'NC' ? 'NC' : '------' }}</td>
+                        <td>{{ $pregunta['respuesta'] == 'NA' ? 'NA' : '------' }}</td>
                     </tr>
                     @endif
+                    @endforeach
                     <tr class="sin-border">
                         <td></td>
                         <td></td>
@@ -288,66 +290,16 @@
                         <td class="letra-fondo" style="width: 50px">N/C </td>
                         <td class="letra-fondo" style="width: 50px">N/A</td>
                     </tr>
-                    <tr>
-                        <td style="text-align: left"> Producto y Origen</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Categoría y Clase</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left">NO. de lote</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> No. De Análisis</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Ingredientes</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Volumen de lote</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Conteido Alcohólico</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Tipo de Maguey</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Edad</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> No De Dictamen</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
+                     @foreach ($preguntas as $pregunta)
+                        @if ($pregunta['id_pregunta'] >= 114 && $pregunta['id_pregunta'] <= 123)
+                            <tr>
+                            <td style="text-align: left">{{ $pregunta['pregunta'] }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'C' ? 'C' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NC' ? 'NC' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NA' ? 'NA' : '------' }}</td>
+                            </tr>
+                         @endif
+                    @endforeach
                 </table>
             </td>
         </tr>
@@ -363,30 +315,16 @@
             <td class="letra-fondo"style="width: 45px">N/A</td>
         </tr>
 
-        <tr>
-            <td style="text-align: left"> No. De Acta</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left"> Fecha de inicio y cierre del muestreo </td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left">Nombre y firma del interesado </td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
-        <tr>
-            <td style="text-align: left"> Nombre y firma del inspector</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
-        </tr>
+        @foreach ($preguntas as $pregunta)
+                        @if ($pregunta['id_pregunta'] >= 110 && $pregunta['id_pregunta'] <= 113)
+                            <tr>
+                            <td style="text-align: left">{{ $pregunta['pregunta'] }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'C' ? 'C' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NC' ? 'NC' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NA' ? 'NA' : '------' }}</td>
+                            </tr>
+                         @endif
+                    @endforeach
     </table>
     <br>
 
@@ -409,11 +347,13 @@
             documento, por consiguiente, se toma la decisión para otorgar la certificación de producto.
             <div style="height: 20px;"></div>
             <div style="width: 100%; text-align: right; position: fixed; margin-top: -30px; right: 20px;">
-                <img src="{{ public_path('img_pdf/2-s.png') }}" alt="Firma" style="width: 120px; height: auto;">
+                @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
+                    <img src="{{ public_path('storage/' . $firmaPath) }}" alt="Firma" style="width: 120px; height: auto;">
+                    @endif
             </div>
             <div style="height: 20px;"></div>
-            Miguel Ángel Gómez Romero <br>
-            Miembro del Consejo para la decisión de la certificación (Vocal):
+            {{ $id_revisor }} <br>
+                {{ $puestoRevisor }}:
         </td>
     </tr>
 </table>

@@ -48,8 +48,8 @@ switch ($tipo_certificado) {
 </p>
 
 <ul style="color: #555555; margin-bottom: 10px; text-align:left;">
+    <li><strong>Fecha de emisión:</strong> {{ $fecha_emision }}</li>
     <li><strong>Fecha de vigencia:</strong> {{ $fecha_vigencia }}</li>
-    <li><strong>Fecha de vencimiento:</strong> {{ $fecha_vencimiento }}</li>
     <li><strong>Cliente:</strong> {{ $razon_social }}</li>
     <li><strong>Número de cliente:</strong> {{ $numero_cliente }}</li>
     <li><strong>Tipo de certificado:</strong> {{ $tipo_certificado }}</li>

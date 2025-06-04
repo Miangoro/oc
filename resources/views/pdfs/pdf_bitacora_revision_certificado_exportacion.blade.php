@@ -210,17 +210,17 @@
     <table>
         <tr>
             <td class="letra-fondo" style="text-align: left" colspan="4">Razón social del cliente:</td>
-            <td class="leftLetter" colspan="2">ALBERTO FRANCO MORGADO</td>
+            <td class="leftLetter" colspan="2">{{ $razon_social }}</td>
         </tr>
         <tr>
             <td class="letra-fondo" style="text-align: left" colspan="2">No. Cliente:</td>
-            <td colspan="2">NOM-070-270C</td>
+            <td colspan="2">{{ $numero_cliente }}</td>
             <td class="letra-fondo" style="text-align: left">Fecha de primera revisión:</td>
-            <td>2024-07-25 11:35:43</td>
+            <td>{{ $fecha }}</td>
         </tr>
         <tr>
             <td class="letra-fondo" style="text-align: left" colspan="2">No. De certificado:</td>
-            <td colspan="2">CIDAM C-INS-088/2024</td>
+            <td colspan="2">{{ $num_certificado }}</td>
             <td class="td-no-border"></td>
             <td class="td-no-border"></td>
         </tr>
@@ -253,48 +253,16 @@
                         <td class="letra-fondo" style="width: 50px">N/A</td>
                     </tr>
 
-                    <tr>
-                        <td style="text-align: left"> Número de certificado</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left">Domicilio </td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left">País</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left">Código postal</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Registro de productor autorizado (Uso de la DOM)</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Certificado de cumplimiento de la norma (NOM a Granel)</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left">No. De convenio de corresponsabilidad </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    @foreach ($preguntas as $pregunta)
+                        @if ($pregunta['id_pregunta'] >= 38 && $pregunta['id_pregunta'] <= 44)
+                            <tr>
+                                <td style="text-align: left">{{ $pregunta['pregunta'] }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'C' ? 'C' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NC' ? 'NC' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NA' ? 'NA' : '------' }}</td>
+                            </tr>
+                        @endif
+                    @endforeach
                     <tr class="sin-border">
                         <td></td>
                         <td></td>
@@ -322,24 +290,16 @@
                         <td class="letra-fondo"style="width: 45px">N/A</td>
                     </tr>
 
-                    <tr>
-                        <td style="text-align: left"> Nombre</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Domicilio </td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> país de destino </td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
+                    @foreach ($preguntas as $pregunta)
+                        @if ($pregunta['id_pregunta'] >= 45 && $pregunta['id_pregunta'] <= 47)
+                            <tr>
+                                <td style="text-align: left">{{ $pregunta['pregunta'] }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'C' ? 'C' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NC' ? 'NC' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NA' ? 'NA' : '------' }}</td>
+                            </tr>
+                        @endif
+                    @endforeach
                 </table>
                 {{-- segunda tabla --}}
 
@@ -354,96 +314,16 @@
                         <td class="letra-fondo" style="width: 50px">N/C </td>
                         <td class="letra-fondo" style="width: 50px">N/A</td>
                     </tr>
-                    <tr>
-                        <td style="text-align: left"> Categoría</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Marca</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left">Clase</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Volumen</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left">% Alcohol volumen</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Cantidad de botellas / cajas</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Lugar de envasado</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> No. De lote a granel y envasado</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Número de análisis</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Aduana de despacho </td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Fracción arancelaria</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Número de factura proforma</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Tipo de maguey </td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Etiquetas </td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left"> Corrugado</td>
-                        <td>C</td>
-                        <td>- -</td>
-                        <td>- -</td>
-                    </tr>
+                    @foreach ($preguntas as $pregunta)
+                        @if ($pregunta['id_pregunta'] >= 48 && $pregunta['id_pregunta'] <= 62)
+                            <tr>
+                                <td style="text-align: left">{{ $pregunta['pregunta'] }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'C' ? 'C' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NC' ? 'NC' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NA' ? 'NA' : '------' }}</td>
+                            </tr>
+                        @endif
+                    @endforeach
                 </table>
             </td>
         </tr>
