@@ -262,6 +262,9 @@
                 documento, por
                 consiguiente, se toma la decisión para otorgar la certificación de instalaciones como comercializador.
                 <div style="padding: 30px"></div>
+                @php
+    use Illuminate\Support\Facades\Storage;
+@endphp
                 <div style="width: 100%; text-align: right; position: fixed; margin-top: -35px; right: 20px;">
                     @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
                     <img src="{{ public_path('storage/' . $firmaPath) }}" alt="Firma" style="width: 120px; height: auto;">
