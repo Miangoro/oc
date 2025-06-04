@@ -81,6 +81,7 @@ class lotesGranelController extends Controller
             ->orWhere('folio_fq', 'LIKE', "%{$search}%")
             ->orWhere('volumen', 'LIKE', "%{$search}%")
             ->orWhere('cont_alc', 'LIKE', "%{$search}%")
+            ->orWhere('folio_certificado', 'LIKE', "%{$search}%")
             ->orWhereHas('empresa', function ($subQuery) use ($search) {
                 $subQuery->where('razon_social', 'LIKE', "%{$search}%");
             })
