@@ -370,8 +370,6 @@
         }
     }
 
-    // Función para cargar lotes envasados
-    // Función para cargar lotes envasados
     function cargarLotesEnvasado(lotesEnvasado, marcas) {
         var contenidoLotes = "";
         for (let index = 0; index < lotesEnvasado.length; index++) {
@@ -445,7 +443,7 @@
                             <td>${limpiarSku(response.lote_envasado.sku) == '{"inicial":""}' ? "SKU no definido" : limpiarSku(response.lote_envasado.sku)}</td>
                             <td>${response.lote_envasado.presentacion || 'N/A'} ${response.lote_envasado.unidad || ''}</td>
 
-                            <td>Botellas: ${response.lote_envasado.cant_botellas}<br>Cajas: Sin definir</td>
+                            <td>Botellas: ${response.lote_envasado.cant_botellas}
                         </tr>`;
                         tbody.append(filaEnvasado);
                     }
@@ -467,10 +465,10 @@
                                 ${lote.certificado_granel ? lote.certificado_granel.num_certificado : 'Sin definir'}
                                 </td>
                                 <td>
-                                  <input type="text" class="form-control form-control-sm" name="folio_fq[]" value="${lote.folio_fq || ''}" />
+                                  <input type="text" class="form-control form-control-sm" name="folio_fq[]" autocomplete="off" value="${lote.folio_fq || ''}" />
                                 </td>
                                 <td>
-                                  <input type="text" class="form-control form-control-sm" name="cont_alc[]" value="${lote.cont_alc || ''}" />
+                                  <input type="text" class="form-control form-control-sm" name="cont_alc[]" autocomplete="off" value="${lote.cont_alc || ''}" />
                                 </td>
                                <td>
                                 ${lote.categoria.categoria || 'N/A'}<br>
@@ -563,9 +561,9 @@
 
                         // Tipo
                         // Si tipos_nombres es un array, únelos con coma
-                     // Si tipos_info es un array, únelos con coma y nombre científico
+                        // Si tipos_info es un array, únelos con coma y nombre científico
                         tbody +=
-                          `<td>${
+                            `<td>${
                             marcas[i].tipos_info && marcas[i].tipos_info.length
                               ? marcas[i].tipos_info.map(
                                   tipo => `${tipo.nombre} (<i>${tipo.cientifico}</i>)`
@@ -627,18 +625,70 @@
                 url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
                 method: 'GET',
                 success: function(response) {
-                    // Rellena los campos de la sección correspondiente
+                    // Rellena el input de lote a granel
                     $(`#lote_granel_${sectionCount}`).val(
                         response.detalle && response.detalle.length > 0 ?
                         response.detalle.map(lote => lote.nombre_lote).join(', ') :
                         ''
                     );
-                    $(`#cantidad_botellas${sectionCount}`).val(response.lote_envasado?.cant_botellas || '');
-                    $(`#presentacion${sectionCount}`).val(
-                        response.lote_envasado ?
-                        response.lote_envasado.presentacion + ' ' + response.lote_envasado.unidad :
-                        ''
-                    );
+
+                    // Genera la tabla de lotes a granel asociados en la sección correspondiente
+                    let $tabla = $(`#tablaLotes_${sectionCount}`);
+                    if ($tabla.length === 0) {
+                        // Si no existe la tabla, créala dinámicamente
+                        $(`#caracteristicas_Ex${sectionCount} .card-body`).append(`
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <table id="tablaLotes_${sectionCount}" class="table table-bordered table-sm mt-3">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Certificado</th>
+                                                <th>Folio FQ</th>
+                                                <th>Cont. Alc.</th>
+                                                <th>Categoría / Clase / Tipos de Maguey</th>
+                                            </tr>
+                                        </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `);
+                        $tabla = $(`#tablaLotes_${sectionCount}`);
+                    }
+                    let $tbody = $tabla.find('tbody');
+                    $tbody.empty();
+
+                    if (response.detalle && response.detalle.length > 0) {
+                        response.detalle.forEach((lote, index) => {
+                            // ...dentro de response.detalle.forEach((lote, index) => {
+                            $tbody.append(`
+                              <tr>
+                                  <td>${index + 1}</td>
+                                        <td>
+                                ${lote.nombre_lote}<br>
+                                <b>Certificado: </b>
+                                ${lote.certificado_granel ? lote.certificado_granel.num_certificado : 'Sin definir'}
+                                </td>
+                                  <td>${lote.folio_fq || ''}</td>
+                                  <td>${lote.cont_alc || ''}</td>
+                                  <td>
+                                      ${lote.categoria?.categoria || 'N/A'}<br>
+                                      ${lote.clase?.clase || 'N/A'}<br>
+                                      ${
+                                          lote.tiposMaguey && lote.tiposMaguey.length
+                                              ? lote.tiposMaguey.map(tipo => `${tipo.nombre} (<i>${tipo.cientifico}</i>)`).join('<br>')
+                                              : 'N/A'
+                                      }
+                                  </td>
+                              </tr>
+                          `);
+                        });
+                    } else {
+                        $tbody.append(
+                            `<tr><td colspan="8" class="text-center">No hay lotes a granel asociados</td></tr>`
+                        );
+                    }
                 },
                 error: function() {
                     console.error('Error al cargar el detalle del lote envasado.');
