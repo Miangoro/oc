@@ -478,18 +478,6 @@ public function editar_cliente_confirmado(Request $request)
       
 
 
-      $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
-
-      $data1 = [
-          'title' => 'Nuevo registro de cliente confirmado',
-          'message' => 'Se ha registrado un nuevo cliente confirmado  : ' . $cliente->razon_social . '.',
-          'url' => 'clientes-historial',
-      ];
-      foreach ($users as $user) {
-        $user->notify(new GeneralNotification($data1));
-    }
-
-
 
       return response()->json([
           'success' => true,
