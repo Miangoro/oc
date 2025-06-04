@@ -477,7 +477,7 @@ public function MostrarDictamenGranel($id_dictamen)
             if ($certificadoGranel) {
                 $estado = $certificadoGranel->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado';
             } else {
-                $estado = "S/G";
+                $estado = "OAXACA";
                 //return response()->json([ 'message' => 'No se encontró Certificado Granel con ese lote granel.' ]);
             }
     }
