@@ -621,7 +621,7 @@ class lotesGranelController extends Controller
             $validated = $request->validate([
                 'nombre_lote' => 'required|string|max:255',
                 'id_empresa' => 'required|integer|exists:empresa,id_empresa',
-                'id_tanque' => 'nullable|integer',
+                'id_tanque' => 'nullable|string|max:100',
                 'tipo_lote' => 'required|integer',
                 'id_guia' => 'nullable|array',
                 'id_guia.*' => 'integer|exists:guias,id_guia',

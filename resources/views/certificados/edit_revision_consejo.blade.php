@@ -162,6 +162,9 @@
                                         @elseif($pregunta->filtro == 'nombre_empresa')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</b>
                                             </td>
+                                        @elseif($pregunta->filtro == 'representante_legal')
+                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'N/A' }}</b>
+                                            </td>
                                         @elseif ($pregunta->filtro == 'num_certificado')
                                             <td><b
                                                     class="text-danger">{{ $datos->certificado->num_certificado ?? 'N/A' }}</b>
@@ -264,6 +267,17 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b>
+                                                 @foreach ($datos->certificado->dictamen->inspeccione->solicitud->documentacion(58)->get() as $documento)
+                                                        <a target="_blank"
+                                                            href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
+                                                                'numero_cliente',
+                                                                '!=',
+                                                                null,
+                                                            )->numero_cliente }}/fqs/{{ $documento->url }}">
+                                                            <i
+                                                                class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                        </a>
+                                                    @endforeach
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis_ajuste')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b>
@@ -323,34 +337,67 @@
                                                 <b>{{ $datos?->certificado?->fecha_emision ? Helpers::formatearFecha($datos->certificado->fecha_emision) : 'NA' }}</b><br>
                                                 <b>{{ $datos?->certificado?->fecha_vigencia ? Helpers::formatearFecha($datos->certificado->fecha_vigencia) : 'NA' }}</b>
                                             </td>
-                                        @elseif($pregunta->filtro == 'num_dictamen')
-                                            <td>
+                                            @elseif($pregunta->filtro == 'num_dictamen')
                                                 @php
-                                                    $dictamenRutas = [
-                                                        1 => '/dictamen_productor/',
-                                                        2 => '/dictamen_envasador/',
-                                                        3 => '/dictamen_comercializador/',
-                                                        4 => '/dictamen_almacen/',
-                                                        5 => '/dictamen_bodega/',
-                                                    ];
+                                            // Determina tipo y URL del certificado
+                                            $tipo = 'Desconocido';
+                                            $url = null;
 
-                                                    $tipoDictamen =
-                                                        $datos->certificado->dictamen->tipo_dictamen ?? null;
-                                                    $pdf_dictamen = $dictamenRutas[$tipoDictamen] ?? null;
-                                                @endphp
+                                            $dictamen = $datos->certificado?->dictamen;
 
-                                                <b>{{ $datos->certificado->dictamen->num_dictamen ?? 'N/A' }}</b>
+                                            if ($datos->tipo_certificado == 1 && $datos->certificado?->dictamen) {
+                                                // Certificado normal con dictamen
+                                                $id_dictamen = $datos->certificado->dictamen->tipo_dictamen ?? null;
 
-                                                @if ($pdf_dictamen)
-                                                    <a target="_blank"
-                                                        href="{{ $pdf_dictamen . $datos->certificado->dictamen->id_dictamen }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                switch ($id_dictamen) {
+                                                    case 1:
+                                                        $tipo = 'Instalaciones de productor';
+                                                        $url = "/dictamen_productor/" . $dictamen->id_dictamen;
+                                                        break;
+                                                    case 2:
+                                                        $tipo = 'Instalaciones de envasador';
+                                                        $url = "/dictamen_envasador/" . $dictamen->id_dictamen;
+                                                        break;
+                                                    case 3:
+                                                        $tipo = 'Instalaciones de comercializador';
+                                                        $url = "/dictamen_comercializador/" . $dictamen->id_dictamen;
+                                                        break;
+                                                    case 4:
+                                                        $tipo = 'Instalaciones de almacén y bodega';
+                                                        $url = "/dictamen_almacen/" . $dictamen->id_dictamen;
+                                                        break;
+                                                    case 5:
+                                                        $tipo = 'Instalaciones de área de maduración';
+                                                        $url = "/dictamen_bodega/" . $dictamen->id_dictamen;
+                                                        break;
+                                                    default:
+                                                        $tipo = 'Desconocido';
+                                                }
+                                            } elseif ($datos->tipo_certificado == 2) {
+                                                $tipo = "Granel";
+                                                $url = "/dictamen_granel/" . $dictamen->id_dictamen;
+                                            } elseif ($datos->tipo_certificado == 3) {
+                                                $tipo = "Exportación";
+                                                $url = "/dictamen_envasado/" . $dictamen->id_dictamen;
+                                            }
+
+                                            
+                                            @endphp
+
+                                        <td>
+                                            @if ($dictamen)
+                                                <b>{{ $dictamen->num_dictamen }}</b>
+                                                @if ($url)
+                                                    <a target="_blank" href="{{ $url }}">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
                                                 @else
                                                     <span>Dictamen no disponible</span>
                                                 @endif
-                                            </td>
+                                            @else
+                                                <span>Dictamen no disponible</span>
+                                            @endif
+                                        </td>
                                         @elseif($pregunta->filtro == 'certificado_granel')
                                             <td>Granel:
                                                 <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}</b>

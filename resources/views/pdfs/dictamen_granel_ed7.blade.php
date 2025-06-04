@@ -339,7 +339,7 @@
             <tr>
                 <td colspan="6" class="negrita" style="font-size: 13px; text-transform: uppercase; padding: 5px;">
                     <p>producto {{ $data->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'NA' }}</p>
-                    <p>origen {{ $data->inspeccione->solicitud->instalacion->estados->nombre ?? 'NA' }}</p>
+                    <p>origen {{ $estado }}</p>
                 </td>
             </tr>
             <tr>
