@@ -181,7 +181,7 @@
                 propuesta</td>
             <td colspan="7"><span style="font-size: 14px" class="con-negra">
                     @if ($muestreo_agave === 'X')
-                        {{ $fecha_visita }}
+                        {{ $fecha_visita ?? 'Sin definir' }}
                     @else
                         ------------------------
                     @endif
