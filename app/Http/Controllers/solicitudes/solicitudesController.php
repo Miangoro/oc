@@ -1576,6 +1576,20 @@ class solicitudesController extends Controller
                 $query->where('direcciones.id_direccion', $id_direccion); // Especifica la tabla
             })
             ->get();
+            foreach ($etiquetas as $etiqueta) {
+                $tipoIds = [];
+                if (!empty($etiqueta->id_tipo)) {
+                    $tipoIds = json_decode($etiqueta->id_tipo, true);
+                }
+                $tipos = [];
+                if (!empty($tipoIds)) {
+                    $tipos = \App\Models\tipos::whereIn('id_tipo', $tipoIds)
+                        ->get(['nombre', 'cientifico'])
+                        ->toArray();
+                }
+                $etiqueta->tipos_info = $tipos; // <-- ahora es un array de objetos
+            }
+
         // Retornar las marcas como respuesta JSON
         return response()->json($etiquetas);
     }

@@ -137,8 +137,9 @@
                                 <div class="row caracteristicas-row">
                                     <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select onchange="cargarDetallesLoteEnvasadoex(this.value)"  id="lote_envasadoExportPe"
-                                                name="lote_envasado[0]" class="select2 form-select evasado_export">
+                                            <select onchange="cargarDetallesLoteEnvasadoex(this.value)"
+                                                id="lote_envasadoExportPe" name="lote_envasado[0]"
+                                                class="select2 form-select evasado_export">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
                                                 <!-- Opciones dinámicas -->
@@ -561,7 +562,16 @@
                         tbody += `<td>${marcas[i].sku || 'N/A'}</td>`;
 
                         // Tipo
-                        tbody += `<td>${marcas[i].tipo.nombre|| 'N/A'}</td>`;
+                        // Si tipos_nombres es un array, únelos con coma
+                     // Si tipos_info es un array, únelos con coma y nombre científico
+                        tbody +=
+                          `<td>${
+                            marcas[i].tipos_info && marcas[i].tipos_info.length
+                              ? marcas[i].tipos_info.map(
+                                  tipo => `${tipo.nombre} (<i>${tipo.cientifico}</i>)`
+                                ).join(', ')
+                              : 'N/A'
+                          }</td>`;
 
                         // Presentación
                         tbody += `<td>${marcas[i].presentacion || 'N/A'} ${marcas[i].unidad || ''}</td>`;
