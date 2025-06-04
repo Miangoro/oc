@@ -309,7 +309,7 @@
 <table>
 	<tbody>
 		<tr>
-			<td colspan="6" class="columna"  style="font-size: 15px;">PRODUCTO: {{ $categoria }}<br>ORIGEN: {{ $estado }}</td>
+			<td colspan="6" class="columna"  style="font-size: 15px;">PRODUCTO: {{ strtoupper($categoria)}}<br>ORIGEN: {{ strtoupper($estado) }}</td>
 		</tr>
 		<tr>
 			<td class="columna" style="white-space: nowrap;">Categoría y clase</td>
@@ -323,7 +323,7 @@
 			<td class="columna">Ingredientes</td>
 			<td class="columna-norm">{{ $ingredientes }}</td>
 			<td class="columna" style="white-space: nowrap;">Volumen de lote</td>
-			<td class="columna-norm">{{ $volumen }} {{ $unidad }}</td>
+			<td class="columna-norm">{{ $volumen }} L</td>
 			<td class="columna">Contenido Alcohólico</td>
 			<td class="columna-norm" style="white-space: nowrap;">{{ $cont_alc }}% Alc. Vol.</td>
 		</tr>
