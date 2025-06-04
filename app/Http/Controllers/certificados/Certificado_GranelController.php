@@ -557,7 +557,24 @@ public function CertificadoGranel($id_certificado)
     $watermarkText = $certificado->estatus === 1;
     $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ? CertificadosGranel::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
+    
+    if ( empty($certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id) ){
+        $estado = $certificado->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado';
+    }else{
+        //$estado = $certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id->lotes;
+        $id_lote = json_decode($certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id, true);
+        // Paso 2: Obtener el primer ID del array 'lotes'
+        $ultimoId = end($id_lote['lotes']) ?? null;
 
+        $certificadoGranel = CertificadosGranel::where('id_lote_granel', $ultimoId)->first();
+
+            if ($certificadoGranel) {
+                $estado = $certificadoGranel->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado';
+            } else {
+                $estado = "S/G";
+                //return response()->json([ 'message' => 'No se encontró Certificado Granel con ese lote granel.' ]);
+            }
+    }
 
     // Datos para el PDF
     $pdfData = [
@@ -575,7 +592,8 @@ public function CertificadoGranel($id_certificado)
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
         //lote
-        'estado' => $certificado->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado',
+        //'estado' => $certificado->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado',
+        'estado' => $estado,
         'categoria' => $certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'No encontrado',
         'clase' => $certificado->dictamen->inspeccione->solicitud->lote_granel->clase->clase ?? 'No encontrado',
         'nombre_lote' => $certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote?? 'No encontrado',
