@@ -1177,8 +1177,8 @@ $(function () {
               // Otros campos específicos para tipo 10
             }
             else if (id_tipo === 11) {
-              modal.find('.id_solicitud').val(id_solicitud);
               modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
+              modal.find('.id_solicitud').val(id_solicitud);
               modal.find('#fecha_visita_edit_exportacion').val(response.data.fecha_visita);
               modal.find('.instalacion_id').val(response.data.id_instalacion);
 
@@ -1239,26 +1239,17 @@ $(function () {
                 } else {
                   for (var i = 1; i < cantidadDeLotes; i++) {
                     $('#add-characteristics_edit').click();
-
                     // Primero actualiza el índice 0 (parece error: debería ser i)
                     modal.find(`#cantidad_cajas_edit0`).val(response.caracteristicas.detalles[0].cantidad_cajas);
                     modal.find(`#cantidad_botellas_edit0`).val(response.caracteristicas.detalles[0].cantidad_botellas);
                     modal.find(`#presentacion_edit0`).val(response.caracteristicas.detalles[0].presentacion || '');
                     modal.find(`#lote_granel_edit_0`).val(response.caracteristicas.detalles[0].lote_granel || '');
-                    setTimeout(function () {
-                      modal.find('#lote_envasado_edit_0').val(response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
-                    }, 300);
+                    modal.find('#lote_envasado_edit_0').data('selected', response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
 
-                    // Luego actualiza el actual i
-                    modal.find(`#cantidad_cajas_edit${i}`).val(response.caracteristicas.detalles[i].cantidad_cajas);
-                    modal.find(`#cantidad_botellas_edit${i}`).val(response.caracteristicas.detalles[i].cantidad_botellas);
-                    modal.find(`#presentacion_edit${i}`).val(response.caracteristicas.detalles[i].presentacion || '');
-                    modal.find(`#lote_granel_edit_${i}`).val(response.caracteristicas.detalles[i].lote_granel || '');
-                    setTimeout((function (i) {
-                      return function () {
-                        modal.find(`select[name="lote_envasado_edit[${i}]"]`).val(response.caracteristicas.detalles[i].id_lote_envasado).trigger('change');
-                      };
-                    })(i), 300);
+                    $(`#caracteristicas_Ex_edit_${i} .evasado_export_edit`).data('selected', response.caracteristicas.detalles[i].id_lote_envasado);
+                    cargarLotesEdit($('#id_empresa_solicitud_exportacion_edit').val(), i);
+
+
                   }
                 }
               }
@@ -3990,7 +3981,7 @@ $(function () {
 
   $(document).ready(function () {
     var $tipoSolicitudEdit = $('#tipo_solicitud_edit');
-    var $botonesCharacteristicsEdit = $('#botones_characteristics_edit_1');
+    var $botonesCharacteristicsEdit = $('#botones_characteristics_edit');
 
     // Mostrar/ocultar los botones al cambiar el tipo en el modal de editar
     $tipoSolicitudEdit.on('change', function () {
@@ -4047,24 +4038,6 @@ $(function () {
                 <label for="lote_granel">Lote a granel</label>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-floating form-floating-outline mb-4">
-                <input type="number" class="form-control" id="cantidad_botellas${sectionCount}" name="cantidad_botellas[${sectionCount}]" placeholder="Cantidad de botellas">
-                <label for="cantidad_botellas">Cantidad de botellas</label>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating form-floating-outline mb-4">
-                <input type="number" class="form-control" id="cantidad_cajas${sectionCount}" name="cantidad_cajas[${sectionCount}]" placeholder="Cantidad de cajas">
-                <label for="cantidad_cajas">Cantidad de cajas</label>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating form-floating-outline mb-4">
-                <input type="text" class="form-control" id="presentacion${sectionCount}" name="presentacion[${sectionCount}]" placeholder="Ej. 750ml">
-                <label for="presentacion">Presentación</label>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -4080,7 +4053,7 @@ $(function () {
         url: '/getDatos/' + empresaSeleccionada,
         method: 'GET',
         success: function (response) {
-          var contenidoLotesEnvasado = '';
+          var contenidoLotesEnvasado = '<option value="" disabled selected>Selecciona un lote envasado</option>';
           var marcas = response.marcas;
           for (let index = 0; index < response.lotes_envasado.length; index++) {
             var lote = response.lotes_envasado[index];
@@ -4088,7 +4061,7 @@ $(function () {
             var marcaEncontrada = marcas.find(marca => marca.id_marca === lote.id_marca);
             var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
             var num_dictamen = lote.dictamen_envasado ? lote.dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
-            contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} | ${lote.nombre} | ${nombreMarca} | ${num_dictamen}</option>`;
+            contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} ${lote.nombre} ${nombreMarca} ${num_dictamen}</option>`;
           }
           if (response.lotes_envasado.length == 0) {
             contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
@@ -4122,13 +4095,29 @@ $(function () {
       }
     });
 
+    $('#id_empresa_solicitud_exportacion').on('change', function () {
+      cargarDatosCliente();
+
+      // Obtener el nuevo valor de empresa
+      let empresaSeleccionada = $(this).val();
+
+      // Si no hay valor, no hacer nada
+      if (!empresaSeleccionada) return;
+
+      // Recorrer todas las secciones generadas y recargar sus selects
+      $('#sections-container .card').each(function (i, card) {
+        let sectionIndex = $(card).attr('id').replace('caracteristicas_Ex', '');
+        cargarLotes(empresaSeleccionada, sectionIndex);
+      });
+    });
+
   });
   /* seccion de editar solicitudes exportacion */
   // ==================== EDITAR ====================
   let sectionCountEdit = 1;
-  $(document).ready(function () {
+/*   $(document).ready(function () { */
 
-    $('#add-characteristics_edit_1').click(function () {
+/*     $('#add-characteristics_edit_1').click(function () {
       let empresaSeleccionada = $('#id_empresa_solicitud_exportacion_edit').val();
       if (!empresaSeleccionada) {
         Swal.fire({
@@ -4161,24 +4150,9 @@ $(function () {
                 <label for="lote_granel">Lote a granel</label>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-floating form-floating-outline mb-4">
-                <input type="number" class="form-control" id="cantidad_botellas_edit${sectionCountEdit}" name="cantidad_botellas_edit[${sectionCountEdit}]" placeholder="Cantidad de botellas">
-                <label for="cantidad_botellas">Cantidad de botellas</label>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating form-floating-outline mb-4">
-                <input type="number" class="form-control" id="cantidad_cajas_edit${sectionCountEdit}" name="cantidad_cajas_edit[${sectionCountEdit}]" placeholder="Cantidad de cajas">
-                <label for="cantidad_cajas">Cantidad de cajas</label>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating form-floating-outline mb-4">
-                <input type="text" class="form-control" id="presentacion_edit${sectionCountEdit}" name="presentacion_edit[${sectionCountEdit}]" placeholder="Ej. 750ml">
-                <label for="presentacion">Presentación</label>
-              </div>
-            </div>
+
+
+
           </div>
         </div>
       </div>
@@ -4187,9 +4161,9 @@ $(function () {
       cargarLotesEdit2(empresaSeleccionada, sectionCountEdit);
       initializeSelect2($('.select2'));
       sectionCountEdit++;
-    });
+    }); */
 
-  });
+/*   }); */
 
   $(document).ready(function () {
     $('#add-characteristics_edit').click(function () {
@@ -4206,12 +4180,14 @@ $(function () {
 
       var newSection = `
       <div class="card mt-4" id="caracteristicas_Ex_edit_${sectionCountEdit}">
+                                 <div class="badge rounded-2 bg-label-primary  fw-bold fs-6 px-4 py-4 mb-5">
+                                Características del Producto
+                            </div>
         <div class="card-body">
-          <h5>Características del Producto</h5>
           <div class="row caracteristicas-row">
             <div class="col-md-8">
               <div class="form-floating form-floating-outline mb-4">
-                <select name="lote_envasado_edit[${sectionCountEdit}]" class="select2 form-select evasado_export_edit" onchange="cargarDetallesLoteEnvasadoDinamicoEdit(this, ${sectionCountEdit})">
+                <select name="lote_envasado[${sectionCountEdit}]" class="select2 form-select evasado_export_edit" onchange="cargarDetallesLoteEnvasadoDinamicoEdit(this, ${sectionCountEdit})">
                   <option value="" disabled selected>Selecciona un lote envasado</option>
                 </select>
                 <label for="lote_envasado">Selecciona el lote envasado</label>
@@ -4223,30 +4199,15 @@ $(function () {
                 <label for="lote_granel">Lote a granel</label>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-floating form-floating-outline mb-4">
-                <input type="number" class="form-control" id="cantidad_botellas_edit${sectionCountEdit}" name="cantidad_botellas_edit[${sectionCountEdit}]" placeholder="Cantidad de botellas">
-                <label for="cantidad_botellas">Cantidad de botellas</label>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating form-floating-outline mb-4">
-                <input type="number" class="form-control" id="cantidad_cajas_edit${sectionCountEdit}" name="cantidad_cajas_edit[${sectionCountEdit}]" placeholder="Cantidad de cajas">
-                <label for="cantidad_cajas">Cantidad de cajas</label>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating form-floating-outline mb-4">
-                <input type="text" class="form-control" id="presentacion_edit${sectionCountEdit}" name="presentacion_edit[${sectionCountEdit}]" placeholder="Ej. 750ml">
-                <label for="presentacion">Presentación</label>
-              </div>
-            </div>
+
+
+
           </div>
         </div>
       </div>
     `;
       $('#sections-container2').append(newSection);
-      /*  cargarLotesEdit(empresaSeleccionada, sectionCountEdit); */
+     cargarLotesEdit(empresaSeleccionada, sectionCountEdit);
       initializeSelect2($('.select2'));
       sectionCountEdit++;
     });
@@ -4254,7 +4215,7 @@ $(function () {
 
 
     // Eliminar la última sección (editar)
-    $('#delete-characteristics_edit_1').click(function () {
+    $('#delete-characteristics_edit').click(function () {
       var totalSections = $('#sections-container2 .card').length;
       var lastSection = $('#sections-container2 .card').last();
       if (totalSections > 1) {
@@ -4271,12 +4232,12 @@ $(function () {
     });
   });
 
-  function cargarLotesEdit2(empresaSeleccionada, sectionCountEdit) {
+  function cargarLotesEdit(empresaSeleccionada, sectionCountEdit) {
     $.ajax({
       url: '/getDatos/' + empresaSeleccionada,
       method: 'GET',
       success: function (response) {
-        var contenidoLotesEnvasado = '';
+        var contenidoLotesEnvasado = '<option value="" disabled selected>Selecciona un lote envasado</option>';
         var marcas = response.marcas;
         for (let index = 0; index < response.lotes_envasado.length; index++) {
           var lote = response.lotes_envasado[index];
@@ -4284,12 +4245,19 @@ $(function () {
           var marcaEncontrada = marcas.find(marca => marca.id_marca === lote.id_marca);
           var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
           var num_dictamen = lote.dictamen_envasado ? lote.dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
-          contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} | ${lote.nombre} | ${nombreMarca} | ${num_dictamen}</option>`;
+          contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} ${lote.nombre} ${nombreMarca} ${num_dictamen}</option>`;
         }
         if (response.lotes_envasado.length == 0) {
           contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
         }
-        $(`#caracteristicas_Ex_edit_${sectionCountEdit} .evasado_export_edit`).html(contenidoLotesEnvasado);
+      const select = $(`#caracteristicas_Ex_edit_${sectionCountEdit} .evasado_export_edit`);
+      select.html(contenidoLotesEnvasado);
+
+      // ✅ Verificar si hay un valor seleccionado previamente
+      const selectedPrevio = select.data('selected');
+      if (selectedPrevio) {
+        select.val(selectedPrevio).trigger('change');
+      }
       },
       error: function () {
         Swal.fire({
@@ -4303,6 +4271,7 @@ $(function () {
   }
   /* fin de la seccion de editar solicitudes exportacion */
   /* Enviar formulario store add exportacion */
+
   $(function () {
     // Configuración de CSRF para las solicitudes AJAX
     $.ajaxSetup({

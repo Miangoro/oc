@@ -12,6 +12,7 @@ use App\Models\empresa;
 use App\Models\Documentacion_url;
 use App\Models\LotesGranel;
 use App\Models\Dictamen_Granel;
+use App\Models\CertificadosGranel;
 use App\Models\tipos;
 use App\Models\User;
 ///Extensiones
@@ -462,9 +463,28 @@ public function MostrarDictamenGranel($id_dictamen)
     $watermarkText = $data->estatus == 1;
     $id_sustituye = json_decode($data->observaciones, true)['id_sustituye'] ?? null;
     $nombre_id_sustituye = $id_sustituye ? Dictamen_Granel::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
+    //origen
+    if ( empty($data->inspeccione->solicitud->lote_granel->lote_original_id) ){
+        $estado = $data->inspeccione->solicitud->instalacion->estados->nombre ?? 'NA';
+    }else{
+        //$estado = $certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id->lotes;
+        $id_lote = json_decode($data->inspeccione->solicitud->lote_granel->lote_original_id, true);
+        // Paso 2: Obtener el primer ID del array 'lotes'
+        $ultimoId = end($id_lote['lotes']) ?? null;
+
+        $certificadoGranel = CertificadosGranel::where('id_lote_granel', $ultimoId)->first();
+
+            if ($certificadoGranel) {
+                $estado = $certificadoGranel->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado';
+            } else {
+                $estado = "OAXACA";
+                //return response()->json([ 'message' => 'No se encontró Certificado Granel con ese lote granel.' ]);
+            }
+    }
 
     $pdf = Pdf::loadView('pdfs.dictamen_granel_ed7', [
         'data' => $data,
+        'estado' => $estado,
         'fecha_servicio' => $fecha_servicio,
         'fecha_emision' => $fecha_emision,
         'fecha_vigencia' => $fecha_vigencia,

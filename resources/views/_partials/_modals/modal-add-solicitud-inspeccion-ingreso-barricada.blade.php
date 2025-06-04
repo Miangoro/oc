@@ -94,8 +94,8 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="id_certificado_barricada"
-                                    name="id_certificado_barricada" placeholder="Certificado de NOM a granel" />
+                                <input type="text" class="form-control bg-light text-muted" id="id_certificado_barricada"
+                                    name="id_certificado_barricada" disabled placeholder="Certificado de NOM a granel" />
                                 <label for="id_certificado_barricada">Certificado de NOM a granel </label>
                             </div>
                         </div>
