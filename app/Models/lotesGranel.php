@@ -107,13 +107,13 @@ class LotesGranel extends Model
 
 
    public function fqs()
-{
-    return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_lote_granel')
-        ->where(function ($query) {
-            $query->where('id_documento', 58)
-                  ->orWhere('id_documento', 134);
-        });
-}
+    {
+        return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_lote_granel')
+            ->where(function ($query) {
+                $query->where('id_documento', 58)
+                    ->orWhere('id_documento', 134);
+            });
+    }
 
 
 
