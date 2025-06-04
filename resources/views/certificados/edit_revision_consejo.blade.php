@@ -162,6 +162,9 @@
                                         @elseif($pregunta->filtro == 'nombre_empresa')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</b>
                                             </td>
+                                        @elseif($pregunta->filtro == 'representante_legal')
+                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'N/A' }}</b>
+                                            </td>
                                         @elseif ($pregunta->filtro == 'num_certificado')
                                             <td><b
                                                     class="text-danger">{{ $datos->certificado->num_certificado ?? 'N/A' }}</b>
