@@ -181,7 +181,11 @@ $navbarDetached = ($navbarDetached ?? '');
           <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-4 me-xl-1">
             <a class="nav-link btn btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
               <i class="ri-notification-2-line ri-22px"></i>
-              <span class="position-absolute top-0 start-50 translate-middle-y badge badge-dot bg-danger mt-2 border"></span>
+                 @if (auth()->check()) 
+                    @if(Auth::user()->unreadNotifications->count() > 0)
+                      <span class="position-absolute top-0 start-50 translate-middle-y badge badge-dot bg-danger mt-2 border"></span>
+                    @endif
+                  @endif
             </a>
             <ul class="dropdown-menu dropdown-menu-end py-0">
               <li class="dropdown-menu-header border-bottom py-50">

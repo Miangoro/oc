@@ -26,8 +26,8 @@ class CorreoCertificado extends Mailable
                     ->with([
                         'nombreRevisor' => $this->details['nombreRevisor'], 
                         'num_certificado' => $this->details['num_certificado'], 
-                        'fecha_vigencia' => $this->details['fecha_vigencia'], 
-                        'fecha_vencimiento' => $this->details['fecha_vencimiento'],
+                        'fecha_emision' => $this->details['fecha_emision'], 
+                        'fecha_vigencia' => $this->details['fecha_vigencia'],
                         'razon_social' => $this->details['razon_social'], 
                         'numero_cliente' => $this->details['numero_cliente'], 
                         'tipo_certificado' => $this->details['tipo_certificado'], 

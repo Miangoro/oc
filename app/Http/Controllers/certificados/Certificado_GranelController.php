@@ -424,20 +424,27 @@ public function storeRevisor(Request $request)
             }
         }
 
-        // Preparar datos para el correo
-        $data1 = [
-            'title' => 'Nuevo registro de solicitud',
-            'message' => 'Se ha asignado el revisor (' . $user->name . ') al certificado número ' . $certificado->num_certificado,
-            'url' => 'solicitudes-historial',
-            'nombreRevisor' => $user->name,
-            'emailRevisor' => $user->email,
-            'num_certificado' => $certificado->num_certificado,
-            'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
-            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-            'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar',
-            'numero_cliente' => $certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar',
-            'tipo_certificado' => $certificado->id_dictamen
-        ];
+            if($validatedData['tipoRevisor']==1){
+                $url_clic = '/add_revision/' . $revisor->id_revision;
+            }else{
+                 $url_clic = '/add_revision_consejo/' . $revisor->id_revision;
+            }
+         // Preparar datos para el correo
+            $data1 = [
+                'asunto' => 'Revisión de certificado ' . $certificado->num_certificado,
+                'title' => 'Revisión de certificado',
+                'message' => 'Se te ha asignado el certificado ' . $certificado->num_certificado,
+                'url' => $url_clic,
+                'nombreRevisor' => $user->name,
+                'emailRevisor' => $user->email,
+                'num_certificado' => $certificado->num_certificado,
+                'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
+                'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+                'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar',
+                'numero_cliente' => $numeroCliente ?? 'Sin asignar',
+                'tipo_certificado' => 'Certificado de instalaciones',
+                'observaciones' => $revisor->observaciones,
+            ];
 
        // Notificación Local
             $users = User::whereIn('id', [$validatedData['nombreRevisor']])->get();
@@ -574,7 +581,6 @@ public function CertificadoGranel($id_certificado)
         'nombre_lote' => $certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote?? 'No encontrado',
         'n_analisis' => $certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'No encontrado',
         'volumen' => $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen_restante ?? 'No encontrado',
-        'unidad' => $certificado->dictamen->inspeccione->solicitud->lote_granel->unidad ?? 'No encontrado',
         'cont_alc' => $certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc?? 'No encontrado',
         'tipo_maguey' => $certificado->dictamen->inspeccione->solicitud->lote_granel ?? 'No encontrado',
         'edad' => $certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? '-----',

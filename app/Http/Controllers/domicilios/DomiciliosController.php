@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;//Permiso empresa
 
 class DomiciliosController extends Controller
 {
@@ -45,12 +46,10 @@ class DomiciliosController extends Controller
 
         $search = [];
 
-      
-
-        if (auth()->user()->tipo == 3) {
-            $empresaId = auth()->user()->empresa?->id_empresa;
-        } else {
-            $empresaId = null;
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
         }
         
 
@@ -192,6 +191,8 @@ class DomiciliosController extends Controller
         ]);
     }
 
+
+    ///FUNCION ELIMINAR
     public function destroy($id_instalacion)
     {
         try {
@@ -220,6 +221,8 @@ class DomiciliosController extends Controller
         }
     }
     
+
+    ///FUNCION AGREGAR
     public function store(Request $request)
     {
         $request->validate([
@@ -294,6 +297,7 @@ class DomiciliosController extends Controller
     }
     
     
+    ///FUNCION OBTENER REGISTRO
     public function edit($id_instalacion)
     {
         try {
@@ -318,7 +322,8 @@ class DomiciliosController extends Controller
             return response()->json(['success' => false], 404);
         }
     }    
-    
+
+    ///FUNCION ACTUALIZAR
     public function update(Request $request, $id)
     {
         $request->validate([
