@@ -557,7 +557,7 @@ public function CertificadoGranel($id_certificado)
     $watermarkText = $certificado->estatus === 1;
     $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ? CertificadosGranel::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
-    
+    //origen
     if ( empty($certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id) ){
         $estado = $certificado->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado';
     }else{
@@ -571,7 +571,7 @@ public function CertificadoGranel($id_certificado)
             if ($certificadoGranel) {
                 $estado = $certificadoGranel->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado';
             } else {
-                $estado = "S/G";
+                $estado = "S/C-G";
                 //return response()->json([ 'message' => 'No se encontró Certificado Granel con ese lote granel.' ]);
             }
     }
