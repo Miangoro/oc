@@ -1177,8 +1177,8 @@ $(function () {
               // Otros campos específicos para tipo 10
             }
             else if (id_tipo === 11) {
-              modal.find('.id_solicitud').val(id_solicitud);
               modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
+              modal.find('.id_solicitud').val(id_solicitud);
               modal.find('#fecha_visita_edit_exportacion').val(response.data.fecha_visita);
               modal.find('.instalacion_id').val(response.data.id_instalacion);
 
@@ -1245,13 +1245,11 @@ $(function () {
                     modal.find(`#presentacion_edit0`).val(response.caracteristicas.detalles[0].presentacion || '');
                     modal.find(`#lote_granel_edit_0`).val(response.caracteristicas.detalles[0].lote_granel || '');
                     modal.find('#lote_envasado_edit_0').data('selected', response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
-                    // Luego actualiza el actual i
-                    modal.find(`#lote_granel_edit_${i}`).val(response.caracteristicas.detalles[i].lote_granel || '');
-                    setTimeout((function (i) {
-                      return function () {
-                        modal.find(`select[name="lote_envasado_edit[${i}]"]`).val(response.caracteristicas.detalles[i].id_lote_envasado).trigger('change');
-                      };
-                    })(i), 300);
+
+                    $(`#caracteristicas_Ex_edit_${i} .evasado_export_edit`).data('selected', response.caracteristicas.detalles[i].id_lote_envasado);
+                    cargarLotesEdit($('#id_empresa_solicitud_exportacion_edit').val(), i);
+
+
                   }
                 }
               }
@@ -4063,7 +4061,7 @@ $(function () {
             var marcaEncontrada = marcas.find(marca => marca.id_marca === lote.id_marca);
             var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
             var num_dictamen = lote.dictamen_envasado ? lote.dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
-            contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} | ${lote.nombre} | ${nombreMarca} | ${num_dictamen}</option>`;
+            contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} ${lote.nombre} ${nombreMarca} ${num_dictamen}</option>`;
           }
           if (response.lotes_envasado.length == 0) {
             contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
@@ -4189,7 +4187,7 @@ $(function () {
           <div class="row caracteristicas-row">
             <div class="col-md-8">
               <div class="form-floating form-floating-outline mb-4">
-                <select name="lote_envasado_edit[${sectionCountEdit}]" class="select2 form-select evasado_export_edit" onchange="cargarDetallesLoteEnvasadoDinamicoEdit(this, ${sectionCountEdit})">
+                <select name="lote_envasado[${sectionCountEdit}]" class="select2 form-select evasado_export_edit" onchange="cargarDetallesLoteEnvasadoDinamicoEdit(this, ${sectionCountEdit})">
                   <option value="" disabled selected>Selecciona un lote envasado</option>
                 </select>
                 <label for="lote_envasado">Selecciona el lote envasado</label>
@@ -4239,7 +4237,7 @@ $(function () {
       url: '/getDatos/' + empresaSeleccionada,
       method: 'GET',
       success: function (response) {
-        var contenidoLotesEnvasado = '';
+        var contenidoLotesEnvasado = '<option value="" disabled selected>Selecciona un lote envasado</option>';
         var marcas = response.marcas;
         for (let index = 0; index < response.lotes_envasado.length; index++) {
           var lote = response.lotes_envasado[index];
@@ -4247,12 +4245,19 @@ $(function () {
           var marcaEncontrada = marcas.find(marca => marca.id_marca === lote.id_marca);
           var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
           var num_dictamen = lote.dictamen_envasado ? lote.dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
-          contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} | ${lote.nombre} | ${nombreMarca} | ${num_dictamen}</option>`;
+          contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} ${lote.nombre} ${nombreMarca} ${num_dictamen}</option>`;
         }
         if (response.lotes_envasado.length == 0) {
           contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
         }
-        $(`#caracteristicas_Ex_edit_${sectionCountEdit} .evasado_export_edit`).html(contenidoLotesEnvasado);
+      const select = $(`#caracteristicas_Ex_edit_${sectionCountEdit} .evasado_export_edit`);
+      select.html(contenidoLotesEnvasado);
+
+      // ✅ Verificar si hay un valor seleccionado previamente
+      const selectedPrevio = select.data('selected');
+      if (selectedPrevio) {
+        select.val(selectedPrevio).trigger('change');
+      }
       },
       error: function () {
         Swal.fire({

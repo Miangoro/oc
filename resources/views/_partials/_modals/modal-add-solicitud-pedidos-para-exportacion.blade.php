@@ -383,7 +383,7 @@
 
             contenidoLotes += `
             <option data-id-marca="${marcaEncontrada ? marcaEncontrada.id_marca : ''}" value="${lotesEnvasado[index].id_lote_envasado}">
-                ${skuLimpio} | ${lotesEnvasado[index].nombre} | ${nombreMarca} | ${dictamenEnvasado}
+                ${skuLimpio} ${lotesEnvasado[index].nombre} ${nombreMarca} ${dictamenEnvasado}
             </option>`;
         }
         if (lotesEnvasado.length === 0) {
