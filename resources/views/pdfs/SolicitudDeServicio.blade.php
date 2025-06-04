@@ -356,7 +356,7 @@
                 propuesta</td>
             <td colspan="7"><span style="font-size: 14px" class="con-negra">
                     @if ($geo === 'X')
-                        {{ $fecha_visita }}
+                        {{ $fecha_visita ?? "Sin definir" }}
                     @else
                         ------------------------
                     @endif
