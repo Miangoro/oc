@@ -178,10 +178,22 @@
                                             <td><b>C.P.:
                                                     {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}
                                                     País: México</b></td>
+                                         @elseif($pregunta->filtro == 'pais_origen')
+                                            <td><b>México</b></td>
+                                        @elseif($pregunta->filtro == 'cp')
+                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}</b></td>
                                         @elseif($pregunta->filtro == 'destinatario')
                                             <td><b>
                                                     {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'N/A' }}
                                                     {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'N/A' }}
+                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'N/A' }}
+                                                </b></td>
+                                        @elseif($pregunta->filtro == 'direccion_destinatario')
+                                            <td><b>
+                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'N/A' }}
+                                                </b></td>
+                                        @elseif($pregunta->filtro == 'pais_destinatario')
+                                            <td><b>
                                                     {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'N/A' }}
                                                 </b></td>
                                         @elseif($pregunta->filtro == 'solicitud')
@@ -254,6 +266,25 @@
                                             <td><b>
                                                     {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['aduana_salida'] ?? 'N/A' }}
                                                     2208.90.05.00
+                                                    {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['no_pedido'] ?? 'N/A' }}
+
+                                                    @foreach ($datos->certificado->dictamen->inspeccione->solicitud->documentacion(55)->get() as $documento)
+                                                        <a target="_blank"
+                                                            href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
+                                                                'numero_cliente',
+                                                                '!=',
+                                                                null,
+                                                            )->numero_cliente }}/{{ $documento->url }}">
+                                                            <i
+                                                                class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                        </a>
+                                                    @endforeach
+
+                                                </b><br></td>
+                                        @elseif($pregunta->filtro == 'fraccion_arancelaria')
+                                            <td><b>2208.90.05.00</b><br></td>
+                                        @elseif($pregunta->filtro == 'proforma')
+                                            <td><b>
                                                     {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['no_pedido'] ?? 'N/A' }}
 
                                                     @foreach ($datos->certificado->dictamen->inspeccione->solicitud->documentacion(55)->get() as $documento)
