@@ -273,6 +273,8 @@
                     $('#analisis_barricada').val(response.lotes_granel.folio_fq);
                     $('#alc_vol_barrica').val(response.lotes_granel.cont_alc);
                     $('#volumen_ingresado').val(response.lotes_granel.volumen_restante);
+                    $('#id_certificado_barricada').val(response.lotes_granel.folio_certificado
+);
                 },
                 error: function() {
                     console.error('Error al obtener los datos del lote granel.');

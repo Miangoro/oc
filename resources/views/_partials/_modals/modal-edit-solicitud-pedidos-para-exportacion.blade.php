@@ -445,7 +445,7 @@
             $('#lote_envasado_edit_0').val(idlotePrevio);
         } else if (response.lotesEnvasado.length == 0) {}
 
-        cargarDetallesLoteEnvasadoEdit($(".evasado_export_edit").val());
+        /* cargarDetallesLoteEnvasadoEdit($(".evasado_export_edit").val()); */
     }
 
     function compararLotesConSelects() {
@@ -541,12 +541,13 @@
                                 <b>Certificado: </b>
                                 ${lote.certificado_granel ? lote.certificado_granel.num_certificado : 'Sin definir'}
                                 </td>
-<td>
-  <input type="text" class="form-control form-control-sm" name="folio_fq[]" value="${lote.folio_fq || ''}" />
-</td>
-<td>
-  <input type="text" class="form-control form-control-sm" name="cont_alc[]" value="${lote.cont_alc || ''}" />
-</td>
+                                  <td>
+                                    <input type="text" class="form-control form-control-sm" name="folio_fq[]" value="${lote.folio_fq || ''}" />
+                                  </td>
+
+                                  <td>
+                                    <input type="text" class="form-control form-control-sm" name="cont_alc[]" value="${lote.cont_alc || ''}" />
+                                  </td>
                                <td>
                                 ${lote.categoria.categoria || 'N/A'}<br>
                                 ${lote.clase.clase || 'N/A'}<br>
@@ -559,6 +560,8 @@
                         });
 
                         $('.lotes_granel_export_edit').val(nombre_lote_granel);
+
+
                     } else {
                         tbody.append(
                             `<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`
