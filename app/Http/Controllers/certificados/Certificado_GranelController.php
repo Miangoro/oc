@@ -581,7 +581,6 @@ public function CertificadoGranel($id_certificado)
         'nombre_lote' => $certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote?? 'No encontrado',
         'n_analisis' => $certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'No encontrado',
         'volumen' => $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen_restante ?? 'No encontrado',
-        'unidad' => $certificado->dictamen->inspeccione->solicitud->lote_granel->unidad ?? 'No encontrado',
         'cont_alc' => $certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc?? 'No encontrado',
         'tipo_maguey' => $certificado->dictamen->inspeccione->solicitud->lote_granel ?? 'No encontrado',
         'edad' => $certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? '-----',
