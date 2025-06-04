@@ -333,33 +333,65 @@
                                                 <b>{{ $datos?->certificado?->fecha_vigencia ? Helpers::formatearFecha($datos->certificado->fecha_vigencia) : 'NA' }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'num_dictamen')
-                                            <td>
-                                                @php
-                                                    $dictamenRutas = [
-                                                        1 => '/dictamen_productor/',
-                                                        2 => '/dictamen_envasador/',
-                                                        3 => '/dictamen_comercializador/',
-                                                        4 => '/dictamen_almacen/',
-                                                        5 => '/dictamen_bodega/',
-                                                    ];
+                                            @php
+                                        // Determina tipo y URL del certificado
+                                        $tipo = 'Desconocido';
+                                        $url = null;
 
-                                                    $tipoDictamen =
-                                                        $datos->certificado->dictamen->tipo_dictamen ?? null;
-                                                    $pdf_dictamen = $dictamenRutas[$tipoDictamen] ?? null;
-                                                @endphp
+                                        if ($datos->tipo_certificado == 1 && $datos->certificado?->dictamen) {
+                                            // Certificado normal con dictamen
+                                            $id_dictamen = $datos->certificado->dictamen->tipo_dictamen ?? null;
 
-                                                <b>{{ $datos->certificado->dictamen->num_dictamen ?? 'N/A' }}</b>
+                                            switch ($id_dictamen) {
+                                                case 1:
+                                                    $tipo = 'Instalaciones de productor';
+                                                    $url = "/dictamen_productor/" . $datos->id_certificado;
+                                                    break;
+                                                case 2:
+                                                    $tipo = 'Instalaciones de envasador';
+                                                    $url = "/dictamen_envasador/" . $datos->id_certificado;
+                                                    break;
+                                                case 3:
+                                                    $tipo = 'Instalaciones de comercializador';
+                                                    $url = "/dictamen_comercializador/" . $datos->id_certificado;
+                                                    break;
+                                                case 4:
+                                                    $tipo = 'Instalaciones de almacén y bodega';
+                                                    $url = "/dictamen_almacen/" . $datos->id_certificado;
+                                                    break;
+                                                case 5:
+                                                    $tipo = 'Instalaciones de área de maduración';
+                                                    $url = "/dictamen_bodega/" . $datos->id_certificado;
+                                                    break;
+                                                default:
+                                                    $tipo = 'Desconocido';
+                                            }
+                                        } elseif ($datos->tipo_certificado == 2) {
+                                            $tipo = "Granel";
+                                            $url = "/dictamen_granel/" . $datos->id_certificado;
+                                        } elseif ($datos->tipo_certificado == 3) {
+                                            $tipo = "Exportación";
+                                            $url = "/dictamen_envasado/" . $datos->id_certificado;
+                                        }
 
-                                                @if ($pdf_dictamen)
-                                                    <a target="_blank"
-                                                        href="{{ $pdf_dictamen . $datos->certificado->dictamen->id_dictamen }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                    </a>
-                                                @else
-                                                    <span>Dictamen no disponible</span>
-                                                @endif
-                                            </td>
+                                        $dictamen = $datos->certificado?->dictamen;
+                                        @endphp
+
+<td>
+    @if ($dictamen)
+        <b>{{ $dictamen->num_dictamen }}</b>
+        @if ($url)
+            <a target="_blank" href="{{ $url . $dictamen->id_dictamen }}">
+                <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+            </a>
+        @else
+            <span>Dictamen no disponible</span>
+        @endif
+    @else
+        <span>Dictamen no disponible</span>
+    @endif
+</td>
+
                                         @elseif($pregunta->filtro == 'certificado_granel')
                                             <td>Granel:
                                                 <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}</b>
