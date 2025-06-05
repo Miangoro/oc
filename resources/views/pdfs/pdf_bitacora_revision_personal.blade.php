@@ -403,6 +403,7 @@
             </td>
         </tr>
     </table>
+    @if($numero_revision == 2)
     <div style="page-break-before: always;"></div>
     <div class="header">
         <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
@@ -412,7 +413,7 @@
         </div>
 
     </div>
-@if($numero_revision == 2)
+
     <div style="font-family: 'Century Gothic'; border: solid 2px; font-size: 10px; margin-bottom: 10px; text-align: left; padding: 3px" class="letra-fondoOPcional">
     <span class="negrita">INSTRUCCIONES DE LLENADO PARA SEGUNDA REVISIÓN SOLO EN EXPORTACIÓN:</span><br>
     En las siguientes tablas se encuentran los requisitos documentales necesarios para la segunda revisión del CERTIFICADO DE EXPORTACIÓN en su SEGUNDA REVISIÓN. Se cancelarán las tablas que no se utilicen con líneas en forma diagonal abarcando todos los campos de la tabla.
