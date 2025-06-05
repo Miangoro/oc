@@ -348,7 +348,7 @@ class lotesGranelController extends Controller
             'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
             'folio_fq_completo' => 'nullable|string|max:50',
             'folio_fq_ajuste' => 'nullable|string|max:50',
-            'folio_fq' => 'nullable|string|max:50',
+            'folio_fq' => 'nullable|string|max:70',
             'es_creado_a_partir' => 'required|string',
             'lote_original_id' => 'nullable',
             'id_lote_granel.*' => 'nullable|integer',
@@ -474,24 +474,44 @@ class lotesGranelController extends Controller
         // Almacenar nuevos documentos solo si se envían
         if ($request->hasFile('url')) {
             foreach ($request->file('url') as $index => $file) {
-                $folio_fq = $index == 0 && $request->id_documento[$index] == 58
-                    ? $request->folio_fq_completo
-                    : $request->folio_fq_ajuste;
-                $tipo_analisis = $request->tipo_analisis[$index] ?? '';
 
-                // Generar un nombre único para el archivo
-                $uniqueId = uniqid(); // Genera un identificador único
-                $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('uploads/' . $numeroCliente.'/fqs', $filename, 'public'); // Aquí se guarda en la ruta definida storage/public
 
-                $documentacion_url = new Documentacion_url();
-                $documentacion_url->id_relacion = $lote->id_lote_granel;
-                $documentacion_url->id_documento = $request->id_documento[$index];
-                $documentacion_url->nombre_documento = $request->nombre_documento[$index] . ": " . $tipo_analisis . " - " . $folio_fq;
-                $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
-                $documentacion_url->id_empresa = $lote->id_empresa;
+        /* $idDoc = $request->id_documento[$index]; */
+        $tipo_analisis = $request->tipo_analisis[$index] ?? '';
+        $folio_fq = '';
 
-                $documentacion_url->save();
+          $idDoc = 0;
+
+          if ($tipo_analisis === 'Análisis completo') {
+              $idDoc = 58;
+              $folio_fq = $request->folio_fq_completo[$index] ?? '';
+          } elseif ($tipo_analisis === 'Ajuste de grado') {
+              $idDoc = 134;
+              $folio_fq = $request->folio_fq_ajuste[$index] ?? '';
+          }
+          $nombre_documento = match($idDoc) {
+              58 => 'Análisis fisicoquímicos',
+              134 => 'Fisicoquímicos de ajuste de grado',
+              default => 'Desconocido',
+          };
+
+        $uniqueId = uniqid();
+        $prefix = match($idDoc) {
+            58 => 'analisis_fisioquimicos',
+            134 => 'fisicoquimicos_ajuste_grado',
+            default => 'documento',
+        };
+        $filename = $prefix . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+        $filePath = $file->storeAs('uploads/' . $numeroCliente . '/fqs', $filename, 'public');
+
+        $documentacion_url = new Documentacion_url();
+        $documentacion_url->id_relacion = $lote->id_lote_granel;
+        $documentacion_url->id_documento = $idDoc;
+        $documentacion_url->nombre_documento = $nombre_documento;
+        $documentacion_url->url = $filename;
+        $documentacion_url->id_empresa = $lote->id_empresa;
+
+        $documentacion_url->save();
             }
         }
         // Retornar una respuesta
