@@ -402,7 +402,7 @@ public function reexpedir(Request $request)
                 'id_certificado' => 'required|exists:certificados_exportacion,id_certificado',
                 'id_dictamen' => 'required|integer',
                 'num_certificado' => 'required|string|min:8',
-                'fecha_emision' => 'required|date',
+                'fecha_emision' => 'nullable|date',
                 'fecha_vigencia' => 'nullable|date',
                 'id_firmante' => 'required|integer',
             ]);

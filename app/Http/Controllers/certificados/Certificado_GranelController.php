@@ -666,13 +666,7 @@ public function subirCertificado(Request $request)
         ->where('id_doc', $certificado->id_certificado)//id del certificado
         ->first();
 
-    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)->first();
-      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
-        return !empty($numero);
-    });
-
-
-     if ($documentacion_url) {
+    if ($documentacion_url) {
         $ArchivoAnterior = "public/uploads/{$numeroCliente}/certificados_granel/{$documentacion_url->url}";
         if (Storage::exists($ArchivoAnterior)) {
             Storage::delete($ArchivoAnterior);

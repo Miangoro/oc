@@ -1009,13 +1009,7 @@ public function index(Request $request)
             ->where('id_documento', $id_documento)
             ->where('id_doc', $certificado->id_certificado)//id del certificado
             ->first();
-
-        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->instalaciones->empresa->id_empresa)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
-            return !empty($numero);
-        });
-
-
+            
         if ($documentacion) {
             $ArchivoAnterior = "public/uploads/{$numeroCliente}/certificados_instalaciones/{$documentacion->url}";
             if (Storage::exists($ArchivoAnterior)) {

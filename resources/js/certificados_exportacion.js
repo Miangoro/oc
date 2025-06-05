@@ -964,14 +964,25 @@ $(document).ready(function () {
     });
 
     //funcion fechas
-    $('#rex_fecha_emision').on('change', function () {
-      var fecha_emision = $(this).val();
-      if (fecha_emision) {
-        var fecha = moment(fecha_emision, 'YYYY-MM-DD');
-        var fecha_vigencia = fecha.add(90, 'days').format('YYYY-MM-DD');
-        $('#rex_fecha_vigencia').val(fecha_vigencia);
-      }
+  $('#rex_fecha_emision').on('change', function () {
+    var valor = $(this).val();
+    if (!valor) {// Si está vacío, también limpiar fecha_vigencia
+      $('#rex_fecha_vigencia').val('');
+      return; // No seguir ejecutando
+    }
+    var fechaInicial = new Date(valor);
+    fechaInicial.setDate(fechaInicial.getDate() + 90); // +90 días
+    var fechaVigencia = fechaInicial.toISOString().split('T')[0];
+    $('#rex_fecha_vigencia').val(fechaVigencia);
+    flatpickr("#rex_fecha_vigencia", {
+      dateFormat: "Y-m-d",
+      enableTime: false,
+      allowInput: true,
+      locale: "es",
+      static: true,
+      disable: true
     });
+  });
 
     $(document).on('change', '#accion_reexpedir', function () {
       var accionSeleccionada = $(this).val();
@@ -1097,9 +1108,9 @@ $(document).ready(function () {
         },
         'fecha_emision': {
           validators: {
-            notEmpty: {
+            /*notEmpty: {
               message: 'La fecha de emisión es obligatoria.'
-            },
+            },*/
             date: {
               format: 'YYYY-MM-DD',
               message: 'Ingresa una fecha válida (yyyy-mm-dd).'
@@ -1108,9 +1119,9 @@ $(document).ready(function () {
         },
         'fecha_vigencia': {
           validators: {
-            notEmpty: {
+            /*notEmpty: {
               message: 'La fecha de vigencia es obligatoria.'
-            },
+            },*/
             date: {
               format: 'YYYY-MM-DD',
               message: 'Ingresa una fecha válida (yyyy-mm-dd).'

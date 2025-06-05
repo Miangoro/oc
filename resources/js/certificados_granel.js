@@ -1369,7 +1369,7 @@ $('#FormCertificadoFirmado').on('submit', function (e) {
       dataTable.ajax.reload(null, false); // Si usas datatables
     },
     error: function (xhr) {
-      console.log(xhr.responseText);
+      /*console.log(xhr.responseText);
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
@@ -1378,9 +1378,34 @@ $('#FormCertificadoFirmado').on('submit', function (e) {
         customClass: {
           confirmButton: 'btn btn-danger'
         }
-      });
+      });*/
+      console.log(xhr.responseText);
+      if (xhr.status === 422) {
+        // Error de validación
+        Swal.fire({
+          icon: 'warning',
+          title: 'Error al subir',
+          text: 'El documento no debe ser mayor a 3MB',
+          //text: xhr.responseText,
+          customClass: {
+            confirmButton: 'btn btn-warning'
+          }
+        });
+      } else {
+        // Otro tipo de error (500, 404, etc.)
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al subir el documento.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+
     }
   });
+      
 });
 
 ///OBTENER CERTIFICADO FIRMADO
