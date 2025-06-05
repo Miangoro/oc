@@ -192,6 +192,8 @@ class PrediosController extends Controller
                 $nestedData['superficie'] = $predio->superficie;
                 $nestedData['estatus']=$predio->estatus;
                 $nestedData['hasSolicitud'] = $hasSolicitud;
+                $nestedData['id_solicitud'] = $predio->solicitudes()->first()->id_solicitud ?? null;
+                $nestedData['folio_solicitud'] = $predio->solicitudes()->first()->folio ?? null;
 
                 $data[] = $nestedData;
             }

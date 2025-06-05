@@ -346,6 +346,10 @@
             personal del OC CIDAM se revisa que el certificado cumple con cada uno de los requisitos mencionados en este
             documento, por consiguiente, se toma la decisión para otorgar la certificación de producto.
             <div style="height: 20px;"></div>
+            @php
+                use Illuminate\Support\Facades\Storage;
+                $firmaPath = $firmaRevisor ? 'firmas/' . $firmaRevisor : null;
+            @endphp
             <div style="width: 100%; text-align: right; position: fixed; margin-top: -30px; right: 20px;">
                 @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
                     <img src="{{ public_path('storage/' . $firmaPath) }}" alt="Firma" style="width: 120px; height: auto;">
