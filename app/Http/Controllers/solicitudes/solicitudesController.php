@@ -740,7 +740,7 @@ class solicitudesController extends Controller
             'material' => $request->material,
             'capacidad' => $request->capacidad,
             'num_recipientes' => $request->num_recipientes,
-            'tiempo_dura' => $request->tiempo_dura,
+            'tiempo_maduracion' => $request->tiempo_maduracion,
             'id_certificado' => $request->id_certificado_barricada,
             'volumen_ingresado' => $request->volumen_ingresado,
         ]);
@@ -1275,7 +1275,7 @@ class solicitudesController extends Controller
                     'material' => $request->material,
                     'capacidad' => $request->capacidad,
                     'num_recipientes' => $request->num_recipientes,
-                    'tiempo_dura' => $request->tiempo_dura,
+                    'tiempo_maduracion' => $request->tiempo_maduracion,
                     'id_certificado' => $request->id_certificado_barricada,
                     'volumen_ingresado' => $request->volumen_ingresado,
 

@@ -222,7 +222,7 @@ class lotesGranelController extends Controller
                           ->toArray();
 
 
-                          $nestedData['lote_procedencia'] = implode(', ', array_map(fn($lote) => "{$lote['nombre_lote']} ({$lote['cont_alc']} % Alc. Vol.)", $nombresLotes));
+                          $nestedData['lote_procedencia'] = implode('<br>', array_map(fn($lote) => "{$lote['nombre_lote']} ({$lote['cont_alc']} % Alc. Vol.)", $nombresLotes));
 
                       } else {
                           $nestedData['lote_procedencia'] = 'Lote de procedencia: No tiene lotes disponibles en el JSON.';
@@ -502,7 +502,7 @@ class lotesGranelController extends Controller
         ]);
 
     }
-    
+
 
 
       public function getVolumen($id_lote_granel){

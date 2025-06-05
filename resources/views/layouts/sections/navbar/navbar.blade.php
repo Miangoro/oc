@@ -39,7 +39,7 @@ $navbarDetached = ($navbarDetached ?? '');
       @endif
 
       <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-        
+
 
         @if(!isset($menuHorizontal))
         <!-- Search -->
@@ -54,7 +54,7 @@ $navbarDetached = ($navbarDetached ?? '');
         <!-- /Search -->
         @endif
 
-        
+
 
        <ul class="navbar-nav flex-row align-items-center ms-auto">
           @if(isset($menuHorizontal))
@@ -77,17 +77,17 @@ $navbarDetached = ($navbarDetached ?? '');
               <ul class="dropdown-menu dropdown-menu-end dropdown-styles">
                 <li>
                   <a class="dropdown-item" href="javascript:void(0);" data-theme="light">
-                    <span class="align-middle"><i class='ri-sun-line ri-22px me-3'></i>Light</span>
+                    <span class="align-middle"><i class='ri-sun-line ri-22px me-3'></i>Claro</span>
                   </a>
                 </li>
                 <li>
                   <a class="dropdown-item" href="javascript:void(0);" data-theme="dark">
-                    <span class="align-middle"><i class="ri-moon-clear-line ri-22px me-3"></i>Dark</span>
+                    <span class="align-middle"><i class="ri-moon-clear-line ri-22px me-3"></i>Oscuro</span>
                   </a>
                 </li>
                 <li>
                   <a class="dropdown-item" href="javascript:void(0);" data-theme="system">
-                    <span class="align-middle"><i class="ri-computer-line ri-22px me-3"></i>System</span>
+                    <span class="align-middle"><i class="ri-computer-line ri-22px me-3"></i>Sistema</span>
                   </a>
                 </li>
               </ul>
@@ -103,12 +103,12 @@ $navbarDetached = ($navbarDetached ?? '');
             <div class="dropdown-menu dropdown-menu-end py-0">
               <div class="dropdown-menu-header border-bottom py-50">
                 <div class="dropdown-header d-flex align-items-center py-2">
-                  <h6 class="mb-0 me-auto">Shortcuts</h6>
-                  <a href="javascript:void(0)" class="btn btn-text-secondary rounded-pill btn-icon dropdown-shortcuts-add" data-bs-toggle="tooltip" data-bs-placement="top" title="Add shortcuts"><i class="ri-add-line text-heading ri-24px"></i></a>
+                  <h6 class="mb-0 me-auto">Accesos directos</h6>
+                  <a href="javascript:void(0)" class="btn btn-text-secondary rounded-pill btn-icon dropdown-shortcuts-add" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar acceso directo"><i class="ri-add-line text-heading ri-24px"></i></a>
                 </div>
               </div>
               <div class="dropdown-shortcuts-list scrollable-container">
-                <div class="row row-bordered overflow-visible g-0">
+{{--                 <div class="row row-bordered overflow-visible g-0">
                   <div class="dropdown-shortcuts-item col">
                     <span class="dropdown-shortcuts-icon rounded-circle mb-3">
                       <i class="ri-calendar-line ri-26px text-heading"></i>
@@ -123,8 +123,8 @@ $navbarDetached = ($navbarDetached ?? '');
                     <a href="{{url('app/invoice/list')}}" class="stretched-link">Invoice App</a>
                     <small class="mb-0">Manage Accounts</small>
                   </div>
-                </div>
-                <div class="row row-bordered overflow-visible g-0">
+                </div> --}}
+{{--                 <div class="row row-bordered overflow-visible g-0">
                   <div class="dropdown-shortcuts-item col">
                     <span class="dropdown-shortcuts-icon rounded-circle mb-3">
                       <i class="ri-user-line ri-26px text-heading"></i>
@@ -139,8 +139,8 @@ $navbarDetached = ($navbarDetached ?? '');
                     <a href="{{url('app/access-roles')}}" class="stretched-link">Role Management</a>
                     <small class="mb-0">Permission</small>
                   </div>
-                </div>
-                <div class="row row-bordered overflow-visible g-0">
+                </div> --}}
+{{--                 <div class="row row-bordered overflow-visible g-0">
                   <div class="dropdown-shortcuts-item col">
                     <span class="dropdown-shortcuts-icon rounded-circle mb-3">
                       <i class="ri-pie-chart-2-line ri-26px text-heading"></i>
@@ -155,22 +155,22 @@ $navbarDetached = ($navbarDetached ?? '');
                     <a href="{{url('pages/account-settings-account')}}" class="stretched-link">Setting</a>
                     <small class="mb-0">Account Settings</small>
                   </div>
-                </div>
+                </div> --}}
                 <div class="row row-bordered overflow-visible g-0">
                   <div class="dropdown-shortcuts-item col">
                     <span class="dropdown-shortcuts-icon rounded-circle mb-3">
                       <i class="ri-question-line ri-26px text-heading"></i>
                     </span>
                     <a href="{{url('pages/faq')}}" class="stretched-link">FAQs</a>
-                    <small class="mb-0">FAQs & Articles</small>
+                    <small class="mb-0">Preguntas Frecuentes</small>
                   </div>
-                  <div class="dropdown-shortcuts-item col">
+{{--                   <div class="dropdown-shortcuts-item col">
                     <span class="dropdown-shortcuts-icon rounded-circle mb-3">
                       <i class="ri-tv-2-line ri-26px text-heading"></i>
                     </span>
                     <a href="{{url('modal-examples')}}" class="stretched-link">Modals</a>
                     <small class="mb-0">Useful Popups</small>
-                  </div>
+                  </div> --}}
                 </div>
               </div>
             </div>
@@ -181,7 +181,7 @@ $navbarDetached = ($navbarDetached ?? '');
           <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-4 me-xl-1">
             <a class="nav-link btn btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
               <i class="ri-notification-2-line ri-22px"></i>
-                 @if (auth()->check()) 
+                 @if (auth()->check())
                     @if(Auth::user()->unreadNotifications->count() > 0)
                       <span class="position-absolute top-0 start-50 translate-middle-y badge badge-dot bg-danger mt-2 border"></span>
                     @endif
@@ -194,8 +194,8 @@ $navbarDetached = ($navbarDetached ?? '');
                   <div class="d-flex align-items-center">
                     <span class="badge rounded-pill bg-label-primary fs-xsmall me-2">
                       @if (auth()->check())
-                          {{ auth()->user()->unreadNotifications->count() }} 
-                        
+                          {{ auth()->user()->unreadNotifications->count() }}
+
                           notificación{{ auth()->user()->unreadNotifications->count() > 1 ? 'es' : '' }}
                       @endif
 
@@ -207,7 +207,7 @@ $navbarDetached = ($navbarDetached ?? '');
               <li class="dropdown-notifications-list scrollable-container">
                 <ul class="list-group list-group-flush">
 
-                  @if (auth()->check()) 
+                  @if (auth()->check())
                     @if(Auth::user()->unreadNotifications->count() > 0)
                       @foreach (Auth::user()->unreadNotifications as $notification)
 
@@ -231,16 +231,16 @@ $navbarDetached = ($navbarDetached ?? '');
                             </div>
                           </div>
                         </li>
-                      @endforeach  
-                    
-                    @else 
+                      @endforeach
+
+                    @else
                     <li class="list-group-item">No hay notificaciones nuevas.</li>
 
                     @endif
                   @endif
 
 
-          
+
                 </ul>
               </li>
               <li class="border-top">
@@ -278,7 +278,7 @@ $navbarDetached = ($navbarDetached ?? '');
                           Sin usuario logeado
                         @endif
                       </span>
-                      <small class="text-primary"> 
+                      <small class="text-primary">
                         @if (Auth::check() and Auth::user()->puesto)
                         {{ Auth::user()->puesto }}
                         @elseif(Auth::user()->empresa)
@@ -307,7 +307,7 @@ $navbarDetached = ($navbarDetached ?? '');
                   </a>
                 </li>
               @endif
-              
+
               @if (Auth::User() && Laravel\Jetstream\Jetstream::hasTeamFeatures())
                 <li>
                   <div class="dropdown-divider"></div>
@@ -399,7 +399,7 @@ $navbarDetached = ($navbarDetached ?? '');
 
 function redirigirNotificacion(url, id) {
         marcarComoLeida(id);
-        window.location.href = url; 
+        window.location.href = url;
     }
 
 
@@ -414,8 +414,8 @@ function marcarComoLeida(notificationId) {
         },
         success: function(response) {
             $('#notification_' + response.id).remove();
-        
-           
+
+
         },
         error: function(xhr, status, error) {
             console.error(error); // Maneja cualquier error que ocurra durante la solicitud AJAX

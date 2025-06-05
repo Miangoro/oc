@@ -344,7 +344,7 @@
     <div style="height: 40%"></div><!--espacio alto-->
 
     <!--FIRMA DIGITAL-->
-<div style="margin-left: -20px;">
+{{-- <div style="margin-left: -20px;">
     <p class="sello">Sello de Unidad de Inspección</p>
         <div class="images-container">
             <img src="{{ $qrCodeBase64 }}" alt="QR" width="90px">
@@ -354,7 +354,7 @@
             <strong>AUTORIZÓ</strong>
             <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
            
-                {{-- @php
+                @php
                     use Illuminate\Support\Facades\Storage;
                     $firma = $data->firmante->firma ?? null;
                     $firmaPath = $firma ? 'firmas/' . $firma : null;
@@ -362,7 +362,7 @@
                 @if ($firma && Storage::disk('public')->exists($firmaPath))
                     <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
                         src="{{ asset('storage/' . $firmaPath) }}">
-                @endif --}}
+                @endif
 
                 <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
             </span>
@@ -382,8 +382,8 @@
         <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
             {{ $firmaDigital['firma'] }}
         </p>
+</div> --}}
 
-</div>
 @endif
 
 
@@ -393,7 +393,46 @@
 @endforeach
 
 
+<!--FIRMA DIGITAL-->
+<div style="margin-left: -20px;">
+    <p class="sello">Sello de Unidad de Inspección</p>
+        <div class="images-container">
+            <img src="{{ $qrCodeBase64 }}" alt="QR" width="90px">
+            <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Logo UI" class="image-right">
+        </div>
+        <p class="textx" style="font-size: 9px; margin-bottom:-8px; margin-top:-2px; position: relative;">
+            <strong>AUTORIZÓ</strong>
+            <span style="margin-left: 54px; display: inline-block; position: relative;">
+           
+                @php
+                    use Illuminate\Support\Facades\Storage;
+                    $firma = $data->firmante->firma ?? null;
+                    $firmaPath = $firma ? 'firmas/' . $firma : null;
+                @endphp
+                @if ($firma && Storage::disk('public')->exists($firmaPath))
+                    <img style="position: absolute; top: -35%; left: 125;" height="60px"
+                        src="{{ public_path('storage/' . $firmaPath) }}">
+                @endif
 
+                <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
+            </span>
+        </p>
+        
+        <p class="textx" style="font-size: 9px; margin-bottom:-8px">
+            <strong>CADENA ORIGINAL</strong>
+            <span style="margin-left: 14px;">
+                <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+            </span>
+        </p>
+
+        <p class="textx" style="font-size: 9px; margin-bottom:1px">
+            <strong>SELLO DIGITAL</strong>
+        </p>
+
+        <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
+            {{ $firmaDigital['firma'] }}
+        </p>
+</div> 
 
 
 </body>
