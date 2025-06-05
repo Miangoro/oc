@@ -412,7 +412,7 @@
         </div>
 
     </div>
-
+@if($numero_revision == 2)
     <div style="font-family: 'Century Gothic'; border: solid 2px; font-size: 10px; margin-bottom: 10px; text-align: left; padding: 3px" class="letra-fondoOPcional">
     <span class="negrita">INSTRUCCIONES DE LLENADO PARA SEGUNDA REVISIÓN SOLO EN EXPORTACIÓN:</span><br>
     En las siguientes tablas se encuentran los requisitos documentales necesarios para la segunda revisión del CERTIFICADO DE EXPORTACIÓN en su SEGUNDA REVISIÓN. Se cancelarán las tablas que no se utilicen con líneas en forma diagonal abarcando todos los campos de la tabla.
@@ -530,7 +530,7 @@
 
 <div style="clear: both;"></div> 
 
-@if($numero_revision == 2)
+
 
   <table style="width: 340px; float: right; margin-top: -100px;">
         <tr>
