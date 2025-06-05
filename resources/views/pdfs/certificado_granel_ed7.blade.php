@@ -186,7 +186,7 @@
 
         td, th {
             border: 2px solid #1F497D;
-            padding: 8px; 
+            padding: 6px; 
             text-align: left;
         }
 
@@ -267,42 +267,42 @@
     <p class="titulo">CERTIFICADO</p>
     <p class="subtitulo">DATOS DE LA EMPRESA</p>
 
-    <table>
-	<tbody>
-		<tr>
-		
-        <td class="columna">Nombre de la empresa</td>
-			<td colspan="3" class="columna">{{ $razon_social }}</td>
-		</tr>
-		
-        <tr> 
-			<td class="columna">Representante Legal</td>
-			<td class="columna">{{ $representante }}</td>
-			<td class="columna">Número de Certificado</td>
-			<td class="columna">{{ $num_certificado }}</td>
-		</tr>
-
-		<tr>
-			<td class="columna">Dirección</td>
-
-            <td class="columna-text">
-                <span class="negrita">Domicilio Fiscal:</span> {{ $domicilio_fiscal }}
-                <br>
-                <span class="negrita">Domicilio de Instalaciones:</span> {{ $direccion_completa }}
-            </td>
-
-            <td class="columna">Fecha de emisión </td>
-			<td class="columna-norm">{{ $fecha_emision }}</td>
-		</tr>
-
-		<tr>
-			<td class="columna">RFC</td>
-			<td class="columna">{{ $rfc }}</td>
-			<td class="columna">Fecha de Vencimiento </td>
-			<td class="columna-norm">{{ $fecha_vigencia }}</td>
-		</tr>
-	</tbody>
+<table>
+    <tr>
+        <td class="columna" style="width: 17%">Nombre de la empresa</td>
+        <td class="columna">{{ $razon_social }}</td>
+    </tr>
 </table>
+<br>
+<table>
+    <tr> 
+        <td class="columna" style="width: 17%">Representante Legal</td>
+        <td class="columna" style="width: 40%">{{ $representante }}</td>
+        <td class="columna">Número de Certificado</td>
+        <td class="columna" style="width: 26%">{{ $num_certificado }}</td>
+    </tr>
+
+    <tr>
+        <td class="columna">Dirección</td>
+
+        <td class="columna-text">
+            <span class="negrita">Domicilio Fiscal:</span> {{ $domicilio_fiscal }}
+            <br>
+            <span class="negrita">Domicilio de Instalaciones:</span> {{ $direccion_completa }}
+        </td>
+
+        <td class="columna">Fecha de emisión </td>
+        <td class="columna-norm">{{ $fecha_emision }}</td>
+    </tr>
+
+    <tr>
+        <td class="columna">RFC</td>
+        <td class="columna">{{ $rfc }}</td>
+        <td class="columna">Fecha de Vencimiento </td>
+        <td class="columna-norm">{{ $fecha_vigencia }}</td>
+    </tr>
+</table>
+
 
 <p class="subtitulo2">DESCRIPCIÓN DEL PRODUCTO</p>
 
