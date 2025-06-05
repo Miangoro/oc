@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
+use function PHPUnit\Framework\isNull;
 
 class Certificado_ExportacionController extends Controller
 {
@@ -218,6 +219,7 @@ public function index(Request $request)
             $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
             //Lote envasado
             $lotes_env = $certificado->dictamen?->inspeccione?->solicitud?->lotesEnvasadoDesdeJson();//obtener todos los lotes
+            $nestedData['combinado'] = $lotes_env?->count() > 1 ? true : false;
             $nestedData['nombre_lote_envasado'] = $lotes_env?->pluck('nombre')->implode(', ') ?? 'No encontrado';
             //Lote granel
             $lotes_granel = $lotes_env?->flatMap(function ($lote) {
@@ -604,10 +606,10 @@ public function MostrarCertificadoExportacion($id_certificado)
 
     //$fecha = Helpers::formatearFecha($data->fecha_emision);
     //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
-    $fecha_emision = Carbon::parse($data->fecha_emision);
-        $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
-    $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
-        $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');
+    $fecha_emision = !empty($data->fecha_emision) ? Carbon::parse($data->fecha_emision)->translatedFormat('d/m/Y')
+    : '--------';
+    $fecha_vigencia = !empty($data->fecha_vigencia) ? Carbon::parse($data->fecha_vigencia)->translatedFormat('d/m/Y')
+    : '--------';
     $empresa = $data->dictamen->inspeccione->solicitud->empresa ?? null;
     $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
         ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
@@ -651,8 +653,8 @@ public function MostrarCertificadoExportacion($id_certificado)
     $pdf =  [
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
         'lotes' =>$lotes,
-        'expedicion' => $fecha1 ?? "",
-        'vigencia' => $fecha2 ?? "",
+        'expedicion' => $fecha_emision,
+        'vigencia' => $fecha_vigencia,
         'n_cliente' => $numero_cliente,
         'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'No encontrado',
@@ -675,10 +677,8 @@ public function MostrarCertificadoExportacion($id_certificado)
         'presentacion' => $presentacion ?? 'No encontrado',
     ];
 
-    if ( $data->fecha_emision >= '2025-06-01' ) {
+    if ( $data->fecha_emision >= '2025-07-01' ) {
         $edicion = 'pdfs.certificado_exportacion_ed13';
-    /*}else if ($lotes->count() > 1) {
-        $edicion = 'pdfs.certificado_exportacion_ed12';*/
     }else{
         $edicion = 'pdfs.certificado_exportacion_ed12';
     }

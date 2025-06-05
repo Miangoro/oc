@@ -295,7 +295,7 @@
         @php
             $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
             $folio1 = trim($folios[0] ?? '');
-            $folio2 = trim($folios[1] ?? 'NA');
+            $folio2 = isset($folios[1]) && trim($folios[1]) !== '' ? trim($folios[1]) : 'NA';
         @endphp
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de análisis:
@@ -356,7 +356,7 @@
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 35px;">
                 Aduana de despacho:</td>
-            <td style="text-align: left; padding-left: 4px;">
+            <td style="text-align: left; padding-left: 4px; font-size: 10.5px;">
                 {{ mb_strtoupper($aduana) }}
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Fracción
@@ -419,7 +419,7 @@
             @php
                 $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
                 $folio1 = trim($folios[0] ?? '');
-                $folio2 = trim($folios[1] ?? 'NA');
+                $folio2 = isset($folios[1]) && trim($folios[1]) !== '' ? trim($folios[1]) : 'NA';
             @endphp
             <tr>
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">No. de análisis:
@@ -471,7 +471,7 @@
                         style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">
                         Envasado<br>en:</td>
                     <td style="text-align: justify; font-size: 9px; padding-left: 4px; padding-right: 2px; width: 22%;">
-                        {{ $envasadoEN }}&nbsp;</td>
+                        {{ mb_strtoupper($envasadoEN) }}&nbsp;</td>
                     <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
                         Cajas:</td>
                     <td style="text-align: left; padding-left: 4px; width: 22%;">{{ $cajas }}</td>
@@ -483,7 +483,7 @@
                     <td
                         style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 35px;">
                         Aduana de despacho:</td>
-                    <td style="text-align: left; padding-left: 4px;">{{ $aduana }}</td>
+                    <td style="text-align: left; padding-left: 4px; font-size: 10.5px;">{{ $aduana }}</td>
                     <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Fracción
                         Arancelaria:</td>
                     <td style="text-align: left; padding-left: 4px;">2208.90.05.00</td>

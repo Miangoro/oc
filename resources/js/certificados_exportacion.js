@@ -37,7 +37,12 @@ $(document).ready(function () {///flatpickr
 });
 //FUNCION FECHAS
 $('#fecha_emision').on('change', function () {
-  var fechaInicial = new Date($(this).val());
+  var valor = $(this).val();
+  if (!valor) {// Si está vacío, también limpiar fecha_vigencia
+    $('#fecha_vigencia').val('');
+    return; // No seguir ejecutando
+  }
+  var fechaInicial = new Date(valor);
   fechaInicial.setDate(fechaInicial.getDate() + 90); // +90 días
   var fechaVigencia = fechaInicial.toISOString().split('T')[0];
   $('#fecha_vigencia').val(fechaVigencia);
@@ -52,7 +57,12 @@ $('#fecha_emision').on('change', function () {
 });
 // FUNCION FECHAS EDIT
 $('#edit_fecha_emision').on('change', function () {
-  var fechaInicial = new Date($(this).val());
+  var valor = $(this).val();
+  if (!valor) {// Si está vacía, limpiar también la fecha de vigencia
+    $('#edit_fecha_vigencia').val('');
+    return;
+  }
+  var fechaInicial = new Date(valor);
   fechaInicial.setDate(fechaInicial.getDate() + 90); // +90 días
   var fechaVigencia = fechaInicial.toISOString().split('T')[0];
   $('#edit_fecha_vigencia').val(fechaVigencia);
@@ -153,13 +163,18 @@ if (dt_user_table.length) {
             var $num_certificado = full['num_certificado'];
             var $id = full['id_certificado'];
             //var $folio_solicitud = full['folio_solicitud'];
-            var $folio_solicitud = full['folio_solicitud']?.match(/^([A-Z\-]+)(\d+)$/)?.slice(1).reduce((prefix, number) =>
-                  prefix + String(Number(number) + 1).padStart(number.length, '0')
-              ) ?? 'No encontrado';
+            var $folio_solicitud = full['folio_solicitud']?.match(/^([A-Z\-]+\d+)$/)?.[1] + '-E' ?? 'No encontrado';
 
             return '<small class="fw-bold">' + $num_certificado + '</small>' +
               '<i data-id="' + $id + '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
-              `<br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud} <i data-id="${full['id_certificado']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitudCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+              `<br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud} <i data-id="${full['id_certificado']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitudCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>
+              
+              <br><span class="fw-bold">Pedido:</span> ${full['folio_solicitud']}
+              <i data-id="${full['id_solicitud']}" data-folio="${full['folio_solicitud']}"
+                class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
+                data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+              </i>
+              `;
           }
         },
         {
@@ -169,7 +184,7 @@ if (dt_user_table.length) {
           orderable: false,
           render: function (data, type, full, meta) {
             var $num_servicio = full['num_servicio'];
-            var $folio_solicitud = full['folio_solicitud'];
+
             if (full['url_acta'] == 'Sin subir') {
               var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
             } else {
@@ -188,11 +203,6 @@ if (dt_user_table.length) {
               </i>
             <br><span class="fw-bold">Servicio:</span> ${$num_servicio}
               <span>${$acta}</span>
-            <br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud}
-              <i data-id="${full['id_solicitud']}" data-folio="${$folio_solicitud}"
-                class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
-                data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
-              </i> 
             `;
           }
         },
@@ -205,6 +215,7 @@ if (dt_user_table.length) {
           render: function (data, type, full, meta) {
 
             return `<div class="small">
+            ${full['combinado'] ? '<span class="badge rounded-pill bg-info"><b>Combinado</b></span> <br>' : ''}
                 <b>Lote envasado:</b> ${full['nombre_lote_envasado']} <br>
                 <b>Lote granel:</b> ${full['nombre_lote_granel']} <br>
                 <b>Marca:</b> ${full['marca']} <br>

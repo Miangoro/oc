@@ -268,13 +268,13 @@
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
                 Categoría y Clase:</td>
-            <td style="text-align: left; padding-left: 4px;">
+            <td style="text-align: left; padding-left: 4px; width: 20%;">
                 {{ mb_strtoupper($lote->lotesGranel->first()->categoria->categoria) ?? 'No encontrado' }},
                 {{ mb_strtoupper($lote->lotesGranel->first()->clase->clase) ?? 'No encontrado' }}
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
                 Edad:</td>
-            <td style="text-align: left; padding-left: 4px; width: 22%;">
+            <td style="text-align: left; padding-left: 4px;">
                 {{ in_array(optional($lote->lotesGranel->first())->id_clase, [2, 3]) 
                     ? (filled(optional($lote->lotesGranel->first())->edad) 
                         ? mb_strtoupper(optional($lote->lotesGranel->first())->edad) 
@@ -302,7 +302,7 @@
         @php
             $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
             $folio1 = trim($folios[0] ?? '');
-            $folio2 = trim($folios[1] ?? 'NA');
+            $folio2 = isset($folios[1]) && trim($folios[1]) !== '' ? trim($folios[1]) : 'NA';
         @endphp
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
@@ -315,9 +315,9 @@
             <td style="text-align: left; padding-left: 4px;">
                 {{ $lote->lotesGranel->first()->nombre_lote ?? 'No encontrado' }}
             </td>
-            <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
+            <td style="text-align: right; font-weight: bold; font-size: 10.6px; padding-right: 8px;">
                 Tipo de Maguey:</td>
-            <td style="text-align: left; padding-left: 4px;">
+            <td style="text-align: left; padding-left: 2px; font-size: 10.6px;">
                 {!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
                     return $tipo->nombre . ' (<i>' . $tipo->cientifico . '</i>)';
                 })->implode(', ') !!}
@@ -357,7 +357,7 @@
         <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 45px; width: 12%;">
             Envasado en:</td>
         <td style="text-align: justify; font-size: 9px; padding-left: 4px; padding-right: 2px; width: 22%;">
-            {{ $envasadoEN }}&nbsp;
+            {{ mb_strtoupper($envasadoEN) }}&nbsp;
         </td>
         <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
             Cajas:</td>
@@ -373,7 +373,7 @@
     <tr>
         <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 35px;">
             Aduana de despacho:</td>
-        <td style="text-align: left; padding-left: 4px;">
+        <td style="text-align: left; padding-left: 4px; font-size: 10.5px;">
             {{ $aduana }}
         </td>
         <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">

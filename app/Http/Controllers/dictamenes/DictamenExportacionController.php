@@ -200,6 +200,7 @@ public function index(Request $request)
 
              //Lote envasado
             $lotes_env = $dictamen->inspeccione?->solicitud?->lotesEnvasadoDesdeJson();//obtener todos los lotes
+            $nestedData['combinado'] = $lotes_env?->count() > 1 ? true : false;
             $nestedData['nombre_lote_envasado'] = $lotes_env?->pluck('nombre')->implode(', ') ?? 'No encontrado';
             //Lote granel
             $lotes_granel = $lotes_env?->flatMap(function ($lote) {
