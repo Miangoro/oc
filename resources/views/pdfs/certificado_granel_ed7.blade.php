@@ -307,17 +307,16 @@
 <p class="subtitulo2">DESCRIPCIÓN DEL PRODUCTO</p>
 
 <table>
-	<tbody>
 		<tr>
 			<td colspan="6" class="columna"  style="font-size: 15px;">PRODUCTO: {{ strtoupper($categoria)}}<br>ORIGEN: {{ strtoupper($estado) }}</td>
 		</tr>
 		<tr>
-			<td class="columna" style="white-space: nowrap;">Categoría y clase</td>
-			<td class="columna-norm">{{ $categoria }} {{ $clase }}</td>
-			<td class="columna">No. de lote</td>
+			<td class="columna" style="white-space: nowrap; width: 12%">Categoría y clase</td>
+			<td class="columna-norm" style="width:20%">{{ $categoria }}<br>{{ $clase }}</td>
+			<td class="columna" style="width:12%">No. de lote</td>
 			<td class="columna-norm">{{ $nombre_lote }}</td>
-			<td class="columna">No. de análisis</td>
-            <td class="columna-norm" style="white-space: nowrap;">{{ $n_analisis }}</td>
+			<td class="columna" style="width:12%">No. de análisis</td>
+            <td class="columna-norm" style="width:18%">{{ $n_analisis }}</td>
 		</tr>
 		<tr>
 			<td class="columna">Ingredientes</td>
@@ -329,7 +328,7 @@
 		</tr>
 		<tr>
 			<td class="columna">Tipo de maguey</td>
-			<td class="columna-norm">
+			<td class="columna-norm" style="font-size: 9px;">
                 {!! $tipo_maguey->tiposRelacionados->map(function ($tipo) {
                     return $tipo->nombre . ' (<i>' . trim($tipo->cientifico) . '</i>)';
                 })->implode(', ') !!}</td>
@@ -338,7 +337,6 @@
 			<td class="columna">No. de dictamen</td>
 			<td class="columna-norm" style="white-space: nowrap;">{{ $num_dictamen }}</td>
 		</tr>
-	</tbody>
 </table>
 
 <p class="text2">Este certificado de cumplimiento de mezcal a granel se expide de acuerdo a Norma Oficial Mexicana NOM-070-SCFI-2016. Bebidas Alcohólicasmezcal-especificaciones, en vigor.</p>
