@@ -116,9 +116,9 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
               if (full['hasSolicitud']) {
-                  return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdfSolicitud cursor-pointer"
+                  return `${full['folio_solicitud']}<i class="ri-file-pdf-2-fill text-danger ri-40px pdfSolicitud cursor-pointer"
                           data-bs-target="#mostrarPdfDcitamen1" data-bs-toggle="modal"
-                          data-bs-dismiss="modal" data-id="${full['id_predio']}"
+                          data-bs-dismiss="modal" data-id="${full['id_solicitud']}"
                           data-registro="${full['id_empresa']}"></i>`;
               } else {
                   return `<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf" data-bs-placement="right" title="Necesita hacer la solicitud"
@@ -1602,7 +1602,7 @@ $(document).on('click', '.pdfSolicitud', function () {
   iframe.hide();
 
   // Generar la URL del PDF
-  var pdfUrl = '../solicitudServicio/' + id;
+  var pdfUrl = '../solicitud_de_servicio/' + id;
 
   // Cargar el PDF en el iframe
   iframe.attr('src', pdfUrl);
