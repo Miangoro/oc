@@ -2,7 +2,8 @@
     <div class="modal-dialog modal-xl ">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
-                <h5 class="modal-title text-white">Registrar nueva solicitud de inspección ingreso a barrica/ contenedor de vidrio
+                <h5 class="modal-title text-white">Registrar nueva solicitud de inspección ingreso a barrica/ contenedor
+                    de vidrio
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -27,7 +28,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    id="fecha_visita_ingreso_barrica" name="fecha_visita" autocomplete="off"/>
+                                    id="fecha_visita_ingreso_barrica" name="fecha_visita" autocomplete="off" />
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -83,29 +84,33 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
+                                    id="id_certificado_barricada" name="id_certificado_barricada" disabled
+                                    placeholder="Certificado de NOM a granel" />
+                                <label for="id_certificado_barricada">Certificado de NOM a granel </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control bg-light text-muted"
                                     id="id_tipo_maguey_barricada" name="" placeholder="Ingresa un tipo de Maguey"
                                     readonly style="pointer-events: none;" />
                                 <label for="id_tipo_maguey_barricada">Tipo de Maguey</label>
                             </div>
                             <input type="hidden" id="id_tipo_maguey_barrica_ids" name="id_tipo_maguey_barricada[]">
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted" id="id_certificado_barricada"
-                                    name="id_certificado_barricada" disabled placeholder="Certificado de NOM a granel" />
-                                <label for="id_certificado_barricada">Certificado de NOM a granel </label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="analisis_barricada"
-                                    name="analisis_barricada" placeholder="Ingresa Análisis fisicoquímico" autocomplete="off"/>
+                                    name="analisis_barricada" placeholder="Ingresa Análisis fisicoquímico"
+                                    autocomplete="off" />
                                 <label for="analisis_barricada">Análisis fisicoquímico</label>
                             </div>
                         </div>
+
+                    </div>
+                    <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" class="form-control" id="alc_vol_barrica"
@@ -113,8 +118,6 @@
                                 <label for="alc_vol_barrica">%Alc. Vol.</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="tipo_lote" name="tipo_lote" class="form-select">
@@ -130,50 +133,64 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
-                                    id="fecha_inicio_ingreso_barrica" name="fecha_inicio" autocomplete="off"/>
+                                    id="fecha_inicio_ingreso_barrica" name="fecha_inicio" autocomplete="off" />
                                 <label for="fecha_inicio">Fecha de inicio del ingreso</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
-                                    id="fecha_termino" name="fecha_termino" autocomplete="off"/>
-                                <label for="fecha_termino">Fecha de término del ingreso
-                                </label>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="material" name="material"
-                                    placeholder="Material de los recipientes" autocomplete="off"/>
-                                <label for="material">Material de los recipientes</label>
+                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
+                                    id="fecha_termino" name="fecha_termino" autocomplete="off" />
+                                <label for="fecha_termino">Fecha de término del ingreso
+                                </label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="capacidad" name="capacidad"
-                                    placeholder="Capacidad de recipientes" autocomplete="off"/>
-                                <label for="capacidad">Capacidad de recipientes</label>
+                                <input type="text" class="form-control" id="material" name="material"
+                                    placeholder="Material de los recipientes" autocomplete="off" />
+                                <label for="material">Material de los recipientes</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
+
+                                                <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" class="form-control" id="num_recipientes"
                                     name="num_recipientes" placeholder="Número de recipientes" />
                                 <label for="num_recipientes">Número de recipientes</label>
                             </div>
                         </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control" id="capacidad" name="capacidad"
+                                    placeholder="Capacidad de recipientes" autocomplete="off" />
+                                <label for="capacidad">Capacidad de recipientes</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control" id="tiempo_maduracion"
+                                    name="tiempo_maduracion" placeholder="Tiempo de maduración" autocomplete="off" />
+                                <label for="Tiempo de maduración">Tiempo de maduración</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."autocomplete="off"></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional"
+                                placeholder="Observaciones..."autocomplete="off"></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad:</label>
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnReIngresoBarrica"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="submit" class="btn btn-primary" id="btnReIngresoBarrica"><i
+                                class="ri-add-line"></i> Registrar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
@@ -249,7 +266,7 @@
                 method: 'GET',
                 success: function(response) {
                     $('#id_categoria_barricada').val(response.categoria ? response.categoria.categoria :
-                    '');
+                        '');
                     $('#id_categoria_barricada_id').val(response.categoria ? response.categoria
                         .id_categoria : '');
                     $('#id_clase_barricada').val(response.clase ? response.clase.clase : '');
@@ -273,8 +290,7 @@
                     $('#analisis_barricada').val(response.lotes_granel.folio_fq);
                     $('#alc_vol_barrica').val(response.lotes_granel.cont_alc);
                     $('#volumen_ingresado').val(response.lotes_granel.volumen_restante);
-                    $('#id_certificado_barricada').val(response.lotes_granel.folio_certificado
-);
+                    $('#id_certificado_barricada').val(response.lotes_granel.folio_certificado);
                 },
                 error: function() {
                     console.error('Error al obtener los datos del lote granel.');

@@ -91,6 +91,18 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control text-muted bg-light"
+                                    id="edit_id_certificado_barricada" name="id_certificado_barricada" disabled
+                                    placeholder="Certificado de NOM a granel" />
+                                <label for="id_certificado_barricada">Certificado de NOM a granel </label>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
                                     id="edit_id_tipo_maguey_barricada" name=""
                                     placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
@@ -99,22 +111,18 @@
                             <input type="hidden" id="edit_id_tipo_maguey_barricada_ids"
                                 name="id_tipo_maguey_barricada">
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control text-muted bg-light" id="edit_id_certificado_barricada"
-                                    name="id_certificado_barricada" disabled placeholder="Certificado de NOM a granel" />
-                                <label for="id_certificado_barricada">Certificado de NOM a granel </label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_analisis_barricada"
                                     name="analisis_barricada" placeholder="Ingresa Análisis fisicoquímico" />
                                 <label for="analisis_barricada">Análisis fisicoquímico</label>
                             </div>
                         </div>
+
+
+                    </div>
+
+                    <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" class="form-control" id="edit_alc_vol_barrica"
@@ -141,6 +149,14 @@
                                 <label for="fecha_inicio">Fecha de inicio del ingreso </label>
                             </div>
                         </div>
+
+
+                    </div>
+
+
+                    <div class="row">
+
+
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
@@ -149,22 +165,15 @@
                                 </label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
+
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_material" name="material"
-                                    placeholder="Material de los recipientes" autocomplete="off"/>
+                                    placeholder="Material de los recipientes" autocomplete="off" />
                                 <label for="material">Material de los recipientes</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="edit_capacidad" name="capacidad"
-                                    placeholder="Capacidad de recipientes" autocomplete="off"/>
-                                <label for="capacidad">Capacidad de recipientes</label>
-                            </div>
-                        </div>
+
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" class="form-control" id="edit_num_recipientes"
@@ -173,6 +182,23 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control" id="edit_capacidad" name="capacidad"
+                                    placeholder="Capacidad de recipientes" autocomplete="off" />
+                                <label for="capacidad">Capacidad de recipientes</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control" id="edit_tiempo_maduracion"
+                                    name="tiempo_maduracion" placeholder="Tiempo de maduración" autocomplete="off" />
+                                <label for="Tiempo de maduración">Tiempo de maduración</label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional"
@@ -181,7 +207,8 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnEditIngresoBarrica"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="submit" class="btn btn-primary" id="btnEditIngresoBarrica"><i
+                                class="ri-pencil-fill"></i> Editar</button>
                         <button type="reset" class="btn btn-danger " data-bs-dismiss="modal" aria-label="Close"><i
                                 class="ri-close-line"></i> Cancelar</button>
                     </div>

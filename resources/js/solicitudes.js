@@ -1092,7 +1092,7 @@ $(function () {
                 modal.find('#edit_material').val(response.caracteristicas.material || '');
                 modal.find('#edit_capacidad').val(response.caracteristicas.capacidad || '');
                 modal.find('#edit_num_recipientes').val(response.caracteristicas.num_recipientes || '');
-                modal.find('#edit_tiempo_dura').val(response.caracteristicas.tiempo_dura || '');
+                modal.find('#edit_tiempo_maduracion').val(response.caracteristicas.tiempo_maduracion || '');
                 modal.find('#edit_id_certificado_barricada').val(response.caracteristicas.id_certificado || '');
               }
 
