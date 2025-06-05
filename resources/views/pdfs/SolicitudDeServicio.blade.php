@@ -598,7 +598,7 @@
                     @foreach ($caracteristicas['detalles'] as $detalle)
                         <span>Cantidad de Botellas: {{ $detalle['cantidad_botellas'] ?? 'No definido' }}</span><br>
                         <span>Cantidad de Cajas: {{ $detalle['cantidad_cajas'] ?? 'No definido' }}</span><br>
-                        <span>Presentación: {{ $detalle['presentacion'] ?? 'No definido' }}</span>
+                        
                     @endforeach
                 @elseif($inspeccion_envasado === 'X')
                    <span>Cantidad de Botellas:  {{ $datos->lote_envasado->cant_botellas ?? 'No definido' }}</span><br>

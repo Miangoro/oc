@@ -1574,22 +1574,22 @@ class solicitudesController extends Controller
     public function obtenerMarcasPorEmpresa($id_marca, $id_direccion)
     {
 
-        $etiquetas = etiquetas::with([
-        'marca.empresa.empresaNumClientes',
-        'destinos' => function ($query) use ($id_direccion) {
-            $query->where('direcciones.id_direccion', $id_direccion);
-        },
-        'url_etiqueta',
-        'url_corrugado',
-        'tipo',
-        'clase',
-        'categoria'
-    ])
-    ->where('id_marca', $id_marca)
-    ->whereHas('destinos', function ($query) use ($id_direccion) {
-        $query->where('direcciones.id_direccion', $id_direccion);
-    })
-    ->get();
+                $etiquetas = etiquetas::with([
+                'marca.empresa.empresaNumClientes',
+                'destinos' => function ($query) use ($id_direccion) {
+                    $query->where('direcciones.id_direccion', $id_direccion);
+                },
+                'url_etiqueta',
+                'url_corrugado',
+                'tipo',
+                'clase',
+                'categoria'
+            ])
+            ->where('id_marca', $id_marca)
+            ->whereHas('destinos', function ($query) use ($id_direccion) {
+                $query->where('direcciones.id_direccion', $id_direccion);
+            })
+            ->get();
 
             foreach ($etiquetas as $etiqueta) {
                 $tipoIds = [];
