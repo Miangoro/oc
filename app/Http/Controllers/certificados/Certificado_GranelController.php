@@ -554,6 +554,12 @@ public function CertificadoGranel($id_certificado)
         //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
     }
 
+    setlocale(LC_TIME, 'es_ES.UTF-8'); // Asegúrate de tener el locale en español
+    $fecha = Carbon::parse($certificado->fecha_emision);
+    $fecha_emision = $fecha->format('d') . '/' . ucfirst($fecha->translatedFormat('F')) . '/' . $fecha->format('Y');
+    $fecha2 = Carbon::parse($certificado->fecha_vigencia);
+    $fecha_vigencia = $fecha2->format('d') . '/' . ucfirst($fecha2->translatedFormat('F')) . '/' . $fecha2->format('Y');
+    
     $watermarkText = $certificado->estatus === 1;
     $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ? CertificadosGranel::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
@@ -576,12 +582,13 @@ public function CertificadoGranel($id_certificado)
             }
     }
 
+    
     // Datos para el PDF
     $pdfData = [
         'data' => $certificado,
         'num_certificado' => $certificado->num_certificado ?? 'No encontrado',
-        'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
-        'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+        'fecha_emision' => $fecha_emision,
+        'fecha_vigencia' => $fecha_vigencia,
         'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'representante' => $certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'No encontrado',
         'domicilio_fiscal' => $certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'No encontrado',
