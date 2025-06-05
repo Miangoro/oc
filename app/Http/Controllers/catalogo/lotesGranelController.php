@@ -218,11 +218,11 @@ class lotesGranelController extends Controller
                       if (isset($lotesOriginales['lotes'])) {
                           // Obtener los nombres de los lotes utilizando los IDs
                           $nombresLotes = LotesGranel::whereIn('id_lote_granel', $lotesOriginales['lotes'])
-                          ->get(['nombre_lote', 'cont_alc']) // Trae ambas columnas
+                          ->get(['nombre_lote', 'cont_alc', 'folio_fq']) // Trae ambas columnas
                           ->toArray();
 
 
-                          $nestedData['lote_procedencia'] = implode('<br>', array_map(fn($lote) => "{$lote['nombre_lote']} ({$lote['cont_alc']} % Alc. Vol.)", $nombresLotes));
+                          $nestedData['lote_procedencia'] = implode('<br> ', array_map(fn($lote) => "{$lote['nombre_lote']} ({$lote['cont_alc']} %) {$lote['folio_fq']}", $nombresLotes));
 
                       } else {
                           $nestedData['lote_procedencia'] = 'Lote de procedencia: No tiene lotes disponibles en el JSON.';
@@ -230,6 +230,7 @@ class lotesGranelController extends Controller
                     } else {
                       $nestedData['lote_procedencia'] = 'No tiene procedencia de otros lotes.';
                     }
+
                     /*  */
                         // Consulta la URL en la tabla Documentacion_url
                     // Obtén la URL del certificado desde la tabla Documentacion_url
@@ -274,8 +275,6 @@ class lotesGranelController extends Controller
             ]);
         }
     }
-
-
 
 
     public function getLotesList(Request $request)

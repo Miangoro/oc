@@ -85,7 +85,7 @@ $(function () {
 
           // Mostrar los nombres de los lotes de procedencia
           if (row.lote_procedencia != 'No tiene procedencia de otros lotes.') {
-            procedencia = '<br><span class="fw-bold text-dark small">Lote de procedencia:</span><span class="small text-primary"> ' + row.lote_procedencia + '</span>';
+            procedencia = '<br><span class="fw-bold text-dark small">Lote de procedencia: <br></span><span class="small text-primary"> ' + row.lote_procedencia + '</span>';
           }
 
           return '<span class="fw-bold text-dark small">Volumen inicial:</span> <span class="small"> ' + row.volumen +
@@ -816,7 +816,7 @@ $(function () {
           $('#id_empresa').val('').trigger('change');
           $('#id_guia').val('').trigger('change');
           $('#offcanvasAddLote').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
+          $('.datatables-users').DataTable().ajax.reload(null, false);
 
           // Mostrar alerta de éxito
           Swal.fire({
@@ -1329,7 +1329,7 @@ $(function () {
         },
         success: function (response) {
           $('#edit_certificado_lote').val('');
-          dt_user.ajax.reload();
+          dt_user.ajax.reload(null, false);
           $('#offcanvasEditLote').modal('hide');
           Swal.fire({
             icon: 'success',
