@@ -51,7 +51,8 @@ public function index(Request $request)
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
-        1 => 'num_certificado',
+        //1 => 'num_certificado',
+        1 => 'pdf_firmado',
         2 => 'folio',
         3 => 'razon_social',
         4 => '',
@@ -74,7 +75,15 @@ public function index(Request $request)
         ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
         ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
         ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
-        ->select('certificados_granel.*', 'empresa.razon_social');
+        ->select('certificados_granel.*', 'empresa.razon_social')
+
+        //filtrar por certificado subido
+        ->leftJoin('documentacion_url as doc', function ($join) {
+                $join->on('doc.id_relacion', '=', 'certificados_granel.id_lote_granel')
+                    ->where('doc.id_documento', '=', 59)
+                    ->whereColumn('doc.id_doc', 'certificados_granel.id_certificado');
+            });
+
 
     if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
@@ -103,7 +112,7 @@ public function index(Request $request)
     }
 
     // Ordenamiento especial para num_certificado con formato 'CIDAM C-GRA25-###'
-    if ($orderColumn === 'num_certificado') {
+    /*if ($orderColumn === 'num_certificado') {
         $query->orderByRaw("
             CASE
                 WHEN num_certificado LIKE 'CIDAM C-GRA25-%' THEN 0
@@ -116,6 +125,11 @@ public function index(Request $request)
                 ) AS UNSIGNED
             ) $orderDirection
         ");
+    } elseif (!empty($orderColumn)) {
+        $query->orderBy($orderColumn, $orderDirection);
+    }*/
+    if ($orderColumn === 'pdf_firmado') {
+        $query->orderByRaw("CASE WHEN doc.url IS NOT NULL THEN 0 ELSE 1 END $orderDirection");
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
     }
