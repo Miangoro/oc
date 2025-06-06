@@ -51,8 +51,7 @@ public function index(Request $request)
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
-        //1 => 'num_certificado',
-        1 => 'pdf_firmado',
+        1 => 'num_certificado',
         2 => 'folio',
         3 => 'razon_social',
         4 => '',
@@ -75,19 +74,9 @@ public function index(Request $request)
         ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
         ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
         ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
-
-        //filtrar por certificado subido
-        ->leftJoin('documentacion_url as doc', function ($join) {
-                $join->on('doc.id_relacion', '=', 'certificados_granel.id_lote_granel')
-                    ->where('doc.id_documento', '=', 59)
-                    ->whereColumn('doc.id_doc', 'certificados_granel.id_certificado');
-            })
-
-        ->select('certificados_granel.*', 'empresa.razon_social','doc.url as pdf_firmado');
+        ->select('certificados_granel.*', 'empresa.razon_social');
 
         
-
-    
     if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
     }
@@ -107,14 +96,6 @@ public function index(Request $request)
             ->orWhereRaw("DATE_FORMAT(certificados_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
             ->orWhere('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
             ->orWhere('lotes_granel.folio_fq', 'LIKE', "%{$search}%");
-
-            // Búsqueda por archivo firmado
-            if (strtolower($search) === 'firmado') {
-                $q->orWhereNotNull('doc.url');
-            } elseif (strtolower($search) === 'no firmado') {
-                $q->orWhereNull('doc.url');
-            }
-
         });
 
         $totalFiltered = $query->count();
