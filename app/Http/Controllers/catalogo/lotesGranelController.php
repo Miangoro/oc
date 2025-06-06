@@ -754,77 +754,69 @@ class lotesGranelController extends Controller
       if ($request->hasFile('url')) {
 
           // Eliminar archivos antiguos
-          $documentacionUrls = Documentacion_url::where('id_relacion', $id_lote_granel)
-    ->whereIn('id_documento', $request->id_documento)
-    ->get();
+    $documentacionUrls = Documentacion_url::where('id_relacion', $id_lote_granel)
+        ->whereIn('id_documento', $request->id_documento)
+        ->get();
 
-          foreach ($documentacionUrls as $documentacionUrl) {
-              $filePath = 'uploads/' . $numeroCliente .'/fqs/' . $documentacionUrl->url;
-              if (Storage::disk('public')->exists($filePath)) {
-                  Storage::disk('public')->delete($filePath);
-              }
+    foreach ($documentacionUrls as $documentacionUrl) {
+        $carpetas = ['fqs', 'certificados_granel'];
 
-               $filePath = 'uploads/' . $numeroCliente .'/certificados_granel/' . $documentacionUrl->url;
-              if (Storage::disk('public')->exists($filePath)) {
-                  Storage::disk('public')->delete($filePath);
-              }
-              $documentacionUrl->delete();
-          }
+        foreach ($carpetas as $carpeta) {
+            $filePath = 'uploads/' . $numeroCliente . '/' . $carpeta . '/' . $documentacionUrl->url;
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+        }
 
-          // Almacenar nuevos documentos
-          foreach ($request->file('url') as $index => $file) {
-              if (isset($request->id_documento[$index])) {
-                  $idDoc = $request->id_documento[$index];
-                  $folio_fq = '';
+        $documentacionUrl->delete();
+    }
 
-                  if ($idDoc == 58) {
-                      $folio_fq = $request->folio_fq_completo ?? '';
-                  } elseif ($idDoc == 134) {
-                      $folio_fq = $request->folio_fq_ajuste ?? '';
-                  }
+//almacenar nuevos documentos
+    foreach ($request->file('url') as $index => $file) {
+        if (isset($request->id_documento[$index])) {
+          $idDoc = (int) $request->id_documento[$index]; // 👈 conversión segura
+            $folio_fq = '';
 
-                  $tipo_analisis = $request->tipo_analisis[$index] ?? '';
+            $carpeta = 'fqs';
 
-                  $nombre_documento = match($idDoc) {
-                      58 => 'Análisis fisicoquímicos',
-                      134 => 'Fisicoquímicos de ajuste de grado',
-                      59 => 'Certificado de cumplimiento de granel',
-                      default => 'Desconocido',
-                  };
+            $prefix = match($idDoc) {
+                58 => 'analisis_fisioquimicos',
+                134 => 'fisicoquimicos_ajuste_grado',
+                59 => 'certificado_granel',
+                default => 'documento',
+            };
 
-                  $prefix = match($request->id_documento[$index]) {
-                      58 => 'analisis_fisioquimicos',
-                      134 => 'fisicoquimicos_ajuste_grado',
-                      59 => 'certificado_granel',
-                      default => 'documento',
-                  };
-                  // Generar un nombre único para el archivo
-                  $uniqueId = uniqid();
-                  $filename = $prefix . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $nombre_base = match($idDoc) {
+                58 => 'Análisis fisicoquímicos',
+                134 => 'Fisicoquímicos de ajuste de grado',
+                59 => 'Certificado de lote a granel',
+                default => 'Desconocido',
+            };
+            if ($idDoc === 59) {
+                $carpeta = 'certificados_granel'; // ✅ sin slash
+            }
 
-                  Log::info('Procesando archivo:', ['file' => $file->getClientOriginalName(), 'numeroCliente' => $numeroCliente]);
-                $carpeta = '/certificados_granel';
-                if($request->id_documento[$index] != 59){
-                    $carpeta = '/fqs';
-                }
-                  // Intentar guardar el archivo
-                  try {
-                      $filePath = $file->storeAs('uploads/' . $numeroCliente.$carpeta, $filename, 'public');
-                      Log::info('Archivo guardado:', ['path' => $filePath, 'filename' => $filename]);
-                  } catch (\Exception $e) {
-                      Log::error('Error al guardar el archivo:', ['error' => $e->getMessage()]);
-                  }
 
-                  $documentacion_url = new Documentacion_url();
-                  $documentacion_url->id_relacion = $lote->id_lote_granel;
-                  $documentacion_url->id_documento = $request->id_documento[$index];
-                  $documentacion_url->nombre_documento = $request->nombre_documento[$index] . ": " . $tipo_analisis . " - " . $folio_fq;
-                  $documentacion_url->url = $filename; // Almacenar solo el nombre del archivo
-                  $documentacion_url->id_empresa = $lote->id_empresa;
+            $filename = $prefix . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-                  $documentacion_url->save();
-              }
-          }
+            try {
+               $filePath = $file->storeAs("uploads/{$numeroCliente}/{$carpeta}", $filename, 'public');
+                Log::info('Archivo guardado:', ['path' => $filePath, 'filename' => $filename]);
+            } catch (\Exception $e) {
+                Log::error('Error al guardar el archivo:', ['error' => $e->getMessage()]);
+                continue; // No guardar en la base si falla el archivo
+            }
+
+            $documentacion_url = new Documentacion_url();
+            $documentacion_url->id_relacion = $lote->id_lote_granel;
+            $documentacion_url->id_documento = $idDoc;
+            $documentacion_url->nombre_documento = $nombre_base;
+            $documentacion_url->url = $filename;
+            $documentacion_url->id_empresa = $lote->id_empresa;
+
+            $documentacion_url->save();
+        }
+    }
       }
 
       // Actualizar el campo folio_fq
