@@ -83,6 +83,8 @@ public function index(Request $request)
         ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
         ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
         ->leftJoin('lotes_envasado', 'lotes_envasado.id_lote_envasado', '=', 'dictamenes_envasado.id_lote_envasado')
+        ->leftJoin('lotes_envasado_granel', 'lotes_envasado_granel.id_lote_envasado', '=', 'lotes_envasado.id_lote_envasado')
+        ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'lotes_envasado_granel.id_lote_granel')
         ->select('dictamenes_envasado.*', 'empresa.razon_social');
         
     if ($empresaId) {
@@ -100,7 +102,8 @@ public function index(Request $request)
             ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
             ->orWhereRaw("DATE_FORMAT(dictamenes_envasado.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
-            ->orWhere('lotes_envasado.nombre', 'LIKE', "%{$search}%");
+            ->orWhere('lotes_envasado.nombre', 'LIKE', "%{$search}%")
+            ->orWhere('lotes_granel.nombre_lote', 'LIKE', "%{$search}%");
         });
 
         $totalFiltered = $query->count();
