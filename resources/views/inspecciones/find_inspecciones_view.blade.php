@@ -186,35 +186,25 @@
         $('.inspectorName').html(inspectorName);
 
 
-        const links = [{
-                id: '#link_solicitud_servicio',
-                href: '{{ url('solicitud_de_servicio') }}/' + id_solicitud
-            },
-            {
-                id: '#link_oficio_comision',
-                href: '{{ url('oficio_de_comision') }}/' + id_inspeccion
-            },
-            {
-                id: '#link_orden_servicio',
-                href: '{{ url('orden_de_servicio') }}/' + id_inspeccion
-            },
-            {
-                id: '#links_etiquetas',
-                href: ''
-            } // se asigna después según id_tipo
-        ];
+   const links = [
+        {
+            id: '#link_solicitud_servicio',
+            href: '{{ url('solicitud_de_servicio') }}/' + id_solicitud
+        },
+        {
+            id: '#link_oficio_comision',
+            href: '{{ url('oficio_de_comision') }}/' + id_inspeccion
+        },
+        {
+            id: '#link_orden_servicio',
+            href: '{{ url('orden_de_servicio') }}/' + id_inspeccion
+        },
+        {
+            id: '#links_etiquetas',
+            href: ''
+        }
+    ];
 
-        if (parseInt(id_inspeccion) === 0) {
-            // Desactivar enlaces e íconos
-            links.forEach(link => {
-                $(link.id)
-                    .removeAttr('href')
-                    .addClass('text-secondary opacity-50')
-                    .find('i')
-                    .removeClass('text-danger')
-                    .addClass('text-secondary opacity-50');
-            });
-        } else {
             // Restaurar enlaces e íconos
             links.forEach(link => {
                 if (link.id !== '#links_etiquetas') { // se maneja aparte por id_tipo
@@ -257,11 +247,16 @@
                     break;
             }
 
-            $('#links_etiquetas').attr('href', etiquetaHref);
-            $('.etiqueta_name').text(etiquetaTexto);
-        }
+  if (etiquetaHref !== '') {
+        $('#links_etiquetas').attr('href', etiquetaHref);
+        $('.etiqueta_name').text(etiquetaTexto);
+        $('.etiquetasNA').show(); // mostrar el tr
+    } else {
+        $('.etiquetasNA').hide(); // ocultar el tr
+    }
 
-        $('#expedienteServicio').modal('show');
+    $('#expedienteServicio').modal('show');
+
 
     }
 
