@@ -241,6 +241,25 @@ public function getDictamenesEnvasado($id_empresa)
     }
 
 
+public function getDocumentosSolicitud($id_solicitud)
+{
+    if (!$id_solicitud) {
+        return response()->json([
+            'success' => false,
+            'message' => 'ID de solicitud no válido.'
+        ], 400);
+    }
+
+    $documentos = Documentacion_url::where('id_relacion', $id_solicitud)
+        ->get(['nombre_documento as nombre', 'url']);
+
+    return response()->json([
+        'success' => true,
+        'data' => $documentos
+    ]);
+}
+
+
 
 
     public function getDatosSolicitud($id_solicitud)

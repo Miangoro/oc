@@ -187,7 +187,30 @@ public function index(Request $request)
             $idLoteGranel = $caracteristicas['id_lote_granel'] ?? null;
             $loteGranel = LotesGranel::find($idLoteGranel); // Busca el lote a granel
             $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'No encontrado';
-            $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
+            $folioFq = $loteGranel->folio_fq ?? null;
+
+            $folioFq = $loteGranel->folio_fq ?? null;
+
+            if ($folioFq) {
+                // Separa por coma y elimina espacios alrededor de cada folio
+                $folios = array_filter(array_map('trim', explode(',', $folioFq))); // array_filter elimina vacíos
+
+                // Si hay más de uno, únelos con coma; si no, usa el primero o 'N/A'
+                $formatoFolios = count($folios) > 0 ? implode(', ', $folios) : 'N/A';
+
+                // Obtener el segundo folio si existe
+                $segundoFolio = $folios[1] ?? 'N/A';
+            } else {
+                $formatoFolios = 'N/A';
+                $segundoFolio = 'N/A';
+            }
+
+            // Ejemplo de asignación
+            $nestedData['analisis'] = $formatoFolios;
+            // o solo segundo si quieres:
+            // $nestedData['analisis'] = $segundoFolio;
+
+
 
 
             $data[] = $nestedData;

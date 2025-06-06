@@ -255,6 +255,51 @@
         $('.etiquetasNA').hide(); // ocultar el tr
     }
 
+          $.ajax({
+            url: '/getDocumentosSolicitud/'+id_solicitud, // URL del servidor (puede ser .php, .json, .html, etc.)
+            type: 'GET',                // O puede ser 'GET'
+            dataType: 'json',            // Puede ser 'html', 'text', 'json', etc.
+           success: function(response) {
+            if (response.success) {
+                const documentos = response.data;
+                let html = `
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nombre del documento</th>
+                                <th>Ver</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+
+                if (documentos.length > 0) {
+                    documentos.forEach(function(doc) {
+                        html += `
+                            <tr>
+                                <td>${doc.nombre}</td>
+                                <td>
+                                    <a href="${doc.url}" target="_blank">
+                                        <i class="fa-solid fa-file-pdf fa-lg text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>`;
+                    });
+                } else {
+                    html += `<tr><td colspan="2">No se encontraron documentos.</td></tr>`;
+                }
+
+                html += `</tbody></table>`;
+                $('#contenedor-documentos').html(html);
+            }
+        },
+
+
+            error: function(xhr, status, error) {
+                // Aquí si algo salió mal
+                console.error('Error AJAX:', error);
+            }
+        });
+
     $('#expedienteServicio').modal('show');
 
 
