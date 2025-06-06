@@ -480,7 +480,7 @@ class lotesGranelController extends Controller
         $tipo_analisis = $request->tipo_analisis[$index] ?? '';
         $nombreChelo = $request->nombre_documento[$index] ?? '';
         $folio_fq = '';
-
+        $carpeta = 'fqs';
           $idDoc = 0;
 
           if ($tipo_analisis === 'Análisis completo') {
@@ -508,9 +508,13 @@ class lotesGranelController extends Controller
             134 => 'fisicoquimicos_ajuste_grado',
             default => 'documento',
         };
-        $filename = $prefix . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
-        $filePath = $file->storeAs('uploads/' . $numeroCliente . '/fqs', $filename, 'public');
 
+        if ($idDoc === 59) {
+                $carpeta = 'certificados_granel'; // ✅ sin slash
+            }
+
+        $filename = $prefix . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+        $filePath = $file->storeAs("uploads/{$numeroCliente}/{$carpeta}", $filename, 'public');
         $documentacion_url = new Documentacion_url();
         $documentacion_url->id_relacion = $lote->id_lote_granel;
         $documentacion_url->id_documento = $idDoc;
