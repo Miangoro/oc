@@ -75,14 +75,19 @@ public function index(Request $request)
         ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
         ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
         ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
-        ->select('certificados_granel.*', 'empresa.razon_social')
 
         //filtrar por certificado subido
         ->leftJoin('documentacion_url as doc', function ($join) {
                 $join->on('doc.id_relacion', '=', 'certificados_granel.id_lote_granel')
                     ->where('doc.id_documento', '=', 59)
                     ->whereColumn('doc.id_doc', 'certificados_granel.id_certificado');
-            });
+            })
+
+        ->select('certificados_granel.*', 'empresa.razon_social','doc.url as pdf_firmado');
+
+        
+
+       
 
 
     if ($empresaId) {
