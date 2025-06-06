@@ -812,9 +812,12 @@ $(function () {
         processData: false, // Evita la conversión automática de datos a cadena
         contentType: false, // Evita que se establezca el tipo de contenido
         success: function (response) {
+          $('input[type="file"][name="url[]"]').val('');
           $('#loteForm').trigger("reset");
           $('#id_empresa').val('').trigger('change');
           $('#id_guia').val('').trigger('change');
+          $('#id_organismo').val('').trigger('change');
+          $('#tipo_agave').val('').trigger('change');
           $('#offcanvasAddLote').modal('hide');
           $('.datatables-users').DataTable().ajax.reload(null, false);
 
@@ -1329,6 +1332,7 @@ $(function () {
         },
         success: function (response) {
           $('#edit_certificado_lote').val('');
+          $('input[type="file"][name="url[]"]').val('');
           dt_user.ajax.reload(null, false);
           $('#offcanvasEditLote').modal('hide');
           Swal.fire({
