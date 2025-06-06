@@ -87,9 +87,7 @@ public function index(Request $request)
 
         
 
-       
-
-
+    
     if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
     }
@@ -109,6 +107,14 @@ public function index(Request $request)
             ->orWhereRaw("DATE_FORMAT(certificados_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
             ->orWhere('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
             ->orWhere('lotes_granel.folio_fq', 'LIKE', "%{$search}%");
+
+            // Búsqueda por archivo firmado
+            if (strtolower($search) === 'firmado') {
+                $q->orWhereNotNull('doc.url');
+            } elseif (strtolower($search) === 'no firmado') {
+                $q->orWhereNull('doc.url');
+            }
+
         });
 
         $totalFiltered = $query->count();
@@ -117,22 +123,6 @@ public function index(Request $request)
     }
 
     // Ordenamiento especial para num_certificado con formato 'CIDAM C-GRA25-###'
-    /*if ($orderColumn === 'num_certificado') {
-        $query->orderByRaw("
-            CASE
-                WHEN num_certificado LIKE 'CIDAM C-GRA25-%' THEN 0
-                ELSE 1
-            END ASC,
-            CAST(
-                SUBSTRING_INDEX(
-                    SUBSTRING(num_certificado, LOCATE('CIDAM C-GRA25-', num_certificado) + 14),
-                    '-', 1
-                ) AS UNSIGNED
-            ) $orderDirection
-        ");
-    } elseif (!empty($orderColumn)) {
-        $query->orderBy($orderColumn, $orderDirection);
-    }*/
     if ($orderColumn === 'num_certificado') {
         $query->orderByRaw("
             CASE
@@ -146,12 +136,10 @@ public function index(Request $request)
                 ) AS UNSIGNED
             ) $orderDirection
         ");
-    } elseif ($orderColumn === 'pdf_firmado') {
-        $query->orderByRaw("CASE WHEN doc.url IS NOT NULL THEN 0 ELSE 1 END $orderDirection");
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
     }
-
+   
 
     // Paginación
     $certificados = $query
