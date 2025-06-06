@@ -37,7 +37,7 @@ class DictamenEnvasadoController extends Controller
     public function UserManagement()
     {
         $inspecciones = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
-            $query->where('id_tipo', 5);
+            $query->where('id_tipo', 5)->orwhere('id_tipo',8);
             })->orderBy('id_inspeccion', 'desc')->get();
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $inspectores = User::where('tipo', 2)->get(); // Obtener solo los usuarios con tipo '2' (inspectores)
