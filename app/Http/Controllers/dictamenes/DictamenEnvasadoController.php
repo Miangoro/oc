@@ -143,13 +143,22 @@ public function index(Request $request)
             $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
             $id_sustituye = json_decode($dictamen->observaciones, true) ['id_sustituye'] ?? null;
             $nestedData['sustituye'] = $id_sustituye ? Dictamen_envasado::find($id_sustituye)->num_dictamen ?? 'No encontrado' : null;
-            $nestedData['lote_envasado'] = $dictamen->lote_envasado->nombre ?? 'No encontrado';
             $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
             $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
             $nestedData['num_servicio'] = $dictamen->inspeccion->num_servicio ?? 'No encontrado';
             $nestedData['folio_solicitud'] = $dictamen->inspeccion->solicitud->folio ?? 'No encontrado';
-            $nestedData['id_lote_envasado'] = $dictamen->lote_envasado->nombre_lote ?? 'No encontrado';
             $nestedData['fecha_servicio'] = Helpers::formatearFecha($dictamen->fecha_servicio);
+            //$nestedData['id_lote_envasado'] = $dictamen->lote_envasado->nombre_lote ?? 'No encontrado';
+            $nestedData['lote_envasado'] = $dictamen->lote_envasado->nombre ?? 'No encontrado';
+            $nestedData['lote_granel'] = $dictamen->lote_envasado->lotesGranel->first()->nombre_lote ?? 'No encontrado';
+            $nestedData['folio_fq'] = $dictamen->lote_envasado->lotesGranel->first()->folio_fq ?? 'No encontrado';
+            $nestedData['tipo_maguey'] = $dictamen->lote_envasado->lotesGranel->first()?->tiposRelacionados
+                ?->map(fn($t) => $t->nombre.' ('.$t->cientifico.')')->implode(', ') ?? 'No encontrado';
+            $nestedData['marca'] = $dictamen->lote_envasado->marca->marca ?? 'No encontrado';
+            $nestedData['presentacion'] = 
+                ($dictamen->lote_envasado->presentacion ?? 'No encontrado') . ' ' . 
+                ($dictamen->lote_envasado->unidad ?? 'No encontrado');
+            $nestedData['sku'] = json_decode($dictamen->lote_envasado->sku, true)['inicial'] ?? 'No encontrado';
             ///numero y nombre empresa
             $empresa = $dictamen->inspeccion->solicitud->empresa ?? null;
             $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()

@@ -154,7 +154,13 @@ if (dt_user_table.length) {
             responsivePriority: 4, 
             render: function (data, type, full, meta) {
               return `<div class="small">
-                <b>Lote envasado:</b> ${full['lote_envasado']}
+                <b>Lote envasado:</b> ${full['lote_envasado']} <br>
+                <b>Lote granel:</b> ${full['lote_granel']} <br>
+                <b>Folio fq:</b> ${full['folio_fq']} <br>
+                <b>Tipo maguey:</b> ${full['tipo_maguey']} <br>
+                <b>Marca:</b> ${full['marca']} <br>
+                <b>Presentación:</b> ${full['presentacion']} <br>
+                <b>sku:</b> ${full['sku']}
                 
                 ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
               </div>`;
