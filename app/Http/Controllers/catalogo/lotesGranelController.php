@@ -754,22 +754,32 @@ class lotesGranelController extends Controller
       if ($request->hasFile('url')) {
 
           // Eliminar archivos antiguos
-    $documentacionUrls = Documentacion_url::where('id_relacion', $id_lote_granel)
-        ->whereIn('id_documento', $request->id_documento)
-        ->get();
+        foreach ($request->file('url') as $index => $file) {
+            if (isset($request->id_documento[$index])) {
+                $idDoc = (int) $request->id_documento[$index];
 
-    foreach ($documentacionUrls as $documentacionUrl) {
-        $carpetas = ['fqs', 'certificados_granel'];
+                // Buscar documento existente solo para este id_documento y id_relacion
+                $documentacionUrl = Documentacion_url::where('id_relacion', $id_lote_granel)
+                    ->where('id_documento', $idDoc)
+                    ->first();
 
-        foreach ($carpetas as $carpeta) {
-            $filePath = 'uploads/' . $numeroCliente . '/' . $carpeta . '/' . $documentacionUrl->url;
-            if (Storage::disk('public')->exists($filePath)) {
-                Storage::disk('public')->delete($filePath);
+                if ($documentacionUrl) {
+                    // Definir carpeta correcta según id_documento
+                    $carpeta = ($idDoc === 59) ? 'certificados_granel' : 'fqs';
+
+                    $filePath = 'uploads/' . $numeroCliente . '/' . $carpeta . '/' . $documentacionUrl->url;
+
+                    if (Storage::disk('public')->exists($filePath)) {
+                        Storage::disk('public')->delete($filePath);
+                    }
+
+                    $documentacionUrl->delete();
+                }
             }
         }
 
-        $documentacionUrl->delete();
-    }
+
+
 
 //almacenar nuevos documentos
     foreach ($request->file('url') as $index => $file) {

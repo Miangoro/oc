@@ -241,7 +241,7 @@
                                                 id="file_ajuste_134" name="url[]">
                                             <input value="134" class="form-control"
                                                 type="hidden" name="id_documento[]">
-                                            <input value="134" class="form-control"
+                                            <input value="Fisicoquímicos de ajuste de grado" class="form-control"
                                                 type="hidden" name="nombre_documento[]" >
                                         </td>
                                     </tr>
