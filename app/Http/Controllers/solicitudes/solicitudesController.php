@@ -1694,24 +1694,27 @@ class solicitudesController extends Controller
         $data['cont_alc'] = $validated['cont_alc'];
 
         // Preparar los detalles
-        $detalles = [];
-        $totalLotes = count($validated['lote_envasado']);  // Suponiendo que todos los arrays tienen el mismo tamaño
+            $detalles = [];
+            $totalLotes = count($validated['lote_envasado']);
 
             for ($i = 0; $i < $totalLotes; $i++) {
-                if ($i === 0) {
-                    // Solo el primer lote lleva los campos extra
-                    $detalles[] = [
-                        'id_lote_envasado' => (int)$validated['lote_envasado'][$i],
-                        'cantidad_botellas' => isset($validated['cantidad_botellas']) ? (int)$validated['cantidad_botellas'] : null,
-                        'cantidad_cajas' => isset($validated['cantidad_cajas']) ? (int)$validated['cantidad_cajas'] : null,
-                        'presentacion' => isset($validated['presentacion']) ? $validated['presentacion'] : null,
-                    ];
-                } else {
-                    // Los demás solo el id
-                    $detalles[] = [
-                        'id_lote_envasado' => (int)$validated['lote_envasado'][$i],
-                    ];
+                $detalle = [
+                    'id_lote_envasado' => (int) $validated['lote_envasado'][$i],
+                ];
+
+                if (isset($validated['cantidad_botellas'][$i])) {
+                    $detalle['cantidad_botellas'] = (int) $validated['cantidad_botellas'][$i];
                 }
+
+                if (isset($validated['cantidad_cajas'][$i])) {
+                    $detalle['cantidad_cajas'] = (int) $validated['cantidad_cajas'][$i];
+                }
+
+                if (isset($validated['presentacion'][$i])) {
+                    $detalle['presentacion'] = [$validated['presentacion'][$i]]; // Mantener formato array
+                }
+
+                $detalles[] = $detalle;
             }
         // Incluir los detalles dentro de las características
         $data['detalles'] = $detalles;

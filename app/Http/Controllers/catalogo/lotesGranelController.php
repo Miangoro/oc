@@ -634,7 +634,7 @@ class lotesGranelController extends Controller
     }
 
     public function update(Request $request, $id_lote_granel)
-    {
+  {
         try {
             // Validar los datos del formulario
             $validated = $request->validate([
@@ -754,7 +754,10 @@ class lotesGranelController extends Controller
       if ($request->hasFile('url')) {
 
           // Eliminar archivos antiguos
-          $documentacionUrls = Documentacion_url::where('id_relacion', $id_lote_granel)->get();
+          $documentacionUrls = Documentacion_url::where('id_relacion', $id_lote_granel)
+    ->whereIn('id_documento', $request->id_documento)
+    ->get();
+
           foreach ($documentacionUrls as $documentacionUrl) {
               $filePath = 'uploads/' . $numeroCliente .'/fqs/' . $documentacionUrl->url;
               if (Storage::disk('public')->exists($filePath)) {
@@ -771,15 +774,33 @@ class lotesGranelController extends Controller
           // Almacenar nuevos documentos
           foreach ($request->file('url') as $index => $file) {
               if (isset($request->id_documento[$index])) {
-                  $folio_fq = $index == 0 && $request->id_documento[$index] == 58
-                      ? $request->folio_fq_completo
-                      : $request->folio_fq_ajuste;
+                  $idDoc = $request->id_documento[$index];
+                  $folio_fq = '';
+
+                  if ($idDoc == 58) {
+                      $folio_fq = $request->folio_fq_completo ?? '';
+                  } elseif ($idDoc == 134) {
+                      $folio_fq = $request->folio_fq_ajuste ?? '';
+                  }
 
                   $tipo_analisis = $request->tipo_analisis[$index] ?? '';
 
+                  $nombre_documento = match($idDoc) {
+                      58 => 'Análisis fisicoquímicos',
+                      134 => 'Fisicoquímicos de ajuste de grado',
+                      59 => 'Certificado de cumplimiento de granel',
+                      default => 'Desconocido',
+                  };
+
+                  $prefix = match($request->id_documento[$index]) {
+                      58 => 'analisis_fisioquimicos',
+                      134 => 'fisicoquimicos_ajuste_grado',
+                      59 => 'certificado_granel',
+                      default => 'documento',
+                  };
                   // Generar un nombre único para el archivo
                   $uniqueId = uniqid();
-                  $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+                  $filename = $prefix . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
                   Log::info('Procesando archivo:', ['file' => $file->getClientOriginalName(), 'numeroCliente' => $numeroCliente]);
                 $carpeta = '/certificados_granel';
@@ -807,18 +828,16 @@ class lotesGranelController extends Controller
       }
 
       // Actualizar el campo folio_fq
-      $folio_fq_Completo = substr($validated['folio_fq_completo'] ?? '', 0, 50);
-      $folio_fq_ajuste = substr($validated['folio_fq_ajuste'] ?? '', 0, 50);
+            $folio_fq_Completo = $validated['folio_fq_completo'] ?? '';
+            $folio_fq_ajuste = $validated['folio_fq_ajuste'] ?? '';
 
-      if (trim($folio_fq_Completo) === '' && trim($folio_fq_ajuste) === '') {
-          $lote->folio_fq = 'Sin FQ'; // Asignar 'Sin FQ' si ambos están vacíos
-      } else {
-          // Concatenar los valores si alguno tiene contenido
-          if (!empty($folio_fq_ajuste)) {
-              $folio_fq_Completo .= ',' . $folio_fq_ajuste;
-          }
-          $lote->folio_fq = substr($folio_fq_Completo, 0, 50); // Limitar a 50 caracteres
-      }
+            if (!empty($folio_fq_Completo) || !empty($folio_fq_ajuste)) {
+                $fqFinal = trim($folio_fq_Completo);
+                if (!empty($folio_fq_ajuste)) {
+                    $fqFinal .= ',' . trim($folio_fq_ajuste);
+                }
+                $lote->folio_fq = substr($fqFinal, 0, 50);
+            }
       $lote->save();
 
 
@@ -849,7 +868,7 @@ class lotesGranelController extends Controller
                 'message' => 'Error al actualizar el lote: ' . $e->getMessage(),
             ], 500);
         }
-    }
+  }
 
 
 
