@@ -128,7 +128,20 @@ public function index(Request $request)
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
     }*/
-    if ($orderColumn === 'pdf_firmado') {
+    if ($orderColumn === 'num_certificado') {
+        $query->orderByRaw("
+            CASE
+                WHEN num_certificado LIKE 'CIDAM C-GRA25-%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(
+                SUBSTRING_INDEX(
+                    SUBSTRING(num_certificado, LOCATE('CIDAM C-GRA25-', num_certificado) + 14),
+                    '-', 1
+                ) AS UNSIGNED
+            ) $orderDirection
+        ");
+    } elseif ($orderColumn === 'pdf_firmado') {
         $query->orderByRaw("CASE WHEN doc.url IS NOT NULL THEN 0 ELSE 1 END $orderDirection");
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
