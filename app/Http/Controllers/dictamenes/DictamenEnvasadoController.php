@@ -209,8 +209,18 @@ public function store(Request $request)
         'fecha_vigencia' => 'required|date',
         'id_firmante' => 'required|exists:users,id',
     ]);
+
+    // Busca la inspección y carga la relacion con modelo inspeccion->solicitud
+    $inspeccion = inspecciones::find($validated['id_inspeccion']);
+    // Obtener el lote directamente
+    $id_lote_envasado = $inspeccion->solicitud->id_lote_envasado;
+    if (!$id_lote_envasado) {
+        return response()->json(['error' => 'No se encontró el lote asociado a la solicitud'], 404);
+    }
+
         // Crear un registro
         $new = new Dictamen_Envasado();
+        $new->id_lote_envasado = $id_lote_envasado;
         $new->id_inspeccion = $validated['id_inspeccion'];
         $new->num_dictamen = $validated['num_dictamen'];
         $new->fecha_emision = $validated['fecha_emision'];
@@ -284,8 +294,19 @@ public function update(Request $request, $id_dictamen_envasado)
             'id_firmante' => 'required|exists:users,id',
         ]);
 
+        // Busca la inspección y carga la relacion con modelo inspeccion->solicitud
+        //$inspeccion = inspecciones::with(['solicitud'])->find($validated['id_inspeccion']);
+        $inspeccion = inspecciones::find($validated['id_inspeccion']);
+        // Obtener el lote directamente
+        $id_lote_envasado = $inspeccion->solicitud->id_lote_envasado;
+        if (!$id_lote_envasado) {
+            return response()->json(['error' => 'No se encontró el lote asociado a la solicitud'], 404);
+        }
+
+
         $actualizar = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
         $actualizar->update([// Actualizar
+            'id_lote_envasado' => $id_lote_envasado,
             'num_dictamen' => $validated['num_dictamen'],
             'id_inspeccion' => $validated['id_inspeccion'],
             'fecha_emision' => $validated['fecha_emision'],
@@ -308,7 +329,7 @@ public function update(Request $request, $id_dictamen_envasado)
 ///FUNCION REEXPEDIR
 public function reexpedir(Request $request)
 {
-    try {
+    //try {
         $request->validate([
             'accion_reexpedir' => 'required|in:1,2',
             'observaciones' => 'nullable|string',
@@ -343,8 +364,17 @@ public function reexpedir(Request $request)
             $reexpedir->observaciones = json_encode($observacionesActuales);
             $reexpedir->save();
 
+        // Busca la inspección y carga la relacion con modelo inspeccion->solicitud
+        $inspeccion = inspecciones::find($request->validate['id_inspeccion']);
+        // Obtener el lote directamente
+        $id_lote_envasado = $inspeccion->solicitud->id_lote_envasado;
+        if (!$id_lote_envasado) {
+            return response()->json(['error' => 'No se encontró el lote asociado a la solicitud'], 404);
+        }
+
             // Crear un nuevo registro de reexpedición
             $new = new Dictamen_Envasado();
+            $new->id_lote_envasado = $id_lote_envasado;
             $new->num_dictamen = $request->num_dictamen;
             $new->id_inspeccion = $request->id_inspeccion;
             $new->fecha_emision = $request->fecha_emision;
@@ -358,13 +388,13 @@ public function reexpedir(Request $request)
         }
 
         return response()->json(['message' => 'Procesado correctamente.']);
-    } catch (\Exception $e) {
+    /*} catch (\Exception $e) {
         Log::error('Error al reexpedir', [
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
         return response()->json(['error' => 'Error al procesar.'], 500);
-    }
+    }*/
 }
 
 
