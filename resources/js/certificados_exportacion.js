@@ -260,8 +260,10 @@ if (dt_user_table.length) {
               estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
             } else if ($estatus == 2) {
               estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
-            } else {
+            } else if ($estatus == 3) {
               estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
+            } else {
+              estatus = '<span class="badge rounded-pill bg-secondary">Pendiente</span>';
             }
 
             ///revisores PERSONAL
