@@ -478,6 +478,7 @@ class lotesGranelController extends Controller
 
         /* $idDoc = $request->id_documento[$index]; */
         $tipo_analisis = $request->tipo_analisis[$index] ?? '';
+        $nombreChelo = $request->nombre_documento[$index] ?? '';
         $folio_fq = '';
 
           $idDoc = 0;
@@ -488,9 +489,14 @@ class lotesGranelController extends Controller
           } elseif ($tipo_analisis === 'Ajuste de grado') {
               $idDoc = 134;
               $folio_fq = $request->folio_fq_ajuste[$index] ?? '';
+          } elseif ($nombreChelo === 'Certificado de lote a granel'){
+            $idDoc = 59;
           }
+
+
           $nombre_documento = match($idDoc) {
               58 => 'Análisis fisicoquímicos',
+              59 => 'Certificado de lote a granel',
               134 => 'Fisicoquímicos de ajuste de grado',
               default => 'Desconocido',
           };
@@ -498,6 +504,7 @@ class lotesGranelController extends Controller
         $uniqueId = uniqid();
         $prefix = match($idDoc) {
             58 => 'analisis_fisioquimicos',
+            59 => 'certificado_granel',
             134 => 'fisicoquimicos_ajuste_grado',
             default => 'documento',
         };
