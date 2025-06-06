@@ -290,7 +290,7 @@
             <td class="column" style="width: 20%; vertical-align: middle;">RFC</td>
             <td style="width: 39%; vertical-align: middle;">{{ $data->inspeccion?->solicitud?->empresa?->rfc ?? 'No encontrado' }}</td>
             <td class="column" style="width: 16%; vertical-align: middle;">Fecha de vencimiento</td>
-            <td style="width: 25%; vertical-align: middle;">{{ $fecha_vigencia ?? '' }}</td>
+            <td style="width: 25%; vertical-align: middle;">{{-- {{ $fecha_vigencia ?? '' }} --}}Indefinido</td>
         </tr>
         <tr>
             <td class="column" style="width: 20%; vertical-align: middle;">No. servicio</td>

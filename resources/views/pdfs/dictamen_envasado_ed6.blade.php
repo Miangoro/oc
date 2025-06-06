@@ -314,7 +314,7 @@
                     <td class="column">RFC</td>
                     <td> {{ $data->inspeccion?->solicitud?->empresa?->rfc ?? 'No encontrado' }}</td>
                     <td class="column">Fecha de vencimiento</td>
-                    <td>{{ $fecha_vigencia ?? ''}}</td>
+                    <td>{{-- {{ $fecha_vigencia ?? ''}} --}}Indefinido</td>
                 </tr>
                 <tr>
                     <td class="column">No. servicio</td>
