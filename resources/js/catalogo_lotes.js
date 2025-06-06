@@ -1036,7 +1036,7 @@ $(function () {
                 if (documento.url) {
                   archivoDisponible = true;
                   var fileName = documento.url.split('/').pop();
-                  $('#archivo_url_display_otro_organismo').html('Documento disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>');
+                  $('#archivo_url_display_otro_organismo').html('Documento disponible: <a href="../files/' + data.numeroCliente + '/certificados_granel/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>');
                 }
               });
               if (!archivoDisponible) {
@@ -1065,49 +1065,43 @@ $(function () {
               var documentoAjusteUrlAsignado = false;
 
               // Limpiar previamente los mensajes en el modal (ya no limpiamos inputs)
-              $('td[id^="archivo_url_display_completo_"]').html('');
-              $('td[id^="archivo_url_display_ajuste_"]').html('');
+              $('#archivo_url_display_completo_58').html('');
+              $('#archivo_url_display_ajuste_134').html('');
 
               documentos.forEach(function (documento) {
-                var id = documento.id_documento;
-
-                var archivoUrlDisplayCompleto = $('#archivo_url_display_completo_' + id);
-                var archivoUrlDisplayAjuste = $('#archivo_url_display_ajuste_' + id);
-
-                // Validar que documento.url y documento.tipo existan
-                if (!documento.url || !documento.tipo) return;
-
-                var fileName = documento.url.split('/').pop();
-
-                // Documento completo
-                if (documento.tipo.includes('Análisis completo') && !documentoCompletoUrlAsignado) {
-                  archivoUrlDisplayCompleto.html(
-                    'Documento completo disponible: <a href="../files/' + data.numeroCliente + '/fqs/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'
-                  );
-                  documentoCompletoUrlAsignado = true;
-                }
-
-                // Documento de ajuste
-                if (documento.tipo.includes('Ajuste de grado') && !documentoAjusteUrlAsignado) {
-                  archivoUrlDisplayAjuste.html(
-                    'Documento ajuste disponible: <a href="../files/' + data.numeroCliente + '/fqs/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'
-                  );
-                  documentoAjusteUrlAsignado = true;
-                }
+                  const id = documento.id_documento;
+                  const fileName = documento.url.split('/').pop();
+                    if (id == 58) {
+                        $('#archivo_url_display_completo_58').html(
+                            'Documento completo disponible: <a href="../files/' + data.numeroCliente + '/fqs/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'
+                        );
+                        documentoCompletoUrlAsignado = true; // ✅ AQUI
+                    }
+                    if (id == 134) {
+                        $('#archivo_url_display_ajuste_134').html(
+                            'Documento ajuste disponible: <a href="../files/' + data.numeroCliente + '/fqs/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'
+                        );
+                        documentoAjusteUrlAsignado = true; // ✅ AQUI
+                    }
               });
+
+
 
               // Mostrar mensajes si no se asignó alguno
               if (!documentoCompletoUrlAsignado) {
-                $('td[id^="archivo_url_display_completo_"]').html('No hay archivo completo disponible.');
+                  $('#archivo_url_display_completo_58').html('No hay archivo completo disponible.');
               }
               if (!documentoAjusteUrlAsignado) {
-                $('td[id^="archivo_url_display_ajuste_"]').html('No hay archivo de ajuste disponible.');
+                  $('#archivo_url_display_ajuste_134').html('No hay archivo de ajuste disponible.');
               }
+
 
             } else {
               console.log('No hay documentos disponibles.');
               $('td[id^="archivo_url_display_"]').html('No hay documentos disponibles.');
             }
+
+            /* aqui termina lo de mostar rutas */
 
 
             // Mostrar el modal

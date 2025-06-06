@@ -503,7 +503,7 @@ class lotesGranelController extends Controller
 
         $uniqueId = uniqid();
         $prefix = match($idDoc) {
-            58 => 'analisis_fisioquimicos',
+            58 => 'analisis_fisicoquimicos',
             59 => 'certificado_granel',
             134 => 'fisicoquimicos_ajuste_grado',
             default => 'documento',
@@ -562,11 +562,11 @@ class lotesGranelController extends Controller
 
             // Obtener los documentos asociados
             $documentos = Documentacion_url::where('id_relacion', $id_lote_granel)
-    ->where(function ($query) {
-        $query->where('id_documento', 58)
-              ->orWhere('id_documento', 134);
-    })
-    ->get();
+            ->where(function ($query) {
+                $query->where('id_documento', 58)
+                      ->orWhere('id_documento', 134)->orWhere('id_documento', 59);
+            })
+            ->get();
 
 
             // Extraer la URL de los documentos
@@ -801,7 +801,7 @@ class lotesGranelController extends Controller
             $carpeta = 'fqs';
 
             $prefix = match($idDoc) {
-                58 => 'analisis_fisioquimicos',
+                58 => 'analisis_fisicoquimicos',
                 134 => 'fisicoquimicos_ajuste_grado',
                 59 => 'certificado_granel',
                 default => 'documento',

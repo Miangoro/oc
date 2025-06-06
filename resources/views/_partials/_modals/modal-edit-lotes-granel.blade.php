@@ -216,7 +216,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="3"
-                                            id="archivo_url_display_completo_{{ $documento->id_documento }}">
+                                            id="archivo_url_display_completo_58">
                                             <!-- La URL del documento completo se mostrará aquí -->
                                         </td>
                                     </tr>
