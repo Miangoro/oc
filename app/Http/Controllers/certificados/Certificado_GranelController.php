@@ -76,6 +76,7 @@ public function index(Request $request)
         ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
         ->select('certificados_granel.*', 'empresa.razon_social');
 
+        
     if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
     }
@@ -119,7 +120,7 @@ public function index(Request $request)
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
     }
-
+   
 
     // Paginación
     $certificados = $query

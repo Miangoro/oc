@@ -1369,16 +1369,7 @@ $('#FormCertificadoFirmado').on('submit', function (e) {
       dataTable.ajax.reload(null, false); // Si usas datatables
     },
     error: function (xhr) {
-      /*console.log(xhr.responseText);
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al subir el documento.',
-        //footer: `<pre>${xhr.responseText}</pre>`,
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });*/
+
       console.log(xhr.responseText);
       if (xhr.status === 422) {
         // Error de validación
@@ -1386,7 +1377,7 @@ $('#FormCertificadoFirmado').on('submit', function (e) {
           icon: 'warning',
           title: 'Error al subir',
           text: 'El documento no debe ser mayor a 3MB',
-          //text: xhr.responseText,
+          //footer: `<pre>${xhr.responseText}</pre>`,
           customClass: {
             confirmButton: 'btn btn-warning'
           }
@@ -1402,7 +1393,7 @@ $('#FormCertificadoFirmado').on('submit', function (e) {
           }
         });
       }
-
+      
     }
   });
       
