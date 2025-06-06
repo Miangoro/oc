@@ -134,7 +134,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="number" step="0.01" placeholder="Volumen total"
-                                    id="volumen_total" name="volumen_total" readonly />
+                                    id="volumen_total" name="volumen_total"  />
                                 <label for="volumen_total">Volumen total en Litros</label>
                             </div>
                         </div>

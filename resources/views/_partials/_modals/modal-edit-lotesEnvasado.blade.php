@@ -141,7 +141,7 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="number" step="0.01"
                                     placeholder="Volumen total" id="edit_volumen_total" name="edit_volumen_total"
-                                    readonly />
+                                     />
                                 <label for="edit_volumen_total">Volumen total</label>
                             </div>
                         </div>
