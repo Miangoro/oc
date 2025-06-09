@@ -75,7 +75,7 @@ public function index(Request $request)
         ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
         ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
         ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
-        ->select('certificados_granel.*', 'empresa.razon_social');
+        ;//->select('certificados_granel.*', 'empresa.razon_social');
 
         
     if ($empresaId) {
@@ -90,13 +90,13 @@ public function index(Request $request)
     if (!empty($search)) {
         $query->where(function ($q) use ($search) {
             $q->where('certificados_granel.num_certificado', 'LIKE', "%{$search}%")
-            ->orWhere('dictamenes_granel.num_dictamen', 'LIKE', "%{$search}%")
+            /*->orWhere('dictamenes_granel.num_dictamen', 'LIKE', "%{$search}%")
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
             ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
             ->orWhereRaw("DATE_FORMAT(certificados_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
             ->orWhere('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
-            ->orWhere('lotes_granel.folio_fq', 'LIKE', "%{$search}%");
+            ->orWhere('lotes_granel.folio_fq', 'LIKE', "%{$search}%")*/;
         });
 
         $totalFiltered = $query->count();
@@ -122,7 +122,7 @@ public function index(Request $request)
 
     // Paginación
     $certificados = $query
-        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
+        /*->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
             'dictamen',// Relación directa
             'dictamen.inspeccione',// Relación anidada: dictamen > inspeccione
             'dictamen.inspeccione.solicitud',
@@ -130,7 +130,7 @@ public function index(Request $request)
             'dictamen.inspeccione.solicitud.empresa.empresaNumClientes',
             'revisorPersonal.user',
             'revisorConsejo.user',
-        ])->offset($start)->limit($limit)->get();
+        ])*/->offset($start)->limit($limit)->get();
 
 
         
