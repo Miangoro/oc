@@ -302,7 +302,7 @@
         </tr>
         <tr>
             <td style="font-size: 15px;"><b>Cont. Net. <br>(mL)</b></td>
-            <td>{{$presentacion}} </td>
+            <td>{{ $presentacion ?? '' }} </td>
             <td style="font-size: 15px;"><b>No. Botellas</b></td>
             <td>{{$botellas}}</td>
             <td style="font-size: 15px;"><b>No. Cajas</b></td>
