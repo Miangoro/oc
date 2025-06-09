@@ -231,11 +231,11 @@
         @endphp
 
         @if ($firma && Storage::disk('public')->exists($firmaPath))
-            <img style="position: absolute; margin-top: -5%; left: 68%;" height="90px"
+            <img style="position: absolute; margin-top: -5%; left: 68%;" height="50px"
             src="{{ public_path('storage/' . $firmaPath) }}">
         @endif
 
-         {{ $datos->inspector->name ?? '' }} <br> {{ $datos->inspector->puesto ?? '' }}
+         {{ $datos->inspector->name ?? '' }} <br> {{ $datos->inspector->puesto ?? '' }}<br>
         ______________________________ <br>
                 Nombre, fecha y firma <br> &nbsp;</td>
         </tr>
