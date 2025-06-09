@@ -275,7 +275,8 @@ public function getDocumentosSolicitud($id_solicitud)
     return response()->json([
         'success' => true,
         'data' => $documentos,
-        'numero_cliente' => $numero_cliente
+        'numero_cliente' => $numero_cliente,
+        'fqs' => $solicitud->lote_granel?->fqs,
     ]);
 }
 
