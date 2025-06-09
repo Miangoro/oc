@@ -296,6 +296,7 @@ public function getDocumentosSolicitud($id_solicitud)
 
     }
 
+
     return response()->json([
         'success' => true,
         'data' => $documentos,

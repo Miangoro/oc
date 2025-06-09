@@ -355,9 +355,13 @@ class inspeccionesController extends Controller
             foreach ($request->file('url') as $index => $file) {
                 if ($request->id_solicitud) {
                     // Buscar el registro existente
+                   if ($request->id_solicitud && $request->id_documento[$index] == 69) {
                     $documentacion_url = Documentacion_url::where('id_relacion', $request->id_solicitud)
-                        ->where('id_documento', $request->id_documento[$index])
+                        ->where('id_documento', 69)
                         ->first();
+                } else {
+                    $documentacion_url = null;
+                }
 
                     // Si existe un registro, elimina el archivo anterior
                     if ($documentacion_url) {

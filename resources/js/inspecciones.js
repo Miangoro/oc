@@ -24,7 +24,7 @@ $(function () {
       }
     },
     columns: [
-      { data: '' },
+
       { data: '' },
       { data: 'folio' },
       { data: 'num_servicio' },
@@ -98,7 +98,7 @@ $(function () {
           return '';
         }
       },
-      {
+     /*   {
         searchable: false,
         orderable: true,
         targets: 1,
@@ -106,7 +106,7 @@ $(function () {
           return `<span>${full.fake_id}</span>`;
         }
       },
-      /*       {
+           {
 
         targets: 11,
         className: 'text-center',
@@ -121,7 +121,7 @@ $(function () {
       },*/
 
       {
-        targets: 10,
+        targets: 9,
         className: 'text-center',
         render: function (data, type, full, meta) {
           const acta = full['url_acta'];

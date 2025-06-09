@@ -137,7 +137,6 @@
                 <thead class="table-dark">
                     <tr>
                         <th></th>
-                        <th>No.</th>
                         <th>Folio</th>
                         <th>No. de servicio</th>
                         <th>Cliente</th>
@@ -265,6 +264,7 @@
                 const fqs = response.fqs;
                 const url_etiqueta = response.url_etiqueta;
                 const url_corrugado = response.url_corrugado;
+                const url_evidencias = response.url_evidencias;
                 let html = `
                     <table class="table table-bordered table-striped">
                         <thead class="table-dark">
@@ -331,6 +331,7 @@
                             </tr>`;
                     
                 }
+
 
                 html += `</tbody></table>`;
                 $('#contenedor-documentos').html(html);
