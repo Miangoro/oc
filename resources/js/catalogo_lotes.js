@@ -1081,38 +1081,61 @@ $(function () {
               // Limpiar previamente los mensajes en el modal (ya no limpiamos inputs)
               $('#archivo_url_display_completo_58').html('');
               $('#archivo_url_display_ajuste_134').html('');
+              $('#deleteArchivo58').html('');
+              $('#deleteArchivo134').html('');
+
 
               documentos.forEach(function (documento) {
-                  const id = documento.id_documento;
-                  const fileName = documento.url.split('/').pop();
-                    if (id == 58) {
-                        $('#archivo_url_display_completo_58').html(
-                            'Documento completo disponible: <a href="../files/' + data.numeroCliente + '/fqs/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'
-                        );
-                        documentoCompletoUrlAsignado = true; // ✅ AQUI
-                    }
-                    if (id == 134) {
-                        $('#archivo_url_display_ajuste_134').html(
-                            'Documento ajuste disponible: <a href="../files/' + data.numeroCliente + '/fqs/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'
-                        );
-                        documentoAjusteUrlAsignado = true; // ✅ AQUI
-                    }
-              });
+                const id = documento.id_documento;
+                const fileName = documento.url.split('/').pop();
+                const fileUrl = '../files/' + data.numeroCliente + '/fqs/' + documento.url;
 
+                let botonEliminar = `
+
+                    <button type="button"
+                            class="btn btn-danger btn-sm btn-eliminar-doc"
+                            data-id="${documento.id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                        Eliminar documento
+                    </button>
+
+                `;
+
+                if (id == 58) {
+                  $('#archivo_url_display_completo_58').html(
+                    `Documento completo disponible: <a href="${fileUrl}" target="_blank" class="text-primary">${fileName}</a>`
+                  );
+                  $('#deleteArchivo58').html(`${botonEliminar}`);
+
+                  documentoCompletoUrlAsignado = true;
+                }
+
+                if (id == 134) {
+                  $('#archivo_url_display_ajuste_134').html(
+                    `Documento ajuste disponible: <a href="${fileUrl}" target="_blank" class="text-primary">${fileName}</a>`
+                  );
+                  $('#deleteArchivo134').html(`${botonEliminar}`);
+                  documentoAjusteUrlAsignado = true;
+                }
+              });
 
 
               // Mostrar mensajes si no se asignó alguno
               if (!documentoCompletoUrlAsignado) {
-                  $('#archivo_url_display_completo_58').html('No hay archivo completo disponible.');
+                $('#archivo_url_display_completo_58').html('No hay archivo completo disponible.');
+                $('#deleteArchivo58').html('');
+
               }
               if (!documentoAjusteUrlAsignado) {
-                  $('#archivo_url_display_ajuste_134').html('No hay archivo de ajuste disponible.');
+                $('#archivo_url_display_ajuste_134').html('No hay archivo de ajuste disponible.');
+                $('#deleteArchivo134').html('');
               }
 
 
             } else {
               console.log('No hay documentos disponibles.');
               $('td[id^="archivo_url_display_"]').html('No hay documentos disponibles.');
+               $('#deleteArchivo58').html('');
+              $('#deleteArchivo134').html('');
             }
 
             /* aqui termina lo de mostar rutas */
@@ -1395,17 +1418,101 @@ $(function () {
 
   });
 
-// Mover el último seleccionado al final visualmente
-$('#tipo_agave').on('select2:select', function (e) {
-  const selectedElement = $(e.params.data.element);
-  selectedElement.detach();
-  $(this).append(selectedElement).trigger('change.select2');
-});
+  // Mover el último seleccionado al final visualmente
+  $('#tipo_agave').on('select2:select', function (e) {
+    const selectedElement = $(e.params.data.element);
+    selectedElement.detach();
+    $(this).append(selectedElement).trigger('change.select2');
+  });
 
-$('#edit_tipo_agave').on('select2:select', function (e) {
-  const selectedElement = $(e.params.data.element);
-  selectedElement.detach();
-  $(this).append(selectedElement).trigger('change.select2');
-});
+  $('#edit_tipo_agave').on('select2:select', function (e) {
+    const selectedElement = $(e.params.data.element);
+    selectedElement.detach();
+    $(this).append(selectedElement).trigger('change.select2');
+  });
+
+
+
+  $(document).on('click', '.btn-eliminar-doc', function () {
+    var idDocumento = $(this).data('id');
+    var dtrModal = $('.dtr-bs-modal.show');
+
+    if (dtrModal.length) {
+      dtrModal.modal('hide');
+    }
+
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: 'Este documento será eliminado y no podrá recuperarse.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-danger me-3',
+        cancelButton: 'btn btn-label-secondary'
+      },
+      buttonsStyling: false
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: 'POST', // o DELETE si defines la ruta así
+          url: `${baseUrl}eliminar_documento`, // ajusta esta URL a tu ruta
+          data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            id: idDocumento
+          },
+          success: function (response) {
+            if (response.success) {
+              $('#edit_certificado_lote').val('');
+              $('input[type="file"][name="url[]"]').val('');
+              dt_user.ajax.reload(null, false);
+              $('#offcanvasEditLote').modal('hide');
+              Swal.fire({
+                icon: 'success',
+                title: '¡Eliminado!',
+                text: 'El documento ha sido eliminado correctamente.',
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                }
+              })
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo eliminar el documento.',
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
+            }
+          },
+          error: function (xhr) {
+            console.error(xhr.responseText);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Ocurrió un error en el servidor.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelado',
+          text: 'La eliminación del documento ha sido cancelada.',
+          icon: 'info',
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      }
+    });
+  });
+
+
+
 
 });

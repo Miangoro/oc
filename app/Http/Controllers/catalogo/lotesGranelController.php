@@ -572,6 +572,7 @@ class lotesGranelController extends Controller
             // Extraer la URL de los documentos
             $documentosConUrl = $documentos->map(function ($documento) {
                 return [
+                    'id' => $documento->id,
                     'id_documento' => $documento->id_documento,
                     'nombre' => $documento->nombre_documento,
                     'url' => $documento->url,
@@ -896,6 +897,54 @@ class lotesGranelController extends Controller
   }
 
 
+        public function eliminar_documento(Request $request)
+      {
+          try {
+              $documento = Documentacion_url::findOrFail($request->id);
+
+              // Obtener id_empresa
+              $idEmpresa = $documento->id_empresa;
+
+              // Buscar el número de cliente desde Empresa
+              $empresa = Empresa::with('empresaNumClientes')
+                  ->where('id_empresa', $idEmpresa)
+                  ->first();
+
+              $numeroCliente = optional($empresa->empresaNumClientes)->pluck('numero_cliente')->first(function ($numero) {
+                  return !empty($numero);
+              });
+
+              if (!$numeroCliente) {
+                  return response()->json([
+                      'success' => false,
+                      'message' => 'No se encontró el número de cliente relacionado con la empresa.'
+                  ]);
+              }
+
+              // Determinar carpeta por tipo de documento
+              $idDoc = $documento->id_documento;
+              $carpeta = ($idDoc === 59) ? 'certificados_granel' : 'fqs';
+
+              // Ruta del archivo
+              $filePath = 'uploads/' . $numeroCliente . '/' . $carpeta . '/' . $documento->url;
+
+              // Eliminar archivo físico si existe
+              if (Storage::disk('public')->exists($filePath)) {
+                  Storage::disk('public')->delete($filePath);
+              }
+
+              // Eliminar registro de base de datos
+              $documento->delete();
+
+              return response()->json(['success' => true]);
+
+          } catch (\Exception $e) {
+              return response()->json([
+                  'success' => false,
+                  'message' => 'Error al eliminar documento: ' . $e->getMessage()
+              ]);
+          }
+      }
 
 
 }
