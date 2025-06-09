@@ -43,7 +43,7 @@ $(function () {
       //{ data: 'fecha_solicitud' },
       {
         data: function (row) {
-          return row.tipo + (row.tipo_instalacion ? ' - ' + row.tipo_instalacion : '');
+          return row.tipo;
         }
       },
       { data: 'direccion_completa' },

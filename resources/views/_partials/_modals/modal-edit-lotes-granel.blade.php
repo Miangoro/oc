@@ -20,8 +20,9 @@
                                         name="id_empresa" class="select2 form-select">
                                         <option value="" disabled selected>Selecciona el cliente</option>
                                         @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
-
+                                            <option value="{{ $empresa->id_empresa }}">
+                                                {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                                | {{ $empresa->razon_social }}</option>
                                         @endforeach
                                     </select>
                                     <label for="id_empresa">Cliente</label>
@@ -63,19 +64,21 @@
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
-                              <div class="form-floating form-floating-outline">
-                                  <input type="text" class="form-control" id="edit_id_tanque" name="id_tanque" placeholder="ID del Tanque(s)" aria-label="ID del Tanque">
-                                  <label for="id_tanque">ID del Tanque(s)</label>
-                              </div>
-                          </div>
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" class="form-control" id="edit_id_tanque" name="id_tanque"
+                                        placeholder="ID del Tanque(s)" aria-label="ID del Tanque">
+                                    <label for="id_tanque">ID del Tanque(s)</label>
+                                </div>
+                            </div>
                         </div>
 
                         <div id="editLotesGranel" class="d-none">
                             <table class="table table-bordered shadow-lg">
                                 <thead>
                                     <tr>
-                                        <th style="width: 30px"><button type="button" class="btn btn-primary add-row-lotes-edit"> <i
-                                            class="ri-add-line"></i> </button></th>
+                                        <th style="width: 30px"><button type="button"
+                                                class="btn btn-primary add-row-lotes-edit"> <i class="ri-add-line"></i>
+                                            </button></th>
                                         <th style="width: 70%">Lote a granel</th>
                                         <th>Volumen parcial</th>
                                     </tr>
@@ -151,7 +154,8 @@
                                     <select id="edit_tipo_agave" name="id_tipo[]" class="select2 form-select"
                                         multiple>
                                         @foreach ($tipos as $tipo)
-                                            <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
+                                            <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}
+                                                ({{ $tipo->cientifico }})</option>
                                         @endforeach
                                     </select>
                                     <label for="tipo_agave">Tipo de Agave</label>
@@ -215,9 +219,11 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3"
-                                            id="archivo_url_display_completo_58">
+                                        <td colspan="2" id="archivo_url_display_completo_58">
                                             <!-- La URL del documento completo se mostrará aquí -->
+                                        </td>
+                                        <td id="deleteArchivo58">
+                                            {{-- <button type="button" class="btn btn-danger btn-sm" value="" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Eliminar documento</button> --}}
                                         </td>
                                     </tr>
 
@@ -226,29 +232,29 @@
                                         <td>
                                             <span>Ajuste de grado</span>
                                             <input hidden readonly value="Ajuste de grado" type="text"
-                                                class="form-control form-control-sm"
-                                                id="tipo_analisis_134}-2"
+                                                class="form-control form-control-sm" id="tipo_analisis_134}-2"
                                                 name="tipo_analisis[]">
                                         </td>
                                         <td>
                                             <input type="text" class="form-control form-control-sm"
-                                                id="folio_fq_ajuste_134"
-                                                name="folio_fq_ajuste"
+                                                id="folio_fq_ajuste_134" name="folio_fq_ajuste"
                                                 value="{{ $documento->folio_fq_ajuste ?? '' }}">
                                         </td>
                                         <td>
                                             <input class="form-control form-control-sm" type="file"
                                                 id="file_ajuste_134" name="url[]">
-                                            <input value="134" class="form-control"
-                                                type="hidden" name="id_documento[]">
+                                            <input value="134" class="form-control" type="hidden"
+                                                name="id_documento[]">
                                             <input value="Fisicoquímicos de ajuste de grado" class="form-control"
-                                                type="hidden" name="nombre_documento[]" >
+                                                type="hidden" name="nombre_documento[]">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3"
-                                            id="archivo_url_display_ajuste_134">
+                                        <td colspan="2" id="archivo_url_display_ajuste_134">
                                             <!-- La URL del documento de ajuste se mostrará aquí -->
+                                        </td>
+                                        <td id="deleteArchivo134">
+                                          {{--   <button type="button" class="btn btn-danger btn-sm" value="" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Eliminar documento</button> --}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -414,7 +420,7 @@
                 var selectedLotes = [];
                 $selectLotesEdit.each(function() {
                     selectedLotes.push($(this)
-                .val()); // Guardar el valor seleccionado en cada select
+                        .val()); // Guardar el valor seleccionado en cada select
                 });
 
                 // Limpiar completamente los select antes de agregar las nuevas opciones
@@ -425,7 +431,9 @@
                         // Añadir nuevas opciones con los lotes obtenidos
                         response.lotes_granel.forEach(function(lote) {
                             var isSelected = selectedLotes[index] == lote.id_lote_granel;
-                            $(this).append(new Option(lote.nombre_lote+" ("+lote.cont_alc+"% Alc. Vol.)"+" ("+lote.volumen_restante+" L)", lote.id_lote_granel,
+                            $(this).append(new Option(lote.nombre_lote + " (" + lote
+                                .cont_alc + "% Alc. Vol.)" + " (" + lote
+                                .volumen_restante + " L)", lote.id_lote_granel,
                                 false, isSelected));
                         }, this); // Usar 'this' para referirse al select actual
 
@@ -436,7 +444,7 @@
                     }
 
                     // Restaurar la selección anterior
-                  //  $(this).val(selectedLotes[index]).trigger('change');
+                    //  $(this).val(selectedLotes[index]).trigger('change');
                 });
             },
             error: function(xhr, status, error) {

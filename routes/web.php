@@ -583,6 +583,8 @@ Route::post('/lotes-register/store', [lotesGranelController::class, 'store'])->n
 Route::get('/lotes-a-granel/{id_lote_granel}/edit', [lotesGranelController::class, 'edit'])->name('lotes-a-granel.edit')->middleware(['auth']);
 Route::post('/lotes-a-granel/{id_lote_granel}', [lotesGranelController::class, 'update'])->middleware(['auth']);
 Route::get('/lotes-a-granel/{id_lote_granel}/volumen', [lotesGranelController::class, 'getVolumen'])->name('lotes-a-granel.volumen')->middleware(['auth']);
+Route::post('/eliminar_documento', [lotesGranelController::class, 'eliminar_documento'])->name('documento.eliminar');
+
 
 //Lotes de envasado
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes')->middleware(['auth']);
@@ -828,7 +830,7 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::get('/obtener_dictamenes_envasado/{empresa}', [getFuncionesController::class, 'getDictamenesEnvasado'])->name('getDictamenesEnvasado');
     Route::get('/obtener_datos_inspeccion_dictamen/{id}', [getFuncionesController::class, 'obtenerDatosInspeccion']);
     Route::get('/getDocumentosSolicitud/{id_solicitud}', [getFuncionesController::class, 'getDocumentosSolicitud']);
-    
+
 
 });
 
