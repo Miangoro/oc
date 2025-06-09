@@ -318,6 +318,20 @@
                     
                 }
 
+                 if (url_corrugado) {
+                   
+                        html += `
+                            <tr>
+                                <td>Corrugado</td>
+                                <td>
+                                    <a href="/files/${response.numero_cliente}/${url_corrugado}" target="_blank">
+                                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>`;
+                    
+                }
+
                 html += `</tbody></table>`;
                 $('#contenedor-documentos').html(html);
             }
