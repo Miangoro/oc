@@ -294,7 +294,7 @@
                             <tr>
                                 <td>${fq.nombre_documento}</td>
                                 <td>
-                                    <a href="/files/${response.numero_cliente}/fqs/${fq.url}" target="_blank">
+                                    <a href="/files/${response.numero_cliente_lote}/fqs/${fq.url}" target="_blank">
                                         <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
                                     </a>
                                 </td>
