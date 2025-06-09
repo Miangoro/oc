@@ -300,8 +300,6 @@
                                 </td>
                             </tr>`;
                     });
-                } else {
-                    html += `<tr><td colspan="2">No se encontraron fqs.</td></tr>`;
                 }
 
                 html += `</tbody></table>`;
