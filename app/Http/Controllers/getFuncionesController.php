@@ -272,6 +272,30 @@ public function getDocumentosSolicitud($id_solicitud)
     $documentos = Documentacion_url::where('id_relacion', $id_solicitud)
         ->get(['nombre_documento as nombre', 'url']);
 
+       if ($solicitud && $solicitud->id_tipo == 11) {
+        $caracteristicas = is_string($solicitud->caracteristicas)
+            ? json_decode($solicitud->caracteristicas, true)
+            : $solicitud->caracteristicas;
+
+        $idEtiqueta = is_array($caracteristicas)
+            ? ($caracteristicas['id_etiqueta'] ?? null)
+            : ($caracteristicas->id_etiqueta ?? null);
+
+        if ($idEtiqueta) {
+            $url_etiqueta = Documentacion_url::where('id_relacion', $idEtiqueta)
+            ->where('id_documento', 60)
+            ->value('url'); // Obtiene directamente el valor del campo 'url'
+        }
+
+
+        if ($idEtiqueta) {
+            $url_corrugado = Documentacion_url::where('id_relacion', $idEtiqueta)
+            ->where('id_documento', 75)
+            ->value('url'); // Obtiene directamente el valor del campo 'url'
+        }
+
+    }
+
     return response()->json([
         'success' => true,
         'data' => $documentos,
@@ -280,6 +304,8 @@ public function getDocumentosSolicitud($id_solicitud)
         'numero_cliente_lote' => $solicitud->lote_granel?->empresa?->empresaNumClientes
             ->first(fn($item) => !empty($item->numero_cliente))
             ?->numero_cliente ?? 'N/A',
+        'url_etiqueta' => $url_etiqueta ?? '',
+        'url_corrugado' => $url_corrugado ?? '',
 
             ]);
 }

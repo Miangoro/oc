@@ -263,6 +263,8 @@
             if (response.success) {
                 const documentos = response.data;
                 const fqs = response.fqs;
+                const url_etiqueta = response.url_etiqueta;
+                const url_corrugado = response.url_corrugado;
                 let html = `
                     <table class="table table-bordered table-striped">
                         <thead class="table-dark">
@@ -288,7 +290,7 @@
                     html += `<tr><td colspan="2">No se encontraron documentos.</td></tr>`;
                 }
 
-                 if (fqs.length > 0) {
+                 if (fqs) {
                     fqs.forEach(function(fq) {
                         html += `
                             <tr>
@@ -300,6 +302,20 @@
                                 </td>
                             </tr>`;
                     });
+                }
+
+                 if (url_etiqueta) {
+                   
+                        html += `
+                            <tr>
+                                <td>Etiqueta</td>
+                                <td>
+                                    <a href="/files/${response.numero_cliente}/${url_etiqueta}" target="_blank">
+                                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>`;
+                    
                 }
 
                 html += `</tbody></table>`;
