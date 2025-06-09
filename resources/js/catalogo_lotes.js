@@ -933,7 +933,7 @@ $(function () {
             var volumenes = data.volumenes;
             var nombreLotes = data.nombreLotes; // Este array contiene los nombres de los lote
             var organismoId = data.organismo;
-            var tipos = data.tipos;
+            var tipos = data.tipos || [];
             var lote_original_id = data.lote.lote_original_id;
             if (lote_original_id) {
               $('#edit_es_creado_a_partir').val('si').trigger('change');
@@ -996,13 +996,27 @@ $(function () {
             $('#folio_fq_completo_58').val(fqs[0]);
             $('#folio_fq_ajuste_134').val(fqs[1]);
 
-            // Cargar las opciones estáticas (de $tipos)
-            $.each(tipos, function (index, tipo) {
-              var option = new Option(tipo.nombre, tipo.id_tipo);
-              $('#edit_tipo_agave').append(option);
+
+            var id_tipo = Array.isArray(data.id_tipo) ? data.id_tipo.map(String) : [];
+
+            var $select = $('#edit_tipo_agave');
+            $select.empty();
+            // 1. Agregar primero los seleccionados en el orden exacto de `id_tipo`
+            id_tipo.forEach(function (id) {
+              var tipo = tipos.find(t => String(t.id_tipo) === id);
+              if (tipo) {
+                var option = new Option(`${tipo.nombre} (${tipo.cientifico})`, tipo.id_tipo, true, true);
+                $select.append(option);
+              }
             });
-            // Asignar las opciones seleccionadas del lote
-            $('#edit_tipo_agave').val(data.id_tipo).trigger('change');
+            // 2. Agregar el resto de tipos que no están seleccionados
+            tipos.forEach(function (tipo) {
+              if (!id_tipo.includes(String(tipo.id_tipo))) {
+                var option = new Option(`${tipo.nombre} (${tipo.cientifico})`, tipo.id_tipo);
+                $select.append(option);
+              }
+            });
+
             // Mostrar campos condicionales
             if (lote.tipo_lote == '1') {
               $('#edit_oc_cidam_fields').removeClass('d-none');
@@ -1381,6 +1395,17 @@ $(function () {
 
   });
 
+// Mover el último seleccionado al final visualmente
+$('#tipo_agave').on('select2:select', function (e) {
+  const selectedElement = $(e.params.data.element);
+  selectedElement.detach();
+  $(this).append(selectedElement).trigger('change.select2');
+});
 
+$('#edit_tipo_agave').on('select2:select', function (e) {
+  const selectedElement = $(e.params.data.element);
+  selectedElement.detach();
+  $(this).append(selectedElement).trigger('change.select2');
+});
 
 });
