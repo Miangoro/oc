@@ -266,7 +266,7 @@
                     <table class="table table-bordered table-striped">
                         <thead class="table-dark">
                             <tr>
-                                <th colspan="2">Documentación de la solicitud</th>
+                                <th class="text-center" colspan="2">Documentación de la solicitud</th>
                             </tr>
                         </thead>
                         <tbody>`;
