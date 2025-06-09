@@ -2,6 +2,44 @@ $(function () {
   // Definir la URL base
   var baseUrl = window.location.origin + '/';
 
+  // 1. Declarar primero los filtros
+  const filtros = [
+    'Muestreo de agave (ART)',
+    'Dictaminación de instalaciones',
+    'Vigilancia en producción de lote',
+    'Muestreo de lote a granel',
+    'Vigilancia en el traslado del lote',
+    'Emisión de certificado NOM a granel',
+    'Inspección ingreso a barrica/contenedor de vidrio',
+    'Inspección de liberación a barrica/contenedor de vidrio',
+    'Georreferenciación',
+    'Inspección de envasado',
+    'Muestreo de lote envasado',
+    'Liberación de producto terminado nacional',
+    'Pedidos para exportación',
+    'Emisión de certificado venta nacional',
+    'Revisión de etiquetas'
+  ];
+
+  // 2. Generar los botones dinámicamente
+  const filtroButtons = filtros.map(filtro => ({
+    text: filtro,
+    className: 'dropdown-item',
+    action: function (e, dt, node, config) {
+      dt_instalaciones_table.search(filtro).draw();
+      $('.dt-button-collection').hide(); // Ocultar el dropdown al seleccionar
+    }
+  }));
+  filtroButtons.unshift({
+    text: '<i class="ri-close-line text-danger me-2"></i>Quitar filtro',
+    className: 'dropdown-item text-danger fw-semibold border',
+    action: function (e, dt, node, config) {
+      dt_instalaciones_table.search('').draw();
+      $('.dt-button-collection').hide(); // Ocultar dropdown también
+    }
+  });
+
+
   // Inicializar DataTable
   var dt_instalaciones_table = $('.datatables-solicitudes').DataTable({
     processing: true,
@@ -387,133 +425,9 @@ $(function () {
     buttons: [
       {
         extend: 'collection',
-        className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-        text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-        buttons: [
-          {
-            extend: 'print',
-            title: 'Solicitudes',
-            text: '<i class="ri-printer-line me-1"></i>Imprimir',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, coldex, rowdex) {
-                  if (inner.length <= 0) return inner;
-                  var el = $.parseHTML(inner);
-                  var result = '';
-                  $.each(el, function (index, item) {
-                    if (item.classList !== undefined && item.classList.contains('user-name')) {
-                      result += item.lastChild.firstChild.textContent;
-                    } else if (item.innerText === undefined) {
-                      result += item.textContent;
-                    } else {
-                      result += item.innerText;
-                    }
-                  });
-                  return result;
-                }
-              }
-            },
-            customize: function (win) {
-              // Customize print view for dark
-              $(win.document.body)
-                .css('color', config.colors.headingColor)
-                .css('border-color', config.colors.borderColor)
-                .css('background-color', config.colors.body);
-              $(win.document.body)
-                .find('table')
-                .addClass('compact')
-                .css('color', 'inherit')
-                .css('border-color', 'inherit')
-                .css('background-color', 'inherit');
-            }
-          },
-          {
-            extend: 'csv',
-            title: 'Solicitudes',
-            text: '<i class="ri-file-text-line me-1"></i>CSV',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 8 || columnIndex === 11) {
-                    return 'ViewSuspend';
-                  }
-                  if (columnIndex === 1) {
-                    // Asegúrate de que el índice de columna es el correcto para el ID
-                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
-                  }
-                  return inner;
-                }
-              }
-            }
-          },
-          {
-            extend: 'excel', //extension a descargar
-            title: 'Solicitudes de servicio',
-            text: '<i class="ri-file-excel-line me-1"></i>Excel',
-            className: 'dropdown-item',
-            exportOptions: {
-              //define como se exportan los datos
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], //N°. de columnas a exportar
-              modifier: {
-                //Incluye todos los datos
-                page: 'all' //Exporta todos los datos de todas las páginas
-                //order: 'current' //Mantiene el orden actual
-              },
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  //Personaliza el contenido de las celdas
-                  /*if (columnIndex === 8 || columnIndex === 11) { //Reemplaza el contenido de la celda con la cadena return
-                    return 'ViewSuspend';
-                  }*/
-                  return inner.replace(/<[^>]*>/g, ''); //Elimina todas las etiquetas HTML de las columnas
-                }
-              }
-            }
-          },
-          {
-            extend: 'pdf',
-            title: 'Solicitudes',
-            text: '<i class="ri-file-pdf-line me-1"></i>PDF',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 1) {
-                    // Asegúrate de que el índice de columna es el correcto para el ID
-                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
-                  }
-                  return inner;
-                }
-              }
-            }
-          },
-          {
-            extend: 'copy',
-            title: 'Solicitudes',
-            text: '<i class="ri-file-copy-line me-1"></i>Copiar',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 8 || columnIndex === 11) {
-                    return 'ViewSuspend';
-                  }
-                  if (columnIndex === 1) {
-                    // Asegúrate de que el índice de columna es el correcto para el ID
-                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
-                  }
-                  return inner;
-                }
-              }
-            }
-          }
-        ]
+        className: 'btn btn-outline-primary dropdown-toggle me-4 waves-effect waves-light',
+        text: '<i class="ri-filter-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Filtrar</span>',
+        buttons: filtroButtons
       },
       {
         text: '<i class="ri-file-excel-2-fill ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
@@ -4115,55 +4029,55 @@ $(function () {
   /* seccion de editar solicitudes exportacion */
   // ==================== EDITAR ====================
   let sectionCountEdit = 1;
-/*   $(document).ready(function () { */
+  /*   $(document).ready(function () { */
 
-/*     $('#add-characteristics_edit_1').click(function () {
-      let empresaSeleccionada = $('#id_empresa_solicitud_exportacion_edit').val();
-      if (!empresaSeleccionada) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Advertencia',
-          text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
-          customClass: { confirmButton: 'btn btn-warning' }
-        });
-        return;
-      }
+  /*     $('#add-characteristics_edit_1').click(function () {
+        let empresaSeleccionada = $('#id_empresa_solicitud_exportacion_edit').val();
+        if (!empresaSeleccionada) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Advertencia',
+            text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
+            customClass: { confirmButton: 'btn btn-warning' }
+          });
+          return;
+        }
 
-      var newSection = `
-      <div class="card mt-4" id="caracteristicas_Ex_edit_${sectionCountEdit}">
-                              <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
-                                Características del Producto
-                            </div>
-        <div class="card-body">
-          <div class="row caracteristicas-row">
-            <div class="col-md-8">
-              <div class="form-floating form-floating-outline mb-4">
-                <select name="lote_envasado_edit[${sectionCountEdit}]" class="select2 form-select evasado_export_edit" onchange="cargarDetallesLoteEnvasadoDinamicoEdit2(this, ${sectionCountEdit})">
-                  <option value="" disabled selected>Selecciona un lote envasado</option>
-                </select>
-                <label for="lote_envasado">Selecciona el lote envasado</label>
+        var newSection = `
+        <div class="card mt-4" id="caracteristicas_Ex_edit_${sectionCountEdit}">
+                                <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
+                                  Características del Producto
+                              </div>
+          <div class="card-body">
+            <div class="row caracteristicas-row">
+              <div class="col-md-8">
+                <div class="form-floating form-floating-outline mb-4">
+                  <select name="lote_envasado_edit[${sectionCountEdit}]" class="select2 form-select evasado_export_edit" onchange="cargarDetallesLoteEnvasadoDinamicoEdit2(this, ${sectionCountEdit})">
+                    <option value="" disabled selected>Selecciona un lote envasado</option>
+                  </select>
+                  <label for="lote_envasado">Selecciona el lote envasado</label>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-floating form-floating-outline mb-4">
-                <input type="text" disabled class="form-control" name="lote_granel_edit[${sectionCountEdit}]" id="lote_granel_edit_${sectionCountEdit}" placeholder="Lote a granel">
-                <label for="lote_granel">Lote a granel</label>
+              <div class="col-md-4">
+                <div class="form-floating form-floating-outline mb-4">
+                  <input type="text" disabled class="form-control" name="lote_granel_edit[${sectionCountEdit}]" id="lote_granel_edit_${sectionCountEdit}" placeholder="Lote a granel">
+                  <label for="lote_granel">Lote a granel</label>
+                </div>
               </div>
+
+
+
             </div>
-
-
-
           </div>
         </div>
-      </div>
-    `;
-      $('#sections-container2').append(newSection);
-      cargarLotesEdit2(empresaSeleccionada, sectionCountEdit);
-      initializeSelect2($('.select2'));
-      sectionCountEdit++;
-    }); */
+      `;
+        $('#sections-container2').append(newSection);
+        cargarLotesEdit2(empresaSeleccionada, sectionCountEdit);
+        initializeSelect2($('.select2'));
+        sectionCountEdit++;
+      }); */
 
-/*   }); */
+  /*   }); */
 
   $(document).ready(function () {
     $('#add-characteristics_edit').click(function () {
@@ -4207,7 +4121,7 @@ $(function () {
       </div>
     `;
       $('#sections-container2').append(newSection);
-     cargarLotesEdit(empresaSeleccionada, sectionCountEdit);
+      cargarLotesEdit(empresaSeleccionada, sectionCountEdit);
       initializeSelect2($('.select2'));
       sectionCountEdit++;
     });
@@ -4250,14 +4164,14 @@ $(function () {
         if (response.lotes_envasado.length == 0) {
           contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
         }
-      const select = $(`#caracteristicas_Ex_edit_${sectionCountEdit} .evasado_export_edit`);
-      select.html(contenidoLotesEnvasado);
+        const select = $(`#caracteristicas_Ex_edit_${sectionCountEdit} .evasado_export_edit`);
+        select.html(contenidoLotesEnvasado);
 
-      // ✅ Verificar si hay un valor seleccionado previamente
-      const selectedPrevio = select.data('selected');
-      if (selectedPrevio) {
-        select.val(selectedPrevio).trigger('change');
-      }
+        // ✅ Verificar si hay un valor seleccionado previamente
+        const selectedPrevio = select.data('selected');
+        if (selectedPrevio) {
+          select.val(selectedPrevio).trigger('change');
+        }
       },
       error: function () {
         Swal.fire({

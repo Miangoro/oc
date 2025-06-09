@@ -114,6 +114,17 @@ class solicitudesController extends Controller
             $query->where('id_empresa', $empresaId);
         }
 
+        // Filtros específicos por columna
+      $columnsInput = $request->input('columns');
+
+      if ($columnsInput && isset($columnsInput[6]) && !empty($columnsInput[6]['search']['value'])) {
+          $tipoFilter = $columnsInput[6]['search']['value'];
+          // Filtro exacto o LIKE según necesites
+          $query->whereHas('tipo_solicitud', function($q) use ($tipoFilter) {
+              $q->where('tipo', 'LIKE', "%{$tipoFilter}%");
+          });
+      }
+
         $totalData = $query->count();
 
         $totalFiltered = $totalData;
