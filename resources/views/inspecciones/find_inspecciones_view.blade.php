@@ -262,6 +262,7 @@
            success: function(response) {
             if (response.success) {
                 const documentos = response.data;
+                const fqs = response.fqs;
                 let html = `
                     <table class="table table-bordered table-striped">
                         <thead class="table-dark">
@@ -285,6 +286,22 @@
                     });
                 } else {
                     html += `<tr><td colspan="2">No se encontraron documentos.</td></tr>`;
+                }
+
+                 if (fqs.length > 0) {
+                    fqs.forEach(function(fq) {
+                        html += `
+                            <tr>
+                                <td>${fq.nombre}</td>
+                                <td>
+                                    <a href="/files/${response.numero_cliente}//fqs/${doc.url}" target="_blank">
+                                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>`;
+                    });
+                } else {
+                    html += `<tr><td colspan="2">No se encontraron fqs.</td></tr>`;
                 }
 
                 html += `</tbody></table>`;
