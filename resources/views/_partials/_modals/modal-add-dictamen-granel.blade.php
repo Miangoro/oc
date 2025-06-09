@@ -150,6 +150,27 @@
                         </div>
                     </div>
 
+                   <div class="row">
+                    <!-- Columna: Análisis FQ completo -->
+                    <div class="col-md-6">
+                        <div class="form-floating form-floating-outline mb-6">
+                            <input type="file" class="form-control form-control-sm" name="analisis_completo">
+                            <label for="">Archivo de análisis FQ completo</label>
+                        </div>
+                        <div class="archivo_fq_completo d-flex align-items-center gap-3 mt-2 flex-wrap"></div>
+                    </div>
+
+                    <!-- Columna: Análisis FQ ajuste -->
+                    <div class="col-md-6">
+                        <div class="form-floating form-floating-outline mb-6">
+                            <input type="file" class="form-control form-control-sm" name="analisis_ajuste">
+                            <label for="">Archivo de análisis FQ de ajuste</label>
+                        </div>
+                        <div class="archivo_fq_ajuste d-flex align-items-center gap-3 mt-2 flex-wrap"></div>
+                    </div>
+                </div>
+
+
 
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
@@ -320,6 +341,26 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                    <!-- Columna: Análisis FQ completo -->
+                    <div class="col-md-6">
+                        <div class="form-floating form-floating-outline mb-6">
+                            <input type="file" class="form-control form-control-sm" name="analisis_completo">
+                            <label for="">Archivo de análisis FQ completo</label>
+                        </div>
+                        <div class="archivo_fq_completo d-flex align-items-center gap-3 mt-2 flex-wrap"></div>
+                    </div>
+
+                    <!-- Columna: Análisis FQ ajuste -->
+                    <div class="col-md-6">
+                        <div class="form-floating form-floating-outline mb-6">
+                            <input type="file" class="form-control form-control-sm" name="analisis_ajuste">
+                            <label for="">Archivo de análisis FQ de ajuste</label>
+                        </div>
+                        <div class="archivo_fq_ajuste d-flex align-items-center gap-3 mt-2 flex-wrap"></div>
+                    </div>
+                </div>
+
 
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i>
@@ -358,6 +399,32 @@
                         $('.id_clase').val(lote.id_clase);
                         let tipos = JSON.parse(lote.id_tipo); // Convierte "[\"8\"]" en ["8"]
                         $('.id_tipo').val(tipos).change();    
+                       /* let valorOriginal = lote.folio_fq || '';
+                        let valoresLimpios = valorOriginal
+                            .trim()
+                            .replace(/,\s*$/, '')
+                            .split(',')
+                            .map(v => v.trim())
+                            .filter(v => v !== '');
+
+                      
+                        $('.fq_completo').val(valoresLimpios[0] || ''); // Primer valor, si existe
+                        $('.fq_ajuste').val(valoresLimpios[1] || '');   // Segundo valor, si existe*/
+
+                        if(lote.fqs[0]){
+                         $('.archivo_fq_completo').html('<a href="/files/'+response.solicitud.empresa.empresa_num_clientes[0].numero_cliente+'/fqs/'+lote.fqs[0].url +'" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>'); // Primer valor, si existe
+                            
+                         }else{
+                              $('.archivo_fq_completo').empty();
+                         }
+
+                         if(lote.fqs[1]){
+                         $('.archivo_fq_ajuste').html('<a href="/files/'+response.solicitud.empresa.empresa_num_clientes[0].numero_cliente+'/fqs/'+lote.fqs[1].url +'" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>'); // Primer valor, si existe
+                            
+                         }else{
+                              $('.archivo_fq_ajuste').empty();
+                         }
+
                     } else {
                         console.warn("No se encontró el lote_granel en la respuesta.");
                     }
@@ -378,6 +445,9 @@
             $('.id_categoria').val('');
             $('.id_clase').val('');
             $('.id_tipo').val([]).change();
+            $('.archivo_fq_completo').empty();
+            $('.archivo_fq_ajuste').empty();
+
         }
     }
 </script>

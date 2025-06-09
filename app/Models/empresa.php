@@ -27,7 +27,8 @@ class empresa extends Model
 
       public function empresaNumClientes()
     {
-        return $this->hasMany(empresaNumCliente::class, 'id_empresa','id_empresa');
+        return $this->hasMany(empresaNumCliente::class, 'id_empresa', 'id_empresa')
+                ->whereNotNull('numero_cliente');
     }
 
     public function users()

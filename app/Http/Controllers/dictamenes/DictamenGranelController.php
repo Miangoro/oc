@@ -30,6 +30,7 @@ use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ValidationException;
+use Illuminate\Support\Facades\Storage;
 
 
 class DictamenGranelController extends Controller  {
@@ -265,6 +266,57 @@ public function store(Request $request)
             $lote->id_clase = $request->id_clase;
             $lote->id_tipo = json_encode($request->id_tipo); 
             $lote->save(); 
+
+            $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
+
+            $documentos = [
+                'analisis_completo' => [
+                    'nombre_documento' => 'Análisis fisicoquímicos',
+                    'id_documento' => 58,
+                    'prefijo' => 'analisis_fisicoquimicos_'
+                ],
+                'analisis_ajuste' => [
+                    'nombre_documento' => 'Fisicoquímicos de ajuste de grado',
+                    'id_documento' => 134,
+                    'prefijo' => 'analisis_fisicoquimicos_ajuste_'
+                ]
+            ];
+
+            foreach ($documentos as $inputName => $info) {
+                $file = $request->file($inputName);
+
+                if ($file) {
+                    $filename = $info['prefijo'] . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs("uploads/{$numeroCliente}/fqs", $filename, 'public');
+
+                    $documentacion_url = Documentacion_url::where('id_relacion', $id_lote_granel)
+                        ->where('id_documento', $info['id_documento'])
+                        ->first();
+
+                    if ($documentacion_url) {
+                        $oldPath = "uploads/{$numeroCliente}/fqs/" . $documentacion_url->url;
+                        if (Storage::disk('public')->exists($oldPath)) {
+                            Storage::disk('public')->delete($oldPath);
+                        }
+                    } else {
+                        $documentacion_url = new Documentacion_url([
+                            'id_relacion' => $id_lote_granel,
+                            'id_documento' => $info['id_documento'],
+                            'id_empresa' => $lote->id_empresa
+                        ]);
+                    }
+
+                    $documentacion_url->nombre_documento = $info['nombre_documento'];
+                    $documentacion_url->url = $filename;
+                    $documentacion_url->save();
+                }
+            }
+
+
+
         }
 
 
@@ -361,6 +413,54 @@ public function update(Request $request, $id_dictamen)
             $lote->id_clase = $request->id_clase;
             $lote->id_tipo = json_encode($request->id_tipo); 
             $lote->save(); 
+
+            $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
+
+            $documentos = [
+                'analisis_completo' => [
+                    'nombre_documento' => 'Análisis fisicoquímicos',
+                    'id_documento' => 58,
+                    'prefijo' => 'analisis_fisicoquimicos_'
+                ],
+                'analisis_ajuste' => [
+                    'nombre_documento' => 'Fisicoquímicos de ajuste de grado',
+                    'id_documento' => 134,
+                    'prefijo' => 'analisis_fisicoquimicos_ajuste_'
+                ]
+            ];
+
+            foreach ($documentos as $inputName => $info) {
+                $file = $request->file($inputName);
+
+                if ($file) {
+                    $filename = $info['prefijo'] . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs("uploads/{$numeroCliente}/fqs", $filename, 'public');
+
+                    $documentacion_url = Documentacion_url::where('id_relacion', $id_lote_granel)
+                        ->where('id_documento', $info['id_documento'])
+                        ->first();
+
+                    if ($documentacion_url) {
+                        $oldPath = "uploads/{$numeroCliente}/fqs/" . $documentacion_url->url;
+                        if (Storage::disk('public')->exists($oldPath)) {
+                            Storage::disk('public')->delete($oldPath);
+                        }
+                    } else {
+                        $documentacion_url = new Documentacion_url([
+                            'id_relacion' => $id_lote_granel,
+                            'id_documento' => $info['id_documento'],
+                            'id_empresa' => $lote->id_empresa
+                        ]);
+                    }
+
+                    $documentacion_url->nombre_documento = $info['nombre_documento'];
+                    $documentacion_url->url = $filename;
+                    $documentacion_url->save();
+                }
+            }
         }
 
         return response()->json(['message' => 'Actualizado correctamente.']);
@@ -596,7 +696,7 @@ public function foliofq($id_dictamen)
     public function getDatosLotes($id_inspeccion)
     {
 
-        $datos = inspecciones::with('solicitud.lote_granel')->find($id_inspeccion);
+        $datos = inspecciones::with('solicitud.lote_granel.fqs','solicitud.empresa.empresaNumClientes')->find($id_inspeccion);
         return response()->json($datos); // Retorna en formato JSON
     }
 
