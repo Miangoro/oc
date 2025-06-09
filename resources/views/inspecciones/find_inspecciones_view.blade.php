@@ -278,7 +278,7 @@
                             <tr>
                                 <td>${doc.nombre}</td>
                                 <td>
-                                    <a href="/${response.numero_cliente}/actas/${doc.url}" target="_blank">
+                                    <a href="/files/${response.numero_cliente}/${doc.url}" target="_blank">
                                         <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
                                     </a>
                                 </td>
