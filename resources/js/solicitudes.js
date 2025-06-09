@@ -1150,6 +1150,8 @@ $(function () {
                   modal.find('#presentacion_edit0').val(response.caracteristicas.detalles[0].presentacion || '');
                   modal.find('#lote_granel_edit_0').val(response.caracteristicas.detalles[0].lote_granel || '');
                   modal.find('#lote_envasado_edit_0').data('selected', response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
+                   let idLoteEnvasado = response.caracteristicas.detalles[0].id_lote_envasado;
+                      cargarDetallesLoteEnvasadoEdit(idLoteEnvasado);
                 } else {
                   for (var i = 1; i < cantidadDeLotes; i++) {
                     $('#add-characteristics_edit').click();
@@ -1159,11 +1161,10 @@ $(function () {
                     modal.find(`#presentacion_edit0`).val(response.caracteristicas.detalles[0].presentacion || '');
                     modal.find(`#lote_granel_edit_0`).val(response.caracteristicas.detalles[0].lote_granel || '');
                     modal.find('#lote_envasado_edit_0').data('selected', response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
-
+                    let idLoteEnvasado = response.caracteristicas.detalles[0].id_lote_envasado;
+                        cargarDetallesLoteEnvasadoEdit(idLoteEnvasado);
                     $(`#caracteristicas_Ex_edit_${i} .evasado_export_edit`).data('selected', response.caracteristicas.detalles[i].id_lote_envasado);
                     cargarLotesEdit($('#id_empresa_solicitud_exportacion_edit').val(), i);
-
-
                   }
                 }
               }
@@ -4183,6 +4184,82 @@ $(function () {
       }
     });
   }
+
+  function cargarDetallesLoteEnvasadoEdit(idLoteEnvasado) {
+    if (idLoteEnvasado) {
+      $.ajax({
+        url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+        method: 'GET',
+        success: function (response) {
+          console.log(response); // Verifica la respuesta en la consola
+          console.log("Entro en el de modal edit");
+
+          let tbody = $('#tablaLotes tbody');
+          tbody.empty(); // Limpia los datos anteriores
+          if (response.lote_envasado) {
+            let filaEnvasado = `
+                        <tr>
+                            <td>1</td>
+                            <td>${response.lote_envasado.nombre}</td>
+                            <td>${limpiarSku(response.lote_envasado.sku) == '{"inicial":""}' ? "SKU no definido" : limpiarSku(response.lote_envasado.sku)}</td>
+                            <td>${response.lote_envasado.presentacion || 'N/A'} ${response.lote_envasado.unidad || ''}</td>
+
+                            <td>Botellas: ${response.lote_envasado.cant_botellas}
+                        </tr>`;
+            tbody.append(filaEnvasado);
+          }
+
+          // Verifica si hay lotes a granel asociados y los muestra
+          if (response.detalle && response.detalle.length > 0) {
+            tbody.append(`
+                        <tr>
+                            <td style='background-color: #f5f5f7' colspan="5" class="text-center font-weight-bold fw-bold">Lotes a granel asociados</td>
+                        </tr>`);
+            let nombre_lote_granel = "";
+            response.detalle.forEach((lote, index) => {
+              let filaGranel = `
+                            <tr>
+                                <td>${index + 2}</td>
+                                <td>
+                                ${lote.nombre_lote}<br>
+                                <b>Certificado: </b>
+                                ${lote.certificado_granel ? lote.certificado_granel.num_certificado : 'Sin definir'}
+                                </td>
+                                  <td>
+                                    <input type="text" class="form-control form-control-sm" name="folio_fq[]" value="${lote.folio_fq || ''}" />
+                                  </td>
+
+                                  <td>
+                                    <input type="text" class="form-control form-control-sm" name="cont_alc[]" value="${lote.cont_alc || ''}" />
+                                  </td>
+                               <td>
+                                ${lote.categoria.categoria || 'N/A'}<br>
+                                ${lote.clase.clase || 'N/A'}<br>
+                                ${lote.tiposMaguey.length ? lote.tiposMaguey.map(tipo => tipo.nombre + ' (<i>' + tipo.cientifico + '</i>)').join('<br>') : 'N/A'}
+                            </td>
+
+                            </tr>`;
+              tbody.append(filaGranel);
+              nombre_lote_granel += lote.nombre_lote;
+            });
+
+            $('.lotes_granel_export_edit').val(nombre_lote_granel);
+
+
+          } else {
+            tbody.append(
+              `<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`
+            );
+          }
+        },
+        error: function () {
+          console.error('Error al cargar el detalle del lote envasado.');
+        }
+      });
+    }
+  }
+
+
   /* fin de la seccion de editar solicitudes exportacion */
   /* Enviar formulario store add exportacion */
 
