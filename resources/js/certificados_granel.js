@@ -290,6 +290,16 @@ var dataTable = $('.datatables-users').DataTable({
         `;*/
       }
     },
+{
+targets: 7, // o el índice libre al final
+data: 'pdf_firmado',
+visible: false,
+searchable: false,
+orderable: true,
+render: function(data, type, full, meta) {
+return data ? 1 : 0; // 1 = tiene PDF, 0 = no tiene
+}
+},
       {
         // Actions
         targets: -1,
@@ -319,7 +329,7 @@ var dataTable = $('.datatables-users').DataTable({
         }
       }
     ],
-    order: [[1, 'desc']],
+    order: [[7, 'desc']],
     dom:
       '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
       '<"me-5 ms-n2"f>' +
