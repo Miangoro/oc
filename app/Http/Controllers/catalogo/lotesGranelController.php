@@ -680,25 +680,37 @@ class lotesGranelController extends Controller
         $volumenesPrevios = $lote_original_data['volumenes'];
 
       // Actualizar el lote principal
-      $lote->update([
-          'id_empresa' => $validated['id_empresa'],
-          'id_tanque' => $validated['id_tanque'],
-          'nombre_lote' => $validated['nombre_lote'],
-          'tipo_lote' => $validated['tipo_lote'],
-          'cont_alc' => $validated['cont_alc'],
-          'id_categoria' => $validated['id_categoria'],
-          'id_clase' => $validated['id_clase'],
-          'id_tipo' => json_encode($validated['id_tipo']),
-          'ingredientes' => $validated['ingredientes'],
-          'edad' => $validated['edad'],
-          'folio_certificado' => $validated['folio_certificado'],
-          'id_organismo' => $validated['id_organismo'] ?? null,
-          'fecha_emision' => $validated['fecha_emision'],
-          'fecha_vigencia' => $validated['fecha_vigencia'],
-          'volumen' => $validated['volumen'],
-          'volumen_restante' => $validated['volumen'],
+          $updateData = [
+              'id_empresa' => $validated['id_empresa'],
+              'id_tanque' => $validated['id_tanque'],
+              'nombre_lote' => $validated['nombre_lote'],
+              'tipo_lote' => $validated['tipo_lote'],
+              'cont_alc' => $validated['cont_alc'],
+              'id_categoria' => $validated['id_categoria'],
+              'id_clase' => $validated['id_clase'],
+              'id_tipo' => json_encode($validated['id_tipo']),
+              'ingredientes' => $validated['ingredientes'],
+              'edad' => $validated['edad'],
+              'id_organismo' => $validated['id_organismo'] ?? null,
+              'volumen' => $validated['volumen'],
+              'volumen_restante' => $validated['volumen'],
+          ];
 
-      ]);
+          // Solo agregamos estos campos si **no** vienen nulos (o están presentes con valor)
+          if (!is_null($validated['folio_certificado'])) {
+              $updateData['folio_certificado'] = $validated['folio_certificado'];
+          }
+          if (!is_null($validated['fecha_emision'])) {
+              $updateData['fecha_emision'] = $validated['fecha_emision'];
+          }
+          if (!is_null($validated['fecha_vigencia'])) {
+              $updateData['fecha_vigencia'] = $validated['fecha_vigencia'];
+          }
+
+          // Actualizar
+          $lote->update($updateData);
+
+
         // Actualizar lotes relacionados solo si hay datos de 'edit_lotes' y 'edit_volumenes'
         if ($request->has('edit_lotes') && $request->has('edit_volumenes')) {
           $nuevosLotes = [];
