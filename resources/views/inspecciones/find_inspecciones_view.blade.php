@@ -266,8 +266,7 @@
                     <table class="table table-bordered table-striped">
                         <thead class="table-dark">
                             <tr>
-                                <th>Nombre del documento</th>
-                                <th>Ver</th>
+                                <th colspan="2">Documentación de la solicitud</th>
                             </tr>
                         </thead>
                         <tbody>`;
