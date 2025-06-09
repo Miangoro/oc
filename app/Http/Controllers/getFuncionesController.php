@@ -270,7 +270,7 @@ public function getDocumentosSolicitud($id_solicitud)
 
     // Obtener documentos relacionados
     $documentos = Documentacion_url::where('id_relacion', $id_solicitud)
-        ->get(['nombre_documento as nombre', 'url']);
+        ->get(['nombre_documento as nombre', 'url', 'id_documento']);
 
        if ($solicitud && $solicitud->id_tipo == 11) {
         $caracteristicas = is_string($solicitud->caracteristicas)
