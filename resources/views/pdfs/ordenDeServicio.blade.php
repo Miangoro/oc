@@ -143,7 +143,7 @@
             <td class="leftLetter" style="background-color: #93cddc">Número de cliente:</td>
             <td class="leftLetter"> <span class="negrita">{{ $datos->solicitud->empresa->empresaNumClientes[0]->numero_cliente ?? ''}}</span></td>
             <td class="leftLetter" style="background-color: #93cddc">Hora del servicio:</td>
-            <td class="leftLetter">1231231</td>
+            <td class="leftLetter"></td>
         </tr>
         <tr>
             <td class="leftLetter" style="background-color: #93cddc">Inspector asignado:</td>
@@ -154,9 +154,9 @@
         <tr>
             <td class="leftLetter" style="background-color: #93cddc">Nombre de la persona que <br> atenderá la visita:
             </td>
-            <td class="leftLetter">Yucli Emmanuel Baza Ortuño</td>
+            <td class="leftLetter"></td>
             <td class="leftLetter" style="background-color: #93cddc">No. de contrato:</td>
-            <td class="leftLetter">1231231</td>
+            <td class="leftLetter"></td>
         </tr>
         <tr>
             <td class="leftLetter" style="background-color: #93cddc" >Dirección del servicio: <br> &nbsp;</td>
@@ -210,11 +210,11 @@
         <tr style="background-color: #d9d9d9">
             <td>&nbsp;&nbsp;5&nbsp;&nbsp;</td>
             <td class="leftLetter">Ajuste, homogenización o muestreo</td>
-            <td>12123</td>
+            <td></td>
             <td>&nbsp;&nbsp;10&nbsp;&nbsp;</td>
             <td class="leftLetter">Vigilancia de producto <br>
                 terminado</td>
-            <td>12312</td>
+            <td></td>
         </tr>
         <tr style="background-color: #93cddc">
             <td colspan="4"><b>Observaciones</b></td>
@@ -222,7 +222,21 @@
         </tr>
         <tr>
             <td colspan="4"></td>
-            <td colspan="2"> <br>______________________________ <br>
+            <td colspan="2">  
+                
+                @php
+            use Illuminate\Support\Facades\Storage;
+            $firma = $datos->inspector->firma ?? null;
+            $firmaPath = $firma ? 'firmas/' . $firma : null;
+        @endphp
+
+        @if ($firma && Storage::disk('public')->exists($firmaPath))
+            <img style="position: absolute; margin-top: -5%; left: 68%;" height="90px"
+            src="{{ public_path('storage/' . $firmaPath) }}">
+        @endif
+
+         {{ $datos->inspector->name ?? '' }} <br> {{ $datos->inspector->puesto ?? '' }}
+        ______________________________ <br>
                 Nombre, fecha y firma <br> &nbsp;</td>
         </tr>
 
