@@ -250,14 +250,35 @@ public function getDocumentosSolicitud($id_solicitud)
         ], 400);
     }
 
+    // Cargar la solicitud con la relación empresa y empresaNumClientes
+    $solicitud = solicitudesModel::with(['empresa', 'empresa.empresaNumClientes'])->find($id_solicitud);
+
+    if (!$solicitud) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Solicitud no encontrada.'
+        ], 404);
+    }
+
+    // Obtener número de cliente
+    $numero_cliente = 'N/A';
+    if ($solicitud->empresa && $solicitud->empresa->empresaNumClientes->isNotEmpty()) {
+        $cliente = $solicitud->empresa->empresaNumClientes
+            ->first(fn($item) => !empty($item->numero_cliente));
+        $numero_cliente = $cliente?->numero_cliente ?? 'No encontrado';
+    }
+
+    // Obtener documentos relacionados
     $documentos = Documentacion_url::where('id_relacion', $id_solicitud)
         ->get(['nombre_documento as nombre', 'url']);
 
     return response()->json([
         'success' => true,
-        'data' => $documentos
+        'data' => $documentos,
+        'numero_cliente' => $numero_cliente
     ]);
 }
+
 
 
 

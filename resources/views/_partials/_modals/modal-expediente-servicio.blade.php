@@ -65,6 +65,8 @@
               </tbody>
             </table>
           </div>
+
+          <div id="contenedor-documentos"></div>
         </div>
       </div>
 
