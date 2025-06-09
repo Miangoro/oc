@@ -1049,6 +1049,14 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     //Asignar revisor
     Route::post('asignar_revisor_exportacion', [Certificado_ExportacionController::class, 'storeRevisor'])->name('cer-expor.asignarRevisor');
     Route::get('/certificados/exportar', 'exportar')->name('certificados.exportar');
+   
+    //documentacion
+    Route::get('/documentos/{id_certificado}', 'documentos')->name('documentos-cer-exportacion');
+
+    //visto bueno
+    Route::get('/certificados/{id}/vobo', 'obtenerVobo');
+    Route::post('/certificados/guardar-vobo', 'guardarVobo');
+
 });
 
 //-------------------CERTIFICADO VENTA NACIONAL-------------------

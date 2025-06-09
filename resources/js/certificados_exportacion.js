@@ -322,18 +322,38 @@ if (dt_user_table.length) {
               colorClass2 = 'badge rounded-pill bg-warning text-dark';
             }
 
+            //visto bueno
+            const voboData = full['vobo'];
+            let vobo = ''; // Declaración fuera del bloque
+
+            if (!voboData) {
+              vobo = '';// No mostrar nada si está vacío
+            }else {
+                const hayCliente = voboData.find(v => v.id_cliente);
+                const respuesta = hayCliente ? hayCliente.respuesta : null;
+                if (!hayCliente) {//Sin respuesta del cliente
+                    vobo = `<span class="badge rounded-pill bg-warning">Pendiente</span>`;
+                }
+                if (respuesta == "1") {
+                    vobo = `<span class="badge rounded-pill bg-info">Vo.Bo. cliente</span>`;
+                }
+                if (respuesta == "2") {
+                    vobo = `<span class="badge rounded-pill bg-danger">Vo.Bo. cliente</span>`;
+                }
+            }
+            
 
             return estatus +
               `<div style="flex-direction: column; margin-top: 2px;">
-              <div class="small"> <b>Personal:</b> 
-                <span class="${colorClass}">${revision_oc} ${revisor_oc}</span>${icono_oc}
-              </div>
-              <div style="display: inline;" class="small"> <b>Consejo:</b> 
-                <span class="${colorClass2}">${revision2} ${revisor2}</span>${icono2}
-              </div>
-            </div> `;
-            //'<span class="badge rounded-pill bg-info">Vo. Bo. Cliente</span>';
-            //<div style="display: flex; flex-direction: column; align-items: flex-start;">
+                <div class="small"> <b>Personal:</b> 
+                  <span class="${colorClass}">${revision_oc} ${revisor_oc}</span>${icono_oc}
+                </div>
+                <div style="display: inline;" class="small"> <b>Consejo:</b> 
+                  <span class="${colorClass2}">${revision2} ${revisor2}</span>${icono2}
+                </div>
+              </div> `+
+              `<div class="small"> ${vobo} </div>`;
+            //<div style="display: flex; flex-direction: column; align-items: flex-start;"></div>;
           }
         },
 
@@ -351,8 +371,9 @@ if (dt_user_table.length) {
               '</button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+              //`<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalDocumentos" href="javascript:;" class="dropdown-item text-dark documentos"> <i class="ri-folder-line ri-20px text-secondary"></i> Ver documentación</a>` +
               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-dark"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
-              `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#Modal" href="javascript:;" class="dropdown-item text-dark"> <i class="ri-edit-box-line ri-20px text-light"></i> Vo. Bo. Cliente</a>` +
+              `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalVoBo" href="javascript:;" class="dropdown-item text-dark VoBo"> <i class="ri-edit-box-line ri-20px text-light"></i> Vo. Bo.</a>` +
               `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>` +
               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor" class="dropdown-item waves-effect text-black reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
               `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
@@ -1551,6 +1572,149 @@ $(document).on('click', '.trazabilidad', function () {
     console.error(xhr.responseText);
   });
 });
+
+
+
+
+
+$(document).on('click', '.documentos', function () {
+    var id_certificado = $(this).data('id');
+    $(".titulo").text('Documentación relacionada al certificado ' + $(this).data('folio'));
+
+    var url = '/documentos/' + id_certificado;
+
+    $.get(url, function (data) {
+        if (data.success) {
+            var datosFinales = data.datosFinales;
+
+            // Primero quitamos solo las filas previas agregadas dinámicamente
+            $('.extra').remove();
+
+            // Luego insertamos debajo de las filas fijas
+            var contenedor = $('.fq');
+
+            datosFinales.forEach(function (dato) {
+                contenedor.append(`
+                    <tr class="extra">
+                        <td><span class="fw-medium">Lote: ${dato.id_lote_envasado}</span></td>
+                        <td>Dictamen: ${dato.dictamen_envasado ?? 'No encontrado'}</td>
+                    </tr>
+                `);
+            });
+
+            $('#ModalDocumentos').modal('show');
+        }
+    }).fail(function (xhr) {
+        console.error(xhr.responseText);
+    });
+});
+
+
+
+
+
+
+//OBTENER VISTO BUENO
+$(document).on('click', '.VoBo', function () {
+    const id_certificado = $(this).data('id');
+
+    $.get(`/certificados/${id_certificado}/vobo`, function (data) {
+        const vobo = data.vobo;
+        const userId = data.id_usuario;
+
+        let html = `
+            <div class="col-md-12">
+              <div class="form-floating form-floating-outline mb-6">
+                <textarea name="descripcion" class="form-control" required></textarea>
+                <label>Descripción:</label>
+              </div>
+            </div>
+        `;
+
+        if (!vobo) {
+            // Personal: primera vez, muestra participantes
+            /* html += `
+                <div class="col-md-12">
+                  <div class="form-floating form-floating-outline mb-6">
+                    <select name="notificados[]" class="form-select" multiple required>
+                        @foreach($usuarios as $u)
+                            <option value="{{ $u->id }}">{{ $u->nombre }}</option>
+                        @endforeach
+                    </select>
+                    <label class="form-label">Participantes:</label>
+                  </div>
+                </div>
+            `; */
+        } else {
+            const yaExiste = vobo.find(v => v.id_personal);
+            if (yaExiste) {
+                // Cliente: muestra select de respuesta
+                html += `
+                    <div class="col-md-12">
+                      <div class="form-floating form-floating-outline mb-6">
+                        <select name="respuesta" class="form-select" required>
+                            <option value=""  selected disabled >Selecciona una opcion</option>
+                            <option value="1">Aprobado</option>
+                            <option value="2">No aprobado</option>
+                        </select>
+                        <label>Respuesta:</label>
+                      </div>
+                    </div>
+                `;
+            }
+        }
+
+        $('#contenidoVobo').html(html);
+        $('#formVobo input[name="id_certificado"]').val(id_certificado);
+    });
+});
+//REGISTRAR VISTO BUENO
+$(document).on('submit', '#formVobo', function (e) {
+    e.preventDefault();
+
+    $.ajax({
+        url: '/certificados/guardar-vobo',
+        method: 'POST',
+        data: $(this).serialize(),
+        /*success: function (res) {
+            alert('Guardado correctamente');
+            $('#ModalVoBo').modal('hide');
+        },
+        error: function (err) {
+            alert('Error al guardar');
+        }*/
+       success: function (response) {
+        console.log('Ok.:', response);
+        $('#ModalVoBo').modal('hide');
+
+        // Actualizar la tabla sin reinicializar DataTables
+        dataTable.ajax.reload();
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.message,
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      },
+      error: function (xhr) {
+        console.log('Error:', xhr);
+        console.log('Error2:', xhr.responseText);
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al registrar.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+});
+
 
 
 

@@ -141,24 +141,50 @@
         </table>
     </div>
     
-
-
 </div>
+
+
+
+
+<!--MODAL VISTO BUENO-->
+<div class="modal fade" id="ModalVoBo" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header bg-primary pb-4">
+          <h5 class="modal-title text-white">Visto Bueno</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+        <form id="formVobo">
+            <input type="hidden" name="id_certificado">
+
+            <div class="row" id="contenidoVobo">
+            <!-- contenido dinámico -->
+            </div>
+            <div class="d-flex mt-6 justify-content-center">
+                <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
+                    Registrar</button>
+                <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ri-close-line"></i> Cancelar</button>
+            </div>
+        </form>
+        </div>
+    </div>
+  </div>
+</div>
+
 
 
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-certificado-exportacion')
+
 @include('_partials/_modals/modal-add-asignar-revisor')
 @include('_partials/_modals/modal-reexpedir-certificado-exportacion')
 @include('_partials/_modals/modal-trazabilidad-certificados')
 @include('_partials/_modals/modal-export-excel-certificados-exportacion')
 
-
-
-
-
-
+@include('_partials/_modals/modal-documentos-certificados')
 <!-- /Modal -->
 
 @endsection

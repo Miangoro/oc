@@ -13,7 +13,7 @@ use App\Models\Revisor;
 use App\Models\lotes_envasado;
 use App\Models\activarHologramasModelo;
 use App\Models\Documentacion_url;
-use App\Models\solicitudesModel;
+use App\Models\Dictamen_Envasado;
 //Clase de exportacion
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CertificadosExport;
@@ -233,6 +233,8 @@ public function index(Request $request)
             $nestedData['n_pedido'] = $caracteristicas['no_pedido'] ?? 'No encontrado';
             $nestedData['cajas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_cajas'] ?? 'No encontrado';
             $nestedData['botellas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado';
+            //visto bueno
+            $nestedData['vobo'] = $certificado->vobo ? json_decode($certificado->vobo, true) : null;
 
 
             $data[] = $nestedData;
@@ -774,6 +776,98 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
     //return $pdf->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');
     return Pdf::loadView($edicion, $pdf)->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');
 }
+
+
+
+
+
+
+
+
+
+
+
+///VER DOCUMENTACION
+public function documentos($id)
+{   
+    $certificado = Certificado_Exportacion::find($id);
+    if (!$certificado) {
+        return abort(404, 'Registro no encontrado.');
+        //return response()->json(['message' => 'Registro no encontrado.', $certificado], 404);
+    }
+
+
+    // Obtener todos los IDs de los lotes
+    $caracteristicas = $certificado->dictamen?->inspeccione?->solicitud?->caracteristicasDecodificadas() ?? [];
+    $detalles = $caracteristicas['detalles'] ?? [];
+    $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
+
+    foreach ($loteIds as $idLote) {
+        $dictamenEnvasado = Dictamen_Envasado::where('id_lote_envasado', $idLote)->first();
+        if ($dictamenEnvasado) {
+            $inspeccion = $dictamenEnvasado->inspeccion ?? null;
+            $solicitud = $inspeccion?->solicitud ?? null;
+
+            $datosFinales[] = [
+                'id_lote_envasado' => $idLote,
+                'dictamen_envasado' => $dictamenEnvasado->id_dictamen_envasado ?? null,
+                'inspeccion_id' => $inspeccion?->id_inspeccion ?? null,
+                'solicitud_id' => $solicitud?->id_solicitud ?? null,
+            ];
+        }
+    }
+
+            
+    return response()->json([
+        'success' => true,
+        'datosFinales' => $datosFinales
+    ]);
+}
+
+
+
+
+///VISTO BUENO
+public function obtenerVobo($id)
+{
+    $certificado = Certificado_Exportacion::findOrFail($id);
+    $vobo = $certificado->vobo ? json_decode($certificado->vobo, true) : null;
+
+    return response()->json([
+        'vobo' => $vobo,
+        'id_usuario' => Auth::id()
+    ]);
+}
+
+public function guardarVobo(Request $request)
+{
+    $certificado = Certificado_Exportacion::findOrFail($request->id_certificado);
+    $vobo = $certificado->vobo ? json_decode($certificado->vobo, true) : [];
+
+    $userId = Auth::id();
+
+    if ($request->has('respuesta')) {
+        $vobo[] = [
+            'id_cliente' => $userId,
+            'descripcion' => $request->descripcion,
+            'respuesta' => $request->respuesta
+        ];
+    } else {
+        $vobo[] = [
+            'id_personal' => $userId,
+            'descripcion' => $request->descripcion,
+            //'notificados' => $request->notificados
+        ];
+    }
+
+    $certificado->vobo = json_encode($vobo);
+    $certificado->save();
+
+    return response()->json(['success' => true]);
+}
+
+
+
 
 
 
