@@ -497,11 +497,11 @@ class solicitudesController extends Controller
 
         $VigilanciaProdu->save();
 
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud Vigilancia en producción',
+            'title' => 'Nuevo registro de solicitud',
             'message' => $VigilanciaProdu->folio . " " . $VigilanciaProdu->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -534,11 +534,11 @@ class solicitudesController extends Controller
 
         $emisionCertificado->save();
 
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud Emison de certificado de venta nacional',
+            'title' => 'Nuevo registro de solicitud',
             'message' => $emisionCertificado->folio . " " . $emisionCertificado->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -583,11 +583,11 @@ class solicitudesController extends Controller
 
         $MuestreoLote->save();
 
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud Muestreo de lote',
+            'title' => 'Nuevo registro de solicitud',
             'message' => $MuestreoLote->folio . " " . $MuestreoLote->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -674,11 +674,11 @@ class solicitudesController extends Controller
 
 
 
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud Vigilancia en traslado',
+            'title' => 'Nuevo registro de solicitud',
             'message' => $VigilanciaTras->folio . " " . $VigilanciaTras->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -710,11 +710,11 @@ class solicitudesController extends Controller
 
         $InspeccionEnva->save();
 
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud Inpeccion de envasado',
+            'title' => 'Nuevo registro de solicitud',
             'message' => $InspeccionEnva->folio . " " . $InspeccionEnva->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -758,11 +758,11 @@ class solicitudesController extends Controller
 
         $InspeccionBarri->save();
 
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud Inspeccion ingreso a barrica',
+            'title' => 'Nuevo registro de solicitud',
             'message' => $InspeccionBarri->folio . " " . $InspeccionBarri->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -805,11 +805,11 @@ class solicitudesController extends Controller
 
         $BarricadaLib->save();
 
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud Inspeccion liberacion a barrica',
+            'title' => 'Nuevo registro de solicitud',
             'message' => $BarricadaLib->folio . " " . $BarricadaLib->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -843,7 +843,7 @@ class solicitudesController extends Controller
 
         $solicitud->save();
 
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
         $data1 = [
             'title' => 'Nuevo registro de solicitud',
             'message' => $solicitud->folio . " " . $solicitud->tipo_solicitud->tipo,
@@ -884,7 +884,7 @@ class solicitudesController extends Controller
 
         $solicitud->save();
 
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
         $data1 = [
             'title' => 'Nuevo registro de solicitud',
             'message' => $solicitud->folio . " " . $solicitud->tipo_solicitud->tipo,
@@ -926,7 +926,7 @@ class solicitudesController extends Controller
         $solicitud->save();
 
         // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
 
         // Notificación 1
         $data1 = [
@@ -1797,7 +1797,7 @@ class solicitudesController extends Controller
         $pedido->caracteristicas = json_encode($data); // Ahora incluye las rutas de los archivos
         $pedido->save();
         // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
 
         // Notificación 1
         $data1 = [
@@ -1813,6 +1813,7 @@ class solicitudesController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Pedido registrado.']);
     }
+
     public function storeSolicitudLibProdTerm(Request $request)
     {
         // Validación de datos del formulario
@@ -1843,7 +1844,7 @@ class solicitudesController extends Controller
         $solicitud->save();
 
         // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $users = User::whereIn('id', [4, 2, 3, 7,])->get(); // IDs de los usuarios
 
         // Notificación 1
         $data1 = [
