@@ -105,9 +105,8 @@ public function index(Request $request)
         CASE 
             WHEN EXISTS (
                 SELECT 1 FROM documentacion_url 
-                WHERE id_relacion = lotes_granel.id_lote_granel 
+                WHERE id_doc = certificados_granel.id_certificado
                   AND id_documento = 59 
-                  AND id_doc = certificados_granel.id_certificado
             ) THEN 1
             ELSE 0
         END $orderDirection
