@@ -91,7 +91,13 @@ public function index(Request $request)
     if (!empty($search)) {
         $query->where(function ($q) use ($search) {
             $q->where('certificados_granel.num_certificado', 'LIKE', "%{$search}%")
-            ;
+            ->orWhere('dictamenes_granel.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhereRaw("DATE_FORMAT(certificados_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
+            ->orWhere('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
+            ->orWhere('lotes_granel.folio_fq', 'LIKE', "%{$search}%");
         });
 
         $totalFiltered = $query->count();
