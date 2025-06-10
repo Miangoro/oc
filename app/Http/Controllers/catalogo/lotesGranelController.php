@@ -211,26 +211,76 @@ class lotesGranelController extends Controller
 
 
 
-                    // Procesar lote_original_id para mostrar los nombres de los lotes de procedencia
-                    if ($lote->lote_original_id) {
-                      $lotesOriginales = json_decode($lote->lote_original_id, true);
+              if ($lote->lote_original_id) {
+                  $lotesOriginales = json_decode($lote->lote_original_id, true);
 
-                      // Extraer los IDs de los lotes
-                      if (isset($lotesOriginales['lotes'])) {
-                          // Obtener los nombres de los lotes utilizando los IDs
-                          $nombresLotes = LotesGranel::whereIn('id_lote_granel', $lotesOriginales['lotes'])
-                          ->get(['nombre_lote', 'cont_alc', 'folio_fq']) // Trae ambas columnas
-                          ->toArray();
+                  if (isset($lotesOriginales['lotes'])) {
+                      $idsLotes = $lotesOriginales['lotes'];
+
+                      // Obtener todos los lotes involucrados
+                      $lotes = LotesGranel::whereIn('id_lote_granel', $idsLotes)->get();
+
+                      // Obtener todos los documentos (completo o ajuste) en un solo query
+                      $documentos = Documentacion_url::whereIn('id_relacion', $idsLotes)
+                          ->whereIn('id_documento', [58, 134])
+                          ->get()
+                          ->groupBy(function ($doc) {
+                              return "{$doc->id_relacion}_{$doc->id_documento}";
+                          });
+
+                      // Obtener el número de cliente para la ruta
+                      $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
+                      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($n) {
+                          return !empty($n);
+                      });
+                        $detallesLotes = $lotes->map(function ($loteItem) use ($documentos, $numeroCliente) {
+                            $folioFq = $loteItem->folio_fq;
+                            $folioPartes = explode(',', $folioFq);
+
+                            $urlCompleto = $documentos->get("{$loteItem->id_lote_granel}_58")?->first()?->url;
+                            $urlAjuste = $documentos->get("{$loteItem->id_lote_granel}_134")?->first()?->url;
+
+                            $folioCompleto = '';
+                            $folioAjuste = '';
+
+                            if (count($folioPartes) === 1) {
+                                // Solo hay uno, lo tratamos como "completo"
+                                $folio = trim($folioPartes[0]);
+                                $folioCompleto = $urlCompleto
+                                    ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlCompleto) . "' class=' text-info text-decoration-underline' target='_blank' title='Ver documento'>{$folio}</a>"
+                                    : $folio;
+                            } elseif (count($folioPartes) === 2) {
+                                $parte1 = trim($folioPartes[0]);
+                                $parte2 = trim($folioPartes[1]);
+
+                                if (!empty($parte1)) {
+                                    $folioCompleto = $urlCompleto
+                                        ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlCompleto) . "' class='  text-info text-decoration-underline' target='_blank' title='Ver documento'>{$parte1}</a>"
+                                        : $parte1;
+                                }
+
+                                if (!empty($parte2)) {
+                                    $folioAjuste = $urlAjuste
+                                        ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlAjuste) . "' class='  text-info text-decoration-underline' target='_blank' title='Ver documento'>{$parte2}</a>"
+                                        : $parte2;
+                                }
+                            }
+
+                            // Unir folios con coma si ambos existen
+                            $foliosTexto = trim(implode(', ', array_filter([$folioCompleto, $folioAjuste])));
+
+                            return "{$loteItem->nombre_lote} ({$loteItem->cont_alc} %) {$foliosTexto}";
+                        });
 
 
-                          $nestedData['lote_procedencia'] = implode('<br> ', array_map(fn($lote) => "{$lote['nombre_lote']} ({$lote['cont_alc']} %) {$lote['folio_fq']}", $nombresLotes));
+                      $nestedData['lote_procedencia'] = implode('<br>', $detallesLotes->toArray());
 
-                      } else {
-                          $nestedData['lote_procedencia'] = 'Lote de procedencia: No tiene lotes disponibles en el JSON.';
-                      }
-                    } else {
-                      $nestedData['lote_procedencia'] = 'No tiene procedencia de otros lotes.';
-                    }
+                  } else {
+                      $nestedData['lote_procedencia'] = 'Lote de procedencia: No tiene lotes disponibles en el JSON.';
+                  }
+              } else {
+                  $nestedData['lote_procedencia'] = 'No tiene procedencia de otros lotes.';
+              }
 
                     /*  */
                         // Consulta la URL en la tabla Documentacion_url
