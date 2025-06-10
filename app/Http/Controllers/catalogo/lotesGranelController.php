@@ -196,16 +196,17 @@ class lotesGranelController extends Controller
                     $nestedData['estatus'] = $lote->estatus;
                     $nestedData['folio_certificado_oc'] = $lote->certificadoGranel->num_certificado ?? 'N/A';
                     $folios = explode(',', $lote->folio_fq); // Divide los folios en un array
-
+                    $documentoCompleto = $lote->fqs->firstWhere('id_documento', 58);
+                    $documentoAjuste = $lote->fqs->firstWhere('id_documento', 134);
                     $nestedData['folio_fq_completo'] = $folios[0] ?? 'N/A';
                     $nestedData['folio_fq_ajuste'] = $folios[1] ?? 'N/A';
 
-                    $nestedData['url_fq_completo'] = !empty($lote->fqs[0]->url)
-                        ? '/files/' . $numeroCliente . '/fqs/' . $lote->fqs[0]->url
+                    $nestedData['url_fq_completo'] = $documentoCompleto
+                        ? '/files/' . $numeroCliente . '/fqs/' . $documentoCompleto->url
                         : '';
 
-                    $nestedData['url_fq_ajuste'] = !empty($lote->fqs[1]->url)
-                        ? '/files/' . $numeroCliente . '/fqs/' . $lote->fqs[1]->url
+                    $nestedData['url_fq_ajuste'] = $documentoAjuste
+                        ? '/files/' . $numeroCliente . '/fqs/' . $documentoAjuste->url
                         : '';
 
 
