@@ -296,6 +296,8 @@ public function getDocumentosSolicitud($id_solicitud)
 
         $idLote = $solicitud->lote_granel?->id_lote_granel;
 
+        dd( $idLote);
+
         if ($idLote) {
             $url_certificado = Documentacion_url::where('id_relacion', $idLote)
             ->where('id_documento', 59)
