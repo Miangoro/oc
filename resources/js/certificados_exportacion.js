@@ -1575,19 +1575,29 @@ let voboClienteHtml = '';
   // Guardar Vo.Bo. separados si no se han guardado aún
   if (!voboPersonalHtml && log.vobo_personal) {
     voboPersonalHtml = `
-      <div class="border-start ps-3 mt-2 mb-2">
+    <li class="timeline-item timeline-item-transparent">
+      <span class="timeline-point timeline-point-primary"></span>
+
+      <div class="mt-2 mb-2">
         <h6 class="text-primary"><i class="ri-user-line me-1"></i> Vo.Bo. del Personal</h6>
         ${log.vobo_personal}
       </div>
+
+    </li><hr>
     `;
   }
 
   if (!voboClienteHtml && log.vobo_cliente) {
     voboClienteHtml = `
-      <div class="border-start ps-3 mt-2 mb-2">
-        <h6 class="text-success"><i class="ri-user-check-line me-1"></i> Respuesta Vo.Bo. del Cliente</h6>
+  <li class="timeline-item timeline-item-transparent">
+    <span class="timeline-point timeline-point-primary"></span>
+
+      <div class="mt-2 mb-2">
+        <h6 class="text-success"><i class="ri-user-check-line me-1"></i>Revisión del cliente</h6>
         ${log.vobo_cliente}
       </div>
+
+    </li><hr>
     `;
   }
 
