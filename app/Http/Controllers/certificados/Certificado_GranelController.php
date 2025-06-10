@@ -51,7 +51,7 @@ public function index(Request $request)
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
-        1 => 'pdf_firmado',
+        1 => 'num_certificado',
         2 => 'folio',
         3 => 'razon_social',
         4 => '',
@@ -74,7 +74,6 @@ public function index(Request $request)
         ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
         ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
         ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
-        ->leftJoin('documentacion_url', 'documentacion_url.id_doc', '=', 'certificados_granel.id_certificado')
         ->select('certificados_granel.*', 'empresa.razon_social');
 
         
@@ -105,20 +104,20 @@ public function index(Request $request)
     }
 
     // Ordenamiento especial para num_certificado con formato 'CIDAM C-GRA25-###'
-if ($orderColumn === 'pdf_firmado') {
-$query->orderByRaw("
-CASE
-WHEN EXISTS (
-    SELECT 1
-    FROM documentacion_url
-    WHERE documentacion_url.id_doc = certificados_granel.id_certificado
-    AND documentacion_url.id_documento = 59
-) THEN 0
-ELSE 1
-END $orderDirection
-");
-}
- elseif (!empty($orderColumn)) {
+    if ($orderColumn === 'num_certificado') {
+        $query->orderByRaw("
+            CASE
+                WHEN num_certificado LIKE 'CIDAM C-GRA25-%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(
+                SUBSTRING_INDEX(
+                    SUBSTRING(num_certificado, LOCATE('CIDAM C-GRA25-', num_certificado) + 14),
+                    '-', 1
+                ) AS UNSIGNED
+            ) $orderDirection
+        ");
+    } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
     }
    

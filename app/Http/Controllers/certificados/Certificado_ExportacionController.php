@@ -24,8 +24,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;//Permiso empresa
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 use function PHPUnit\Framework\isNull;
 
@@ -235,6 +236,12 @@ public function index(Request $request)
             $nestedData['botellas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado';
             //visto bueno
             $nestedData['vobo'] = $certificado->vobo ? json_decode($certificado->vobo, true) : null;
+            //Certificado Firmado
+            $documentacion = Documentacion_url::where('id_relacion', $certificado->id_certificado)
+                ->where('id_documento', 135)->first();
+            $nestedData['pdf_firmado'] = $documentacion?->url
+                ? asset("files/{$numero_cliente}/certificados_exportacion/{$documentacion->url}") : null;
+            
 
 
             $data[] = $nestedData;
@@ -781,6 +788,100 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
 
 
 
+///SUBIR CERTIFICADO FIRMADO
+public function subirCertificado(Request $request)
+{
+    $request->validate([
+        'id_certificado' => 'required|exists:certificados_exportacion,id_certificado',
+        'documento' => 'required|mimes:pdf|max:3072',
+    ]);
+
+    $certificado = Certificado_Exportacion::findOrFail($request->id_certificado);
+
+    // Limpiar num_certificado para evitar crear carpetas por error
+    $nombreCertificado = preg_replace('/[^A-Za-z0-9_\-]/', '_', $certificado->num_certificado ?? 'No encontrado');
+    // Generar nombre de archivo con num_certificado + cadena aleatoria
+    $nombreArchivo = $nombreCertificado.'_'. uniqid() .'.pdf'; //uniqid() para asegurar nombre único
+
+    
+    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)->first();
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+    // Ruta de carpeta física donde se guardará
+    $rutaCarpeta = "public/uploads/{$numeroCliente}/certificados_exportacion";
+   
+    // Guardar nuevo archivo
+    $upload = Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
+    if (!$upload) {
+        return response()->json(['message' => 'Error al subir el archivo.'], 500);
+    }
+
+
+    // Buscar si ya existe un registro para ese lote y tipo de documento
+    $documentacion_url = Documentacion_url::where('id_documento', 135)
+        ->where('id_relacion', $certificado->id_certificado)//id del certificado
+        ->first();
+
+    if ($documentacion_url) {
+        $ArchivoAnterior = "public/uploads/{$numeroCliente}/certificados_exportacion/{$documentacion_url->url}";
+        if (Storage::exists($ArchivoAnterior)) {
+            Storage::delete($ArchivoAnterior);
+        }
+    }
+
+    // Crear o actualizar registro
+    Documentacion_url::updateOrCreate(
+        [
+            'id_documento' => 135,
+            'id_relacion' => $certificado->id_certificado,//id del certificado
+        ],
+        [
+            'nombre_documento' => "Certificado de exportación",
+            'url' => "{$nombreArchivo}",
+            'id_empresa' => $certificado->dictamen?->inspeccione?->solicitud?->id_empresa,
+        ]
+    );
+
+    return response()->json(['message' => 'Documento actualizado correctamente.']);
+}
+///OBTENER CERTIFICADO FIRMADO
+public function CertificadoFirmado($id)
+{
+    $certificado = Certificado_Exportacion::findOrFail($id);
+
+    // Buscar documento asociado al lote
+    $documentacion = Documentacion_url::where('id_documento', 135)
+        ->where('id_relacion', $certificado->id_certificado)
+        ->first();
+
+    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)->first();
+      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+
+    if ($documentacion) {
+        $rutaArchivo = "{$numeroCliente}/certificados_exportacion/{$documentacion->url}";
+
+        if (Storage::exists("public/uploads/{$rutaArchivo}")) {
+            return response()->json([
+                'documento_url' => Storage::url($rutaArchivo), // genera URL pública
+                'nombre_archivo' => basename($documentacion->url),
+            ]);
+        }else {
+            return response()->json([
+                'documento_url' => null,
+                'nombre_archivo' => null,
+            ], 404);
+        }
+    }
+
+    return response()->json([
+        'documento_url' => null,
+        'nombre_archivo' => null,
+        //'message' => 'Documento no encontrado.',
+    ]);
+}
 
 
 

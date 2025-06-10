@@ -1059,6 +1059,10 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::get('/certificados/{id}/vobo', 'obtenerVobo');
     Route::post('/certificados/guardar-vobo', 'guardarVobo');
 
+    //subir certificado firmado
+    Route::post('/certificados/exportacion/documento', [Certificado_ExportacionController::class, 'subirCertificado']);
+    Route::get('/certificados/exportacion/documento/{id}', [Certificado_ExportacionController::class, 'CertificadoFirmado']);
+
 });
 
 //-------------------CERTIFICADO VENTA NACIONAL-------------------

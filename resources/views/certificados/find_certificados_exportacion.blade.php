@@ -176,6 +176,8 @@
 
 
 <!-- Modal -->
+
+
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-certificado-exportacion')
 
@@ -184,7 +186,11 @@
 @include('_partials/_modals/modal-trazabilidad-certificados')
 @include('_partials/_modals/modal-export-excel-certificados-exportacion')
 
+@include('_partials/_modals/modal-add-certificado-firmado')<!--subir certificado-->
+
 @include('_partials/_modals/modal-documentos-certificados')
+
+
 <!-- /Modal -->
 
 @endsection

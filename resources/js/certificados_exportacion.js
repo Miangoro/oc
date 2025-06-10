@@ -2,30 +2,6 @@
  Page User List
  */
 'use strict';
-/*
-$(document).ready(function () {
-  $('.datepicker').datepicker({
-    format: 'yyyy-mm-dd',
-    autoclose: true,
-    todayHighlight: true,
-    language: 'es' // Configura el idioma a español
-  });
-});
-
-///FUNCION FECHAS
-$('#fecha_emision').on('change', function() {
-  var fechaInicial = new Date($(this).val());
-  fechaInicial.setDate(fechaInicial.getDate() + 91);//Sumar 90 días a la fecha inicial
-  $('#fecha_vigencia').datepicker("setDate", fechaInicial);
-});
-
-///FUNCION FECHAS EDIT
-$('#edit_fecha_emision').on('change', function() {
-  var fechaInicial = new Date($(this).val());
-  fechaInicial.setDate(fechaInicial.getDate() + 91);
-  $('#edit_fecha_vigencia').datepicker("setDate", fechaInicial);
-});
-*/
 
 $(document).ready(function () {///flatpickr
   flatpickr(".flatpickr-datetime", {
@@ -164,9 +140,18 @@ if (dt_user_table.length) {
             var $id = full['id_certificado'];
             //var $folio_solicitud = full['folio_solicitud'];
             var $folio_solicitud = full['folio_solicitud']?.match(/^([A-Z\-]+\d+)$/)?.[1] + '-E' ?? 'No encontrado';
+            
+            var $pdf_firmado  = full['pdf_firmado'];
+            if ($pdf_firmado) {
+              var icono = `<a href="${$pdf_firmado}" target="_blank" title="Ver PDF firmado">
+                <i class="ri-file-pdf-2-fill text-success ri-28px cursor-pointer"></i> </a>`;
+            } else {
+              var icono = '<i data-id="' + $id + '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+            }
 
             return '<small class="fw-bold">' + $num_certificado + '</small>' +
-              '<i data-id="' + $id + '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
+              `${icono}` +
+
               `<br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud} <i data-id="${full['id_certificado']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitudCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>
               
               <br><span class="fw-bold">Pedido:</span> ${full['folio_solicitud']}
@@ -371,6 +356,7 @@ if (dt_user_table.length) {
               '</button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+              `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
               //`<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalDocumentos" href="javascript:;" class="dropdown-item text-dark documentos"> <i class="ri-folder-line ri-20px text-secondary"></i> Ver documentación</a>` +
               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-dark"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalVoBo" href="javascript:;" class="dropdown-item text-dark VoBo"> <i class="ri-edit-box-line ri-20px text-light"></i> Vo. Bo.</a>` +
@@ -1601,8 +1587,7 @@ let voboClienteHtml = '';
     `;
   }
 
-
-      });
+      });//for
 
   // Agregar Vo.Bo. una sola vez al final
 if (voboPersonalHtml) {
@@ -1623,7 +1608,94 @@ if (voboClienteHtml) {
 
 
 
+///SUBIR CERTIFICADO FIRMADO
+$('#FormCertificadoFirmado').on('submit', function (e) {
+  e.preventDefault();
+  var formData = new FormData(this);
 
+  $.ajax({
+    url: '/certificados/exportacion/documento',
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.message,
+        customClass: {
+            confirmButton: 'btn btn-primary'
+        }
+      });
+      $('#ModalCertificadoFirmado').modal('hide');
+      $('#FormCertificadoFirmado')[0].reset();
+      $('#documentoActual').empty();
+      dataTable.ajax.reload(null, false); // Si usas datatables
+    },
+    error: function (xhr) {
+
+      console.log(xhr.responseText);
+      if (xhr.status === 422) {
+        // Error de validación
+        Swal.fire({
+          icon: 'warning',
+          title: 'Error al subir',
+          text: 'El documento no debe ser mayor a 3MB',
+          //footer: `<pre>${xhr.responseText}</pre>`,
+          customClass: {
+            confirmButton: 'btn btn-warning'
+          }
+        });
+      } else {
+        // Otro tipo de error (500, 404, etc.)
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al subir el documento.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+      
+    }
+  });
+      
+});
+///OBTENER CERTIFICADO FIRMADO
+$(document).on('click', '.subirPDF', function () {
+  var id = $(this).data('id');
+  $('#doc_id_certificado').val(id);
+  $('#documentoActual').html('Cargando documento...');
+  $('#modalTitulo').text('Certificado exportación firmado');//Titulo
+
+  $.ajax({
+    url: `/certificados/exportacion/documento/${id}`,
+    type: 'GET',
+    success: function (response) {
+      if (response.documento_url && response.nombre_archivo) {
+        $('#documentoActual').html(
+          `<p>Documento actual: 
+            <a href="${response.documento_url}" target="_blank">${response.nombre_archivo}</a>
+          </p>`);
+      } else {
+        $('#documentoActual').html('<p>No hay documento cargado.</p>');
+      }
+    },
+    error: function () {
+      $('#documentoActual').html('<p class="text-danger">Error al cargar el documento.</p>');
+    }
+  });
+
+});
+
+
+
+
+
+
+///VER DOCUMENTOS RELACIONADOS
 $(document).on('click', '.documentos', function () {
     var id_certificado = $(this).data('id');
     $(".titulo").text('Documentación relacionada al certificado ' + $(this).data('folio'));
