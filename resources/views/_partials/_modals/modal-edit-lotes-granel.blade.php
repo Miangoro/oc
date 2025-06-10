@@ -184,82 +184,7 @@
                             </div>
                         </div>
 
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Tipo de análisis</th>
-                                    <th>No. de Análisis Fisicoquímico</th>
-                                    <th>Documento</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($documentos as $documento)
-                                    <!-- Primer bloque para Análisis completo -->
-                                    <tr id="documento-row-{{ $documento->id_documento }}">
-                                        <td>
-                                            <span>Análisis completo</span>
-                                            <input hidden readonly value="Análisis completo" type="text"
-                                                class="form-control form-control-sm"
-                                                id="tipo_analisis_{{ $documento->id_documento }}"
-                                                name="tipo_analisis[]">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control form-control-sm"
-                                                id="folio_fq_completo_{{ $documento->id_documento }}"
-                                                name="folio_fq_completo"
-                                                value="{{ $documento->folio_fq_completo ?? '' }}">
-                                        </td>
-                                        <td>
-                                            <input class="form-control form-control-sm" type="file"
-                                                id="file_completo_{{ $documento->id_documento }}" name="url[]">
-                                            <input value="{{ $documento->id_documento }}" class="form-control"
-                                                type="hidden" name="id_documento[]">
-                                            <input value="{{ $documento->nombre }}" class="form-control"
-                                                type="hidden" name="nombre_documento[]">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2" id="archivo_url_display_completo_58">
-                                            <!-- La URL del documento completo se mostrará aquí -->
-                                        </td>
-                                        <td id="deleteArchivo58">
 
-                                        </td>
-                                    </tr>
-
-                                    <!-- Segundo bloque para Ajuste de grado -->
-                                    <tr id="documento-row-134-2">
-                                        <td>
-                                            <span>Ajuste de grado</span>
-                                            <input hidden readonly value="Ajuste de grado" type="text"
-                                                class="form-control form-control-sm" id="tipo_analisis_134}-2"
-                                                name="tipo_analisis[]">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control form-control-sm"
-                                                id="folio_fq_ajuste_134" name="folio_fq_ajuste"
-                                                value="{{ $documento->folio_fq_ajuste ?? '' }}">
-                                        </td>
-                                        <td>
-                                            <input class="form-control form-control-sm" type="file"
-                                                id="file_ajuste_134" name="url[]">
-                                            <input value="134" class="form-control" type="hidden"
-                                                name="id_documento[]">
-                                            <input value="Fisicoquímicos de ajuste de grado" class="form-control"
-                                                type="hidden" name="nombre_documento[]">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2" id="archivo_url_display_ajuste_134">
-                                            <!-- La URL del documento de ajuste se mostrará aquí -->
-                                        </td>
-                                        <td id="deleteArchivo134">
-
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
 
 
 
@@ -325,6 +250,82 @@
                             </div>
                         </div>
                     </div>
+                                            <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Tipo de análisis</th>
+                                    <th>No. de Análisis Fisicoquímico</th>
+                                    <th>Documento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($documentos as $documento)
+                                    <!-- Primer bloque para Análisis completo -->
+                                    <tr id="documento-row-{{ $documento->id_documento }}">
+                                        <td>
+                                            <span>Análisis completo</span>
+                                            <input hidden readonly value="Análisis completo" type="text"
+                                                class="form-control form-control-sm"
+                                                id="tipo_analisis_{{ $documento->id_documento }}"
+                                                name="tipo_analisis[]">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-sm"
+                                                id="folio_fq_completo_{{ $documento->id_documento }}" autocomplete="off"
+                                                name="folio_fq_completo"
+                                                value="{{ $documento->folio_fq_completo ?? '' }}">
+                                        </td>
+                                        <td>
+                                            <input class="form-control form-control-sm" type="file"
+                                                id="file_completo_{{ $documento->id_documento }}" name="url[]">
+                                            <input value="{{ $documento->id_documento }}" class="form-control"
+                                                type="hidden" name="id_documento[]">
+                                            <input value="{{ $documento->nombre }}" class="form-control"
+                                                type="hidden" name="nombre_documento[]">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" id="archivo_url_display_completo_58">
+                                            <!-- La URL del documento completo se mostrará aquí -->
+                                        </td>
+                                        <td id="deleteArchivo58">
+
+                                        </td>
+                                    </tr>
+
+                                    <!-- Segundo bloque para Ajuste de grado -->
+                                    <tr id="documento-row-134-2">
+                                        <td>
+                                            <span>Ajuste de grado</span>
+                                            <input hidden readonly value="Ajuste de grado" type="text"
+                                                class="form-control form-control-sm" id="tipo_analisis_134}-2"
+                                                name="tipo_analisis[]">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-sm"
+                                                id="folio_fq_ajuste_134" name="folio_fq_ajuste" autocomplete="off"
+                                                value="{{ $documento->folio_fq_ajuste ?? '' }}">
+                                        </td>
+                                        <td>
+                                            <input class="form-control form-control-sm" type="file"
+                                                id="file_ajuste_134" name="url[]">
+                                            <input value="134" class="form-control" type="hidden"
+                                                name="id_documento[]">
+                                            <input value="Fisicoquímicos de ajuste de grado" class="form-control"
+                                                type="hidden" name="nombre_documento[]">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" id="archivo_url_display_ajuste_134">
+                                            <!-- La URL del documento de ajuste se mostrará aquí -->
+                                        </td>
+                                        <td id="deleteArchivo134">
+
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
 
                     <div class="d-flex justify-content-center mt-3">
                         <button type="submit" class="btn btn-primary me-2">Actualizar</button>

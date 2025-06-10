@@ -1044,28 +1044,35 @@ $(function () {
               // Eliminar las opciones de guías si es tipo 2
               $('#edit_id_guia').empty();
               // Mostrar enlace al archivo PDF si está disponible
+              // Mostrar enlace al archivo PDF si está disponible
               $('#archivo_url_display_otro_organismo').html('');
               var archivoDisponible = false;
               var documentos = data.documentos;
+
               documentos.forEach(function (documento) {
-                let botonEliminar = `
+                const id = documento.id_documento;
+
+                if (id == 59 && documento.url) { // Solo si id_documento es 59 y tiene URL
+                  archivoDisponible = true;
+                  var fileName = documento.url.split('/').pop();
+
+                  let botonEliminar = `
                     <button type="button"
                             class="btn btn-danger btn-sm btn-eliminar-doc"
                             data-id="${documento.id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
                         Eliminar documento
                     </button>
+                  `;
 
-                `;
-                if (documento.url) {
-                  archivoDisponible = true;
-                  var fileName = documento.url.split('/').pop();
-
-                  $('#archivo_url_display_otro_organismo').html('Documento disponible: <a href="../files/' + data.numeroCliente + '/certificados_granel/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'+'<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+ botonEliminar +'</span>');
+                  $('#archivo_url_display_otro_organismo').html('Documento disponible: <a href="../files/' + data.numeroCliente + '/certificados_granel/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>' + '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + botonEliminar + '</span>');
                 }
               });
+
               if (!archivoDisponible) {
                 $('#archivo_url_display_otro_organismo').html('No hay archivo disponible.');
               }
+
+
             } else {
               $('#edit_oc_cidam_fields').addClass('d-none');
               $('#edit_otro_organismo_fields').addClass('d-none');

@@ -379,6 +379,8 @@ class lotesGranelController extends Controller
 
     public function store(Request $request)
     {
+      /* dd($request->all(), $request->file('documentos')); */
+
         $validatedData = $request->validate([
             'id_empresa' => 'required|exists:empresa,id_empresa',
             'nombre_lote' => 'required|string|max:70',
@@ -522,60 +524,61 @@ class lotesGranelController extends Controller
             return !empty($numero);
         });
 
-        // Almacenar nuevos documentos solo si se envían
-        if ($request->hasFile('url')) {
-            foreach ($request->file('url') as $index => $file) {
+if ($request->has('documentos')) {
+    foreach ($request->documentos as $index => $documento) {
+        if (
+            isset($documento['url']) &&
+            $documento['url'] instanceof \Illuminate\Http\UploadedFile &&
+            $documento['url']->isValid()
+        ) {
+            $file = $documento['url'];
+           $idDoc = (int) $documento['id_documento']; // 🔥 fuerza a entero
+            $nombreDocumento = $documento['nombre_documento'] ?? null;
 
+            // Decide carpeta y nombre según id_documento
+            $carpeta = match($idDoc) {
+                58, 134 => 'fqs',
+                59 => 'certificados_granel',
+                default => 'otros',
+            };
 
-        /* $idDoc = $request->id_documento[$index]; */
-        $tipo_analisis = $request->tipo_analisis[$index] ?? '';
-        $nombreChelo = $request->nombre_documento[$index] ?? '';
-        $folio_fq = '';
-        $carpeta = 'fqs';
-          $idDoc = 0;
+            $nombre_documento = match($idDoc) {
+                58 => 'Análisis fisicoquímicos',
+                59 => 'Certificado de lote a granel',
+                134 => 'Fisicoquímicos de ajuste de grado',
+                default => $nombreDocumento ?? 'Desconocido',
+            };
 
-          if ($tipo_analisis === 'Análisis completo') {
-              $idDoc = 58;
-              $folio_fq = $request->folio_fq_completo[$index] ?? '';
-          } elseif ($tipo_analisis === 'Ajuste de grado') {
-              $idDoc = 134;
-              $folio_fq = $request->folio_fq_ajuste[$index] ?? '';
-          } elseif ($nombreChelo === 'Certificado de lote a granel'){
-            $idDoc = 59;
-          }
+            $uniqueId = uniqid();
+            $prefix = match($idDoc) {
+                58 => 'analisis_fisicoquimicos',
+                59 => 'certificado_granel',
+                134 => 'fisicoquimicos_ajuste_grado',
+                default => 'documento',
+            };
 
+            $filename = $prefix . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+            $numeroCliente = Empresa::with("empresaNumClientes")
+                ->where("id_empresa", $lote->id_empresa)
+                ->first()
+                ->empresaNumClientes
+                ->pluck('numero_cliente')
+                ->first(fn($num) => !empty($num));
 
-          $nombre_documento = match($idDoc) {
-              58 => 'Análisis fisicoquímicos',
-              59 => 'Certificado de lote a granel',
-              134 => 'Fisicoquímicos de ajuste de grado',
-              default => 'Desconocido',
-          };
+            $filePath = $file->storeAs("uploads/{$numeroCliente}/{$carpeta}", $filename, 'public');
 
-        $uniqueId = uniqid();
-        $prefix = match($idDoc) {
-            58 => 'analisis_fisicoquimicos',
-            59 => 'certificado_granel',
-            134 => 'fisicoquimicos_ajuste_grado',
-            default => 'documento',
-        };
-
-        if ($idDoc === 59) {
-                $carpeta = 'certificados_granel'; // ✅ sin slash
-            }
-
-        $filename = $prefix . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
-        $filePath = $file->storeAs("uploads/{$numeroCliente}/{$carpeta}", $filename, 'public');
-        $documentacion_url = new Documentacion_url();
-        $documentacion_url->id_relacion = $lote->id_lote_granel;
-        $documentacion_url->id_documento = $idDoc;
-        $documentacion_url->nombre_documento = $nombre_documento;
-        $documentacion_url->url = $filename;
-        $documentacion_url->id_empresa = $lote->id_empresa;
-
-        $documentacion_url->save();
-            }
+            $documentacion_url = new Documentacion_url();
+            $documentacion_url->id_relacion = $lote->id_lote_granel;
+            $documentacion_url->id_documento = $idDoc;
+            $documentacion_url->nombre_documento = $nombre_documento;
+            $documentacion_url->url = $filename;
+            $documentacion_url->id_empresa = $lote->id_empresa;
+            $documentacion_url->save();
         }
+    }
+}
+
+
         // Retornar una respuesta
         return response()->json([
             'success' => true,
