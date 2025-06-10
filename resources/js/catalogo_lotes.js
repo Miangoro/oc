@@ -413,7 +413,7 @@ $(function () {
     openPdfBtn.attr('href', url);
     openPdfBtn.show();
     $("#titulo_modal_Dictamen1").text("Certificado de lote a granel");
-    $("#subtitulo_modal_Dictamen1").text(registro);
+    $("#subtitulo_modal_Dictamen1").html(registro);
     $('#mostrarPdfDictamen1').modal('show');
   });
   // Ocultar el spinner cuando el PDF esté completamente cargado

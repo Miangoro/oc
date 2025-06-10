@@ -149,6 +149,8 @@ class TrazabilidadController extends Controller
 
 
     
+
+
     ///TRAZABILIDAD CERTIFICADOS
     public function TrackingCertificados($id)
     {   
@@ -173,9 +175,44 @@ class TrazabilidadController extends Controller
         ->orderBy('created_at', 'asc')
         ->get()
         ->map(function($log) {
+
+
         
          $attributes = $log->properties['attributes'] ?? [];//todas las propiedades
          $evento = $log->event ?? '';
+
+
+//VOBO
+// Procesar Vo.Bo. desde certificado si es que este log es del certificado
+$voboPersonalHtml = '';
+$voboClienteHtml = '';
+
+$personalMostrado = false;
+$clienteMostrado = false;
+
+if ($log->subject_type === 'App\Models\Certificado_Exportacion') {
+    $certificado = Certificado_Exportacion::find($attributes['id_certificado'] ?? null);
+
+    if ($certificado && $certificado->vobo) {
+        $voboData = json_decode($certificado->vobo, true);
+
+        foreach ($voboData as $item) {
+            if (!$personalMostrado && isset($item['id_personal'])) {
+                $usuario = User::find($item['id_personal']);
+                $voboPersonalHtml = "<p><b>Personal:</b> {$usuario->name} solicitó revisión.<br><b>Descripción:</b> {$item['descripcion']}</p>";
+                $personalMostrado = true;
+            }
+
+            if (!$clienteMostrado && isset($item['id_cliente'])) {
+                $usuario = User::find($item['id_cliente']);
+                $estado = $item['respuesta'] == 1 ? 'Aprobado' : 'No aprobado';
+                $voboClienteHtml = "<p><b>Cliente:</b> {$usuario->name} dio Vo.Bo.<br><b>Respuesta:</b> $estado<br><b>Descripción:</b> {$item['descripcion']}</p>";
+                $clienteMostrado = true;
+            }
+        }
+    }
+}
+
     
             // Buscar los objetos solo si los IDs están presentes
             $num_certificado = $attributes['num_certificado'] ?? null;
@@ -283,7 +320,6 @@ class TrazabilidadController extends Controller
                 $contenido .= ", <b>Observaciones:</b> $obs";
             }
 
-            
             //if ($num_certificado) {
                 $bitacora .= "
                     <i class='ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdf'
@@ -295,10 +331,9 @@ class TrazabilidadController extends Controller
                         data-tipo_revision='$tipo_revision'>
                     </i>";
             //}
-
         }
 
-
+        
 
             // Retornar los datos con el contenido construido
             return [
@@ -307,6 +342,8 @@ class TrazabilidadController extends Controller
                 'created_at' => $log->created_at->toDateTimeString(),
                 'contenido' => trim($contenido),  // Eliminar posibles espacios extra
                 'bitacora' => $bitacora,
+                'vobo_personal' => $voboPersonalHtml,
+                'vobo_cliente' => $voboClienteHtml,
             ];
         });
     

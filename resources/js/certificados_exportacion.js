@@ -1542,6 +1542,11 @@ $(document).on('click', '.trazabilidad', function () {
       var contenedor = $('#ListTracking');
       contenedor.empty(); // Limpiar el contenedor de logs
 
+
+let voboPersonalHtml = '';// Aquí guardaremos el HTML del Vo.Bo., si hay
+let voboClienteHtml = '';
+
+
       // Iterar sobre los logs y agregarlos al contenedor
       logs.forEach(function (log) {
         contenedor.append(`
@@ -1559,11 +1564,53 @@ $(document).on('click', '.trazabilidad', function () {
                       <div class="d-flex align-items-center mb-1">
                       ${log.bitacora}
                       </div>
-                      
+
                   </div>
                   </li><hr>
+
               `);
+
+
+  // Guardar solo un Vo.Bo. (si no lo hemos guardado aún)
+  // Guardar Vo.Bo. separados si no se han guardado aún
+  if (!voboPersonalHtml && log.vobo_personal) {
+    voboPersonalHtml = `
+    <li class="timeline-item timeline-item-transparent">
+      <span class="timeline-point timeline-point-primary"></span>
+
+      <div class="mt-2 mb-2">
+        <h6 class="text-primary"><i class="ri-user-line me-1"></i> Vo.Bo. del Personal</h6>
+        ${log.vobo_personal}
+      </div>
+
+    </li><hr>
+    `;
+  }
+
+  if (!voboClienteHtml && log.vobo_cliente) {
+    voboClienteHtml = `
+  <li class="timeline-item timeline-item-transparent">
+    <span class="timeline-point timeline-point-primary"></span>
+
+      <div class="mt-2 mb-2">
+        <h6 class="text-success"><i class="ri-user-check-line me-1"></i>Revisión del cliente</h6>
+        ${log.vobo_cliente}
+      </div>
+
+    </li><hr>
+    `;
+  }
+
+
       });
+
+  // Agregar Vo.Bo. una sola vez al final
+if (voboPersonalHtml) {
+  contenedor.append(voboPersonalHtml);
+}
+if (voboClienteHtml) {
+  contenedor.append(voboClienteHtml);
+}
 
       // Mostrar el modal
       $('#ModalTracking').modal('show');
