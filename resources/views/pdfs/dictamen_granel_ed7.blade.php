@@ -363,13 +363,21 @@
                 <td>{{ $data->inspeccione->solicitud->lote_granel->edad ?? 'NA' }}</td>
                 <td class="negrita" style="color: #17365D;">Tipo de maguey</td>
                 <td colspan="3">
-                    @if(!empty($data->inspeccione->solicitud->lote_granel->tiposRelacionados))
-                    @foreach($data->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
-                        {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>)
-                    @endforeach
-                        @else
-                            ------
-                     @endif
+                    @php
+                        $ordenIds = json_decode($data->inspeccione->solicitud->lote_granel->orden_ids ?? '[]'); // o el campo que contiene ["8","1"]
+                        $tipos = collect($data->inspeccione->solicitud->lote_granel->tiposRelacionados ?? [])
+                                    ->keyBy('id');
+                    @endphp
+
+                    @if(!empty($ordenIds) && $tipos->isNotEmpty())
+                        @foreach($ordenIds as $id)
+                            @if($tipos->has($id))
+                                {{ $tipos[$id]->nombre }} (<i>{{ $tipos[$id]->cientifico }}</i>)<br>
+                            @endif
+                        @endforeach
+                    @else
+                        ------
+                    @endif
                     
                 </td>
             </tr>

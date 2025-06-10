@@ -1744,7 +1744,9 @@ $(document).on('click', '.VoBo', function () {
         let html = `
             <div class="col-md-12">
               <div class="form-floating form-floating-outline mb-6">
-                <textarea name="descripcion" class="form-control" required></textarea>
+                <textarea name="descripcion" class="form-control" required
+                value="Estimado cliente, envío a usted el siguiente pre certificado con codificación' 
+                    .$certificado->num_certificado. ' para su Vo.Bo."></textarea>
                 <label>Descripción:</label>
               </div>
             </div>

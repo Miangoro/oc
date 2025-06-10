@@ -936,7 +936,8 @@ public function obtenerVobo($id)
 
     return response()->json([
         'vobo' => $vobo,
-        'id_usuario' => Auth::id()
+        'id_usuario' => Auth::id(),
+        'num_certificado' => $certificado->num_certificado
     ]);
 }
 
@@ -965,8 +966,9 @@ public function guardarVobo(Request $request)
                 $dataNotificacion = [
                     'title' => 'Revisión del cliente',
                     'asunto' => 'revisión' . $certificado->num_certificado,
-                    //'message' => 'Revisado por ' .$user->name. ' y el Vo.Bo. fué '.$respuesta,
-                    'message' => $request->descripcion,
+                    'message' => 'Revisado por ' .$user->name. ' y el Vo.Bo. fué '.$respuesta.'<br>'
+                        .$request->descripcion,
+                    //'message' => $request->descripcion,
                     'url' => route('certificados-exportacion'),
                 ];
                 $receptor->notify(new GeneralNotification($dataNotificacion));
