@@ -276,7 +276,7 @@
 
                 if (documentos.length > 0) {
                     documentos.forEach(function(doc) {
-                        let carpeta;
+                        let carpeta = '';
                         if(doc.id_documento == 69 || doc.id_documento == 70){
                             carpeta = 'actas/';
                         }
