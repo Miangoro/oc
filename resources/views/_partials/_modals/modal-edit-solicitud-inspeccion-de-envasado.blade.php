@@ -225,13 +225,16 @@
                             .trigger('change');
                     }
 
-                    var contenidoE = "";
-                    for (let index = 0; index < response.lotes_envasado.length; index++) {
-                        contenidoE = '<option value="' + response.lotes_envasado[index].id_lote_envasado +
-                            '">' +
-                            response
-                            .lotes_envasado[index].nombre + '</option>' + contenidoE;
-                    }
+                    let contenidoE = '';
+
+                    response.lotes_envasado.forEach(lote => {
+                        const nombreLote = lote.nombre;
+                        const loteGranel = lote.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.nombre_lote || '';
+                        
+                        contenidoE += `<option value="${lote.id_lote_envasado}">
+                            ${nombreLote} Granel: ${loteGranel}
+                        </option>`;
+                    });
                     if (response.lotes_envasado.length == 0) {
                         contenidoE = '<option value="">Sin lotes registrados</option>';
                     } else {}

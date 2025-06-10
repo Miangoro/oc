@@ -202,13 +202,17 @@
                     }
                     $('#id_instalacion_inspeccion').html(contenido);
 
-                    var contenidoEnv = "";
-                    for (let index = 0; index < response.lotes_envasado.length; index++) {
-                        contenidoEnv = '<option value="' + response.lotes_envasado[index].id_lote_envasado +
-                            '">' +
-                            response
-                            .lotes_envasado[index].nombre + '</option>' + contenidoEnv;
-                    }
+                    let contenidoEnv = '';
+
+                    response.lotes_envasado.forEach(lote => {
+                        const nombreLote = lote.nombre;
+                        const loteGranel = lote.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.nombre_lote || '';
+                        
+                        contenidoEnv += `<option value="${lote.id_lote_envasado}">
+                            ${nombreLote} Granel: ${loteGranel}
+                        </option>`;
+                    });
+
                     if (response.lotes_envasado.length == 0) {
                         contenidoEnv = '<option disabled selected value="">Sin lotes registrados</option>';
                     } else {}
