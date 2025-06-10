@@ -1150,8 +1150,8 @@ $(function () {
                   modal.find('#presentacion_edit0').val(response.caracteristicas.detalles[0].presentacion || '');
                   modal.find('#lote_granel_edit_0').val(response.caracteristicas.detalles[0].lote_granel || '');
                   modal.find('#lote_envasado_edit_0').data('selected', response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
-                   let idLoteEnvasado = response.caracteristicas.detalles[0].id_lote_envasado;
-                      cargarDetallesLoteEnvasadoEdit(idLoteEnvasado);
+                  let idLoteEnvasado = response.caracteristicas.detalles[0].id_lote_envasado;
+                  cargarDetallesLoteEnvasadoEdit(idLoteEnvasado);
                 } else {
                   for (var i = 1; i < cantidadDeLotes; i++) {
                     $('#add-characteristics_edit').click();
@@ -1162,7 +1162,7 @@ $(function () {
                     modal.find(`#lote_granel_edit_0`).val(response.caracteristicas.detalles[0].lote_granel || '');
                     modal.find('#lote_envasado_edit_0').data('selected', response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
                     let idLoteEnvasado = response.caracteristicas.detalles[0].id_lote_envasado;
-                        cargarDetallesLoteEnvasadoEdit(idLoteEnvasado);
+                    cargarDetallesLoteEnvasadoEdit(idLoteEnvasado);
                     $(`#caracteristicas_Ex_edit_${i} .evasado_export_edit`).data('selected', response.caracteristicas.detalles[i].id_lote_envasado);
                     cargarLotesEdit($('#id_empresa_solicitud_exportacion_edit').val(), i);
                   }
@@ -1899,7 +1899,7 @@ $(function () {
       });
     });
   });
-
+  //edit inspeccion de envasado
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -2032,7 +2032,7 @@ $(function () {
     });
   });
 
-
+  //add inspeccion de envsasado
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -2275,6 +2275,7 @@ $(function () {
       });
     });
   });
+  //edit liberacion
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -3008,7 +3009,7 @@ $(function () {
     });
   });
 
-
+  //vigilancia en produccion
   $(function () {
     $.ajaxSetup({
       headers: {
@@ -4420,6 +4421,9 @@ $(function () {
           // Reiniciar el formulario
           $('#addPedidoExportacionForm')[0].reset();
           $('.select2').val(null).trigger('change');
+          $('#sections-container .card').not(':first').remove();
+          $('#encabezado_etiquetas').html('Elegir Etiquetas y Corrugados');
+          $('#tablaLotes tbody').empty();
           $('.datatables-solicitudes').DataTable().ajax.reload();
           $('#addPedidoExportacion').modal('hide');
           // Mostrar alerta de éxito
