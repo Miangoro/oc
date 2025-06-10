@@ -296,9 +296,20 @@ public function getDocumentosSolicitud($id_solicitud)
 
         $idLote = $solicitud->lote_granel?->id_lote_granel;
 
+
    
 
         if ($idLote) {
+
+            
+          $numero_cliente = 'N/A';
+        $empresa = empresa::find($solicitud->lote_granel->id_empresa);
+        $cliente = $empresa->empresaNumClientes
+            ->first(fn($item) => !empty($item->numero_cliente));
+        $numero_cliente = $cliente?->numero_cliente ?? 'No encontrado';
+    
+
+
             $url_certificado = Documentacion_url::where('id_relacion', $idLote)
             ->where('id_documento', 59)
             ->value('url'); // Obtiene directamente el valor del campo 'url'
