@@ -294,6 +294,14 @@ public function getDocumentosSolicitud($id_solicitud)
             ->value('url'); // Obtiene directamente el valor del campo 'url'
         }
 
+        $idLote = $solicitud->lote_granel?->id_lote_granel;
+
+        if ($idLote) {
+            $url_certificado = Documentacion_url::where('id_relacion', $idLote)
+            ->where('id_documento', 59)
+            ->value('url'); // Obtiene directamente el valor del campo 'url'
+        }
+
     }
 
 
@@ -307,6 +315,7 @@ public function getDocumentosSolicitud($id_solicitud)
             ?->numero_cliente ?? 'N/A',
         'url_etiqueta' => $url_etiqueta ?? '',
         'url_corrugado' => $url_corrugado ?? '',
+        'url_certificado' => $url_certificado ?? '',
 
             ]);
 }
