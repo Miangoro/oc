@@ -13,7 +13,6 @@ use App\Models\tipos;
 use App\Models\clases;
 use App\Models\categorias;
 use App\Models\direcciones;
-use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helpers;
 use App\Models\etiquetas;
 use App\Models\etiquetas_destino;
@@ -22,6 +21,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;//Permiso empresa
 
 
 
@@ -64,10 +64,11 @@ class EtiquetasController extends Controller
             4 => 'unidad',
             5 => 'alc_vol',
         ];
-        if (auth()->user()->tipo == 3) {
-            $empresaId = auth()->user()->empresa?->id_empresa;
-        } else {
-            $empresaId = null;
+        
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
         }
 
      $totalData = etiquetas::when($empresaId, function ($q) use ($empresaId) {
@@ -95,7 +96,7 @@ class EtiquetasController extends Controller
             ->limit($limit)
             ->get();
         } else {
-              $filteredQuery = etiquetas::with('destinos', 'marca')
+              $filteredQuery = etiquetas::with('destinos', 'marca', 'marca.empresa')
         ->when($empresaId, function ($q) use ($empresaId) {
             $q->whereHas('marca', function ($q2) use ($empresaId) {
                 $q2->where('id_empresa', $empresaId);
@@ -119,6 +120,9 @@ class EtiquetasController extends Controller
                 })
                 ->orWhereHas('tipo', function ($q) use ($search) {
                     $q->where('nombre', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('marca.empresa', function ($q) use ($search) {
+                    $q->where('razon_social', 'LIKE', "%{$search}%");
                 });
         });
 
