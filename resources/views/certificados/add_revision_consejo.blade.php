@@ -154,7 +154,28 @@
                                                 @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'nombre_empresa')
+                                            @php
+                                                $cliente = $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
+                                                    'numero_cliente',
+                                                    '!=',
+                                                    null,
+                                                );
+                                                $documento = $datos->obtenerDocumentosClientes(
+                                                    77,
+                                                    $datos->certificado->dictamen->inspeccione->solicitud->empresa
+                                                        ->id_empresa,
+                                                );
+                                            @endphp
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</b>
+                                                 @if ($pregunta->documentacion?->documentacionUrls && $pregunta->id_documento != 69 && $cliente && $documento)
+                                                    <a target="_blank"
+                                                        href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">Sin carta de asignación</span>
+                                                @endif
                                             </td>
                                          @elseif($pregunta->filtro == 'representante_legal')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'N/A' }}</b>
