@@ -252,15 +252,13 @@
     @endif
     
     <div class="margen_mezcal_granel"></div>
-    <img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Marca de Agua" class="watermark">
+    <img alt="Marca de Agua" class="watermark">
 
     <div class="header">
-        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" width="300px">
+        <img  alt="Logo CIDAM" width="300px">
     </div>
 
-    <div class="description1">ORGANISMO CERTIFICADOR</div>
-    <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C</div>
-
+    
     <p class="text">El Centro de Innovación y Desarrollo Agroalimentario de Michoacán, (CIDAM) acreditado como Organismo de Certificación con acreditación No. 144/18,
     acreditado por la entidad mexicana de acreditación, a.c. y aprobado por la DGN con el No. 144/18 otorga el presente:</p>
 
@@ -360,7 +358,7 @@
     <br>Edición 7 Entrada en vigor: 07/11/2023
 </div>
 <div class="foother">
-    <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="300px">
+    <img  alt="Logo CIDAM" width="300px">
 </div>
 
 

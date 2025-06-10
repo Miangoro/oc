@@ -1246,6 +1246,7 @@ $(document).ready(function () {
 $(document).on('click', '.pdfCertificado', function ()  {
   var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
   var pdfUrl = '/Pre-certificado-granel/' + id; //Ruta del PDF
+  var archivoDescargaUrl = '/Descargar-certificado-granel/' + id;
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
       
@@ -1260,6 +1261,25 @@ $(document).on('click', '.pdfCertificado', function ()  {
 
     $("#titulo_modal").text("Certificado Nom Mezcal a Granel");
     $("#subtitulo_modal").text("PDF del Certificado");
+
+
+  ///descarga sin marca de agua
+// Crear botón de descarga si aún no existe
+  if ($('#btnDescargarDinamico').length === 0) {
+    var botonDescarga = $(`
+      <a id="btnDescargarDinamico" href="${archivoDescargaUrl}" class="btn btn-secondary ms-2" download>
+        Certificado sin marca de agua
+      </a>
+    `);
+    
+    // Insertar el botón junto al de Nueva Pestaña
+    $('#NewPestana').after(botonDescarga);
+  } else {
+    // Solo actualizar el href si ya existe
+    $('#btnDescargarDinamico').attr('href', archivoDescargaUrl).show();
+  }
+
+
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();

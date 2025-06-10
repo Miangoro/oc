@@ -1740,6 +1740,7 @@ $(document).on('click', '.VoBo', function () {
     $.get(`/certificados/${id_certificado}/vobo`, function (data) {
         const vobo = data.vobo;
         const userId = data.id_usuario;
+        const num_certificado = data.num_certificado;
 
         let html = `
             <div class="col-md-12">
