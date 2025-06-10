@@ -299,7 +299,7 @@
                    
                         html += `
                             <tr>
-                                <td>Corrugado</td>
+                                <td>Certificado de granel</td>
                                 <td>
                                     <a href="/files/${response.numero_cliente}/certificados_granel/${url_certificado}" target="_blank">
                                         <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
