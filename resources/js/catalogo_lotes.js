@@ -1109,7 +1109,6 @@ $(function () {
                     </button>
 
                 `;
-
                 if (id == 58) {
                   $('#archivo_url_display_completo_58').html(
                     `Documento completo disponible: <a href="${fileUrl}" target="_blank" class="text-primary">${fileName}</a>`
@@ -1118,7 +1117,6 @@ $(function () {
 
                   documentoCompletoUrlAsignado = true;
                 }
-
                 if (id == 134) {
                   $('#archivo_url_display_ajuste_134').html(
                     `Documento ajuste disponible: <a href="${fileUrl}" target="_blank" class="text-primary">${fileName}</a>`
@@ -1127,7 +1125,6 @@ $(function () {
                   documentoAjusteUrlAsignado = true;
                 }
               });
-
 
               // Mostrar mensajes si no se asignó alguno
               if (!documentoCompletoUrlAsignado) {
