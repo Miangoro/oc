@@ -362,14 +362,23 @@
                 <td class="negrita" style="color: #17365D;">Edad</td>
                 <td>{{ $data->inspeccione->solicitud->lote_granel->edad ?? 'NA' }}</td>
                 <td class="negrita" style="color: #17365D;">Tipo de maguey</td>
-                <td colspan="3">
-                    @if(!empty($data->inspeccione->solicitud->lote_granel->tiposRelacionados))
-                    @foreach($data->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
-                        {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>)
-                    @endforeach
-                        @else
-                            ------
-                     @endif
+                <td colspan="3" style="font-size: 10px">
+                    @php
+                        $ordenIds = json_decode($data->inspeccione->solicitud->lote_granel->id_tipo ?? '[]');
+                        $tipos = $data->inspeccione->solicitud->lote_granel->tiposRelacionados;
+                        // Reordenar manualmente
+                        $tiposOrdenados = collect($ordenIds)->map(function($id) use ($tipos) {
+                            return $tipos->firstWhere('id_tipo', (int) $id);
+                        })->filter(); // Elimina nulos si faltan IDs
+                    @endphp
+
+                    @if($tiposOrdenados->isNotEmpty())
+                        @foreach($tiposOrdenados as $tipo)
+                            {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>) <br>
+                        @endforeach
+                    @else
+                        ------
+                    @endif
                     
                 </td>
             </tr>

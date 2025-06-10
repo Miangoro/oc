@@ -154,7 +154,43 @@
                                                 @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'nombre_empresa')
+                                            @php
+                                                $cliente = $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
+                                                    'numero_cliente',
+                                                    '!=',
+                                                    null,
+                                                );
+                                                $documento = $datos->obtenerDocumentosClientes(
+                                                    77,
+                                                    $datos->certificado->dictamen->inspeccione->solicitud->empresa
+                                                        ->id_empresa,
+                                                );
+
+                                                $documento2 = $datos->obtenerDocumentosClientes(
+                                                    5,
+                                                    $datos->certificado->dictamen->inspeccione->solicitud->empresa
+                                                        ->id_empresa,
+                                                );
+                                            @endphp
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</b>
+                                                 @if ($cliente && $documento)
+                                                    <a target="_blank"
+                                                        href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">Sin carta de asignación</span>
+                                                @endif
+                                                @if ($cliente && $documento2)
+                                                    <a target="_blank"
+                                                        href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento2 }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">Sin contrato subido</span>
+                                                @endif
                                             </td>
                                          @elseif($pregunta->filtro == 'representante_legal')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'N/A' }}</b>
