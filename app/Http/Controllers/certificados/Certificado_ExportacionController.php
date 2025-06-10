@@ -838,7 +838,30 @@ public function obtenerVobo($id)
         'id_usuario' => Auth::id()
     ]);
 }
+/*
+// Preparar datos para el correo
+    $data1 = [
+        'asunto' => 'Revisión de certificado ' . $certificado->num_certificado,
+        'title' => 'Revisión de certificado',
+        'message' => 'Se te ha asignado el certificado ' . $certificado->num_certificado,
+        'url' => $url_clic,
+        'nombreRevisor' => $user->name,
+        'emailRevisor' => $user->email,
+        'num_certificado' => $certificado->num_certificado,
+        'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
+        'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+        'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar',
+        'numero_cliente' => $numeroCliente ?? 'Sin asignar',
+        'tipo_certificado' => 'Certificado de instalaciones',
+        'observaciones' => $revisor->observaciones,
+    ];
 
+// Notificación Local
+    $users = User::whereIn('id', [$validatedData['nombreRevisor']])->get();
+    foreach ($users as $notifiedUser) {
+        $notifiedUser->notify(new GeneralNotification($data1));
+    }
+*/
 public function guardarVobo(Request $request)
 {
     $certificado = Certificado_Exportacion::findOrFail($request->id_certificado);
@@ -852,12 +875,46 @@ public function guardarVobo(Request $request)
             'descripcion' => $request->descripcion,
             'respuesta' => $request->respuesta
         ];
-    } else {
+
+        $user = User::find($userId);
+        $respuesta = $request->respuesta == 1 ? 'Aprobado' : 'No aprobado';
+        // NOTIFICACION PARA EL PERSONAL
+        $personalEntry = collect($vobo)->firstWhere('id_personal');
+        if ($personalEntry) {
+            $receptor = User::find($personalEntry['id_personal']);
+
+            if ($receptor) {
+                $dataNotificacion = [
+                    'title' => 'Revisión del cliente',
+                    'asunto' => 'revisión' . $certificado->num_certificado,
+                    'message' => 'Revisado por ' .$user->name. ' y el Vo.Bo. fué '.$respuesta,
+                    'url' => route('certificados-exportacion'),
+                ];
+                $receptor->notify(new GeneralNotification($dataNotificacion));
+            }
+        }
+
+    } else {//NOTIFICACION PARA EL CLIENTE
         $vobo[] = [
             'id_personal' => $userId,
             'descripcion' => $request->descripcion,
             //'notificados' => $request->notificados
         ];
+
+        /*$clientes = User::where('tipo', 3)->get(); // Suponiendo tipo 3 es cliente
+        foreach ($clientes as $cliente) {*/
+        $cliente = User::find(49);//para ISABEL
+        if ($cliente) {
+            $dataNotificacion = [
+                'title' => 'Vo.Bo.',
+                'asunto' => 'revisión' . $certificado->num_certificado . ' pendiente',
+                'message' => 'Se te ha asignado la revisión del certificado ' .$certificado->num_certificado. ' para su Vo.Bo',
+                //'url' => route('certificados-exportacion', $certificado->id_certificado),
+                'url' => route('certificados-exportacion'),
+            ];
+            $cliente->notify(new GeneralNotification($dataNotificacion));
+        }
+
     }
 
     $certificado->vobo = json_encode($vobo);
