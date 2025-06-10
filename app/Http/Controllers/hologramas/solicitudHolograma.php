@@ -77,11 +77,14 @@ class solicitudHolograma extends Controller
         $order = $columns[$orderColumnIndex] ?? 'id_solicitud';
         $dir = $request->input('order.0.dir');
         $searchValue = $request->input('search.value');
-        if (auth()->user()->tipo == 3) {
-            $empresaId = auth()->user()->id_empresa;
-        } else {
-            $empresaId = null;
+        
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
         }
+
+
         $query = ModelsSolicitudHolograma::with(['empresa.empresaNumClientes', 'user', 'marcas'])
         ->when($empresaId, function ($q) use ($empresaId) {
             $q->where('id_empresa', $empresaId);
