@@ -21,6 +21,8 @@ $(function () {
     'Revisión de etiquetas'
   ];
 
+
+
   // 2. Generar los botones dinámicamente
   const filtroButtons = filtros.map(filtro => ({
     text: filtro,
@@ -227,7 +229,8 @@ $(function () {
                        <br>
                        <span class="fw-bold  small">Proforma:</span><span class="small"> ${data.no_pedido || 'N/A'}</span>
                        <br>
-                      <span class="fw-bold  small">Certificado:</span><span class="small"> ${data.certificado_exportacion || 'N/A'}</span>`;
+                      <span class="fw-bold  small">Certificado:</span><span class="small"> ${data.certificado_exportacion || 'N/A'}</span>
+                       ${data.combinado}`;
             case 14:
               return `<span class="fw-bold  small">
                   ${data.renovacion === 'si' ? 'Es renovación' : 'No es renovación'}
@@ -291,7 +294,12 @@ $(function () {
         targets: 2,
         searchable: false,
         orderable: false,
-      },
+      }, 
+      {
+        targets: 3,
+        responsivePriority: 4,
+        orderable: false,
+      }, 
       {
         targets: 4,
         searchable: false,
@@ -305,7 +313,6 @@ $(function () {
       {
         // User full name
         targets: 8,
-        responsivePriority: 4,
         render: function (data, type, full, meta) {
           var $name = full['inspector'];
           var foto_inspector = full['foto_inspector'];
@@ -361,40 +368,57 @@ $(function () {
         searchable: false,
         orderable: false,
         render: function (data, type, full, meta) {
-          return (
-            '<div class="d-flex align-items-center gap-50">' +
-            '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">' +
-            '<i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>' +
-            '</button>' +
-            '<div class="dropdown-menu dropdown-menu-end m-0">' +
-            `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2">` +
-            '<i class="text-warning ri-user-search-fill"></i> Trazabilidad</a>' +
-            `<a
-            data-id="${full['id_tipo']}"
-            data-id-solicitud="${full['id_solicitud']}"
-            data-tipo="${full['tipo']}"
-            data-razon-social="${full['razon_social']}"
-            data-bs-toggle="modal"
-            data-bs-target="#addSolicitudValidar"
-            class="dropdown-item text-dark waves-effect validar-solicitudes">
-            <i class="text-success ri-search-eye-line"></i> Validar solicitud
-          </a>` +
-            `<a
-              data-id="${full['id']}"
-              data-id-solicitud="${full['id_solicitud']}"
-              data-tipo="${full['tipo']}"
-              data-id-tipo="${full['id_tipo']}"
-              data-razon-social="${full['razon_social']}"
-              class="cursor-pointer dropdown-item text-dark edit-record-tipo">` +
-            '<i class="text-warning ri-edit-fill"></i> Editar</a>' +
+              let dropdown = `
+                <div class="d-flex align-items-center gap-50">
+                  <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                    <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end m-0">
+                    <a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']}, '${full['tipo']}', '${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2">
+                      <i class="text-warning ri-user-search-fill"></i> Trazabilidad
+                    </a>`;
 
-            // Aquí agregamos la opción de eliminar
-            `<a  data-id="${full['id']}"   data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">` +
-            '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>' +
-            '</div>' +
-            '</div>'
-          );
-        }
+              // Si puede agregar usuario, incluir opción adicional
+              if (puedeValidarSolicitud) {
+                dropdown += `
+                  <a
+                    data-id="${full['id_tipo']}"
+                    data-id-solicitud="${full['id_solicitud']}"
+                    data-tipo="${full['tipo']}"
+                    data-razon-social="${full['razon_social']}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addSolicitudValidar"
+                    class="dropdown-item text-dark waves-effect validar-solicitudes">
+                    <i class="text-success ri-search-eye-line"></i> Validar solicitud
+                  </a>`;
+              }
+
+              if (puedeEditarSolicitud) {
+                dropdown += `
+                  <a
+                    data-id="${full['id']}"
+                    data-id-solicitud="${full['id_solicitud']}"
+                    data-tipo="${full['tipo']}"
+                    data-id-tipo="${full['id_tipo']}"
+                    data-razon-social="${full['razon_social']}"
+                    class="cursor-pointer dropdown-item text-dark edit-record-tipo">
+                    <i class="text-warning ri-edit-fill"></i> Editar
+                  </a>`;
+              }
+            if (puedeEliminarSolicitud) {
+              dropdown += `
+                    <a data-id="${full['id']}" data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">
+                      <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
+                    </a>`;
+            }
+
+            dropdown += `
+                  </div>
+                </div>`;
+
+              return dropdown;
+            }
+
       }
     ],
     order: [[2, 'desc']],

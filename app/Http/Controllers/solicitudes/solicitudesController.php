@@ -330,6 +330,10 @@ class solicitudesController extends Controller
                 $nestedData['art'] = $caracteristicas['art'] ?? 'N/A';
                 $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
                 $nestedData['folio_caracteristicas'] = $caracteristicas['folio'] ?? 'N/A';
+                $nestedData['combinado'] = ($caracteristicas['tipo_solicitud'] ?? null) == 2
+    ? '<span class="badge rounded-pill bg-info"><b>Combinado</b></span>'
+    : '';
+
                 $nestedData['etapa'] = $caracteristicas['etapa'] ?? 'N/A';
                 $nestedData['fecha_corte'] = isset($caracteristicas['fecha_corte']) ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i') : 'N/A';
                 $nestedData['marca'] = $marca ?? 'N/A';

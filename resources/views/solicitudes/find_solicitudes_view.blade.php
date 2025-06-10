@@ -153,7 +153,14 @@
 
             setupEventListeners();
         });
+
+          window.puedeAgregarSolicitud = @json(auth()->user()->can('Registrar solicitudes'));
+          window.puedeEditarSolicitud= @json(auth()->user()->can('Editar solicitudes'));
+          window.puedeEliminarSolicitud = @json(auth()->user()->can('Eliminar solicitudes'));
+          window.puedeValidarSolicitud = @json(auth()->user()->can('Validar solicitudes'));
+          window.puedeExportarSolicitud = @json(auth()->user()->can('Exportar solicitudes'));
     </script>
+
 
     <style>
         .text-primary {
