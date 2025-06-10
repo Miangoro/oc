@@ -167,7 +167,7 @@
                                                 );
                                             @endphp
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</b>
-                                                 @if ($pregunta->documentacion?->documentacionUrls && $pregunta->id_documento != 69 && $cliente && $documento)
+                                                 @if ($cliente && $documento)
                                                     <a target="_blank"
                                                         href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
                                                         <i
