@@ -233,9 +233,15 @@ class lotesGranelController extends Controller
                       $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($n) {
                           return !empty($n);
                       });
-                        $detallesLotes = $lotes->map(function ($loteItem) use ($documentos, $numeroCliente) {
+                        $detallesLotes = $lotes->map(function ($loteItem) use ($documentos) {
                             $folioFq = $loteItem->folio_fq;
                             $folioPartes = explode(',', $folioFq);
+
+                            // Obtener empresa y número de cliente del lote de procedencia
+                            $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $loteItem->id_empresa)->first();
+                            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($n) {
+                                return !empty($n);
+                            });
 
                             $urlCompleto = $documentos->get("{$loteItem->id_lote_granel}_58")?->first()?->url;
                             $urlAjuste = $documentos->get("{$loteItem->id_lote_granel}_134")?->first()?->url;
@@ -244,10 +250,9 @@ class lotesGranelController extends Controller
                             $folioAjuste = '';
 
                             if (count($folioPartes) === 1) {
-                                // Solo hay uno, lo tratamos como "completo"
                                 $folio = trim($folioPartes[0]);
                                 $folioCompleto = $urlCompleto
-                                    ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlCompleto) . "' class=' text-info text-decoration-underline' target='_blank' title='Ver documento'>{$folio}</a>"
+                                    ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlCompleto) . "' class='text-info text-decoration-underline' target='_blank' title='Ver documento'>{$folio}</a>"
                                     : $folio;
                             } elseif (count($folioPartes) === 2) {
                                 $parte1 = trim($folioPartes[0]);
@@ -255,22 +260,22 @@ class lotesGranelController extends Controller
 
                                 if (!empty($parte1)) {
                                     $folioCompleto = $urlCompleto
-                                        ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlCompleto) . "' class='  text-info text-decoration-underline' target='_blank' title='Ver documento'>{$parte1}</a>"
+                                        ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlCompleto) . "' class='text-info text-decoration-underline' target='_blank' title='Ver documento'>{$parte1}</a>"
                                         : $parte1;
                                 }
 
                                 if (!empty($parte2)) {
                                     $folioAjuste = $urlAjuste
-                                        ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlAjuste) . "' class='  text-info text-decoration-underline' target='_blank' title='Ver documento'>{$parte2}</a>"
+                                        ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlAjuste) . "' class='text-info text-decoration-underline' target='_blank' title='Ver documento'>{$parte2}</a>"
                                         : $parte2;
                                 }
                             }
 
-                            // Unir folios con coma si ambos existen
                             $foliosTexto = trim(implode(', ', array_filter([$folioCompleto, $folioAjuste])));
 
                             return "{$loteItem->nombre_lote} ({$loteItem->cont_alc} %) {$foliosTexto}";
                         });
+
 
 
                       $nestedData['lote_procedencia'] = implode('<br>', $detallesLotes->toArray());
