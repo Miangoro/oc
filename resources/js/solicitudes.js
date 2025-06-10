@@ -65,9 +65,14 @@ $(function () {
     },
 
     columns: [
+    
       { data: '' },
-      { data: '' },
-      { data: 'folio' },
+      { 
+          data: 'folio',
+          render: function(data, type, row) {
+              return `<span style="font-weight: bold; font-size: 1.1em;">${data}</span>`;
+          }
+      },
       { data: 'num_servicio' },
       {
         render: function (data, type, full, meta) {
@@ -75,8 +80,8 @@ $(function () {
           var $razon_social = full['razon_social'];
           return `
             <div>
-              <span class="fw-bold">${$numero_cliente}</span><br>
-              <small style="font-size:12px;" class="user-email">${$razon_social}</small>
+              <span  style="font-size:12px;" class="fw-bold">${$numero_cliente}</span><br>
+              <small style="font-size:11px;" class="user-email">${$razon_social}</small>
             </div>
           `;
         }
@@ -103,128 +108,128 @@ $(function () {
             case 1: //Muestreo de agave
               return `
             <br>
-            <span class="fw-bold text-dark small">Guías de agave:</span>
+            <span class="fw-bold small">Guías de agave:</span>
             <span class="small"> ${data.guias || 'N/A'}</span>
           `;
 
             case 2: //Vigilancia en producción de lote
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+              return `<br><span class="fw-bold small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Nombre del predio:</span><span class="small"> ${data.nombre_predio || 'N/A'}</span>
+                      <span class="fw-bold small">Nombre del predio:</span><span class="small"> ${data.nombre_predio || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Art:</span><span class="small"> ${data.art || 'N/A'}</span>
+                      <span class="fw-bold small">Art:</span><span class="small"> ${data.art || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Etapa:</span><span class="small"> ${data.etapa || 'N/A'}</span>
+                      <span class="fw-bold  small">Etapa:</span><span class="small"> ${data.etapa || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha de Corte:</span>
+                      <span class="fw-bold  small">Fecha de Corte:</span>
                       <span class="small">${data.fecha_corte || 'N/A'}</span>
                       `;
             case 3:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+              return `<br><span class="fw-bold  small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small">${data.id_tipo_maguey || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small">${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Certificado de lote:</span><span class="small"> ${data.id_certificado_muestreo || 'N/A'}</span>
+                      <span class="fw-bold  small">Certificado de lote:</span><span class="small"> ${data.id_certificado_muestreo || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
+                      <span class="fw-bold  small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
                       `;
             case 4:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+              return `<br><span class="fw-bold  small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_traslado || 'N/A'}</span>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria_traslado || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_traslado || 'N/A'}</span>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase_traslado || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_traslado || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_traslado || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Volumen actual:</span><span class="small"> ${data.id_vol_actual || 'N/A'}</span>
+                      <span class="fw-bold  small">Volumen actual:</span><span class="small"> ${data.id_vol_actual || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Volumen restante:</span><span class="small"> ${data.id_vol_res || 'N/A'}</span>
+                      <span class="fw-bold  small">Volumen restante:</span><span class="small"> ${data.id_vol_res || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_traslado || 'N/A'}</span>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis_traslado || 'N/A'}</span>
                       `;
             case 5:
-              return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
-                      <br><span class="fw-bold text-dark small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
+              return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
+                      <br><span class="fw-bold  small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
             case 7:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+              return `<br><span class="fw-bold  small">Granel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_barricada || 'N/A'}</span>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis_barricada || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.tipo_lote || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.tipo_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
+                      <span class="fw-bold  small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
+                      <span class="fw-bold  small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
                        <br>
-                      <span class="fw-bold text-dark small">Volumen ingresado:</span><span class="small"> ${data.volumen_ingresado || 'N/A'}</span>
+                      <span class="fw-bold  small">Volumen ingresado:</span><span class="small"> ${data.volumen_ingresado || 'N/A'}</span>
                       `;
             case 8:
-              return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
+              return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
+                      <span class="fw-bold  small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
                       `;
             case 9:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+              return `<br><span class="fw-bold  small">Granel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.tipo_lote_lib || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.tipo_lote_lib || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
+                      <span class="fw-bold  small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
+                      <span class="fw-bold  small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
                       `;
             case 10:
-              return `<br><span class="fw-bold text-dark small">Punto de reunión:</span><span class="small"> ${data.punto_reunion || 'N/A'}</span>
+              return `<br><span class="fw-bold small">Punto de reunión:</span><span class="small"> ${data.punto_reunion || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
+                      <span class="fw-bold small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
             case 11:
-              return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
+              return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Lote granel:</span><span class="small"> ${data.lote_granel || 'N/A'}</span>
+                      <span class="fw-bold  small">Granel:</span><span class="small"> ${data.lote_granel || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Marca:</span><span class="small"> ${data.marca || 'N/A'}</span>
+                      <span class="fw-bold  small">Marca:</span><span class="small"> ${data.marca || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Cont. Neto.:</span><span class="small"> ${data.presentacion || 'N/A'}</span>
+                      <span class="fw-bold  small">Cont. Neto.:</span><span class="small"> ${data.presentacion || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Cajas:</span><span class="small"> ${data.cajas || 'N/A'}</span>
+                      <span class="fw-bold  small">Cajas:</span><span class="small"> ${data.cajas || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Botellas:</span><span class="small"> ${data.botellas || 'N/A'}</span>
+                      <span class="fw-bold  small">Botellas:</span><span class="small"> ${data.botellas || 'N/A'}</span>
                        <br>
-                       <span class="fw-bold text-dark small">Proforma:</span><span class="small"> ${data.no_pedido || 'N/A'}</span>
+                       <span class="fw-bold  small">Proforma:</span><span class="small"> ${data.no_pedido || 'N/A'}</span>
                        <br>
-                      <span class="fw-bold text-dark small">Certificado:</span><span class="small"> ${data.certificado_exportacion || 'N/A'}</span>`;
+                      <span class="fw-bold  small">Certificado:</span><span class="small"> ${data.certificado_exportacion || 'N/A'}</span>`;
             case 14:
-              return `<span class="fw-bold text-dark small">
+              return `<span class="fw-bold  small">
                   ${data.renovacion === 'si' ? 'Es renovación' : 'No es renovación'}
               </span>`;
 
@@ -276,13 +281,11 @@ $(function () {
           return '';
         }
       },
+   
       {
-        searchable: false,
-        orderable: true,
         targets: 1,
-        render: function (data, type, full, meta) {
-          return `<span>${full.fake_id}</span>`;
-        }
+        searchable: false,
+        orderable: false,
       },
       {
         targets: 2,
@@ -290,7 +293,7 @@ $(function () {
         orderable: false,
       },
       {
-        targets: 3,
+        targets: 4,
         searchable: false,
         orderable: false,
       },
@@ -300,13 +303,8 @@ $(function () {
         orderable: false,
       },
       {
-        targets: 6,
-        searchable: false,
-        orderable: false,
-      },
-      {
         // User full name
-        targets: 9,
+        targets: 8,
         responsivePriority: 4,
         render: function (data, type, full, meta) {
           var $name = full['inspector'];
@@ -338,12 +336,12 @@ $(function () {
         }
       },
       {
-        targets: 10,
+        targets: 9,
         searchable: false,
         orderable: false,
       },
       {
-        targets: 12,
+        targets: 11,
         className: 'text-center',
         searchable: false,
         orderable: false,
@@ -352,7 +350,7 @@ $(function () {
         }
       },
       {
-        targets: 13, // o el índice correcto de la columna 'estatus'
+        targets: 12, // o el índice correcto de la columna 'estatus'
         orderable: false,
         searchable: false
       },

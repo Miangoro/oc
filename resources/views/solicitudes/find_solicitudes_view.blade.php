@@ -175,7 +175,6 @@
                 <thead class="table-dark">
                     <tr>
                         <th></th>
-                        <th>No.</th>
                         <th>Folio</th>
                         <th>No. de servicio</th>
                         <th>Cliente</th>
