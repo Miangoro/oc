@@ -838,30 +838,7 @@ public function obtenerVobo($id)
         'id_usuario' => Auth::id()
     ]);
 }
-/*
-// Preparar datos para el correo
-    $data1 = [
-        'asunto' => 'Revisión de certificado ' . $certificado->num_certificado,
-        'title' => 'Revisión de certificado',
-        'message' => 'Se te ha asignado el certificado ' . $certificado->num_certificado,
-        'url' => $url_clic,
-        'nombreRevisor' => $user->name,
-        'emailRevisor' => $user->email,
-        'num_certificado' => $certificado->num_certificado,
-        'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
-        'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-        'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar',
-        'numero_cliente' => $numeroCliente ?? 'Sin asignar',
-        'tipo_certificado' => 'Certificado de instalaciones',
-        'observaciones' => $revisor->observaciones,
-    ];
 
-// Notificación Local
-    $users = User::whereIn('id', [$validatedData['nombreRevisor']])->get();
-    foreach ($users as $notifiedUser) {
-        $notifiedUser->notify(new GeneralNotification($data1));
-    }
-*/
 public function guardarVobo(Request $request)
 {
     $certificado = Certificado_Exportacion::findOrFail($request->id_certificado);
@@ -887,7 +864,8 @@ public function guardarVobo(Request $request)
                 $dataNotificacion = [
                     'title' => 'Revisión del cliente',
                     'asunto' => 'revisión' . $certificado->num_certificado,
-                    'message' => 'Revisado por ' .$user->name. ' y el Vo.Bo. fué '.$respuesta,
+                    //'message' => 'Revisado por ' .$user->name. ' y el Vo.Bo. fué '.$respuesta,
+                    'message' => $request->descripcion,
                     'url' => route('certificados-exportacion'),
                 ];
                 $receptor->notify(new GeneralNotification($dataNotificacion));
@@ -908,9 +886,10 @@ public function guardarVobo(Request $request)
             $dataNotificacion = [
                 'title' => 'Vo.Bo.',
                 'asunto' => 'revisión' . $certificado->num_certificado . ' pendiente',
-                'message' => 'Se te ha asignado la revisión del certificado ' .$certificado->num_certificado. ' para su Vo.Bo',
-                //'url' => route('certificados-exportacion', $certificado->id_certificado),
+                'message' => $request->descripcion,
                 'url' => route('certificados-exportacion'),
+                //'message' => 'Se te ha asignado la revisión del certificado ' .$certificado->num_certificado. ' para su Vo.Bo',
+                //'url' => route('certificados-exportacion', $certificado->id_certificado),
             ];
             $cliente->notify(new GeneralNotification($dataNotificacion));
         }

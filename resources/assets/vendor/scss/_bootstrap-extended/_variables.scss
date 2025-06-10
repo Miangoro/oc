@@ -362,15 +362,15 @@ $zindex-levels: (
 // scss-docs-start table-variables
 $table-head-padding-y: 1.426rem !default; // (C)
 $table-head-padding-y-sm: 1.115rem !default; // (C)
-$table-cell-padding-y: 0.7813rem !default;
-$table-cell-padding-x: 1.25rem !default;
+$table-cell-padding-y: 0.2213rem !default;
+$table-cell-padding-x: 1rem !default;
 $table-cell-padding-y-sm: 0.595rem !default;
 $table-cell-padding-x-sm: $table-cell-padding-x !default;
 
 $table-cell-vertical-align: middle !default;
 
 $table-th-color: $headings-color !default; // (C)
-$table-color: var(--#{$prefix}body-color) !default;
+$table-color: rgb(0, 0, 0);
 $table-bg: transparent !default;
 
 $table-th-font-weight: $font-weight-medium !default;
