@@ -1044,13 +1044,23 @@ $(function () {
               // Eliminar las opciones de guías si es tipo 2
               $('#edit_id_guia').empty();
               // Mostrar enlace al archivo PDF si está disponible
+              $('#archivo_url_display_otro_organismo').html('');
               var archivoDisponible = false;
               var documentos = data.documentos;
               documentos.forEach(function (documento) {
+                let botonEliminar = `
+                    <button type="button"
+                            class="btn btn-danger btn-sm btn-eliminar-doc"
+                            data-id="${documento.id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                        Eliminar documento
+                    </button>
+
+                `;
                 if (documento.url) {
                   archivoDisponible = true;
                   var fileName = documento.url.split('/').pop();
-                  $('#archivo_url_display_otro_organismo').html('Documento disponible: <a href="../files/' + data.numeroCliente + '/certificados_granel/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>');
+
+                  $('#archivo_url_display_otro_organismo').html('Documento disponible: <a href="../files/' + data.numeroCliente + '/certificados_granel/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>'+'<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+ botonEliminar +'</span>');
                 }
               });
               if (!archivoDisponible) {

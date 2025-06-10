@@ -223,7 +223,7 @@
                                             <!-- La URL del documento completo se mostrará aquí -->
                                         </td>
                                         <td id="deleteArchivo58">
-                                            {{-- <button type="button" class="btn btn-danger btn-sm" value="" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Eliminar documento</button> --}}
+
                                         </td>
                                     </tr>
 
@@ -254,7 +254,7 @@
                                             <!-- La URL del documento de ajuste se mostrará aquí -->
                                         </td>
                                         <td id="deleteArchivo134">
-                                          {{--   <button type="button" class="btn btn-danger btn-sm" value="" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Eliminar documento</button> --}}
+
                                         </td>
                                     </tr>
                                 @endforeach
