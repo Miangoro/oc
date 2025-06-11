@@ -335,14 +335,21 @@ foreach ($certificados as $certificado) {
 $fqs = collect();
 
 foreach ($certificados as $certificado) {
-    $url = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
-        ->where('id_documento', 58)->orwhere('id_documento', 134)
-        ->value('url','nombre_documento');
+    $documento = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+        ->where(function ($query) {
+            $query->where('id_documento', 58)
+                  ->orWhere('id_documento', 134);
+        })
+        ->first(['url', 'nombre_documento']);
 
-    if ($url) {
-        $fqs->push($url);
+    if ($documento) {
+        $fqs->push([
+            'url' => $documento->url,
+            'nombre' => $documento->nombre_documento
+        ]);
     }
 }
+
 
 
     }
