@@ -89,6 +89,23 @@ public function getIdLoteGranelAttribute()
     return null;
 }
 
+public function getIdLoteGranel2Attribute()
+{
+    // Asumiendo que la relación se llama lotesGranel
+    if ($this->lotesGranel && $this->lotesGranel->isNotEmpty()) {
+        return $this->lotesGranel;
+    }
+
+    // Si tienes datos en JSON también
+    $caracteristicas = json_decode($this->caracteristicas, true);
+    if (isset($caracteristicas['id_lote_granel'])) {
+        $ids = (array) $caracteristicas['id_lote_granel'];
+        return LotesGranel::whereIn('id_lote_granel', $ids)->get();
+    }
+
+    return collect();
+}
+
     public function getTipoAnalisisAttribute()
     {
         return json_decode($this->caracteristicas, true)['tipo_analisis'] ?? null;
@@ -99,29 +116,30 @@ public function getIdLoteGranelAttribute()
     {
         return $this->belongsTo(LotesGranel::class, 'id_lote_granel', 'id_lote_granel');
     }
+    
 
-        public function getIdLoteEnvasadoAttribute()
-        {
-            $caracteristicas = json_decode($this->caracteristicas, true);
-            $ids = [];
+    public function getIdLoteEnvasadoAttribute()
+    {
+        $caracteristicas = json_decode($this->caracteristicas, true);
+        $ids = [];
 
-            // Verifica si hay uno directamente en la raíz
-            if (isset($caracteristicas['id_lote_envasado'])) {
-                $ids[] = $caracteristicas['id_lote_envasado'];
-            }
+        // Verifica si hay uno directamente en la raíz
+        if (isset($caracteristicas['id_lote_envasado'])) {
+            $ids[] = $caracteristicas['id_lote_envasado'];
+        }
 
-            // Verifica dentro del array "detalles"
-            if (isset($caracteristicas['detalles']) && is_array($caracteristicas['detalles'])) {
-                foreach ($caracteristicas['detalles'] as $detalle) {
-                    if (isset($detalle['id_lote_envasado'])) {
-                        $ids[] = $detalle['id_lote_envasado'];
-                    }
+        // Verifica dentro del array "detalles"
+        if (isset($caracteristicas['detalles']) && is_array($caracteristicas['detalles'])) {
+            foreach ($caracteristicas['detalles'] as $detalle) {
+                if (isset($detalle['id_lote_envasado'])) {
+                    $ids[] = $detalle['id_lote_envasado'];
                 }
             }
-
-            // Elimina duplicados (por si acaso)
-            return array_unique($ids);
         }
+
+        // Elimina duplicados (por si acaso)
+        return array_unique($ids);
+    }
 
 
 

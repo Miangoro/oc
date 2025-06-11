@@ -300,7 +300,7 @@
                                                
                                                  @foreach ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs as $documento)
                                                         <a target="_blank"
-                                                            href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
+                                                            href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->empresa->empresaNumClientes->firstWhere(
                                                                 'numero_cliente',
                                                                 '!=',
                                                                 null,

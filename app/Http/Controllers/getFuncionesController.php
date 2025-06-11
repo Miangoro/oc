@@ -272,7 +272,7 @@ public function getDocumentosSolicitud($id_solicitud)
     $documentos = Documentacion_url::where('id_relacion', $id_solicitud)
         ->get(['nombre_documento as nombre', 'url', 'id_documento']);
 
-       if ($solicitud && $solicitud->id_tipo == 11) {
+
         $caracteristicas = is_string($solicitud->caracteristicas)
             ? json_decode($solicitud->caracteristicas, true)
             : $solicitud->caracteristicas;
@@ -335,11 +335,11 @@ foreach ($certificados as $certificado) {
 $fqs = collect();
 
 foreach ($certificados as $certificado) {
-    $documentos = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+    $documentos2 = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
         ->whereIn('id_documento', [58, 134])
         ->get(['url', 'nombre_documento']);
 
-    foreach ($documentos as $documento) {
+    foreach ($documentos2 as $documento) {
         $fqs->push([
             'url' => $documento->url,
             'nombre_documento' => $documento->nombre_documento
@@ -351,7 +351,7 @@ foreach ($certificados as $certificado) {
 
 
 
-    }
+    
 
 
     return response()->json([
