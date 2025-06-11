@@ -244,8 +244,23 @@
                                         @elseif($pregunta->filtro == 'lote_granel')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}</b>
                                             </td>
+                                       @elseif($pregunta->filtro == 'nanalisis')
+                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b>
+                                               
+                                                 @foreach ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs as $documento)
+                                                        <a target="_blank"
+                                                            href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->empresa->empresaNumClientes->firstWhere(
+                                                                'numero_cliente',
+                                                                '!=',
+                                                                null,
+                                                            )->numero_cliente }}/fqs/{{ $documento->url }}">
+                                                            <i
+                                                                class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                        </a>
+                                                    @endforeach
+                                            </td>
                                        @elseif($pregunta->filtro == 'nanalisis_ajuste')
-    @php
+                                             @php
         $folioFq = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? null;
 
         // Limpieza y separación
@@ -257,21 +272,6 @@
         $segundoFolio = $folios->count() > 1 ? $folios->get(1) : 'N/A';
     @endphp
     <td><b>{{ $segundoFolio }}</b></td>
-
-
-                                       @elseif($pregunta->filtro == 'nanalisis_ajuste')
-                                            @php
-                                                $folioFq = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? null;
-
-                                                // Explota, limpia y filtra los elementos vacíos
-                                                $folios = collect(explode(',', $folioFq))
-                                                            ->map(fn($f) => trim($f))
-                                                            ->filter(fn($f) => $f !== '')
-                                                            ->values();
-
-                                                $segundoFolio = $folios->get(1, 'N/A');
-                                            @endphp
-                                            <td><b>{{ $segundoFolio }}</b></td>
                                         @elseif($pregunta->filtro == 'aduana')
                                             <td><b>
                                                     {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['aduana_salida'] ?? 'N/A' }}
