@@ -299,6 +299,12 @@ public function getDocumentosSolicitud($id_solicitud)
 
         $ids = $solicitud->id_lote_envasado; // array de IDs
 
+                  $numero_cliente = 'N/A';
+        $empresa = empresa::find($solicitud->lote_granel->id_empresa);
+        $cliente = $empresa->empresaNumClientes
+            ->first(fn($item) => !empty($item->numero_cliente));
+        $numero_cliente = $cliente?->numero_cliente ?? 'No encontrado';
+
   $certificados = collect();
 
 foreach ($ids as $id) {
@@ -313,22 +319,18 @@ foreach ($ids as $id) {
 }
 
    
+$urls_certificados = collect();
 
-        if ($idLote) {
+foreach ($certificados as $certificado) {
+    $url = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+        ->where('id_documento', 59)
+        ->value('url');
 
-            
-          $numero_cliente = 'N/A';
-        $empresa = empresa::find($solicitud->lote_granel->id_empresa);
-        $cliente = $empresa->empresaNumClientes
-            ->first(fn($item) => !empty($item->numero_cliente));
-        $numero_cliente = $cliente?->numero_cliente ?? 'No encontrado';
-    
+    if ($url) {
+        $urls_certificados->push($url);
+    }
+}
 
-
-            $url_certificado = Documentacion_url::where('id_relacion', $idLote)
-            ->where('id_documento', 59)
-            ->value('url'); // Obtiene directamente el valor del campo 'url'
-        }
 
     }
 
@@ -343,7 +345,7 @@ foreach ($ids as $id) {
             ?->numero_cliente ?? 'N/A',
         'url_etiqueta' => $url_etiqueta ?? '',
         'url_corrugado' => $url_corrugado ?? '',
-        'url_certificado' => $url_certificado ?? '',
+        'url_certificado' => $urls_certificados ?? '',
         'id_lote_envasado' => $certificados ?? '',
 
             ]);
