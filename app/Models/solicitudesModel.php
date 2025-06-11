@@ -116,6 +116,7 @@ public function getIdLoteGranel2Attribute()
     {
         return $this->belongsTo(LotesGranel::class, 'id_lote_granel', 'id_lote_granel');
     }
+    
 
     public function getIdLoteEnvasadoAttribute()
     {
