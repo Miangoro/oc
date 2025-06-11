@@ -337,7 +337,7 @@ $fqs = collect();
 foreach ($certificados as $certificado) {
     $documento = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
         ->whereIn('id_documento', [58, 134])
-        ->first(['url', 'nombre_documento']);
+        ->get(['url', 'nombre_documento']);
 
     if ($documento) {
         $fqs->push([
