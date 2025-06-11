@@ -64,6 +64,7 @@
 
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-bitacoraMezcal')
+@include('_partials._modals.modal-edit-bitacoraMezcal')
 <!-- /Modal -->
 
 @endsection
