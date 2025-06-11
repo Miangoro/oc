@@ -263,7 +263,7 @@
                 const documentos = response.data;
                 const fqs = response.fqs;
                 const url_etiqueta = response.url_etiqueta;
-                const url_certificado = response.url_certificado;
+                const urls_certificados = response.url_certificado;
                 const url_corrugado = response.url_corrugado;
                 const url_evidencias = response.url_evidencias;
                 let html = `
@@ -295,19 +295,20 @@
                     html += `<tr><td colspan="2">No se encontraron documentos.</td></tr>`;
                 }
 
-                 if (url_certificado) {
-                   
-                        html += `
-                            <tr>
-                                <td>Certificado de granel</td>
-                                <td>
-                                    <a href="/files/${response.numero_cliente}/certificados_granel/${url_certificado}" target="_blank">
-                                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
-                                    </a>
-                                </td>
-                            </tr>`;
-                    
-                }
+       if (urls_certificados && urls_certificados.length > 0) {
+    urls_certificados.forEach(function(url) {
+        html += `
+            <tr>
+                <td>Certificado de granel</td>
+                <td>
+                    <a href="/files/${response.numero_cliente}/certificados_granel/${url}" target="_blank">
+                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                    </a>
+                </td>
+            </tr>`;
+    });
+}
+
 
                  if (fqs) {
                     fqs.forEach(function(fq) {
