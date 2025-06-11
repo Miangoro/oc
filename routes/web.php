@@ -1021,11 +1021,10 @@ Route::middleware(['auth'])->controller(Certificado_GranelController::class)->gr
     Route::get('/edit-certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'edit']);
     Route::delete('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'destroy'])->name('certificados.destroy');
     Route::get('/Pre-certificado-granel/{id}', [Certificado_GranelController::class, 'CertificadoGranel'])->name('PDF-cer-granel');
-//Descarga sin marca de agua (botón dinámico)
-Route::get('/Descargar-certificado-granel/{id}', function($id) {
-    return app(Certificado_GranelController::class)->CertificadoGranel($id, false);
-})->name('PDF-cer-granel-sin-marca');
-
+    //Descarga sin marca de agua (botón dinámico)
+    Route::get('/certificado-sin-marca/{id}', function($id) {
+        return app(Certificado_GranelController::class)->CertificadoGranel($id, false);
+        })->name('PDF-cer-granel-sin-marca');
     Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
     Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
     Route::post('/granel/reexpedir', [Certificado_GranelController::class, 'reexpedir'])->name('cer-granel.reex');

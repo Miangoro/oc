@@ -934,10 +934,14 @@ public function obtenerVobo($id)
     $certificado = Certificado_Exportacion::findOrFail($id);
     $vobo = $certificado->vobo ? json_decode($certificado->vobo, true) : null;
 
+    // Obtener usuarios tipo 3 (clientes)
+    $clientes = User::where('tipo', 3)->select('id', 'name')->get();
+
     return response()->json([
         'vobo' => $vobo,
         'id_usuario' => Auth::id(),
-        'num_certificado' => $certificado->num_certificado
+        'num_certificado' => $certificado->num_certificado,
+        'clientes' => $clientes
     ]);
 }
 
@@ -982,19 +986,20 @@ public function guardarVobo(Request $request)
             //'notificados' => $request->notificados
         ];
 
-        /*$clientes = User::where('tipo', 3)->get(); // Suponiendo tipo 3 es cliente
-        foreach ($clientes as $cliente) {*/
-        $cliente = User::find(49);//para ISABEL
-        if ($cliente) {
-            $dataNotificacion = [
-                'title' => 'Vo.Bo.',
-                'asunto' => 'revisión' . $certificado->num_certificado . ' pendiente',
-                'message' => $request->descripcion,
-                'url' => route('certificados-exportacion'),
-                //'message' => 'Se te ha asignado la revisión del certificado ' .$certificado->num_certificado. ' para su Vo.Bo',
-                //'url' => route('certificados-exportacion', $certificado->id_certificado),
-            ];
-            $cliente->notify(new GeneralNotification($dataNotificacion));
+        // Notificar a los clientes seleccionados
+        if ($request->has('notificados')) {
+            foreach ($request->notificados as $clienteId) {
+                $cliente = User::find($clienteId);
+                if ($cliente) {
+                    $dataNotificacion = [
+                        'title' => 'Vo.Bo.',
+                        'asunto' => 'Revisión ' . $certificado->num_certificado . ' pendiente',
+                        'message' => $request->descripcion,
+                        'url' => route('certificados-exportacion'),
+                    ];
+                    $cliente->notify(new GeneralNotification($dataNotificacion));
+                }
+            }
         }
 
     }

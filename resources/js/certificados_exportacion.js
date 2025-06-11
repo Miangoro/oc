@@ -1739,54 +1739,63 @@ $(document).on('click', '.VoBo', function () {
 
     $.get(`/certificados/${id_certificado}/vobo`, function (data) {
         const vobo = data.vobo;
-        const userId = data.id_usuario;
         const num_certificado = data.num_certificado;
-
-        let html = `
-            <div class="col-md-12">
-              <div class="form-floating form-floating-outline mb-6">
-                <textarea name="descripcion" class="form-control" required
-                value="Estimado cliente, envío a usted el siguiente pre certificado con codificación' 
-                    .$certificado->num_certificado. ' para su Vo.Bo."></textarea>
-                <label>Descripción:</label>
-              </div>
-            </div>
-        `;
+        const clientes = data.clientes;
+        let html = '';
 
         if (!vobo) {
-            // Personal: primera vez, muestra participantes
-            /* html += `
-                <div class="col-md-12">
-                  <div class="form-floating form-floating-outline mb-6">
-                    <select name="notificados[]" class="form-select" multiple required>
-                        @foreach($usuarios as $u)
-                            <option value="{{ $u->id }}">{{ $u->nombre }}</option>
-                        @endforeach
-                    </select>
-                    <label class="form-label">Participantes:</label>
-                  </div>
+
+          let opciones = '';
+          clientes.forEach(cliente => {
+              opciones += `<option value="${cliente.id}">${cliente.name}</option>`;
+          });
+          
+            html = `
+              <div class="col-md-12">
+                <div class="form-floating form-floating-outline mb-6">
+                  <textarea style="height: 100px;" name="descripcion" class="form-control" required>
+Estimado cliente, envío a usted el siguiente pre certificado con codificación ${num_certificado} para su Vo.Bo.</textarea>
+                  <label>Descripción:</label>
                 </div>
-            `; */
+              </div>
+
+              <div class="col-md-12">
+              <div class="form-floating form-floating-outline mb-6 select2-primary">
+                <select name="notificados[]" class="select2 form-select" multiple required data-placeholder="Selecciona un cliente">
+                  ${opciones}
+                </select>
+                <label>Participantes:</label>
+              </div>
+            </div>
+          `;
         } else {
             const yaExiste = vobo.find(v => v.id_personal);
             if (yaExiste) {
                 // Cliente: muestra select de respuesta
                 html += `
-                    <div class="col-md-12">
-                      <div class="form-floating form-floating-outline mb-6">
-                        <select name="respuesta" class="form-select" required>
-                            <option value=""  selected disabled >Selecciona una opcion</option>
-                            <option value="1">Aprobado</option>
-                            <option value="2">No aprobado</option>
-                        </select>
-                        <label>Respuesta:</label>
-                      </div>
+                  <div class="col-md-12">
+                    <div class="form-floating form-floating-outline mb-6">
+                      <textarea style="height: 100px;" name="descripcion" class="form-control" required> </textarea>
+                      <label>Descripción:</label>
                     </div>
+                  </div>
+
+                  <div class="col-md-12">
+                    <div class="form-floating form-floating-outline mb-6">
+                      <select name="respuesta" class="form-select" required>
+                          <option value=""  selected disabled >Selecciona una opcion</option>
+                          <option value="1">Aprobado</option>
+                          <option value="2">No aprobado</option>
+                      </select>
+                      <label>Respuesta:</label>
+                    </div>
+                  </div>
                 `;
             }
         }
 
         $('#contenidoVobo').html(html);
+        initializeSelect2($('#contenidoVobo .select2'));
         $('#formVobo input[name="id_certificado"]').val(id_certificado);
     });
 });
@@ -1798,13 +1807,7 @@ $(document).on('submit', '#formVobo', function (e) {
         url: '/certificados/guardar-vobo',
         method: 'POST',
         data: $(this).serialize(),
-        /*success: function (res) {
-            alert('Guardado correctamente');
-            $('#ModalVoBo').modal('hide');
-        },
-        error: function (err) {
-            alert('Error al guardar');
-        }*/
+        
        success: function (response) {
         console.log('Ok.:', response);
         $('#ModalVoBo').modal('hide');

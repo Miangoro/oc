@@ -617,11 +617,11 @@ public function CertificadoGranel($id_certificado, $conMarca = true)
     // Generar y mostrar el PDF
     //return Pdf::loadView('pdfs.certificado_granel_ed7', $pdfData)->stream("Certificado NOM de Mezcal a Granel NOM-070-SCFI-2016F7.1-01-07.pdf");
     // Seleccionar la vista según si lleva marca o no
-    $view = $conMarca
+    $documento = $conMarca
         ? 'pdfs.certificado_granel_ed7'
         : 'pdfs.certificado_granel_ed7_sin_marca'; // asegúrate de que el archivo se llame así
 
-    return Pdf::loadView($view, $pdfData)
+    return Pdf::loadView($documento, $pdfData)
         ->stream("Certificado NOM de Mezcal a Granel NOM-070-SCFI-2016F7.1-01-07.pdf");
 }
 
