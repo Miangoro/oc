@@ -272,7 +272,7 @@ public function getDocumentosSolicitud($id_solicitud)
     $documentos = Documentacion_url::where('id_relacion', $id_solicitud)
         ->get(['nombre_documento as nombre', 'url', 'id_documento']);
 
-       if ($solicitud && ($solicitud->id_tipo == 11 OR $solicitud->id_tipo == 5)) {
+
         $caracteristicas = is_string($solicitud->caracteristicas)
             ? json_decode($solicitud->caracteristicas, true)
             : $solicitud->caracteristicas;
@@ -351,7 +351,7 @@ foreach ($certificados as $certificado) {
 
 
 
-    }
+    
 
 
     return response()->json([
