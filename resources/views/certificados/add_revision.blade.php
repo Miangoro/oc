@@ -259,7 +259,19 @@
                                                         </a>
                                                     @endforeach
                                             </td>
-                                       
+                                       @elseif($pregunta->filtro == 'nanalisis_ajuste')
+                                             @php
+        $folioFq = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? null;
+
+        // Limpieza y separación
+        $folios = collect(explode(',', $folioFq))
+                    ->map(fn($f) => trim($f))
+                    ->filter()
+                    ->values();
+
+        $segundoFolio = $folios->count() > 1 ? $folios->get(1) : 'N/A';
+    @endphp
+    <td><b>{{ $segundoFolio }}</b></td>
                                         @elseif($pregunta->filtro == 'aduana')
                                             <td><b>
                                                     {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['aduana_salida'] ?? 'N/A' }}
