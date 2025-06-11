@@ -342,7 +342,7 @@ if (dt_user_table.length) {
                   <span class="${colorClass2}">${revision2} ${revisor2}</span>${icono2}
                 </div>
               </div> `+
-              `<div class="small"> ${vobo} </div>`;
+              `<div class="small" style="margin-top: 4px;"> ${vobo} </div>`;
             //<div style="display: flex; flex-direction: column; align-items: flex-start;"></div>;
           }
         },

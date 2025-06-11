@@ -467,7 +467,7 @@ public function MostrarDictamenExportacion($id_dictamen)
         foreach ($detalles as $detalle) {
             $botellas = $detalle['cantidad_botellas'] ?? '';
             $cajas = $detalle['cantidad_cajas'] ?? '';
-            $presentacion = $detalle['presentacion'] ?? '';
+            $presentacion = $detalle['presentacion'][0] ?? '';
         }
         // Obtener todos los IDs de los lotes
         $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
