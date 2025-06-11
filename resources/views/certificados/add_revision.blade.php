@@ -245,7 +245,10 @@
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}</b>
                                             </td>
 
-                                            @php
+  
+                                       @elseif($pregunta->filtro == 'nanalisis')
+
+                                                                                 @php
     $folioFq = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? '';
 
     // Explota y limpia
@@ -257,7 +260,6 @@
     $primerFolio = $folios->get(0, 'N/A');
     $segundoFolio = $folios->get(1, 'N/A');
 @endphp
-                                       @elseif($pregunta->filtro == 'nanalisis')
     <td>
         <b>{{ $primerFolio }}</b>
 
