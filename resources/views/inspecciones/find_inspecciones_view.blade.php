@@ -295,19 +295,19 @@
                     html += `<tr><td colspan="2">No se encontraron documentos.</td></tr>`;
                 }
 
-       if (urls_certificados && urls_certificados.length > 0) {
-    urls_certificados.forEach(function(url) {
-        html += `
-            <tr>
-                <td>Certificado de granel</td>
-                <td>
-                    <a href="/files/${response.numero_cliente}/certificados_granel/${url}" target="_blank">
-                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
-                    </a>
-                </td>
-            </tr>`;
-    });
-}
+                    if (urls_certificados && urls_certificados.length > 0) {
+                            urls_certificados.forEach(function(url) {
+                                html += `
+                                    <tr>
+                                        <td>Certificado de granel</td>
+                                        <td>
+                                            <a href="/files/${response.numero_cliente}/certificados_granel/${url}" target="_blank">
+                                                <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                            </a>
+                                        </td>
+                                    </tr>`;
+                            });
+                        }
 
 
                  if (fqs) {

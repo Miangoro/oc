@@ -331,6 +331,19 @@ foreach ($certificados as $certificado) {
     }
 }
 
+   
+$fqs = collect();
+
+foreach ($certificados as $certificado) {
+    $url = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+        ->where('id_documento', 58)->orwhere('id_documento', 134)
+        ->value('url');
+
+    if ($url) {
+        $fqs->push($url);
+    }
+}
+
 
     }
 
@@ -339,7 +352,7 @@ foreach ($certificados as $certificado) {
         'success' => true,
         'data' => $documentos,
         'numero_cliente' => $numero_cliente,
-        'fqs' => $solicitud->lote_granel?->fqs,
+        'fqs' => $fqs,
         'numero_cliente_lote' => $solicitud->lote_granel?->empresa?->empresaNumClientes
             ->first(fn($item) => !empty($item->numero_cliente))
             ?->numero_cliente ?? 'N/A',
