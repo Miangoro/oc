@@ -638,11 +638,11 @@ public function MostrarCertificadoExportacion($id_certificado)
         $no_pedido = $caracteristicas['no_pedido'] ?? '';
         $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
         // Acceder a los detalles
-        foreach ($detalles as $detalle) {
-            $botellas = $detalle['cantidad_botellas'][0] ?? '';
-            $cajas = $detalle['cantidad_cajas'][0] ?? '';
-            $presentacion = $detalle['presentacion'][0] ?? '';
-        }
+            //$botellas = $detalle['cantidad_botellas'][0] ?? '';
+            $botellas = $detalles[0]['cantidad_botellas'] ?? '';
+            $cajas = $detalles[0]['cantidad_cajas'] ?? '';
+            //$cajas = $detalle['cantidad_cajas'][0] ?? '';
+            $presentacion = $detalles[0]['presentacion'][0] ?? '';
         // Obtener todos los IDs de los lotes
         $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
         // Buscar los lotes envasados
