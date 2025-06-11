@@ -297,7 +297,7 @@ public function getDocumentosSolicitud($id_solicitud)
         $idLote = $solicitud->lote_granel?->id_lote_granel;
 
 
-        $id_lote_envasado = $solicitud->lote_envasado;
+        $id_lote_envasado = $solicitud->id_lote_envasado;
    
 
         if ($idLote) {
