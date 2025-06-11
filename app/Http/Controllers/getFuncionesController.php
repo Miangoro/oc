@@ -297,6 +297,16 @@ public function getDocumentosSolicitud($id_solicitud)
         $idLote = $solicitud->lote_granel?->id_lote_granel;
 
 
+        $ids = $solicitud->id_lote_envasado; // array de IDs
+
+$granelRelacionados = collect();
+
+        foreach ($ids as $id) {
+            $lote = lotes_envasado::find($id);
+            if ($lote) {
+                $granelRelacionados = $granelRelacionados->merge($lote->lotesGranel);
+            }
+        }
    
 
         if ($idLote) {
@@ -329,6 +339,7 @@ public function getDocumentosSolicitud($id_solicitud)
         'url_etiqueta' => $url_etiqueta ?? '',
         'url_corrugado' => $url_corrugado ?? '',
         'url_certificado' => $url_certificado ?? '',
+        'id_lote_envasado' => $granelRelacionados ?? '',
 
             ]);
 }
