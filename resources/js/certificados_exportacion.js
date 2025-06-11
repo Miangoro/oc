@@ -238,9 +238,14 @@ if (dt_user_table.length) {
             var $estatus = full['estatus'];
             var $fecha_actual = full['fecha_actual'];
             var $vigencia = full['vigencia'];
+            var $pdf_firmado  = full['pdf_firmado'];//si hay archivo subido
             let estatus;
+            
+            
             if ($fecha_actual > $vigencia) {
               estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
+            } else if ($pdf_firmado) {
+              estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
             } else if ($estatus == 1) {
               estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
             } else if ($estatus == 2) {
@@ -248,7 +253,7 @@ if (dt_user_table.length) {
             } else if ($estatus == 3) {
               estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
             } else {
-              estatus = '<span class="badge rounded-pill bg-secondary">Pendiente</span>';
+              estatus = '<span class="badge rounded-pill bg-secondary">Pre-certificado</span>';
             }
 
             ///revisores PERSONAL
@@ -317,7 +322,7 @@ if (dt_user_table.length) {
                 const hayCliente = voboData.find(v => v.id_cliente);
                 const respuesta = hayCliente ? hayCliente.respuesta : null;
                 if (!hayCliente) {//Sin respuesta del cliente
-                    vobo = `<span class="badge rounded-pill bg-warning">Pendiente</span>`;
+                    vobo = `<span class="badge rounded-pill bg-dark">Vo.Bo. pendiente</span>`;
                 }
                 if (respuesta == "1") {
                     vobo = `<span class="badge rounded-pill bg-info">Vo.Bo. cliente</span>`;
@@ -1795,9 +1800,11 @@ Estimado cliente, envío a usted el siguiente pre certificado con codificación 
             }
         }
 
+        $('#folio_certificado').html('<span class="badge bg-info">'+num_certificado+'</span>');
         $('#contenidoVobo').html(html);
         initializeSelect2($('#contenidoVobo .select2'));
         $('#formVobo input[name="id_certificado"]').val(id_certificado);
+        
     });
 });
 //REGISTRAR VISTO BUENO
