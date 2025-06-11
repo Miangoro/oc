@@ -299,12 +299,12 @@ public function getDocumentosSolicitud($id_solicitud)
 
         $ids = $solicitud->id_lote_envasado; // array de IDs
 
-$granelRelacionados = collect();
+    $granelRelacionados = collect();
 
         foreach ($ids as $id) {
             $lote = lotes_envasado::find($id);
             if ($lote) {
-                $granelRelacionados = $granelRelacionados->merge($lote->lotesGranel);
+                $granelRelacionados = $granelRelacionados->merge($lote->lotesGranel->certificadoGranel);
             }
         }
    
