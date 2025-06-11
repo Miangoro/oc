@@ -50,18 +50,21 @@ class LotesGranel extends Model
     }
 
 
-    public function gettiposRelacionadosAttribute()
+   public function gettiposRelacionadosAttribute()
 {
     $idTipos = json_decode($this->id_tipo, true);
 
     if (is_array($idTipos) && !empty($idTipos)) {
+        $idTipos = array_map('intval', $idTipos); // Asegura que todos sean enteros
+
         return tipos::whereIn('id_tipo', $idTipos)
             ->orderByRaw('FIELD(id_tipo, ' . implode(',', $idTipos) . ')')
             ->get();
     }
 
-    return collect(); // Devuelve colección vacía si no hay tipos válidos
+    return collect();
 }
+
 
 
 
