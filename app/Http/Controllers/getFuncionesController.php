@@ -335,17 +335,18 @@ foreach ($certificados as $certificado) {
 $fqs = collect();
 
 foreach ($certificados as $certificado) {
-    $documento = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+    $documentos = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
         ->whereIn('id_documento', [58, 134])
         ->get(['url', 'nombre_documento']);
 
-    if ($documento) {
+    foreach ($documentos as $documento) {
         $fqs->push([
             'url' => $documento->url,
             'nombre_documento' => $documento->nombre_documento
         ]);
     }
 }
+
 
 
 
