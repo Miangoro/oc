@@ -89,6 +89,23 @@ public function getIdLoteGranelAttribute()
     return null;
 }
 
+public function getIdLoteGranel2Attribute()
+{
+    // Asumiendo que la relación se llama lotesGranel
+    if ($this->lotesGranel && $this->lotesGranel->isNotEmpty()) {
+        return $this->lotesGranel;
+    }
+
+    // Si tienes datos en JSON también
+    $caracteristicas = json_decode($this->caracteristicas, true);
+    if (isset($caracteristicas['id_lote_granel'])) {
+        $ids = (array) $caracteristicas['id_lote_granel'];
+        return LotesGranel::whereIn('id_lote_granel', $ids)->get();
+    }
+
+    return collect();
+}
+
     public function getTipoAnalisisAttribute()
     {
         return json_decode($this->caracteristicas, true)['tipo_analisis'] ?? null;
