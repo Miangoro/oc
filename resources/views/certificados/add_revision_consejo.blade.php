@@ -268,7 +268,7 @@
 
                                                 </b></td>
                                         @elseif($pregunta->filtro == 'cont_alc')
-                                            <td><b>{{ round($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc) ?? 'N/A' }}</b>
+                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc ?? 'N/A' }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'nbotellas')
                                             @php
