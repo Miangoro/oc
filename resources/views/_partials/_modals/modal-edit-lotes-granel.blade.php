@@ -2,8 +2,8 @@
 <div class="modal fade" id="offcanvasEditLote" tabindex="-1" aria-labelledby="offcanvasEditLoteLabel">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 id="offcanvasEditLoteLabel" class="modal-title">Editar el Lote a Granel</h5>
+            <div class="modal-header bg-primary pb-4">
+                <h5 id="offcanvasEditLoteLabel" class="modal-title text-white">Editar el Lote a Granel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -328,9 +328,9 @@
                         </table>
 
                     <div class="d-flex justify-content-center mt-3">
-                        <button type="submit" class="btn btn-primary me-2">Actualizar</button>
-                        <button type="reset" class="btn btn-outline-secondary"
-                            data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill me-1"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger"
+                            data-bs-dismiss="modal"><i class="ri-close-line me-1"></i>Cancelar</button>
                     </div>
                 </form>
             </div>
