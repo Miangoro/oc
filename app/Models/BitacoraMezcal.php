@@ -14,7 +14,9 @@ class BitacoraMezcal extends Model
     protected $fillable = [
         'fecha',
         'id_tanque',
-        'lote_a_granel',
+        'id_empresa',
+        'id_lote_granel',
+        'id_instalacion',
         'operacion_adicional',
         'categoria',
         'clase',
