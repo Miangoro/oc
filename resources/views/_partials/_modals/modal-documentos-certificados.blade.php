@@ -4,7 +4,7 @@
         <div class="modal-content">
 
             <div class="modal-header bg-primary pb-4">
-                <h5 class="modal-title text-white titulo">Documentación relacionada al certificado</h5>
+                <h5 class="modal-title text-white titulo"> </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -22,26 +22,34 @@
 
               <tbody class="table-border-bottom-0 ">
                 <tr class="table-success">
-                  <td><i class="ri-bank-fill ri-22px text-primary me-4"></i><span class="fw-medium">1. Solicitud de servicio</span></td>
-                  <td><a  id="link_solicitud_servicio"  target="_Blank" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                  <td><i class="ri-bank-fill ri-22px text-primary me-4"></i><span class="fw-medium">Dictamen NOM envasado</span></td>
+                  <td><a id="dictamen" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
                 </tr>
                 <tr class="table-danger">
-                  <td><i class="ri-palette-line ri-22px text-danger me-4"></i><span class="fw-medium">2. Oficio de comisión</span></td>
-                  <td><a id="link_oficio_comision" target="_blank" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                  <td><i class="ri-palette-line ri-22px text-danger me-4"></i><span class="fw-medium">Certificado Nom granel</span></td>
+                  <td><a id="certificado" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
                 </tr>
                 <tr class="table-warning">
-                  <td><i class="ri-shield-user-line ri-22px text-info me-4"></i><span class="fw-medium">3. Orden de servicio</span></td>
-                  <td><a id="link_orden_servicio" target="_blank" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                  <td><i class="ri-shield-user-line ri-22px text-info me-4"></i><span class="fw-medium">No. de análisis</span></td>
+                  <td><a id="fq" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
                 </tr>
-                <tr class="table-light etiquetasNA">
-                  <td><i class="ri-angularjs-line ri-22px text-danger me-4"></i><span class="fw-medium etiqueta_name"></span></td>
-                  <td><a  id="links_etiquetas" target="_blank" href="#">
-                    <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
-                  </a>
-                  </td>
+                <tr class="table-light">
+                  <td><i class="ri-angularjs-line ri-22px text-danger me-4"></i><span class="fw-medium etiqueta_name"></span>No. de análisis ajuste</td>
+                  <td><a id="fq_ajuste" href="#"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i> </a> </td>
                 </tr>
 
-                <tr class="extra"></tr>
+                <tr class="table-success">
+                  <td><i class="ri-bank-fill ri-22px text-primary me-4"></i><span class="fw-medium">Etiquetas</span></td>
+                  <td><a id="etiquetas" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                </tr>
+                <tr class="table-danger">
+                  <td><i class="ri-palette-line ri-22px text-danger me-4"></i><span class="fw-medium">Corrugado</span></td>
+                  <td><a id="corrugado" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                </tr>
+                <tr class="table-warning">
+                  <td><i class="ri-shield-user-line ri-22px text-info me-4"></i><span class="fw-medium">Factura Proforma</span></td>
+                  <td><a id="proforma" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                </tr>
 
               </tbody>
             </table>

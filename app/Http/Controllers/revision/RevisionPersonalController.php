@@ -47,7 +47,7 @@ class RevisionPersonalController extends Controller
     public function index(Request $request)
     {
         $columns = [
-            1 => 'id_revisor',
+            1 => 'id_revision',
             2 => 'decision',
             3 => 'observaciones',
             4 => 'tipo_revision',
@@ -108,7 +108,7 @@ class RevisionPersonalController extends Controller
         $orderIndex = $request->input('order.0.column');
         $orderDir = $request->input('order.0.dir');
 
-        $order = $columns[$orderIndex] ?? 'id_revisor';
+        $order = $columns[$orderIndex] ?? 'id_revision';
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
 
         // Obtener los totales de registros por separado

@@ -897,26 +897,21 @@ public function documentos($id)
         //return response()->json(['message' => 'Registro no encontrado.', $certificado], 404);
     }
 
-
     // Obtener todos los IDs de los lotes
     $caracteristicas = $certificado->dictamen?->inspeccione?->solicitud?->caracteristicasDecodificadas() ?? [];
     $detalles = $caracteristicas['detalles'] ?? [];
     $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
 
-    foreach ($loteIds as $idLote) {
-        $dictamenEnvasado = Dictamen_Envasado::where('id_lote_envasado', $idLote)->first();
+    //foreach ($loteIds as $idLote) {
+        $dictamenEnvasado = Dictamen_Envasado::where('id_lote_envasado', $loteIds)->first();
         if ($dictamenEnvasado) {
-            $inspeccion = $dictamenEnvasado->inspeccion ?? null;
-            $solicitud = $inspeccion?->solicitud ?? null;
+            $dictamen = $dictamenEnvasado->id_dictamen_envasado ?? null;
 
             $datosFinales[] = [
-                'id_lote_envasado' => $idLote,
-                'dictamen_envasado' => $dictamenEnvasado->id_dictamen_envasado ?? null,
-                'inspeccion_id' => $inspeccion?->id_inspeccion ?? null,
-                'solicitud_id' => $solicitud?->id_solicitud ?? null,
+                'dictamen' => $dictamen,
             ];
         }
-    }
+    //}
 
             
     return response()->json([
