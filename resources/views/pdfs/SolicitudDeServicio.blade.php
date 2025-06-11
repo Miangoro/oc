@@ -519,7 +519,7 @@
             <td colspan="2" class="td-no-margins" style="text-align: right"
                 style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Fecha y
                 hora de visita propuesta:</td>
-            <td colspan="7" style="padding-top: 0;padding-bottom: 0;"><span style="font-size: 14px"
+            <td colspan="7" style="padding-top: 0;padding-bottom: 0; border-bottom: none"><span style="font-size: 14px"
                     class="con-negra">
                     @if ($renovacion_dictaminacion === 'X')
                         {{ $fecha_visita }}
@@ -528,7 +528,24 @@
                     @endif
                 </span></td>
         </tr>
+    </table>
+   
 
+@php
+    use App\Models\lotes_envasado;
+    $obtenerLote = $datos->caracteristicas ?? null; //Obtener Características Solicitud
+        $caracteristicas =$obtenerLote ? json_decode($obtenerLote, true) : []; //Decodificar el JSON
+        $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
+        // Obtener todos los IDs de los lotes
+        $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
+        // Buscar los lotes envasados
+        $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
+            : collect();
+@endphp
+<!--INICIO DE TABLAS LOTES-->
+@if ($lotes->count() <= 1)<!--si es 1 lote-->
+
+    <table>
         <tr>
             <th>III:</th>
             <th colspan="12" style="padding-top: 0;padding-bottom: 0;">CARACTERISTICAS DEL PRODUCTO</th>
@@ -611,9 +628,131 @@
         </tr>
     </table>
 
-    <br>
-    <br>
-    <br>
+
+@else<!--si hay mas de 1 lote (multiple)-->
+
+
+    @foreach ($lotes as $lote)<!--FOR COMBINADO-->
+    <table>
+        <tr>
+            <th>III:</th>
+            <th colspan="12" style="padding-top: 0;padding-bottom: 0;">CARACTERISTICAS DEL PRODUCTO</th>
+        </tr>
+        <tr>
+            <td class="con-negra" colspan="2" style="text-align: left">1) No. de lote granel:</td>
+            <td colspan="3">
+                {{ $lote->lotesGranel->first()->nombre_lote ?? '---------------' }}
+            </td>
+            <td class="con-negra" colspan="4" style="text-align: left">6) No. de certificado NOM de Mezcal <br> a
+                granel vigente:</td>
+            <td colspan="4">
+                @if($muestreo_granel != 'X') {{ $lote->lotesGranel->first()->folio_certificado ?? '---------------' }} @else --------------- @endif
+            </td>
+        </tr>
+        <tr>
+            <td class="con-negra" colspan="2" style="text-align: left">2) Categoria:</td>
+            <td colspan="3">
+                @if ( empty($lote->lotesGranel->first()->id_categoria) )
+                    ---------------
+                @else
+                    {{ $lote->lotesGranel->first()->categoria->categoria ?? '' }}
+                @endif
+            </td>
+
+            <td class="con-negra" colspan="4" style="text-align: left">7) Clase:</td>
+            <td colspan="4">
+                @if ( empty($lote->lotesGranel->first()->clase->clase) )
+                    ---------------
+                @else
+                    {{ $lote->lotesGranel->first()->clase->clase ?? '' }}
+                @endif
+
+            </td>
+        </tr>
+        <tr>
+            <td class="con-negra" colspan="2" style="text-align: left">3) No. de análisis de
+                laboratorio:</td>
+            <td colspan="3">@if($muestreo_granel != 'X') {{ $lote->lotesGranel->first()->folio_fq ?? '---------------' }} @else --------------- @endif</td>
+            <td class="con-negra" colspan="4" style="text-align: left">8) Contenido Alcohólico:</td>
+            <td colspan="4">@if($muestreo_granel != 'X') {{ $lote->lotesGranel->first()->cont_alc ?? '---------------' }} @else --------------- @endif</td>
+        </tr>
+        <tr>
+            <td class="con-negra" colspan="2" style="text-align: left">4) Marca:</td>
+            <td colspan="3">{{ $lote->marca->marca ?? '---------------' }}</td>
+            <td class="con-negra" colspan="4" style="text-align: left">9) No. de lote de envasado:</td>
+            <td colspan="4">{{ $lote->nombre ?? '---------------' }}</td>
+        </tr>
+        <tr>
+            <td class="con-negra" colspan="2" style="text-align: left">5) Especie de Agave:</td>
+            <td colspan="3">
+                @if ($lote->lotesGranel->first() && $lote->lotesGranel->first()->tiposRelacionados->isNotEmpty())
+                    {!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
+                        return $tipo->nombre . ' (<i>' . $tipo->cientifico . '</i>)';
+                    })->implode(', ') !!}
+                @else
+                    ---------------
+                @endif
+            </td>
+            <td class="con-negra" colspan="4" style="text-align: left">10) Cajas y botellas:</td>
+            <td colspan="4">
+                @php
+                $caracteristicas = json_decode($datos->caracteristicas, true);
+                $detalles = $caracteristicas['detalles'] ?? [];
+                @endphp
+
+                    @if (isset($caracteristicas['detalles']))
+                        <span>Cantidad de Botellas: {{ $detalles[0]['cantidad_botellas']  ?? 'No definido' }}</span><br>
+                        <span>Cantidad de Cajas: {{ $detalles[0]['cantidad_cajas']  ?? 'No definido' }}</span><br>
+                    @else
+                        <p>---------------</p>
+                    @endif
+            </td>
+        </tr>
+    </table>
+
+
+
+
+        @if ($loop->iteration == 1)<!--Aplicar solo en la interaccion 1-->
+            <!--Salto de pag después de tabla 1-->
+            <div style="page-break-before: always;"></div>
+        <table>
+        <tr>
+            <td rowspan="3" colspan="2" style="padding: 0; ">
+                <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM"
+                    style="max-width: 170px; margin: 0;">
+            </td>
+            <td class="con-negra" rowspan="2" colspan="4" style="font-size: 12px">SOLICITUD DE SERVICIOS</td>
+            <td colspan="3" style="text-align: right; font-size: 8.5px !important;">Solicitud de servicios
+                NOM-070-SCFI-2016
+                F7.1-01-32 <br>
+                Edición 10 Entrada en vigor:
+                20/06/2024
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                ORGANISMO DE CERTIFICACION No. de <br> acreditación 144/18 ante la ema A.C
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+            <td class="th-color con-negra" style="width: 100px">N° DE SOLICITUD:</td>
+            <td style="font-size: 16px; color: red" class="con-negra" colspan="3">{{ $datos->folio }}</td>
+        </tr>
+        </table>
+
+        @endif
+
+    @endforeach <!-- FIN DE TABLAS LOTES -->
+
+@endif<!--FIN del IF si es uno o multiple-->
+
+
+
+@if ($lotes->count() <= 1) 
+    <div style="page-break-before: always;"></div>
+    
     <table>
         <tr>
             <td rowspan="3" colspan="2" style="padding: 0; ">
@@ -632,12 +771,18 @@
             <td colspan="3">
                 ORGANISMO DE CERTIFICACION No. de <br> acreditación 144/18 ante la ema A.C
             </td>
+        </tr>
         <tr>
             <td colspan="3">&nbsp;</td>
             <td class="th-color con-negra" style="width: 100px">N° DE SOLICITUD:</td>
             <td style="font-size: 16px; color: red" class="con-negra" colspan="3">{{ $datos->folio }}</td>
 
         </tr>
+    </table>
+@endif
+
+
+    <table>
         <tr>
             <td class="con-negra" colspan="3" rowspan="3">INFORMACIÓN ADICIONAL SOBRE LA <br> ACTIVIDAD:</td>
             <td class="td-margins" colspan="6">
