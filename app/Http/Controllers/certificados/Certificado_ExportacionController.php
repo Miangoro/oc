@@ -6,17 +6,29 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\Helpers;
 use App\Models\Certificado_Exportacion;
-use App\Models\Dictamen_Exportacion; 
+use App\Models\Dictamen_Exportacion;
 use App\Models\User;
-use App\Models\empresa; 
-use App\Models\Revisor; 
+use App\Models\empresa;
+use App\Models\Revisor;
 use App\Models\lotes_envasado;
-use App\Models\solicitudHolograma;
+use App\Models\activarHologramasModelo;
+use App\Models\Documentacion_url;
+use App\Models\Dictamen_Envasado;
+//Clase de exportacion
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CertificadosExport;
+use App\Mail\CorreoCertificado;
+use App\Notifications\GeneralNotification;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;//Permiso empresa
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
+use function PHPUnit\Framework\isNull;
 
 class Certificado_ExportacionController extends Controller
 {
@@ -24,76 +36,145 @@ class Certificado_ExportacionController extends Controller
     public function UserManagement()
     {
         $certificado = Certificado_Exportacion::all(); // Obtener todos los datos
-        $dictamen = Dictamen_Exportacion::where('estatus','!=',1)->get();
-        $users = User::where('tipo',1)->get(); //Solo PErsonal OC 
+        //$dictamen = Dictamen_Exportacion::where('estatus','!=',1)->get();
+        $dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')
+            ->orderBy('id_dictamen', 'desc')
+            ->get();
+        $users = User::where('tipo',1)->get(); //Solo Prrsonal OC
         $empresa = empresa::where('tipo', 2)->get();
-        $revisores = Revisor::all(); 
-        $hologramas = solicitudHolograma::with(['empresa', 'marcas'])->get();
+        $revisores = Revisor::all();
+        $hologramas = activarHologramasModelo::all();
 
-        return view('certificados.find_certificados_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores', 'hologramas'));
+        return view('certificados.find_certificados_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores', 'hologramas'))
+        ;//->with('dictamenes', $dictamen); // Pasamos el dictamen como un JSON;
     }
-
 
 public function index(Request $request)
 {
+    //Permiso de empresa
+    $empresaId = null;
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaId = Auth::user()->empresa?->id_empresa;
+    }
+
+    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
+
+    // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
-    //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
-        1 => 'id_certificado',
-        2 => 'id_dictamen',
-        3 => '',
-        4 => '',
-        5 => 'fechas',
+        0 => '',
+        1 => 'num_certificado',
+        2 => 'dictamenes_exportacion.num_dictamen', //nombre de mi tabla y atributo
+        3 => 'razon_social',
+        4 => '', //caracteristicas
+        5 => 'certificados_exportacion.fecha_emision',
         6 => 'estatus',
+        7 => '',// acciones
     ];
-
-    $search = [];
-    $totalData = Certificado_Exportacion::count();
-    $totalFiltered = $totalData;
-
+      
+    /*$totalData = Certificado_Exportacion::count();
+    $totalFiltered = $totalData; */
     $limit = $request->input('length');
     $start = $request->input('start');
-    $order = $columns[$request->input('order.0.column')];
-    $dir = $request->input('order.0.dir');
+
+    // Columnas ordenadas desde DataTables
+    $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
+    $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
+    $orderColumn = $columns[$orderColumnIndex] ?? 'num_certificado'; // Por defecto
+
+    $search = $request->input('search.value');//Define la búsqueda global.
 
 
-    if (empty($request->input('search.value'))) {
-        // ORDENAR EL BUSCADOR "thead"
-        $users = Certificado_Exportacion::where('id_certificado', 'LIKE', "%{$request->input('search.value')}%")
-        ->offset($start)
-        ->limit($limit)
-        ->orderBy($order, $dir)
-        ->get();
-
-    } else {
-    // BUSCADOR
-    $search = $request->input('search.value');
-
-    // Consulta con filtros
-    $query = Certificado_Exportacion::where('id_certificado', 'LIKE', "%{$search}%")
-    ->where("id_certificado", 1)
-    ->orWhere('num_certificado', 'LIKE', "%{$search}%");
-
-    $users = $query->offset($start)
-        ->limit($limit)
-        ->orderBy($order, $dir)
-        ->get();
-
-    $totalFiltered = Certificado_Exportacion::where('id_certificado', 'LIKE', "%{$search}%")
-        ->where("id_certificado", 1)
-        ->orWhere('num_certificado', 'LIKE', "%{$search}%")
-        ->count();
+    //1)$query = Certificado_Exportacion::query();
+    /*2)$query = Certificado_Exportacion::select('certificados_exportacion.*')
+    ->leftJoin('dictamenes_exportacion', 'certificados_exportacion.id_dictamen', '=', 'dictamenes_exportacion.id_dictamen');
+    */
+    $query = Certificado_Exportacion::query()
+        ->leftJoin('dictamenes_exportacion', 'dictamenes_exportacion.id_dictamen', '=', 'certificados_exportacion.id_dictamen')
+        ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
+        ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+        ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+        ->select('certificados_exportacion.*', 'empresa.razon_social')//especifica la columna obtenida
+        /*->where(function ($q) use ($search) {
+            $q->where('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhere('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
+            ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%");
+        })*/;
+    if ($empresaId) {
+        $query->where('solicitudes.id_empresa', $empresaId);
     }
+    $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
+    $totalData = $baseQuery->count();// totalData (sin búsqueda)
+
+
+    // Búsqueda Global
+    if (!empty($search)) {//solo se aplica si hay búsqueda global
+        /*1)$query->where(function ($q) use ($search) {
+            $q->where('num_certificado', 'LIKE', "%{$search}%")
+              ->orWhere('id_certificado', 'LIKE', "%{$search}%");
+        });*/
+        $query->where(function ($q) use ($search) {
+            $q->where('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
+            ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+        });
+
+        $totalFiltered = $query->count();
+    } else {
+        $totalFiltered = $totalData;
+    }
+
+
+    // Ordenamiento especial para num_certificado con formato 'CIDAM C-EXP25-###'
+    if ($orderColumn === 'num_certificado') {
+        $query->orderByRaw("
+            CASE
+                WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(
+                SUBSTRING_INDEX(
+                    SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14),
+                    '-', 1
+                ) AS UNSIGNED
+            ) $orderDirection
+        ");
+    } elseif (!empty($orderColumn)) {
+        $query->orderBy($orderColumn, $orderDirection);
+    }
+
     
+    //dd($query->toSql(), $query->getBindings());ver que manda
+    // Paginación
+    //1)$certificados = $query->offset($start)->limit($limit)->get();
+    $certificados = $query
+        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda de query adicionales en BD)
+            'dictamen',// Relación directa
+            'dictamen.inspeccione',// Relación anidada: dictamen > inspeccione
+            'dictamen.inspeccione.solicitud',// dictamen > inspeccione > solicitud
+            // solicitud > empresa > empresaNumClientes
+            'dictamen.inspeccione.solicitud.empresa',
+            'dictamen.inspeccione.solicitud.empresa.empresaNumClientes',
+            // Revisores
+            'revisorPersonal.user',
+            'revisorConsejo.user',
+        ])->offset($start)->limit($limit)->get();
+
+
 
     //MANDA LOS DATOS AL JS
     $data = [];
-    if (!empty($users)) {
-        foreach ($users as $certificado) {
+    if (!empty($certificados)) {
+        foreach ($certificados as $certificado) {
             $nestedData['id_certificado'] = $certificado->id_certificado ?? 'No encontrado';
             $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
             $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
             $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
             $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
+            $id_sustituye = json_decode($certificado->observaciones, true) ['id_sustituye'] ?? null;
+            $nestedData['sustituye'] = $id_sustituye ? Certificado_Exportacion::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
             $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
             $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
             ///Folio y no. servicio
@@ -107,17 +188,21 @@ public function index(Request $request)
             $nestedData['numero_cliente'] = $numero_cliente;
             $nestedData['razon_social'] = $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
             //Revisiones
-            $nestedData['id_revisor'] = $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar';
-            $nestedData['id_revisor2'] = $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar';
+            $nestedData['revisor_personal'] = $certificado->revisorPersonal->user->name ?? null;
+            $nestedData['numero_revision_personal'] = $certificado->revisorPersonal->numero_revision ?? null;
+            $nestedData['decision_personal'] = $certificado->revisorPersonal->decision?? null;
+            $nestedData['respuestas_personal'] = $certificado->revisorPersonal->respuestas ?? null;
+            $nestedData['revisor_consejo'] = $certificado->revisorConsejo->user->name ?? null;
+            $nestedData['numero_revision_consejo'] = $certificado->revisorConsejo->numero_revision ?? null;
+            $nestedData['decision_consejo'] = $certificado->revisorConsejo->decision ?? null;
+            $nestedData['respuestas_consejo'] = $certificado->revisorConsejo->respuestas ?? null;
             ///dias vigencia
-            $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
-            $nestedData['fecha_actual'] = $fechaActual;
-            $nestedData['vigencia'] = $certificado->fecha_vigencia;
+            $fechaActual = Carbon::now()->startOfDay();//Obtener la fecha actual sin horas
             $fechaVigencia = Carbon::parse($certificado->fecha_vigencia)->startOfDay();
                 if ($fechaActual->isSameDay($fechaVigencia)) {
                     $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este certificado</span>";
                 } else {
-                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);//diferencia de "dias" actual a vigencia
                     if ($diasRestantes > 0) {
                         if ($diasRestantes > 15) {
                             $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
@@ -134,31 +219,56 @@ public function index(Request $request)
             $urls = $certificado->dictamen?->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
             $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
             //Lote envasado
-            $lotes = $certificado->dictamen?->inspeccione?->solicitud?->lotesEnvasadoDesdeJson();
-            $nestedData['nombre_lote'] = $lotes?->pluck('nombre')->implode(', ') ?? 'No encontrado';
+            $lotes_env = $certificado->dictamen?->inspeccione?->solicitud?->lotesEnvasadoDesdeJson();//obtener todos los lotes
+            $nestedData['combinado'] = $lotes_env?->count() > 1 ? true : false;
+            $nestedData['nombre_lote_envasado'] = $lotes_env?->pluck('nombre')->implode(', ') ?? 'No encontrado';
+            //Lote granel
+            $lotes_granel = $lotes_env?->flatMap(function ($lote) {
+                return $lote->lotesGranel; // Relación definida en el modelo lotes_envasado
+                })->unique('id_lote_granel');//elimina duplicados
+            $nestedData['nombre_lote_granel'] = $lotes_granel?->pluck('nombre_lote')//extrae cada "nombre"
+                ->implode(', ') ?? 'No encontrado';//une y separa por coma
+            //caracteristicas
+            $nestedData['marca'] = $lotes_env?->first()?->marca->marca ?? 'No encontrado';
+            $caracteristicas = $certificado->dictamen?->inspeccione?->solicitud?->caracteristicasDecodificadas() ?? [];
+            $nestedData['n_pedido'] = $caracteristicas['no_pedido'] ?? 'No encontrado';
+            $nestedData['cajas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_cajas'] ?? 'No encontrado';
+            $nestedData['botellas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado';
+            //visto bueno
+            $nestedData['vobo'] = $certificado->vobo ? json_decode($certificado->vobo, true) : null;
+            //Certificado Firmado
+            $documentacion = Documentacion_url::where('id_relacion', $certificado->id_certificado)
+                ->where('id_documento', 135)->first();
+            $nestedData['pdf_firmado'] = $documentacion?->url
+                ? asset("files/{$numero_cliente}/certificados_exportacion/{$documentacion->url}") : null;
             
-            
+
+
             $data[] = $nestedData;
         }
     }
 
-    if ($data) {
-        return response()->json([
-            'draw' => intval($request->input('draw')),
-            'recordsTotal' => intval($totalData),
-            'recordsFiltered' => intval($totalFiltered),
-            'code' => 200,
-            'data' => $data,
-        ]);
-    } else {
-        return response()->json([
-            'message' => 'Internal Server Error',
-            'code' => 500,
-            'data' => [],
-        ]);
-    }
+    return response()->json([
+        'draw' => intval($request->input('draw')),
+        'recordsTotal' => intval($totalData),
+        'recordsFiltered' => intval($totalFiltered),
+        'code' => 200,
+        'data' => $data,
+    ]);
 }
 
+
+///FUNCION EXPORTAR EXCEL
+public function exportar(Request $request)
+{
+    //try {
+        $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes']);
+        return Excel::download(new CertificadosExport($filtros), 'reporte_certificados.xlsx');
+    /*} catch (\Exception $e) {
+        Log::error('Error al generar el reporte: ' . $e->getMessage());
+        return response()->json(['message' => 'Error al generar el reporte. Verifica los filtros e intenta nuevamente.', 'code' => 500]);
+    }*/
+}
 
 
 ///FUNCION REGISTRAR
@@ -168,10 +278,34 @@ public function store(Request $request)
     $validated = $request->validate([
         'id_dictamen' => 'required|exists:dictamenes_exportacion,id_dictamen',
         'num_certificado' => 'required|string|max:40',
-        'fecha_emision' => 'required|date',
-        'fecha_vigencia' => 'required|date',
+        'fecha_emision' => 'nullable|date',
+        'fecha_vigencia' => 'nullable|date',
         'id_firmante' => 'required|exists:users,id',
     ]);
+
+      $hologramas = [];
+
+    /*foreach ($request->id_activacion as $id) {
+        $activacion = activarHologramasModelo::find($id);
+        $folios = json_decode($activacion->folios, true);
+
+        if (!empty($folios['folio_inicial']) && !empty($folios['folio_final'])) {
+            $totalRangos = count($folios['folio_inicial']);
+
+            for ($i = 0; $i < $totalRangos; $i++) {
+                $inicio = $folios['folio_inicial'][$i] ?? null;
+                $fin = $folios['folio_final'][$i] ?? null;
+
+                if ($inicio && $fin) {
+                    $hologramas[] = [
+                        'id_activacion' => $id,
+                        'folio_inicial' => $inicio,
+                        'folio_final' => $fin,
+                    ];
+                }
+            }
+        }
+    }*/
         // Crear un registro
         $new = new Certificado_Exportacion();
         $new->id_dictamen = $validated['id_dictamen'];
@@ -179,18 +313,15 @@ public function store(Request $request)
         $new->fecha_emision = $validated['fecha_emision'];
         $new->fecha_vigencia = $validated['fecha_vigencia'];
         $new->id_firmante = $validated['id_firmante'];
+        //$new->hologramas = $hologramas;
         $new->save();
-    
+
         return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
-        Log::error('Error al registrar', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        return response()->json(['error' => 'Error al registrar.'], 500);
+        
+        return response()->json(['error' => 'Error al registrar.'. $e], 500);
     }
 }
-
 
 
 ///FUNCION ELIMINAR
@@ -209,7 +340,6 @@ public function destroy($id_certificado)
         return response()->json(['error' => 'Error al eliminar.'], 500);
     }
 }
-
 
 
 ///FUNCION PARA OBTENER LOS REGISTROS
@@ -236,7 +366,7 @@ public function edit($id_certificado)
 }
 
 ///FUNCION ACTUALIZAR
-public function update(Request $request, $id_certificado) 
+public function update(Request $request, $id_certificado)
 {
     $request->validate([
         'num_certificado' => 'required|string|max:40',
@@ -248,6 +378,7 @@ public function update(Request $request, $id_certificado)
 
     try {
         $actualizar = Certificado_Exportacion::findOrFail($id_certificado);
+
         $actualizar->num_certificado = $request->num_certificado;
         $actualizar->id_dictamen = $request->id_dictamen;
         $actualizar->fecha_emision = $request->fecha_emision;
@@ -266,8 +397,7 @@ public function update(Request $request, $id_certificado)
 }
 
 
-
-///FUNCION REEXPEDIR 
+///FUNCION REEXPEDIR
 public function reexpedir(Request $request)
 {
     try {
@@ -281,8 +411,8 @@ public function reexpedir(Request $request)
                 'id_certificado' => 'required|exists:certificados_exportacion,id_certificado',
                 'id_dictamen' => 'required|integer',
                 'num_certificado' => 'required|string|min:8',
-                'fecha_emision' => 'required|date',
-                'fecha_vigencia' => 'required|date',
+                'fecha_emision' => 'nullable|date',
+                'fecha_vigencia' => 'nullable|date',
                 'id_firmante' => 'required|integer',
             ]);
         }
@@ -290,14 +420,14 @@ public function reexpedir(Request $request)
         $reexpedir = Certificado_Exportacion::findOrFail($request->id_certificado);
 
         if ($request->accion_reexpedir == '1') {
-            $reexpedir->estatus = 1; 
+            $reexpedir->estatus = 1;
             //$certificado->observaciones = $request->observaciones;
                 // Decodificar el JSON actual
                 $observacionesActuales = json_decode($reexpedir->observaciones, true);
                 // Actualiza solo 'observaciones' sin modificar 'id_certificado_sustituye'
                 $observacionesActuales['observaciones'] = $request->observaciones;
                 // Volver a codificar el array y asignarlo a $certificado->observaciones
-            $reexpedir->observaciones = json_encode($observacionesActuales); 
+            $reexpedir->observaciones = json_encode($observacionesActuales);
             $reexpedir->save();
             return response()->json(['message' => 'Cancelado correctamente.']);
 
@@ -306,7 +436,7 @@ public function reexpedir(Request $request)
                 $observacionesActuales = json_decode($reexpedir->observaciones, true);
                 $observacionesActuales['observaciones'] = $request->observaciones;
             $reexpedir->observaciones = json_encode($observacionesActuales);
-            $reexpedir->save(); 
+            $reexpedir->save();
 
             // Crear un nuevo registro de reexpedición
             $new = new Certificado_Exportacion();
@@ -333,7 +463,6 @@ public function reexpedir(Request $request)
 }
 
 
-
 ///FUNCION AGREGAR REVISOR
 public function storeRevisor(Request $request)
 {
@@ -346,7 +475,7 @@ public function storeRevisor(Request $request)
             'observaciones' => 'nullable|string|max:255',
             'id_certificado' => 'required|integer|exists:certificados_exportacion,id_certificado',
         ]);
-        
+
         $user = User::find($validatedData['nombreRevisor']);
         if (!$user) {
             return response()->json(['message' => 'El revisor no existe.'], 404);
@@ -357,83 +486,110 @@ public function storeRevisor(Request $request)
             return response()->json(['message' => 'El certificado no existe.'], 404);
         }
 
-        $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])->first();
-        $message = ''; // Inicializar el mensaje
+        $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])
+                ->where('tipo_certificado', 3)
+                ->where('tipo_revision', $validatedData['tipoRevisor']) // buscar según tipo de revisión
+                ->first();
 
-        if ($revisor) {
-            // Actualizar el revisor existente
-            if ($validatedData['tipoRevisor'] == '1') {
+            $message = ''; // Inicializar el mensaje
+
+            if ($revisor) {
                 if ($revisor->id_revisor == $validatedData['nombreRevisor']) {
-                    $message = 'Revisor reasignado.'; 
+                    $message = 'Revisor reasignado.';
                 } else {
                     $revisor->id_revisor = $validatedData['nombreRevisor'];
                     $message = 'Revisor asignado exitosamente.';
                 }
             } else {
-                if ($revisor->id_revisor2 == $validatedData['nombreRevisor']) {
-                    $message = 'Revisor reasignado.';
-                } else {
-                    $revisor->id_revisor2 = $validatedData['nombreRevisor'];
-                    $message = 'Revisor Miembro del consejo asignado exitosamente.';
-                }
-            }
-        } else {
-            // Crear un nuevo revisor
-            $revisor = new Revisor();
-            $revisor->id_certificado = $validatedData['id_certificado'];
-            $revisor->tipo_revision = $validatedData['tipoRevisor'];
-
-            if ($validatedData['tipoRevisor'] == '1') {
+                $revisor = new Revisor();
+                $revisor->id_certificado = $validatedData['id_certificado'];
+                $revisor->tipo_certificado = 3; //El 2 corresponde al certificado de granel
+                $revisor->tipo_revision = $validatedData['tipoRevisor'];
                 $revisor->id_revisor = $validatedData['nombreRevisor'];
                 $message = 'Revisor asignado exitosamente.';
-            } else {
-                $revisor->id_revisor2 = $validatedData['nombreRevisor'];
-                $message = 'Revisor Miembro del consejo asignado exitosamente.';
             }
-        }
-
         // Guardar los datos del revisor
-        $revisor->tipo_certificado = 3;
+        $revisor->decision = 'Pendiente';
         $revisor->numero_revision = $validatedData['numeroRevision'];
         $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
         $revisor->observaciones = $validatedData['observaciones'] ?? '';
         $revisor->save();
 
-        // Preparar datos para el correo
-        $data1 = [
-            'title' => 'Nuevo registro de solicitud',
-            'message' => 'Se ha asignado el revisor (' . $user->name . ') al certificado número ' . $certificado->num_certificado, 
-            'url' => 'solicitudes-historial',
-            'nombreRevisor' => $user->name,
-            'emailRevisor' => $user->email,
-            'num_certificado' => $certificado->num_certificado,
-            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-            'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento), 
-            'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar',
-            'numero_cliente' => $certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar',
-            'tipo_certificado' => $certificado->id_dictamen
-        ];
+        $empresa = $certificado->dictamen->inspeccione->solicitud->empresa;
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
 
-        // Notificación Local
-        /*$users = User::whereIn('id', [18, 19, 20])->get();
-        foreach ($users as $notifiedUser) {
-            $notifiedUser->notify(new GeneralNotification($data1));
-        }*/
+            if ($request->hasFile('url')) {
+            if ($revisor->id_revision) {
+                // Buscar el registro existente
 
-/*             // Correo a Revisores
-        try {
-            info('Enviando correo a: ' . $user->email);
 
-            if (empty($user->email)) {
-                return response()->json(['message' => 'El correo del revisor no está disponible.'], 404);
+                    // Si no existe, crea una nueva instancia
+                    $documentacion_url = new Documentacion_url();
+                    $documentacion_url->id_relacion = $revisor->id_revision;
+                    $documentacion_url->id_documento = $request->id_documento;
+                    $documentacion_url->id_empresa = $empresa->id_empresa;
+
+
+                // Procesar el nuevo archivo
+                $file = $request->file('url');
+                $nombreLimpio = str_replace('/', '-', $request->nombre_documento);
+                $filename = $nombreLimpio . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $filePath = $file->storeAs('revisiones/', $filename, 'public');
+
+                // Actualizar los datos del registro
+                $documentacion_url->nombre_documento = $nombreLimpio;
+                $documentacion_url->url = $filename;
+                $documentacion_url->save();
+
+            }
+        }
+
+            if($validatedData['tipoRevisor']==1){
+                $url_clic = '/add_revision/' . $revisor->id_revision;
+            }else{
+                 $url_clic = '/add_revision_consejo/' . $revisor->id_revision;
             }
 
-            Mail::to($user->email)->send(new CorreoCertificado($data1)); 
-            info('Correo enviado a: ' . $user->email);
-        } catch (\Exception $e) {
-            Log::error('Error al enviar el correo: ' . $e->getMessage()); 
-            return response()->json(['message' => 'Error al enviar el correo: ' . $e->getMessage()], 500);
-        } */
+
+          // Preparar datos para el correo
+            $data1 = [
+                'asunto' => 'Revisión de certificado ' . $certificado->num_certificado,
+                'title' => 'Revisión de certificado',
+                'message' => 'Se te ha asignado el certificado ' . $certificado->num_certificado,
+                'url' => $url_clic,
+                'nombreRevisor' => $user->name,
+                'emailRevisor' => $user->email,
+                'num_certificado' => $certificado->num_certificado,
+                'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
+                'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+                'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar',
+                'numero_cliente' => $numeroCliente ?? 'Sin asignar',
+                'tipo_certificado' => 'Certificado de instalaciones',
+                'observaciones' => $revisor->observaciones,
+            ];
+
+       // Notificación Local
+            $users = User::whereIn('id', [$validatedData['nombreRevisor']])->get();
+            foreach ($users as $notifiedUser) {
+                $notifiedUser->notify(new GeneralNotification($data1));
+            }
+
+            // Correo a Revisores
+            try {
+                info('Enviando correo a: ' . $user->email);
+
+                if (empty($user->email)) {
+                    return response()->json(['message' => 'El correo del revisor no está disponible.'], 404);
+                }
+
+                Mail::to($user->email)->send(new CorreoCertificado($data1));
+                info('Correo enviado a: ' . $user->email);
+            } catch (\Exception $e) {
+                Log::error('Error al enviar el correo: ' . $e->getMessage());
+                return response()->json(['message' => 'Error al enviar el correo: ' . $e->getMessage()], 500);
+            }
 
         return response()->json([
             'message' => $message ?? 'Revisor del OC asignado exitosamente',
@@ -447,9 +603,8 @@ public function storeRevisor(Request $request)
 }
 
 
-
 ///PDF CERTIFICADO
-public function MostrarCertificadoExportacion($id_certificado) 
+public function MostrarCertificadoExportacion($id_certificado)
 {
     $data = Certificado_Exportacion::find($id_certificado);//Obtener datos del certificado
 
@@ -460,22 +615,22 @@ public function MostrarCertificadoExportacion($id_certificado)
 
     //$fecha = Helpers::formatearFecha($data->fecha_emision);
     //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
-    $fecha_emision = Carbon::parse($data->fecha_emision);
-        $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
-    $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
-        $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');
+    $fecha_emision = !empty($data->fecha_emision) ? Carbon::parse($data->fecha_emision)->translatedFormat('d/m/Y')
+    : '--------';
+    $fecha_vigencia = !empty($data->fecha_vigencia) ? Carbon::parse($data->fecha_vigencia)->translatedFormat('d/m/Y')
+    : '--------';
     $empresa = $data->dictamen->inspeccione->solicitud->empresa ?? null;
-    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() 
+    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
         ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
         ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
     //Determinar si la marca de agua debe ser visible
     $watermarkText = $data->estatus == 1;
     //Obtener un valor específico del JSON
     $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON actual
-    ['id_certificado_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
-    $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado 
+    ['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
+    $nombre_id_sustituye = $id_sustituye ?//verifica si la variable $id_sustituye tiene valor asociado
     //Busca el registro del certificado que tiene el id igual a $id_sustituye
-    Certificado_Exportacion::find($id_sustituye)->num_certificado ?? '' : '';
+    Certificado_Exportacion::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
     $datos = $data->dictamen->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
         $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
@@ -500,43 +655,49 @@ public function MostrarCertificadoExportacion($id_certificado)
                 $lotes->push($lote);//Agregar el lote a la colección
             }
         }*/
-       
+
     //return response()->json(['message' => 'No se encontraron características.', $data], 404)
 
-
-    $pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
+    //$pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
+    $pdf =  [
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
         'lotes' =>$lotes,
-        'expedicion' => $fecha1 ?? "",
-        'vigencia' => $fecha2 ?? "",
+        'expedicion' => $fecha_emision,
+        'vigencia' => $fecha_vigencia,
         'n_cliente' => $numero_cliente,
         'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'No encontrado',
         'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? 'No encontrado',
         'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? 'No encontrado',
-        'convenio' => $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA',
-        'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
+        'convenio' =>  $lotes[0]->lotesGranel[0]->empresa->convenio_corresp ?? 'NA',
+        'DOM' => $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? 'NA',
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
         'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'No encontrado',
         'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'No encontrado',
         'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado',
+        'envasadoEN' => $data->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa ?? 'No encontrado',
         ///caracteristicas
         'aduana' => $aduana_salida ?? 'No encontrado',
         'n_pedido' => $no_pedido ?? 'No encontrado',
         'botellas' => $botellas ?? 'No encontrado',
         'cajas' => $cajas ?? 'No encontrado',
         'presentacion' => $presentacion ?? 'No encontrado',
-    ]);
+    ];
 
+    if ( $data->fecha_emision >= '2025-07-01' ) {
+        $edicion = 'pdfs.certificado_exportacion_ed13';
+    }else{
+        $edicion = 'pdfs.certificado_exportacion_ed12';
+    }
     //nombre al descargar
-    return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
+    //return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
+    return Pdf::loadView($edicion, $pdf)->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
 }
 
-
 ///PDF SOLICITUD CERTIFICADO
-public function MostrarSolicitudCertificadoExportacion($id_certificado) 
+public function MostrarSolicitudCertificadoExportacion($id_certificado)
 {
     $data = Certificado_Exportacion::find($id_certificado);
     if (!$data) {
@@ -544,23 +705,21 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
     }
 
-    $fecha = Helpers::formatearFecha($data->fecha_emision);
     //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
     /*$fecha_emision = Carbon::parse($data->fecha_emision);
         $fecha1 = $fecha_emision->translatedFormat('d/m/Y');
     $fecha_vigencia = Carbon::parse($data->fecha_vigencia);
         $fecha2 = $fecha_vigencia->translatedFormat('d/m/Y');*/
     $empresa = $data->dictamen->inspeccione->solicitud->empresa ?? null;
-    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty() ? $empresa
-        ->empresaNumClientes
-        ->first(fn($item) => $item->empresa_id === $empresa
-        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'N/A' : 'N/A';
-    $watermarkText = $data->estatus == 1;//Determinar si marca de agua es visible
+    $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+        ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
     $id_sustituye = json_decode($data->observaciones, true)//Decodifica el JSON
         ['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
-    $nombre_id_sustituye = $id_sustituye ?//verifica si $id_sustituye tiene valor  
+    $nombre_id_sustituye = $id_sustituye ?//verifica si $id_sustituye tiene valor
         //Busca el registro del certificado que tiene el id igual a $id_sustituye
         Certificado_Exportacion::find($id_sustituye)->num_certificado ?? '' : '';
+    $watermarkText = $data->estatus == 1;//Determinar si marca de agua es visible
 
     $datos = $data->dictamen?->inspeccione?->solicitud?->caracteristicas; //Obtener Características Solicitud
         $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
@@ -578,15 +737,19 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
 
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
 
-
-    $pdf = Pdf::loadView('pdfs.solicitud_certificado_exportacion_ed10', [//formato del PDF
+    //$pdf = Pdf::loadView('pdfs.solicitud_certificado_exportacion_ed10', [//formato del PDF
+    $pdf = [
         'data' => $data,
         'lotes' =>$lotes,
-        'expedicion' => $fecha ?? "",
-        'vigencia' => $fecha2 ?? "",
+        'fecha_solicitud' => Helpers::formatearFecha($data->dictamen->inspeccione->solicitud->fecha_solicitud) ?? 'No encontrado',
         'n_cliente' => $numero_cliente,
-        'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
-        'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'No encontrado',
+        'empresa' => $empresa->razon_social ?? 'No encontrado',
+        'domicilio_inspeccion' => $data->dictamen->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrado',
+        'fecha_propuesta' => Helpers::formatearFecha($data->dictamen->inspeccione->solicitud->fecha_visita) ?? 'No encontrado',
+        'resp_instalacion' => $data->dictamen->inspeccione->solicitud->instalacion->responsable ?? 'No encontrado',
+        'info_adicional' => $data->dictamen->inspeccione->solicitud->info_adicional ?? ' ',
+
+
         'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? 'No encontrado',
         'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? 'No encontrado',
@@ -594,19 +757,260 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
+
         'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'No encontrado',
         'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'No encontrado',
         'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado',
+
+        'folio' => isset($data->dictamen->inspeccione->solicitud->folio) &&
+           preg_match('/^([A-Z\-]+)(\d+)$/', $data->dictamen->inspeccione->solicitud->folio, $m)
+           ? $m[1] . str_pad(((int)$m[2]) + 1, strlen($m[2]), '0', STR_PAD_LEFT)
+           : 'No encontrado',
         ///caracteristicas
         'aduana' => $aduana_salida ?? 'No encontrado',
         'n_pedido' => $no_pedido ?? 'No encontrado',
         'botellas' => $botellas ?? 'No encontrado',
         'cajas' => $cajas ?? 'No encontrado',
-        'presentacion' => $presentacion ?? 'No encontrado',
-    ]);
+        //'presentacion' => $presentacion ?? 'No encontrado', se tomara directod el lote
+    ];
+
+    if ( $data->fecha_emision >= '2025-06-01' ) {
+        $edicion = 'pdfs.solicitud_certificado_exportacion_ed11';
+    }else{
+        $edicion = 'pdfs.solicitud_certificado_exportacion_ed10';
+    }
     //nombre al descargar
-    return $pdf->stream('F7.1-01-21 Ver 10. Solicitud de emisión de Certificado para Exportación.pdf');
+    //return $pdf->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');
+    return Pdf::loadView($edicion, $pdf)->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');
 }
+
+
+
+
+
+///SUBIR CERTIFICADO FIRMADO
+public function subirCertificado(Request $request)
+{
+    $request->validate([
+        'id_certificado' => 'required|exists:certificados_exportacion,id_certificado',
+        'documento' => 'required|mimes:pdf|max:3072',
+    ]);
+
+    $certificado = Certificado_Exportacion::findOrFail($request->id_certificado);
+
+    // Limpiar num_certificado para evitar crear carpetas por error
+    $nombreCertificado = preg_replace('/[^A-Za-z0-9_\-]/', '_', $certificado->num_certificado ?? 'No encontrado');
+    // Generar nombre de archivo con num_certificado + cadena aleatoria
+    $nombreArchivo = $nombreCertificado.'_'. uniqid() .'.pdf'; //uniqid() para asegurar nombre único
+
+    
+    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)->first();
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+    // Ruta de carpeta física donde se guardará
+    $rutaCarpeta = "public/uploads/{$numeroCliente}/certificados_exportacion";
+   
+    // Guardar nuevo archivo
+    $upload = Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
+    if (!$upload) {
+        return response()->json(['message' => 'Error al subir el archivo.'], 500);
+    }
+
+
+    // Buscar si ya existe un registro para ese lote y tipo de documento
+    $documentacion_url = Documentacion_url::where('id_documento', 135)
+        ->where('id_relacion', $certificado->id_certificado)//id del certificado
+        ->first();
+
+    if ($documentacion_url) {
+        $ArchivoAnterior = "public/uploads/{$numeroCliente}/certificados_exportacion/{$documentacion_url->url}";
+        if (Storage::exists($ArchivoAnterior)) {
+            Storage::delete($ArchivoAnterior);
+        }
+    }
+
+    // Crear o actualizar registro
+    Documentacion_url::updateOrCreate(
+        [
+            'id_documento' => 135,
+            'id_relacion' => $certificado->id_certificado,//id del certificado
+        ],
+        [
+            'nombre_documento' => "Certificado de exportación",
+            'url' => "{$nombreArchivo}",
+            'id_empresa' => $certificado->dictamen?->inspeccione?->solicitud?->id_empresa,
+        ]
+    );
+
+    return response()->json(['message' => 'Documento actualizado correctamente.']);
+}
+///OBTENER CERTIFICADO FIRMADO
+public function CertificadoFirmado($id)
+{
+    $certificado = Certificado_Exportacion::findOrFail($id);
+
+    // Buscar documento asociado al lote
+    $documentacion = Documentacion_url::where('id_documento', 135)
+        ->where('id_relacion', $certificado->id_certificado)
+        ->first();
+
+    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)->first();
+      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+
+    if ($documentacion) {
+        $rutaArchivo = "{$numeroCliente}/certificados_exportacion/{$documentacion->url}";
+
+        if (Storage::exists("public/uploads/{$rutaArchivo}")) {
+            return response()->json([
+                'documento_url' => Storage::url($rutaArchivo), // genera URL pública
+                'nombre_archivo' => basename($documentacion->url),
+            ]);
+        }else {
+            return response()->json([
+                'documento_url' => null,
+                'nombre_archivo' => null,
+            ], 404);
+        }
+    }
+
+    return response()->json([
+        'documento_url' => null,
+        'nombre_archivo' => null,
+        //'message' => 'Documento no encontrado.',
+    ]);
+}
+
+
+
+
+
+
+///VER DOCUMENTACION
+public function documentos($id)
+{   
+    $certificado = Certificado_Exportacion::find($id);
+    if (!$certificado) {
+        return abort(404, 'Registro no encontrado.');
+        //return response()->json(['message' => 'Registro no encontrado.', $certificado], 404);
+    }
+
+
+    // Obtener todos los IDs de los lotes
+    $caracteristicas = $certificado->dictamen?->inspeccione?->solicitud?->caracteristicasDecodificadas() ?? [];
+    $detalles = $caracteristicas['detalles'] ?? [];
+    $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
+
+    foreach ($loteIds as $idLote) {
+        $dictamenEnvasado = Dictamen_Envasado::where('id_lote_envasado', $idLote)->first();
+        if ($dictamenEnvasado) {
+            $inspeccion = $dictamenEnvasado->inspeccion ?? null;
+            $solicitud = $inspeccion?->solicitud ?? null;
+
+            $datosFinales[] = [
+                'id_lote_envasado' => $idLote,
+                'dictamen_envasado' => $dictamenEnvasado->id_dictamen_envasado ?? null,
+                'inspeccion_id' => $inspeccion?->id_inspeccion ?? null,
+                'solicitud_id' => $solicitud?->id_solicitud ?? null,
+            ];
+        }
+    }
+
+            
+    return response()->json([
+        'success' => true,
+        'datosFinales' => $datosFinales
+    ]);
+}
+
+
+
+
+///VISTO BUENO
+public function obtenerVobo($id)
+{
+    $certificado = Certificado_Exportacion::findOrFail($id);
+    $vobo = $certificado->vobo ? json_decode($certificado->vobo, true) : null;
+
+    // Obtener usuarios tipo 3 (clientes)
+    $clientes = User::where('tipo', 3)->select('id', 'name')->get();
+
+    return response()->json([
+        'vobo' => $vobo,
+        'id_usuario' => Auth::id(),
+        'num_certificado' => $certificado->num_certificado,
+        'clientes' => $clientes
+    ]);
+}
+
+public function guardarVobo(Request $request)
+{
+    $certificado = Certificado_Exportacion::findOrFail($request->id_certificado);
+    $vobo = $certificado->vobo ? json_decode($certificado->vobo, true) : [];
+
+    $userId = Auth::id();
+
+    if ($request->has('respuesta')) {
+        $vobo[] = [
+            'id_cliente' => $userId,
+            'descripcion' => $request->descripcion,
+            'respuesta' => $request->respuesta
+        ];
+
+        $user = User::find($userId);
+        $respuesta = $request->respuesta == 1 ? 'Aprobado' : 'No aprobado';
+        // NOTIFICACION PARA EL PERSONAL
+        $personalEntry = collect($vobo)->firstWhere('id_personal');
+        if ($personalEntry) {
+            $receptor = User::find($personalEntry['id_personal']);
+
+            if ($receptor) {
+                $dataNotificacion = [
+                    'title' => 'Revisión del cliente',
+                    'asunto' => 'revisión' . $certificado->num_certificado,
+                    'message' => 'Revisado por ' .$user->name. ' y el Vo.Bo. fué '.$respuesta.'<br>'
+                        .$request->descripcion,
+                    //'message' => $request->descripcion,
+                    'url' => route('certificados-exportacion'),
+                ];
+                $receptor->notify(new GeneralNotification($dataNotificacion));
+            }
+        }
+
+    } else {//NOTIFICACION PARA EL CLIENTE
+        $vobo[] = [
+            'id_personal' => $userId,
+            'descripcion' => $request->descripcion,
+            //'notificados' => $request->notificados
+        ];
+
+        // Notificar a los clientes seleccionados
+        if ($request->has('notificados')) {
+            foreach ($request->notificados as $clienteId) {
+                $cliente = User::find($clienteId);
+                if ($cliente) {
+                    $dataNotificacion = [
+                        'title' => 'Vo.Bo.',
+                        'asunto' => 'Revisión ' . $certificado->num_certificado . ' pendiente',
+                        'message' => $request->descripcion,
+                        'url' => route('certificados-exportacion'),
+                    ];
+                    $cliente->notify(new GeneralNotification($dataNotificacion));
+                }
+            }
+        }
+
+    }
+
+    $certificado->vobo = json_encode($vobo);
+    $certificado->save();
+
+    return response()->json(['success' => true]);
+}
+
+
 
 
 

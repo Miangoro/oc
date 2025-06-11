@@ -11,18 +11,18 @@
 <style>
         //estios para el pie
     .panel-footer {
-        background: url('{{ asset('assets/img/illustrations/organismo_certificador_cidam.png') }}')no-repeat 50%;
+        background: url('{{ asset('assets/img/illustrations/organismo_certificador_cidam2024.png') }}')no-repeat 50% !important;
     
     }
 
     .panel-footer {
-        background: url('{{ asset('assets/img/illustrations/organismo_certificador_cidam.png') }}')no-repeat 50%;
+        background: url('{{ asset('assets/img/illustrations/organismo_certificador_cidam2024.png') }}')no-repeat 50% !important;
        
     }
 
     @media only screen and (max-width: 900px) {
         .panel-footer {
-            background: url('{{ asset('assets/img/illustrations/organismo_certificador_cidam.png') }}')no-repeat 50%;
+            background: url('{{ asset('assets/img/illustrations/organismo_certificador_cidam2024.png') }}')no-repeat 50% !important;
            
         }
     }
@@ -43,6 +43,10 @@
 
                     @if($ya_activado == true)
                     <div id="trazabilidad" class="panel-heading">Trazabilidad</div>
+<<<<<<< HEAD
+=======
+                   
+>>>>>>> 895f03a777a42a8aec5677c609f3b7e6165253b2
 
                     <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;" class="alert">
                         <strong>FOLIO DE HOLOGRAMA: {{ $folio }}</strong>
@@ -57,7 +61,18 @@
                         <tbody>
                             <tr>
                                 <td class="td"><b>CERTIFICADO DE LOTE A GRANEL</b></td>
-                                <td class="td">Pendiente</td>
+                                <td class="td">{{ $datosHolograma->certificado_granel }}</td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="td"><b>TIPO DE AGAVE</b></td>
+                                <td class="td">
+                                    {!! optional($datosHolograma->tipos)->map(function($tipo) {
+                                        return $tipo->nombre . ($tipo->cientifico ? ' (<i>' . $tipo->cientifico . '</i>)' : '');
+                                    })->implode(', ') !!}
+                                </td>
+
+                                
                             </tr>
                             <tr>
                                 <td class="td"><b>TIPO DE AGAVE</b></td>
@@ -76,6 +91,12 @@
                                 <td class="td"><b>CLASE</b></td>
                                 <td class="td">{{ $datosHolograma->clases->clase }}</td>
                             </tr>
+                            @if($datosHolograma->edad)
+                                <tr>
+                                    <td class="td"><b>Edad</b></td>
+                                    <td class="td">{{ $datosHolograma->edad }}</td>
+                                </tr>
+                            @endif
                             <tr>
                                 <td class="td"><b>EDAD</b></td>
                                 <td class="td">Pendiente</td>
@@ -106,15 +127,26 @@
                             </tr>
                         </tbody>
                     </table>
+<<<<<<< HEAD
                     
                     <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;"class="alert">
+=======
+                   <!-- <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;"class="alert">
+>>>>>>> 895f03a777a42a8aec5677c609f3b7e6165253b2
                         <strong>CERTIFICADO
                             VENTA
                             NACIONAL Y/O EXPORTACIÓN: <br>
                             CIDAM C-EXP-497/2024</strong>
+<<<<<<< HEAD
                     </div>
+=======
+                    </div>-->
+>>>>>>> 895f03a777a42a8aec5677c609f3b7e6165253b2
                     @else
+                    <div class="alert alert-danger text-center fw-bold fs-4">
                         HOLOGRAMA NO ACTIVADO
+                    </div>
+                    
                     @endif
                     <table class="table">
                         <thead>
@@ -146,7 +178,11 @@
                <div class="row">
                     <div class="col-sm-12" style="text-align: center"></div>
                 </div>
+<<<<<<< HEAD
                 <!-- <div class="row">
+=======
+                <!--<div class="row">
+>>>>>>> 895f03a777a42a8aec5677c609f3b7e6165253b2
                     <div class="col-sm-12 contenedor-imagenes">
                         <img src="{{ asset('assets/img/illustrations/holograma_cidam.png') }}"
                             alt="Holograma de organismo certificador de cidam" id="holograma" class="imagen-holograma" />

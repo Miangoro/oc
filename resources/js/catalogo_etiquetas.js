@@ -384,14 +384,21 @@ $(function () {
               }
             }
           },
-          id_tipo: {
+          'id_tipo[]': {
             validators: {
               notEmpty: {
-                message: 'Por favor seleccione el tipo'
+                message: 'Por favor seleccione un tipo de agave'
               }
             }
-          }
+          },
+          botellas_caja: {
+            validators: {
+            digits: {
+              message: 'Solo se permiten números enteros'
+            },
+          },
         },
+      },
         
         plugins: {
           trigger: new FormValidation.plugins.Trigger(),
@@ -505,6 +512,7 @@ $(function () {
         $('#etiquetasForm').find('select').val(null).trigger('change'); 
         $('#doc_etiqueta').html(''); 
         $('#doc_corrugado').html('');
+         $('#id_etiqueta').val('');
     }
 
     $('#etiquetas').on('hidden.bs.modal', function () {
@@ -518,6 +526,8 @@ $(function () {
         var documentacion_urls = data.documentacion_urls;
         var documentacion_urls_corrugado = data.documentacion_urls_corrugado;
         var numCliente = data.numeroCliente;
+        var tipos = JSON.parse(data.etiqueta.id_tipo);
+        
         // Rellenar el formulario con los datos obtenidos
         $('#id_etiqueta').val(datos.id_etiqueta);
         let valores = datos.destinos.map(d => d.id_direccion);
@@ -529,7 +539,10 @@ $(function () {
         $('#id_marca').val(datos.id_marca).trigger('change');
         $('#id_categoria').val(datos.id_categoria).trigger('change');
         $('#id_clase').val(datos.id_clase).trigger('change');
-        $('#id_tipo').val(datos.id_tipo).trigger('change');
+        //$('#id_tipo').val(datos.etiqueta.id_tipo).trigger('change');
+        $('#id_tipo').val(tipos).trigger('change');
+        $('#botellas_caja').val(datos.botellas_caja);
+
         $('#doc_etiqueta').html(`<div style="display: flex; align-items: center; gap: 8px;">
         <a href="/files/${numCliente}/${documentacion_urls[0].url}" target="_blank">
             <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i>

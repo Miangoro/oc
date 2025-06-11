@@ -72,6 +72,11 @@ class lotesEnvasadoController extends Controller
             10 => 'volumen_total',
             11 => 'lugar_envasado',
         ];
+              if (auth()->user()->tipo == 3) {
+                  $empresaId = auth()->user()->empresa?->id_empresa;
+              } else {
+                  $empresaId = null;
+              }
 
         $limit = $request->input('length');
         $start = $request->input('start');
@@ -82,7 +87,9 @@ class lotesEnvasadoController extends Controller
         $searchValue = $request->input('search.value');
 
         $query = lotes_envasado::with(['empresa.empresaNumClientes', 'marca', 'Instalaciones', 'lotes_envasado_granel']); // Cargar relaciones necesarias
-
+        if ($empresaId) {
+            $query->where('id_empresa', $empresaId);
+        }
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('destino_lote', 'LIKE', "%{$searchValue}%")
@@ -126,7 +133,7 @@ class lotesEnvasadoController extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-  
+
                 $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $user->id_empresa)->first();
 
 $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first(fn($numero) => !empty($numero));
@@ -219,6 +226,20 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                         $envasado->id_lote_granel = $request->id_lote_granel[$i];
                         $envasado->volumen_parcial = $request->volumen_parcial[$i] ?? $request->volumen_total;
                         $envasado->save();
+
+                        $loteGranel = LotesGranel::find($request->id_lote_granel[$i]);
+                        if ($loteGranel) {
+                          $volumenParcial = $request->volumen_parcial[$i] ?? 0;
+                          $loteGranel->volumen_restante -= $volumenParcial;
+                          if ($loteGranel->volumen_restante < 0) {
+                              return response()->json([
+                                  'success' => false,
+                                  'message' => 'El volumen del lote a granel no puede ser negativo.'
+                              ], 400);
+                          }
+                          $loteGranel->save();
+                      }
+
                     }
                 }
             }
@@ -245,6 +266,8 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener el lote envasado'], 500);
         }
+
+
     }
 
     //Actualizar lotes envasados
@@ -254,6 +277,17 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
             // Buscar el lote existente
             $lotes = lotes_envasado::findOrFail($request->input('id'));
 
+            // 1. Restaurar volumen_restante de los lotes a granel originales
+            $relacionesOriginales = lotes_envasado_granel::where('id_lote_envasado', $lotes->id_lote_envasado)->get();
+            foreach ($relacionesOriginales as $relacion) {
+                $loteGranel = LotesGranel::find($relacion->id_lote_granel);
+                if ($loteGranel) {
+                    $loteGranel->volumen_restante += $relacion->volumen_parcial;
+                    $loteGranel->save();
+                }
+            }
+
+            lotes_envasado_granel::where('id_lote_envasado', $lotes->id_lote_envasado)->delete();
 
             // Actualizar los campos del lote envasado
             $lotes->id_empresa = $request->edit_cliente;
@@ -266,7 +300,7 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
             // Re-codificar el array a JSON y guardarlo en el campo 'sku'
             $lotes->sku = json_encode($skuData);
             // Guardar los cambios en la base de datos
-            $lotes->save();
+            /* $lotes->save(); */
 
             $lotes->id_marca = $request->edit_marca;
             $lotes->destino_lote = $request->edit_destino_lote;
@@ -279,21 +313,34 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
             $lotes->save();
 
             // Eliminar los registros de `lotes_envasado_granel` relacionados con este lote
-            lotes_envasado_granel::where('id_lote_envasado', $lotes->id_lote_envasado)->delete();
+            /* lotes_envasado_granel::where('id_lote_envasado', $lotes->id_lote_envasado)->delete(); */
 
             // Guardar los testigos relacionados si existen
-            if ($request->has('id_lote_granel') && is_array($request->id_lote_granel) && $request->has('volumen_parcial') && is_array($request->volumen_parcial)) {
-                for ($i = 0; $i < count($request->id_lote_granel); $i++) {
-                    // Verificar que ambos arrays tengan el mismo tamaño
-                    if (isset($request->id_lote_granel[$i]) && isset($request->volumen_parcial[$i])) {
-                        $envasado = new lotes_envasado_granel();
-                        $envasado->id_lote_envasado = $lotes->id_lote_envasado;  // Relacionar con el lote envasado
-                        $envasado->id_lote_granel = $request->id_lote_granel[$i];
-                        $envasado->volumen_parcial = $request->volumen_parcial[$i];
-                        $envasado->save();
+        // 4. Guardar los nuevos testigos relacionados y actualizar volumen_restante
+        if ($request->has('id_lote_granel') && is_array($request->id_lote_granel) && $request->has('volumen_parcial') && is_array($request->volumen_parcial)) {
+            for ($i = 0; $i < count($request->id_lote_granel); $i++) {
+                if (isset($request->id_lote_granel[$i]) && isset($request->volumen_parcial[$i])) {
+                    $envasado = new lotes_envasado_granel();
+                    $envasado->id_lote_envasado = $lotes->id_lote_envasado;
+                    $envasado->id_lote_granel = $request->id_lote_granel[$i];
+                    $envasado->volumen_parcial = $request->volumen_parcial[$i];
+                    $envasado->save();
+
+                    // Restar el nuevo volumen parcial al lote a granel
+                    $loteGranel = LotesGranel::find($request->id_lote_granel[$i]);
+                    if ($loteGranel) {
+                        $loteGranel->volumen_restante -= $request->volumen_parcial[$i];
+                        if ($loteGranel->volumen_restante < 0) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'El volumen del lote a granel no puede ser negativo.'
+                            ], 400);
+                        }
+                        $loteGranel->save();
                     }
                 }
             }
+        }
 
             return response()->json(['success' => 'Lote envasado actualizado exitosamente.']);
         } catch (\Exception $e) {
@@ -346,10 +393,10 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
     public function obtenerMarcasPorEmpresa($id_empresa)
     {
         $marcas = marcas::where('id_empresa', $id_empresa)->get();
-    
+
         foreach ($marcas as $marca) {
             $etiquetado = is_string($marca->etiquetado) ? json_decode($marca->etiquetado, true) : $marca->etiquetado;
-    
+
             if (is_null($etiquetado) || !is_array($etiquetado)) {
                 $marca->tipo_nombre = [];
                 $marca->clase_nombre = [];
@@ -358,11 +405,11 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                 $marca->etiquetado = [];
                 continue;
             }
-    
+
             $tipos = isset($etiquetado['id_tipo']) ? tipos::whereIn('id_tipo', $etiquetado['id_tipo'])->pluck('nombre')->toArray() : [];
             $clases = isset($etiquetado['id_clase']) ? clases::whereIn('id_clase', $etiquetado['id_clase'])->pluck('clase')->toArray() : [];
             $categorias = isset($etiquetado['id_categoria']) ? categorias::whereIn('id_categoria', $etiquetado['id_categoria'])->pluck('categoria')->toArray() : [];
-    
+
             $direcciones = [];
             if (isset($etiquetado['id_direccion']) && is_array($etiquetado['id_direccion'])) {
                 foreach ($etiquetado['id_direccion'] as $id_direccion) {
@@ -370,12 +417,12 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                     $direcciones[] = $direccion ?? 'N/A';
                 }
             }
-    
+
             // Obtener los documentos asociados a la marca
             $documentos = Documentacion_url::where('id_empresa', $marca->id_empresa)
                                             ->where('id_relacion', $marca->id_marca)
                                             ->get();
-    
+
             // Agregar los datos procesados al resultado
             $marca->tipo_nombre = $tipos;
             $marca->clase_nombre = $clases;
@@ -384,9 +431,9 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
             $marca->etiquetado = $etiquetado;
             $marca->documentos = $documentos; // Agregar documentos a la marca
         }
-    
+
         return response()->json($marcas);
     }
-    
-    
+
+
 }

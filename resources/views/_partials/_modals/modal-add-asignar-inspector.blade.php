@@ -18,9 +18,14 @@
           </div>-->
           <form id="addAsignarInspector" class="row g-5" onsubmit="return false">
             <input name="id_solicitud" type="hidden" id="id_solicitud">
+
+           <div id="datosSolicitud" class="mt-3 mb-3"></div>
+
+
+        
   
 
-            <div class="col-12">
+            <div class="col-12 mb-2">
               <div class="form-floating form-floating-outline">
                 <select id="id_inspector" name="id_inspector" class="select2 form-select" data-allow-clear="true">
                  @foreach ($inspectores as $inspector)
@@ -31,8 +36,8 @@
               </div>
             </div>
             
-            <hr class="my-2">
-            <h5 class="mb-4">Información para la inspección</h5>
+            <!--<hr class="my-2">
+            <h5 class="mb-4">Información para la inspección</h5>-->
 
             <div class="col-md-6 col-sm-12">
                 <div class="form-floating form-floating-outline">
@@ -57,8 +62,8 @@
 
             
             <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-              <button type="submit" class="btn btn-primary">Registrar</button>
-              <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+              <button type="submit" class="btn btn-primary"><i class="ri-user-add-line"></i> Asignar</button>
+              <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
             </div>
           </form>
         </div>

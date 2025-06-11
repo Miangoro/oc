@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class HologramasValidacion extends Controller
 {
-  public function index($folio)
+  public function index2($folio)
   {
     $pageConfigs = ['myLayout' => 'blank'];
 
@@ -20,7 +20,7 @@ class HologramasValidacion extends Controller
       ->where('numero_cliente', $numero_cliente)
       ->first();
 
-    $folio_marca = substr($folio, 12, 1);
+    $folio_marca = substr($folio, 14, 1);
     $marca = marcas::where('folio', $folio_marca)->where('id_empresa', $cliente->id_empresa)->first();
 
 

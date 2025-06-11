@@ -21,8 +21,8 @@ class Analytics extends Controller
   public function index()
   {
     //$datos = solicitudesModel::All();
-    $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')->count();
-    $solicitudesSinActa = solicitudesModel::whereNot('id_tipo', 15)
+    $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')->where('fecha_solicitud','>','2024-12-31')->count();
+    $solicitudesSinActa = solicitudesModel::whereNot('id_tipo', 12)->whereNot('id_tipo', 13)->whereNot('id_tipo', 15)->where('fecha_solicitud','>','2024-12-31')
       ->where(function ($query) {
         $query->doesntHave('documentacion_completa')
           ->orWhereHas('documentacion_completa', function ($q) {
@@ -35,7 +35,7 @@ class Analytics extends Controller
 
 
     $hoy = Carbon::today(); // Solo la fecha, sin hora.
-    $fechaLimite = $hoy->copy()->addDays(15); // Fecha límite en 15 días.
+    $fechaLimite = $hoy->copy()->addDays(5); // Fecha límite en 5 días.
 
 
     $dictamenesInstalacion = Dictamen_instalaciones::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
@@ -55,13 +55,13 @@ class Analytics extends Controller
       ->merge($certificadosExportacion);
 
 
-    $dictamenesInstalacionesSinCertificado = Dictamen_instalaciones::whereDoesntHave('certificado')->count();
-    $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->count();
+    $dictamenesInstalacionesSinCertificado = Dictamen_instalaciones::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->count();
+    $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->count();
+    $dictamenesExportacionSinCertificado  = Dictamen_Exportacion::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->count();
 
 
 
-
-    return view('content.dashboard.dashboards-analytics', compact('solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado'));
+    return view('content.dashboard.dashboards-analytics', compact('solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)

@@ -38,7 +38,7 @@
                             <select class="select2 form-select" id="rex_id_dictamen" name="id_dictamen" 
                                 data-placeholder="Selecciona un dictamen">
                                 @foreach($dictamen as $dictamen)
-                                <option value="{{ $dictamen->id_dictamen }}">{{ $dictamen->num_dictamen }}</option>
+                                <option value="{{ $dictamen->id_dictamen }}">{{ $dictamen->num_dictamen }} | {{ $dictamen->inspeccione->solicitud->folio }}</option>
                                 @endforeach
                             </select>
                                 <label for="">No. de dictamen</label>

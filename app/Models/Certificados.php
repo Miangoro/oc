@@ -42,9 +42,28 @@ class Certificados extends Model
         return $this->belongsTo(Empresa::class, 'id_empresa', 'id');
     }
 
-    public function revisor()
+    public function revisorPersonal()
     {
-        return $this->belongsTo(Revisor::class, 'id_certificado', 'id_certificado');
+        return $this->hasOne(Revisor::class, 'id_certificado')
+            ->where('tipo_revision', 1)
+            ->where('tipo_certificado', 1);
     }
+
+    public function revisorConsejo()
+    {
+        return $this->hasOne(Revisor::class, 'id_certificado')
+            ->where('tipo_revision', 2)
+            ->where('tipo_certificado', 1);
+    }
+    
+    public function certificadoReexpedido()
+    {
+        $datos = json_decode($this->observaciones, true);
+        if (isset($datos['id_sustituye'])) {
+            return Certificados::find($datos['id_sustituye']);
+        }
+        return null;
+    }
+
     
 }

@@ -89,8 +89,10 @@
     </div>
 
     <div class="section content">
-        <p class="text_al left">Oficio:<strong>CIDAM/OC/____/20__</strong></p>
-        <p class="text_al left">Morelia, Michoacán. a __ de _____ del 20__</p>
+        <p class="text_al left">Oficio:<strong>{{ $codigo_oficio }}</strong></p>
+        {{-- <p class="text_al left">Morelia, Michoacán. a __ de _____ del 20__</p> --}}
+        
+        <p class="text_al left">Morelia, Michoacán. a {{$fecha_registro}}</p>
         <p class="text_al left">ASUNTO: Asignación del número de cliente.</p>
     </div>
 
@@ -131,7 +133,7 @@
 
     </div>
     <div style="margin-bottom: 50px; text-align: center">
-        <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_mayra.png') }}">
+        {{-- <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_Q.F.B._Mayra_Gutiérrez_Romero_1739201715.png') }}"> --}}
         <p class="text_al text-center">GERENTE TÉCNICO DEL ORGANISMO</p>
         <p class="text_al text-center">CERTIFICADOR CIDAM A.C.</p>
     </div>

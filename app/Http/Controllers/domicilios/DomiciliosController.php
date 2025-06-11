@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;//Permiso empresa
 
 class DomiciliosController extends Controller
 {
@@ -44,11 +45,22 @@ class DomiciliosController extends Controller
         ];
 
         $search = [];
-      
 
-        $totalData = instalaciones::whereHas('empresa', function ($query) {
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
+        }
+        
+
+        $totalData = instalaciones::whereHas('empresa', function ($query) use ($empresaId) {
             $query->where('tipo', 2);
+
+            if ($empresaId) {
+                $query->where('id_empresa', $empresaId);
+            }
         })->count();
+
 
         $totalFiltered = $totalData;
 
@@ -59,8 +71,12 @@ class DomiciliosController extends Controller
 
         if (empty($request->input('search.value'))) {
             $instalaciones = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
-                ->whereHas('empresa', function ($query) {
+                ->whereHas('empresa', function ($query) use ($empresaId) {
                     $query->where('tipo', 2);
+
+                    if ($empresaId) {
+                            $query->where('id_empresa', $empresaId);
+                        }
                 })
                 ->offset($start)
                 ->limit($limit)
@@ -69,8 +85,12 @@ class DomiciliosController extends Controller
         } else {
             $search = $request->input('search.value');
             $instalaciones = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
-                ->whereHas('empresa', function ($query) {
+                ->whereHas('empresa', function ($query)  use($empresaId){
                     $query->where('tipo', 2);
+
+                    if ($empresaId) {
+                        $query->where('id_empresa', $empresaId);
+                    }
                 })
                 ->where(function ($query) use ($search) {
                     
@@ -96,6 +116,7 @@ class DomiciliosController extends Controller
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
+       
 
             $totalFiltered = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
                 ->whereHas('empresa', function ($query) {
@@ -118,9 +139,11 @@ class DomiciliosController extends Controller
                         ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
                         ->orWhere('folio', 'LIKE', "%{$search}%")
                         ->orWhere('tipo', 'LIKE', "%{$search}%");
+                        
                     
                 })
                 ->count();
+
         }
 
         $data = [];
@@ -168,6 +191,8 @@ class DomiciliosController extends Controller
         ]);
     }
 
+
+    ///FUNCION ELIMINAR
     public function destroy($id_instalacion)
     {
         try {
@@ -196,6 +221,8 @@ class DomiciliosController extends Controller
         }
     }
     
+
+    ///FUNCION AGREGAR
     public function store(Request $request)
     {
         $request->validate([
@@ -270,6 +297,7 @@ class DomiciliosController extends Controller
     }
     
     
+    ///FUNCION OBTENER REGISTRO
     public function edit($id_instalacion)
     {
         try {
@@ -294,7 +322,8 @@ class DomiciliosController extends Controller
             return response()->json(['success' => false], 404);
         }
     }    
-    
+
+    ///FUNCION ACTUALIZAR
     public function update(Request $request, $id)
     {
         $request->validate([

@@ -14,18 +14,26 @@ class DestinosController extends Controller
 
     public function UserManagement()
     {
-        // Obtener todos los registros de destinos con la relación empresa cargada
-        $destinos = Destinos::with('empresa')->get();
+        $empresaId = null;
 
-        // Obtener solo las empresas tipo '2'
-        $empresas = empresa::where('tipo', 2)->get();
-
-        // Pasar los datos a la vista
+        if (auth()->user()->tipo == 3) {
+            $empresaId = auth()->user()->empresa?->id_empresa;
+        }
+        $destinosQuery = Destinos::with('empresa');
+        if ($empresaId) {
+            $destinosQuery->where('id_empresa', $empresaId);
+        }
+        $destinos = $destinosQuery->get();
+        $empresasQuery = empresa::where('tipo', 2);
+        if ($empresaId) {
+            $empresasQuery->where('id_empresa', $empresaId);
+        }
+        $empresas = $empresasQuery->get();
         return view('domicilios.find_domicilio_destinos_view', [
             'destinos' => $destinos,
             'empresas' => $empresas,
         ]);
-        }
+    }
 
         public function index(Request $request)
         {
@@ -44,9 +52,18 @@ class DestinosController extends Controller
 
             $search = [];
 
+        if (auth()->user()->tipo == 3) {
+            $empresaId = auth()->user()->empresa?->id_empresa;
+        } else {
+            $empresaId = null;
+        }
+
             // Obtener el total de registros filtrados
-            $totalData = Destinos::whereHas('empresa', function ($query) {
+            $totalData = Destinos::whereHas('empresa', function ($query) use ($empresaId) {
                 $query->where('tipo', 2);
+                if ($empresaId) {
+                    $query->where('id_empresa', $empresaId);
+                }
             })->count();
 
             $totalFiltered = $totalData;
@@ -58,8 +75,12 @@ class DestinosController extends Controller
 
             if (empty($request->input('search.value'))) {
                 $destinos = Destinos::with('empresa')
-                    ->whereHas('empresa', function ($query) {
-                        $query->where('tipo', 2);
+                    ->whereHas('empresa', function ($query) use ($empresaId) {
+                       $query->where('tipo', 2);
+                        if ($empresaId) {
+                            $query->where('id_empresa', $empresaId);
+                        }
+
                     })
                     ->offset($start)
                     ->limit($limit)
@@ -67,10 +88,12 @@ class DestinosController extends Controller
                     ->get();
             } else {
                 $search = $request->input('search.value');
-
                 $destinos = Destinos::with('empresa')
-                    ->whereHas('empresa', function ($query) {
+                    ->whereHas('empresa', function ($query) use ($empresaId) {
                         $query->where('tipo', 2);
+                        if ($empresaId) {
+                            $query->where('id_empresa', $empresaId);
+                        }
                     })
                     ->where(function ($query) use ($search) {
                         $query->whereHas('empresa', function ($q) use ($search) {
@@ -90,8 +113,11 @@ class DestinosController extends Controller
                     ->get();
 
                 $totalFiltered = Destinos::with('empresa')
-                    ->whereHas('empresa', function ($query) {
+                    ->whereHas('empresa', function ($query) use ($empresaId) {
                         $query->where('tipo', 2);
+                        if ($empresaId) {
+                            $query->where('id_empresa', $empresaId);
+                        }
                     })
                     ->where(function ($query) use ($search) {
                         $query->whereHas('empresa', function ($q) use ($search) {
@@ -124,7 +150,7 @@ class DestinosController extends Controller
                     $nestedData['id_direccion'] = $destino->id_direccion;
                     $nestedData['fake_id'] = ++$ids;
                     $nestedData['tipo_direccion'] = $tipoDireccionMap[$destino->tipo_direccion] ?? 'Desconocido';
-                    
+
                     //$nestedData['id_empresa'] = $destino->empresa->razon_social;
                     $numeroCliente =
                     $destino->empresa->empresaNumClientes[0]->numero_cliente ??
@@ -212,18 +238,7 @@ class DestinosController extends Controller
                 // Obtener el tipo de dirección basado en el valor de tipo_direccion
                 $tipoDireccion = isset($tipoDireccionMap[$destino->tipo_direccion]) ? $tipoDireccionMap[$destino->tipo_direccion] : 'Tipo desconocido';
 
-                // Datos de la notificación
-                $data1 = [
-                    'title' => 'Nuevo registro de destinos',
-                    'message' => 'Se ha registrado un nuevo destino de tipo: ' . $tipoDireccion . '.',
-                    'url' => 'destinos-historial',
-                ];
-
-                // Enviar la notificación a cada usuario
-                foreach ($users as $user) {
-                    $user->notify(new GeneralNotification($data1));
-                }
-
+              
 
                 // Retornar una respuesta
                 return response()->json([

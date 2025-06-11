@@ -180,75 +180,58 @@
         /* Opcional: agrega espacio dentro de las celdas */
         }
 
-        .images-container {
-            position: relative;
-            display: flex;
-            margin-top: -40px;
-         
-            width: 100%;
-        }
+        
 
-        .textx1 {
-            bottom: 82px;
-            position: fixed;
-            line-height: 1.2;
-            font-family: Arial, Helvetica, Verdana;
-        }
+        /*inicia firma digital DIV*/
+    .images-container {
+        position: relative;
+        width: 100%;
+        /*vertical-align: bottom;*/
+    }
+    .image-right {
+        position: absolute;
+        width: 200px;
+        right: 10px;
+        margin-top: -5px;
+    }
+    .sello {
+        position: absolute;
+        right: 5%;
+        margin-top: -13px;
+        font-size: 11px;
+        font-family: 'Arial Negrita' !important;
+    }
+    .textx {
+        line-height: 1.2;
+        font-size: 9px;
+        font-family: Arial, Helvetica, Verdana;
+    }
+    .textsello {
+        width: 85%; 
+        text-align: left;
+        word-wrap: break-word;
+        margin-top: -1px;
+        line-height: 1.2;
+        font-size: 8px;
+        font-family: Arial, Helvetica, Verdana;
+    }
 
-        .textx2 {
-            bottom: 71px;
-            position: fixed;
-            line-height: 1.2;
-            font-family: Arial, Helvetica, Verdana;
-        }
 
-        .textx3 {
-            bottom: 60px;
-            position: fixed;
-            line-height: 1.2;
-            font-family: Arial, Helvetica, Verdana;
-        }
 
-        .textx,
-        .textsello {
-            line-height: 1.2;
-            font-family: Arial, Helvetica, Verdana;
-        }
-
-        .textsello {
-            text-align: left;
-            font-size: 8px;
-            margin: 0;
-            padding: 0;
-        }
-
-        .sello {
-            text-align: right;
-            font-size: 11px;
-            margin: 0;
-            padding: 0;
-            position: fixed;
-            right: 30px;
-            top: 840px;
-            font-family: 'Arial Negrita' !important;
-        }
-
-        .image-right {
-            position: absolute;
-            right: 10px;
-            top: 18px;
-            width: 240px;
-        }
 
         .pie {
-            position: fixed;
-            font-family: 'Lucida Sans Unicode';
-            bottom: 10.5px;
-            left: 550px;
             text-align: right;
             font-size: 9px;
             line-height: 1;
-            padding-bottom: 8px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: calc(100% - 40px);
+            height: 45px;
+            margin-right: 30px;
+            padding: 10px 0px;
+            font-family: 'Lucida Sans Unicode';
         }
 
         .watermark {
@@ -285,9 +268,9 @@
     <div class="header">
         <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo CIDAM">
         <div class="header-text">
-            <p class="large-text">Unidad de Inspección No. UVNOM-129</p>
-            <p class="small-text">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</p>
-            <p class="normal-text">Acreditados ante la Entidad Mexicana de Acreditación, A.C.</p>
+            <p class="large-text" style="text-align: center">Unidad de Inspección No. UVNOM-129</p>
+            <p class="small-text" style="text-align: center; margin-top: -4px;">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</p>
+            <p class="normal-text" style="text-align: center">Acreditados ante la Entidad Mexicana de Acreditación, A.C.</p>
         </div>
 
     </div>
@@ -356,12 +339,12 @@
             <tr>
                 <td colspan="6" class="negrita" style="font-size: 13px; text-transform: uppercase; padding: 5px;">
                     <p>producto {{ $data->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'NA' }}</p>
-                    <p>origen {{ $data->inspeccione->solicitud->instalacion->estados->nombre ?? 'NA' }}</p>
+                    <p>origen {{ $estado }}</p>
                 </td>
             </tr>
             <tr>
                 <td class="negrita" style="color: #17365D; width: 16%;">Categoría y clase</td>
-                <td>{{ $data->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'NA' }} {{$data->inspeccione->solicitud->lote_granel->clase->clase ?? 'NA' }}</td>
+                <td style="font-size: 12px">{{ $data->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'NA' }}<br> {{$data->inspeccione->solicitud->lote_granel->clase->clase ?? 'NA' }}</td>
                 <td class="negrita" style="color: #17365D;  width: 19%">No. de lote a granel</td>
                 <td>{{ $data->inspeccione->solicitud->lote_granel->nombre_lote ?? '------' }}</td>
                 <td class="negrita" style="color: #17365D; width: 14%;">No. de análisis</td>
@@ -379,14 +362,23 @@
                 <td class="negrita" style="color: #17365D;">Edad</td>
                 <td>{{ $data->inspeccione->solicitud->lote_granel->edad ?? 'NA' }}</td>
                 <td class="negrita" style="color: #17365D;">Tipo de maguey</td>
-                <td colspan="3">
-                    @if(!empty($data->inspeccione->solicitud->lote_granel->tiposRelacionados))
-                    @foreach($data->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
-                        {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>)
-                    @endforeach
-                        @else
-                            ------
-                     @endif
+                <td colspan="3" style="font-size: 10px">
+                    @php
+                        $ordenIds = json_decode($data->inspeccione->solicitud->lote_granel->id_tipo ?? '[]');
+                        $tipos = $data->inspeccione->solicitud->lote_granel->tiposRelacionados;
+                        // Reordenar manualmente
+                        $tiposOrdenados = collect($ordenIds)->map(function($id) use ($tipos) {
+                            return $tipos->firstWhere('id_tipo', (int) $id);
+                        })->filter(); // Elimina nulos si faltan IDs
+                    @endphp
+
+                    @if($tiposOrdenados->isNotEmpty())
+                        @foreach($tiposOrdenados as $tipo)
+                            {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>) <br>
+                        @endforeach
+                    @else
+                        ------
+                    @endif
                     
                 </td>
             </tr>
@@ -396,45 +388,57 @@
             NOM-070-SCFI-2016. Bebidas alcohólicas -mezcal-especificaciones.</p>
     </div>
 
-<br><br>
 
 
 <!--FIRMA DIGITAL-->
-<div style="margin-left: 15px;">
-        <p class="sello">Sello de Unidad de Inspección</p>
-        <div class="images-container">
-            <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
-            <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
-        </div>
-        <p class="textx" style="font-size: 9px;">
-            <strong>AUTORIZÓ</strong>
-            <span style="margin-left: 50px;">
-                <strong>{{ $data->firmante->puesto }} | {{ $data->firmante->name }}</strong>
-            </span>
-        </p>
-
-        <p class="textx" style="font-size: 9px;">
-            <strong>CADENA ORIGINAL</strong>
-            <span style="margin-left: 14px;">
-                <strong>{{ $firmaDigital['cadena_original'] }}</strong>
-            </span>
-        </p>
-
-        <p class="textx" style="font-size: 9px; ">
-            <strong>SELLO DIGITAL</strong>
-        </p>
-
-        <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
-            {{ $firmaDigital['firma'] }}
-        </p>
-
+<div style="margin-left: 2%">
+    <div class="images-container">
+        <img src="{{ $qrCodeBase64 }}" alt="QR" width="75px">
+        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Sello UI" class="image-right">
     </div>
+    <p class="sello">Sello de Unidad de Inspección</p>
+    
 
+        @php
+            use Illuminate\Support\Facades\Storage;
+            $firma = $data->firmante->firma ?? null;
+            $firmaPath = $firma ? 'firmas/' . $firma : null;
+        @endphp
 
+        @if ($firma && Storage::disk('public')->exists($firmaPath))
+            <img style="position: absolute; margin-top: -10%; left: 45%;" height="60px"
+            src="{{ public_path('storage/' . $firmaPath) }}">
+        @endif
 
-    <p class="pie">Entrada en vigor: 15-07-2024 <br>
-        F-UV-04-16 Ver 7
+    <p class="textx" style="margin-top: -5px">
+        <strong>AUTORIZÓ</strong>
+        <span style="margin-left: 54px; display: inline-block; text-align: center; position: relative;">
+            <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
+        </span>
     </p>
-</body>
+    <p class="textx">
+        <strong>CADENA ORIGINAL</strong>
+        <span style="margin-left: 14px;">
+            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+        </span>
+    </p>
+    <p class="textx">
+        <strong>SELLO DIGITAL</strong>
+    </p>
+    <p class="textsello">
+        {{ $firmaDigital['firma'] }}
+    </p>
+</div>
 
+
+    <p class="pie">
+        @if ($id_sustituye)
+        Este dictamen sustituye al: {{ $id_sustituye }}
+        @endif
+        <br>Entrada en vigor: 15-07-2024
+        <br>F-UV-04-16 Ver 7
+    </p>
+
+
+</body>
 </html>

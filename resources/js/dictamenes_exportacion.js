@@ -14,39 +14,31 @@ $(document).ready(function () {
 //FECHAS
 $('#fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);// Sumar 1 año a la fecha inicial
-  //fechaInicial.setDate(fechaInicial.getDate() + 1); // Sumar 1 día a la fecha inicial
-  // Establecer la fecha de vigencia al año sumado sin que el calendario se recargue
-  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-  // Actualizamos el valor de #fecha_vigencia
+  fechaInicial.setDate(fechaInicial.getDate() + 90); // +90 días
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0];
   $('#fecha_vigencia').val(fechaVigencia);
-  // Deshabilitar la interacción con flatpickr en #fecha_vigencia.
   flatpickr("#fecha_vigencia", {
-      dateFormat: "Y-m-d", // Formato de la fecha
-      enableTime: false,    // Desactiva la hora
-      allowInput: true,     // Permite la escritura manual
-      locale: "es",         // Español
-      static: true,         // Establece el calendario como no interactivo
-      disable: true          // Español
+      dateFormat: "Y-m-d",
+      enableTime: false,
+      allowInput: true,
+      locale: "es",
+      static: true,
+      disable: true
   });
 });
 //FECHAS EDIT
 $('#edit_fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);// Sumar 1 año a la fecha iniciaL
-  // Establecer el valor en el campo edit_fecha_vigencia
-  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-  // Actualizamos el valor de #edit_fecha_vigencia
+  fechaInicial.setDate(fechaInicial.getDate() + 90); // +90 días
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0];
   $('#edit_fecha_vigencia').val(fechaVigencia);
-
-  // Deshabilitar la interacción con flatpickr en #edit_fecha_vigencia
   flatpickr("#edit_fecha_vigencia", {
-    dateFormat: "Y-m-d",  // Formato de la fecha
-    enableTime: false,     // Desactiva la hora
-    allowInput: true,      // Permite la escritura manual
-    locale: "es",          // Español
-    static: true,          // Hace que el calendario no se muestre como interactivo
-    disable: true          // Deshabilita la selección
+      dateFormat: "Y-m-d",
+      enableTime: false,
+      allowInput: true,
+      locale: "es",
+      static: true,
+      disable: true
   });
 });
 
@@ -95,7 +87,7 @@ if (dt_user_table.length) {
       { data: '' },
       { data: 'num_dictamen' },
       { data: 'num_servicio' },
-      { data: null, // Se usará null porque combinaremos varios valores
+      { data: null, orderable: false,// Se usará null porque combinaremos varios valores
         render: function(data, type, row) {
           return `
             <strong>${data.numero_cliente}</strong>
@@ -146,7 +138,7 @@ if (dt_user_table.length) {
           }else {
             //var $acta = `<i data-id="${full['numero_cliente']}/${full['url_acta']}" data-empresa="${full['razon_social']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
             var $acta = full['url_acta'].map(url => `
-              <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
+              <i data-id="${full['numero_cliente']}/actas/${url}" data-empresa="${full['razon_social']}"
                  class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
                  data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
               </i>
@@ -167,21 +159,27 @@ if (dt_user_table.length) {
           `;
         }
       }, 
-      {
+      {//caracteristicas
         targets: 4,
-        searchable: false,
+        searchable: true,
         orderable: false,
         responsivePriority: 4, 
         render: function (data, type, full, meta) {
           var $ = full[''];
-          return '<span class="small"> Falta </span>';
+          return `<div class="small">
+                ${full['combinado'] ? '<span class="badge rounded-pill bg-info"><b>Combinado</b></span> <br>' : ''}
+                <b>Lote envasado:</b> ${full['nombre_lote_envasado']} <br>
+                <b>Lote granel:</b> ${full['nombre_lote_granel']}
+
+                ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
+              </div>`;
           }
       },
       {
         ///fechas 
         targets: 5,
-        searchable: false,
-        orderable: false,
+        searchable: true,
+        orderable: true,
         className: 'text-center',//columna centrada
         render: function (data, type, full, meta) {
           var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
@@ -194,10 +192,9 @@ if (dt_user_table.length) {
             </div> `;
           }
       },
-      {
-        ///estatus
+      { ///estatus
         targets: 6,
-        searchable: true,
+        searchable: false,
         orderable: true,
         className: 'text-center',
         render: function (data, type, full, meta) {
@@ -210,7 +207,7 @@ if (dt_user_table.length) {
             } else if ($estatus == 1) {
                 estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
             } else if ($estatus == 2) {
-                estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+                estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
             } else {
               estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
             }
@@ -246,7 +243,7 @@ if (dt_user_table.length) {
       }
     ],
 
-    order: [[2, 'desc']],
+    order: [[1, 'desc']],
     dom:
       '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
       '<"me-5 ms-n2"f>' +
@@ -832,12 +829,12 @@ $(document).ready(function () {
 
   //funcion fechas
   $('#rex_fecha_emision').on('change', function () {
-      var fecha_emision = $(this).val();
-      if (fecha_emision) {
-          var fecha = moment(fecha_emision, 'YYYY-MM-DD');
-          var fecha_vigencia = fecha.add(1, 'years').format('YYYY-MM-DD');
-          $('#rex_fecha_vigencia').val(fecha_vigencia);
-      }
+    var fecha_emision = $(this).val();
+    if (fecha_emision) {
+        var fecha = moment(fecha_emision, 'YYYY-MM-DD');
+        var fecha_vigencia = fecha.add(90, 'days').format('YYYY-MM-DD');
+        $('#rex_fecha_vigencia').val(fecha_vigencia);
+    }
   });
 
   $(document).on('change', '#accion_reexpedir', function () {

@@ -16,7 +16,7 @@ $breadcrumbs = [['link' => 'home', 'name' => 'Home'], ['link' => 'javascript:voi
   @endif
 
   <div class="mb-6">
-    @include('profile.subir-firmas-perfil')
+    @livewire('profile.signature-upload')
 </div>
 
 

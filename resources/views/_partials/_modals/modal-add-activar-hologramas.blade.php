@@ -12,7 +12,7 @@
                 <form id="activarHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
 
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="id_solicitudActivacion" name="id_solicitudActivacion"
                                     class="form-select select2" aria-label="Default select example">
@@ -29,14 +29,7 @@
                         </div>
 
                         
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="folio_activacion"
-                                    placeholder="Introduce el folio" name="folio_activacion"
-                                    aria-label="Nombre del lote" />
-                                <label for="folio_activacion">Folio de activación:</label>
-                            </div>
-                        </div>
+                        
 
                         <div class="col-md-10">
                             <div class="form-floating form-floating-outline mb-6">
@@ -57,10 +50,26 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control" id="folio_activacion"
+                                    placeholder="Introduce el folio" name="folio_activacion"
+                                    aria-label="Nombre del lote" />
+                                <label for="folio_activacion">Folio de activación:</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="no_lote_agranel"
                                     placeholder="Introduce el nombre del lote" name="no_lote_agranel"
                                     aria-label="Nombre del lote" />
                                 <label for="no_lote_agranel">No. de lote granel:</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control" id="certificado_granel"
+                                    placeholder="Introduce el folio del certificado granel" name="certificado_granel"
+                                    aria-label="Certificado granel" />
+                                <label for="certificado_granel">Certificado granel:</label>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -85,20 +94,21 @@
                                 <label for="clase">Clase</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <select multiple class=" form-select select2" id="id_tipo" name="id_tipo"
                                     aria-label="tipo">
                                     <option value="" disabled>Elige un tipo</option>
                                     @foreach ($tipos as $tipo)
-                                        <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                        <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
                                     @endforeach
                                 </select>
                                 <label for="id_tipo">Tipo Agave</label>
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
+                        
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="number" step="0.01"
@@ -109,11 +119,18 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class=" form-select" id="unidad" name="unidad" aria-label="Unidad">
-                                    <option value="Litros">Litros</option>
-                                    <option value="Mililitros">Mililitros</option>
-                                    <option value="Centilitros">Centilitros</option>
+                                    <option value="L">Litros</option>
+                                    <option value="mL">Mililitros</option>
+                                    <option value="cL">Centilitros</option>
                                 </select>
                                 <label for="unidad">Unidad</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" type="text" placeholder="No. de lote de envasado:"
+                                    id="no_lote_envasado" name="no_lote_envasado" />
+                                <label for="no_lote_envasado">No. de lote de envasado:</label>
                             </div>
                         </div>
                     </div>
@@ -135,9 +152,9 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="No. de lote de envasado:"
-                                    id="no_lote_envasado" name="no_lote_envasado" />
-                                <label for="no_lote_envasado">No. de lote de envasado:</label>
+                                <input class="form-control" type="text" placeholder="Edad"
+                                    id="edad" name="edad" />
+                                <label for="edad">Edad:</label>
                             </div>
                         </div>
                     </div>
@@ -235,7 +252,8 @@
 
 <script>
     function cargarInfoServicio() {
-        var id_inspeccion = $('#id_inspeccion').val();
+       
+         var id_inspeccion = $('#id_inspeccion').val();
         if (id_inspeccion) {
             $.ajax({
                 url: '/getDatosInpeccion/' + id_inspeccion,
@@ -244,21 +262,23 @@
                 success: function(response) {
                     // Agregar el enlace dentro de un contenedor específico
                     $('#contenedorActa').html(`
-            <a id="url_acta" target="_blank" href="/files/${response.numero_cliente}/${response.url_acta[0]}">
+            <a id="url_acta" target="_blank" href="/files/${response.numero_cliente}/actas/${response.url_acta[0]}">
                 <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
             </a>
             `);
-
-                    // $('#no_lote_agranel').val(response.solicitud.lote_granel.nombre_lote || '').val();
-                    // $('#categoria').val(response.solicitud.lote_granel.id_categoria).trigger('change');
-                    // $('#clase').val(response.solicitud.lote_granel.id_clase).trigger('change');
-                    // $('#id_tipo').val(response.solicitud.lote_granel.tipo_lote).trigger('change');
-                    $('#cont_neto').val(response.solicitud.lote_envasado.presentacion).val();
-                    $('#unidad').val(response.solicitud.lote_envasado.unidad).val();
-                    //$('#no_analisis').val(response.solicitud.lote_granel.folio_fq).val();
-                    //$('#contenido').val(response.solicitud.lote_granel.cont_alc).val();
-                    $('#no_lote_envasado').val(response.solicitud.lote_envasado.nombre).val();
-                    $('#lugar_envasado').val(response.solicitud.instalacion.direccion_completa).val();
+                     $('#folio_activacion').val(response.num_servicio);
+                     $('#no_lote_agranel').val(response.solicitud.lote_envasado.lotes_granel[0].nombre_lote);
+                    $('#certificado_granel').val(response.solicitud.lote_envasado.lotes_granel[0].certificadoGranel?.num_certificado);
+                     $('#categoria').val(response.solicitud.lote_envasado.lotes_granel[0].id_categoria).trigger('change');
+                     $('#clase').val(response.solicitud.lote_envasado.lotes_granel[0].id_clase).trigger('change');
+                     $('#id_tipo').val(response.solicitud.lote_envasado.lotes_granel[0].tipo_lote).trigger('change');
+                    $('#cont_neto').val(response.solicitud.lote_envasado.presentacion);
+                    $('#unidad').val(response.solicitud.lote_envasado.unidad).trigger('change');
+                    $('#no_analisis').val(response.solicitud.lote_envasado.lotes_granel[0].folio_fq);
+                    $('#contenido').val(response.solicitud.lote_envasado.lotes_granel[0].cont_alc);
+                    $('#no_lote_envasado').val(response.solicitud.lote_envasado.nombre);
+                    $('#lugar_envasado').val(response.solicitud.instalacion?.direccion_completa);
+                    $('#edad').val(response.solicitud.lote_envasado.lotes_granel[0].edad);
 
                 },
                 error: function(xhr) {

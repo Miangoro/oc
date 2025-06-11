@@ -26,22 +26,42 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class PrediosController extends Controller
+{public function UserManagement()
 {
-    public function UserManagement()
-    {
-        $predios = Predios::with('empresa')->get(); // Obtener todos los registros con la relación cargada
-        $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
-        $tipos = tipos::all(); // Obtén todos los tipos de agave
-        $estados = estados::all(); // Obtén todos los estados
-       /*  $documentos = Documentacion::where('id_documento', '=', '34')->get(); */
-        return view('domicilios.find_domicilio_predios_view', [
-            'predios' => $predios, // Pasar los datos a la vista
-            'empresas' => $empresas, // Pasar las empresas a la vista
-            'tipos' => $tipos, // Pasar los tipos a la vista
-            'estados' => $estados,
-            //'documentos' => $documentos // Pasar los documentos a la vista
-        ]);
+    $empresaId = null;
+
+    if (auth()->user()->tipo == 3) {
+        $empresaId = auth()->user()->empresa?->id_empresa;
     }
+
+    // Filtrar predios si el usuario es tipo 3
+    $prediosQuery = Predios::with('empresa');
+
+    if ($empresaId) {
+        $prediosQuery->where('id_empresa', $empresaId);
+    }
+
+    $predios = $prediosQuery->get();
+
+    // Filtrar empresas
+    $empresasQuery = empresa::where('tipo', 2);
+
+    if ($empresaId) {
+        $empresasQuery->where('id_empresa', $empresaId);
+    }
+
+    $empresas = $empresasQuery->get();
+
+    $tipos = tipos::all();
+    $estados = estados::all();
+
+    return view('domicilios.find_domicilio_predios_view', [
+        'predios' => $predios,
+        'empresas' => $empresas,
+        'tipos' => $tipos,
+        'estados' => $estados,
+    ]);
+}
 
 
     public function index(Request $request)
@@ -61,9 +81,19 @@ class PrediosController extends Controller
 
         $search = [];
 
+        if (auth()->user()->tipo == 3) {
+            $empresaId = auth()->user()->empresa?->id_empresa;
+        } else {
+            $empresaId = null;
+        }
+
+
         // Obtener el total de registros filtrados
-        $totalData = Predios::whereHas('empresa', function ($query) {
+        $totalData = Predios::whereHas('empresa', function ($query)  use ($empresaId) {
             $query->where('tipo', 2);
+                        if ($empresaId) {
+                $query->where('id_empresa', $empresaId);
+            }
         })->count();
 
         $totalFiltered = $totalData;
@@ -75,8 +105,11 @@ class PrediosController extends Controller
 
         if (empty($request->input('search.value'))) {
             $predios = Predios::with('empresa') // Carga la relación
-                ->whereHas('empresa', function ($query) {
+                ->whereHas('empresa', function ($query) use ($empresaId){
                     $query->where('tipo', 2);
+                                        if ($empresaId) {
+                            $query->where('id_empresa', $empresaId);
+                        }
                 })
                 ->offset($start)
                 ->limit($limit)
@@ -86,8 +119,11 @@ class PrediosController extends Controller
             $search = $request->input('search.value');
 
             $predios = Predios::with('empresa')
-                ->whereHas('empresa', function ($query) {
+                ->whereHas('empresa', function ($query) use($empresaId) {
                     $query->where('tipo', 2);
+                    if ($empresaId) {
+                        $query->where('id_empresa', $empresaId);
+                    }
                 })
                 ->where(function ($query) use ($search) {
                     $query->whereHas('empresa', function ($q) use ($search) {
@@ -156,6 +192,8 @@ class PrediosController extends Controller
                 $nestedData['superficie'] = $predio->superficie;
                 $nestedData['estatus']=$predio->estatus;
                 $nestedData['hasSolicitud'] = $hasSolicitud;
+                $nestedData['id_solicitud'] = $predio->solicitudes()->first()->id_solicitud ?? null;
+                $nestedData['folio_solicitud'] = $predio->solicitudes()->first()->folio ?? null;
 
                 $data[] = $nestedData;
             }

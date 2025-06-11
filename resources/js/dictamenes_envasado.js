@@ -82,7 +82,7 @@ if (dt_user_table.length) {
           { data: '' },
           { data: 'num_dictamen' },
           { data: 'num_servicio' },
-          { data: null,
+          { data: null, orderable: false,
             render: function(data, type, row) {
                 return `
                 <strong>${data.numero_cliente}</strong>
@@ -129,7 +129,7 @@ if (dt_user_table.length) {
                 var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
               }else {
                 var $acta = full['url_acta'].map(url => `
-                  <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
+                  <i data-id="${full['numero_cliente']}/actas/${url}" data-empresa="${full['razon_social']}"
                      class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
                      data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
                   </i>
@@ -149,18 +149,27 @@ if (dt_user_table.length) {
           }, 
           {
             targets: 4,
-            searchable: false,
+            searchable: true,
             orderable: false, 
             responsivePriority: 4, 
             render: function (data, type, full, meta) {
-              return '<span class="small"> Falta </span>';
+              return `<div class="small">
+                <b>Lote envasado:</b> ${full['lote_envasado']} <br>
+                <b>Lote granel:</b> ${full['lote_granel']} <br>
+                <b>Folio fq:</b> ${full['folio_fq']} <br>
+                <b>Tipo maguey:</b> ${full['tipo_maguey']} <br>
+                <b>Marca:</b> ${full['marca']} <br>
+                <b>Presentación:</b> ${full['presentacion']} <br>
+                <b>sku:</b> ${full['sku']}
+                
+                ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
+              </div>`;
             }     
           },
-          {
-            ///fechas
-            targets: 5, 
-            searchable: false,
-            orderable: false,
+          { ///fechas
+            targets: 5,
+            searchable: true,
+            orderable: true,
             className: 'text-center',//columna centrada
             render: function (data, type, full, meta) {
               var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
@@ -176,7 +185,7 @@ if (dt_user_table.length) {
           {
             ///estatus
             targets: 6,
-            searchable: true,
+            searchable: false,
             orderable: true,
             className: 'text-center',
             render: function (data, type, full, meta) {
@@ -189,7 +198,7 @@ if (dt_user_table.length) {
                 } else if ($estatus == 1) {
                     estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
                 } else if ($estatus == 2) {
-                    estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+                    estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
                 } else {
                   estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
                 }
@@ -221,7 +230,7 @@ if (dt_user_table.length) {
           }
       ],
 
-      order: [[2, 'desc']],
+      order: [[1, 'desc']],
       dom:
           '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
           '<"me-5 ms-n2"f>' +
@@ -244,7 +253,7 @@ if (dt_user_table.length) {
               "sPrevious": "Anterior"
           }
       },
-      // Buttons with Dropdown
+      // Opciones Exportar Documentos
       buttons: [
         {
           extend: 'collection',

@@ -331,12 +331,14 @@
             </a>
             <div class="authentication-inner row m-0">
                 <div class="santa"></div>
-                <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center justify-content-center p-12 pb-2">
-                    <video autoplay muted loop>
-                        <source src="{{ asset('video/fondo.mp4') }}" type="video/mp4">
-                        Tu navegador no soporta el formato de video
-                    </video>
-                </div>
+               <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center justify-content-center p-12 pb-2 min-vh-100">
+  <img style="inset-block-end: 0%" src="{{ asset('assets/img/fondo_oc_cidam.jpg') }}"
+       class="authentication-image w-100 h-100 object-fit-cover"
+       alt="mask"
+       data-app-light-img="fondo_oc_cidam.jpg"
+       data-app-dark-img="fondo_oc_cidam.jpg" />
+</div>
+
                 <div
                     class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-sm-12 px-12 py-6">
                     <div class="w-px-400 mx-auto pt-5 pt-lg-0">
@@ -404,8 +406,7 @@
                                     </a>
                                 @endif
                             </div>
-                            <button class="btn btn-primary d-grid w-100 border-effect-boton">
-                                Iniciar sesión
+                            <button class="btn btn-primary d-grid w-100 border-effect-boton"><i class="ri-login-box-line"></i> Iniciar sesión
                             </button>
                         </form>
                         <p class="text-center">
@@ -460,10 +461,11 @@
             </a>
             <div class="authentication-inner row m-0">
                 <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center justify-content-center p-12 pb-2">
-                    <video autoplay muted loop style="max-width: 100%; height: 100%;">
+                    <!--<video autoplay muted loop style="max-width: 100%; height: 100%;">
                         <source src="{{ asset('video/fondo.mp4') }}" type="video/mp4">
                         Tu navegador no soporta el formato de video
-                    </video>
+                    </video>-->
+                    <img src="sasdas" class="authentication-image" alt="mask" data-app-light-img="{{ asset('video/fondo_oc_cidam.jpg') }}" data-app-dark-img="{{ asset('video/fondo_oc_cidam.jpg') }}">
                 </div>
                 <div
                     class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-6 px-4">

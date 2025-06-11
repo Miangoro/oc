@@ -76,11 +76,19 @@ class solicitudHolograma extends Controller
         $orderColumnIndex = $request->input('order.0.column');
         $order = $columns[$orderColumnIndex] ?? 'id_solicitud';
         $dir = $request->input('order.0.dir');
-
         $searchValue = $request->input('search.value');
+        
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
+        }
 
-        $query = ModelsSolicitudHolograma::with(['empresa.empresaNumClientes', 'user', 'marcas']);
 
+        $query = ModelsSolicitudHolograma::with(['empresa.empresaNumClientes', 'user', 'marcas'])
+        ->when($empresaId, function ($q) use ($empresaId) {
+            $q->where('id_empresa', $empresaId);
+        });
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('estatus', 'LIKE', "%{$searchValue}%")
@@ -105,7 +113,9 @@ class solicitudHolograma extends Controller
             });
         }
 
-        $totalData = ModelsSolicitudHolograma::count();
+        $totalData = ModelsSolicitudHolograma::when($empresaId, function ($q) use ($empresaId) {
+            $q->where('id_empresa', $empresaId);
+        })->count();
         $totalFiltered = $query->count();
 
         $users = $query->offset($start)
@@ -119,8 +129,11 @@ class solicitudHolograma extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
-                
+                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)
+                ->whereNotNull('numero_cliente')
+                ->value('numero_cliente');
+
+
                 $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
                 $name = \App\Models\User::where('id', $user->id_solicitante)->value('name');
 
@@ -144,9 +157,9 @@ class solicitudHolograma extends Controller
                     'costo_envio' => $user->costo_envio,
                     'no_guia' => $user->no_guia,
                     'estatus' => $user->estatus,
-                    'folio_inicial' => '<a target="_blank" href="' . url('/pages/hologramas-validacion/'.$numero_cliente.$user->marcas->folio.'-'.str_pad($user->folio_inicial, 6, '0', STR_PAD_LEFT)) . '">' . $numero_cliente.$user->marcas->folio.'-'.str_pad($user->folio_inicial, 6, '0', STR_PAD_LEFT) . '</a>',
+                    'folio_inicial' => '<a target="_blank" href="' . url('/holograma/'.$numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_inicial, 7, '0', STR_PAD_LEFT)) . '">' . $numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_inicial, 7, '0', STR_PAD_LEFT) . '</a>',
 
-                    'folio_final' => '<a target="_Blank" href="'.url('http://localhost:8000/pages/hologramas-validacion/'.$numero_cliente.$user->marcas->folio.'-'.str_pad($user->folio_final, 6, '0', STR_PAD_LEFT)).'">'.$numero_cliente.$user->marcas->folio.'-'.str_pad($user->folio_final, 6, '0', STR_PAD_LEFT).'</a>',
+                    'folio_final' => '<a target="_Blank" href="'.url('/holograma/'.$numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_final, 7, '0', STR_PAD_LEFT)).'">'.$numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_final, 7, '0', STR_PAD_LEFT).'</a>',
                     'activados' => $user->cantidadActivados($user->id_solicitud),
                     'restantes' => max(0, ($user->cantidad_hologramas - $user->cantidadActivados($user->id_solicitud) - $user->cantidadMermas($user->id_solicitud))),
                     'mermas' => $user->cantidadMermas($user->id_solicitud),
@@ -186,6 +199,7 @@ class solicitudHolograma extends Controller
         $request->validate([
             'id_empresa' => 'required|integer',
             'id_marca' => 'required|integer',
+            'tipo' => 'required|in:A,J',
             'cantidad_hologramas' => 'required|integer',
             'id_direccion' => 'required|integer',
             'comentarios' => 'nullable|string|max:1000',
@@ -193,6 +207,7 @@ class solicitudHolograma extends Controller
         // Obtener el último folio_final registrado con la misma id_empresa e id_marca
         $ultimoFolio = ModelsSolicitudHolograma::where('id_empresa', $request->id_empresa)
             ->where('id_marca', $request->id_marca)
+            ->where('tipo',$request->tipo)
             ->orderBy('folio_final', 'desc')
             ->value('folio_final');
         // Si existe un registro previo, usar su folio_final + 1 como el nuevo folio_inicial, de lo contrario iniciar en 1
@@ -217,6 +232,7 @@ class solicitudHolograma extends Controller
         $holograma->folio = $nuevoFolio;
         $holograma->id_empresa = $request->id_empresa;
         $holograma->id_marca = $request->id_marca;
+        $holograma->tipo = $request->tipo;
         $holograma->id_solicitante = Auth::user()->id; // Obtiene el ID del usuario actual
         $holograma->cantidad_hologramas = $request->cantidad_hologramas;
         $holograma->id_direccion = $request->id_direccion;
@@ -251,26 +267,26 @@ class solicitudHolograma extends Controller
             $holograma->folio = $request->input('edit_folio');
             $holograma->id_empresa = $request->input('edit_id_empresa');
             $holograma->id_marca = $request->input('edit_id_marca');
+            $holograma->tipo = $request->tipo;
             $holograma->id_solicitante = Auth::user()->id; // Actualiza el ID del solicitante con el ID del usuario actual
             $holograma->cantidad_hologramas = $request->input('edit_cantidad_hologramas');
             $holograma->id_direccion = $request->input('edit_id_direccion');
             $holograma->comentarios = $request->input('edit_comentarios');
             // Solo modificar el folio_final si el folio_inicial es 1
-            if ($holograma->folio_inicial == 1) {
-                // Calcular el folio final basado en la cantidad de hologramas
-                $holograma->folio_final = $holograma->folio_inicial + $request->input('edit_cantidad_hologramas') - 1;
-            } else {
+
                 // Si no es el primer registro, recalcular folio_inicial y folio_final basado en el último registro de la misma empresa y marca
                 $ultimoFolio = ModelsSolicitudHolograma::where('id_empresa', $request->input('edit_id_empresa'))
                     ->where('id_marca', $request->input('edit_id_marca'))
                     ->where('id_solicitud', '!=', $holograma->id_solicitud) // Excluir el registro actual
+                    ->where('tipo',$request->tipo)
                     ->orderBy('folio_final', 'desc') // Ordenar por el folio_final más alto
                     ->value('folio_final'); // Obtener el valor del folio_final más alto
                 // Si existe un registro previo, usar su folio_final + 1 como el nuevo folio_inicial
+
                 $folioInicial = $ultimoFolio ? $ultimoFolio + 1 : 1;
                 $holograma->folio_inicial = $folioInicial;
                 $holograma->folio_final = $folioInicial + $request->input('edit_cantidad_hologramas') - 1;
-            }
+
             // Guarda los cambios en la base de datos
             $holograma->save();
             // Retorna una respuesta exitosa
@@ -344,7 +360,7 @@ class solicitudHolograma extends Controller
                 return !empty($numero);
             });
 
-            foreach ($request->id_documento as $index => $id_documento) {
+          /*  foreach ($request->id_documento as $index => $id_documento) {
                 // Agregar nuevo documento si no existe
                 if ($request->hasFile('url') && isset($request->file('url')[$index])) {
                     $file = $request->file('url')[$index];
@@ -359,7 +375,7 @@ class solicitudHolograma extends Controller
                     $documentacion_url->id_empresa = $request->empresa;
                     $documentacion_url->save();
                 }
-            }
+            }*/
             // Retorna una respuesta exitosa
             return response()->json(['success' => 'Solicitud de envio actualizada correctamente']);
         } catch (\Exception $e) {
@@ -403,7 +419,7 @@ class solicitudHolograma extends Controller
 
             $holograma->save();
             //metodo para guardar pdf
-            
+
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
             return !empty($numero);
@@ -448,7 +464,7 @@ class solicitudHolograma extends Controller
         return $pdf->stream($datos->folio.'.pdf');
     }
 
-    
+
     //Ver activos
     public function editActivos($id)
     {
@@ -542,5 +558,5 @@ class solicitudHolograma extends Controller
 
 
 
-    
+
 }

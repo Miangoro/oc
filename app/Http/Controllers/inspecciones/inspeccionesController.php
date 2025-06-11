@@ -58,7 +58,7 @@ class inspeccionesController extends Controller
             2 => 'folio',
             3 => 'num_servicio',
             4 => 'razon_social',
-            5 => 'fecha_solicitud',
+            5 => '',//fecha_solicitud
             6 => 'tipo',
             7 => 'direccion_completa',
             8 => 'inspector',
@@ -68,16 +68,16 @@ class inspeccionesController extends Controller
             12 => 'id_inspeccion',
             13 => 'id_empresa',
         ];
-        
+
         $limit = $request->input('length');
         $start = $request->input('start');
         $orderIndex = $request->input('order.0.column');
         $orderColumn = $columns[$orderIndex] ?? 'id_solicitud';
         $dir = $request->input('order.0.dir', 'asc');
         $search = $request->input('search.value');
-        
+
         $query = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion');
-        
+
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('id_solicitud', 'LIKE', "%{$search}%")
@@ -96,15 +96,22 @@ class inspeccionesController extends Controller
                     });
             });
         }
-        
+
         $totalData = solicitudesModel::count();
         $totalFiltered = $query->count();
-        
+
         // Obtener datos paginados sin orden
         $solicitudes = $query->get();
-        
+
         // Ordenar manualmente si es un campo de relación
-        if (in_array($orderColumn, ['num_servicio', 'razon_social', 'tipo', 'name'])) {
+        if ($orderColumn === 'folio') {
+            // Ordenar por la parte numérica del folio "SOL-#####"
+            $solicitudes = $solicitudes->sortBy(function ($item) {
+                // Extraemos el número, asumiendo formato 'SOL-#####'
+                return intval(substr($item->folio, 4));
+            }, SORT_NUMERIC, $dir === 'desc');
+
+        } elseif (in_array($orderColumn, ['num_servicio', 'razon_social', 'tipo', 'name'])) {
             $solicitudes = $solicitudes->sortBy(function ($item) use ($orderColumn) {
                 switch ($orderColumn) {
                     case 'num_servicio':
@@ -117,14 +124,18 @@ class inspeccionesController extends Controller
                         return $item->inspector->name ?? '';
                 }
             }, SORT_REGULAR, $dir === 'desc');
+
         } else {
             // Ordenar campos propios del modelo
             $solicitudes = $solicitudes->sortBy($orderColumn, SORT_REGULAR, $dir === 'desc');
         }
-        
+
         // Paginar manualmente
         $solicitudes = $solicitudes->slice($start, $limit)->values();
-        
+
+
+
+
 
         $data = [];
 
@@ -134,9 +145,9 @@ class inspeccionesController extends Controller
             foreach ($solicitudes as $solicitud) {
                 $empresa = $solicitud->empresa;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                ? $empresa->empresaNumClientes
+                    ? $empresa->empresaNumClientes
                     ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-                : 'N/A';
+                    : 'N/A';
                 $nestedData['numero_cliente'] = $numero_cliente;
                 $nestedData['id_inspeccion'] = $solicitud->inspeccion->id_inspeccion ?? '0';
                 $nestedData['id_empresa'] = $solicitud->empresa->id_empresa ?? '0';
@@ -144,6 +155,8 @@ class inspeccionesController extends Controller
                 $nestedData['id_acta'] = $solicitud->inspeccion->actas_inspeccion->id_acta ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids  ?? 'N/A';
                 $nestedData['folio'] = '<b class="text-primary">' . $solicitud->folio . '</b>';
+                $nestedData['folio_info'] = $solicitud->folio;
+                $nestedData['num_servicio_info'] = $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
                 $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</apan>';
                 $nestedData['razon_social'] = $solicitud->empresa->razon_social  ?? 'N/A';
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
@@ -152,44 +165,60 @@ class inspeccionesController extends Controller
                 $nestedData['tipo_instalacion'] = $solicitud->instalacion->tipo  ?? '';
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</span>'; // Maneja el caso donde el organismo sea nulo
+                $nestedData['inspectorName'] = $solicitud->inspector->name ?? 'Sin inspector';
                 $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? '';
-                $nestedData['fecha_servicio'] = $nestedData['fecha_servicio'] = $solicitud->inspeccion && $solicitud->inspeccion->fecha_servicio
-                ? Helpers::formatearFechaHora($solicitud->inspeccion->fecha_servicio)
-                : '<span class="badge bg-danger">Sin asignar</span>';
-            
-                $urls = $solicitud->documentacion(69)->pluck('url')->toArray();
-                switch ($solicitud->inspeccion?->dictamen?->tipo_dictamen) {
-                    case 1:
-                        $tipo_dictamen = 'dictamen_productor';
-                        break;
-                    case 2:
-                        $tipo_dictamen = 'dictamen_envasador';
-                        break;
-                
-                    case 3:
-                        $tipo_dictamen = 'dictamen_comercializador';
-                        break;
-                    case 4:
-                        $tipo_dictamen = 'dictamen_almacen';
-                        break;
-                    default:
-                        $tipo_dictamen = 'Sin tipo';
-                        break;
-                }
-                
-                $nestedData['url_dictamen'] = $solicitud->inspeccion?->dictamen?->id_dictamen 
-                    ? $tipo_dictamen . '/' . $solicitud->inspeccion->dictamen->id_dictamen 
-                    : 'Sin subir';
-                
+                $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo ?? 'N/A';
 
-            // Comprobamos si $urls está vacío
-            if (empty($urls)) {
-                // Si está vacío, asignamos la etiqueta de "Sin subir"
-                $nestedData['url_acta'] = 'Sin subir';
-            } else {
-                // Si hay URLs, las unimos en una cadena separada por comas
-                $nestedData['url_acta'] = implode(', ', $urls);
-            }
+                $nestedData['fecha_servicio'] = $nestedData['fecha_servicio'] = $solicitud->inspeccion && $solicitud->inspeccion->fecha_servicio
+                    ? Helpers::formatearFechaHora($solicitud->inspeccion->fecha_servicio)
+                    : '<span class="badge bg-danger">Sin asignar</span>';
+
+                $urls = $solicitud->documentacion(69)->pluck('url')->toArray();
+                if ($solicitud->inspeccion?->dictamen) {
+                    switch ($solicitud->inspeccion->dictamen->tipo_dictamen) {
+                        case 1:
+                            $tipo_dictamen = 'dictamen_productor';
+                            break;
+                        case 2:
+                            $tipo_dictamen = 'dictamen_envasador';
+                            break;
+                        case 3:
+                            $tipo_dictamen = 'dictamen_comercializador';
+                            break;
+                        case 4:
+                            $tipo_dictamen = 'dictamen_almacen';
+                            break;
+                        default:
+                            $tipo_dictamen = 'Sin tipo';
+                            break;
+                    }
+                    $id = $solicitud->inspeccion->dictamen->id_dictamen;
+                } elseif ($solicitud->inspeccion?->dictamenGranel) {
+                    $tipo_dictamen = 'dictamen_granel';
+                    $id = $solicitud->inspeccion->dictamenGranel->id_dictamen;
+                } elseif ($solicitud->inspeccion?->dictamenEnvasado) {
+                    $tipo_dictamen = 'dictamen_envasado';
+                    $id = $solicitud->inspeccion->dictamenEnvasado->id_dictamen_envasado;
+                }elseif ($solicitud->inspeccion?->dictamenExportacion) {
+                    $tipo_dictamen = 'dictamen_exportacion';
+                    $id = $solicitud->inspeccion->dictamenExportacion->id_dictamen;
+                } else {
+                    $tipo_dictamen = null;
+                    $id = null;
+                }
+
+                $nestedData['url_dictamen'] = $id ? $tipo_dictamen . '/' . $id : 'Sin subir';
+
+
+
+                // Comprobamos si $urls está vacío
+                if (empty($urls)) {
+                    // Si está vacío, asignamos la etiqueta de "Sin subir"
+                    $nestedData['url_acta'] = 'Sin subir';
+                } else {
+                    // Si hay URLs, las unimos en una cadena separada por comas
+                    $nestedData['url_acta'] = implode(', ', $urls);
+                }
 
 
 
@@ -263,8 +292,26 @@ class inspeccionesController extends Controller
                 'observaciones' => $request->observaciones ?? '',
             ]
         );
+
+                // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
+        $users = User::whereIn('id', [$request->id_inspector])->get(); // IDs de los usuarios
+
+        // Notificación 1
+        $data1 = [
+            'title' => 'Nueva inspección',
+            'message' => 'Se te asignó la inspección '.$request->num_servicio,
+            'url' => 'inspecciones',
+        ];
+
+        // Iterar sobre cada usuario y enviar la notificación
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+
+
     }
 
+    
 
 
     //Pdfs de inspecciones
@@ -274,7 +321,10 @@ class inspeccionesController extends Controller
 
         $datos = inspecciones::with(['inspector', 'solicitud.instalacion', 'solicitud.tipo_solicitud'])->find($id_inspeccion);
 
-        $fecha_servicio = Helpers::formatearFecha($datos->fecha_servicio);
+        $fecha_servicio = !empty($datos->fecha_servicio)
+            ? Helpers::formatearFecha($datos->fecha_servicio)
+            : null;
+
         $pdf = Pdf::loadView('pdfs.oficioDeComision', ['datos' => $datos, 'fecha_servicio' => $fecha_servicio]);
         return $pdf->stream('F-UV-02-09 Oficio de Comisión Ed.5, Vigente.pdf');
     }
@@ -282,8 +332,9 @@ class inspeccionesController extends Controller
     public function pdf_orden_servicio($id_inspeccion)
     {
         $datos = inspecciones::with(['inspector', 'solicitud.instalacion', 'solicitud.empresa.empresaNumClientes'])->find($id_inspeccion);
-
-        $fecha_servicio = Helpers::formatearFecha($datos->fecha_servicio);
+        $fecha_servicio = !empty($datos->fecha_servicio)
+            ? Helpers::formatearFecha($datos->fecha_servicio)
+            : null;
         $pdf = Pdf::loadView('pdfs.ordenDeServicio', ['datos' => $datos, 'fecha_servicio' => $fecha_servicio]);
         return $pdf->stream('F-UV-02-01 Orden de servicio Ed. 5, Vigente.pdf');
     }
@@ -304,13 +355,17 @@ class inspeccionesController extends Controller
             foreach ($request->file('url') as $index => $file) {
                 if ($request->id_solicitud) {
                     // Buscar el registro existente
+                   if ($request->id_solicitud && $request->id_documento[$index] == 69) {
                     $documentacion_url = Documentacion_url::where('id_relacion', $request->id_solicitud)
-                        ->where('id_documento', $request->id_documento[$index])
+                        ->where('id_documento', 69)
                         ->first();
-        
+                } else {
+                    $documentacion_url = null;
+                }
+
                     // Si existe un registro, elimina el archivo anterior
                     if ($documentacion_url) {
-                        $existingFilePath = 'uploads/' . $numeroCliente . '/' . $documentacion_url->url;
+                        $existingFilePath = 'uploads/' . $numeroCliente . '/actas/' . $documentacion_url->url;
                         if (Storage::disk('public')->exists($existingFilePath)) {
                             Storage::disk('public')->delete($existingFilePath);
                         }
@@ -321,38 +376,25 @@ class inspeccionesController extends Controller
                         $documentacion_url->id_documento = $request->id_documento[$index];
                         $documentacion_url->id_empresa = $sol->id_empresa;
                     }
-        
+
                     // Procesar el nuevo archivo
                     $filename = str_replace('/', '-', $request->nombre_documento[$index]) . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-        
+                    $filePath = $file->storeAs('uploads/' . $numeroCliente . '/actas/', $filename, 'public');
+
                     // Actualizar los datos del registro
                     $documentacion_url->nombre_documento = str_replace('/', '-', $request->nombre_documento[$index]);
                     $documentacion_url->url = $filename; // Guardar solo el nombre del archivo
                     $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null; // Usa null si no hay fecha
                     $documentacion_url->save();
-        
+
                     // Construir el mensaje
                     $mensaje = str_replace('/', '-', $request->nombre_documento[$index]) . ", " . $mensaje;
                 }
             }
         }
-        
 
-        // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
 
-        // Notificación 1
-        $data1 = [
-            'title' => 'Adjuntó resultados de inspección',
-            'message' => $mensaje,
-            'url' => 'inspecciones',
-        ];
-
-        // Iterar sobre cada usuario y enviar la notificación
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
-        }
+  
     }
 
     // Método para obtener una guía por ID
@@ -360,9 +402,16 @@ class inspeccionesController extends Controller
     {
         try {
             // Aquí obtienes el acta de inspección junto con sus testigos
-            $acta = actas_inspeccion::with('actas_testigo', 'acta_produccion_mezcal', 'actas_equipo_mezcal', 'actas_unidad_envasado', 'actas_unidad_comercializacion',
-             'actas_equipo_envasado','actas_produccion')->findOrFail($id_acta);
-    
+            $acta = actas_inspeccion::with(
+                'actas_testigo',
+                'acta_produccion_mezcal',
+                'actas_equipo_mezcal',
+                'actas_unidad_envasado',
+                'actas_unidad_comercializacion',
+                'actas_equipo_envasado',
+                'actas_produccion'
+            )->findOrFail($id_acta);
+
             return response()->json($acta);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener el acta por ID'], 500);
@@ -373,13 +422,13 @@ class inspeccionesController extends Controller
     {
         try {
             // Aquí obtienes el acta de inspección junto con sus testigos
-            $datos = inspecciones::where('id_solicitud',$id_solicitud)->first();
-            return response()->json(['success' => true, 'data' =>$datos]);
+            $datos = solicitudesModel::with('inspeccion', 'empresa')->where('id_solicitud', $id_solicitud)->first();
+            return response()->json(['success' => true, 'data' => $datos]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener los datos de la inspección'], 500);
         }
     }
-    
+
     // Método para insertar el formulario de Acta de Inspección
     public function store(Request $request)
     {
@@ -549,5 +598,45 @@ class inspeccionesController extends Controller
         $hora_llenado_fin = Helpers::extraerHora($datos->actas_inspeccion->fecha_fin);
         $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion', compact('datos', 'hora_llenado', 'fecha_llenado', 'fecha_llenado_fin', 'hora_llenado_fin'));
         return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
+    }
+    public function etiqueta_muestra($id_inspeccion)
+    {
+        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
+        $pdf = Pdf::loadView('pdfs.Etiqueta_agave_art', ['datos' => $datos]);
+        return $pdf->stream('Etiqueta para agave (%ART).pdf');
+    }
+
+    public function etiqueta_granel($id_inspeccion)
+    {
+        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
+        // Renderizar el PDF por primera vez para obtener el total de páginas
+        $pdf = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', ['datos' => $datos]);
+        $dompdf = $pdf->getDomPDF();
+        $dompdf->render();
+        // Obtener el total de páginas
+        $totalPaginas = $dompdf->get_canvas()->get_page_count();
+        // Pasar el total de páginas a la vista para la segunda renderización
+        $pdfFinal = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', [
+            'totalPaginas' => $totalPaginas,
+            'datos' => $datos
+        ]);
+
+        // Retornar el PDF final
+        return $pdfFinal->stream('Etiqueta para lotes de mezcal a granel.pdf');
+    }
+
+    public function etiqueta_barrica($id_inspeccion)
+    {
+        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
+        $pdf = Pdf::loadView('pdfs.Etiqueta_Barrica', ['datos' => $datos]);
+        return $pdf->stream('Etiqueta_ingreso_a_barrica.pdf');
+    }
+
+    public function etiqueta($id_inspeccion)
+    {
+        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
+
+        $pdf = Pdf::loadView('pdfs.Etiquetas_tapas_sellado',  ['datos' => $datos]);
+        return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
 }

@@ -1,11 +1,12 @@
-<div class="modal fade" id="editSolicitudDictamen" tabindex="-1">
+<div class="modal fade" id="editSolicitudDictamen" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
                 <h5 class="modal-title text-white">Editar solicitud de dictaminación de instalaciones</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-10">
+            <div class="modal-body p-8">
+                <p class="solicitud badge bg-primary"></p>
                 <form id="addEditSolicitud">
                     @csrf
 
@@ -40,16 +41,12 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select" id="edit_id_instalacion" name="id_instalacion"
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select class="form-select select2" id="edit_id_instalacion" name="id_instalacion"
                                     aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
-
-                                <button type="button" class="btn btn-primary" id="abrirModalInstalaciones"><i
-                                        class="ri-add-line"></i> Nueva instalación</button>
-
                             </div>
                         </div>
                     </div>
@@ -101,9 +98,9 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="btnEditDicIns"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>

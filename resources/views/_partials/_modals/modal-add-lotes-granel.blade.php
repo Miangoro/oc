@@ -22,7 +22,9 @@
                                         data-error-message="por favor selecciona la empresa">
                                         <option value="" disabled selected>Selecciona el cliente</option>
                                         @foreach ($empresas as $empresa)
-                                            <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                            <option value="{{ $empresa->id_empresa }}">
+                                                {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                                | {{ $empresa->razon_social }}</option>
                                             </option>
                                         @endforeach
                                     </select>
@@ -41,17 +43,17 @@
                         </div>
                         <!-- Campo para seleccionar lote original -->
                         <div class="row">
-                          <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <select id="tipo_lote" name="tipo_lote" class=" form-select"
-                                    data-error-message="Por favor selecciona el tipo de lote">
-                                    <option value="" disabled selected>Selecciona el tipo de lote</option>
-                                    <option value="1">Certificación por OC CIDAM</option>
-                                    <option value="2">Certificado por otro organismo</option>
-                                </select>
-                                <label for="tipo_lote">Tipo de Lote</label>
+                            <div class="col-md-4">
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <select id="tipo_lote" name="tipo_lote" class=" form-select"
+                                        data-error-message="Por favor selecciona el tipo de lote">
+                                        <option value="" disabled selected>Selecciona el tipo de lote</option>
+                                        <option value="1">Certificación por OC CIDAM</option>
+                                        <option value="2">Certificado por otro organismo</option>
+                                    </select>
+                                    <label for="tipo_lote">Tipo de Lote</label>
+                                </div>
                             </div>
-                        </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="es_creado_a_partir" name="es_creado_a_partir" class="form-select">
@@ -64,27 +66,29 @@
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
-                              <div class="form-floating form-floating-outline">
-                                  <input type="text" class="form-control" id="id_tanque" name="id_tanque" placeholder="ID del Tanque(s)" aria-label="ID del Tanque">
-                                  <label for="id_tanque">ID del Tanque(s)</label>
-                              </div>
-                          </div>
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" class="form-control" id="id_tanque" name="id_tanque"
+                                        placeholder="ID del Tanque(s)" aria-label="ID del Tanque">
+                                    <label for="id_tanque">ID del Tanque(s)</label>
+                                </div>
+                            </div>
                         </div>
 
 
                     </div>
                     <div id="addLotes" class="d-none">
-                      <table class="table table-bordered shadow-lg">
-                          <thead>
-                              <tr>
-                                  <th style="width: 30px"><button type="button" class="btn btn-primary add-row-lotes"> <i
-                                    class="ri-add-line"></i> </button></th>
-                                <th style="width: 70%">Lote a granel</th>
-                                <th>Volumen parcial</th>
-                              </tr>
-                          </thead>
-                          <tbody id="contenidoGraneles">
-{{--                               <tr data-row-index="0">
+                        <table class="table table-bordered shadow-lg">
+                            <thead>
+                                <tr>
+                                    <th style="width: 30px"><button type="button"
+                                            class="btn btn-primary add-row-lotes"> <i class="ri-add-line"></i> </button>
+                                    </th>
+                                    <th style="width: 70%">Lote a granel</th>
+                                    <th>Volumen parcial</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contenidoGraneles">
+                                {{--                               <tr data-row-index="0">
                                   <th>
                                       <button type="button" class="btn btn-danger" disabled>
                                           <i class="ri-delete-bin-5-fill"></i>
@@ -100,27 +104,29 @@
                                              name="volumenes[0][volumen_parcial]" id="volumen_parcial_0">
                                   </td>
                               </tr> --}}
-                          </tbody>
-                      </table>
-                  </div>
+                            </tbody>
+                        </table>
+                    </div>
 
 
                     <div class="form-section mb-4 p-3 border rounded">
                         <!-- Sección para información del lote -->
                         <h6 class="mb-3">Detalles del Lote</h6>
                         <div class="row">
-                          <div class="col-md-6 d-none" id="mostrar_guias">
-                            <div class="d-flex align-items-center mb-3 input-group input-group-merge">
-                                <div class="flex-grow-1">
-                                    <select id="id_guia" name="id_guia[]" class="select2 form-select" multiple data-error-message="Por favor selecciona una guia">
-                                        {{-- <option value="" disabled selected>Seleccione una guía</option> --}}
-                                    </select>
+                            <div class="col-md-6 d-none" id="mostrar_guias">
+                                <div class="d-flex align-items-center mb-3 input-group input-group-merge">
+                                    <div class="flex-grow-1">
+                                        <select id="id_guia" name="id_guia[]" class="select2 form-select" multiple
+                                            data-error-message="Por favor selecciona una guia">
+                                            {{-- <option value="" disabled selected>Seleccione una guía</option> --}}
+                                        </select>
+                                    </div>
+                                    <a href="../guias/guias_de_agave" class="btn btn-primary"
+                                        style="padding: 0.75rem 1.5rem;" target="_blank" role="button">
+                                        <i class="ri-menu-search-line"></i> Ver guías
+                                    </a>
                                 </div>
-                                <a href="../guias/guias_de_agave" class="btn btn-primary" style="padding: 0.75rem 1.5rem;" target="_blank" role="button">
-                                    <i class="ri-menu-search-line"></i> Ver guías
-                                </a>
                             </div>
-                        </div>
                             <div class="col-md-12" id="volmen_in">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="volumen" name="volumen"
@@ -172,15 +178,17 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                              <div class="form-floating form-floating-outline mb-4">
-                                  <select id="tipo_agave" name="id_tipo[]" class="select2 form-select" multiple>
-                                      @foreach ($tipos as $tipo)
-                                          <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
-                                      @endforeach
-                                  </select>
-                                  <label for="tipo_agave">Tipo de Agave</label>
-                              </div>
-                          </div>
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <select id="tipo_agave" name="id_tipo[]" class="select2 form-select" multiple>
+                                        @foreach ($tipos as $tipo)
+                                            <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}
+                                                ({{ $tipo->cientifico }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <label for="tipo_agave">Tipo de Agave</label>
+                                </div>
+                            </div>
 
 
                         </div>
@@ -203,63 +211,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Tipo de análisis</th>
-                                        <th>No. de Análisis Fisicoquímico</th>
-                                        <th>Documento</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($documentos as $documento)
-                                        <!-- Primer bloque -->
-                                        <tr>
-                                            <td>
-                                              <span>Análisis completo</span>
-                                                <input hidden readonly value="Análisis completo" type="text"
-                                                    class="form-control form-control-sm" id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control form-control-sm"
-                                                    id="date{{ $documento->id_documento }}" name="folio_fq_completo">
-                                            </td>
-                                            <td>
-                                                <input class="form-control form-control-sm" type="file"
-                                                    id="file{{ $documento->id_documento }}" name="url[]">
-                                                <input value="{{ $documento->id_documento }}" class="form-control"
-                                                    type="hidden" name="id_documento[]">
-                                                <input value="{{ $documento->nombre }}" class="form-control"
-                                                    type="hidden" name="nombre_documento[]">
-                                            </td>
-                                        </tr>
 
-                                        <!-- Segundo bloque -->
-                                        <tr>
-                                            <td>
-                                              <span>Ajuste de grado</span>
-                                                <input hidden readonly value="Ajuste de grado" type="text"
-                                                    class="form-control form-control-sm"
-                                                    id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control form-control-sm"
-                                                    id="date{{ $documento->id_documento }}-2" name="folio_fq_ajuste">
-                                            </td>
-                                            <td>
-                                                <input class="form-control form-control-sm" type="file"
-                                                    id="file{{ $documento->id_documento }}-2" name="url[]">
-                                                <input value="{{ $documento->id_documento }}" class="form-control"
-                                                    type="hidden" name="id_documento[]">
-                                                <input value="{{ $documento->nombre }}" class="form-control"
-                                                    type="hidden" name="nombre_documento[]">
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
 
                         </div>
+
 
                         <!-- Campos para "Certificado por otro organismo" -->
                         <div id="otro_organismo_fields" class="d-none">
@@ -269,11 +224,11 @@
                                 <div class="col-md-12 mb-4">
                                     <div class="form-floating form-floating-outline">
                                         <input class="form-control form-control-sm" type="file" id="file-59"
-                                            name="url[]">
+                                            name="documentos[0][url]">
                                         <input value="59" class="form-control" type="hidden"
-                                            name="id_documento[]">
+                                            name="documentos[0][id_documento]">
                                         <input value="Certificado de lote a granel" class="form-control"
-                                            type="hidden" name="nombre_documento[]">
+                                            type="hidden" name="documentos[0][nombre_documento]">
                                         <label for="certificado_lote">Adjuntar Certificado de Lote a Granel</label>
                                     </div>
 
@@ -309,7 +264,7 @@
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" id="fecha_emision" name="fecha_emision"
                                             autocomplete="off" class="form-control datepicker"
-                                            placeholder="Fecha de Emisión"  />
+                                            placeholder="Fecha de Emisión" />
                                         <label for="fecha_emision">Fecha de Emisión</label>
                                     </div>
                                 </div>
@@ -317,12 +272,70 @@
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" id="fecha_vigencia" name="fecha_vigencia"
                                             autocomplete="off" class="form-control datepicker"
-                                            placeholder="Fecha de Vigencia"  />
+                                            placeholder="Fecha de Vigencia" />
                                         <label for="fecha_vigencia">Fecha de Vigencia</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Tipo de análisis</th>
+                                    <th>No. de Análisis Fisicoquímico</th>
+                                    <th>Documento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($documentos as $documento)
+                                    <!-- Primer bloque -->
+                                    <tr>
+                                        <td>
+                                            <span>Análisis completo</span>
+                                            <input hidden readonly value="Análisis completo" type="text"
+                                                class="form-control form-control-sm"
+                                                id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-sm"
+                                                id="date{{ $documento->id_documento }}" name="folio_fq_completo"
+                                                autocomplete="off">
+                                        </td>
+                                        <td>
+                                            <input class="form-control form-control-sm" type="file"
+                                                id="file-58" name="documentos[1][url]">
+                                            <input value="58" class="form-control"
+                                                type="hidden" name="documentos[1][id_documento]">
+                                            <input value="{{ $documento->nombre }}" class="form-control"
+                                                type="hidden" name="documentos[1][nombre_documento]">
+                                        </td>
+                                    </tr>
+
+                                    <!-- Segundo bloque -->
+                                    <tr>
+                                        <td>
+                                            <span>Ajuste de grado</span>
+                                            <input hidden readonly value="Ajuste de grado" type="text"
+                                                class="form-control form-control-sm"
+                                                id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-sm"
+                                                id="date{{ $documento->id_documento }}-2" name="folio_fq_ajuste"
+                                                autocomplete="off">
+                                        </td>
+                                        <td>
+                                            <input class="form-control form-control-sm" type="file"
+                                                id="file-134" name="documentos[2][url]">
+                                            <input value="134" class="form-control"
+                                                type="hidden" name="documentos[2][id_documento]">
+                                            <input value="{{ $documento->nombre }}" class="form-control"
+                                                type="hidden" name="documentos[2][nombre_documento]">
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
 
 

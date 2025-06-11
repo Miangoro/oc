@@ -61,7 +61,7 @@ class marcasCatalogoController extends Controller
             'tipos' => $tipos,
             'clases' => $clases,
             'categorias' => $categorias,
-          
+
 
 
 
@@ -78,6 +78,11 @@ class marcasCatalogoController extends Controller
             4 => 'id_empresa',
             5 => 'id_norma',
         ];
+              if (auth()->user()->tipo == 3) {
+                  $empresaId = auth()->user()->empresa?->id_empresa;
+              } else {
+                  $empresaId = null;
+              }
 
         $search = [];
 
@@ -89,37 +94,64 @@ class marcasCatalogoController extends Controller
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
+        $search = $request->input('search.value');
 
-        if (empty($request->input('search.value'))) {
-            $users = marcas::with('empresa') // Incluye la relación empresa
+        if (empty($search)) {
+            $users = marcas::with('empresa')
+            ->when($empresaId, function ($query) use ($empresaId) {
+              $query->where('id_empresa', $empresaId);
+                }) // Incluye la relación empresa
                 ->offset($start)
                 ->limit($limit)
                 //  ->orderBy($order, $dir)
                 ->get();
-        } else {
-            $search = $request->input('search.value');
-            $users = marcas::with('empresa.empresaNumClientes', 'catalogo_norma_certificar') // Incluye la relación empresa
-                ->where('id_marca', 'LIKE', "%{$search}%")
-                ->orWhere('folio', 'LIKE', "%{$search}%")
-                ->orWhere('marca', 'LIKE', "%{$search}%")
-                ->orWhereHas('empresa', function ($q) use ($search) {
-                    $q->where('razon_social', 'LIKE', "%{$search}%");
-                })
-                ->orWhereHas('empresa.empresaNumClientes', function ($q) use ($search) {
-                    $q->where('numero_cliente', 'LIKE', "%{$search}%");
-                })
-                ->orWhereHas('catalogo_norma_certificar', function ($q) use ($search) {
-                    $q->where('norma', 'LIKE', "%{$search}%");
-                })
-                ->offset($start)
-                ->limit($limit)
-                //  ->orderBy($order, $dir)
-                ->get();
-            $totalFiltered = marcas::where('id_marca', 'LIKE', "%{$search}%")
-                ->orWhere('folio', 'LIKE', "%{$search}%")
-                ->orWhere('marca', 'LIKE', "%{$search}%")
-                ->count();
-        }
+            $totalFiltered = marcas::when($empresaId, function ($query) use ($empresaId) {
+            $query->where('id_empresa', $empresaId);
+
+        })->count();
+      } else {
+    $users = marcas::with('empresa.empresaNumClientes', 'catalogo_norma_certificar')
+        ->when($empresaId, function ($query) use ($empresaId) {
+            $query->where('id_empresa', $empresaId);
+        })
+        ->where(function ($q) use ($search) {
+            $q->where('id_marca', 'LIKE', "%{$search}%")
+              ->orWhere('folio', 'LIKE', "%{$search}%")
+              ->orWhere('marca', 'LIKE', "%{$search}%")
+              ->orWhereHas('empresa', function ($q) use ($search) {
+                  $q->where('razon_social', 'LIKE', "%{$search}%");
+              })
+              ->orWhereHas('empresa.empresaNumClientes', function ($q) use ($search) {
+                  $q->where('numero_cliente', 'LIKE', "%{$search}%");
+              })
+              ->orWhereHas('catalogo_norma_certificar', function ($q) use ($search) {
+                  $q->where('norma', 'LIKE', "%{$search}%");
+              });
+        })
+        ->offset($start)
+        ->limit($limit)
+        ->orderBy($order, $dir)
+        ->get();
+
+    $totalFiltered = marcas::when($empresaId, function ($query) use ($empresaId) {
+            $query->where('id_empresa', $empresaId);
+        })
+        ->where(function ($q) use ($search) {
+            $q->where('id_marca', 'LIKE', "%{$search}%")
+              ->orWhere('folio', 'LIKE', "%{$search}%")
+              ->orWhere('marca', 'LIKE', "%{$search}%")
+              ->orWhereHas('empresa', function ($q) use ($search) {
+                  $q->where('razon_social', 'LIKE', "%{$search}%");
+              })
+              ->orWhereHas('empresa.empresaNumClientes', function ($q) use ($search) {
+                  $q->where('numero_cliente', 'LIKE', "%{$search}%");
+              })
+              ->orWhereHas('catalogo_norma_certificar', function ($q) use ($search) {
+                  $q->where('norma', 'LIKE', "%{$search}%");
+              });
+        })
+        ->count();
+}
 
         $data = [];
 
@@ -313,17 +345,17 @@ class marcasCatalogoController extends Controller
                 'url_etiqueta' => 'array',
                 'url_corrugado' => 'array',
             ]);
-    
+
             // Obtener datos del formulario
             $direcciones = $request->id_direccion;
             $totalElementos = count($direcciones);
             $idUnico = $request->id_unico ?? [];
-    
+
             // Completar IDs únicos si faltan
             for ($i = count($idUnico); $i < $totalElementos; $i++) {
                 $idUnico[] = Str::uuid()->toString();
             }
-    
+
             // Actualizar el lote envasado con datos etiquetados
             $loteEnvasado = marcas::findOrFail($request->id_marca);
             $loteEnvasado->etiquetado = json_encode([
@@ -338,14 +370,14 @@ class marcasCatalogoController extends Controller
                 'alc_vol' => $request->alc_vol,
             ]);
             $loteEnvasado->save();
-    
+
             // Obtener el número de cliente
             $empresa = empresa::with('empresaNumClientes')
                 ->where('id_empresa', $loteEnvasado->id_empresa)
                 ->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')
                 ->first(fn($numero) => !empty($numero));
-    
+
             // Documentos actuales
             $documentosActuales = Documentacion_url::where('id_relacion', $loteEnvasado->id_marca)
                 ->whereIn('id_documento', [60, 75])
@@ -357,12 +389,12 @@ class marcasCatalogoController extends Controller
                     $idUnico1[] = $item;
                     $idUnico1[] = $item; // Duplicamos el valor
                 }
-                
-    
+
+
             // Procesar cada documento enviado
             foreach ($request->id_documento as $index => $id_documento) {
-               
-                
+
+
 
                 if ($id_documento ==60 AND !isset($idUnico1[$index]) AND !isset($request->url_etiqueta[$index])) {
                     continue;
@@ -373,13 +405,13 @@ class marcasCatalogoController extends Controller
                 }
 
                // $imprimir = $imprimir.'-entro aunque sea al for'.$idUnico1[$index].' y '.$id_documento;
-    
+
                 $currentIdUnico = $idUnico1[$index];
                 $documento = Documentacion_url::where('id_doc', $currentIdUnico)
                     ->where('id_documento', $id_documento)
                     ->where('id_relacion', $loteEnvasado->id_marca)
                     ->first();
-                
+
                 if ($documento) {
                     // Actualizar documento existente
                     $imprimir = $imprimir.'---entro al editar'.$id_documento.' '.$currentIdUnico;
@@ -390,7 +422,7 @@ class marcasCatalogoController extends Controller
                     $this->createNewDocuments($loteEnvasado, $currentIdUnico, $request, $index, $numeroCliente);
                 }
             }
-          
+
             return response()->json(['success' => 'Etiquetas actualizadas correctamente']);
         } catch (\Exception $e) {
             return response()->json([
@@ -400,7 +432,7 @@ class marcasCatalogoController extends Controller
                 'file' => $e->getFile(),
             ], 500);
         }
-         
+
     }
 
     protected function updateDocument($documento, $request, $index, $numeroCliente,$imprimir)
@@ -412,7 +444,7 @@ class marcasCatalogoController extends Controller
             $documento->url = $filename;
             $documento->save();
         }
-    
+
         if (isset($request->file('url')[$index]) && $documento->id_documento==75) {
             $file = $request->file('url')[$index];
             $filename = 'corrugado_editado' . time() . $index . '.' . $file->getClientOriginalExtension();
@@ -421,15 +453,15 @@ class marcasCatalogoController extends Controller
             $documento->save();
         }
     }
-    
+
     protected function createNewDocuments($loteEnvasado, $currentIdUnico, $request, $index, $numeroCliente)
-    {   
+    {
         $imprimir = 'a registrar';
         if (isset($request->file('url')[$index])) {
             $file = $request->file('url')[$index];
             $filename = $request->nombre_documento[$index].'_' . time() . $index . '.' . $file->getClientOriginalExtension();
             $file->storeAs("uploads/$numeroCliente", $filename, 'public');
-    
+
             Documentacion_url::create([
                 'id_relacion' => $loteEnvasado->id_marca,
                 'id_doc' => $currentIdUnico,
@@ -439,15 +471,15 @@ class marcasCatalogoController extends Controller
                 'id_empresa' => $loteEnvasado->id_empresa,
             ]);
         }
-    
-     
+
+
     }
-    
 
 
-    
 
-    
+
+
+
     //Editar etiquetas solo para quie se guarde
     public function editEtiquetas($id)
     {

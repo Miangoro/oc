@@ -42,13 +42,24 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-8">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control bg-light text-muted" type="number"
                                     id="edit_cantidad_hologramas" name="edit_cantidad_hologramas"
                                     placeholder="Número de hologramas solicitados" readonly
                                     style="pointer-events: none;" />
                                 <label for="edit_cantidad_hologramas">Número de hologramas solicitados</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <select class="form-select" name="tipo" id="tipo">
+                                    <option value="A">A - Por imprimir</option>
+                                    <option value="J">J - Impresos</option>
+                                    
+                                </select>
+                                <label for="cantidad_hologramas">Tipo</label>
                             </div>
                         </div>
                     </div>
@@ -85,6 +96,7 @@
                 var contenido = "";
                 for (let index = 0; index < response.marcas.length; index++) {
                     contenido = '<option value="' + response.marcas[index].id_marca + '">' + response
+                        .marcas[index].folio + ' - ' + response
                         .marcas[index].marca + '</option>' + contenido;
                 }
 
@@ -109,15 +121,15 @@
                     return direccion.tipo_direccion == 3;
                 });
                 var contenido = "";
-                for (let index = 0; index < response.direcciones.length; index++) {
-                    contenido += '<option value="' + response.direcciones[index].id_direccion + '">' +
-                        'Nombre de detinatario: ' + response.direcciones[index].nombre_recibe +
-                        ' - Dirección: ' + response.direcciones[index].direccion +
-                        ' - Correo: ' + response.direcciones[index].correo_recibe +
-                        ' - Celular: ' + response.direcciones[index].celular_recibe +
+                for (let index = 0; index < direccionesFiltradas.length; index++) {
+                    contenido += '<option value="' + direccionesFiltradas[index].id_direccion + '">' +
+                        'Nombre de detinatario: ' + direccionesFiltradas[index].nombre_recibe +
+                        ' - Dirección: ' + direccionesFiltradas[index].direccion +
+                        ' - Correo: ' + direccionesFiltradas[index].correo_recibe +
+                        ' - Celular: ' + direccionesFiltradas[index].celular_recibe +
                         '</option>';
                 }
-                if (response.direcciones.length == 0) {
+                if (direccionesFiltradas.length == 0) {
                     contenido = '<option value="">Sin lotes a granel registrados</option>';
                 }
                 $('.edit_id_direccion').html(contenido);

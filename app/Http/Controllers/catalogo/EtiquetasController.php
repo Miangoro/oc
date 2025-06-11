@@ -13,7 +13,6 @@ use App\Models\tipos;
 use App\Models\clases;
 use App\Models\categorias;
 use App\Models\direcciones;
-use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helpers;
 use App\Models\etiquetas;
 use App\Models\etiquetas_destino;
@@ -21,6 +20,8 @@ use Illuminate\Support\Facades\Log;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;//Permiso empresa
 
 
 
@@ -63,10 +64,18 @@ class EtiquetasController extends Controller
             4 => 'unidad',
             5 => 'alc_vol',
         ];
+        
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
+        }
 
-        $search = [];
-
-        $totalData = etiquetas::count();
+     $totalData = etiquetas::when($empresaId, function ($q) use ($empresaId) {
+        $q->whereHas('marca', function ($q2) use ($empresaId) {
+            $q2->where('id_empresa', $empresaId);
+        });
+      })->count();
 
         $totalFiltered = $totalData;
 
@@ -74,24 +83,34 @@ class EtiquetasController extends Controller
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
+        $search = $request->input('search.value');
 
-        if (empty($request->input('search.value'))) {
-            $sql = etiquetas::with('destinos', 'marca') // Incluye la relación empresa
-                ->offset($start)
-                ->limit($limit)
-                //  ->orderBy($order, $dir)
-                ->get();
+        if (empty($search)) {
+        $sql = etiquetas::with('destinos', 'marca', 'categoria', 'clase', 'tipo', 'marca.empresa.empresaNumClientes', 'url_etiqueta')
+            ->when($empresaId, function ($q) use ($empresaId) {
+                $q->whereHas('marca', function ($q2) use ($empresaId) {
+                    $q2->where('id_empresa', $empresaId);
+                });
+            })
+            ->offset($start)
+            ->limit($limit)
+            ->get();
         } else {
-            $search = $request->input('search.value');
-            $sql = etiquetas::with('destinos', 'marca') // Incluye la relación empresa
-                ->where('sku', 'LIKE', "%{$search}%")
+              $filteredQuery = etiquetas::with('destinos', 'marca', 'marca.empresa')
+        ->when($empresaId, function ($q) use ($empresaId) {
+            $q->whereHas('marca', function ($q2) use ($empresaId) {
+                $q2->where('id_empresa', $empresaId);
+            });
+        })
+        ->where(function ($q) use ($search) {
+            $q->where('sku', 'LIKE', "%{$search}%")
                 ->orWhere('presentacion', 'LIKE', "%{$search}%")
                 ->orWhere('alc_vol', 'LIKE', "%{$search}%")
                 ->orWhereHas('marca', function ($q) use ($search) {
                     $q->where('marca', 'LIKE', "%{$search}%");
                 })
                 ->orWhereHas('destinos', function ($q) use ($search) {
-                    $q->where('direccion', 'LIKE', "%{$search}%");
+                    $q->where('destinatario', 'LIKE', "%{$search}%");
                 })
                 ->orWhereHas('categoria', function ($q) use ($search) {
                     $q->where('categoria', 'LIKE', "%{$search}%");
@@ -102,29 +121,17 @@ class EtiquetasController extends Controller
                 ->orWhereHas('tipo', function ($q) use ($search) {
                     $q->where('nombre', 'LIKE', "%{$search}%");
                 })
-                ->offset($start)
-                ->limit($limit)
-                //  ->orderBy($order, $dir)
-                ->get();
-            $totalFiltered = etiquetas::where('sku', 'LIKE', "%{$search}%")
-                ->orWhere('unidad', 'LIKE', "%{$search}%")
-                ->orWhere('presentacion', 'LIKE', "%{$search}%")
-                ->orWhereHas('marca', function ($q) use ($search) {
-                    $q->where('marca', 'LIKE', "%{$search}%");
-                })
-                ->orWhereHas('destinos', function ($q) use ($search) {
-                    $q->where('direccion', 'LIKE', "%{$search}%");
-                })
-                ->orWhereHas('categoria', function ($q) use ($search) {
-                    $q->where('categoria', 'LIKE', "%{$search}%");
-                })
-                ->orWhereHas('clase', function ($q) use ($search) {
-                    $q->where('clase', 'LIKE', "%{$search}%");
-                })
-                ->orWhereHas('tipo', function ($q) use ($search) {
-                    $q->where('nombre', 'LIKE', "%{$search}%");
-                })
-                ->count();
+                ->orWhereHas('marca.empresa', function ($q) use ($search) {
+                    $q->where('razon_social', 'LIKE', "%{$search}%");
+                });
+        });
+
+    $sql = $filteredQuery
+        ->offset($start)
+        ->limit($limit)
+        ->get();
+
+    $totalFiltered = $filteredQuery->count();
         }
 
         $data = [];
@@ -143,16 +150,33 @@ class EtiquetasController extends Controller
                 $nestedData['alc_vol'] = $etiqueta->alc_vol." %Alc.Vol.";
                 $nestedData['categoria'] = $etiqueta->categoria->categoria;
                 $nestedData['clase'] = $etiqueta->clase->clase;
-                $nestedData['tipo'] = $etiqueta->tipo->nombre . " (" . $etiqueta->tipo->cientifico . ")";
+                /* $nestedData['tipo'] = $etiqueta->tipo
+            ? $etiqueta->tipo->nombre . " (" . $etiqueta->tipo->cientifico . ")"
+            : 'No especificado'; */
+        //TIPOS DE agave
+        $tiposNombres = tipos::pluck(DB::raw("CONCAT(nombre, ' (', cientifico, ')')"), 'id_tipo')->toArray();
+            if ($etiqueta->id_tipo && $etiqueta->id_tipo !== 'N/A') {
+                $idTipos = json_decode($etiqueta->id_tipo, true);
+
+                if (is_array($idTipos)) {
+                    $nombresTipos = array_map(fn($id) => $tiposNombres[$id] ?? 'Desconocido', $idTipos);
+                    $nestedData['tipo'] = implode(', ', $nombresTipos);
+                } else {
+                    $nestedData['tipo'] = 'Desconocido';
+                }
+            } else {
+                $nestedData['tipo'] = 'No especificado';
+            }
+
                 $nestedData['numero_cliente'] = $etiqueta->marca->empresa->empresaNumClientes
                     ?->pluck('numero_cliente')
                     ?->first(fn($num) => !empty($num)) ?? "";
                 $nestedData['razon_social'] = $etiqueta->marca->empresa->razon_social;
                 $nestedData['url_etiqueta'] = $etiqueta->url_etiqueta->url ?? "Sin documento";
                 $direcciones = $etiqueta->destinos->map(function ($destino) {
-                    return '• ' . $destino->direccion; // Agregar viñeta antes de la dirección
+                    return '• ' . $destino->destinatario; // Agregar viñeta antes de la dirección
                 })->toArray(); // Convertimos la colección en un array
-                
+
                 $nestedData['destinos'] = implode('<br>', $direcciones); // Unimos las direcciones con un salto de línea
                 $data[] = $nestedData;
             }
@@ -171,7 +195,6 @@ class EtiquetasController extends Controller
     /*Metodo para actualizar*/
     public function store(Request $request)
     {
-
         // Verificar si estamos editando o creando una nueva etiqueta
         $etiqueta = $request->id_etiqueta ? etiquetas::find($request->id_etiqueta) : new etiquetas();
 
@@ -191,10 +214,12 @@ class EtiquetasController extends Controller
         $etiqueta->sku = $request->sku ?? '';
         $etiqueta->id_categoria = $request->id_categoria;
         $etiqueta->id_clase = $request->id_clase;
-        $etiqueta->id_tipo = $request->id_tipo;
+        //$etiqueta->id_tipo = $request->id_tipo;
+        $etiqueta->id_tipo = json_encode($request['id_tipo']);
         $etiqueta->presentacion = $request->presentacion;
         $etiqueta->unidad = $request->unidad;
         $etiqueta->alc_vol = $request->alc_vol;
+        $etiqueta->botellas_caja = $request->botellas_caja ?? null;
         $etiqueta->save();
 
         // Eliminar destinos previos si es edición
@@ -279,6 +304,7 @@ class EtiquetasController extends Controller
         return response()->json(['success' => $request->id_etiqueta ? 'Etiqueta actualizada exitosamente.' : 'Etiqueta registrada exitosamente.']);
     }
 
+
     //Metodo para editar las marcas
     public function edit_etiqueta($id_etiqueta)
     {
@@ -326,10 +352,10 @@ class EtiquetasController extends Controller
         $etiqueta = etiquetas::findOrFail($id_etiqueta);
 
         // Eliminar relaciones
-        $etiqueta->destinos()->delete();
+        //$etiqueta->destinos()->delete();
         $etiqueta->url_etiqueta()->delete();
         $etiqueta->url_corrugado()->delete();
-    
+
         // Eliminar la etiqueta principal
         $etiqueta->delete();
         return response()->json(['success' => 'Etiqueta eliminada correctamente']);

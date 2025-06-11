@@ -2,6 +2,46 @@ $(function () {
   // Definir la URL base
   var baseUrl = window.location.origin + '/';
 
+  // 1. Declarar primero los filtros
+  const filtros = [
+    'Muestreo de agave (ART)',
+    'Dictaminación de instalaciones',
+    'Vigilancia en producción de lote',
+    'Muestreo de lote a granel',
+    'Vigilancia en el traslado del lote',
+    'Emisión de certificado NOM a granel',
+    'Inspección ingreso a barrica/contenedor de vidrio',
+    'Inspección de liberación a barrica/contenedor de vidrio',
+    'Georreferenciación',
+    'Inspección de envasado',
+    'Muestreo de lote envasado',
+    'Liberación de producto terminado nacional',
+    'Pedidos para exportación',
+    'Emisión de certificado venta nacional',
+    'Revisión de etiquetas'
+  ];
+
+
+
+  // 2. Generar los botones dinámicamente
+  const filtroButtons = filtros.map(filtro => ({
+    text: filtro,
+    className: 'dropdown-item',
+    action: function (e, dt, node, config) {
+      dt_instalaciones_table.search(filtro).draw();
+      $('.dt-button-collection').hide(); // Ocultar el dropdown al seleccionar
+    }
+  }));
+  filtroButtons.unshift({
+    text: '<i class="ri-close-line text-danger me-2"></i>Quitar filtro',
+    className: 'dropdown-item text-danger fw-semibold border',
+    action: function (e, dt, node, config) {
+      dt_instalaciones_table.search('').draw();
+      $('.dt-button-collection').hide(); // Ocultar dropdown también
+    }
+  });
+
+
   // Inicializar DataTable
   var dt_instalaciones_table = $('.datatables-solicitudes').DataTable({
     processing: true,
@@ -27,9 +67,14 @@ $(function () {
     },
 
     columns: [
+    
       { data: '' },
-      { data: '' },
-      { data: 'folio' },
+      { 
+          data: 'folio',
+          render: function(data, type, row) {
+              return `<span style="font-weight: bold; font-size: 1.1em;">${data}</span>`;
+          }
+      },
       { data: 'num_servicio' },
       {
         render: function (data, type, full, meta) {
@@ -37,8 +82,8 @@ $(function () {
           var $razon_social = full['razon_social'];
           return `
             <div>
-              <span class="fw-bold">${$numero_cliente}</span><br>
-              <small style="font-size:12px;" class="user-email">${$razon_social}</small>
+              <span  style="font-size:12px;" class="fw-bold">${$numero_cliente}</span><br>
+              <small style="font-size:11px;" class="user-email">${$razon_social}</small>
             </div>
           `;
         }
@@ -52,8 +97,8 @@ $(function () {
       },
       {
         data: 'direccion_completa',
-        render: function(data, type, row) {
-            return `<span style="font-size: 12px;">${data}</span>`; // Tamaño en línea
+        render: function (data, type, row) {
+          return `<span style="font-size: 12px;">${data}</span>`; // Tamaño en línea
         }
       },
       { data: 'fecha_visita' },
@@ -65,138 +110,129 @@ $(function () {
             case 1: //Muestreo de agave
               return `
             <br>
-            <span class="fw-bold text-dark small">Guías de agave:</span>
+            <span class="fw-bold small">Guías de agave:</span>
             <span class="small"> ${data.guias || 'N/A'}</span>
           `;
 
             case 2: //Vigilancia en producción de lote
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+              return `<br><span class="fw-bold small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Nombre del predio:</span><span class="small"> ${data.nombre_predio || 'N/A'}</span>
+                      <span class="fw-bold small">Nombre del predio:</span><span class="small"> ${data.nombre_predio || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Art:</span><span class="small"> ${data.art || 'N/A'}</span>
+                      <span class="fw-bold small">Art:</span><span class="small"> ${data.art || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Etapa:</span><span class="small"> ${data.etapa || 'N/A'}</span>
+                      <span class="fw-bold  small">Etapa:</span><span class="small"> ${data.etapa || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha de Corte:</span>
+                      <span class="fw-bold  small">Fecha de Corte:</span>
                       <span class="small">${data.fecha_corte || 'N/A'}</span>
                       `;
             case 3:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+              return `<br><span class="fw-bold  small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small">${data.id_tipo_maguey || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small">${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Certificado de lote:</span><span class="small"> ${data.id_certificado_muestreo || 'N/A'}</span>
+                      <span class="fw-bold  small">Certificado de lote:</span><span class="small"> ${data.id_certificado_muestreo || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
+                      <span class="fw-bold  small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
                       `;
             case 4:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+              return `<br><span class="fw-bold  small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_traslado || 'N/A'}</span>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria_traslado || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_traslado || 'N/A'}</span>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase_traslado || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_traslado || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_traslado || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Volumen actual:</span><span class="small"> ${data.id_vol_actual || 'N/A'}</span>
+                      <span class="fw-bold  small">Volumen actual:</span><span class="small"> ${data.id_vol_actual || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Volumen restante:</span><span class="small"> ${data.id_vol_res || 'N/A'}</span>
+                      <span class="fw-bold  small">Volumen restante:</span><span class="small"> ${data.id_vol_res || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_traslado || 'N/A'}</span>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis_traslado || 'N/A'}</span>
                       `;
             case 5:
-              return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold text-dark small">Marca:</span><span class="small"> ${data.id_marca || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.volumen_inspeccion || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_inspeccion || 'N/A'}</span>
-                      `;
+              return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
+                      <br><span class="fw-bold  small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
             case 7:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+              return `<br><span class="fw-bold  small">Granel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_barricada || 'N/A'}</span>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis_barricada || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.tipo_lote || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.tipo_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
+                      <span class="fw-bold  small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
+                      <span class="fw-bold  small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
                        <br>
-                      <span class="fw-bold text-dark small">Volumen ingresado:</span><span class="small"> ${data.volumen_ingresado || 'N/A'}</span>
+                      <span class="fw-bold  small">Volumen ingresado:</span><span class="small"> ${data.volumen_ingresado || 'N/A'}</span>
                       `;
             case 8:
-              return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
+              return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
+                      <span class="fw-bold  small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
                       `;
             case 9:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+              return `<br><span class="fw-bold  small">Granel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.tipo_lote_lib || 'N/A'}</span>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.tipo_lote_lib || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
+                      <span class="fw-bold  small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
+                      <span class="fw-bold  small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
                       `;
             case 10:
-              return `<br><span class="fw-bold text-dark small">Punto de reunión:</span><span class="small"> ${data.punto_reunion || 'N/A'}</span>
+              return `<br><span class="fw-bold small">Punto de reunión:</span><span class="small"> ${data.punto_reunion || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
+                      <span class="fw-bold small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
             case 11:
-              return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
+              return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Lote granel:</span><span class="small"> ${data.lote_granel || 'N/A'}</span>
+                      <span class="fw-bold  small">Granel:</span><span class="small"> ${data.lote_granel || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Marca:</span><span class="small"> ${data.marca || 'N/A'}</span>
+                      <span class="fw-bold  small">Marca:</span><span class="small"> ${data.marca || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Cont. Neto.:</span><span class="small"> ${data.presentacion || 'N/A'}</span>
+                      <span class="fw-bold  small">Cont. Neto.:</span><span class="small"> ${data.presentacion || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Cajas:</span><span class="small"> ${data.cajas || 'N/A'}</span>
+                      <span class="fw-bold  small">Cajas:</span><span class="small"> ${data.cajas || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Botellas:</span><span class="small"> ${data.botellas || 'N/A'}</span>
+                      <span class="fw-bold  small">Botellas:</span><span class="small"> ${data.botellas || 'N/A'}</span>
                        <br>
-                      <span class="fw-bold text-dark small">Certificado:</span><span class="small"> ${data.certificado_exportacion || 'N/A'}</span>`;
+                       <span class="fw-bold  small">Proforma:</span><span class="small"> ${data.no_pedido || 'N/A'}</span>
+                       <br>
+                      <span class="fw-bold  small">Certificado:</span><span class="small"> ${data.certificado_exportacion || 'N/A'}</span>
+                       ${data.combinado}`;
             case 14:
-              return `<span class="fw-bold text-dark small">
+              return `<span class="fw-bold  small">
                   ${data.renovacion === 'si' ? 'Es renovación' : 'No es renovación'}
               </span>`;
 
@@ -208,31 +244,31 @@ $(function () {
       { data: 'fecha_servicio' },
       { data: '' },
       {
-        data: 'estatus', 
-        render: function(data, type, row) {
-            // Define las etiquetas para cada estado
-            let estatus_validado_oc = 'bg-warning';
-            let estatus_validado_ui = 'bg-warning';
-            if(row.estatus_validado_oc=='Validada'){
-              estatus_validado_oc = 'bg-success';
-            }
-            if(row.estatus_validado_oc=='Rechazada'){
-              estatus_validado_oc = 'bg-danger';
-            }
-          
-            if(row.estatus_validado_ui=='Validada'){
-              estatus_validado_ui = 'bg-success';
-            }
-            if(row.estatus_validado_ui=='Rechazada'){
-              estatus_validado_ui = 'bg-danger';
-            }
-            return `<span class="badge bg-warning mb-1">${data}</span><br>
+        data: 'estatus',
+        render: function (data, type, row) {
+          // Define las etiquetas para cada estado
+          let estatus_validado_oc = 'bg-warning';
+          let estatus_validado_ui = 'bg-warning';
+          if (row.estatus_validado_oc == 'Validada') {
+            estatus_validado_oc = 'bg-success';
+          }
+          if (row.estatus_validado_oc == 'Rechazada') {
+            estatus_validado_oc = 'bg-danger';
+          }
+
+          if (row.estatus_validado_ui == 'Validada') {
+            estatus_validado_ui = 'bg-success';
+          }
+          if (row.estatus_validado_ui == 'Rechazada') {
+            estatus_validado_ui = 'bg-danger';
+          }
+          return `<span class="badge bg-warning mb-1">${data}</span><br>
             <span class="badge ${estatus_validado_oc} mb-1">${row.estatus_validado_oc} por oc</span><br>
             <span class="badge ${estatus_validado_ui}">${row.estatus_validado_ui} por ui</span>`;
-                    
-              
+
+
         }
-    },
+      },
       { data: 'action' }
     ],
 
@@ -248,18 +284,35 @@ $(function () {
           return '';
         }
       },
+   
       {
-        searchable: false,
-        orderable: true,
         targets: 1,
-        render: function (data, type, full, meta) {
-          return `<span>${full.fake_id}</span>`;
-        }
+        searchable: false,
+        orderable: false,
+      },
+      {
+        targets: 2,
+        searchable: false,
+        orderable: false,
+      }, 
+      {
+        targets: 3,
+        responsivePriority: 4,
+        orderable: false,
+      }, 
+      {
+        targets: 4,
+        searchable: false,
+        orderable: false,
+      },
+      {
+        targets: 5,
+        searchable: false,
+        orderable: false,
       },
       {
         // User full name
-        targets: 9,
-        responsivePriority: 4,
+        targets: 8,
         render: function (data, type, full, meta) {
           var $name = full['inspector'];
           var foto_inspector = full['foto_inspector'];
@@ -290,7 +343,12 @@ $(function () {
         }
       },
       {
-        targets: 12,
+        targets: 9,
+        searchable: false,
+        orderable: false,
+      },
+      {
+        targets: 11,
         className: 'text-center',
         searchable: false,
         orderable: false,
@@ -299,49 +357,71 @@ $(function () {
         }
       },
       {
+        targets: 12, // o el índice correcto de la columna 'estatus'
+        orderable: false,
+        searchable: false
+      },
+      {
         // Acciones
         targets: -1,
         title: 'Acciones',
         searchable: false,
         orderable: false,
         render: function (data, type, full, meta) {
-          return (
-            '<div class="d-flex align-items-center gap-50">' +
-            '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">' +
-            '<i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>' +
-            '</button>' +
-            '<div class="dropdown-menu dropdown-menu-end m-0">' +
-            `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2">` +
-            '<i class="text-warning ri-user-search-fill"></i> Trazabilidad</a>' +
-            `<a
-            data-id="${full['id_tipo']}"
-            data-id-solicitud="${full['id_solicitud']}"
-            data-tipo="${full['tipo']}"
-            data-razon-social="${full['razon_social']}"
-            data-bs-toggle="modal"
-            data-bs-target="#addSolicitudValidar"
-            class="dropdown-item text-dark waves-effect validar-solicitudes">
-            <i class="text-success ri-search-eye-line"></i> Validar solicitud
-          </a>` +
-            `<a
-              data-id="${full['id']}"
-              data-id-solicitud="${full['id_solicitud']}"
-              data-tipo="${full['tipo']}"
-              data-id-tipo="${full['id_tipo']}"
-              data-razon-social="${full['razon_social']}"
-              class="cursor-pointer dropdown-item text-dark edit-record-tipo">` +
-            '<i class="text-warning ri-edit-fill"></i> Editar</a>' +
-         
-            // Aquí agregamos la opción de eliminar
-            `<a  data-id="${full['id']}"   data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">` +
-            '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>' +
-            '</div>' +
-            '</div>'
-          );
-        }
+              let dropdown = `
+                <div class="d-flex align-items-center gap-50">
+                  <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                    <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end m-0">
+                    <a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']}, '${full['tipo']}', '${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2">
+                      <i class="text-warning ri-user-search-fill"></i> Trazabilidad
+                    </a>`;
+
+              // Si puede agregar usuario, incluir opción adicional
+              if (puedeValidarSolicitud) {
+                dropdown += `
+                  <a
+                    data-id="${full['id_tipo']}"
+                    data-id-solicitud="${full['id_solicitud']}"
+                    data-tipo="${full['tipo']}"
+                    data-razon-social="${full['razon_social']}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addSolicitudValidar"
+                    class="dropdown-item text-dark waves-effect validar-solicitudes">
+                    <i class="text-success ri-search-eye-line"></i> Validar solicitud
+                  </a>`;
+              }
+
+              if (puedeEditarSolicitud) {
+                dropdown += `
+                  <a
+                    data-id="${full['id']}"
+                    data-id-solicitud="${full['id_solicitud']}"
+                    data-tipo="${full['tipo']}"
+                    data-id-tipo="${full['id_tipo']}"
+                    data-razon-social="${full['razon_social']}"
+                    class="cursor-pointer dropdown-item text-dark edit-record-tipo">
+                    <i class="text-warning ri-edit-fill"></i> Editar
+                  </a>`;
+              }
+            if (puedeEliminarSolicitud) {
+              dropdown += `
+                    <a data-id="${full['id']}" data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">
+                      <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
+                    </a>`;
+            }
+
+            dropdown += `
+                  </div>
+                </div>`;
+
+              return dropdown;
+            }
+
       }
     ],
-    order: [[1, 'desc']],
+    order: [[2, 'desc']],
     dom:
       '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
       '<"me-5 ms-n2"f>' +
@@ -367,133 +447,9 @@ $(function () {
     buttons: [
       {
         extend: 'collection',
-        className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-        text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-        buttons: [
-          {
-            extend: 'print',
-            title: 'Solicitudes',
-            text: '<i class="ri-printer-line me-1"></i>Imprimir',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, coldex, rowdex) {
-                  if (inner.length <= 0) return inner;
-                  var el = $.parseHTML(inner);
-                  var result = '';
-                  $.each(el, function (index, item) {
-                    if (item.classList !== undefined && item.classList.contains('user-name')) {
-                      result += item.lastChild.firstChild.textContent;
-                    } else if (item.innerText === undefined) {
-                      result += item.textContent;
-                    } else {
-                      result += item.innerText;
-                    }
-                  });
-                  return result;
-                }
-              }
-            },
-            customize: function (win) {
-              // Customize print view for dark
-              $(win.document.body)
-                .css('color', config.colors.headingColor)
-                .css('border-color', config.colors.borderColor)
-                .css('background-color', config.colors.body);
-              $(win.document.body)
-                .find('table')
-                .addClass('compact')
-                .css('color', 'inherit')
-                .css('border-color', 'inherit')
-                .css('background-color', 'inherit');
-            }
-          },
-          {
-            extend: 'csv',
-            title: 'Solicitudes',
-            text: '<i class="ri-file-text-line me-1"></i>CSV',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 8 || columnIndex === 11) {
-                    return 'ViewSuspend';
-                  }
-                  if (columnIndex === 1) {
-                    // Asegúrate de que el índice de columna es el correcto para el ID
-                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
-                  }
-                  return inner;
-                }
-              }
-            }
-          },
-          {
-            extend: 'excel', //extension a descargar
-            title: 'Solicitudes de servicio',
-            text: '<i class="ri-file-excel-line me-1"></i>Excel',
-            className: 'dropdown-item',
-            exportOptions: {
-              //define como se exportan los datos
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], //N°. de columnas a exportar
-              modifier: {
-                //Incluye todos los datos
-                page: 'all' //Exporta todos los datos de todas las páginas
-                //order: 'current' //Mantiene el orden actual
-              },
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  //Personaliza el contenido de las celdas
-                  /*if (columnIndex === 8 || columnIndex === 11) { //Reemplaza el contenido de la celda con la cadena return
-                    return 'ViewSuspend';
-                  }*/
-                  return inner.replace(/<[^>]*>/g, ''); //Elimina todas las etiquetas HTML de las columnas
-                }
-              }
-            }
-          },
-          {
-            extend: 'pdf',
-            title: 'Solicitudes',
-            text: '<i class="ri-file-pdf-line me-1"></i>PDF',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 1) {
-                    // Asegúrate de que el índice de columna es el correcto para el ID
-                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
-                  }
-                  return inner;
-                }
-              }
-            }
-          },
-          {
-            extend: 'copy',
-            title: 'Solicitudes',
-            text: '<i class="ri-file-copy-line me-1"></i>Copiar',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 8 || columnIndex === 11) {
-                    return 'ViewSuspend';
-                  }
-                  if (columnIndex === 1) {
-                    // Asegúrate de que el índice de columna es el correcto para el ID
-                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
-                  }
-                  return inner;
-                }
-              }
-            }
-          }
-        ]
+        className: 'btn btn-outline-primary dropdown-toggle me-4 waves-effect waves-light',
+        text: '<i class="ri-filter-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Filtrar</span>',
+        buttons: filtroButtons
       },
       {
         text: '<i class="ri-file-excel-2-fill ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
@@ -528,18 +484,18 @@ $(function () {
           var data = $.map(columns, function (col, i) {
             return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
               ? '<tr data-dt-row="' +
-                  col.rowIndex +
-                  '" data-dt-column="' +
-                  col.columnIndex +
-                  '">' +
-                  '<td>' +
-                  col.title +
-                  ':' +
-                  '</td> ' +
-                  '<td>' +
-                  col.data +
-                  '</td>' +
-                  '</tr>'
+              col.rowIndex +
+              '" data-dt-column="' +
+              col.columnIndex +
+              '">' +
+              '<td>' +
+              col.title +
+              ':' +
+              '</td> ' +
+              '<td>' +
+              col.data +
+              '</td>' +
+              '</tr>'
               : '';
           }).join('');
 
@@ -559,12 +515,14 @@ $(function () {
       var $this = $(this);
       select2Focus($this);
       $this.wrap('<div class="position-relative"></div>').select2({
-        dropdownParent: $this.parent()
+        dropdownParent: $this.parent(),
+        language: 'es',
       });
     });
   }
+
   initializeSelect2(select2Elements);
-//funcion para los datepickers formato año/mes/dia
+  //funcion para los datepickers formato año/mes/dia
   $(document).ready(function () {
     $('.datepicker').datepicker({
       format: 'yyyy-mm-dd',
@@ -669,64 +627,64 @@ $(function () {
 
     // Verificar si el tipo es igual a 3
     if (tipo === "3") {
-        var url = 'Etiqueta-2401ESPTOB';  // URL de la ruta
+      var url = 'Etiqueta-2401ESPTOB';  // URL de la ruta
 
-        var iframe = $('#pdfViewerDictamen1');
-        var spinner = $('#loading-spinner1');  // Spinner
-        spinner.show();
-        iframe.hide();
+      var iframe = $('#pdfViewerDictamen1');
+      var spinner = $('#loading-spinner1');  // Spinner
+      spinner.show();
+      iframe.hide();
 
-        // Asegurarse de que la URL esté bien formada
-        iframe.attr('src', url + '/' + id_solicitud);    // Concatenar la URL con el ID de la solicitud
+      // Asegurarse de que la URL esté bien formada
+      iframe.attr('src', url + '/' + id_solicitud);    // Concatenar la URL con el ID de la solicitud
 
-        // Configurar el botón para abrir el PDF en una nueva pestaña
-        $('#openPdfBtnDictamen1')
-          .attr('href', url + '/' + id_solicitud)
-          .show();
+      // Configurar el botón para abrir el PDF en una nueva pestaña
+      $('#openPdfBtnDictamen1')
+        .attr('href', url + '/' + id_solicitud)
+        .show();
 
-        // Configuración del título y subtítulo del modal
-        $('#titulo_modal_Dictamen1').text('Etiquetas');
+      // Configuración del título y subtítulo del modal
+      $('#titulo_modal_Dictamen1').text('Etiquetas');
 
-        // Obtener el texto del título de la solicitud
-        var solicitudTitleText = $('#solicitud_title').text().trim();
-        $('#subtitulo_modal_Dictamen1').html('<p class="solicitud badge bg-primary"> ' + solicitudTitleText + '</p>');
+      // Obtener el texto del título de la solicitud
+      var solicitudTitleText = $('#solicitud_title').text().trim();
+      $('#subtitulo_modal_Dictamen1').html('<p class="solicitud badge bg-primary"> ' + solicitudTitleText + '</p>');
 
-        // Mostrar el modal
-        $('#modalDictamen').modal('show');
+      // Mostrar el modal
+      $('#modalDictamen').modal('show');
 
-        // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-        iframe.on('load', function () {
-            console.log('PDF cargado en el iframe.');
-            spinner.hide();
-            iframe.show();
-        });
+      // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+      iframe.on('load', function () {
+        console.log('PDF cargado en el iframe.');
+        spinner.hide();
+        iframe.show();
+      });
     } else {
-        console.log("El tipo no es 3. No se cargará el PDF.");
+      console.log("El tipo no es 3. No se cargará el PDF.");
     }
-});
+  });
 
 
 
-$(document).on('click', '.expediente-record', function () {
-  // Accediendo a los valores de los atributos data-
-  var id = $(this).data('id');
-  var id_solicitud = $(this).data('id-solicitud');
-  var tipo = $(this).data('tipo');
-  var id_tipo = $(this).data('id-tipo');
-  var razon_social = $(this).data('razon-social');
+  $(document).on('click', '.expediente-record', function () {
+    // Accediendo a los valores de los atributos data-
+    var id = $(this).data('id');
+    var id_solicitud = $(this).data('id-solicitud');
+    var tipo = $(this).data('tipo');
+    var id_tipo = $(this).data('id-tipo');
+    var razon_social = $(this).data('razon-social');
 
-  // Ahora puedes hacer lo que necesites con estos valores
-/*   console.log("ID:", id);
-  console.log("ID Solicitud:", id_solicitud);
-  console.log("Tipo:", tipo);
-  console.log("ID Tipo:", id_tipo);
-  console.log("Razón Social:", razon_social); */
+    // Ahora puedes hacer lo que necesites con estos valores
+    /*   console.log("ID:", id);
+      console.log("ID Solicitud:", id_solicitud);
+      console.log("Tipo:", tipo);
+      console.log("ID Tipo:", id_tipo);
+      console.log("Razón Social:", razon_social); */
 
-  $('#expedienteServicio .id_solicitud').text(id_solicitud);
-  $('#expedienteServicio .tiposs').text(id_tipo);
-  // Aquí puedes utilizar estos datos para abrir un modal, hacer una solicitud AJAX, etc.
-  abrirModal(id_solicitud, tipo, razon_social);
-});
+    $('#expedienteServicio .id_solicitud').text(id_solicitud);
+    $('#expedienteServicio .tiposs').text(id_tipo);
+    // Aquí puedes utilizar estos datos para abrir un modal, hacer una solicitud AJAX, etc.
+    abrirModal(id_solicitud, tipo, razon_social);
+  });
 
 
 
@@ -763,8 +721,10 @@ $(document).on('click', '.expediente-record', function () {
         modal = $('#editInspeccionLiberacion');
       } else if (id_tipo === 10) {
         modal = $('#editClienteModalTipo10');
-      }  else if (id_tipo === 11) {
+      } else if (id_tipo === 11) {
         modal = $('#editPedidoExportacion');
+      } else if (id_tipo === 13) {
+        modal = $('#editSolicitudEmisionCertificado');
       } else if (id_tipo === 14) {
         modal = $('#editSolicitudDictamen');
       } else {
@@ -913,9 +873,9 @@ $(document).on('click', '.expediente-record', function () {
                 modal.find('#edit_id_clase_muestreo').val(response.caracteristicas.clase || 'N/A');
                 // Tipos de Maguey
                 modal.find('#edit_id_tipo_maguey_muestreo').val(
-                    response.caracteristicas.nombre.join(', ') || 'N/A'
+                  response.caracteristicas.nombre.join(', ') || 'N/A'
                 );
-            }
+              }
               if (response.caracteristicas && response.caracteristicas.analisis_muestreo) {
                 modal.find('#edit_analisis_muestreo').val(response.caracteristicas.analisis_muestreo);
               } else {
@@ -974,63 +934,63 @@ $(document).on('click', '.expediente-record', function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_inspeccion').data('selected', response.data.id_instalacion);
 
-              if (response.caracteristicas && response.caracteristicas.id_lote_granel_inspeccion) {
-                modal.find('#edit_id_lote_granel_inspeccion').val(response.caracteristicas.id_lote_granel_inspeccion);
+              if (response.caracteristicas && response.caracteristicas.id_lote_envasado) {
+                modal.find('#edit_id_lote_envasado_inspeccion').data('selected', response.caracteristicas.id_lote_envasado);
               } else {
-                modal.find('#edit_id_lote_granel_inspeccion').val('');
+                modal.find('#edit_id_lote_envasado_inspeccion').val('');
               }
-              if (response.caracteristicas && response.caracteristicas.id_categoria_inspeccion) {
-                modal.find('#edit_id_categoria_inspeccion').val(response.caracteristicas.id_categoria_inspeccion);
-              } else {
-                modal.find('#edit_id_categoria_inspeccion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_clase_inspeccion) {
-                modal.find('#edit_id_clase_inspeccion').val(response.caracteristicas.id_clase_inspeccion);
-              } else {
-                modal.find('#edit_id_clase_inspeccion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_inspeccion) {
-                modal.find('#edit_id_tipo_maguey_inspeccion').val(response.caracteristicas.id_tipo_maguey_inspeccion);
-              } else {
-                modal.find('#edit_id_tipo_maguey_inspeccion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_marca) {
-                modal.find('#edit_id_marca').val(response.caracteristicas.id_marca);
-              } else {
-                modal.find('#edit_id_marca').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.volumen_inspeccion) {
-                modal.find('#edit_volumen_inspeccion').val(response.caracteristicas.volumen_inspeccion);
-              } else {
-                modal.find('#edit_volumen_inspeccion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.analisis_inspeccion) {
-                modal.find('#edit_analisis_inspeccion').val(response.caracteristicas.analisis_inspeccion);
-              } else {
-                modal.find('#edit_analisis_inspeccion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_tipo_inspeccion) {
-                modal.find('#edit_id_tipo_inspeccion').val(response.caracteristicas.id_tipo_inspeccion);
-              } else {
-                modal.find('#edit_id_tipo_inspeccion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_cantidad_bote) {
-                modal.find('#edit_id_cantidad_bote').val(response.caracteristicas.id_cantidad_bote);
-              } else {
-                modal.find('#edit_id_cantidad_bote').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_cantidad_caja) {
-                modal.find('#edit_id_cantidad_caja').val(response.caracteristicas.id_cantidad_caja);
+              /*               if (response.caracteristicas && response.caracteristicas.id_categoria_inspeccion) {
+                              modal.find('#edit_id_categoria_inspeccion').val(response.caracteristicas.id_categoria_inspeccion);
+                            } else {
+                              modal.find('#edit_id_categoria_inspeccion').val('');
+                            }
+                            if (response.caracteristicas && response.caracteristicas.id_clase_inspeccion) {
+                              modal.find('#edit_id_clase_inspeccion').val(response.caracteristicas.id_clase_inspeccion);
+                            } else {
+                              modal.find('#edit_id_clase_inspeccion').val('');
+                            }
+                            if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_inspeccion) {
+                              modal.find('#edit_id_tipo_maguey_inspeccion').val(response.caracteristicas.id_tipo_maguey_inspeccion);
+                            } else {
+                              modal.find('#edit_id_tipo_maguey_inspeccion').val('');
+                            }
+                            if (response.caracteristicas && response.caracteristicas.id_marca) {
+                              modal.find('#edit_id_marca').val(response.caracteristicas.id_marca);
+                            } else {
+                              modal.find('#edit_id_marca').val('');
+                            }
+                            if (response.caracteristicas && response.caracteristicas.volumen_inspeccion) {
+                              modal.find('#edit_volumen_inspeccion').val(response.caracteristicas.volumen_inspeccion);
+                            } else {
+                              modal.find('#edit_volumen_inspeccion').val('');
+                            }
+                            if (response.caracteristicas && response.caracteristicas.analisis_inspeccion) {
+                              modal.find('#edit_analisis_inspeccion').val(response.caracteristicas.analisis_inspeccion);
+                            } else {
+                              modal.find('#edit_analisis_inspeccion').val('');
+                            }
+                            if (response.caracteristicas && response.caracteristicas.id_tipo_inspeccion) {
+                              modal.find('#edit_id_tipo_inspeccion').val(response.caracteristicas.id_tipo_inspeccion);
+                            } else {
+                              modal.find('#edit_id_tipo_inspeccion').val('');
+                            }
+                            if (response.caracteristicas && response.caracteristicas.id_cantidad_bote) {
+                              modal.find('#edit_id_cantidad_bote').val(response.caracteristicas.id_cantidad_bote);
+                            } else {
+                              modal.find('#edit_id_cantidad_bote').val('');
+                            } */
+              if (response.caracteristicas && response.caracteristicas.cantidad_caja) {
+                modal.find('#edit_id_cantidad_caja').val(response.caracteristicas.cantidad_caja);
               } else {
                 modal.find('#edit_id_cantidad_caja').val('');
               }
-              if (response.caracteristicas && response.caracteristicas.id_inicio_envasado) {
-                modal.find('#edit_id_inicio_envasado').val(response.caracteristicas.id_inicio_envasado);
+              if (response.caracteristicas && response.caracteristicas.fecha_inicio) {
+                modal.find('#edit_id_inicio_envasado').val(response.caracteristicas.fecha_inicio);
               } else {
                 modal.find('#edit_id_inicio_envasado').val('');
               }
-              if (response.caracteristicas && response.caracteristicas.id_previsto) {
-                modal.find('#edit_id_previsto').val(response.caracteristicas.id_previsto);
+              if (response.caracteristicas && response.caracteristicas.fecha_fin) {
+                modal.find('#edit_id_previsto').val(response.caracteristicas.fecha_fin);
               } else {
                 modal.find('#edit_id_previsto').val('');
               }
@@ -1047,7 +1007,7 @@ $(document).on('click', '.expediente-record', function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_barricada').data('selected', response.data.id_instalacion);
               modal.find('#instalacion_ingreso').val(response.data.id_instalacion);
-              modal.find('#lote_ingreso').val(response.caracteristicas.id_lote_granel);
+              modal.find('#lote_ingreso').val(response.caracteristicas?.id_lote_granel || '');
 
               if (response.caracteristicas) {
                 modal.find('#edit_id_lote_granel_barricada').val(response.caracteristicas.id_lote_granel || '');
@@ -1058,7 +1018,7 @@ $(document).on('click', '.expediente-record', function () {
                 modal.find('#edit_id_tipo_maguey_barricada_ids').val(response.caracteristicas.id_tipo_maguey || '');
                 modal.find('#edit_id_tipo_maguey_barricada').val(
                   response.caracteristicas.nombre.join(', ') || 'N/A'
-              );
+                );
                 modal.find('#edit_volumen_ingresado').val(response.caracteristicas.volumen_ingresado || '');
                 modal.find('#edit_analisis_barricada').val(response.caracteristicas.analisis || '');
                 modal.find('#edit_alc_vol_barrica').val(response.caracteristicas.cont_alc || '');
@@ -1068,7 +1028,7 @@ $(document).on('click', '.expediente-record', function () {
                 modal.find('#edit_material').val(response.caracteristicas.material || '');
                 modal.find('#edit_capacidad').val(response.caracteristicas.capacidad || '');
                 modal.find('#edit_num_recipientes').val(response.caracteristicas.num_recipientes || '');
-                modal.find('#edit_tiempo_dura').val(response.caracteristicas.tiempo_dura || '');
+                modal.find('#edit_tiempo_maduracion').val(response.caracteristicas.tiempo_maduracion || '');
                 modal.find('#edit_id_certificado_barricada').val(response.caracteristicas.id_certificado || '');
               }
 
@@ -1085,13 +1045,9 @@ $(document).on('click', '.expediente-record', function () {
               if (response.caracteristicas) {
                 modal.find('#edit_id_lote_envasado_lib_ter').data('selected', response.caracteristicas.id_lote_envasado || '');
                 modal.find('#edit_id_categoria_lib_ter').val(response.caracteristicas.categoria || '');
-                modal.find('#edit_id_categoria_lib_ter_id').val(response.caracteristicas.id_categoria || '');
                 modal.find('#edit_id_clase_lib_ter').val(response.caracteristicas.clase || '');
-                modal.find('#edit_id_clase_lib_ter_id').val(response.caracteristicas.id_clase || '');
                 modal.find('#edit_id_tipo_maguey_lib_ter').val(response.caracteristicas.nombre || '');
-                modal.find('#edit_id_tipo_maguey_lib_ter_ids').val(response.caracteristicas.id_tipo_maguey || '');
                 modal.find('#edit_marca_lib_ter').val(response.caracteristicas.marca || '');
-                modal.find('#edit_marca_lib_ter_id').val(response.caracteristicas.id_marca || '');
                 modal.find('#edit_porcentaje_alcohol_lib_ter').val(response.caracteristicas.cont_alc || '');
                 modal.find('#edit_analisis_fisiq_lib_ter').val(response.caracteristicas.analisis || '');
                 modal.find('#edit_can_botellas_lib_ter').val(response.caracteristicas.cantidad_botellas || '');
@@ -1114,35 +1070,35 @@ $(document).on('click', '.expediente-record', function () {
 
               // Mapeo de campos de `caracteristicas` a los inputs correspondientes
               const fields = {
-                  id_lote_granel: '#edit_id_lote_granel_liberacion',
-                  id_categoria: '#edit_id_categoria_liberacion_id',
-                  categoria: '#edit_id_categoria_liberacion',
-                  id_clase: '#edit_id_clase_liberacion_id',
-                  clase: '#edit_id_clase_liberacion',
-                  id_tipo_maguey: '#edit_id_tipo_maguey_liberacion_ids',
-                  nombre: '#edit_id_tipo_maguey_liberacion',
-                  edad: '#edit_id_edad_liberacion',
-                  analisis: '#edit_analisis_liberacion',
-                  cont_alc: '#edit_volumen_liberacion',
-                  tipoLiberacion: '#edit_tipo_lote_lib',
-                  fecha_inicio: '#edit_fecha_inicio_lib',
-                  fecha_termino: '#edit_fecha_termino_lib',
-                  material: '#edit_material_liberacion',
-                  capacidad: '#edit_capacidad_liberacion',
-                  num_recipientes: '#edit_num_recipientes_lib',
-                  tiempo_dura: '#edit_tiempo_dura_lib',
-                  id_certificado: '#edit_id_certificado_liberacion'
+                id_lote_granel: '#edit_id_lote_granel_liberacion',
+                id_categoria: '#edit_id_categoria_liberacion_id',
+                categoria: '#edit_id_categoria_liberacion',
+                id_clase: '#edit_id_clase_liberacion_id',
+                clase: '#edit_id_clase_liberacion',
+                id_tipo_maguey: '#edit_id_tipo_maguey_liberacion_ids',
+                nombre: '#edit_id_tipo_maguey_liberacion',
+                edad: '#edit_id_edad_liberacion',
+                analisis: '#edit_analisis_liberacion',
+                cont_alc: '#edit_volumen_liberacion',
+                tipoLiberacion: '#edit_tipo_lote_lib',
+                fecha_inicio: '#edit_fecha_inicio_lib',
+                fecha_termino: '#edit_fecha_termino_lib',
+                material: '#edit_material_liberacion',
+                capacidad: '#edit_capacidad_liberacion',
+                num_recipientes: '#edit_num_recipientes_lib',
+                tiempo_dura: '#edit_tiempo_dura_lib',
+                id_certificado: '#edit_id_certificado_liberacion'
               };
 
               // Iterar sobre el mapeo y asignar valores
               Object.entries(fields).forEach(([key, selector]) => {
-                  const value = response.caracteristicas?.[key] || ''; // Asignar '' si no existe
-                  modal.find(selector).val(value);
+                const value = response.caracteristicas?.[key] || ''; // Asignar '' si no existe
+                modal.find(selector).val(value);
               });
 
               modal.find('#edit_info_adicional').val(response.data.info_adicional || '');
-          }
-           else if (id_tipo === 10) {
+            }
+            else if (id_tipo === 10) {
               modal.find('#id_solicitud_geo').val(id_solicitud);
               modal.find('#edit_id_empresa_geo').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita_geo').val(response.data.fecha_visita);
@@ -1155,47 +1111,118 @@ $(document).on('click', '.expediente-record', function () {
               }
               modal.find('#edit_info_adicional_geo').val(response.data.info_adicional);
               // Otros campos específicos para tipo 10
-              }
-              else if (id_tipo === 11) {
-                
-                  modal.find('.id_solicitud').val(id_solicitud);
-                  modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
-                  modal.find('#fecha_visita_edit').val(response.data.fecha_visita);
-                  modal.find('.instalacion_id').val(response.data.id_instalacion);
-    
-                  if (response.caracteristicas) { 
-                    modal.find('#tipo_solicitud_edit').val(response.caracteristicas.tipo_solicitud).trigger('change');
-                    modal.find('.direccion_id').val(response.caracteristicas.direccion_destinatario);
-                    modal.find('.aduana_salida').val(response.caracteristicas.aduana_salida);
-                    modal.find('.no_pedido').val(response.caracteristicas.no_pedido);
-                    modal.find('.instalacion_envasado_id').val(response.caracteristicas.id_instalacion_envasado);
-                    modal.find('.etiqueta_id').val(response.caracteristicas.id_etiqueta);
-                    var lotesEnvasado = response.caracteristicas.detalles.map(function(detalle) {
-                      return detalle.id_lote_envasado;
-                  });
-                  
-                    modal.find('.lote_envasado_id').val(lotesEnvasado.join(',')); 
-                    var cantidadDeLotes = response.caracteristicas.detalles.length;
+            }
+            else if (id_tipo === 11) {
+              modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
+              modal.find('.id_solicitud').val(id_solicitud);
+              modal.find('#fecha_visita_edit_exportacion').val(response.data.fecha_visita);
+              modal.find('.instalacion_id').val(response.data.id_instalacion);
 
-                    // Primero eliminar todos los bloques extras si es necesario
-                    if (cantidadDeLotes === 1) {
-                        // Mantener solo el primer bloque
-                        $('#sections-container2').not(':first').remove();
-                        modal.find('#cantidad_cajas0').val(response.caracteristicas.detalles[0].cantidad_cajas);
-                        modal.find('#cantidad_botellas0').val(response.caracteristicas.detalles[0].cantidad_botellas);
-                    } else {
-                        // Si hay más de uno, agregamos los que faltan
-                        for (var i = 1; i < cantidadDeLotes; i++) {
-                            $('#add-characteristics').click();
-                            modal.find('#cantidad_cajas'+(i-1)).val(response.caracteristicas.detalles[i-1].cantidad_cajas);
-                            modal.find('#cantidad_botellas'+(i-1)).val(response.caracteristicas.detalles[i-1].cantidad_botellas);
-                        }
-                    }
+              if (response.caracteristicas) {
+                modal.find('#tipo_solicitud_edit').val(response.caracteristicas.tipo_solicitud).trigger('change');
+                modal.find('.direccion_id').val(response.caracteristicas.direccion_destinatario);
+                modal.find('.aduana_salida').val(response.caracteristicas.aduana_salida);
+                modal.find('.no_pedido').val(response.caracteristicas.no_pedido);
+                modal.find('.instalacion_envasado_id').val(response.caracteristicas.id_instalacion_envasado);
+                modal.find('#direccion_destinatario_ex_edit').val(response.caracteristicas.id_instalacion_envasado).trigger('change');
+
+                modal.find('.etiqueta_id').val(response.caracteristicas.id_etiqueta);
+
+                var lotesEnvasado = response.caracteristicas.detalles.map(function (detalle) {
+                  return detalle.id_lote_envasado;
+                });
+                // Mostrar Factura Proforma
+                let facturaProforma = null;
+                let facturaProformaCont = null;
+                var numeroCliente = response.numero_cliente;
+
+                if (response.documentos && Array.isArray(response.documentos)) {
+                  facturaProforma = response.documentos.find(
+                    doc => doc.nombre_documento && doc.nombre_documento.toLowerCase().includes('proforma') && !doc.nombre_documento.toLowerCase().includes('continuación')
+                  );
+                  facturaProformaCont = response.documentos.find(
+                    doc => doc.nombre_documento && doc.nombre_documento.toLowerCase().includes('continuación')
+                  );
                 }
-  
-                modal.find('#comentarios_edit').val(response.data.info_adicional);
-              
-            } else if (id_tipo === 14) {
+
+                if (facturaProforma && facturaProforma.url) {
+                  $('#factura_proforma_display').html(
+                    'Factura actual: <a href="/storage/uploads/' + numeroCliente + '/' + facturaProforma.url + '" target="_blank">' + facturaProforma.url + '</a>'
+                  );
+                } else {
+                  $('#factura_proforma_display').html('<span class="text-danger">No hay factura proforma.</span>');
+                }
+
+                if (facturaProformaCont && facturaProformaCont.url) {
+                  $('#factura_proforma_cont_display').html(
+                    'Factura (Continuación) actual: <a href="/storage/uploads/' + numeroCliente + '/' + facturaProformaCont.url + '" target="_blank">' + facturaProformaCont.url + '</a>'
+                  );
+                } else {
+                  $('#factura_proforma_cont_display').html('<span class="text-danger">No hay factura proforma (continuación).</span>');
+                }
+
+                modal.find('.lote_envasado_id').val(lotesEnvasado.join(','));
+
+                var cantidadDeLotes = response.caracteristicas.detalles.length;
+
+                if (cantidadDeLotes === 1) {
+                  $('#sections-container2').not(':first').remove();
+                  modal.find('#cantidad_cajas_edit0').val(response.caracteristicas.detalles[0].cantidad_cajas);
+                  modal.find('#cantidad_botellas_edit0').val(response.caracteristicas.detalles[0].cantidad_botellas);
+                  modal.find('#presentacion_edit0').val(response.caracteristicas.detalles[0].presentacion || '');
+                  modal.find('#lote_granel_edit_0').val(response.caracteristicas.detalles[0].lote_granel || '');
+                  modal.find('#lote_envasado_edit_0').data('selected', response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
+                  let idLoteEnvasado = response.caracteristicas.detalles[0].id_lote_envasado;
+                  cargarDetallesLoteEnvasadoEdit(idLoteEnvasado);
+                } else {
+                  for (var i = 1; i < cantidadDeLotes; i++) {
+                    $('#add-characteristics_edit').click();
+                    // Primero actualiza el índice 0 (parece error: debería ser i)
+                    modal.find(`#cantidad_cajas_edit0`).val(response.caracteristicas.detalles[0].cantidad_cajas);
+                    modal.find(`#cantidad_botellas_edit0`).val(response.caracteristicas.detalles[0].cantidad_botellas);
+                    modal.find(`#presentacion_edit0`).val(response.caracteristicas.detalles[0].presentacion || '');
+                    modal.find(`#lote_granel_edit_0`).val(response.caracteristicas.detalles[0].lote_granel || '');
+                    modal.find('#lote_envasado_edit_0').data('selected', response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
+                    let idLoteEnvasado = response.caracteristicas.detalles[0].id_lote_envasado;
+                    cargarDetallesLoteEnvasadoEdit(idLoteEnvasado);
+                    $(`#caracteristicas_Ex_edit_${i} .evasado_export_edit`).data('selected', response.caracteristicas.detalles[i].id_lote_envasado);
+                    cargarLotesEdit($('#id_empresa_solicitud_exportacion_edit').val(), i);
+                  }
+                }
+              }
+
+              modal.find('#comentarios_edit').val(response.data.info_adicional);
+            }
+            else if (id_tipo === 13) {
+              modal.find('#id_solicitud_emision_v').val(id_solicitud);
+              modal.find('#edit_id_empresa_solicitud_emision_venta').val(response.data.id_empresa).trigger('change');
+              modal.find('#edit_fecha_visita_emision_v').val(response.data.fecha_visita);
+              modal.find('#edit_id_instalacion_emision_v').val(response.data.id_instalacion);
+
+              let caracteristicas = {};
+              if (typeof response.data.caracteristicas === 'string') {
+                try {
+                  caracteristicas = JSON.parse(response.data.caracteristicas);
+                } catch (e) {
+                  console.error("Error al parsear caracteristicas:", e);
+                }
+              }
+              if (caracteristicas.id_dictamen_envasado) {
+                modal.find('#edit_id_dictamen_envasado').data('selected', caracteristicas.id_dictamen_envasado || '');
+              }
+              if (caracteristicas.id_lote_envasado) {
+                modal.find('#edit_id_lote_envasado_emision_v').val(caracteristicas.id_lote_envasado || '');
+              }
+              if (caracteristicas.cantidad_cajas) {
+                modal.find('#edit_num_cajas').val(caracteristicas.cantidad_cajas);
+              }
+              if (caracteristicas.cantidad_botellas) {
+                modal.find('#edit_num_botellas').val(caracteristicas.cantidad_botellas);
+              }
+
+              modal.find('#edit_comentarios_e_venta_n').val(response.data.info_adicional);
+            }
+            else if (id_tipo === 14) {
               // Aquí va el tipo correspondiente para tu caso
               // Llenar los campos del modal con los datos de la solicitud
               modal.find('#edit_id_solicitud').val(id_solicitud);
@@ -1203,6 +1230,7 @@ $(document).on('click', '.expediente-record', function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion').val(response.data.id_instalacion).trigger('change');
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
+              modal.find('#instalacion_id').val(response.data.id_instalacion);
               modal.find('#instalacion_id').val(response.data.id_instalacion);
 
               // Aquí vamos a manejar las características (clases, categorías, renovacion)
@@ -1256,28 +1284,28 @@ $(document).on('click', '.expediente-record', function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_predio: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un predio para la inspección.'
+              message: 'Por favor seleccione un predio para la inspección.'
             }
           }
         },
         punto_reunion: {
           validators: {
             notEmpty: {
-              message: 'Introduce la dirección para el punto de reunión.'
+              message: 'Por favor introduzca la dirección para el punto de reunión.'
             }
           }
         }
@@ -1293,8 +1321,14 @@ $(document).on('click', '.expediente-record', function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function (e) {
-      // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
+      $('#btnEditGeo').prop('disabled', true);
+
+      $('#btnEditGeo').html('<span class="spinner-border spinner-border-sm me-2"></span> Actualizando...');
+      setTimeout(function () {
+        $('#btnEditGeo').prop('disabled', false);
+        $('#btnEditGeo').html('<i class="ri-add-line"></i> Editar');
+      }, 3000);
 
       // Hacer la solicitud AJAX
       $.ajax({
@@ -1308,7 +1342,7 @@ $(document).on('click', '.expediente-record', function () {
           $('#editFormTipo10')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
           $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
-          
+
 
           Swal.fire({
             icon: 'success',
@@ -1350,42 +1384,42 @@ $(document).on('click', '.expediente-record', function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha sugerida para la inspección.'
+              message: 'Por favor seleccione la fecha sugerida para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
         'clases[]': {
           validators: {
             notEmpty: {
-              message: 'Selecciona al menos una clase.'
+              message: 'Por favor seleccione al menos una clase.'
             }
           }
         },
         'categorias[]': {
           validators: {
             notEmpty: {
-              message: 'Selecciona al menos una categoria.'
+              message: 'Por favor seleccione al menos una categoria.'
             }
           }
         },
         renovacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona si es renovación o no.'
+              message: 'Por favor seleccione si es renovación o no.'
             }
           }
         }
@@ -1403,7 +1437,13 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(formDictaminacion);
+      $('#btnEditDicIns').prop('disabled', true);
 
+      $('#btnEditDicIns').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+      setTimeout(function () {
+        $('#btnEditDicIns').prop('disabled', false);
+        $('#btnEditDicIns').html('<i class="ri-add-line"></i> Editar');
+      }, 3000);
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud').val(),
         type: 'POST',
@@ -1414,9 +1454,9 @@ $(document).on('click', '.expediente-record', function () {
           $('#editSolicitudDictamen').modal('hide');
           $('#addEditSolicitud')[0].reset();
           $('.select2').val(null).trigger('change');
-          
+
           $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
-        
+
 
           Swal.fire({
             icon: 'success',
@@ -1459,28 +1499,28 @@ $(document).on('click', '.expediente-record', function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
-        id_predio: {
+        id_lote_granel: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un predio para la inspección.'
+              message: 'Por favor seleccione un predio para la inspección.'
             }
           }
         },
         punto_reunion: {
           validators: {
             notEmpty: {
-              message: 'Introduce la dirección para el punto de reunión.'
+              message: 'Por favor introduzca la dirección para el punto de reunión.'
             }
           }
         }
@@ -1496,8 +1536,13 @@ $(document).on('click', '.expediente-record', function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function (e) {
-      // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
+      $('#btnEditVigiProd').prop('disabled', true);
+      $('#btnEditVigiProd').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+      setTimeout(function () {
+        $('#btnEditVigiProd').prop('disabled', false);
+        $('#btnEditVigiProd').html('<i class="ri-add-line"></i> Editar');
+      }, 3000);
 
       // Agregar los valores seleccionados del select múltiple al FormData
       $('#edit_id_tipo_vig')
@@ -1523,8 +1568,8 @@ $(document).on('click', '.expediente-record', function () {
           $('#editVigilanciaProduccion').modal('hide'); // Oculta el modal
           $('#editVigilanciaProduccionForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
-        // Recarga la tabla manteniendo la página actual
-        $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
+          // Recarga la tabla manteniendo la página actual
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
 
           console.log(response);
 
@@ -1551,6 +1596,8 @@ $(document).on('click', '.expediente-record', function () {
         }
       });
     });
+
+
   });
   //metodo update para muestrteo de lote agranel
   $(function () {
@@ -1568,35 +1615,35 @@ $(document).on('click', '.expediente-record', function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
         id_lote_granel_muestreo: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote a granel.'
+              message: 'Por favor seleccione un lote a granel.'
             }
           }
         },
         destino_lote: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un tipo.'
+              message: 'Por favor seleccione un tipo.'
             }
           }
         }
@@ -1614,7 +1661,12 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function (e) {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
-
+      $('#btnEditMLote').prop('disabled', true);
+      $('#btnEditMLote').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+      setTimeout(function () {
+        $('#btnEditMLote').prop('disabled', false);
+        $('#btnEditMLote').html('<i class="ri-add-line"></i> Editar');
+      }, 3000);
       // Hacer la solicitud AJAX
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_muestreo').val(),
@@ -1668,35 +1720,35 @@ $(document).on('click', '.expediente-record', function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
         id_lote_granel_traslado: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote a granel.'
+              message: 'Por favor seleccione un lote a granel.'
             }
           }
         },
         id_vol_traslado: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el volumen trasladado.'
+              message: 'Por favor ingrese el volumen trasladado.'
             },
             numeric: {
               message: 'El volumen debe ser un número válido.'
@@ -1717,6 +1769,12 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function (e) {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
+      $('#btnEditVigiLote').prop('disabled', true);
+      $('#btnEditVigiLote').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+      setTimeout(function () {
+        $('#btnEditVigiLote').prop('disabled', false);
+        $('#btnEditVigiLote').html('<i class="ri-add-line"></i> Editar');
+      }, 2000);
 
       // Hacer la solicitud AJAX
       $.ajax({
@@ -1771,35 +1829,35 @@ $(document).on('click', '.expediente-record', function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
         id_lote_granel_barricada: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote a granel.'
+              message: 'Por favor seleccione un lote a granel.'
             }
           }
         },
         volumen_barricada: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el volumen trasladado.'
+              message: 'por favor ingrese el volumen trasladado.'
             },
             numeric: {
               message: 'El volumen debe ser un número válido.'
@@ -1820,7 +1878,12 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function (e) {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
-
+      $('#btnEditIngresoBarrica').prop('disabled', true);
+      $('#btnEditIngresoBarrica').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+      setTimeout(function () {
+        $('#btnEditIngresoBarrica').prop('disabled', false);
+        $('#btnEditIngresoBarrica').html('<i class="ri-add-line"></i> Editar');
+      }, 2000);
       // Hacer la solicitud AJAX
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_barricada').val(),
@@ -1858,7 +1921,7 @@ $(document).on('click', '.expediente-record', function () {
       });
     });
   });
-
+  //edit inspeccion de envasado
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -1874,41 +1937,60 @@ $(document).on('click', '.expediente-record', function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
-        id_lote_granel_inspeccion: {
+        edit_id_lote_envasado_inspeccion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote a granel.'
+              message: 'Por favor seleccione un lote envasado.'
             }
           }
         },
-        volumen_inspeccion: {
+        id_cantidad_caja: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el volumen trasladado.'
+              message: 'Por favor seleccione la cantidad de cajas.'
+            }
+          }
+        },
+        id_inicio_envasado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese inicio de envasado.'
             },
-            numeric: {
-              message: 'El volumen debe ser un número válido.'
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'El formato de la fecha debe ser AAAA-MM-DD (ej. 2025-05-30).'
             }
           }
-        }
+        },
+        id_previsto: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el término previsto del envasado.'
+            }, date: {
+              format: 'YYYY-MM-DD',
+              message: 'El formato de la fecha debe ser AAAA-MM-DD (ej. 2025-05-30).'
+            }
+          }
+        },
+
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -1923,7 +2005,13 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function () {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
+      $('#enviarInspec').prop('disabled', true);
 
+      $('#enviarInspec').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+      setTimeout(function () {
+        $('#enviarInspec').prop('disabled', false);
+        $('#enviarInspec').html('<i class="ri-add-line"></i> Editar');
+      }, 2500);
       // Hacer la solicitud AJAX
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_inspeccion').val(),
@@ -1935,7 +2023,7 @@ $(document).on('click', '.expediente-record', function () {
           $('#editInspeccionEnvasado').modal('hide'); // Oculta el modal
           $('#editInspeccionEnvasadoForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
-          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false);// Recarga la tabla
 
           Swal.fire({
             icon: 'success',
@@ -1960,6 +2048,144 @@ $(document).on('click', '.expediente-record', function () {
         }
       });
     });
+    // Inicializar select2 y revalidar el campo cuando cambie
+    $('#edit_id_lote_envasado_inspeccion, #edit_id_inicio_envasado, #edit_id_previsto').on('change', function () {
+      fvUpdate.revalidateField($(this).attr('name'));
+    });
+  });
+
+  //add inspeccion de envsasado
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Validación del formulario inpeccion de envasado
+    const addInspeccionEnvasadoForm = document.getElementById('addInspeccionEnvasadoForm');
+    const fvEnvasado = FormValidation.formValidation(addInspeccionEnvasadoForm, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un cliente.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una instalación.'
+            }
+          }
+        },
+        id_lote_envasado_inspeccion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un lote envasado.'
+            }
+          }
+        },
+        id_cantidad_caja: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la cantidad de cajas.'
+            }
+          }
+        },
+        id_inicio_envasado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese inicio de envasado.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'El formato de la fecha debe ser AAAA-MM-DD (ej. 2025-05-30).'
+            }
+          }
+        },
+        id_previsto: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el término previsto del envasado.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'El formato de la fecha debe ser AAAA-MM-DD (ej. 2025-05-30).'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: '.mb-4, .mb-5, .mb-6'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+
+    }).on('core.form.valid', function () {
+      const formData = new FormData(addInspeccionEnvasadoForm);
+      $('#btnAddInspEnv').prop('disabled', true);
+
+      $('#btnAddInspEnv').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnAddInspEnv').prop('disabled', false);
+        $('#btnAddInspEnv').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
+
+      $.ajax({
+        url: '/hologramas/storeInspeccionEnvasado', // Cambiar a la ruta correspondiente
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // Cerrar modal y reiniciar formulario
+          $('#addInspeccionEnvasado').modal('hide');
+          $('#addInspeccionEnvasadoForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Inspección de envasado registrada exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function () {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la inspección.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+
+      });
+    });
+    // Inicializar select2 y revalidar el campo cuando cambie
+    $('#id_empresa_inspeccion, #fecha_visita_inspeccion_envasado, #id_lote_envasado_inspeccion, #id_inicio_envasado, #id_previsto, #id_instalacion_inspeccion').on('change', function () {
+      fvEnvasado.revalidateField($(this).attr('name'));
+    });
   });
 
   //metodo para liberacion
@@ -1978,35 +2204,35 @@ $(document).on('click', '.expediente-record', function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
         id_lote_granel_liberacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote a granel.'
+              message: 'Por favor seleccione un lote a granel.'
             }
           }
         },
         volumen_liberacion: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el volumen trasladado.'
+              message: 'Por favor ingrese el volumen trasladado.'
             },
             numeric: {
               message: 'El volumen debe ser un número válido.'
@@ -2027,6 +2253,12 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function (e) {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
+      $('#btnEditLiberacion').prop('disabled', true);
+      $('#btnEditLiberacion').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+      setTimeout(function () {
+        $('#btnEditLiberacion').prop('disabled', false);
+        $('#btnEditLiberacion').html('<i class="ri-add-line"></i> Editar');
+      }, 3000);
 
       // Hacer la solicitud AJAX
       $.ajax({
@@ -2065,6 +2297,7 @@ $(document).on('click', '.expediente-record', function () {
       });
     });
   });
+  //edit liberacion
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -2080,28 +2313,28 @@ $(document).on('click', '.expediente-record', function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha y hora para la inspección.'
+              message: 'Por favor seleccione la fecha y hora para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         },
         id_lote_envasado: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote envasado.'
+              message: 'Por favor seleccione un lote envasado.'
             }
           }
         },
@@ -2119,7 +2352,9 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function () {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
+      $('#btneditlib').prop('disabled', true);
 
+      $('#btneditlib').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
       // Hacer la solicitud AJAX
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_liberacion_terminado').val(),
@@ -2129,6 +2364,8 @@ $(document).on('click', '.expediente-record', function () {
         contentType: false,
         success: function (response) {
           $('#editLiberacionProducto').modal('hide'); // Oculta el modal
+          $('#btneditlib').prop('disabled', false);
+          $('#btneditlib').html('<i class="ri-add-line"></i> Editar');
           $('#editLiberacionProductoForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
           $('.datatables-solicitudes').DataTable().ajax.reload(null, false); // Recarga la tabla
@@ -2173,21 +2410,21 @@ $(document).on('click', '.expediente-record', function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione el cliente.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha sugerida para la inspección.'
+              message: 'Por favor seleccione la fecha sugerida para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor seleccione una instalación.'
             }
           }
         }
@@ -2205,6 +2442,13 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(formDictaminacion);
+      $('#btnEditMA').prop('disabled', true);
+
+      $('#btnEditMA').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+      setTimeout(function () {
+        $('#btnEditMA').prop('disabled', false);
+        $('#btnEditMA').html('<i class="ri-add-line"></i> Editar');
+      }, 3000);
 
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_muestr').val(),
@@ -2244,19 +2488,19 @@ $(document).on('click', '.expediente-record', function () {
     });
   });
 
-    //Editar pedidos para exportación
-    $(function () {
-      // Configuración CSRF para Laravel
-      $.ajaxSetup({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      });
-  
-      // Inicializar FormValidation para la solicitud de muestreo
-      const formDictaminacion = document.getElementById('editPedidoExportacionForm');
-      const fvDictaminacion = FormValidation.formValidation(formDictaminacion, {
-        fields: {
+  //Editar pedidos para exportación
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation para la solicitud de muestreo
+    const formDictaminacion = document.getElementById('editPedidoExportacionForm');
+    const fvDictaminacion = FormValidation.formValidation(formDictaminacion, {
+      fields: {
         'cantidad_botellas[0]': {
           validators: {
             notEmpty: {
@@ -2280,14 +2524,14 @@ $(document).on('click', '.expediente-record', function () {
         },
 
         id_etiqueta: {
-          selector: "input[name='id_etiqueta']",  
+          selector: "input[name='id_etiqueta']",
           validators: {
             notEmpty: {
               message: 'Por favor seleccione una etiqueta.'
             }
           }
         },
- 
+
         direccion_destinatario: {
           validators: {
             notEmpty: {
@@ -2309,22 +2553,28 @@ $(document).on('click', '.expediente-record', function () {
             }
           }
         }
-        },
-        plugins: {
-          trigger: new FormValidation.plugins.Trigger(),
-          bootstrap5: new FormValidation.plugins.Bootstrap5({
-            eleValidClass: '',
-            eleInvalidClass: 'is-invalid',
-            rowSelector: '.form-floating'
-          }),
-          submitButton: new FormValidation.plugins.SubmitButton(),
-          autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-      }).on('core.form.valid', function (e) {
-        // Validar el formulario
-        var formData = new FormData(formDictaminacion);
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      // Validar el formulario
+      var formData = new FormData(formDictaminacion);
+      $('#btnEditExport').prop('disabled', true);
 
-           // Construir las características como un JSON completo
+      $('#btnEditExport').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
+      setTimeout(function () {
+        $('#btnEditExport').prop('disabled', false);
+        $('#btnEditExport').html('<i class="ri-add-line"></i> Editar');
+      }, 3000);
+      // Construir las características como un JSON completo
       const caracteristicas = {
         tipo_solicitud: $('#tipo_solicitud_edit').val(),
         direccion_destinatario: $('#direccion_destinatario_ex_edit').val(),
@@ -2348,111 +2598,24 @@ $(document).on('click', '.expediente-record', function () {
 
       // Añadir el JSON al FormData como string
       formData.append('caracteristicas', JSON.stringify(caracteristicas));
-  
-        $.ajax({
-          url: '/actualizar-solicitudes/' + $('#solicitud_id_pedidos').val(),
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function (response) {
-            $('#editPedidoExportacion').modal('hide');
-            $('#editPedidoExportacion')[0].reset();
-            $('.select2').val(null).trigger('change');
-            $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
-            console.log(response);
-  
-            Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.message,
-              customClass: {
-                confirmButton: 'btn btn-success'
-              }
-            });
-          },
-          error: function (xhr) {
-            console.log('Error:', xhr.responseText);
-  
-            Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al actualizar la solicitud',
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          }
-        });
-      });
-    });
-
-  ///
-  $(function () {
-    // Configuración CSRF para Laravel
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-
-    // Inicializar FormValidation para la solicitud de muestreo de agave
-    const form3 = document.getElementById('addRegistrarSolicitudMuestreoAgave');
-    const fv3 = FormValidation.formValidation(form3, {
-      fields: {
-        id_empresa: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona el cliente.'
-            }
-          }
-        },
-        fecha_visita: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona la fecha sugerida para la inspección.'
-            }
-          }
-        },
-        punto_reunion: {
-          validators: {
-            notEmpty: {
-              message: 'Introduce la dirección para el punto de reunión.'
-            }
-          }
-        }
-      },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating'
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function (e) {
-      // Validar el formulario
-      var formData = new FormData(form3);
 
       $.ajax({
-        url: '/registrar-solicitud-muestreo-agave',
+        url: '/actualizar-solicitudes/' + $('#solicitud_id_pedidos').val(),
         type: 'POST',
         data: formData,
         processData: false,
         contentType: false,
         success: function (response) {
-          $('#addSolicitudMuestreoAgave').modal('hide');
-          $('#addRegistrarSolicitudMuestreoAgave')[0].reset();
+          $('#editPedidoExportacion').modal('hide');
+          $('#editPedidoExportacionForm')[0].reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-solicitudes').DataTable().ajax.reload();
-          console.log(response);
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
+
 
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
-            text: 'Solicitud de muestreo registrado exitosamente.',
+            text: response.message,
             customClass: {
               confirmButton: 'btn btn-success'
             }
@@ -2464,7 +2627,7 @@ $(document).on('click', '.expediente-record', function () {
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al registrar la solicitud',
+            text: 'Error al actualizar la solicitud',
             customClass: {
               confirmButton: 'btn btn-danger'
             }
@@ -2472,7 +2635,111 @@ $(document).on('click', '.expediente-record', function () {
         }
       });
     });
+  });
+  /* editar emision certificado venta nacional */
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
 
+    // Inicializar FormValidation para el formulario de actualización
+    const formUpdate = document.getElementById('editEmisionCetificadoVentaNacionalForm');
+    const fvUpdate = FormValidation.formValidation(formUpdate, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa.'
+            }
+          }
+        },
+        id_dictamen_envasado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un dictamen de envasado.'
+            }
+          }
+        },
+        cantidad_botellas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad de botellas.'
+            }
+          }
+        },
+        cantidad_cajas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad de cajas.'
+            }
+          }
+        }
+
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      var formData = new FormData(formUpdate);
+      $('#btnEditremi').prop('disabled', true);
+      $('#btnEditremi').html('<span class="spinner-border spinner-border-sm me-2"></span> Actualizando...');
+      // Hacer la solicitud AJAX
+      $.ajax({
+        url: '/actualizar-solicitudes/' + $('#id_solicitud_emision_v').val(),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#editSolicitudEmisionCertificado').modal('hide'); // Oculta el modal
+          $('#btnEditremi').prop('disabled', false);
+          $('#btnEditremi').html('<i class="ri-add-line"></i> Editar');
+          $('#editEmisionCetificadoVentaNacionalForm')[0].reset(); // Resetea el formulario
+          $('.select2').val(null).trigger('change'); // Resetea los select2
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la solicitud',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+  });
+
+  ///
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
     // Inicializar FormValidation para la solicitud de dictaminación de instalaciones
     const form = document.getElementById('addRegistrarSolicitud');
     const fv = FormValidation.formValidation(form, {
@@ -2480,42 +2747,42 @@ $(document).on('click', '.expediente-record', function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha sugerida para la inspección'
+              message: 'Por favor seleccione la fecha sugerida para la inspección.'
             }
           }
         },
         id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la instalación'
+              message: 'Por favor seleccione la instalación.'
             }
           }
         },
         renovacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la opción'
+              message: 'Por favor seleccione una opción.'
             }
           }
         },
         'clases[]': {
           validators: {
             notEmpty: {
-              message: 'Selecciona la clase'
+              message: 'Por favor seleccione una clase'
             }
           }
         },
         'categorias[]': {
           validators: {
             notEmpty: {
-              message: 'Selecciona la clase'
+              message: 'Por favor seleccione una categoria'
             }
           }
         }
@@ -2531,8 +2798,14 @@ $(document).on('click', '.expediente-record', function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function (e) {
-      // Validar el formulario
       var formData = new FormData(form);
+      $('#btnRegistrarDicIns').prop('disabled', true);
+
+      $('#btnRegistrarDicIns').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnRegistrarDicIns').prop('disabled', false);
+        $('#btnRegistrarDicIns').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
 
       $.ajax({
         url: '/solicitudes-list',
@@ -2571,13 +2844,18 @@ $(document).on('click', '.expediente-record', function () {
       });
     });
     // Inicializar select2 y manejar eventos de cambio por "name"
-    $(
-      'select[name="clases[]"], select[name="categorias[]"], select[name="id_instalacion"], select[name="id_empresa"]'
-    ).on('change', function () {
-      // Revalidar el campo cuando se cambia el valor del select2
+    $('#id_empresa_solicitudes, #fechaSoliInstalacion, #id_instalacion_dic, #categoriaDictamenIns, #clasesDicIns, #renovacion').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
 
+  });
+
+  $(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
     // Inicializar FormValidation para la solicitud de georeferenciacion
     const form2 = document.getElementById('addRegistrarSolicitudGeoreferenciacion');
     const fv2 = FormValidation.formValidation(form2, {
@@ -2585,21 +2863,28 @@ $(document).on('click', '.expediente-record', function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha sugerida para la inspección.'
+              message: 'Por favor seleccione la fecha sugerida para la inspección.'
             }
           }
         },
         punto_reunion: {
           validators: {
             notEmpty: {
-              message: 'Introduce la dirección para el punto de reunión.'
+              message: 'Por favor introduzca la dirección para el punto de reunión.'
+            }
+          }
+        },
+        id_predio: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione el predio.'
             }
           }
         }
@@ -2617,7 +2902,13 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(form2);
+      $('#btnRegistrarGeo').prop('disabled', true);
 
+      $('#btnRegistrarGeo').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnRegistrarGeo').prop('disabled', false);
+        $('#btnRegistrarGeo').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
       $.ajax({
         url: '/registrar-solicitud-georeferenciacion',
         type: 'POST',
@@ -2654,275 +2945,11 @@ $(document).on('click', '.expediente-record', function () {
         }
       });
     });
-  });
 
-  //new new
-  $(function () {
-    // Configuración CSRF para Laravel
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-
-    // Inicializar FormValidation
-    const form = document.getElementById('editInstalacionForm');
-    const fv = FormValidation.formValidation(form, {
-      fields: {
-        id_empresa: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona una empresa.'
-            }
-          }
-        },
-        tipo: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona un tipo de instalación.'
-            }
-          }
-        },
-        estado: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona un estado.'
-            }
-          }
-        },
-        direccion_completa: {
-          validators: {
-            notEmpty: {
-              message: 'Ingrese la dirección completa.'
-            }
-          }
-        },
-        certificacion: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona el tipo de certificación.'
-            }
-          }
-        }
-      },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating'
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function (e) {
-      // Validar el formulario
-      var formData = new FormData(form);
-
-      $.ajax({
-        url: baseUrl + 'instalaciones/' + $('#editInstalacionForm').data('id'),
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
-        },
-        success: function (response) {
-          dt_instalaciones_table.ajax.reload();
-          $('#modalEditInstalacion').modal('hide');
-          $('#editInstalacionForm')[0].reset();
-          $('.select2').val(null).trigger('change');
-
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.message,
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-        },
-        error: function (xhr) {
-          console.log('Error:', xhr.responseText);
-
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al actualizar la instalación',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
-        }
-      });
-    });
-
-    $(function () {
-      // Configuración CSRF para Laravel
-      $.ajaxSetup({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      });
-
-      // Inicializar FormValidation para el formulario de edición
-      const formUpdate = document.getElementById('editLiberacionProductoForm');
-      const fvUpdate = FormValidation.formValidation(formUpdate, {
-        fields: {
-          id_empresa: {
-            validators: {
-              notEmpty: {
-                message: 'Selecciona el cliente.'
-              }
-            }
-          },
-          fecha_visita: {
-            validators: {
-              notEmpty: {
-                message: 'Selecciona la fecha y hora para la inspección.'
-              }
-            }
-          },
-          id_instalacion: {
-            validators: {
-              notEmpty: {
-                message: 'Selecciona una instalación.'
-              }
-            }
-          },
-          id_lote_envasado: {
-            validators: {
-              notEmpty: {
-                message: 'Selecciona un lote envasado.'
-              }
-            }
-          },
-        },
-        plugins: {
-          trigger: new FormValidation.plugins.Trigger(),
-          bootstrap5: new FormValidation.plugins.Bootstrap5({
-            eleValidClass: '',
-            eleInvalidClass: 'is-invalid',
-            rowSelector: '.form-floating'
-          }),
-          submitButton: new FormValidation.plugins.SubmitButton(),
-          autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-      }).on('core.form.valid', function () {
-        // Obtener los datos del formulario
-        var formData = new FormData(formUpdate);
-
-        // Hacer la solicitud AJAX
-        $.ajax({
-          url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_liberacion_terminado').val(),
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function (response) {
-            $('#editLiberacionProducto').modal('hide'); // Oculta el modal
-            $('#editLiberacionProductoForm')[0].reset(); // Resetea el formulario
-            $('.select2').val(null).trigger('change'); // Resetea los select2
-            $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
-            Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.message,
-              customClass: {
-                confirmButton: 'btn btn-success'
-              }
-            });
-          },
-          error: function (xhr) {
-            console.log('Error:', xhr.responseText);
-
-            Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al actualizar la solicitud',
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          }
-        });
-      });
-    });
-
-
-    // Mostrar u ocultar campos adicionales según el tipo de certificación
-    $('#edit_certificacion').on('change', function () {
-      if ($(this).val() === 'otro_organismo') {
-        $('#edit_certificado_otros').removeClass('d-none');
-
-        // Agregar la validación a los campos adicionales
-        fv.addField('url[]', {
-          validators: {
-            notEmpty: {
-              message: 'Debes subir un archivo de certificado.'
-            },
-            file: {
-              extension: 'pdf,jpg,jpeg,png',
-              type: 'application/pdf,image/jpeg,image/png',
-              maxSize: 2097152, // 2 MB en bytes
-              message: 'El archivo debe ser un PDF o una imagen (jpg, png) y no debe superar los 2 MB.'
-            }
-          }
-        });
-
-        fv.addField('folio', {
-          validators: {
-            notEmpty: {
-              message: 'El folio o número del certificado es obligatorio.'
-            }
-          }
-        });
-
-        fv.addField('id_organismo', {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona un organismo de certificación.'
-            }
-          }
-        });
-
-        fv.addField('fecha_emision', {
-          validators: {
-            notEmpty: {
-              message: 'La fecha de emisión es obligatoria.'
-            },
-            date: {
-              format: 'YYYY-MM-DD',
-              message: 'La fecha de emisión no es válida.'
-            }
-          }
-        });
-
-        fv.addField('fecha_vigencia', {
-          validators: {
-            notEmpty: {
-              message: 'La fecha de vigencia es obligatoria.'
-            },
-            date: {
-              format: 'YYYY-MM-DD',
-              message: 'La fecha de vigencia no es válida.'
-            }
-          }
-        });
-      } else {
-        $('#edit_certificado_otros').addClass('d-none');
-
-        // Quitar la validación de los campos adicionales
-        fv.removeField('url[]');
-        fv.removeField('folio');
-        fv.removeField('id_organismo');
-        fv.removeField('fecha_emision');
-        fv.removeField('fecha_vigencia');
-      }
+    $('#id_empresa_georefere, #fecha_visita_geo, #id_predio_georefe, #punto_reunion_georefere').on('change', function () {
+      fv2.revalidateField($(this).attr('name'));
     });
   });
-
 
   //new
   $(document).on('click', '.edit-record', function () {
@@ -3004,23 +3031,7 @@ $(document).on('click', '.expediente-record', function () {
     });
   });
 
-  // Limpiar los campos del formulario cuando el modal se oculta
-  $('#modalEditInstalacion').on('hidden.bs.modal', function () {
-    $('#edit_certificado_otros').addClass('d-none');
-    $('#archivo_url_display').html('No hay archivo disponible.');
-
-    // Limpiar campos individuales
-    $('#edit_id_empresa').val('').trigger('change');
-    $('#edit_tipo').val('').trigger('change');
-    $('#edit_estado').val('').trigger('change');
-    $('#edit_direccion').val('');
-    $('#edit_certificacion').val('oc_cidam').trigger('change');
-    $('#edit_folio').val('');
-    $('#edit_id_organismo').val('').trigger('change');
-    $('#edit_fecha_emision').val('');
-    $('#edit_fecha_vigencia').val('');
-  });
-
+  //vigilancia en produccion
   $(function () {
     $.ajaxSetup({
       headers: {
@@ -3068,7 +3079,13 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function () {
       var formData = new FormData(addVigilanciaProduccionForm);
 
-      // Agregar los valores seleccionados del select múltiple al FormData
+      $('#btnRegisVigiPro').prop('disabled', true);
+      $('#btnRegisVigiPro').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnRegisVigiPro').prop('disabled', false);
+        $('#btnRegisVigiPro').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
+
       $('#id_tipo_maguey')
         .find('option:selected')
         .each(function () {
@@ -3116,542 +3133,503 @@ $(document).on('click', '.expediente-record', function () {
         }
       });
     });
+    $('#id_empresa_vigilancia, #fecha_visita_vigi, #id_instalacion_vigi').on('change', function () {
+      fv5.revalidateField($(this).attr('name'));
+    });
   });
 
-  // Validación del formulario Muestreo Lote Agranel
-  const addMuestreoLoteAgranelForm = document.getElementById('addMuestreoLoteAgranelForm');
-  const fvMuestreo = FormValidation.formValidation(addMuestreoLoteAgranelForm, {
-    fields: {
-      id_empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una empresa.'
-          }
-        }
-      },
-      fecha_visita: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha y hora de la visita.'
-          }
-        }
-      },
-      id_instalacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una instalación.'
-          }
-        }
-      },
-      id_lote_granel: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un lote a granel.'
-          }
-        }
-      },
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          return '.mb-4, .mb-5, .mb-6';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    const formData = new FormData(addMuestreoLoteAgranelForm);
-
-    $.ajax({
-      url: '/hologramas/storeMuestreoLote', // Actualiza con la URL correcta
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        // Cerrar modal y reiniciar formulario
-        $('#addMuestreoLoteAgranel').modal('hide');
-        $('#addMuestreoLoteAgranelForm')[0].reset();
-        $('.select2').val(null).trigger('change');
-        $('.datatables-solicitudes').DataTable().ajax.reload();
-
-        // Mostrar alerta de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Solicitud de Muestreo registrado exitosamente.',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function () {
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar el muestreo.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
+  $(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
+    });
+
+    // Validación del formulario Muestreo Lote Agranel
+    const addMuestreoLoteAgranelForm = document.getElementById('addMuestreoLoteAgranelForm');
+    const fvMuestreo = FormValidation.formValidation(addMuestreoLoteAgranelForm, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha y hora de la visita.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una instalación.'
+            }
+          }
+        },
+        id_lote_granel: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un lote a granel.'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-4, .mb-5, .mb-6';
+          }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      const formData = new FormData(addMuestreoLoteAgranelForm);
+      $('#btnRegistrMLote').prop('disabled', true);
+      $('#btnRegistrMLote').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnRegistrMLote').prop('disabled', false);
+        $('#btnRegistrMLote').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
+
+      $.ajax({
+        url: '/hologramas/storeMuestreoLote', // Actualiza con la URL correcta
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // Cerrar modal y reiniciar formulario
+          $('#addMuestreoLoteAgranel').modal('hide');
+          $('#addMuestreoLoteAgranelForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Solicitud de Muestreo registrado exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function () {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar el muestreo.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+
+    });
+    $('#id_empresa_muestreo, #fecha_visita_muestreoLo, #id_instalacion_muestreoLo, #id_lote_granel_muestreo').on('change', function () {
+      fvMuestreo.revalidateField($(this).attr('name'));
+    });
+
+  });
+
+  $(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    // Validación del formulario Inspección Ingreso Barricada
+    const addInspeccionIngresoBarricadaForm = document.getElementById('addInspeccionIngresoBarricadaForm');
+    const fvBarricada = FormValidation.formValidation(addInspeccionIngresoBarricadaForm, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un cliente.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una instalación.'
+            }
+          }
+        },
+        id_lote_granel_barricada: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un lote a granel.'
+            }
+          }
+        },
+        tipo_lote: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un tipo.'
+            }
+          }
+        },
+        analisis_barricada: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el análisis fisicoquímico.'
+            }
+          }
+        },
+        volumen_barricada: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el porcentaje de alcohol.'
+            },
+            numeric: {
+              message: 'Por favor ingrese un valor numérico válido.'
+            }
+          }
+        },
+        fecha_inicio: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha de inicio.'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-4, .mb-5, .mb-6';
+          }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      const formData = new FormData(addInspeccionIngresoBarricadaForm);
+      $('#btnReIngresoBarrica').prop('disabled', true);
+      $('#btnReIngresoBarrica').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnReIngresoBarrica').prop('disabled', false);
+        $('#btnReIngresoBarrica').html('<i class="ri-add-line"></i> Registrar');
+      }, 2000);
+      $.ajax({
+        url: '/hologramas/storeInspeccionBarricada', // Actualiza con la URL correcta
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // Cerrar modal y reiniciar formulario
+          $('#addInspeccionIngresoBarricada').modal('hide');
+          $('#addInspeccionIngresoBarricadaForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Inspección barricada registrada exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function () {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la inspección.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+    $('#id_empresa_barricada, #fecha_visita_ingreso_barrica, #id_instalacion_barricada, #id_lote_granel_barricada, #fecha_inicio_ingreso_barrica').on('change', function () {
+      fvBarricada.revalidateField($(this).attr('name'));
+    });
+  });
+
+  $(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    // Validación del formulario Inspección Liberación Barrica/Contenedor de Vidrio
+    const addInspeccionLiberacionForm = document.getElementById('addInspeccionLiberacionForm');
+    const fvLiberacion = FormValidation.formValidation(addInspeccionLiberacionForm, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un cliente.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una instalación.'
+            }
+          }
+        },
+        id_lote_granel_liberacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un lote a granel.'
+            }
+          }
+        },
+        tipo_lote_lib: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un tipo.'
+            }
+          }
+        },
+        analisis_liberacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el análisis fisicoquímico.'
+            }
+          }
+        },
+        volumen_liberacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el volumen.'
+            },
+            numeric: {
+              message: 'Por favor ingrese un valor numérico válido.'
+            }
+          }
+        },
+        fecha_inicio_lib: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha de inicio.'
+            }
+          }
+        },
+        fecha_termino_lib: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha de término.'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-4, .mb-5, .mb-6';
+          }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      const formData = new FormData(addInspeccionLiberacionForm);
+      $('#btnAddLiberacion').prop('disabled', true);
+      $('#btnAddLiberacion').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnAddLiberacion').prop('disabled', false);
+        $('#btnAddLiberacion').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
+
+      $.ajax({
+        url: '/hologramas/storeInspeccionBarricadaLiberacion', // Actualiza con la URL correcta
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // Cerrar modal y reiniciar formulario
+          $('#addInspeccionLiberacion').modal('hide');
+          $('#addInspeccionLiberacionForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Inspección de liberacion barricada registrada exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function () {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la inspección.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+    $('#id_empresa_liberacion, #fecha_visita_liberacion, #id_instalacion_liberacion, #id_lote_granel_liberacion, #fecha_inicio_libe_inspe, #fecha_termino_libe_inspe').on('change', function () {
+      fvLiberacion.revalidateField($(this).attr('name'));
     });
   });
 
 
-  // Validación del formulario Inspección Ingreso Barricada
-  const addInspeccionIngresoBarricadaForm = document.getElementById('addInspeccionIngresoBarricadaForm');
-  const fvBarricada = FormValidation.formValidation(addInspeccionIngresoBarricadaForm, {
-    fields: {
-      id_empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un cliente.'
-          }
-        }
-      },
-      fecha_visita: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
-          }
-        }
-      },
-      id_instalacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una instalación.'
-          }
-        }
-      },
-      id_lote_granel_barricada: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un lote a granel.'
-          }
-        }
-      },
-      tipo_lote: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un tipo.'
-          }
-        }
-      },
-      analisis_barricada: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el análisis fisicoquímico.'
-          }
-        }
-      },
-      volumen_barricada: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el porcentaje de alcohol.'
-          },
-          numeric: {
-            message: 'Por favor ingrese un valor numérico válido.'
-          }
-        }
-      },
-      fecha_inicio: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha de inicio.'
-          }
-        }
+  $(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          return '.mb-4, .mb-5, .mb-6';
+    });
+    //Validar vigilancia en traslado
+    const addVigilanciaTrasladoForm = document.getElementById('addVigilanciaTrasladoForm');
+    const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha y hora de la inspección.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una instalación.'
+            }
+          }
+        },
+        instalacion_vigilancia: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una dirección de destino.'
+            }
+          }
+        },
+        id_lote_granel_traslado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un lote a granel.'
+            }
+          }
+        },
+        id_vol_traslado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el volumen trasladado.'
+            },
+            numeric: {
+              message: 'El volumen trasladado debe ser un número válido.',
+              thousandsSeparator: '',
+              decimalSeparator: '.'
+            }
+          }
         }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    const formData = new FormData(addInspeccionIngresoBarricadaForm);
-
-    $.ajax({
-      url: '/hologramas/storeInspeccionBarricada', // Actualiza con la URL correcta
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        // Cerrar modal y reiniciar formulario
-        $('#addInspeccionIngresoBarricada').modal('hide');
-        $('#addInspeccionIngresoBarricadaForm')[0].reset();
-        $('.select2').val(null).trigger('change');
-        $('.datatables-solicitudes').DataTable().ajax.reload();
-
-        // Mostrar alerta de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Inspección barricada registrada exitosamente.',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
       },
-      error: function () {
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar la inspección.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-4, .mb-5, .mb-6';
           }
-        });
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
       }
+    }).on('core.form.valid', function () {
+      const formData = new FormData(addVigilanciaTrasladoForm);
+      $('#btnReVigiLote').prop('disabled', true);
+      $('#btnReVigiLote').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnReVigiLote').prop('disabled', false);
+        $('#btnReVigiLote').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
+      $.ajax({
+        url: '/hologramas/storeVigilanciaTraslado', // Cambia a la URL correcta
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // Cerrar modal y reiniciar formulario
+          $('#addVigilanciaTraslado').modal('hide');
+          $('#addVigilanciaTrasladoForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Vigilancia traslado registrada exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function () {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la vigilancia.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+    $('#id_empresa_traslado, #fecha_visita_traslado, #id_instalacion_traslado, #instalacion_vigilancia, #id_lote_granel_traslado').on('change', function () {
+      fvVigilancia.revalidateField($(this).attr('name'));
     });
   });
 
-  // Validación del formulario Inspección Liberación Barrica/Contenedor de Vidrio
-  const addInspeccionLiberacionForm = document.getElementById('addInspeccionLiberacionForm');
-  const fvLiberacion = FormValidation.formValidation(addInspeccionLiberacionForm, {
-    fields: {
-      id_empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un cliente.'
-          }
-        }
-      },
-      fecha_visita: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
-          }
-        }
-      },
-      id_instalacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una instalación.'
-          }
-        }
-      },
-      id_lote_granel_liberacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un lote a granel.'
-          }
-        }
-      },
-      tipo_lote_lib: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un tipo.'
-          }
-        }
-      },
-      analisis_liberacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el análisis fisicoquímico.'
-          }
-        }
-      },
-      volumen_liberacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el volumen.'
-          },
-          numeric: {
-            message: 'Por favor ingrese un valor numérico válido.'
-          }
-        }
-      },
-      fecha_inicio_lib: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha de inicio.'
-          }
-        }
-      },
-      fecha_termino_lib: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha de término.'
-          }
-        }
-      }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          return '.mb-4, .mb-5, .mb-6';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    const formData = new FormData(addInspeccionLiberacionForm);
-
-    $.ajax({
-      url: '/hologramas/storeInspeccionBarricadaLiberacion', // Actualiza con la URL correcta
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        // Cerrar modal y reiniciar formulario
-        $('#addInspeccionLiberacion').modal('hide');
-        $('#addInspeccionLiberacionForm')[0].reset();
-        $('.select2').val(null).trigger('change');
-        $('.datatables-solicitudes').DataTable().ajax.reload();
-
-        // Mostrar alerta de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Inspección de liberacion barricada registrada exitosamente.',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function () {
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar la inspección.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
-    });
-  });
-
-  // Validación del formulario inpeccion de envasado
-  const addInspeccionEnvasadoForm = document.getElementById('addInspeccionEnvasadoForm');
-  const fvEnvasado = FormValidation.formValidation(addInspeccionEnvasadoForm, {
-    fields: {
-      id_empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un cliente.'
-          }
-        }
-      },
-      fecha_visita: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
-          }
-        }
-      },
-      id_instalacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una instalación.'
-          }
-        }
-      },
-      id_lote_granel_inspeccion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un lote a granel.'
-          }
-        }
-      },
-      id_tipo_inspeccion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un tipo.'
-          }
-        }
-      },
-      analisis_inspeccion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el análisis fisicoquímico.'
-          }
-        }
-      },
-      volumen_inspeccion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el volumen.'
-          },
-          numeric: {
-            message: 'Por favor ingrese un valor numérico válido.'
-          }
-        }
-      },
-      id_cantidad_bote: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la cantidad de botellas.'
-          },
-          numeric: {
-            message: 'Por favor ingrese un valor numérico válido.'
-          }
-        }
-      }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        rowSelector: '.mb-4, .mb-5, .mb-6'
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    const formData = new FormData(addInspeccionEnvasadoForm);
-
-    $.ajax({
-      url: '/hologramas/storeInspeccionEnvasado', // Cambiar a la ruta correspondiente
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        // Cerrar modal y reiniciar formulario
-        $('#addInspeccionEnvasado').modal('hide');
-        $('#addInspeccionEnvasadoForm')[0].reset();
-        $('.select2').val(null).trigger('change');
-        $('.datatables-inspecciones').DataTable().ajax.reload();
-
-        // Mostrar alerta de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Inspección de envasado registrada exitosamente.',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function () {
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar la inspección.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
-    });
-  });
-
-  //Validar vigilancia en traslado
-  const addVigilanciaTrasladoForm = document.getElementById('addVigilanciaTrasladoForm');
-  const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
-    fields: {
-      id_empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una empresa.'
-          }
-        }
-      },
-      fecha_visita: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha y hora de la inspección.'
-          }
-        }
-      },
-      id_instalacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una instalación.'
-          }
-        }
-      },
-      id_lote_granel_traslado: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un lote a granel.'
-          }
-        }
-      },
-      id_vol_traslado: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el volumen trasladado.'
-          },
-          numeric: {
-            message: 'El volumen trasladado debe ser un número válido.',
-            thousandsSeparator: '',
-            decimalSeparator: '.'
-          }
-        }
-      }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          return '.mb-4, .mb-5, .mb-6';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    const formData = new FormData(addVigilanciaTrasladoForm);
-    $.ajax({
-      url: '/hologramas/storeVigilanciaTraslado', // Cambia a la URL correcta
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        // Cerrar modal y reiniciar formulario
-        $('#addVigilanciaTraslado').modal('hide');
-        $('#addVigilanciaTrasladoForm')[0].reset();
-        $('.select2').val(null).trigger('change');
-        $('.datatables-solicitudes').DataTable().ajax.reload();
-
-        // Mostrar alerta de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Vigilancia traslado registrada exitosamente.',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function () {
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar la vigilancia.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
-    });
-  });
-
-  /*funcion para solicitud de liberacion producto termiando  */
+  /* envio de emision de certificado de venta nacional */
+  ///
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -3659,39 +3637,40 @@ $(document).on('click', '.expediente-record', function () {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-
-    // Inicializar FormValidation para la solicitud de dictaminación
-    const formDictaminacion = document.getElementById('addLiberacionProductoForm');
-    const fvDictaminacion = FormValidation.formValidation(formDictaminacion, {
+    // Inicializar FormValidation para la solicitud de dictaminación de instalaciones
+    const form = document.getElementById('addEmisionCetificadoVentaNacionalForm');
+    const fv = FormValidation.formValidation(form, {
       fields: {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione una empresa.'
             }
           }
         },
-        fecha_visita: {
+        id_dictamen_envasado: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha sugerida para la inspección.'
+              message: 'Por favor seleccione un dictamen de envasado.'
             }
           }
         },
-        id_instalacion: {
+        cantidad_botellas: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una instalación.'
+              message: 'Por favor ingrese la cantidad de botellas.'
             }
           }
         },
-        id_lote_envasado: {
+        cantidad_cajas: {
           validators: {
             notEmpty: {
-              message: 'Selecciona al menos una clase.'
+              message: 'Por favor ingrese la cantidad de cajas.'
             }
           }
-        },
+        }
+
+
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -3704,26 +3683,27 @@ $(document).on('click', '.expediente-record', function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function (e) {
-      // Validar el formulario
-      var formData = new FormData(formDictaminacion);
+      var formData = new FormData(form);
+      $('#btnRegistraremi').prop('disabled', true);
 
+      $('#btnRegistraremi').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
       $.ajax({
-        url: '/registrar-solicitud-lib-prod-term',
+        url: '/storeEmisionCertificadoVentaNacional', // Cambia a la URL correcta
         type: 'POST',
         data: formData,
         processData: false,
         contentType: false,
         success: function (response) {
-          $('#addLiberacionProducto').modal('hide');
-          $('#addLiberacionProductoForm')[0].reset();
+          $('#addEmisionCetificadoVentaNacional').modal('hide');
+          $('#btnRegistraremi').prop('disabled', false);
+          $('#btnRegistraremi').html('<i class="ri-add-line"></i> Registrar');
+          $('#addEmisionCetificadoVentaNacionalForm')[0].reset();
           $('.select2').val(null).trigger('change');
           $('.datatables-solicitudes').DataTable().ajax.reload();
-          console.log(response);
-
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
-            text: response.message,
+            text: 'Solicitud registrada correctamente',
             customClass: {
               confirmButton: 'btn btn-success'
             }
@@ -3742,6 +3722,111 @@ $(document).on('click', '.expediente-record', function () {
           });
         }
       });
+    });
+    // Inicializar select2 y manejar eventos de cambio por "name"
+    $('#id_empresa_solicitudes, #fechaSoliInstalacion, #id_instalacion_dic, #categoriaDictamenIns, #clasesDicIns, #renovacion').on('change', function () {
+      fv.revalidateField($(this).attr('name'));
+    });
+
+  });
+
+  /*funcion para solicitud de liberacion producto termiando  */
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation para la solicitud de dictaminación
+    const formDictaminacion = document.getElementById('addLiberacionProductoForm');
+    const fvDictaminacion = FormValidation.formValidation(formDictaminacion, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la fecha sugerida para la inspección.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una instalación.'
+            }
+          }
+        },
+        id_lote_envasado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione al menos un lote envasado.'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      // Validar el formulario
+      var formData = new FormData(formDictaminacion);
+      $('#btnRegistrarlib').prop('disabled', true);
+      $('#btnRegistrarlib').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      $.ajax({
+        url: '/registrar-solicitud-lib-prod-term',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#addLiberacionProducto').modal('hide');
+          $('#btnRegistrarlib').prop('disabled', false);
+          $('#btnRegistrarlib').html('<i class="ri-add-line"></i> Registrar');
+          $('#addLiberacionProductoForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+          console.log(response);
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'La liberación del producto se registró exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la solicitud',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+    $('#id_empresa_solicitud_lib_ter, #fecha_visita_liberacion_produto, #id_instalacion_lib_ter, #id_lote_envasado_lib_ter').on('change', function () {
+      fvDictaminacion.revalidateField($(this).attr('name'));
     });
   });
 
@@ -3776,57 +3861,6 @@ $(document).on('click', '.expediente-record', function () {
     }
   });
 
-  $(document).ready(function () {
-    $('#modalEditInstalacion').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget);
-      var id_instalacion = button.data('id');
-      var modal = $(this);
-
-      modal.find('#editInstalacionForm').data('id', id_instalacion);
-    });
-
-    $('#editInstalacionForm').submit(function (e) {
-      e.preventDefault();
-
-      var id_instalacion = $(this).data('id');
-      var form = $(this)[0];
-      var formData = new FormData(form);
-
-      $.ajax({
-        url: baseUrl + 'instalaciones/' + id_instalacion,
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
-        },
-        success: function (response) {
-          dt_instalaciones_table.ajax.reload();
-          $('#modalEditInstalacion').modal('hide');
-
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.message,
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-        },
-        error: function (xhr) {
-          console.error('Error en la solicitud AJAX:', xhr.responseJSON);
-
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Hubo un problema al actualizar los datos.',
-            footer: `<pre>${JSON.stringify(xhr.responseJSON, null, 2)}</pre>`
-          });
-        }
-      });
-    });
-  });
 
   $(document).on('click', '.pdf2', function () {
     var url = $(this).data('url');
@@ -3854,247 +3888,6 @@ $(document).on('click', '.expediente-record', function () {
     });
   });
 
-  var openedFromFirstModal = false;
-
-  $('#abrirModalInstalaciones').on('click', function () {
-    var clienteSeleccionado = $('#id_empresa_solicitudes').val();
-
-    openedFromFirstModal = true;
-    $('#addSolicitudDictamen').modal('hide');
-    $('#id_empresa option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
-    $('#id_empresa').trigger('change');
-    $('#modalAddInstalacion').modal('show');
-  });
-
-  // Al cerrar el segundo modal
-  $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-    if (openedFromFirstModal) {
-      openedFromFirstModal = false;
-      $('#addSolicitudDictamen').modal('show');
-    }
-  });
-
-  // Al registrar el segundo modal
-  $('#btnRegistrarInstalacion').on('click', function () {
-    var clienteSeleccionado = $('#id_empresa').val();
-    if (openedFromFirstModal) {
-      openedFromFirstModal = false;
-      // $('#modalAddInstalacion').modal('hide');
-
-      $('#id_empresa_solicitudes option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
-      $('#id_empresa_solicitudes').trigger('change');
-      obtenerInstalacion();
-
-
-      $('#addSolicitudDictamen').modal('show');
-    }
-  });
-
-  //Vigilancia boton instalaciones
-  $(document).ready(function () {
-    let openedFromFirstModal = false;
-
-    $('#modalVigilancia').on('click', function () {
-      var clienteSeleccionado = $('.id_empresa').val();
-      // Verificar si hay una empresa seleccionada
-      if (!clienteSeleccionado) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
-        });
-        return;
-      }
-      $('#addVigilanciaProduccion').modal('hide');
-      // Marcar que el nuevo modal fue abierto desde el anterior
-      openedFromFirstModal = true;
-      // Preseleccionar la empresa en el modal de nueva instalación
-      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-      $('#modalAddInstalacion').modal('show');
-    });
-    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-      if (openedFromFirstModal) {
-        $('#addVigilanciaProduccion').modal('show');
-        openedFromFirstModal = false;
-      }
-    });
-  });
-
-  //Muestreo de lote a granel
-  $(document).ready(function () {
-    let openedFromFirstModal = false;
-
-    $('#modalMuestreo').on('click', function () {
-      var clienteSeleccionado = $('.id_empresa_muestreo').val();
-      // Verificar si hay una empresa seleccionada
-      if (!clienteSeleccionado) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
-        });
-        return;
-      }
-      $('#addMuestreoLoteAgranel').modal('hide');
-      // Marcar que el nuevo modal fue abierto desde el anterior
-      openedFromFirstModal = true;
-      // Preseleccionar la empresa en el modal de nueva instalación
-      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-      $('#modalAddInstalacion').modal('show');
-    });
-    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-      if (openedFromFirstModal) {
-        $('#addMuestreoLoteAgranel').modal('show');
-        openedFromFirstModal = false;
-      }
-    });
-  });
-
-  //Muestreo de vigilancia traslado
-  $(document).ready(function () {
-    let openedFromFirstModal = false;
-
-    $('#modalVigilanciaTraslado').on('click', function () {
-      var clienteSeleccionado = $('.id_empresa_traslado').val();
-      // Verificar si hay una empresa seleccionada
-      if (!clienteSeleccionado) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
-        });
-        return;
-      }
-      $('#addVigilanciaTraslado').modal('hide');
-      // Marcar que el nuevo modal fue abierto desde el anterior
-      openedFromFirstModal = true;
-      // Preseleccionar la empresa en el modal de nueva instalación
-      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-      $('#modalAddInstalacion').modal('show');
-    });
-    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-      if (openedFromFirstModal) {
-        $('#addVigilanciaTraslado').modal('show');
-        openedFromFirstModal = false;
-      }
-    });
-  });
-
-  //Muestreo de inpeccion ingreso barricada
-  $(document).ready(function () {
-    let openedFromFirstModal = false;
-
-    $('#modalVigilanciaBarricada').on('click', function () {
-      var clienteSeleccionado = $('.id_empresa_barricada').val();
-      // Verificar si hay una empresa seleccionada
-      if (!clienteSeleccionado) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
-        });
-        return;
-      }
-      $('#addInspeccionIngresoBarricada').modal('hide');
-      // Marcar que el nuevo modal fue abierto desde el anterior
-      openedFromFirstModal = true;
-      // Preseleccionar la empresa en el modal de nueva instalación
-      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-      $('#modalAddInstalacion').modal('show');
-    });
-    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-      if (openedFromFirstModal) {
-        $('#addInspeccionIngresoBarricada').modal('show');
-        openedFromFirstModal = false;
-      }
-    });
-  });
-
-  //Muestreo de inpeccion liberacion barricada
-  $(document).ready(function () {
-    let openedFromFirstModal = false;
-
-    $('#modalVigilanciaBarricadaLiberacion').on('click', function () {
-      var clienteSeleccionado = $('.id_empresa_liberacion').val();
-      // Verificar si hay una empresa seleccionada
-      if (!clienteSeleccionado) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
-        });
-        return;
-      }
-      $('#addInspeccionLiberacion').modal('hide');
-      // Marcar que el nuevo modal fue abierto desde el anterior
-      openedFromFirstModal = true;
-      // Preseleccionar la empresa en el modal de nueva instalación
-      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-      $('#modalAddInstalacion').modal('show');
-    });
-    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-      if (openedFromFirstModal) {
-        $('#addInspeccionLiberacion').modal('show');
-        openedFromFirstModal = false;
-      }
-    });
-  });
-
-  //Muestreo de inspeccion de envasado
-  $(document).ready(function () {
-    let openedFromFirstModal = false;
-
-    $('#modalMuestreoInspeccion').on('click', function () {
-      var clienteSeleccionado = $('.id_empresa_inspeccion').val();
-      // Verificar si hay una empresa seleccionada
-      if (!clienteSeleccionado) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
-        });
-        return;
-      }
-      $('#addInspeccionEnvasado').modal('hide');
-      // Marcar que el nuevo modal fue abierto desde el anterior
-      openedFromFirstModal = true;
-      // Preseleccionar la empresa en el modal de nueva instalación
-      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-      $('#modalAddInstalacion').modal('show');
-    });
-    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-      if (openedFromFirstModal) {
-        $('#addInspeccionEnvasado').modal('show');
-       
-        openedFromFirstModal = false;
-      }
-    });
-  });
-
   /* seccion para exportacion */
   $(document).ready(function () {
     // Obtener el select y las secciones
@@ -4107,7 +3900,7 @@ $(document).on('click', '.expediente-record', function () {
     $tipoSolicitud.on('change', function () {
       var valorSeleccionado = $tipoSolicitud.val();
 
-  
+
       if (valorSeleccionado === '2' || valorSeleccionado === '5') {
         $botonesCharacteristics.removeClass('d-none'); // Mostrar los botones
       } else {
@@ -4117,190 +3910,382 @@ $(document).on('click', '.expediente-record', function () {
   });
 
   $(document).ready(function () {
-    // Contador para las secciones dinámicas
+    $('#editPedidoExportacion').on('hidden.bs.modal', function () {
+      // Elimina todas las tarjetas menos la primera dentro de sections-container2
+      $('#sections-container2 .card').not(':first').remove();
+      sectionCountEdit = 1;
+    });
+  });
+
+  $(document).ready(function () {
+    var $tipoSolicitudEdit = $('#tipo_solicitud_edit');
+    var $botonesCharacteristicsEdit = $('#botones_characteristics_edit');
+
+    // Mostrar/ocultar los botones al cambiar el tipo en el modal de editar
+    $tipoSolicitudEdit.on('change', function () {
+      if ($(this).val() === '2') {
+        $botonesCharacteristicsEdit.removeClass('d-none');
+      } else {
+        $botonesCharacteristicsEdit.addClass('d-none');
+      }
+    });
+
+    // Al abrir el modal de editar, asegúrate de mostrar/ocultar según el valor actual
+    if ($tipoSolicitudEdit.length) {
+      if ($tipoSolicitudEdit.val() === '2') {
+        $botonesCharacteristicsEdit.removeClass('d-none');
+      } else {
+        $botonesCharacteristicsEdit.addClass('d-none');
+      }
+    }
+  });
+
+  $(document).ready(function () {
     let sectionCount = 1;
 
-    // Función para agregar una nueva sección dinámica
     $('#add-characteristics').click(function () {
-      // Validar que se haya seleccionado una empresa
-      let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val() 
-    ? $('#id_empresa_solicitud_exportacion').val() 
-    : $('#id_empresa_solicitud_exportacion_edit').val();
-
-
-  
-
+      let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val();
       if (!empresaSeleccionada) {
-        // Mostrar alerta si no se seleccionó ninguna empresa
         Swal.fire({
           icon: 'warning',
           title: 'Advertencia',
           text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
-          customClass: {
-            confirmButton: 'btn btn-warning'
-          }
+          customClass: { confirmButton: 'btn btn-warning' }
         });
-        return; // Salir del evento si no se seleccionó una empresa
+        return;
       }
 
-      // Crear una nueva sección dinámica
       var newSection = `
-        <div class="card mt-4" id="caracteristicas_Ex_${sectionCount}">
-            <div class="card-body">
-                <h5>Características del Producto</h5>
-                <div class="row caracteristicas-row">
-                    <div class="col-md-8">
-                        <div class="form-floating form-floating-outline mb-4">
-                            <select name="lote_envasado[${sectionCount}]" class="select2 form-select evasado_export">
-                                <option value="" disabled selected>Selecciona un lote envasado</option>
-                                <!-- Opciones dinámicas -->
-                            </select>
-                            <label for="lote_envasado">Selecciona el lote envasado</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-4">
-                            <input type="text" disabled class="form-control" name="lote_granel[${sectionCount}]" id="lote_granel_${sectionCount}" placeholder="Lote a granel">
-                            <label for="lote_granel">Lote a granel</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-4">
-                            <input type="number" class="form-control" id="cantidad_botellas${sectionCount}" name="cantidad_botellas[${sectionCount}]" placeholder="Cantidad de botellas">
-                            <label for="cantidad_botellas">Cantidad de botellas</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-4">
-                            <input type="number" class="form-control" id="cantidad_cajas${sectionCount}" name="cantidad_cajas[${sectionCount}]" placeholder="Cantidad de cajas">
-                            <label for="cantidad_cajas">Cantidad de cajas</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-4">
-                            <input type="text" class="form-control" name="presentacion[${sectionCount}]" placeholder="Ej. 750ml">
-                            <label for="presentacion">Presentación</label>
-                        </div>
-                    </div>
-                </div>
+      <div class="card mt-4" id="caracteristicas_Ex${sectionCount}">
+                              <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
+                                Características del Producto
+                            </div>
+        <div class="card-body">
+          <div class="row caracteristicas-row">
+            <div class="col-md-8">
+              <div class="form-floating form-floating-outline mb-4">
+                <select name="lote_envasado[${sectionCount}]" class="select2 form-select evasado_export" onchange="cargarDetallesLoteEnvasadoDinamico(this, ${sectionCount})">
+                  <option value="" disabled selected>Selecciona un lote envasado</option>
+                </select>
+                <label for="lote_envasado">Selecciona el lote envasado</label>
+              </div>
             </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="text" disabled class="form-control" name="lote_granel[${sectionCount}]" id="lote_granel_${sectionCount}" placeholder="Lote a granel">
+                <label for="lote_granel">Lote a granel</label>
+              </div>
+            </div>
+          </div>
         </div>
-      `;
-
-      // Agregar la nueva sección al contenedor
-      $('#sections-container').append(newSection); 
-      $('#sections-container2').append(newSection); 
-
-      // Cargar opciones dinámicas para los selects de la nueva sección
+      </div>
+    `;
+      $('#sections-container').append(newSection);
       cargarLotes(empresaSeleccionada, sectionCount);
-      
-
-      // Inicializar Select2 en los nuevos selects
-      var select2Elements = $('.select2');
-      initializeSelect2(select2Elements);
-
-      // Incrementar el contador para la siguiente sección
+      initializeSelect2($('.select2'));
       sectionCount++;
     });
 
-    // Función para cargar los lotes dinámicamente en la nueva sección
-    // Función para cargar los lotes dinámicamente en la nueva sección
     function cargarLotes(empresaSeleccionada, sectionCount) {
       $.ajax({
-        url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
+        url: '/getDatos/' + empresaSeleccionada,
         method: 'GET',
         success: function (response) {
-          // Lote envasado
-          var contenidoLotesEnvasado = '';
+          var contenidoLotesEnvasado = '<option value="" disabled selected>Selecciona un lote envasado</option>';
           var marcas = response.marcas;
-          var dictamenEnvasado = response.lotesEnvasado;
-
           for (let index = 0; index < response.lotes_envasado.length; index++) {
-            var skuLimpio = limpiarSku(response.lotes_envasado[index].sku);
-            var marcaEncontrada = marcas.find(function (marca) {
-              return marca.id_marca === response.lotes_envasado[index].id_marca;
-            });
+            var lote = response.lotes_envasado[index];
+            var skuLimpio = limpiarSku(lote.sku);
+            var marcaEncontrada = marcas.find(marca => marca.id_marca === lote.id_marca);
             var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
-
-            var num_dictamen = dictamenEnvasado ? dictamenEnvasado[index].dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
-
-            contenidoLotesEnvasado += `
-          <option value="${response.lotes_envasado[index].id_lote_envasado}">
-            ${skuLimpio} | ${response.lotes_envasado[index].nombre} | ${nombreMarca} | ${num_dictamen}
-          </option>`;
+            var num_dictamen = lote.dictamen_envasado ? lote.dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
+            contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} ${lote.nombre} ${nombreMarca} ${num_dictamen}</option>`;
           }
-
           if (response.lotes_envasado.length == 0) {
             contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
           }
-          
-          // Actualizar las opciones del select para la nueva sección
-          $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
+          $(`#caracteristicas_Ex${sectionCount} .evasado_export`).html(contenidoLotesEnvasado);
         },
         error: function () {
-          console.error('Error al cargar los lotes.');
           Swal.fire({
             icon: 'error',
             title: 'Error al cargar los datos',
-            text: 'Hubo un problema al intentar cargar los lotes. Intenta nuevamente más tarde.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
+            text: 'Hubo un problema al intentar cargar los lotes.',
+            customClass: { confirmButton: 'btn btn-danger' }
           });
         }
       });
     }
 
-    $(document).on('change', '.evasado_export', function () {
-      var sectionId = $(this).closest('.card').attr('id').split('_')[2]; // Cambiado a split('_')[2]
-      var loteEnvasadoSeleccionado = $(this).val(); // Obtener el valor del lote envasado seleccionado
-
-      // Obtener los lotes a granel correspondientes a este lote envasado desde el servidor
-      $.ajax({
-        url: '/getDetalleLoteEnvasado/' + loteEnvasadoSeleccionado, // Asegúrate de que esta URL sea la correcta
-        method: 'GET',
-        success: function (response) {
-          console.log(response); // Para depuración, asegúrate de que la respuesta esté correcta
-
-          // Comprobar si 'detalle' tiene datos
-          if (response.detalle && response.detalle.length > 0) {
-            // Convertir el array de lotes a granel en una cadena separada por comas
-            var lotesGranelNombres = response.detalle.join(', '); // Convierte el array en una cadena separada por comas
-            $('#caracteristicas_Ex_' + sectionId + ' #lote_granel_' + sectionId).val(lotesGranelNombres); // Actualiza el campo de lote a granel
-          } else {
-            $('#caracteristicas_Ex_' + sectionId + ' #lote_granel_' + sectionId).val(''); // Si no hay lotes, limpia el campo
-          }
-        },
-        error: function () {
-          console.error('Error al cargar los lotes a granel.');
-        }
-      });
-    });
-
-    // Eliminar la última sección
     $('#delete-characteristics').click(function () {
-      var totalSections = $('#sections-container .card').length; // Total de secciones en el contenedor
-      var lastSection = $('#sections-container .card').last(); // Última sección
-
-      // Solo eliminar si hay más de una sección (no borrar la sección original)
+      var totalSections = $('#sections-container .card').length;
+      var lastSection = $('#sections-container .card').last();
       if (totalSections > 1) {
-        lastSection.remove(); // Eliminar la última sección
-        sectionCount--; // Decrementar el contador
+        lastSection.remove();
+        sectionCount--;
       } else {
-        // Mensaje de advertencia con SweetAlert
         Swal.fire({
           icon: 'warning',
           title: 'Advertencia',
           text: 'No se puede eliminar la sección original.',
-          customClass: {
-            confirmButton: 'btn btn-warning'
-          }
+          customClass: { confirmButton: 'btn btn-warning' }
+        });
+      }
+    });
+
+    $('#id_empresa_solicitud_exportacion').on('change', function () {
+      cargarDatosCliente();
+
+      // Obtener el nuevo valor de empresa
+      let empresaSeleccionada = $(this).val();
+
+      // Si no hay valor, no hacer nada
+      if (!empresaSeleccionada) return;
+
+      // Recorrer todas las secciones generadas y recargar sus selects
+      $('#sections-container .card').each(function (i, card) {
+        let sectionIndex = $(card).attr('id').replace('caracteristicas_Ex', '');
+        cargarLotes(empresaSeleccionada, sectionIndex);
+      });
+    });
+
+  });
+  /* seccion de editar solicitudes exportacion */
+  // ==================== EDITAR ====================
+  let sectionCountEdit = 1;
+  /*   $(document).ready(function () { */
+
+  /*     $('#add-characteristics_edit_1').click(function () {
+        let empresaSeleccionada = $('#id_empresa_solicitud_exportacion_edit').val();
+        if (!empresaSeleccionada) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Advertencia',
+            text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
+            customClass: { confirmButton: 'btn btn-warning' }
+          });
+          return;
+        }
+
+        var newSection = `
+        <div class="card mt-4" id="caracteristicas_Ex_edit_${sectionCountEdit}">
+                                <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
+                                  Características del Producto
+                              </div>
+          <div class="card-body">
+            <div class="row caracteristicas-row">
+              <div class="col-md-8">
+                <div class="form-floating form-floating-outline mb-4">
+                  <select name="lote_envasado_edit[${sectionCountEdit}]" class="select2 form-select evasado_export_edit" onchange="cargarDetallesLoteEnvasadoDinamicoEdit2(this, ${sectionCountEdit})">
+                    <option value="" disabled selected>Selecciona un lote envasado</option>
+                  </select>
+                  <label for="lote_envasado">Selecciona el lote envasado</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-floating form-floating-outline mb-4">
+                  <input type="text" disabled class="form-control" name="lote_granel_edit[${sectionCountEdit}]" id="lote_granel_edit_${sectionCountEdit}" placeholder="Lote a granel">
+                  <label for="lote_granel">Lote a granel</label>
+                </div>
+              </div>
+
+
+
+            </div>
+          </div>
+        </div>
+      `;
+        $('#sections-container2').append(newSection);
+        cargarLotesEdit2(empresaSeleccionada, sectionCountEdit);
+        initializeSelect2($('.select2'));
+        sectionCountEdit++;
+      }); */
+
+  /*   }); */
+
+  $(document).ready(function () {
+    $('#add-characteristics_edit').click(function () {
+      let empresaSeleccionada = $('#id_empresa_solicitud_exportacion_edit').val();
+      if (!empresaSeleccionada) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Advertencia',
+          text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
+          customClass: { confirmButton: 'btn btn-warning' }
+        });
+        return;
+      }
+
+      var newSection = `
+      <div class="card mt-4" id="caracteristicas_Ex_edit_${sectionCountEdit}">
+                                 <div class="badge rounded-2 bg-label-primary  fw-bold fs-6 px-4 py-4 mb-5">
+                                Características del Producto
+                            </div>
+        <div class="card-body">
+          <div class="row caracteristicas-row">
+            <div class="col-md-8">
+              <div class="form-floating form-floating-outline mb-4">
+                <select name="lote_envasado[${sectionCountEdit}]" class="select2 form-select evasado_export_edit" onchange="cargarDetallesLoteEnvasadoDinamicoEdit(this, ${sectionCountEdit})">
+                  <option value="" disabled selected>Selecciona un lote envasado</option>
+                </select>
+                <label for="lote_envasado">Selecciona el lote envasado</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="text" disabled class="form-control" name="lote_granel_edit[${sectionCountEdit}]" id="lote_granel_edit_${sectionCountEdit}" placeholder="Lote a granel">
+                <label for="lote_granel">Lote a granel</label>
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+      </div>
+    `;
+      $('#sections-container2').append(newSection);
+      cargarLotesEdit(empresaSeleccionada, sectionCountEdit);
+      initializeSelect2($('.select2'));
+      sectionCountEdit++;
+    });
+
+
+
+    // Eliminar la última sección (editar)
+    $('#delete-characteristics_edit').click(function () {
+      var totalSections = $('#sections-container2 .card').length;
+      var lastSection = $('#sections-container2 .card').last();
+      if (totalSections > 1) {
+        lastSection.remove();
+        sectionCountEdit--;
+      } else {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Advertencia',
+          text: 'No se puede eliminar la sección original.',
+          customClass: { confirmButton: 'btn btn-warning' }
         });
       }
     });
   });
 
+  function cargarLotesEdit(empresaSeleccionada, sectionCountEdit) {
+    $.ajax({
+      url: '/getDatos/' + empresaSeleccionada,
+      method: 'GET',
+      success: function (response) {
+        var contenidoLotesEnvasado = '<option value="" disabled selected>Selecciona un lote envasado</option>';
+        var marcas = response.marcas;
+        for (let index = 0; index < response.lotes_envasado.length; index++) {
+          var lote = response.lotes_envasado[index];
+          var skuLimpio = limpiarSku(lote.sku);
+          var marcaEncontrada = marcas.find(marca => marca.id_marca === lote.id_marca);
+          var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
+          var num_dictamen = lote.dictamen_envasado ? lote.dictamen_envasado.num_dictamen : 'Sin dictamen de envasado';
+          contenidoLotesEnvasado += `<option value="${lote.id_lote_envasado}">${skuLimpio} ${lote.nombre} ${nombreMarca} ${num_dictamen}</option>`;
+        }
+        if (response.lotes_envasado.length == 0) {
+          contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+        }
+        const select = $(`#caracteristicas_Ex_edit_${sectionCountEdit} .evasado_export_edit`);
+        select.html(contenidoLotesEnvasado);
+
+        // ✅ Verificar si hay un valor seleccionado previamente
+        const selectedPrevio = select.data('selected');
+        if (selectedPrevio) {
+          select.val(selectedPrevio).trigger('change');
+        }
+      },
+      error: function () {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al cargar los datos',
+          text: 'Hubo un problema al intentar cargar los lotes.',
+          customClass: { confirmButton: 'btn btn-danger' }
+        });
+      }
+    });
+  }
+
+  function cargarDetallesLoteEnvasadoEdit(idLoteEnvasado) {
+    if (idLoteEnvasado) {
+      $.ajax({
+        url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+        method: 'GET',
+        success: function (response) {
+          console.log(response); // Verifica la respuesta en la consola
+          console.log("Entro en el de modal edit");
+
+          let tbody = $('#tablaLotes tbody');
+          tbody.empty(); // Limpia los datos anteriores
+          if (response.lote_envasado) {
+            let filaEnvasado = `
+                        <tr>
+                            <td>1</td>
+                            <td>${response.lote_envasado.nombre}</td>
+                            <td>${limpiarSku(response.lote_envasado.sku) == '{"inicial":""}' ? "SKU no definido" : limpiarSku(response.lote_envasado.sku)}</td>
+                            <td>${response.lote_envasado.presentacion || 'N/A'} ${response.lote_envasado.unidad || ''}</td>
+
+                            <td>Botellas: ${response.lote_envasado.cant_botellas}
+                        </tr>`;
+            tbody.append(filaEnvasado);
+          }
+
+          // Verifica si hay lotes a granel asociados y los muestra
+          if (response.detalle && response.detalle.length > 0) {
+            tbody.append(`
+                        <tr>
+                            <td style='background-color: #f5f5f7' colspan="5" class="text-center font-weight-bold fw-bold">Lotes a granel asociados</td>
+                        </tr>`);
+            let nombre_lote_granel = "";
+            response.detalle.forEach((lote, index) => {
+              let filaGranel = `
+                            <tr>
+                                <td>${index + 2}</td>
+                                <td>
+                                ${lote.nombre_lote}<br>
+                                <b>Certificado: </b>
+                                ${lote.certificado_granel ? lote.certificado_granel.num_certificado : 'Sin definir'}
+                                </td>
+                                  <td>
+                                    <input type="text" class="form-control form-control-sm" name="folio_fq[]" value="${lote.folio_fq || ''}" />
+                                  </td>
+
+                                  <td>
+                                    <input type="text" class="form-control form-control-sm" name="cont_alc[]" value="${lote.cont_alc || ''}" />
+                                  </td>
+                               <td>
+                                ${lote.categoria.categoria || 'N/A'}<br>
+                                ${lote.clase.clase || 'N/A'}<br>
+                                ${lote.tiposMaguey.length ? lote.tiposMaguey.map(tipo => tipo.nombre + ' (<i>' + tipo.cientifico + '</i>)').join('<br>') : 'N/A'}
+                            </td>
+
+                            </tr>`;
+              tbody.append(filaGranel);
+              nombre_lote_granel += lote.nombre_lote;
+            });
+
+            $('.lotes_granel_export_edit').val(nombre_lote_granel);
+
+
+          } else {
+            tbody.append(
+              `<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`
+            );
+          }
+        },
+        error: function () {
+          console.error('Error al cargar el detalle del lote envasado.');
+        }
+      });
+    }
+  }
+
+
+  /* fin de la seccion de editar solicitudes exportacion */
   /* Enviar formulario store add exportacion */
+
   $(function () {
     // Configuración de CSRF para las solicitudes AJAX
     $.ajaxSetup({
@@ -4342,7 +4327,7 @@ $(document).on('click', '.expediente-record', function () {
           }
         },
 
-       
+
         'cantidad_botellas[0]': {
           validators: {
             notEmpty: {
@@ -4366,7 +4351,7 @@ $(document).on('click', '.expediente-record', function () {
         },
 
         id_etiqueta: {
-          selector: "input[name='id_etiqueta']",  
+          selector: "input[name='id_etiqueta']",
           validators: {
             notEmpty: {
               message: 'Por favor seleccione una etiqueta.'
@@ -4416,12 +4401,18 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function () {
       // Recolectar el resto de los datos del formulario
       const formData = new FormData(addPedidoExportacionForm);
-
+      $('#btnAddExport').prop('disabled', true);
+      $('#btnAddExport').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnAddExport').prop('disabled', false);
+        $('#btnAddExport').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
       // Construir las características como un JSON completo
       const caracteristicas = {
         tipo_solicitud: $('#tipo_solicitud').val(),
         direccion_destinatario: $('#direccion_destinatario_ex').val(),
         aduana_salida: $('[name="aduana_salida"]').val(),
+        cont_alc: $('[name="cont_alc"]').val(),
         no_pedido: $('[name="no_pedido"]').val(),
         factura_proforma: $('[name="factura_proforma"]')[0].files[0], // Archivo
         factura_proforma_cont: $('[name="factura_proforma_cont"]')[0].files[0], // Archivo
@@ -4452,6 +4443,9 @@ $(document).on('click', '.expediente-record', function () {
           // Reiniciar el formulario
           $('#addPedidoExportacionForm')[0].reset();
           $('.select2').val(null).trigger('change');
+          $('#sections-container .card').not(':first').remove();
+          $('#encabezado_etiquetas').html('Elegir Etiquetas y Corrugados');
+          $('#tablaLotes tbody').empty();
           $('.datatables-solicitudes').DataTable().ajax.reload();
           $('#addPedidoExportacion').modal('hide');
           // Mostrar alerta de éxito
@@ -4477,6 +4471,9 @@ $(document).on('click', '.expediente-record', function () {
         }
       });
     });
+    $('#id_empresa_solicitud_exportacion, #fecha_visita_exportacion, #id_instalacion_exportacion, #direccion_destinatario_ex, #id_instalacion_envasado_2').on('change', function () {
+      fv.revalidateField($(this).attr('name'));
+    });
   });
 
   // Mapeo entre IDs de tipo de solicitud y IDs de divs
@@ -4490,6 +4487,7 @@ $(document).on('click', '.expediente-record', function () {
     3: ['muestreoLoteAjustes', 'guiastraslado'],
     5: ['inspeccionEnvasado'],
     7: ['inspeccionIngresoBarrica'],
+    8: ['liberacionPTNacional'],
     9: ['liberacionBarricaVidrio']
   };
 
@@ -4505,15 +4503,15 @@ $(document).on('click', '.expediente-record', function () {
     if (divsMostrar) {
       divsMostrar.forEach(divId => {
         $(`#${divId}`).removeClass('d-none');
-      
+
         document.querySelectorAll('.d-none select').forEach(el => {
-          el.disabled = true;
-          
+          // el.disabled = true;
+
         });
-        
+
       });
     }
-  
+
   }
   // Manejar el clic en los enlaces con clase "validar-solicitudes"
   $(document).on('click', '.validar-solicitudes', function () {
@@ -4524,9 +4522,9 @@ $(document).on('click', '.expediente-record', function () {
     var razon_social = $(this).data('razon-social');
     $('#tipoSolicitud').text(tipoName);
 
-      // Manejar la visibilidad de divs si aplica
-      manejarVisibilidadDivs(idTipo);
-  
+    // Manejar la visibilidad de divs si aplica
+    manejarVisibilidadDivs(idTipo);
+
 
     $.ajax({
       url: `/getDatosSolicitud/${id_solicitud}`,
@@ -4538,53 +4536,65 @@ $(document).on('click', '.expediente-record', function () {
           $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
           // Validar si `direccion_completa` no está vacío
           if (response.data.instalacion) {
-            $('.domicilioInstalacion').html(response.data.instalacion.direccion_completa + " <b>Vigencia: </b>"+response.data.instalacion.fecha_vigencia);
+            $('.domicilioInstalacion').html(response.data.instalacion.direccion_completa + " <b>Vigencia: </b>" + response.data.instalacion.fecha_vigencia);
           } else {
             // Si está vacío, usar `ubicacion_predio`
             $('.domicilioInstalacion').text(response.data?.predios?.ubicacion_predio);
             $('.nombrePredio').text(response.data?.predios?.nombre_predio);
             $('.preregistro').html(
               "<a target='_Blank' href='/pre-registro_predios/" +
-                response.data?.predios?.id_predio +
-                "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
+              response.data?.predios?.id_predio +
+              "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
             );
           }
 
-    
+
 
           $('.razonSocial').text(response?.data?.empresa?.razon_social || 'No disponible');
           $('.fechaHora').text(response?.fecha_visita_formateada || 'No disponible');
-     
+
           $('.nombreLote').text(response?.data?.lote_granel?.nombre_lote || 'No disponible');
 
-       
+
           $('.guiasTraslado').text(response?.data?.caracteristicas?.guias || 'No disponible');
 
           // Validar categoría
           $('.categoria').text(
             response?.data?.lote_granel?.categoria?.categoria ||
-              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
-              'No disponible'
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
+            'No disponible'
           );
 
           // Validar clase
           $('.clase').text(
             response?.data?.lote_granel?.clase?.clase ||
-              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
-              'No disponible'
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
+            'No disponible'
           );
 
           $('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
           $('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
-          $('.certificadoGranel').text(response?.data?.lote_granel?.folio_certificado || 'No disponible');
+          $('.certificadoGranel').text(response?.data?.lote_granel?.certificado_granel?.num_certificado ||
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.certificado_granel?.num_certificado ||
+            'No disponible');
+
+
 
           $('.tipos').text(response?.tipos_agave || 'No disponible');
-          $('.tipoAnalisis').text(response?.data?.caracteristicas?.tipo_analisis || 'No disponible');
+
 
           // Validar nombre del lote envasado
           $('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
 
           var caracteristicas = JSON.parse(response.data?.caracteristicas);
+          var tipos = {
+            1: 'Análisis completo',
+            2: 'Ajuste de grado alcohólico'
+          };
+
+          var texto = tipos[caracteristicas?.tipo_analisis] || 'No disponible';
+
+          $('.tipoAnalisis').text(texto);
           $('.materialRecipiente').text(caracteristicas.material);
           $('.capacidadRecipiente').text(caracteristicas.capacidad);
           $('.numeroRecipiente').text(caracteristicas.num_recipientes);
@@ -4596,9 +4606,23 @@ $(document).on('click', '.expediente-record', function () {
           $('.volumenTrasladado').text(caracteristicas.id_vol_traslado);
           $('.volumenSobrante').text(caracteristicas.id_vol_res);
           $('.volumenIngresado').text(caracteristicas.volumen_ingresado);
-          $('.etiqueta').html('<a href="files/'+response.data.empresa.empresa_num_clientes[0].numero_cliente+'/'+response?.url_etiqueta+'" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-          $('.dictamenEnvasado').html('<a href="/dictamen_envasado/'+response?.data?.lote_envasado?.dictamen_envasado?.id_dictamen_envasado+'" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          $('.tipoEtiquetaEnvasado').text(response?.data?.lote_envasado.tipo);
+          $('.inicioTerminoEnvasado').text(caracteristicas.fecha_inicio + ' a ' + caracteristicas.fecha_fin);
+          let destino;
+          if (response?.data?.lote_envasado.destino_lote == 1) {
+            destino = 'Nacional';
+          }
+          if (response?.data?.lote_envasado.destino_lote == 2) {
+            destino = 'Exportación';
+          }
+          if (response?.data?.lote_envasado.destino_lote == 3) {
+            destino = 'stock';
+          }
 
+          $('.destinoEnvasado').text(destino);
+          $('.etiqueta').html('<a href="files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + response?.url_etiqueta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          $('.dictamenEnvasado').html('<a href="/dictamen_envasado/' + response?.data?.lote_envasado?.dictamen_envasado?.id_dictamen_envasado + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          $('.acta').html('<a href="/files/' + response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente + '/actas/' + response?.url_acta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
           // Verificar si 'detalles' existe y es un arreglo
           if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
             // Recorrer cada elemento de 'detalles'
@@ -4611,7 +4635,7 @@ $(document).on('click', '.expediente-record', function () {
             });
           } else {
             // Si 'detalles' no existe o no es un arreglo
-            $('.cajasBotellas').text('No hay detalles disponibles.');
+            $('.cajasBotellas').text(caracteristicas.cantidad_caja + ' Cajas y ' + response?.data?.lote_envasado.cant_botellas + ' Botellas');
           }
 
           // Estructura de configuración para los documentos
@@ -4652,12 +4676,12 @@ $(document).on('click', '.expediente-record', function () {
               noDocMessage: 'No hay factura proforma',
               condition: (documento, response) => documento.id_empresa == response.data.id_empresa
             },
-            {
-              ids: [128],
-              targetClass: '.domicilioInstalacion',
-              noDocMessage: 'No hay dictamen de instalaciones',
-              condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
-            }
+            /*/  {
+                ids: [128],
+                targetClass: '.domicilioInstalacion',
+                noDocMessage: 'No hay dictamen de instalaciones',
+                condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
+              }*/
           ];
 
           // Variable para seguimiento de documentos encontrados
@@ -4668,28 +4692,39 @@ $(document).on('click', '.expediente-record', function () {
             documentsFound[config.targetClass] = false;
           });
 
-          // Iterar sobre los documentos
-          $.each(response.documentos, function (index, documento) {
-            documentConfig.forEach(config => {
-              if (
-                config.ids.includes(documento.id_documento) &&
-                config.condition(documento, response) // Usar la condición dinámica
-              ) {
-                const link = $('<a>', {
-                  href: 'files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + documento.url,
-                  target: '_blank'
-                });
 
-                link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
-                if (documento.id_documento === 128) {
-                  $(config.targetClass).append(link);
-                } else {
-                  $(config.targetClass).empty().append(link);
+          // Obtener el primer cliente válido
+          const clientes = response.data.empresa.empresa_num_clientes || [];
+          const clienteValido = clientes.find(c => c && c.numero_cliente);
+          const numeroCliente = clienteValido ? clienteValido.numero_cliente : null;
+
+          // Iterar sobre los documentos
+          if (numeroCliente) {
+            $.each(response.documentos, function (index, documento) {
+              documentConfig.forEach(config => {
+                if (
+                  config.ids.includes(documento.id_documento) &&
+                  config.condition(documento, response) // Usar la condición dinámica
+                ) {
+                  const link = $('<a>', {
+                    href: 'files/' + numeroCliente + '/' + documento.url,
+                    target: '_blank'
+                  });
+
+                  link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
+                  if (documento.id_documento === 128) {
+                    $(config.targetClass).append(link);
+                  } else {
+                    $(config.targetClass).empty().append(link);
+                  }
+                  documentsFound[config.targetClass] = true;
                 }
-                documentsFound[config.targetClass] = true;
-              }
+              });
             });
-          });
+          } else {
+            console.warn('No se encontró un número de cliente válido.');
+          }
+
 
           // Mostrar mensajes para documentos no encontrados
           documentConfig.forEach(config => {
@@ -4706,7 +4741,7 @@ $(document).on('click', '.expediente-record', function () {
       }
     });
 
-  
+
   });
 
   $(document).ready(function () {
@@ -4768,7 +4803,7 @@ $(document).on('click', '.expediente-record', function () {
       });
     });
   });
-//funcion para exportar en excel
+  //funcion para exportar en excel
   $(document).ready(function () {
     $('#restablecerFiltros').on('click', function () {
       $('#reporteForm')[0].reset();
@@ -4802,7 +4837,6 @@ $(document).on('click', '.expediente-record', function () {
       }
     });
   });
-});
 
   //Date picker
   $(document).ready(function () {
@@ -4823,7 +4857,6 @@ $(document).on('click', '.expediente-record', function () {
   });
 
 
-
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -4839,24 +4872,31 @@ $(document).on('click', '.expediente-record', function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Por favor seleccione un cliente.'
             }
           }
         },
         fecha_visita: {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha sugerida para la inspección.'
+              message: 'Por favor seleccione la fecha sugerida para la inspección.'
             }
           }
         },
         punto_reunion: {
           validators: {
             notEmpty: {
-              message: 'Introduce la dirección para el punto de reunión.'
+              message: 'Por favor ingrese la dirección para el punto de reunión.'
             }
           }
-        }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un domicilio para la inspección.'
+            }
+          }
+        },
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -4871,7 +4911,13 @@ $(document).on('click', '.expediente-record', function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(form3);
+      $('#btnRegistrarMA').prop('disabled', true);
 
+      $('#btnRegistrarMA').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
+      setTimeout(function () {
+        $('#btnRegistrarMA').prop('disabled', false);
+        $('#btnRegistrarMA').html('<i class="ri-add-line"></i> Registrar');
+      }, 3000);
       $.ajax({
         url: '/registrar-solicitud-muestreo-agave',
         type: 'POST',
@@ -4908,76 +4954,88 @@ $(document).on('click', '.expediente-record', function () {
         }
       });
     });
+    $('#id_empresa_dic2mues, #fecha_visita_dic2, #id_instalacion_dic2').on('change', function () {
+      fv3.revalidateField($(this).attr('name'));
+    });
+  });
 
+
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
     // Inicializar FormValidation para las validaciones por parte del personal oc
     const form = document.getElementById('addValidarSolicitud');
 
     const fv = FormValidation.formValidation(form, {
       excluded: ':disabled',
       fields: {
-       /* razonSocial: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona la respuesta'
-            }
-          }
-        },
-        razonSocial1: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona la respuesta'
-            }
-          }
-        },
-        domicilioFiscal: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona la respuesta'
-            }
-          }
-        },
-        domicilioInstalacion: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona la respuesta'
-            }
-          }
-        },
-        fechaHora: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona la respuesta'
-            }
-          }
-        },
-        actaConstitutiva: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona la respuesta'
-            }
-          }
-        },
-        csf: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona la respuesta'
-            }
-          }
-        },
-        comprobantePosesion: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona la respuesta'
-            }
-          }
-        },
-        planoDistribucion: {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona la respuesta'
-            }
-          }
-        }, */
+        /* razonSocial: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         razonSocial1: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         domicilioFiscal: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         domicilioInstalacion: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         fechaHora: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         actaConstitutiva: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         csf: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         comprobantePosesion: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         },
+         planoDistribucion: {
+           validators: {
+             notEmpty: {
+               message: 'Selecciona la respuesta'
+             }
+           }
+         }, */
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -4990,7 +5048,7 @@ $(document).on('click', '.expediente-record', function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
 
-      
+
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(form);
@@ -5031,9 +5089,10 @@ $(document).on('click', '.expediente-record', function () {
       });
     });
 
-  
-
-
- 
   });
+
+});
+
+
+
 

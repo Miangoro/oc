@@ -27,6 +27,7 @@ class solicitudHolograma extends Model
         'fecha_envio',
         'costo_envio',
         'no_guia',
+        'tipo',
 
 
     ];

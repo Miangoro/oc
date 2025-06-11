@@ -16,52 +16,48 @@ class Helpers
 
 
   public static function firmarCadena(string $cadenaOriginal, string $password, int $userId)
-    {
-        try {
+{
+    try {
+        // Validación de usuario y contraseña
+        $passwords = [
+            6 => '890418jks',   // Karen Velázquez
+            9 => 'Mejia2307',   // Erik
+            7 => 'ZA27CI09',    // Zaida
+            14 => 'v921009villa' // Mario
+        ];
 
-          if($userId==6){ //Karen velázquez
-            $password = '890418jks';
-          }
-          if($userId==9){ //Erik
-            $password = 'Mejia2307';
-          }
+        $password = $passwords[$userId] ?? $password;
 
-          if($userId==7){ //Zaida
-            $password = 'ZA27CI09';
-          }
+        // Rutas de los archivos en storage
+        $cerPath = storage_path("app/public/firmas/efirma/{$userId}.cer");
+        $keyPath = storage_path("app/public/firmas/efirma/{$userId}.key");
 
-          if($userId==14){ //Mario
-            $password = 'v921009villa';
-          }
-
-            // Rutas de los archivos en storage
-            $cerPath = storage_path("app/public/firmas/efirma/{$userId}.cer");
-            $keyPath = storage_path("app/public/firmas/efirma/{$userId}.key");
-
-            // Verificar que los archivos existen
-            if (!file_exists($cerPath) || !file_exists($keyPath)) {
-                return response()->json(['error' => 'No se encontraron los archivos de la firma'], 404);
-            }
-
-  
-
-            // Crear la credencial con los archivos
-            $credential = Credential::openFiles($cerPath, $keyPath, $password);
-
-            // Firmar la cadena
-            $firma = base64_encode($credential->sign($cadenaOriginal));
-
+        // Verificar que los archivos existen
+        if (!file_exists($cerPath) || !file_exists($keyPath)) {
             return [
-                'cadena_original' => $cadenaOriginal,
-                'firma' => $firma,
-                'rfc' => $credential->certificate()->rfc(),
-                'nombre' => $credential->certificate()->legalName()];
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'No se pudo firmar la cadena: ' . $e->getMessage(),
-            ], 500);
+                'error' => 'No se encontraron los archivos de la firma'
+            ]; // ✅ Devolvemos un ARRAY en lugar de JsonResponse
         }
+
+        // Crear la credencial con los archivos
+        $credential = Credential::openFiles($cerPath, $keyPath, $password);
+
+        // Firmar la cadena
+        $firma = base64_encode($credential->sign($cadenaOriginal));
+
+        return [
+            'cadena_original' => $cadenaOriginal,
+            'firma' => $firma,
+            'rfc' => $credential->certificate()->rfc(),
+            'nombre' => $credential->certificate()->legalName()
+        ];
+    } catch (\Exception $e) {
+        return [
+            'error' => 'No se pudo firmar la cadena: ' . $e->getMessage()
+        ]; // ✅ Ahora el error es un array y no un JsonResponse
     }
+}
+
 
   public static function generarFolioMarca($id_empresa)
   {
@@ -89,10 +85,11 @@ class Helpers
         $count = solicitudesModel::count() + 1; // Sumar 1 al número actual para el siguiente consecutivo
 
         // Formatear el consecutivo con ceros a la izquierda (5 dígitos)
-        $consecutivo = str_pad($count, 5, '0', STR_PAD_LEFT);
+        //$consecutivo = str_pad($count, 5, '0', STR_PAD_LEFT);
+        $consecutivo =  str_pad($count + 12686, 5, '0', STR_PAD_LEFT);
 
         // Retornar el folio en el formato SOL-año-consecutivo
-        return "SOL-$year-$consecutivo";
+        return "SOL-$consecutivo";
     }
     public static function formatearFecha($fecha)
     {

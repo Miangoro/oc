@@ -118,7 +118,7 @@
         </tr>
         <tr>
             <td class="con-negra" colspan="2">Fecha de solicitud:</td>
-            <td colspan="4">{{ $datos->fecha_solicitud }}</td>
+            <td colspan="4">{{ $datos->created_at }}</td>
             <td class="con-negra" colspan="3">Teléfono:</td>
             <td colspan="4">{{ $datos->empresa->telefono }}</td>
         </tr>
@@ -143,12 +143,12 @@
             </td>
             <td colspan="4" rowspan="2">
                 @if ($vigilancia_traslado === 'X')
-                    {{ $datos->instalacion_destino->direccion_completa }}
+                    {{ $datos->instalacion_destino->direccion_completa ?? '' }}
                 @else
                     ------------------------
                 @endif <br><br>
                 @if ($vigilancia_traslado === 'X')
-                    {{ $datos->instalacion_destino->empresa->razon_social }}
+                    {{ $datos->instalacion_destino->empresa->razon_social ?? '' }}
                 @else
                     ------------------------
                 @endif
@@ -181,7 +181,7 @@
                 propuesta</td>
             <td colspan="7"><span style="font-size: 14px" class="con-negra">
                     @if ($muestreo_agave === 'X')
-                        {{ $fecha_visita }}
+                        {{ $fecha_visita ?? 'Sin definir' }}
                     @else
                         ------------------------
                     @endif
@@ -356,7 +356,7 @@
                 propuesta</td>
             <td colspan="7"><span style="font-size: 14px" class="con-negra">
                     @if ($geo === 'X')
-                        {{ $fecha_visita }}
+                        {{ $fecha_visita ?? "Sin definir" }}
                     @else
                         ------------------------
                     @endif
@@ -538,7 +538,7 @@
             <td colspan="3">{{ $datos->lote_granel->nombre_lote ?? '---------------' }}</td>
             <td class="con-negra" colspan="4" style="text-align: left">6) No. de certificado NOM de Mezcal <br> a
                 granel vigente:</td>
-            <td colspan="4">{{ $datos->lote_granel->folio_certificado ?? '---------------' }}</td>
+            <td colspan="4">@if($muestreo_granel != 'X') {{ $datos->lote_granel->certificadoGranel->num_certificado ?? '---------------' }} @else --------------- @endif</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">2) Categoria:</td>
@@ -568,9 +568,9 @@
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">3) No. de análisis de
                 laboratorio:</td>
-            <td colspan="3">{{ $datos->lote_granel->folio_fq ?? '---------------' }}</td>
+            <td colspan="3">@if($muestreo_granel != 'X') {{ $datos->lote_granel->folio_fq ?? '---------------' }} @else --------------- @endif</td>
             <td class="con-negra" colspan="4" style="text-align: left">8) Contenido Alcohólico:</td>
-            <td colspan="4">{{ $datos->lote_granel->cont_alc ?? '---------------' }}</td>
+            <td colspan="4">@if($muestreo_granel != 'X') {{ $datos->lote_granel->cont_alc ?? '---------------' }} @else --------------- @endif</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">4) Marca:</td>
@@ -598,10 +598,14 @@
                     @foreach ($caracteristicas['detalles'] as $detalle)
                         <span>Cantidad de Botellas: {{ $detalle['cantidad_botellas'] ?? 'No definido' }}</span><br>
                         <span>Cantidad de Cajas: {{ $detalle['cantidad_cajas'] ?? 'No definido' }}</span><br>
-                        <span>Presentación: {{ $detalle['presentacion'] ?? 'No definido' }}</span>
+                        
                     @endforeach
+                @elseif($inspeccion_envasado === 'X')
+                   <span>Cantidad de Botellas:  {{ $datos->lote_envasado->cant_botellas ?? 'No definido' }}</span><br>
+                   <span>Cantidad de Cajas: {{ $caracteristicas['cantidad_caja'] ?? 'No definido' }}</span><br>
+                   
                 @else
-                    <p>---------------</< /p>
+                    <p>---------------</p>
                 @endif
             </td>
         </tr>
@@ -638,12 +642,12 @@
             <td class="con-negra" colspan="3" rowspan="3">INFORMACIÓN ADICIONAL SOBRE LA <br> ACTIVIDAD:</td>
             <td class="td-margins" colspan="6">
                 @if ($vigilancia_traslado === 'X')
-                    <b>Identificador de contenedor de salida:</b> {{ $caracteristicas['id_salida'] }}<br>
-                    <b>Identificador de contenedor de recepción:</b> {{ $caracteristicas['id_contenedor'] }}<br>
-                    <b>Sobrante en contenedor de salida:</b> {{ $caracteristicas['id_vol_res'] }}<br>
-                    <b>Volumen actual del lote:</b> {{ $caracteristicas['id_vol_actual'] }}<br>
-                    <b>Volumen trasladado</b> {{ $caracteristicas['id_vol_traslado'] }}<br>
-                    <b>Volumen sobrante del lote:</b> {{ $caracteristicas['id_sobrante'] }}<br>
+                    <b>Identificador de contenedor de salida:</b> {{ $caracteristicas['id_salida'] ?? '' }}<br>
+                    <b>Identificador de contenedor de recepción:</b> {{ $caracteristicas['id_contenedor'] ?? '' }}<br>
+                    <b>Sobrante en contenedor de salida:</b> {{ $caracteristicas['id_vol_res'] ?? '' }}<br>
+                    <b>Volumen actual del lote:</b> {{ $caracteristicas['id_vol_actual'] ?? '' }}<br>
+                    <b>Volumen trasladado</b> {{ $caracteristicas['id_vol_traslado'] ?? '' }}<br>
+                    <b>Volumen sobrante del lote:</b> {{ $caracteristicas['id_sobrante'] ?? '' }}<br>
                 @elseif($geo === 'X')
                     @foreach ($datos->predios->predio_plantaciones as $plantacion)
                         <b>Especie de agave:</b> {{ $plantacion->tipo->nombre }}
@@ -652,7 +656,7 @@
                         <b>No. de Plantas:</b> {{ $plantacion->num_plantas }}<br>
                         <b>Edad de plantación:</b> {{ $plantacion->anio_plantacion }}<br>
                         <b>Tipo de plantación:</b> {{ $plantacion->tipo_plantacion }}<br>
-                        <b>Dirección del punto de reunión: </b> {{ $caracteristicas['punto_reunion'] }}<br>
+                        <b>Dirección del punto de reunión: </b> {{ $caracteristicas['punto_reunion'] ?? '' }}<br>
                         <hr>
                     @endforeach
                 @elseif($ingreso_barrica === 'X')
@@ -665,6 +669,24 @@
                 @elseif($muestreo_granel === 'X')
                     <b>Tipo:</b>
                     {{ $caracteristicas['tipo_analisis'] == 1 ? 'Análisis completo' : ($caracteristicas['tipo_analisis'] == 2 ? 'Ajuste de grado alcohólico' : '') }}
+                    <br>
+                @elseif($inspeccion_envasado === 'X')
+                    @if (!empty($datos->lote_granel->edad) && $datos->lote_granel->edad != 0)
+                        <b>Edad:</b> {{ $datos->lote_granel->edad }}<br>
+                    @endif
+
+                    <b>Con etiqueta o sin etiqueta:</b>
+                    {{ $datos->lote_envasado->tipo ?? '---------------' }}
+                    <br>
+                     <b>Volumen envasado:</b>
+                   {{ number_format($datos->lote_envasado->volumen_total, 0, '.', ',') . ' L' }}
+
+                    <br>
+                    <b>Inicio de envasado:</b>
+                    {{ $caracteristicas['fecha_inicio'] }}
+                    <br>
+                    <b>Término previsto del envasado:</b>
+                    {{ $caracteristicas['fecha_fin'] }}
                     <br>
 
 
@@ -726,8 +748,21 @@
             <td class="sin-negrita" colspan="4">Se cuenta con todos los medios para realizar todas las actividades
                 de evaluación para la <br>
                 Certificación:</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
+          <td>
+            @if (isset($datos->ultima_validacion_oc->estatus) && strtolower($datos->ultima_validacion_oc->estatus) === 'validada')
+                X
+            @else
+                ---------
+            @endif
+        </td>
+
+            <td>
+            @if (isset($datos->ultima_validacion_oc->estatus) && strtolower($datos->ultima_validacion_oc->estatus) === 'rechazada')
+                X
+            @else
+                ---------
+            @endif
+        </td>
             <td rowspan="2" colspan="3">
                 @if ($datos->ultima_validacion_oc)
                     {{ $datos->ultima_validacion_oc->responsable->name }}
@@ -740,15 +775,39 @@
         <tr>
             <td class="sin-negrita" colspan="4">El organismo de Certificación tiene la competencia para realizar la
                 Certificación</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
+           <td>
+            @if (isset($datos->ultima_validacion_oc->estatus) && strtolower($datos->ultima_validacion_oc->estatus) === 'validada')
+                X
+            @else
+                ---------
+            @endif
+        </td>
+         <td>
+            @if (isset($datos->ultima_validacion_oc->estatus) && strtolower($datos->ultima_validacion_oc->estatus) === 'rechazada')
+                X
+            @else
+                ---------
+            @endif
+        </td>
         </tr>
         <tr>
             <td class="sin-negrita" colspan="4">El organismo de Certificación tiene la capacidad para llevar a cabo
                 las actividades de <br>
                 certificación</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
+            <td>
+            @if (isset($datos->ultima_validacion_oc->estatus) && strtolower($datos->ultima_validacion_oc->estatus) === 'validada')
+                X
+            @else
+                ---------
+            @endif
+        </td>
+           <td>
+            @if (isset($datos->ultima_validacion_oc->estatus) && strtolower($datos->ultima_validacion_oc->estatus) === 'rechazada')
+                X
+            @else
+                ---------
+            @endif
+        </td>
             <td colspan="3" rowspan="2" style="padding-top: 0; margin-top: 0; vertical-align: top">Nombre y
                 firma<br>
                 @php

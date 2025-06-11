@@ -199,14 +199,16 @@ use App\Http\Controllers\solicitudes\solicitudesController;
 use App\Http\Controllers\TrazabilidadController;
 use App\Http\Controllers\pdf_llenado\PdfController;
 use App\Http\Controllers\revision\RevisionPersonalController;
+use App\Http\Controllers\revision\RevisionConsejoController;
 use App\Http\Controllers\revision\catalogo_personal_seleccion_preguntas_controller;
-use App\Http\Controllers\Bitacoras\BitacoraMezcalController;
-use App\Http\Controllers\Bitacoras\BitacoraProductoMaduracionController;
-use App\Http\Controllers\Bitacoras\BitacoraProcesoElaboracionController;
-use App\Http\Controllers\Bitacoras\BitacoraProductoTerminadoController;
-use App\Http\Controllers\Bitacoras\BitacoraHologramasController;
+use App\Http\Controllers\bitacoras\BitacoraMezcalController;
+use App\Http\Controllers\bitacoras\BitacoraProductoMaduracionController;
+use App\Http\Controllers\bitacoras\BitacoraProcesoElaboracionController;
+use App\Http\Controllers\bitacoras\BitacoraProductoTerminadoController;
+use App\Http\Controllers\bitacoras\BitacoraHologramasController;
 use App\Http\Controllers\catalogo\EtiquetasController;
 use App\Http\Controllers\certificados\Certificado_ExportacionController;
+use App\Http\Controllers\certificados\Certificado_NacionalController;
 use App\Http\Controllers\insertar_datos_bd_certificados;
 use App\Http\Controllers\insertar_datos_bd_dictamenes;
 use App\Http\Controllers\Tramite_impi\impiController;
@@ -217,8 +219,10 @@ use App\Http\Controllers\efirma\firmaController;
 use App\Http\Controllers\hologramas\hologramasACtivar;
 use App\Http\Controllers\insertar_datos_bd_actas;
 use App\Http\Controllers\insertar_datos_bd_certificados_granel;
+use App\Http\Controllers\insertar_datos_bd_dictamenes_exportacion;
 use App\Http\Controllers\insertar_datos_bd_dictamenes_graneles;
 use App\Http\Controllers\insertar_datos_bd_lotes_envasado;
+use App\Http\Controllers\insertar_datos_bd_predios;
 use App\Http\Controllers\permisos\permisosController;
 use App\Http\Controllers\permisos\rolesController;
 
@@ -231,8 +235,8 @@ Route::get('/', function () {
 Route::get('/docusign/authenticate', [DocuSignController::class, 'authenticate'])->name('docusign');
 Route::get('/test-docusign', [DocuSignController::class, 'sendDocument'])->name('test-docusign');
 Route::get('/obtenerTokenDocuSign', [DocuSignController::class, 'obtenerTokenDocuSign'])->name('obtenerTokenDocuSign');
-Route::post('/docusign/enviar', [DocuSignController::class, 'sendDocument2'])->name('docusign.enviar')->middleware('auth'); 
-Route::get('/docusign/sendDocumentAuto', [DocuSignController::class, 'sendDocumentAuto'])->name('docusign.enviar.auto'); 
+Route::post('/docusign/enviar', [DocuSignController::class, 'sendDocument2'])->name('docusign.enviar')->middleware('auth');
+Route::get('/docusign/sendDocumentAuto', [DocuSignController::class, 'sendDocumentAuto'])->name('docusign.enviar.auto');
 
 Route::get('/docusign/firma-completada', [DocuSignController::class, 'firmaCompletada'])->name('firma.completada');
 Route::get('/docusign/descargar/{envelopeId}', [DocuSignController::class, 'descargarDocumento'])->name('docusign.descargar');
@@ -247,7 +251,9 @@ Route::get('files/{filename}', [FileController::class, 'show'])
     ->middleware('auth'); // Middleware para autenticar usuarios
 
     Route::get('files/{carpeta}/{filename}', [FileController::class, 'show2'])
-    ->name('file.show2')
+    ->name('file.show2');
+     Route::get('files/{carpeta}/{carpeta2}/{filename}', [FileController::class, 'show3'])
+    ->name('file.show3')
     ->middleware('auth'); // Middleware para autenticar usuarios
 
 Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -328,10 +334,10 @@ Route::get('/pages/account-settings-security', [AccountSettingsSecurity::class, 
 Route::get('/pages/account-settings-billing', [AccountSettingsBilling::class, 'index'])->name('pages-account-settings-billing');
 Route::get('/pages/account-settings-notifications', [AccountSettingsNotifications::class, 'index'])->name('pages-account-settings-notifications');
 Route::get('/pages/account-settings-connections', [AccountSettingsConnections::class, 'index'])->name('pages-account-settings-connections');
-Route::get('/pages/faq', [Faq::class, 'index'])->name('pages-faq');
+Route::get('/pages/faq', [Faq::class, 'index'])->name('pages-faq')->middleware(['auth']);
 Route::get('/pages/pricing', [PagesPricing::class, 'index'])->name('pages-pricing');
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
-Route::get('/pages/hologramas-validacion/{folio}', [HologramasValidacion::class, 'index'])->name('pages-hologramas-validacion');
+Route::get('/holograma/{folio}', [HologramasValidacion::class, 'index2'])->name('pages-hologramas-validacion');
 Route::get('/validar_dictamen', [HologramasValidacion::class, 'validar_dictamen'])->name('validar_dictamen');
 
 Route::get('/pages/misc-under-maintenance', [MiscUnderMaintenance::class, 'index'])->name('pages-misc-under-maintenance');
@@ -491,24 +497,27 @@ Route::get('/dictamen_cumplimiento_instalaciones', [CartaAsignacionController::c
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'Contancia_trabajo'])->name('Contancia_trabajo');
 Route::get('/informe_inspeccion_etiqueta', [CartaAsignacionController::class, 'InformeInspeccionEtiqueta'])->name('InformeInspeccionEtiqueta');
 
+Route::get('/informe_resultados', [CartaAsignacionController::class, 'informeresulta'])->name('informeresultados');
+
+
 /* orden-trabajo-inspeccion-etiquetas */
 Route::get('/orden_trabajo_inspeccion_etiquetas', [CartaAsignacionController::class, 'OrdenTrabajoInspeccionEtiquetas'])->name('OrdenTrabajoInspeccionEtiquetas');
 /* lista_verificacion_nom051-mod20200327_solrev005 */
 Route::get('/lista_verificacion_nom051-mod20200327_solrev005', [CartaAsignacionController::class, 'ListaVerificacionNom051Mod20200327Solrev005'])->name('ListaVerificacionNom051Mod20200327Solrev005');
 
 //Etiquetas Etiqueta_Barrica
-Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'])->name('Etiqueta-2401ESPTOB');
-Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_muestra'])->name('Etiqueta-Muestra');
-Route::get('/Etiqueta-Barrica', [CartaAsignacionController::class, 'Etiqueta_Barrica'])->name('Etiqueta-Barrica');
+Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'])->name('Etiqueta-2401ESPTOB')->middleware(['auth']);
+Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_muestra'])->name('Etiqueta-Muestra')->middleware(['auth']);
+Route::get('/Etiqueta-Barrica', [CartaAsignacionController::class, 'Etiqueta_Barrica'])->name('Etiqueta-Barrica')->middleware(['auth']);
 
-Route::get('/Etiqueta_lotes_mezcal_granel', [CartaAsignacionController::class, 'Etiqueta_Granel']);
+Route::get('/Etiqueta_lotes_mezcal_granel', [CartaAsignacionController::class, 'Etiqueta_Granel'])->middleware(['auth']);
 
-Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion');/*  */
+Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion')->middleware(['auth']);
 
 //Certificados de instalaciones
-Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador');
-Route::get('/certificado_envasador_mezcal', [CartaAsignacionController::class, 'certificadoenv'])->name('certificado_envasador_mezcal');
-Route::get('/certificado_productor_mezcal', [CartaAsignacionController::class, 'certificadoprod'])->name('certificado_productor_mezcal');
+Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador')->middleware(['auth']);
+Route::get('/certificado_envasador_mezcal', [CartaAsignacionController::class, 'certificadoenv'])->name('certificado_envasador_mezcal')->middleware(['auth']);
+Route::get('/certificado_productor_mezcal', [CartaAsignacionController::class, 'certificadoprod'])->name('certificado_productor_mezcal')->middleware(['auth']);
 
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto')->middleware(['auth']);
@@ -574,50 +583,52 @@ Route::post('/lotes-register/store', [lotesGranelController::class, 'store'])->n
 Route::get('/lotes-a-granel/{id_lote_granel}/edit', [lotesGranelController::class, 'edit'])->name('lotes-a-granel.edit')->middleware(['auth']);
 Route::post('/lotes-a-granel/{id_lote_granel}', [lotesGranelController::class, 'update'])->middleware(['auth']);
 Route::get('/lotes-a-granel/{id_lote_granel}/volumen', [lotesGranelController::class, 'getVolumen'])->name('lotes-a-granel.volumen')->middleware(['auth']);
+Route::post('/eliminar_documento', [lotesGranelController::class, 'eliminar_documento'])->name('documento.eliminar');
+
 
 //Lotes de envasado
-Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
-Route::resource('/lotes-list', LotesEnvasadoController::class);
-Route::post('/lotes-envasado', [LotesEnvasadoController::class, 'store']);
-Route::get('/lotes-envasado/edit/{id}', [lotesEnvasadoController::class, 'edit']);
-Route::post('/lotes-envasado/update/', [lotesEnvasadoController::class, 'update']);
-Route::get('/lotes-envasado/editSKU/{id}', [lotesEnvasadoController::class, 'editSKU']);
-Route::post('/lotes-envasado/updateSKU/', [lotesEnvasadoController::class, 'updateSKU']);
+Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes')->middleware(['auth']);
+Route::resource('/lotes-list', LotesEnvasadoController::class)->middleware(['auth']);
+Route::post('/lotes-envasado', [LotesEnvasadoController::class, 'store'])->middleware(['auth']);
+Route::get('/lotes-envasado/edit/{id}', [lotesEnvasadoController::class, 'edit'])->middleware(['auth']);
+Route::post('/lotes-envasado/update/', [lotesEnvasadoController::class, 'update'])->middleware(['auth']);
+Route::get('/lotes-envasado/editSKU/{id}', [lotesEnvasadoController::class, 'editSKU'])->middleware(['auth']);
+Route::post('/lotes-envasado/updateSKU/', [lotesEnvasadoController::class, 'updateSKU'])->middleware(['auth']);
 Route::get('/obtenerDocumentos/{id_marca}', [LotesEnvasadoController::class, 'obtenerDocumentosPorMarca']);
 
 //Domicilios fiscal
-Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
+Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal')->middleware(['auth']);
 
 //Domicilios Instalaciones
-Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio-instalaciones');
-Route::resource('/instalaciones-list', DomiciliosController::class);
-Route::delete('instalaciones/{id_instalacion}', [DomiciliosController::class, 'destroy']);
-Route::post('/instalaciones', [DomiciliosController::class, 'store']);
-Route::get('domicilios/edit/{id_instalacion}', [DomiciliosController::class, 'edit'])->name('domicilios.edit');
-Route::put('instalaciones/{id_instalacion}', [DomiciliosController::class, 'update']);
-Route::get('/getDocumentosPorInstalacion', [DomiciliosController::class, 'getDocumentosPorInstalacion']);
+Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio-instalaciones')->middleware(['auth']);
+Route::resource('/instalaciones-list', DomiciliosController::class)->middleware(['auth']);
+Route::delete('instalaciones/{id_instalacion}', [DomiciliosController::class, 'destroy'])->middleware(['auth']);
+Route::post('/instalaciones', [DomiciliosController::class, 'store'])->middleware(['auth']);
+Route::get('domicilios/edit/{id_instalacion}', [DomiciliosController::class, 'edit'])->name('domicilios.edit')->middleware(['auth']);
+Route::put('instalaciones/{id_instalacion}', [DomiciliosController::class, 'update'])->middleware(['auth']);
+Route::get('/getDocumentosPorInstalacion', [DomiciliosController::class, 'getDocumentosPorInstalacion'])->middleware(['auth']);
 
 //Domicilio predios
-Route::get('/domicilios/predios', [PrediosController::class, 'UserManagement'])->name('domicilios-predios');
-Route::resource('/predios-list', PrediosController::class);
-Route::delete('/predios-list/{id_predio}', [PrediosController::class, 'destroy'])->name('predios-list.destroy');
-Route::post('/predios-register/store', [PrediosController::class, 'store'])->name('predios-register.store');
-Route::get('/domicilios-predios/{id_predio}/edit', [PrediosController::class, 'edit'])->name('domicilios-predios.edit');
-Route::post('/domicilios-predios/{id_predio}', [PrediosController::class, 'update'])->name('domicilios-predios.update');
-Route::post('/domicilios-predios/{id_predio}/inspeccion', [PrediosController::class, 'inspeccion'])->name('domicilios-predios.inspeccion');
-Route::get('/pre-registro_predios/{id_predio}', [prediosController::class, 'PdfPreRegistroPredios'])->name('pre-registro_predios');
-Route::get('/inspeccion_geo_referenciacion/{id_predio}', [prediosController::class, 'PDFInspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion');
-Route::get('/Registro_de_Predios_Maguey_Agave/{id_predio}', [prediosController::class, 'PDFRegistroPredios'])->name('PDF_Registro_Predios');
-Route::post('/registro-Predio/{id_predio}', [PrediosController::class, 'registroPredio'])->name('registro-predios.registroPredio');
-Route::get('/solicitudServicio/{id_predio}', [PrediosController::class, 'pdf_solicitud_servicios_070']);
+Route::get('/domicilios/predios', [PrediosController::class, 'UserManagement'])->name('domicilios-predios')->middleware(['auth']);
+Route::resource('/predios-list', PrediosController::class)->middleware(['auth']);
+Route::delete('/predios-list/{id_predio}', [PrediosController::class, 'destroy'])->name('predios-list.destroy')->middleware(['auth']);
+Route::post('/predios-register/store', [PrediosController::class, 'store'])->name('predios-register.store')->middleware(['auth']);
+Route::get('/domicilios-predios/{id_predio}/edit', [PrediosController::class, 'edit'])->name('domicilios-predios.edit')->middleware(['auth']);
+Route::post('/domicilios-predios/{id_predio}', [PrediosController::class, 'update'])->name('domicilios-predios.update')->middleware(['auth']);
+Route::post('/domicilios-predios/{id_predio}/inspeccion', [PrediosController::class, 'inspeccion'])->name('domicilios-predios.inspeccion')->middleware(['auth']);
+Route::get('/pre-registro_predios/{id_predio}', [prediosController::class, 'PdfPreRegistroPredios'])->name('pre-registro_predios')->middleware(['auth']);
+Route::get('/inspeccion_geo_referenciacion/{id_predio}', [prediosController::class, 'PDFInspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion')->middleware(['auth']);
+Route::get('/Registro_de_Predios_Maguey_Agave/{id_predio}', [prediosController::class, 'PDFRegistroPredios'])->name('PDF_Registro_Predios')->middleware(['auth']);
+Route::post('/registro-Predio/{id_predio}', [PrediosController::class, 'registroPredio'])->name('registro-predios.registroPredio')->middleware(['auth']);
+Route::get('/solicitudServicio/{id_predio}', [PrediosController::class, 'pdf_solicitud_servicios_070'])->middleware(['auth']);
 
 //Domicilio Destinos
-Route::get('/domicilios/destinos', [DestinosController::class, 'UserManagement'])->name('domicilio-destinos');
-Route::resource('/destinos-list', DestinosController::class);
-Route::delete('/destinos-list/{id_direccion}', [DestinosController::class, 'destroy'])->name('destinos-list.destroy');
-Route::post('/destinos-register/{id_direccion}', [DestinosController::class, 'store'])->name('destinos-register.store');
+Route::get('/domicilios/destinos', [DestinosController::class, 'UserManagement'])->name('domicilio-destinos')->middleware(['auth']);
+Route::resource('/destinos-list', DestinosController::class)->middleware(['auth']);
+Route::delete('/destinos-list/{id_direccion}', [DestinosController::class, 'destroy'])->name('destinos-list.destroy')->middleware(['auth']);
+Route::post('/destinos-register/{id_direccion}', [DestinosController::class, 'store'])->name('destinos-register.store')->middleware(['auth']);
 /* route::get('/destinos-list/{id_direccion}/edit', [DestinoController::class, 'edit'])->name('destinos.edit');
- */route::post('/destinos-update/{id_direccion}', [DestinosController::class, 'update'])->name('destinos.update');
+ */route::post('/destinos-update/{id_direccion}', [DestinosController::class, 'update'])->name('destinos.update')->middleware(['auth']);
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes')->middleware(['auth']);
@@ -677,28 +688,28 @@ Route::get('/obtenerDocumentosClientes/{id_documento}/{id_cliente}', [getFuncion
 
 
 //Guias de agave o maguey
-Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('traslado-guias');
-Route::resource('/guias-list', GuiasController::class);
-Route::post('/guias/store', [GuiasController::class, 'store']);
-Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
-Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
-Route::post('/update', [GuiasController::class, 'update'])->name('guias.update');
-Route::get('/editGuias/{run_folio}', [GuiasController::class, 'editGuias']);
+Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('traslado-guias')->middleware(['auth']);
+Route::resource('/guias-list', GuiasController::class)->middleware(['auth']);
+Route::post('/guias/store', [GuiasController::class, 'store'])->middleware(['auth']);
+Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado')->middleware(['auth']);
+Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit')->middleware(['auth']);
+Route::post('/update', [GuiasController::class, 'update'])->name('guias.update')->middleware(['auth']);
+Route::get('/editGuias/{run_folio}', [GuiasController::class, 'editGuias'])->middleware(['auth']);
 
 //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
 
 
 //Documentacion
-Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
-Route::resource('/documentos-list', DocumentosController::class);
-Route::delete('/documentos/{id}', [DocumentosController::class, 'destroy'])->name('documentos.destroy');
-Route::post('/documentos', [DocumentosController::class, 'store']);
+Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos')->middleware(['auth']);
+Route::resource('/documentos-list', DocumentosController::class)->middleware(['auth']);
+Route::delete('/documentos/{id}', [DocumentosController::class, 'destroy'])->name('documentos.destroy')->middleware(['auth']);
+Route::post('/documentos', [DocumentosController::class, 'store'])->middleware(['auth']);
 
 // Ruta para obtener los datos del documento para editar
-Route::get('/documentos/{id}/edit', [DocumentosController::class, 'edit']);
+Route::get('/documentos/{id}/edit', [DocumentosController::class, 'edit'])->middleware(['auth']);
 
 // Ruta para actualizar el documento
-Route::put('/documentos/{id}', [DocumentosController::class, 'update']);
+Route::put('/documentos/{id}', [DocumentosController::class, 'update'])->middleware(['auth']);
 
 //-------------------INSPECCIONES-------------------
 Route::middleware(['auth'])->controller(inspeccionesController::class)->group(function () {
@@ -706,13 +717,19 @@ Route::middleware(['auth'])->controller(inspeccionesController::class)->group(fu
     Route::resource('inspecciones-list', inspeccionesController::class);
     Route::post('/asignar-inspector', 'asignarInspector');
     Route::get('/oficio_de_comision/{id_inspeccion}', 'pdf_oficio_comision')->name('oficioDeComision');
+    Route::get('/etiqueta_agave_art/{id_inspeccion}', 'etiqueta_muestra')->name('etiqueta-muestra');
     Route::get('/orden_de_servicio/{id_inspeccion}', 'pdf_orden_servicio')->name('ordenDeServicio');
+    Route::get('/etiqueta_lotes_mezcal_granel/{id_inspeccion}', 'etiqueta_granel')->name('etiquetalotegranel');
+    Route::get('/etiqueta-barrica/{id_inspeccion}',  'etiqueta_barrica')->name('etiquetabarrica');
+    Route::get('/etiquetas_tapas_sellado/{id_inspeccion}', 'etiqueta')->name('etiqueta-2401ESPTOB');
     Route::post('/agregar-resultados', 'agregarResultados');
     Route::get('/acta-solicitud/edit/{id_acta}', 'editActa');
     Route::get('/getInspeccion/{id_solicitud}', 'getInspeccion');
     //pdf rutas
     Route::post('/acta-unidades', [inspeccionesController::class, 'store'])->name('acta.unidades.store');
     Route::get('/acta_circunstanciada_unidades_produccion/{id_inspeccion}', [inspeccionesController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');
+
+   /*  Route::get('/getDatosSolicitud/{id_solicitud}',  'getDatosSolicitud')->name('getDatosSolicitud'); */
 });
 
 //-------------------HOLOGRAMAS - SOLICITUD DE HOLOGRAMAS-------------------
@@ -751,31 +768,35 @@ Route::get('/marcas/{id_empresa}', [lotesEnvasadoController::class, 'obtenerMarc
 
 
 //Tipo
-Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
-Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
+Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo')->middleware(['auth']);
+Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos')->middleware(['auth']);
 
 //Notificaciones
-Route::post('/notificacion-leida/{id}', [NotificacionController::class, 'marcarNotificacionLeida'])->name('notificacion.leida');
+Route::post('/notificacion-leida/{id}', [NotificacionController::class, 'marcarNotificacionLeida'])->name('notificacion.leida')->middleware(['auth']);
 
-//Trazabilidad
-Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])->name('mostrarLogs');
 
-Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema');
-Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico');
-Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado');
-Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema');
-Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico');
-Route::get('/Solicitud-Especificaciones', [CartaAsignacionController::class, 'SolicitudEspecificaciones'])->name('Solicitud-Especificaciones');
-Route::get('/Oreden-Trabajo', [CartaAsignacionController::class, 'OrdenTrabajo'])->name('Oreden-Trabajo');
-Route::get('/Solicitud-Servicio-UNIIC', [CartaAsignacionController::class, 'SolicitudUNIIC'])->name('Solicitud-Servicio-UNIIC');
+//-------------------TRAZABILIDAD-------------------
+Route::middleware(['auth'])->controller(TrazabilidadController::class)->group(function () {
+    Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])->name('mostrarLogs');
+    Route::get('/trazabilidad-certificados/{id}', [TrazabilidadController::class, 'TrackingCertificados'])->name('trazabilidad de certificados');
+});
 
-Route::get('/empresa_contrato/{id_empresa}', [clientesConfirmadosController::class, 'obtenerContratosPorEmpresa']);
-Route::get('/edit_cliente_confirmado/{id_empresa}', [clientesConfirmadosController::class, 'edit_cliente_confirmado']);
-Route::get('/empresa_num_cliente/{id_empresa}', [clientesConfirmadosController::class, 'obtenerNumeroCliente']);
-Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'actualizarRegistros']);
-Route::post('/editar_cliente_confirmado', [clientesConfirmadosController::class, 'editar_cliente_confirmado']);
-Route::delete('clientes-list/{id_empresa}', [clientesConfirmadosController::class, 'destroy'])->name('');
-Route::post('/registrar-clientes', [ClientesConfirmadosController::class, 'registrarClientes'])->name('clientes.registrar');
+Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema')->middleware(['auth']);
+Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico')->middleware(['auth']);
+Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado')->middleware(['auth']);
+Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema')->middleware(['auth']);
+Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico')->middleware(['auth']);
+Route::get('/Solicitud-Especificaciones', [CartaAsignacionController::class, 'SolicitudEspecificaciones'])->name('Solicitud-Especificaciones')->middleware(['auth']);
+Route::get('/Oreden-Trabajo', [CartaAsignacionController::class, 'OrdenTrabajo'])->name('Oreden-Trabajo')->middleware(['auth']);
+Route::get('/Solicitud-Servicio-UNIIC', [CartaAsignacionController::class, 'SolicitudUNIIC'])->name('Solicitud-Servicio-UNIIC')->middleware(['auth']);
+
+Route::get('/empresa_contrato/{id_empresa}', [clientesConfirmadosController::class, 'obtenerContratosPorEmpresa'])->middleware(['auth']);
+Route::get('/edit_cliente_confirmado/{id_empresa}', [clientesConfirmadosController::class, 'edit_cliente_confirmado'])->middleware(['auth']);
+Route::get('/empresa_num_cliente/{id_empresa}', [clientesConfirmadosController::class, 'obtenerNumeroCliente'])->middleware(['auth']);
+Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'actualizarRegistros'])->middleware(['auth']);
+Route::post('/editar_cliente_confirmado', [clientesConfirmadosController::class, 'editar_cliente_confirmado'])->middleware(['auth']);
+Route::delete('clientes-list/{id_empresa}', [clientesConfirmadosController::class, 'destroy'])->name('')->middleware(['auth']);
+Route::post('/registrar-clientes', [ClientesConfirmadosController::class, 'registrarClientes'])->name('clientes.registrar')->middleware(['auth']);
 
 
 //-------------------MODULO DE SOLICITUDES-------------------
@@ -791,6 +812,7 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::post('/hologramas/storeInspeccionBarricada', 'storeInspeccionBarricada');
     Route::post('/hologramas/storeInspeccionBarricadaLiberacion', 'storeInspeccionBarricadaLiberacion');
     Route::post('/hologramas/storeInspeccionEnvasado', 'storeInspeccionEnvasado');
+    Route::post('/storeEmisionCertificadoVentaNacional', 'storeEmisionCertificadoVentaNacional');
     Route::get('/getDetalleLoteTipo/{id_tipo}', 'getDetalleLoteTipo');
     Route::delete('/solicitudes-lista/{id_solicitud}', 'destroy')->name('solicitudes-list.destroy');
     Route::get('/getDetalleLoteEnvasado/{id_lote_envasado}', 'getDetalleLoteEnvasado');
@@ -804,6 +826,12 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::get('/Etiqueta-2401ESPTOB/{id_solicitud}', 'Etiqueta_240');
     Route::post('/registrarValidarSolicitud', 'registrarValidarSolicitud');
     Route::get('/pdf_validar_solicitud/{id_validacion}', 'pdf_validar_solicitud');
+
+    Route::get('/obtener_dictamenes_envasado/{empresa}', [getFuncionesController::class, 'getDictamenesEnvasado'])->name('getDictamenesEnvasado');
+    Route::get('/obtener_datos_inspeccion_dictamen/{id}', [getFuncionesController::class, 'obtenerDatosInspeccion']);
+    Route::get('/getDocumentosSolicitud/{id_solicitud}', [getFuncionesController::class, 'getDocumentosSolicitud']);
+
+
 });
 
 //-------------------CATALOGO EQUIPOS-------------------
@@ -833,10 +861,34 @@ Route::middleware(['auth'])->controller(RevisionPersonalController::class)->grou
     Route::get('/add_revision/{id_revision}', 'add_revision');
     Route::post('registrar_revision', 'registrar_revision')->name('registrar_revision');
     Route::get('/edit_revision/{id_revision}', 'edit_revision');
+    Route::post('editar_revision', 'editar_revision')->name('editar_revision');
     Route::get('/pdf_bitacora_revision_personal/{id}', 'pdf_bitacora_revision_personal');
 });
 
 
+//-------------------REVISION CONSEJO-------------------
+Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group(function () {
+    Route::get('/revision/consejo', 'UserManagement')->name('revision-consejo');
+    Route::resource('/revision-consejo-list', RevisionConsejoController::class);
+    Route::post('/revisor/registrar-respuestas-consejo', 'registrarRespuestasConsejo')->name('registrar.respuestas.consejo');
+    Route::get('/revisor/obtener-respuestas-consejo/{id_revision}', 'obtenerRespuestasConsejo');
+    Route::get('/get-certificado-url-consejo/{id_revision}/{tipo}', 'getCertificadoUrlConsejo');
+    Route::get('/bitacora_revisionConsejo_Instalaciones/{id}', 'Bitacora_revisionConsejo_Instalaciones');
+    Route::post('/registrar-aprobacion-consejo', 'registrarAprobacionConsejo')->name('registrar.aprobacion.consejo');
+    Route::get('/aprobacion-consejo/{id}', 'cargarAprobacionConsejo');
+    Route::get('/obtener/historial-consejo/{id_revision}', 'cargarHistorialConsejo');
+    Route::post('/editar-respuestas-consejo', 'editinsertarCertificadosGranelDesdeAPIarRespuestasConsejo');
+    // -Granel-
+    Route::get('/bitacora_revisionConsejo_Granel/{id}', 'Bitacora_revisionConsejo_Granel');
+    Route::get('/add_revision_consejo/{id_revision}', 'add_revision_consejo');
+    Route::post('registrar_revision_consejo', 'registrar_revision_consejo')->name('registrar_revision_consejo');
+    Route::get('/edit_revision_consejo/{id_revision}', 'edit_revision_consejo');
+    Route::post('editar_revision_consejo', 'editar_revision_consejo')->name('editar_revision_consejo');
+    Route::get('/pdf_bitacora_revision_consejo/{id}', 'pdf_bitacora_revision_consejo');
+    Route::get('/pdf_bitacora_revision_certificado_instalaciones/{id}', 'pdf_bitacora_revision_certificado_instalaciones');
+    Route::get('/pdf_bitacora_revision_certificado_granel/{id}', 'pdf_bitacora_revision_certificado_granel');
+    Route::get('/pdf_bitacora_revision_certificado_exportacion/{id}', 'pdf_bitacora_revision_certificado_exportacion');
+});
 
 // Pdfs Bitacoras
 Route::get('/bitacora_maduracion', [CartaAsignacionController::class, 'BitacoraMaduracion'])->name('bitacora_maduracion');
@@ -847,7 +899,7 @@ Route::get('/bitacora_hologramas', [CartaAsignacionController::class, 'BitacoraH
 // BitacoraMezcal
 Route::get('/bitacoraMezcal', [BitacoraMezcalController::class, 'UserManagement'])->name('bitacora-mezcal');
 Route::resource('/bitacoraMezcal-list', BitacoraMezcalController::class);
-Route::get('/bitacora_mezcal/{id}', [BitacoraMezcalController::class, 'PDFBitacoraMezcal']);
+Route::get('/bitacora_mezcal', [BitacoraMezcalController::class, 'PDFBitacoraMezcal']);
 
 // BitacoraMaduracion
 Route::get('/bitacoraProductoMaduracion', [BitacoraProductoMaduracionController::class, 'UserManagement'])->name('bitacoraProductoMaduracion');
@@ -869,10 +921,13 @@ Route::resource('/bitacoraHologramas-list', BitacoraHologramasController::class)
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
 Route::get('/insertarDictamenesDesdeAPI', [insertar_datos_bd_dictamenes::class, 'insertarDictamenesDesdeAPI'])->name('insertarDictamenesDesdeAPI');
 Route::get('/insertarDictamenesGranelesDesdeAPI', [insertar_datos_bd_dictamenes_graneles::class, 'insertarDictamenesGranelesDesdeAPI'])->name('insertarDictamenesGranelesDesdeAPI');
+Route::get('/insertarDictamenesExportacionDesdeAPI', [insertar_datos_bd_dictamenes_exportacion::class, 'insertarDictamenesExportacionDesdeAPI'])->name('insertarDictamenesExportacionDesdeAPI');
 Route::get('/insertarCertificadosDesdeAPI', [insertar_datos_bd_certificados::class, 'insertarCertificadosDesdeAPI'])->name('insertarCertificadosDesdeAPI');
 Route::get('/insertarCertificadosGranelDesdeAPI', [insertar_datos_bd_certificados_granel::class, 'insertarCertificadosGranelDesdeAPI'])->name('insertarCertificadosGranelDesdeAPI');
 Route::get('/insertarActasDesdeAPI', [insertar_datos_bd_actas::class, 'insertarActasDesdeAPI'])->name('insertarActasDesdeAPI');
 Route::get('/insertarLotesEnvasadoDesdeAPI', [insertar_datos_bd_lotes_envasado::class, 'insertarLotesEnvasadoDesdeAPI'])->name('insertarLotesEnvasadoDesdeAPI');
+Route::get('/insertarPrediosDesdeAPI', [insertar_datos_bd_predios::class, 'insertarPrediosDesdeAPI'])->name('insertarPrediosDesdeAPI');
+
 
 
 
@@ -903,9 +958,10 @@ Route::middleware(['auth'])->group(function () {//agrupa distintos controladores
     Route::post('dictamenes-granel',[DictamenGranelController::class, 'store'])->name('dictamen.store');
     route::get('/dictamenes/granel/{id_dictamen}/edit', [DictamenGranelController::class, 'edit'])->name('dictamenes.edit');
     Route::post('/dictamenes/granel/{id_dictamen}/update', [DictamenGranelController::class, 'update'])->name('dictamen.update');
-    Route::get('/dictamenes/granel/{id_dictamen}/foliofq', [DictamenGranelController::class, 'foliofq'])->name('dictamenes.foliofq');
+    //Route::get('/dictamenes/granel/{id_dictamen}/foliofq', [DictamenGranelController::class, 'foliofq'])->name('dictamenes.foliofq');
     Route::post('/registrar/reexpedir-granel', [DictamenGranelController::class, 'reexpedir'])->name('dic-granel.reex');
     Route::get('/dictamen_granel/{id_dictamen}', [DictamenGranelController::class, 'MostrarDictamenGranel'])->name('formato-dictamen-granel');
+      Route::get('/getDatosLotes/{id_inspeccion}', [DictamenGranelController::class, 'getDatosLotes'])->name('getDatosLotes');
 });
 
 //-------------------DICTAMEN ENVASADO-------------------
@@ -952,6 +1008,9 @@ Route::middleware(['auth'])->controller(Certificado_InstalacionesController::cla
     Route::get('/certificado_comercializador/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_comercializador'])->name('certificado_comercializador');
     Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
     Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
+
+    Route::post('/certificados/instalacion/documento', [Certificado_InstalacionesController::class, 'subirCertificado']);
+    Route::get('/certificados/instalacion/documento/{id}', [Certificado_InstalacionesController::class, 'CertificadoFirmado']);
 });
 
 //-------------------CERTIFICADO GRANEL-------------------
@@ -961,17 +1020,17 @@ Route::middleware(['auth'])->controller(Certificado_GranelController::class)->gr
     Route::post('/certificados/granel', [Certificado_GranelController::class, 'store']);
     Route::get('/edit-certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'edit']);
     Route::delete('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'destroy'])->name('certificados.destroy');
-    Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'CertificadoGranel'])->name('PDF-cer-granel');
+    Route::get('/Pre-certificado-granel/{id}', [Certificado_GranelController::class, 'CertificadoGranel'])->name('PDF-cer-granel');
+    //Descarga sin marca de agua (botón dinámico)
+    Route::get('/certificado-sin-marca/{id}', function($id) {
+        return app(Certificado_GranelController::class)->CertificadoGranel($id, false);
+        })->name('PDF-cer-granel-sin-marca');
     Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
     Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
     Route::post('/granel/reexpedir', [Certificado_GranelController::class, 'reexpedir'])->name('cer-granel.reex');
 
-Route::post('/certificados/granel/documento', [Certificado_GranelController::class, 'subirCertificado']);
-Route::get('/certificados/granel/documento/{id}', [Certificado_GranelController::class, 'CertificadoFirmado']);
-
-Route::post('/certificados/instalacion/documento', [Certificado_InstalacionesController::class, 'subirCertificado']);
-Route::get('/certificados/instalacion/documento/{id}', [Certificado_InstalacionesController::class, 'CertificadoFirmado']);
-
+    Route::post('/certificados/granel/documento', [Certificado_GranelController::class, 'subirCertificado']);
+    Route::get('/certificados/granel/documento/{id}', [Certificado_GranelController::class, 'CertificadoFirmado']);
 });
 
 //-------------------CERTIFICADO EXPORTACION-------------------
@@ -995,6 +1054,35 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::post('/creaCerExp/reexpedir', [Certificado_ExportacionController::class, 'reexpedir'])->name('cer-expor.reex');
     //Asignar revisor
     Route::post('asignar_revisor_exportacion', [Certificado_ExportacionController::class, 'storeRevisor'])->name('cer-expor.asignarRevisor');
+    Route::get('/certificados/exportar', 'exportar')->name('certificados.exportar');
+   
+    //documentacion
+    Route::get('/documentos/{id_certificado}', 'documentos')->name('documentos-cer-exportacion');
+
+    //visto bueno
+    Route::get('/certificados/{id}/vobo', 'obtenerVobo');
+    Route::post('/certificados/guardar-vobo', 'guardarVobo');
+
+    //subir certificado firmado
+    Route::post('/certificados/exportacion/documento', [Certificado_ExportacionController::class, 'subirCertificado']);
+    Route::get('/certificados/exportacion/documento/{id}', [Certificado_ExportacionController::class, 'CertificadoFirmado']);
+
+});
+
+//-------------------CERTIFICADO VENTA NACIONAL-------------------
+Route::middleware(['auth'])->controller(Certificado_NacionalController::class)->group(function () {
+    Route::get('certificados/venta_nacional', 'UserManagement')->name('certificados-nacional');
+    Route::resource('CerVentaNacional-list', Certificado_NacionalController::class);
+    Route::post('crear', 'store')->name('registrar-cer-nac');
+    Route::delete('eliminar/{id_certificado}',  'destroy')->name('eliminar-cer-nac');
+    Route::get('editar/{id_certificado}/edit', 'edit')->name('obtener-cer-nac');
+    Route::put('actualizar/{id_certificado}', 'update')->name('actualizar-cer-nac');
+    Route::get('/certificado_venta_nacional/{id}', 'certificado')->name('PDF-cer-nac');
+
+    //Reexpedir
+    Route::post('reexpedir', 'reexpedir')->name('reexpedir-cer-nac');
+    //Asignar revisor
+    Route::post('asignar_revisor_nacional', 'storeRevisor')->name('asignarRevisor-cer-nac');
 });
 
 //-------------------TRAMITE IMPI-------------------

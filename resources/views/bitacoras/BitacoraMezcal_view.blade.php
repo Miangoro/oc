@@ -51,7 +51,7 @@
                     <th>Datos Iniciales</th>
                     <th>Salidas</th>
                     <th>Inventario Final</th>
-                    <th>Bitácora</th>
+{{--                     <th>Bitácora</th> --}}
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -61,7 +61,7 @@
 </div>
 
 <!-- Modal -->
-@include('_partials/_modals/modal-pdfs-certificados')
+
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-bitacoraMezcal')
 <!-- /Modal -->

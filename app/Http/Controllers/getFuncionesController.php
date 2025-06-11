@@ -13,6 +13,7 @@ use App\Models\lotes_envasado;
 use App\Models\maquiladores_model;
 use App\Models\normas;
 use App\Models\solicitudesModel;
+use App\Models\Dictamen_Envasado;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,18 +22,18 @@ class getFuncionesController extends Controller
 {
     public function datosComunes($id_empresa)
     {
-       /* $normas = DB::table('empresa_norma_certificar AS n')
+        $normas = DB::table('empresa_norma_certificar AS n')
         ->join('catalogo_norma_certificar AS c', 'n.id_norma', '=', 'c.id_norma')
         ->select('c.norma', 'c.id_norma') // Selecciona las columnas necesarias
         ->where('c.id_norma', '!=' ,2)
         ->where('n.id_empresa', $id_empresa)
-        ->get();*/
+        ->get();
 
 
         // Lógica común que se necesita en diferentes vistas
         return [
             'empresas' => empresa::all(),
-            //'normas' => $normas,
+            'normas' => $normas,
             'direcciones_destino' => Destinos::where("id_empresa",$id_empresa),
 
         ];
@@ -62,7 +63,7 @@ class getFuncionesController extends Controller
     {
         // Obtener las marcas de la empresa
         //$marcas = $empresa->marcas()->get();  // Llamamos a `get()` para obtener los datos reales
-        $marcas = $empresa->todasLasMarcas()->get(); 
+        $marcas = $empresa->todasLasMarcas()->get();
 
         // Depurar las marcas
 
@@ -80,7 +81,11 @@ class getFuncionesController extends Controller
             'predios' => $empresa->predios(),
             'predio_plantacion' => $empresa->predio_plantacion(),
             'direcciones' => $empresa->direcciones(),
-            'lotes_envasado' => $empresa->todos_lotes_envasado(),
+            /* 'lotes_envasado' => $empresa->todos_lotes_envasado(), */
+            'lotes_envasado' => lotes_envasado::whereIn('id_empresa', $idsEmpresas)
+            ->with('lotes_envasado_granel.lotes_granel', 'dictamenEnvasado')
+            ->orderByDesc('id_lote_envasado')
+            ->get(),
             'direcciones_destino' => Destinos::where("id_empresa", $empresa->id_empresa)->where('tipo_direccion', 1)->get(),
             'instalaciones_produccion' => Instalaciones::where('tipo', 'like', '%Productora%')->where("id_empresa", $empresa->id_empresa)->get(),
             'instalaciones_comercializadora' => Instalaciones::where('tipo', 'like', '%Comercializadora%')->where("id_empresa", $empresa->id_empresa)->get(),
@@ -126,13 +131,63 @@ class getFuncionesController extends Controller
     ]);
 
     }
+
+public function getDictamenesEnvasado($id_empresa)
+{
+    $dictamenes = Dictamen_Envasado::with(['inspeccion.solicitud', 'lote_envasado'])
+        ->whereHas('lote_envasado', function ($query) use ($id_empresa) {
+            $query->where('id_empresa', $id_empresa);
+        })
+        ->get();
+
+    $formateados = $dictamenes->map(function ($d) {
+        $solicitud = $d->inspeccion->solicitud ?? null;
+
+        return [
+            'id_dictamen_envasado' => $d->id_dictamen_envasado,
+            'num_dictamen' => $d->num_dictamen,
+            'folio' => $solicitud->folio ?? 'Sin folio',
+            'lote_nombre' => $d->lote_envasado->nombre ?? 'Sin nombre',
+            'id_instalacion' => $solicitud->id_instalacion ?? '',
+            'fecha_visita' => $solicitud->fecha_visita ?? '',
+        ];
+    });
+
+    return response()->json($formateados);
+}
+
+      public function obtenerDatosInspeccion($idDictamen)
+    {
+
+  $dictamen = Dictamen_Envasado::with([
+        'inspeccion.solicitud' // Asegúrate de tener bien definidas las relaciones
+    ])->findOrFail($idDictamen);
+
+    $inspeccion = $dictamen->inspeccion;
+    $solicitud = $inspeccion->solicitud ?? null;
+
+    return response()->json([
+        'id_inspeccion' => $inspeccion->id ?? null,
+        'id_solicitud' => $inspeccion->id_solicitud ?? null,
+        'id_inspector' => $inspeccion->id_inspector ?? null,
+        'num_servicio' => $inspeccion->num_servicio ?? null,
+        'fecha_servicio' => $inspeccion->fecha_servicio ?? null,
+        'estatus_inspeccion' => $inspeccion->estatus_inspeccion ?? null,
+        'observaciones' => $inspeccion->observaciones ?? null,
+        'id_instalacion' => $solicitud->id_instalacion ?? null,
+        'fecha_visita' => $solicitud->fecha_visita ?? null,
+        'id_lote_envasado' => $dictamen->id_lote_envasado,
+    ]);
+    }
+
     public function getDatosLoteEnvasado($idLoteEnvasado)
     {
         // Obtener el lote envasado específico por ID, con las relaciones necesarias
         $loteEnvasado = lotes_envasado::with([
             'marca',
             'lotesGranel.categoria',
-            'lotesGranel.clase'
+            'lotesGranel.clase',
+            'lotesGranel.certificadoGranel'
         ])->find($idLoteEnvasado);
 
         // Si no se encuentra el lote envasado, devolver un error
@@ -175,13 +230,109 @@ class getFuncionesController extends Controller
                   'nombre_clase' => $primerLoteGranel->clase ? $primerLoteGranel->clase->clase : '', // Nombre de la clase
                   'folio_fq' => $primerLoteGranel->folio_fq,
                   'cont_alc' => $primerLoteGranel->cont_alc,
-                  'folio_certificado' => $primerLoteGranel->folio_certificado,
+                  'folio_certificado' => $primerLoteGranel->certificadoGranel && $primerLoteGranel->certificadoGranel->num_certificado
+                      ? $primerLoteGranel->certificadoGranel->num_certificado
+                      : ($primerLoteGranel->folio_certificado ?? null),
                   'tipos' => $tipos,
                   'tipos_ids' => $idTipos, // Solo los IDs
                   'tipos_nombres' => $tipos->pluck('nombre'),
               ]
           ]);
     }
+
+
+public function getDocumentosSolicitud($id_solicitud)
+{
+    if (!$id_solicitud) {
+        return response()->json([
+            'success' => false,
+            'message' => 'ID de solicitud no válido.'
+        ], 400);
+    }
+
+    // Cargar la solicitud con la relación empresa y empresaNumClientes
+    $solicitud = solicitudesModel::with(['empresa', 'empresa.empresaNumClientes'])->find($id_solicitud);
+
+    if (!$solicitud) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Solicitud no encontrada.'
+        ], 404);
+    }
+
+    // Obtener número de cliente
+    $numero_cliente = 'N/A';
+    if ($solicitud->empresa && $solicitud->empresa->empresaNumClientes->isNotEmpty()) {
+        $cliente = $solicitud->empresa->empresaNumClientes
+            ->first(fn($item) => !empty($item->numero_cliente));
+        $numero_cliente = $cliente?->numero_cliente ?? 'No encontrado';
+    }
+
+    // Obtener documentos relacionados
+    $documentos = Documentacion_url::where('id_relacion', $id_solicitud)
+        ->get(['nombre_documento as nombre', 'url', 'id_documento']);
+
+       if ($solicitud && $solicitud->id_tipo == 11) {
+        $caracteristicas = is_string($solicitud->caracteristicas)
+            ? json_decode($solicitud->caracteristicas, true)
+            : $solicitud->caracteristicas;
+
+        $idEtiqueta = is_array($caracteristicas)
+            ? ($caracteristicas['id_etiqueta'] ?? null)
+            : ($caracteristicas->id_etiqueta ?? null);
+
+        if ($idEtiqueta) {
+            $url_etiqueta = Documentacion_url::where('id_relacion', $idEtiqueta)
+            ->where('id_documento', 60)
+            ->value('url'); // Obtiene directamente el valor del campo 'url'
+        }
+
+
+        if ($idEtiqueta) {
+            $url_corrugado = Documentacion_url::where('id_relacion', $idEtiqueta)
+            ->where('id_documento', 75)
+            ->value('url'); // Obtiene directamente el valor del campo 'url'
+        }
+
+        $idLote = $solicitud->lote_granel?->id_lote_granel;
+
+
+   
+
+        if ($idLote) {
+
+            
+          $numero_cliente = 'N/A';
+        $empresa = empresa::find($solicitud->lote_granel->id_empresa);
+        $cliente = $empresa->empresaNumClientes
+            ->first(fn($item) => !empty($item->numero_cliente));
+        $numero_cliente = $cliente?->numero_cliente ?? 'No encontrado';
+    
+
+
+            $url_certificado = Documentacion_url::where('id_relacion', $idLote)
+            ->where('id_documento', 59)
+            ->value('url'); // Obtiene directamente el valor del campo 'url'
+        }
+
+    }
+
+
+    return response()->json([
+        'success' => true,
+        'data' => $documentos,
+        'numero_cliente' => $numero_cliente,
+        'fqs' => $solicitud->lote_granel?->fqs,
+        'numero_cliente_lote' => $solicitud->lote_granel?->empresa?->empresaNumClientes
+            ->first(fn($item) => !empty($item->numero_cliente))
+            ?->numero_cliente ?? 'N/A',
+        'url_etiqueta' => $url_etiqueta ?? '',
+        'url_corrugado' => $url_corrugado ?? '',
+        'url_certificado' => $url_certificado ?? '',
+
+            ]);
+}
+
 
 
 
@@ -192,14 +343,15 @@ class getFuncionesController extends Controller
 $solicitudQuery = solicitudesModel::with([
     'empresa.empresaNumClientes',
     'instalacion.certificado_instalacion',
-   
+
     'predios',
     'marcas',
      'lote_envasado.lotes_envasado_granel.lotes_granel.clase',
     'lote_envasado.lotes_envasado_granel.lotes_granel.categoria',
     'lote_envasado.marca',
     'lote_envasado.dictamenEnvasado',
-    
+    'lote_envasado.lotes_envasado_granel.lotes_granel.certificadoGranel'
+
 ]);
 
 // Cargamos la solicitud
@@ -210,6 +362,7 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
     $solicitud->load([
         'lote_granel.categoria',
         'lote_granel.clase',
+        'lote_granel.certificadoGranel',
 
     ]);
 }
@@ -234,28 +387,67 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
     $documentos = Documentacion_url::where("id_empresa", $solicitud->empresa->id_empresa)->get();
 
     if ($solicitud && $solicitud->id_tipo == 11) {
-        $caracteristicas = is_string($solicitud->caracteristicas) 
-            ? json_decode($solicitud->caracteristicas, true) 
+        $caracteristicas = is_string($solicitud->caracteristicas)
+            ? json_decode($solicitud->caracteristicas, true)
             : $solicitud->caracteristicas;
-    
-        $idEtiqueta = is_array($caracteristicas) 
-            ? ($caracteristicas['id_etiqueta'] ?? null) 
+
+        $idEtiqueta = is_array($caracteristicas)
+            ? ($caracteristicas['id_etiqueta'] ?? null)
             : ($caracteristicas->id_etiqueta ?? null);
-    
+
         if ($idEtiqueta) {
             $url_etiqueta = Documentacion_url::where('id_relacion', $idEtiqueta)
             ->where('id_documento', 60)
             ->value('url'); // Obtiene directamente el valor del campo 'url'
         }
 
+
+        if ($idEtiqueta) {
+            $url_corrugado = Documentacion_url::where('id_relacion', $idEtiqueta)
+            ->where('id_documento', 75)
+            ->value('url'); // Obtiene directamente el valor del campo 'url'
+        }
+
     }
-    
+
+ if ($solicitud && $solicitud->id_tipo == 3) {
+    $caracteristicas = is_string($solicitud->caracteristicas)
+        ? json_decode($solicitud->caracteristicas, true)
+        : $solicitud->caracteristicas;
+
+    $id_lote_granel = is_array($caracteristicas)
+        ? ($caracteristicas['id_lote_granel'] ?? null)
+        : ($caracteristicas->id_lote_granel ?? null);
+
+    if ($id_lote_granel) {
+        // Buscar solicitud con ese id_lote_granel dentro del campo json 'caracteristicas'
+        $id_solicitud = solicitudesModel::where('id_tipo', 3)
+            ->get()
+            ->first(function ($item) use ($id_lote_granel) {
+                $car = is_string($item->caracteristicas)
+                    ? json_decode($item->caracteristicas, true)
+                    : $item->caracteristicas;
+
+                return is_array($car) && ($car['id_lote_granel'] ?? null) == $id_lote_granel;
+            });
+
+        if ($id_solicitud) {
+            $url_acta = Documentacion_url::where('id_relacion', $id_solicitud->id_solicitud)
+                ->where('id_documento', 69)
+                ->value('url');
+        }
+    }
+}
+
+
 
     return response()->json([
         'success' => true,
         'data' => $solicitud,
         'documentos' => $documentos,
         'url_etiqueta' => $url_etiqueta ?? '',
+        'url_corrugado' => $url_corrugado ?? '',
+        'url_acta' => $url_acta ?? '',
         'fecha_visita_formateada' => Helpers::formatearFechaHora($solicitud->fecha_visita),
         'tipos_agave' => $tipos
     ]);

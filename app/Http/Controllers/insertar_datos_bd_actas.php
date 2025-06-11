@@ -61,7 +61,7 @@ class insertar_datos_bd_actas extends Controller
                         });
                 
                         // Definir la carpeta de almacenamiento
-                        $storagePath = "uploads/{$numeroCliente}";
+                        $storagePath = "uploads/{$numeroCliente}/actas";
                 
                         // Ruta final en storage/app/public/
                         $destinationPath = storage_path("app/public/{$storagePath}/{$nombreArchivo}");

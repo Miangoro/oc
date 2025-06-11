@@ -43,7 +43,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input type="text" class="form-control" id="num_dictamen" name="num_dictamen"
-                                    placeholder="No. de dictamen">
+                                    placeholder="No. de dictamen" value="UMC-">
                                 <label for="">No. de dictamen</label>
                             </div>
                         </div>

@@ -50,16 +50,23 @@ class LotesGranel extends Model
     }
 
 
-    public function gettiposRelacionadosAttribute()
-    {
-        $idTipos = json_decode($this->id_tipo, true);
+   public function gettiposRelacionadosAttribute()
+{
+    $idTipos = json_decode($this->id_tipo, true);
 
-        if (is_array($idTipos) && !empty($idTipos)) {
-            return tipos::whereIn('id_tipo', $idTipos)->get();
-        }
-    
-        return collect(); // Siempre devuelve colección, vacía si no hay tipos válidos
+    if (is_array($idTipos) && !empty($idTipos)) {
+        $idTipos = array_map('intval', $idTipos); // Asegura que todos sean enteros
+
+        return tipos::whereIn('id_tipo', $idTipos)
+            ->orderByRaw('FIELD(id_tipo, ' . implode(',', $idTipos) . ')')
+            ->get();
     }
+
+    return collect();
+}
+
+
+
 
     public function tipos()
     {
@@ -97,6 +104,23 @@ class LotesGranel extends Model
     {
         return $this->hasMany(LotesGranel::class, 'lote_original_id');
     }
+
+
+    public function certificadoGranel()
+    {
+        return $this->hasOne(CertificadosGranel::class, 'id_lote_granel', 'id_lote_granel');
+    }
+
+
+   public function fqs()
+    {
+        return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_lote_granel')
+            ->where(function ($query) {
+                $query->where('id_documento', 58)
+                    ->orWhere('id_documento', 134);
+            });
+    }
+
 
 
 }

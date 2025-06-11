@@ -88,6 +88,7 @@ class UsuariosConsejoController extends Controller
         ->where("tipo",3)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
+        ->orWhere('puesto', 'LIKE', "%{$search}%")
 
         ->offset($start)
         ->limit($limit)
@@ -98,6 +99,7 @@ class UsuariosConsejoController extends Controller
         ->where("tipo",2)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
+        ->orWhere('puesto', 'LIKE', "%{$search}%")
 
         ->count();
     }
@@ -113,6 +115,7 @@ class UsuariosConsejoController extends Controller
         $nestedData['fake_id'] = ++$ids;
         $nestedData['name'] = $user->name;
         $nestedData['email'] = $user->email ;
+        $nestedData['puesto'] = $user->puesto;
         $nestedData['firma'] = $user->firma ?? 'N/A';
         $nestedData['password_original'] = $user->password_original ;
         $nestedData['razon_social'] = 'No aplica';
@@ -203,6 +206,7 @@ class UsuariosConsejoController extends Controller
               [
                   'name' => $request->name,
                   'email' => $request->email,
+                  'puesto' => $request->puesto,
                   'estatus' => $request->estatus,
                   'firma' => $firmaPath, // Guardar la firma nueva o existente
               ]
@@ -219,6 +223,7 @@ class UsuariosConsejoController extends Controller
               $users = User::create([
                   'name' => $request->name,
                   'email' => $request->email,
+                  'puesto' => $request->puesto,
                   'estatus' => $request->estatus,
                   'password_original' => $pass,
                   'password' => bcrypt($pass),

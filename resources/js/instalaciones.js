@@ -1,3 +1,47 @@
+
+///flatpickr
+$(document).ready(function () {
+  flatpickr(".flatpickr-datetime", {
+      dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
+      enableTime: false,   // Desactiva la  hora
+      allowInput: true,    // Permite al usuario escribir la fecha manualmente
+      locale: "es",        // idioma a español
+  });
+});
+
+//FUNCION FECHAS
+$('#fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+  $('#fecha_vigencia').val(fechaVigencia);
+  flatpickr("#fecha_vigencia", {
+      dateFormat: "Y-m-d",
+      enableTime: false,  
+      allowInput: true,  
+      locale: "es",     
+      static: true,      
+      disable: true          
+  });
+});
+//FUNCION FECHAS EDIT
+$('#edit_fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+  $('#edit_fecha_vigencia').val(fechaVigencia);
+  flatpickr("#edit_fecha_vigencia", {
+      dateFormat: "Y-m-d",  
+      enableTime: false,   
+      allowInput: true,  
+      locale: "es",  
+      static: true,   
+      disable: true  
+  });
+});
+
+
+
 $(function () {
   var dt_user_table = $('.datatables-users'),
   select2Elements = $('.select2'),
@@ -396,6 +440,7 @@ $(function () {
     }
   });
 
+
   // Configuración CSRF para Laravel
   $.ajaxSetup({
     headers: {
@@ -403,7 +448,8 @@ $(function () {
     }
   });
 
-  // Eliminar registro
+
+  //ELIMINAR
   $(document).on('click', '.delete-record', function () {
     var id_instalacion = $(this).data('id'),
         dtrModal = $('.dtr-bs-modal.show');
@@ -462,16 +508,9 @@ $(function () {
     });
   });
 
-  //Agregar
-  $('#fecha_emision').on('change', function() {
-    var fechaInicial = new Date($(this).val());
-    fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-    var year = fechaInicial.getFullYear();
-    var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
-    var day = ('0' + fechaInicial.getDate()).slice(-2);
-    $('#fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
-  });
 
+
+  //AGREGAR
   $(document).ready(function () {
     const formAdd = document.getElementById('addNewInstalacionForm');
     const certificadoContainer = $('#certificado-otros');
@@ -739,7 +778,7 @@ $(function () {
               Swal.fire({
                   icon: 'success',
                   title: '¡Éxito!',
-                  text: response.message,
+                  text: 'Registrado correctamente.',
                   customClass: {
                       confirmButton: 'btn btn-success'
                   }
@@ -773,19 +812,19 @@ $(function () {
 
         if (tipo === "Productora") {
             archivoId = '127';
-            archivoNombre = 'Certificado de productora';
+            archivoNombre = 'Certificado como productor';
         } else if (tipo === "Envasadora") {
             archivoId = '128';
-            archivoNombre = 'Certificado de envasadora';
+            archivoNombre = 'Certificado como envasador';
         } else if (tipo === "Comercializadora") {
             archivoId = '129';
-            archivoNombre = 'Certificado de comercializadora';
+            archivoNombre = 'Certificado como comercializador';
         } else if (tipo === "Almacen y bodega") {
             archivoId = '130'; 
-            archivoNombre = 'Certificado de almacén y bodega';
+            archivoNombre = 'Certificado como almacén y bodega';
         } else if (tipo === "Area de maduracion") {
             archivoId = '131'; 
-            archivoNombre = 'Certificado de área de maduración';
+            archivoNombre = 'Certificado como área de maduración';
         }
 
        // Mostrar u ocultar el select según las opciones seleccionadas
@@ -835,22 +874,7 @@ $(function () {
 
 
 
-
-
-
-//Editar
-$('#edit_fecha_emision').on('change', function() {
-  var fechaInicial = new Date($(this).val());
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-  var year = fechaInicial.getFullYear();
-  var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
-  var day = ('0' + fechaInicial.getDate()).slice(-2);
-  $('#edit_fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
-});
-
-
-
-
+//EDITAR
 $(document).ready(function () {
   let instalacionData = {};
   let archivo = false; // Variable para manejar la existencia del archivo
@@ -952,6 +976,10 @@ $(document).ready(function () {
             validators: {
                 notEmpty: {
                     message: 'La fecha de emisión es obligatoria.'
+                },
+                date: {
+                  format: 'YYYY-MM-DD',
+                  message: 'Ingresa una fecha válida (yyyy-mm-dd).'
                 }
             }
         },
@@ -959,6 +987,10 @@ $(document).ready(function () {
             validators: {
                 notEmpty: {
                     message: 'La fecha de vigencia es obligatoria.'
+                },
+                date: {
+                  format: 'YYYY-MM-DD',
+                  message: 'Ingresa una fecha válida (yyyy-mm-dd).'
                 }
             }
         },
@@ -1057,23 +1089,23 @@ $(document).ready(function () {
       // Manejo de documentos basado en el tipo seleccionado
       if (tipo.includes("Productora")) {
         hiddenIdDocumento.val('127');
-        hiddenNombreDocumento.val('Certificado de productora');
+        hiddenNombreDocumento.val('Certificado como productor');
         fileCertificado.attr('id', 'file-127');
       } else if (tipo.includes("Envasadora")) {
         hiddenIdDocumento.val('128');
-        hiddenNombreDocumento.val('Certificado de envasadora');
+        hiddenNombreDocumento.val('Certificado como envasador');
         fileCertificado.attr('id', 'file-128');
       } else if (tipo.includes("Comercializadora")) {
         hiddenIdDocumento.val('129');
-        hiddenNombreDocumento.val('Certificado de comercializadora');
+        hiddenNombreDocumento.val('Certificado como comercializador');
         fileCertificado.attr('id', 'file-129');
       } else if (tipo.includes("Almacen y bodega")) {
         hiddenIdDocumento.val('130');
-        hiddenNombreDocumento.val('Certificado de almacén y bodega');
+        hiddenNombreDocumento.val('Certificado como almacén y bodega');
         fileCertificado.attr('id', 'file-130');
       } else if (tipo.includes("Area de maduracion")) {
         hiddenIdDocumento.val('131');
-        hiddenNombreDocumento.val('Certificado de área de maduración');
+        hiddenNombreDocumento.val('Certificado como área de maduración');
         fileCertificado.attr('id', 'file-131');
       } else {
         hiddenIdDocumento.val('');
@@ -1272,24 +1304,9 @@ console.log("Modal de PDF cerrado y iframe limpiado");
 $('#modalVerDocumento').modal('show');
 });
 
-//end
-});
 
-  //Date picker
- /* 
-  $(document).ready(function () {
-    const flatpickrDateTime = document.querySelectorAll('.flatpickr-datetime');
 
-    if (flatpickrDateTime.length) {
-      flatpickrDateTime.forEach((element) => {
-        // Inicializar flatpickr para cada input
-        flatpickr(element, {
-          enableTime: true, // Habilitar selección de tiempo
-          time_24hr: true, // Mostrar tiempo en formato 24 horas
-          dateFormat: 'Y-m-d',
-          locale: 'es',
-          allowInput: true,
-        });
-      });
-    }
-  });*/
+
+
+
+});///end function

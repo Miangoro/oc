@@ -133,15 +133,14 @@
             <h3 class="card-title mb-0 fw-bold">Inspecciones de la Unidad de Inspección</h3>
         </div>
         <div class="card-datatable table-responsive">
-            <table style="font-size: 14px"  class="datatables-users table table-bordered  table-hover">
+            <table style="font-size: 14px" class="datatables-users table table-bordered  table-hover">
                 <thead class="table-dark">
                     <tr>
                         <th></th>
-                        <th>No.</th>
                         <th>Folio</th>
                         <th>No. de servicio</th>
                         <th>Cliente</th>
-                        <th>Fecha de solicitud</th>
+                        {{-- <th>Fecha de solicitud</th> --}}
                         <th>Solicitud</th>
                         <th>Domicilio de inspección</th>
                         <th>Fecha y hora de visita estimada</th>
@@ -161,72 +160,288 @@
         <!-- Modal -->
         @include('_partials._modals.modal-pdfs-frames')
         @include('_partials._modals.modal-expediente-servicio')
+        @include('_partials._modals.modal-validad-solicitud')
         @include('_partials._modals.modal-add-asignar-inspector')
         @include('_partials._modals.modal-trazabilidad')
         @include('_partials._modals.modal-add-resultados-inspeccion')
-        @include('_partials._modals.modal-acta-unidades-produccion')
-        @include('_partials._modals.modal-acta-edit-unidades')
 
-        
-        <!-- /Modal -->
+
+
+        <!-- Modal -->
 
     </div>
 @endsection
 
 <script>
-    function abrirModal(id_solicitud, tipo, nombre_empresa) {
+    function abrirModal(id_solicitud, id_inspeccion, tipo, nombre_empresa, id_tipo, folio, noservicio, inspectorName) {
 
-        /* $.ajax({
-             url: '/lista_empresas/' + id_empresa,
-             method: 'GET',
-             success: function(response) {
-                 // Cargar los detalles en el modal
-                 var contenido = "";
-
-               for (let index = 0; index < response.normas.length; index++) {
-                 contenido = '<input value="'+response.normas[index].id_norma+'" type="hidden" name="id_norma[]"/><div class="col-12 col-md-12 col-sm-12"><div class="form-floating form-floating-outline"><input type="text" id="numero_cliente'+response.normas[index].id_norma+'" name="numero_cliente[]" class="form-control" placeholder="Introducir el número de cliente" /><label for="modalAddressFirstName">Número de cliente para la norma '+response.normas[index].norma+'</label></div></div><br>' + contenido;
-                 console.log(response.normas[index].norma);
-               }
-                
-                 $('#expedienteServicio').modal('show');
-             },
-             error: function() {
-                 alert('Error al cargar los detalles de la empresa.');
-             }
-         });*/
+        $('.id_soli').text(id_solicitud);
+        $('.id_deinspeccion').text(id_inspeccion);
         $('.solicitud').text(tipo);
         $('.nombre_empresa').text(nombre_empresa);
-        $('#expedienteServicio').modal('show');
+        $('.numero_tipo').text(id_tipo);
+        $('.folio_solicitud').html('<b class="text-primary">' + (folio) + '</b>');
+        $('.numero_servicio').html('<b class="text-primary">' + noservicio + '</b>');
+        $('.inspectorName').html(inspectorName);
+
+
+   const links = [
+        {
+            id: '#link_solicitud_servicio',
+            href: '{{ url('solicitud_de_servicio') }}/' + id_solicitud
+        },
+        {
+            id: '#link_oficio_comision',
+            href: '{{ url('oficio_de_comision') }}/' + id_inspeccion
+        },
+        {
+            id: '#link_orden_servicio',
+            href: '{{ url('orden_de_servicio') }}/' + id_inspeccion
+        },
+        {
+            id: '#links_etiquetas',
+            href: ''
+        }
+    ];
+
+            // Restaurar enlaces e íconos
+            links.forEach(link => {
+                if (link.id !== '#links_etiquetas') { // se maneja aparte por id_tipo
+                    $(link.id)
+                        .attr('href', link.href)
+                        .removeClass('text-secondary opacity-50')
+                        .find('i')
+                        .removeClass('text-secondary opacity-50')
+                        .addClass('text-danger');
+                } else {
+                    $(link.id)
+                        .removeClass('text-secondary opacity-50')
+                        .find('i')
+                        .removeClass('text-secondary opacity-50')
+                        .addClass('text-danger');
+                }
+            });
+
+            // Etiquetas específicas según tipo
+            let etiquetaHref = '';
+            let etiquetaTexto = 'Etiquetas';
+
+            switch (parseInt(id_tipo)) {
+                case 1:
+                    etiquetaHref = '{{ url('etiqueta_agave_art') }}/' + id_solicitud;
+                    etiquetaTexto = 'Etiqueta para agave (%ART)';
+                    break;
+                case 3:
+                    etiquetaHref = '{{ url('etiquetas_tapas_sellado') }}/' + id_solicitud;
+                    etiquetaTexto = 'Etiqueta para tapa de la muestra';
+                    break;
+                case 4:
+                case 5:
+                    etiquetaHref = '{{ url('etiqueta_lotes_mezcal_granel') }}/' + id_solicitud;
+                    etiquetaTexto = 'Etiqueta para lotes de mezcal a granel';
+                    break;
+                case 7:
+                    etiquetaHref = '{{ url('etiqueta-barrica') }}/' + id_solicitud;
+                    etiquetaTexto = 'Etiqueta de ingreso a barricas';
+                    break;
+            }
+
+  if (etiquetaHref !== '') {
+        $('#links_etiquetas').attr('href', etiquetaHref);
+        $('.etiqueta_name').text(etiquetaTexto);
+        $('.etiquetasNA').show(); // mostrar el tr
+    } else {
+        $('.etiquetasNA').hide(); // ocultar el tr
+    }
+
+          $.ajax({
+            url: '/getDocumentosSolicitud/'+id_solicitud, // URL del servidor (puede ser .php, .json, .html, etc.)
+            type: 'GET',                // O puede ser 'GET'
+            dataType: 'json',            // Puede ser 'html', 'text', 'json', etc.
+           success: function(response) {
+            if (response.success) {
+                const documentos = response.data;
+                const fqs = response.fqs;
+                const url_etiqueta = response.url_etiqueta;
+                const url_certificado = response.url_certificado;
+                const url_corrugado = response.url_corrugado;
+                const url_evidencias = response.url_evidencias;
+                let html = `
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="text-center" colspan="2">Documentación de la solicitud</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+
+                if (documentos.length > 0) {
+                    documentos.forEach(function(doc) {
+                        let carpeta = '';
+                        if(doc.id_documento == 69 || doc.id_documento == 70){
+                            carpeta = 'actas/';
+                        }
+                        html += `
+                            <tr>
+                                <td>${doc.nombre}</td>
+                                <td>
+                                    <a href="/files/${response.numero_cliente}/${carpeta}${doc.url}" target="_blank">
+                                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>`;
+                    });
+                } else {
+                    html += `<tr><td colspan="2">No se encontraron documentos.</td></tr>`;
+                }
+
+                 if (url_certificado) {
+                   
+                        html += `
+                            <tr>
+                                <td>Certificado de granel</td>
+                                <td>
+                                    <a href="/files/${response.numero_cliente}/certificados_granel/${url_certificado}" target="_blank">
+                                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>`;
+                    
+                }
+
+                 if (fqs) {
+                    fqs.forEach(function(fq) {
+                        html += `
+                            <tr>
+                                <td>${fq.nombre_documento}</td>
+                                <td>
+                                    <a href="/files/${response.numero_cliente_lote}/fqs/${fq.url}" target="_blank">
+                                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>`;
+                    });
+                }
+
+                 if (url_etiqueta) {
+                   
+                        html += `
+                            <tr>
+                                <td>Etiqueta</td>
+                                <td>
+                                    <a href="/files/${response.numero_cliente}/${url_etiqueta}" target="_blank">
+                                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>`;
+                    
+                }
+
+                 if (url_corrugado) {
+                   
+                        html += `
+                            <tr>
+                                <td>Corrugado</td>
+                                <td>
+                                    <a href="/files/${response.numero_cliente}/${url_corrugado}" target="_blank">
+                                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>`;
+                    
+                }
+
+
+                html += `</tbody></table>`;
+                $('#contenedor-documentos').html(html);
+            }
+        },
+
+
+            error: function(xhr, status, error) {
+                // Aquí si algo salió mal
+                console.error('Error AJAX:', error);
+            }
+        });
+
+    $('#expedienteServicio').modal('show');
+
 
     }
 
     function abrirModalAsignarInspector(id_solicitud, tipo, nombre_empresa) {
-    // Asignar valores iniciales
-    $("#id_solicitud").val(id_solicitud);
-    $('.solicitud').text(tipo);
-    $('#nombre_empresa').text(nombre_empresa); // Mostrar nombre de la empresa en el modal
-    $('#asignarInspector').modal('show');
+        // Asignar valores iniciales
+        $("#id_solicitud").val(id_solicitud);
+        $('.solicitud').text(tipo);
+        $('#nombre_empresa').text(nombre_empresa); // Mostrar nombre de la empresa en el modal
+        $('#asignarInspector').modal('show');
 
-    $.ajax({
-        url: '/getInspeccion/'+id_solicitud, 
-        method: 'GET', 
-        success: function(response) {
-            if (response.success) {
-                const data = response.data;
-                $("#id_inspector").val(data.id_inspector).change();
-                $("#num_servicio").val(data.num_servicio || '');
-                $("#fecha_servicio").val(data.fecha_servicio || '');
-                $("#observaciones").text(data.observaciones || '');
-            } else {
-                alert('No se pudieron obtener los datos de la solicitud.');
+        $.ajax({
+            url: '/getInspeccion/' + id_solicitud,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    const data = response.data;
+                    console.log(data);
+
+                    if (data) {
+                        const solicitud = data;
+
+                        const tabla = `
+                        <div class="table-responsive">
+                            <table class="table small table-hover table-bordered table-sm">
+
+                                <tbody>
+                                    <tr>
+                                        <td><b>Folio</b></td>
+                                        <td>${solicitud.folio}</td>
+                                    </tr>
+                                     <tr>
+                                        <td><b>Cliente</b></td>
+                                        <td>${solicitud.empresa.razon_social}</td>
+                                    </tr>
+                                </tbody>
+                                    <tr>
+                                        <td><b>Fecha</b></td>
+                                        <td>${solicitud.fecha_solicitud}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Fecha sugerida</b></td>
+                                        <td>${solicitud.fecha_visita}</td>
+                                    </tr>
+
+                            </table>
+                        </div>`;
+
+                        $("#datosSolicitud").html(tabla);
+                    } else {
+                        $("#datosSolicitud").html(
+                            '<div class="alert alert-warning">No hay datos de la solicitud.</div>');
+                    }
+
+                    if (data.inspeccion) {
+                        $("#id_inspector").val(data.inspeccion.id_inspector).change();
+                        $("#num_servicio").val(data.inspeccion.num_servicio || '');
+                        $("#fecha_servicio").val(data.inspeccion.fecha_servicio || '');
+                        $("#observaciones").text(data.inspeccion.observaciones || '');
+                    } else {
+
+                        $("#num_servicio").val('');
+                        $("#fecha_servicio").val('');
+                        $("#observaciones").text('');
+                    }
+
+
+                } else {
+                    alert('No se pudieron obtener los datos de la solicitud.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error en la solicitud:', error);
+                alert('Hubo un error al obtener los datos.');
             }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error en la solicitud:', error);
-            alert('Hubo un error al obtener los datos.');
-        }
-    });
-}
+        });
+    }
 
 
     function abrirModalActaProduccion(id_inspeccion, tipo, nombre_empresa, id_empresa, direccion_completa,
@@ -282,12 +497,12 @@
                 $('#edit_testigoss').append(newRow);
             });
 
-    // EDIT PRODUCCION AGAVE
-    $('#edit_unidadProduccion').empty();
+            // EDIT PRODUCCION AGAVE
+            $('#edit_unidadProduccion').empty();
 
-    // Iterar sobre los testigos y agregar filas a la tabla
-    data.actas_produccion.forEach(function(plantacion, index) {
-        var newRow = `
+            // Iterar sobre los testigos y agregar filas a la tabla
+            data.actas_produccion.forEach(function(plantacion, index) {
+                var newRow = `
         <tr>
             <th>
                 <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
@@ -302,16 +517,16 @@
             </td>
         </tr>
     `;
-        $('#edit_unidadProduccion').append(newRow);
-    });
+                $('#edit_unidadProduccion').append(newRow);
+            });
 
-                //EQUIPO MEZCAL
-    //EQUIPO MEZCAL
-    $('#edit_equipoMezcal').empty();
+            //EQUIPO MEZCAL
+            //EQUIPO MEZCAL
+            $('#edit_equipoMezcal').empty();
 
-    // Iterar sobre los testigos y agregar filas a la tabla
-    data.actas_equipo_mezcal.forEach(function(equipoMezcal, index) {
-        var newRow = `
+            // Iterar sobre los testigos y agregar filas a la tabla
+            data.actas_equipo_mezcal.forEach(function(equipoMezcal, index) {
+                var newRow = `
         <tr>
             <th>
                 <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
@@ -340,8 +555,8 @@
             </td>
         </tr>
     `;
-        $('#edit_equipoMezcal').append(newRow);
-    });
+                $('#edit_equipoMezcal').append(newRow);
+            });
 
             //EQUIPO ENVASADO
             $('#edit_equipoEnvasado').empty();
@@ -505,8 +720,9 @@
             $('#editActaUnidades').modal('show');
         });
         // Cualquier otra lógica adicional
-/*         edit_obtenerNombrePredio();
- */        edit_Testigos();
+        /*         edit_obtenerNombrePredio();
+         */
+        edit_Testigos();
         iniciarCategorias();
     }
 
@@ -516,7 +732,7 @@
 
 
 
-//modal resulatdos
+    //modal resulatdos
     function abrirModalSubirResultados(id_solicitud, num_servicio) {
 
         $(".id_solicitud").val(id_solicitud);
@@ -545,7 +761,7 @@
                 // Iterar sobre los logs y agregarlos al contenedor
                 logs.forEach(function(log) {
                     logsContainer.append(`
-                    
+
                 <li class="timeline-item timeline-item-transparent">
                     <span class="timeline-point timeline-point-primary"></span>
                     <div class="timeline-event">
@@ -555,7 +771,7 @@
                         </div>
                         <p class="mb-2">  ${log.contenido}</p>
                         <div class="d-flex align-items-center mb-1">
-                        
+
                         </div>
                     </div>
                     </li><hr>

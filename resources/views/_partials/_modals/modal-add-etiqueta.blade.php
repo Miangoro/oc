@@ -1,12 +1,20 @@
 <div class="modal fade" id="etiquetas" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-custom-size  modal-lg modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-lg  modal-add-new-address">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2"> Subir etiquetas</h4>
                     <p class="subtitulo badge bg-primary"></p>
-                </div>
+                </div> --}}
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Subir etiquetas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
                 <form id="etiquetasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
                         <input type="hidden" id="id_etiqueta" name="id_etiqueta">
@@ -66,7 +74,8 @@
                                 <label for="alc_vol">%Alc. Vol.</label>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+
+                        <div class="col-sm-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <select id="id_categoria" name="id_categoria" class="form-select" required>
                                     <option value="" disabled selected>Categoría de mezcal</option>
@@ -77,7 +86,7 @@
                                 <label for="id_norma">Categoría de mezcal</label>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <select id="id_clase" name="id_clase" class="select2 form-select" required>
                                     <option value="" disabled selected>Clase de mezcal</option>
@@ -88,10 +97,11 @@
                                 <label for="id_norma">Clase de agave</label>
                             </div>
                         </div>
-                        <div class="col-sm-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <select id="id_tipo" name="id_tipo" class="select2 form-select" required>
-                                    <option value="" disabled selected>Tipos de agave</option>
+
+                        <div class="col-sm-6">
+                            <div class="form-floating form-floating-outline mb-5 select2-primary">
+                                <select id="id_tipo" name="id_tipo[]" class="select2 form-select" multiple required>
+                                    <option value="" disabled >Tipos de agave</option>
                                     @foreach ($tipos as $tipo)
                                         <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
                                     @endforeach
@@ -99,6 +109,13 @@
                                 <label for="id_tipo">Tipos de agave</label>
                             </div>
                         </div>
+                        <div class="col-sm-6">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input id="botellas_caja" name="botellas_caja" type="number" min="1" class="form-control" placeholder="Botellas por caja" />
+                                <label for="botellas_caja">Botellas por caja</label>
+                            </div>
+                        </div>
+
             
                         <div class="col-md-10  mb-5">
                             <label for="file60" class="form-label">Etiqueta</label>
@@ -122,11 +139,18 @@
 
                     </div>
                         
-                        <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+                        {{-- <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                             <button type="submit" class="btn btn-primary">Registrar</button>
                             <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
                                 aria-label="Close">Cancelar</button>
-                        </div>
+                        </div> --}}
+                    <div class="d-flex mt-6 justify-content-center">
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
+                            Registrar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-line"></i> Cancelar</button>
+                    </div>
+                    
                 </form>
             </div>
         </div>

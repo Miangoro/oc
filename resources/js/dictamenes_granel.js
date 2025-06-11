@@ -84,7 +84,7 @@ if (dt_user_table.length) {
       { data: ''},//0
       { data: 'num_dictamen' },//1
       { data: 'num_servicio' },//2
-      { data: null, // Se usará null porque combinaremos varios valores
+      { data: null, orderable: false,// Se usará null porque combinaremos varios valores
           render: function(data, type, row) {
               return `
               <strong>${data.numero_cliente}</strong><br>
@@ -130,7 +130,7 @@ if (dt_user_table.length) {
               var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
             }else {
               var $acta = full['url_acta'].map(url => `
-                <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
+                <i data-id="${full['numero_cliente']}/actas/${url}" data-empresa="${full['razon_social']}"
                     class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
                     data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
                 </i>
@@ -151,18 +151,23 @@ if (dt_user_table.length) {
         {
           //caracteristicas
           targets: 4,
-          searchable: false,
+          searchable: true,
           orderable: false, 
           responsivePriority: 4, 
           render: function (data, type, full, meta) {
-            return `<b>Lote: </b><small>${full['nombre_lote']}</small><br><b>FQs: </b><small>${full['analisis']}</small>`;
+            return `<div class="small">
+                <b>Lote granel:</b> ${full['nombre_lote']} <br>
+                <b>FQs: </b> ${full['analisis']}
+                
+                ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
+              </div>`;
           }     
         },
         {
           //fechas
           targets: 5, 
-          searchable: false,
-          orderable: false,
+          searchable: true,
+          orderable: true,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
@@ -178,7 +183,7 @@ if (dt_user_table.length) {
         {
           ///estatus
           targets: 6,
-          searchable: true,
+          searchable: false,
           orderable: true,
           className: 'text-center',
           render: function (data, type, full, meta) {
@@ -191,7 +196,7 @@ if (dt_user_table.length) {
               } else if ($estatus == 1) {
                   estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
               } else if ($estatus == 2) {
-                  estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+                  estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
               } else {
                 estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
               }
@@ -221,7 +226,7 @@ if (dt_user_table.length) {
       }
     ],
 
-    order: [[2, 'desc']],
+    order: [[1, 'desc']],
     dom:
       '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
       '<"me-5 ms-n2"f>' +
@@ -774,6 +779,8 @@ $(function () {
     var id_dictamen = $(this).data('id');
     $('#edit_id_dictamen').val(id_dictamen);
 
+    cargarLotes();
+
     $.ajax({
       url: '/dictamenes/granel/' + id_dictamen + '/edit',
       method: 'GET',
@@ -892,6 +899,16 @@ $(document).ready(function () {
       $('#rex_fecha_emision').val('');
       $('#rex_fecha_vigencia').val('');
       $('#rex_observaciones').val('');
+       $('.nombre_lote').val('');
+      $('.folio_fq').val('');
+      $('.volumen').val('');
+      $('.cont_alc').val('');
+      $('.edad').val('');
+      $('.ingredientes').val('');
+      $('.id_categoria').val('');
+      $('.id_clase').val('');
+      $('.id_tipo').val([]).change();
+      $('#id_inspeccion').val('').change();
   }
 
   function showError(message) {
@@ -905,7 +922,17 @@ $(document).ready(function () {
       });
   }
 
-  $('#ModalReexpedir').on('hidden.bs.modal', function () {
+  $('#ModalAgregar').on('hidden.bs.modal', function () {
+      clearFields();
+      fieldsValidated = []; 
+  });
+
+  $('#ModalEditar').on('hidden.bs.modal', function () {
+      clearFields();
+      fieldsValidated = []; 
+  });
+
+    $('#ModalReexpedir').on('hidden.bs.modal', function () {
       $('#FormReexpedir')[0].reset();
       clearFields();
       $('#campos_condicionales').hide();
@@ -1113,7 +1140,7 @@ $(document).on('click', '.pdfActa', function () {
 });
 
 
-
+/*
 ///FQ'S
 $(document).on('click', '.ver-folio-fq', function (e) {
   e.preventDefault();
@@ -1213,7 +1240,7 @@ $(document).on('click', '.ver-pdf', function (e) {
     $('#modalVerDocumento').modal('show');
   });
 });
-
+*/
 
 
 

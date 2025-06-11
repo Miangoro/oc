@@ -1,12 +1,12 @@
 <div class="modal fade" id="addInspeccionLiberacion" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Inspección de liberación a barrica/contenedor de vidrio</h4>
-                    <p class="address-subtitle"></p>
-                </div>
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white">Registrar nueva solicitud de inspección de liberación a barrica/contenedor
+                    de vidrio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-8">
                 <form id="addInspeccionLiberacionForm">
                     <div class="row">
                         <div class="col-md-6">
@@ -27,21 +27,18 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    id="fecha_visita" name="fecha_visita" />
+                                    id="fecha_visita_liberacion" name="fecha_visita" autocomplete="off"/>
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select" id="id_instalacion_liberacion" name="id_instalacion"
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select class=" form-select select2" id="id_instalacion_liberacion" name="id_instalacion"
                                     aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
-                                <button type="button" class="btn btn-primary"
-                                    id="modalVigilanciaBarricadaLiberacion"><i class="ri-add-line"></i> Agregar nueva
-                                    instalación</button>
                             </div>
                         </div>
                     </div>
@@ -62,8 +59,8 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="id_categoria_liberacion" name=""
-                                    placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
+                                    id="id_categoria_liberacion" name="" placeholder="Ingresa una Categoria"
+                                    readonly style="pointer-events: none;" />
                                 <label for="id_categoria_liberacion">Ingresa Categoria</label>
                             </div>
                             <input type="hidden" id="id_categoria_liberacion_id" name="id_categoria_liberacion">
@@ -91,8 +88,8 @@
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control bg-light text-muted"
-                                id="id_tipo_maguey_liberacion" name=""
-                                placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
+                                id="id_tipo_maguey_liberacion" name="" placeholder="Ingresa un tipo de Maguey"
+                                readonly style="pointer-events: none;" />
                             <label for="id_tipo_maguey_liberacion">Ingresa Tipo de Maguey</label>
                         </div>
                         <input type="hidden" id="id_tipo_maguey_liberacion_ids" name="id_tipo_maguey_liberacion">
@@ -101,7 +98,7 @@
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="analisis_liberacion"
-                                    name="analisis_liberacion" placeholder="Ingresa Análisis fisicoquímico" />
+                                    name="analisis_liberacion" placeholder="Ingresa Análisis fisicoquímico"autocomplete="off"/>
                                 <label for="analisis_liberacion">Ingresa Análisis fisicoquímico</label>
                             </div>
                         </div>
@@ -129,14 +126,14 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
-                                    id="fecha_inicio_libe" name="fecha_inicio_lib"  />
+                                    id="fecha_inicio_libe_inspe" name="fecha_inicio_lib" autocomplete="off"/>
                                 <label for="fecha_inicio_lib">Fecha de inicio ingreso/liberación </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
-                                    id="fecha_termino_libe" name="fecha_termino_lib"  />
+                                    id="fecha_termino_libe_inspe" name="fecha_termino_lib" autocomplete="off"/>
                                 <label for="fecha_termino_lib">Fecha de término ingreso/liberación
                                 </label>
                             </div>
@@ -146,14 +143,14 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="material_liberacion"
-                                    name="material_liberacion" placeholder="Material de los recipientes" />
+                                    name="material_liberacion" placeholder="Material de los recipientes" autocomplete="off"/>
                                 <label for="material_liberacion">Material de los recipientes</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="capacidad_liberacion"
-                                    name="capacidad_liberacion" placeholder="Capacidad de recipientes" />
+                                    name="capacidad_liberacion" placeholder="Capacidad de recipientes" autocomplete="off"/>
                                 <label for="capacidad_liberacion">Capacidad de recipientes</label>
                             </div>
                         </div>
@@ -169,29 +166,29 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="tiempo_dura_lib"
-                                    name="tiempo_dura_lib" placeholder="Tiempo de maduración" />
+                                    name="tiempo_dura_lib" placeholder="Tiempo de maduración" autocomplete="off"/>
                                 <label for="tiempo_dura_lib">Tiempo de maduración</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="id_certificado_liberacion"
-                                    name="id_certificado_liberacion" placeholder="Certificado de NOM a granel" />
+                                    name="id_certificado_liberacion" placeholder="Certificado de NOM a granel" autocomplete="off"/>
                                 <label for="id_certificado_liberacion">Certificado de NOM a granel </label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."autocomplete="off"></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
                                 CONTENEDORES):</label>
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary btnCancelar" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="btnAddLiberacion"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -211,7 +208,8 @@
                     var contenido = "";
                     for (let index = 0; index < response.instalaciones.length; index++) {
                         var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-                        contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        contenido = '<option value="' + response.instalaciones[index].id_instalacion +
+                            '">' +
                             tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                             '</option>' +
                             contenido;
@@ -242,6 +240,7 @@
                         contenido = '<option value="">Sin lotes registrados</option>';
                     } else {}
                     $('#id_lote_granel_liberacion').html(contenido);
+                    obtenerDatosGranelesLiberacion();
                 },
                 error: function() {}
             });
@@ -263,8 +262,10 @@
                 url: '/getDatos2/' + lote_granel_id,
                 method: 'GET',
                 success: function(response) {
-                    $('#id_categoria_liberacion_id').val(response.categoria ? response.categoria.id_categoria : '');
-                    $('#id_categoria_liberacion').val(response.categoria ? response.categoria.categoria : '');
+                    $('#id_categoria_liberacion_id').val(response.categoria ? response.categoria
+                        .id_categoria : '');
+                    $('#id_categoria_liberacion').val(response.categoria ? response.categoria.categoria :
+                        '');
                     $('#id_clase_liberacion_id').val(response.clase ? response.clase.id_clase : '');
                     $('#id_clase_liberacion').val(response.clase ? response.clase.clase : '');
 
@@ -273,8 +274,8 @@
                             return tipo.nombre + ' (' + tipo.cientifico + ')';
                         }).join(', '); // Unir con coma
                         $('#id_tipo_maguey_liberacion').val(tiposConcatenados);
-                         // Crear un array de los IDs seleccionados (sin concatenarlos)
-                         var tiposIdsLib = response.tipo.map(function(tipo) {
+                        // Crear un array de los IDs seleccionados (sin concatenarlos)
+                        var tiposIdsLib = response.tipo.map(function(tipo) {
                             return tipo.id_tipo; // Obtener solo el ID
                         });
                         $('#id_tipo_maguey_liberacion_ids').val(tiposIdsLib.join(','));
@@ -293,7 +294,7 @@
         }
     }
 
-    // Limpiar campos al cerrar el modal
+    /* Limpiar campos al cerrar el modal
     $('#addInspeccionLiberacion').on('hidden.bs.modal', function() {
         $('#id_empresa_liberacion').val('').trigger('change');
         $('#id_instalacion_liberacion').html(
@@ -315,5 +316,5 @@
         $('#id_certificado_liberacion').val('');
         $('#info_adicional').val('');
         formValidator.resetForm(true);
-    });
+    });*/
 </script>

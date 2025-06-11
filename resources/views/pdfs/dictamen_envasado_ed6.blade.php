@@ -314,7 +314,7 @@
                     <td class="column">RFC</td>
                     <td> {{ $data->inspeccion?->solicitud?->empresa?->rfc ?? 'No encontrado' }}</td>
                     <td class="column">Fecha de vencimiento</td>
-                    <td>{{ $fecha_vigencia ?? ''}}</td>
+                    <td>{{-- {{ $fecha_vigencia ?? ''}} --}}Indefinido</td>
                 </tr>
                 <tr>
                     <td class="column">No. servicio</td>
@@ -374,7 +374,7 @@
                     <td>
                         @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->ingredientes ?? ''}}
+                                {{ !empty($loteGranel->ingredientes) ? $loteGranel->ingredientes : '----' }}
                                 <!-- Añade una separación si deseas entre los nombres de lotes -->
                                 @if (!$loop->last)
                                     ,
@@ -386,11 +386,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="column2">Edad (Exclusivo clase añejo)</td>
+                    <td class="column2">Edad</td>
                     <td>
                         @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->edad ?? ''}}
+                                {{ !empty($loteGranel->edad) ? $loteGranel->edad : '----' }}
                                 <!-- Añade una separación si deseas entre los nombres de lotes -->
                                 @if (!$loop->last)
                                     ,
@@ -431,21 +431,11 @@
                 </tr>
                 <tr>
                     <td class="column2">Presentación</td>
-                    <td>{{ $data->lote_envasado->presentacion ?? 'N/A' }}</td>
+                    <td>{{ $data->lote_envasado->presentacion ?? 'No encontrado' }}</td>
                     <td class="column2">Volumen del lote</td>
 
                     <td>
-                        @if ($lotesGranel->isNotEmpty())
-                            @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->volumen ?? '' }}
-                                <!-- Añade una separación si deseas entre los nombres de lotes -->
-                                @if (!$loop->last)
-                                    ,
-                                @endif
-                            @endforeach
-                        @else
-                            N/A
-                        @endif
+                        {{ $data->lote_envasado->volumen_total ?? 'No encontrado' }} L
                     </td> {{-- no se de donde se jala --}}
                     <td class="column2">Contenido alcohólico</td>
                     <td>
@@ -510,16 +500,17 @@
             <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
                 @php
                     use Illuminate\Support\Facades\Storage;
-                    $firma = $data->inspectores->firma ?? null;
+                    $firma = $data->firmante->firma ?? null;
                     $firmaPath = $firma ? 'firmas/' . $firma : null;
                 @endphp
         
                 @if ($firma && Storage::disk('public')->exists($firmaPath))
                     <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
-                        src="{{ asset('storage/' . $firmaPath) }}">
+                        {{-- src="{{ asset('storage/' . $firmaPath) }}"> --}}
+                        src="{{ public_path('storage/' . $firmaPath) }}">
                 @endif
         
-                <strong>{{ $data->inspectores->puesto ?? '' }} | {{ $data->inspectores->name ?? '' }}</strong>
+                <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
             </span>
         </p>
         

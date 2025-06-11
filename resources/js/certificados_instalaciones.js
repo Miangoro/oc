@@ -87,7 +87,7 @@ initializeSelect2(select2Elements);
         { data: '' }, // (0)
         { data: 'num_certificado' },//(1)
         { data: ''},
-        {data: null, // Se usará null porque combinaremos varios valores
+        {data: null, orderable: false,// Se usará null porque combinaremos varios valores
          render: function(data, type, row) {
              return `
              <strong>${data.numero_cliente}</strong><br>
@@ -102,25 +102,38 @@ initializeSelect2(select2Elements);
        ],
        columnDefs: [
          {
+           targets: 0,
            className: 'control',
            searchable: false,
            orderable: false,
            responsivePriority: 2,
-           targets: 0,
            render: function (data, type, full, meta) {
              return '';
            }
          },
          {
           targets: 1,
+          searchable: true,
+          orderable: true,
           render: function (data, type, full, meta) {
             var $num_certificado = full['num_certificado'];
             var $tipo =full['tipo_dictamen'];
             var $id = full['id_certificado'];
+            var $pdf_firmado  = full['pdf_firmado'];
+
+            if ($pdf_firmado) {
+              var $icono = `<a href="${$pdf_firmado}" target="_blank" title="Ver PDF firmado">
+                <i class="ri-file-pdf-2-fill text-success ri-28px cursor-pointer"></i> </a>`;
+            } else {
+              var $icono = `<i data-id="${$id}" data-tipo="${$tipo}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-toggle="modal" data-bs-target="#mostrarPdf"></i>`;
+            }
+
             return '<small class="fw-bold">' +$num_certificado+ '</small>' +
-                '<i data-id="'+$id+'" data-tipo="'+$tipo+'" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
-                `<br><small><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']}</small> <i data-id="${full['id_dictamen']}" data-tipo="${full['tipo_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
-              }
+                  $icono +
+                `<br><small><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']}</small> 
+                  <i data-id="${full['id_dictamen']}" data-tipo="${full['tipo_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+
+            }
         }, 
         {
         //Tabla 2
@@ -134,7 +147,7 @@ initializeSelect2(select2Elements);
               var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
             }else {
               var $acta = full['url_acta'].map(url => `
-                <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
+                <i data-id="${full['numero_cliente']}/actas/${url}" data-empresa="${full['razon_social']}"
                    class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
                    data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
                 </i>
@@ -154,7 +167,7 @@ initializeSelect2(select2Elements);
         }, 
         {
           targets: 4,
-          searchable: false,
+          searchable: true,
           orderable: false,
           responsivePriority: 4, 
           render: function (data, type, full, meta) {
@@ -189,13 +202,15 @@ initializeSelect2(select2Elements);
             }
         
             // Retorna el badge con el texto y color apropiado
-            return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span><br><small>${full['direccion_completa']}</small>`;
+            return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span>
+                <br><small>${full['direccion_completa']}
+                ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''} </small>`;
           }  
         },
-        {
+        {//fechas
           targets: 5,
-          searchable: false,
-          orderable: false,
+          searchable: true,
+          orderable: true,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
@@ -210,7 +225,7 @@ initializeSelect2(select2Elements);
         },
         {
           targets: 6,
-          searchable: true,
+          searchable: false,
           orderable: true,
           className: 'text-center',
           render: function (data, type, full, meta) {
@@ -224,35 +239,76 @@ initializeSelect2(select2Elements);
               } else if ($estatus == 1) {
                   estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
               } else if ($estatus == 2) {
-                  estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+                  estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
               } else {
                 estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
               }
-            //revisores
-            var id_revisor = full['id_revisor'];   // Obtener el id_revisor
-            var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
-            // Mensajes para los revisores
-            var revisorPersonal, revisorMiembro;
-            // Para el revisor personal
-            if (id_revisor !== 'Sin asignar') {
-                revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> ${id_revisor}</span>`;
-            } else {
-                revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
-            }
-            // Para el revisor miembro
-            if (id_revisor2 !== 'Sin asignar') {
-                revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> ${id_revisor2}</span>`;
-            } else {
-                revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
-            }
-    
-            // Retorna los revisores en formato HTML
-            return estatus+
-              ` <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                    <div style="display: inline;">${revisorPersonal}</div>
-                    <div style="display: inline;">${revisorMiembro}</div>
+
+            ///revisores PERSONAL
+            var $revisor_personal = full['revisor_personal'];
+            var $numero_revision_personal = full['numero_revision_personal'];
+            const decision_personal = full['decision_personal'];
+            const respuestas_personal = full['respuestas_personal'] ? JSON.parse(full['respuestas_personal']) : {};
+
+            const observaciones_personal = Object.values(respuestas_personal).some(r =>
+                r.some(({ observacion }) => observacion?.toString().trim()) );
+
+            const icono_oc = observaciones_personal
+              ? `<i class="ri-alert-fill text-warning"></i>`
+              : '';
+
+            let revisor_oc = $revisor_personal !== null ? $revisor_personal  : `<b style="color: red;">Sin asignar</b>`;
+
+            let revision_oc = $numero_revision_personal === 1 ? ''
+              : $numero_revision_personal === 2 ? 'Segunda revisión - '
+              : '';
+
+            let colorClass = '';
+              if (decision_personal === 'positiva') {
+                colorClass = 'badge rounded-pill bg-primary';
+              } else if (decision_personal === 'negativa') {
+                colorClass = 'badge rounded-pill bg-danger';
+              } else if (decision_personal === 'Pendiente') {
+                colorClass = 'badge rounded-pill bg-warning text-dark';
+              }
+
+            ///revisores CONSEJO
+            var $revisor_consejo = full['revisor_consejo'];
+            var $numero_revision_consejo = full['numero_revision_consejo'];
+            const decision_consejo = full['decision_consejo'];
+            const respuestas_consejo = full['respuestas_consejo'] ? JSON.parse(full['respuestas_consejo']) : {};
+
+            const observaciones2 = Object.values(respuestas_consejo).some(r =>
+                r.some(({ observacion }) => observacion?.toString().trim()) );
+
+            const icono2 = observaciones2
+              ? `<i class="ri-alert-fill text-warning"></i>`
+              : '';
+
+            let revisor2 = $revisor_consejo !== null ? $revisor_consejo  : `<b style="color: red;">Sin asignar</b>`;
+
+            let revision2 = $numero_revision_consejo === 1 ? ''
+              : $numero_revision_consejo === 2 ? 'Segunda revisión - '
+              : '';
+
+            let colorClass2 = '';
+              if (decision_consejo === 'positiva') {
+                colorClass2 = 'badge rounded-pill bg-primary';
+              } else if (decision_consejo === 'negativa') {
+                colorClass2 = 'badge rounded-pill bg-danger';
+              } else if (decision_consejo === 'Pendiente') {
+                colorClass2 = 'badge rounded-pill bg-warning text-dark';
+              }
+              
+            return estatus + 
+              `<div style="flex-direction: column; margin-top: 2px;">
+                <div class="small"> <b>Personal:</b> 
+                  <span class="${colorClass}">${revision_oc} ${revisor_oc}</span>${icono_oc}
                 </div>
-              `;
+                <div style="display: inline;" class="small"> <b>Consejo:</b> 
+                  <span class="${colorClass2}">${revision2} ${revisor2}</span>${icono2}
+                </div>
+              </div> `;
           }
         },
          {
@@ -279,7 +335,7 @@ initializeSelect2(select2Elements);
            }
          }
        ],
-       order: [[2, 'desc']],
+       order: [[1, 'desc']],
        dom:
          '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
          '<"me-5 ms-n2"f>' +
@@ -510,7 +566,7 @@ $(function () {
     } else {
         $('#CamposCondicionales_tipo').hide();
         $('#maestro_mezcalero').val('');
-        $('#no_autorizacion').val('');
+        //$('#no_autorizacion').val('');
     }
   });
 
@@ -561,22 +617,22 @@ $(function () {
         }
       }
     },
-    /*'maestro_mezcalero': {
+    'maestro_mezcalero': {
       validators: {
         stringLength: {
           max: 60,
           message: 'Máximo 60 caracteres.'
         }
       }
-    },*/
-    'num_autorizacion': {
+    },
+   /* 'num_autorizacion': {
       validators: {
         regexp: {
           regexp: /^[0-9]*$/,
           message: 'Solo se permiten números.'
         }
       }
-    },
+    },*/
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -726,7 +782,7 @@ $(function () {
     } else {
         $('#Edit_CamposCondicionales_tipo').hide();
         $('#edit_maestro_mezcalero').val('');
-        $('#edit_num_autorizacion').val('');
+        //$('#edit_num_autorizacion').val('');
     }
   });
 
@@ -784,7 +840,7 @@ $(function () {
             message: 'Máximo 60 caracteres.'
           }
         }
-      },*/
+      },
       'num_autorizacion': {
         validators: {
           regexp: {
@@ -792,7 +848,7 @@ $(function () {
             message: 'Solo se permiten números.'
           }
         }
-      },
+      },*/
     },
     plugins: {
           trigger: new FormValidation.plugins.Trigger(),
@@ -874,7 +930,7 @@ $(function () {
               $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
               $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();
               $('#edit_maestro_mezcalero').val(datos.maestro_mezcalero || '');
-              $('#edit_num_autorizacion').val(datos.num_autorizacion || '');
+              //$('#edit_num_autorizacion').val(datos.num_autorizacion || '');
             //$('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');//funciona igual que arriba
 
               flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
@@ -936,7 +992,7 @@ $(document).ready(function () {
     } else {
       $('#rex_CamposCondicionales_tipo').slideUp();
       $('#rex_maestro_mezcalero').val('');
-      $('#rex_num_autorizacion').val('');
+      //$('#rex_num_autorizacion').val('');
     }
   });
 
@@ -981,11 +1037,11 @@ $(document).ready(function () {
           if (parseInt(datos.tipo_dictamen) === 1) {
             $('#rex_CamposCondicionales_tipo').stop(true, true).slideDown('fast');
             $('#rex_maestro_mezcalero').val(datos.maestro_mezcalero || '');
-            $('#rex_num_autorizacion').val(datos.num_autorizacion || '');
+            //$('#rex_num_autorizacion').val(datos.num_autorizacion || '');
           } else {
             $('#rex_CamposCondicionales_tipo').stop(true, true).slideUp('fast', function () {
                 $('#rex_maestro_mezcalero').val('');
-                $('#rex_num_autorizacion').val('');
+                //$('#rex_num_autorizacion').val('');
             });
           }
 
@@ -1013,7 +1069,7 @@ $(document).ready(function () {
       $('#rex_fecha_vigencia').val('');
       $('#rex_observaciones').val('');
       $('#rex_maestro_mezcalero').val('');
-      $('#rex_num_autorizacion').val('');
+      //$('#rex_num_autorizacion').val('');
       $('#rex_campos_condicionales_tipo').hide();
   }
 
@@ -1107,7 +1163,7 @@ $(document).ready(function () {
               message: 'Máximo 60 caracteres.'
             }
           }
-        },*/
+        },
         'num_autorizacion': {
           validators: {
             regexp: {
@@ -1115,7 +1171,7 @@ $(document).ready(function () {
               message: 'Solo se permiten números.'
             }
           }
-        },
+        },*/
       },
       plugins: {
           trigger: new FormValidation.plugins.Trigger(),
@@ -1512,16 +1568,31 @@ $('#FormCertificadoFirmado').on('submit', function (e) {
       dataTable.ajax.reload(null, false); // Si usas datatables
     },
     error: function (xhr) {
+
       console.log(xhr.responseText);
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al subir el documento.',
-        //footer: `<pre>${xhr.responseText}</pre>`,
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
+      if (xhr.status === 422) {
+        // Error de validación
+        Swal.fire({
+          icon: 'warning',
+          title: 'Error al subir',
+          text: 'El documento no debe ser mayor a 3MB',
+          //footer: `<pre>${xhr.responseText}</pre>`,
+          customClass: {
+            confirmButton: 'btn btn-warning'
+          }
+        });
+      } else {
+        // Otro tipo de error (500, 404, etc.)
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al subir el documento.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+      
     }
   });
 });

@@ -83,8 +83,7 @@ $.ajaxSetup({
          { data: '' },
          { data: 'num_dictamen' },
          { data: 'num_servicio' },
-         { data: null, // Se usará null porque combinaremos varios valores
-          
+         { data: null, orderable: false,// Se usará null porque combinaremos varios valores
             render: function(data, type, row) {
                 return `
                 <strong>${data.numero_cliente}</strong><br>
@@ -117,7 +116,7 @@ $.ajaxSetup({
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $num_dictamen = full['num_dictamen'];
-            return `<small>`+ $num_dictamen + `</small>` +
+            return `<small class="fw-bold">`+ $num_dictamen + `</small>` +
              `<i style class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
           }
         }, 
@@ -132,7 +131,7 @@ $.ajaxSetup({
               var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
             }else {
               var $acta = full['url_acta'].map(url => `
-                <i data-id="${full['numero_cliente']}/${url}" data-empresa="${full['razon_social']}"
+                <i data-id="${full['numero_cliente']}/actas/${url}" data-empresa="${full['razon_social']}"
                    class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
                    data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
                 </i>
@@ -152,7 +151,7 @@ $.ajaxSetup({
           }, 
           {
             targets: 4,
-            searchable: false,
+            searchable: true,
             orderable: false,
             responsivePriority: 4,
             render: function (data, type, full, meta) {
@@ -187,13 +186,15 @@ $.ajaxSetup({
               }
           
               // Retorna el badge con el texto y color apropiado
-              return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span><br><small>${full['direccion_completa']}</small>`;
+              return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span>
+                  <br><small>${full['direccion_completa']}
+                  ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''} </small>`;
             }     
           },
           {//fechas
             targets: 5, // Suponiendo que este es el índice de la columna que quieres actualizar
-            searchable: false,
-            orderable: false,
+            searchable: true,
+            orderable: true,
             className: 'text-center',//columna centrada
             render: function (data, type, full, meta) {
                 // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
@@ -216,7 +217,7 @@ $.ajaxSetup({
           {
             ///estatus
             targets: 6,
-            searchable: true,
+            searchable: false,
             orderable: true,
             className: 'text-center',
             render: function (data, type, full, meta) {
@@ -229,7 +230,7 @@ $.ajaxSetup({
                 } else if ($estatus == 1) {
                     estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
                 } else if ($estatus == 2) {
-                    estatus = '<span class="badge rounded-pill bg-success">Reexpedido</span>';
+                    estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
                 } else {
                   estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
                 }
@@ -263,7 +264,7 @@ $.ajaxSetup({
          }
        ],
  
-       order: [[2, 'desc']],
+       order: [[1, 'desc']],
        dom:
          '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
          '<"me-5 ms-n2"f>' +

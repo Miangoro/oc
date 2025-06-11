@@ -432,9 +432,9 @@
                                         </tr>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Acta de
+                                                Acta de dfsdf
                                                 Vigilancia de producción:</th>
-                                            <td id="actaVigilanciaRemuestreo"></td>
+                                            <td class="acta"></td>
                                             <td>
                                                 <select name="actaVigilanciaRemuestreo" class="form-control form-control-sm"
                                                     id="cumpleActaVigilanciaRemuestreo">
@@ -822,11 +822,10 @@
                                         </tr>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Tipo
-                                                (Sin/Con Etiqueta):</th>
-                                            <td id="tipoEtiquetaEnvasado"></td>
+                                                Tipo (Sin/Con Etiqueta):</th>
+                                            <td class="tipoEtiquetaEnvasado"></td>
                                             <td>
-                                                <select class="tipoEtiquetaEnvasado" class="form-control form-control-sm"
+                                                <select name="tipoEtiquetaEnvasado" class="form-control form-control-sm"
                                                     id="cumpleTipoEtiquetaEnvasado">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
@@ -838,7 +837,7 @@
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Inicio
                                                 y Término de Envasado:</th>
-                                            <td id="inicioTerminoEnvasado"></td>
+                                            <td class="inicioTerminoEnvasado"></td>
                                             <td>
                                                 <select name="inicioTerminoEnvasado" class="form-control form-control-sm"
                                                     id="cumpleInicioTerminoEnvasado">
@@ -852,7 +851,7 @@
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Destino
                                                 (Nacional/Internacional):</th>
-                                            <td id="destinoEnvasado"></td>
+                                            <td class="destinoEnvasado"></td>
                                             <td>
                                                 <select name="destinoEnvasado" class="form-control form-control-sm"
                                                     id="cumpleDestinoEnvasado">
@@ -1327,8 +1326,8 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <th class="text-dark fw-bold" scope="row">Razón Social (Emisor):</th>
-                                            <td id="razonSocialEmisorLiberacionPTNacional"></td>
+                                            <th class="text-dark fw-bold" scope="row">Razón Social:</th>
+                                            <td id="" class="razonSocial"></td>
                                             <td>
                                                 <select name="razonSocial" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
@@ -1338,20 +1337,9 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th class="text-dark fw-bold" scope="row">Razón Social (Receptor):</th>
-                                            <td id="razonSocialReceptorLiberacionPTNacional"></td>
-                                            <td>
-                                                <select name="razonSocial" class="form-control form-control-sm">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" scope="row">Domicilio Fiscal (Emisor):
+                                            <th class="text-dark fw-bold" scope="row">Domicilio Fiscal:
                                             </th>
-                                            <td id="domicilioFiscal"></td>
+                                            <td id="" class="domicilioFiscal"></td>
                                             <td>
                                                 <select name="domicilioFiscal" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
@@ -1363,7 +1351,7 @@
                                         <tr>
                                             <th class="text-dark fw-bold" scope="row">Domicilio de Instalaciones
                                                 (Unidad de Producción o Envasadora Autorizada):</th>
-                                            <td id="domicilioInstalacion"></td>
+                                            <td id="domicilioInstalacion" class="domicilioInstalacion"></td>
                                             <td>
                                                 <select name="domicilioInstalacion" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
@@ -1374,7 +1362,7 @@
                                         </tr>
                                         <tr>
                                             <th class="text-dark fw-bold" scope="row">Fecha y Hora de Visita:</th>
-                                            <td id="fechaHora"></td>
+                                            <td id="fechaHora" class="fechaHora"></td>
                                             <td>
                                                 <select name="fechaHora" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
@@ -1386,7 +1374,7 @@
                                         <tr>
                                             <th class="text-dark fw-bold" scope="row">Nombre del Lote a Granel:
                                             </th>
-                                            <td id="nombreLote"></td>
+                                            <td id="nombreLote" class="nombreLote"></td>
                                             <td>
                                                 <select name="nombreLote" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
@@ -1485,7 +1473,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th class="text-dark fw-bold" scope="row">Rango de Hologramas:</th>
+                                            <th class="text-dark fw-bold" scope="row">Rango de Hologramas (acta de envasado):</th>
                                             <td id="rangoHologramas"></td>
                                             <td>
                                                 <select name="rangoHologramas" class="form-control form-control-sm">
@@ -1497,7 +1485,7 @@
                                         </tr>
                                         <tr>
                                             <th class="text-dark fw-bold" scope="row">Dictamen de Envasado:</th>
-                                            <td id="dictamenEnvasado"></td>
+                                            <td id="dictamenEnvasado" class="dictamenEnvasado"></td>
                                             <td>
                                                 <select name="dictamenEnvasado" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
@@ -1543,21 +1531,6 @@
                                             <td>
                                                 <select name="domicilioFiscal" class="form-control form-control-sm"
                                                     id="cumpleDomicilioFiscalEmisorDictamen">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Domicilio de Instalaciones (Unidad de Producción o Envasadora
-                                                Autorizada):
-                                            </th>
-                                            <td class="domicilioInstalacion"></td>
-                                            <td>
-                                                <select name="domicilioInstalacion" class="form-control form-control-sm"
-                                                    id="cumpleDomicilioInstalacionesEmisorDictamen">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
@@ -1680,6 +1653,21 @@
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                                Domicilio de Instalaciones (Unidad de Producción o Envasadora
+                                                Autorizada):
+                                            </th>
+                                            <td class="domicilioInstalacion"></td>
+                                            <td>
+                                                <select name="domicilioInstalacion" class="form-control form-control-sm"
+                                                    id="cumpleDomicilioInstalacionesEmisorDictamen">
+                                                    <option value="" disabled selected>Seleccionar</option>
+                                                    <option value="si">Sí</option>
+                                                    <option value="no">No</option>
+                                                </select>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
@@ -1823,7 +1811,7 @@
                         </div>
                     </div>-->
                         <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                            <button type="submit" class="btn btn-primary">Validar</button>
+                            <button type="submit" class="btn btn-primary"><i class="ri-checkbox-circle-line"></i> Validar</button>
                             <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
                                 aria-label="Close">Cancelar</button>
                         </div>

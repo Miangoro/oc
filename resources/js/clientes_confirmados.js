@@ -158,7 +158,7 @@ $(function () {
           }
         }
       ],
-      order: [[2, 'desc']],
+      order: [[1, 'desc']],
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' +
@@ -464,37 +464,76 @@ $(function () {
     });
   });
 
+
+//FORMATO PDF PRESTACION SERVICIOS
   $(document).on('click', '#pdf2', function () {
     var id = $(this).data('id');
     var regimen = $(this).data('regimen');
     var registro = $(this).data('registro');
     var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+
     if (regimen == 'Persona física') {
       var pdf = "../prestacion_servicio_fisica/";
     }
     if (regimen == 'Persona moral') {
       var pdf = "../prestacion_servicio_moral/";
     }
+
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    //Cargar el PDF con el ID
     iframe.attr('src', pdf + id);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdf + id).show();
+
     $("#titulo_modal").text("Contrato");
     $("#subtitulo_modal").text(registro);
+
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
   });
 
+
+//FORMATO PDF CARTA ASIGNACION CLIENTE
   $(document).on('click', '#pdf', function () {
     var id = $(this).data('id');
     var tipo_pdf = $(this).data('pdf');
     var registro = $(this).data('registro');
     var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+
     if (tipo_pdf == 1) {
       var pdf = "../carta_asignacion/";
     }
     if (tipo_pdf == 2) {
       var pdf = "../carta_asignacion052/";
     }
+
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+
+    //Cargar el PDF con el ID
     iframe.attr('src', pdf + id);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdf + id).show();
+
     $("#titulo_modal").text("Carta de asignación de número de cliente");
     $("#subtitulo_modal").text(registro);
+
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
   });
+
+
 
   // edit record
   $(document).on('click', '.edit-record', function () {
@@ -755,13 +794,13 @@ $(function () {
             notEmpty: {
               message: 'Por favor ingrese el correo electrónico'
             },
-            emailAddress: {
+           /* emailAddress: {
               message: 'Por favor ingrese un correo electrónico válido'
             },
             regexp: {
               regexp: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
               message: 'Por favor ingrese un correo electrónico en un formato válido'
-            }
+            }*/
           }
         },
         telefono: {

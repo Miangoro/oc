@@ -9,6 +9,7 @@ use App\Models\empresa;
 use App\Models\instalaciones;
 use App\Models\marcas;
 use App\Models\Predios;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +21,14 @@ class documentacionController extends Controller
     $documentos = Documentacion::where('subtipo', '=', 'Todas')->get();
     $productor_agave = Documentacion::where('subtipo', '=', 'Generales Productor')->get();
 
-    $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get();
+      //Permiso de empresa
+    $empresas = Auth::check() && Auth::user()->tipo == 3
+    ? Empresa::with('empresaNumClientes')
+        ->where('id_empresa', Auth::user()->empresa?->id_empresa)
+        ->get()
+    : Empresa::with('empresaNumClientes')
+        ->where('tipo', 2)
+        ->get();
     $instalaciones = instalaciones::where('tipo', '=', 2)->get();
 
     return view("documentacion.documentacion_view", ["documentos" => $documentos, "productor_agave" => $productor_agave, "empresas" => $empresas]);

@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificado de mezcal a granel</title>
     <style>
+        @page {
+            size: 227mm 292mm;/*tamaño carta*/
+            /*margin-top: 30;
+            margin-left: 80px;
+            margin-right: 25px;
+            margin-bottom: 1px;*/
+        }
         body {
             margin: 0;
             padding: 0;
@@ -14,8 +21,8 @@
         .watermark {
             position: absolute;
             top: 43%; 
-            left: 55%; 
-            width: 40%;
+            left: 50%; 
+            width: 55%;
             height: auto;
             transform: translate(-50%, -50%);
             opacity: 0.1;
@@ -82,7 +89,7 @@
 
         .pie {
             text-align: right;
-            font-size: 10px;
+            font-size: 8px;
             line-height: 1;
             position: fixed;
             bottom: 10px;
@@ -141,7 +148,7 @@
             z-index: 1; 
         }
 
-        .img-background-left {
+        .margen_mezcal_granel {
             position: absolute;
             top: 90px; 
             left: -80px; 
@@ -179,7 +186,7 @@
 
         td, th {
             border: 2px solid #1F497D;
-            padding: 8px; 
+            padding: 6px; 
             text-align: left;
         }
 
@@ -244,7 +251,7 @@
         </div>
     @endif
     
-    <div class="img-background-left"></div>
+    <div class="margen_mezcal_granel"></div>
     <img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Marca de Agua" class="watermark">
 
     <div class="header">
@@ -260,95 +267,102 @@
     <p class="titulo">CERTIFICADO</p>
     <p class="subtitulo">DATOS DE LA EMPRESA</p>
 
-    <table>
-	<tbody>
-		<tr>
-		
-        <td class="columna">Nombre de la empresa</td>
-			<td colspan="3" class="columna">{{ $razon_social }}</td>
-		</tr>
-		
-        <tr> 
-			<td class="columna">Representante Legal</td>
-			<td class="columna">{{ $representante }}</td>
-			<td class="columna">Número de Certificado</td>
-			<td class="columna">{{ $num_certificado }}</td>
-		</tr>
-
-		<tr>
-			<td class="columna">Dirección</td>
-
-            <td class="columna-text">
-                <span class="negrita">Domicilio Fiscal:</span> {{ $domicilio_fiscal }}
-                <br>
-                <span class="negrita">Domicilio de Instalaciones:</span> {{ $direccion_completa }}
-            </td>
-
-            <td class="columna">Fecha de emisión </td>
-			<td class="columna-norm">{{ $fecha_emision }}</td>
-		</tr>
-
-		<tr>
-			<td class="columna">RFC</td>
-			<td class="columna">{{ $rfc }}</td>
-			<td class="columna">Fecha de Vencimiento </td>
-			<td class="columna-norm">{{ $fecha_vigencia }}</td>
-		</tr>
-	</tbody>
+<table>
+    <tr>
+        <td class="columna" style="width: 17%">Nombre de la empresa</td>
+        <td class="columna">{{ $razon_social }}</td>
+    </tr>
 </table>
+<br>
+<table>
+    <tr> 
+        <td class="columna" style="width: 17%">Representante Legal</td>
+        <td class="columna" style="width: 40%">{{ $representante }}</td>
+        <td class="columna">Número de Certificado</td>
+        <td class="columna" style="width: 26%">{{ $num_certificado }}</td>
+    </tr>
+
+    <tr>
+        <td class="columna">Dirección</td>
+
+        <td class="columna-text">
+            <span class="negrita">Domicilio Fiscal:</span> {{ $domicilio_fiscal }}
+            <br>
+            <span class="negrita">Domicilio de Instalaciones:</span> {{ $direccion_completa }}
+        </td>
+
+        <td class="columna">Fecha de emisión </td>
+        <td class="columna-norm">{{ $fecha_emision }}</td>
+    </tr>
+
+    <tr>
+        <td class="columna">RFC</td>
+        <td class="columna">{{ $rfc }}</td>
+        <td class="columna">Fecha de Vencimiento </td>
+        <td class="columna-norm">{{ $fecha_vigencia }}</td>
+    </tr>
+</table>
+
 
 <p class="subtitulo2">DESCRIPCIÓN DEL PRODUCTO</p>
 
 <table>
-	<tbody>
 		<tr>
-			<td colspan="6" class="columna"  style="font-size: 15px;">PRODUCTO: MEZCAL ARTESANAL<br>ORIGEN: OAXACA</td>
+			<td colspan="6" class="columna"  style="font-size: 15px;">PRODUCTO: {{ strtoupper($categoria)}}<br>ORIGEN: {{ strtoupper($estado) }}</td>
 		</tr>
 		<tr>
-			<td class="columna" style="white-space: nowrap;">Categoría y clase</td>
-			<td class="columna-norm">{{ $lote }}</td>
-			<td class="columna">No. de lote</td>
+			<td class="columna" style="white-space: nowrap; width: 12%">Categoría y clase</td>
+			<td class="columna-norm" style="width:20%">{{ $categoria }}<br>{{ $clase }}</td>
+			<td class="columna" style="width:12%">No. de lote</td>
 			<td class="columna-norm">{{ $nombre_lote }}</td>
-			<td class="columna">No. de análisis</td>
-            <td class="columna-norm" style="white-space: nowrap;">{{ $folio_fq }}</td>
+			<td class="columna" style="width:12%">No. de análisis</td>
+            <td class="columna-norm" style="width:18%">{{ $n_analisis }}</td>
 		</tr>
 		<tr>
 			<td class="columna">Ingredientes</td>
 			<td class="columna-norm">{{ $ingredientes }}</td>
 			<td class="columna" style="white-space: nowrap;">Volumen de lote</td>
-			<td class="columna-norm">{{ $volumen }}</td>
+			<td class="columna-norm">{{ $volumen }} L</td>
 			<td class="columna">Contenido Alcohólico</td>
-			<td class="columna-norm" style="white-space: nowrap;">{{ $cont_alc }}</td>
+			<td class="columna-norm" style="white-space: nowrap;">{{ $cont_alc }}% Alc. Vol.</td>
 		</tr>
 		<tr>
 			<td class="columna">Tipo de maguey</td>
-			<td class="columna-norm">{{ $tipo }}</td>
+			<td class="columna-norm" style="font-size: 11px;">
+                {!! $tipo_maguey->tiposRelacionados->map(function ($tipo) {
+                    $nombre = preg_replace('/^Maguey\s+/i', '', $tipo->nombre);
+                    return $nombre . ' (<i>' . trim($tipo->cientifico) . '</i>)';
+                })->implode('<br> ') !!}
+            </td>
 			<td class="columna">Edad</td>
 			<td class="columna-norm">{{ $edad }}</td>
 			<td class="columna">No. de dictamen</td>
 			<td class="columna-norm" style="white-space: nowrap;">{{ $num_dictamen }}</td>
 		</tr>
-	</tbody>
 </table>
 
 <p class="text2">Este certificado de cumplimiento de mezcal a granel se expide de acuerdo a Norma Oficial Mexicana NOM-070-SCFI-2016. Bebidas Alcohólicasmezcal-especificaciones, en vigor.</p>
 
-<p class="firma">AUTORIZÓ <br><br> Q.F.B. Mayra Gutiérrez Romero <br> Gerente Técnico del Organismo Certificador CIDAM</p>
 
-  <p class="pie-pag">Página 1 de 1</p>
-    <p class="pie">Certificado NOM de Mezcal a Granel NOM-070-SCFI-2016F7.1-01-07
+
+<div class="firma">AUTORIZÓ
     <br>
-    Edición 7 Entrada en vigor: 07/11/2023
+    <br>{{ $nombre_firmante }}
+    <br>{{ $puesto_firmante }}
+</div>
 
-    @if ($leyenda)
-    <p class="leyenda">
-    Cancela y sustituye al certificado con clave: CIDAM C-GRA-057/2023
-    </p>
+  
+<div class="pie">
+    @if ($id_sustituye)
+        Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
     @endif
-    </p>
+    <br>Certificado NOM de Mezcal a Granel NOM-070-SCFI-2016F7.1-01-07
+    <br>Edición 7 Entrada en vigor: 07/11/2023
+</div>
+<div class="foother">
+    <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="300px">
+</div>
 
-    <div class="foother">
-        <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="300px">
-    </div>
+
 </body>
 </html>

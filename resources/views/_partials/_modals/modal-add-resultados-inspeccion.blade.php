@@ -5,7 +5,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-body p-0">
           <div class="text-center mb-6">
-            <h4 class="address-title mb-2">Registrar resultados de inspección</h4>
+            <h4 class="address-title mb-2">Registrar/Visualizar resultados de inspección</h4>
             <p class="num_servicio badge bg-primary"></p>
           </div>
 
@@ -34,7 +34,7 @@
                     <tbody id="contenidoGraneles">
                         <tr>
                             <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled> <i
+                                <button type="button" class="btn btn-danger remove-row" > <i
                                         class="ri-delete-bin-5-fill"></i> </button>
                             </th>
                             <td>

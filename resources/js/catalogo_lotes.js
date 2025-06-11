@@ -85,7 +85,7 @@ $(function () {
 
           // Mostrar los nombres de los lotes de procedencia
           if (row.lote_procedencia != 'No tiene procedencia de otros lotes.') {
-            procedencia = '<br><span class="fw-bold text-dark small">Lote de procedencia:</span><span class="small text-primary"> ' + row.lote_procedencia + '</span>';
+            procedencia = '<br><span class="fw-bold text-dark small">Lote de procedencia: <br></span><span class="small text-primary"> ' + row.lote_procedencia + '</span>';
           }
 
           return '<span class="fw-bold text-dark small">Volumen inicial:</span> <span class="small"> ' + row.volumen +
@@ -96,7 +96,36 @@ $(function () {
         }
 
       },
-      { data: 'folio_fq' },
+
+      {
+        data: 'folio_fq',
+        render: function (data, type, row) {
+          // Separar los folios
+          const folios = data ? data.split(',') : [];
+          const folioCompleto = folios[0] ?? '';
+          const folioAjuste = folios[1] ?? '';
+
+          let html = '';
+
+          // Análisis completo
+          if (row.url_fq_completo && folioCompleto) {
+            html += `<div><strong>Completo:</strong> <a class="cursor-pointer pdf text-primary" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${row.url_fq_completo}">${folioCompleto}</a></div>`;
+          } else if (folioCompleto) {
+            html += `<div><strong>Completo:</strong> ${folioCompleto}</div>`;
+          }
+
+          // Ajuste de grado
+          if (row.url_fq_ajuste && folioAjuste) {
+            html += `<div><strong>Ajuste:</strong> <a class="cursor-pointer pdf text-primary" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${row.url_fq_ajuste}">${folioAjuste}</a></div>`;
+          } else if (folioAjuste) {
+            html += `<div><strong>Ajuste:</strong> ${folioAjuste}</div>`;
+          }
+
+          return html || 'N/A';
+        }
+      },
+
+
       { data: 'cont_alc' },
       {
         data: 'volumen_restante',
@@ -110,7 +139,7 @@ $(function () {
         orderable: false,
         render: function (data, type, row) {
           if (row.folio_certificado !== 'N/A') {
-            return '<span class="fw-bold text-dark small">Organismo:</span> <span class="small">' + row.id_organismo +
+            return '<span class="fw-bold text-dark small">Organismo:</span> <span class="small">' + (row.id_organismo || 'CIDAM') +
               '</span><br><span class="fw-bold text-dark small">Certificado:</span><span class="small"> ' +
               // Verifica si hay URL del certificado
               (row.url_certificado ?
@@ -120,8 +149,8 @@ $(function () {
                   data-url="${row.url_certificado}">${row.folio_certificado}</a>`
                 : row.folio_certificado) +
               '</span>' +
-              '<br><span class="fw-bold text-dark small">Fecha de emisión:</span><span class="small"> ' + row.fecha_emision +
-              '</span><br><span class="fw-bold text-dark small">Fecha de vigencia:</span><span class="small"> ' + row.fecha_vigencia +
+              '<br><span class="fw-bold text-dark small">Emisión:</span><span class="small"> ' + row.fecha_emision +
+              '</span><br><span class="fw-bold text-dark small">Vigencia:</span><span class="small"> ' + row.fecha_vigencia +
               '</span>';
           } else {
             return '<span class="badge rounded-pill bg-danger">Sin certificado</span>';
@@ -179,7 +208,7 @@ $(function () {
 
       }
     ],
-    order: [[2, 'desc']],
+    order: [[1, 'desc']],
     dom:
       '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
       '<"me-5 ms-n2"f>' +
@@ -384,13 +413,35 @@ $(function () {
     openPdfBtn.attr('href', url);
     openPdfBtn.show();
     $("#titulo_modal_Dictamen1").text("Certificado de lote a granel");
-    $("#subtitulo_modal_Dictamen1").text(registro);
+    $("#subtitulo_modal_Dictamen1").html(registro);
     $('#mostrarPdfDictamen1').modal('show');
   });
   // Ocultar el spinner cuando el PDF esté completamente cargado
   $('#pdfViewerDictamen1').on('load', function () {
     $('#loading-spinner1').hide(); // Ocultar el spinner
     $(this).show(); // Mostrar el iframe con el PDF
+  });
+
+  // Reciben los datos del PDF
+  $(document).on('click', '.pdf', function () {
+    var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
+    var pdfUrl = $(this).data('url');//Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+
+    spinner.show();
+    iframe.hide();
+
+    iframe.attr('src', pdfUrl);
+    $("#NewPestana").attr('href', pdfUrl).show();
+
+    $("#titulo_modal").text("Análisis fisicoquímico");
+    // $("#subtitulo_modal").text("PDF del Dictamen");
+
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
   });
 
   // Delete Record
@@ -761,11 +812,14 @@ $(function () {
         processData: false, // Evita la conversión automática de datos a cadena
         contentType: false, // Evita que se establezca el tipo de contenido
         success: function (response) {
+          $('input[type="file"][name="url[]"]').val('');
           $('#loteForm').trigger("reset");
           $('#id_empresa').val('').trigger('change');
           $('#id_guia').val('').trigger('change');
+          $('#id_organismo').val('').trigger('change');
+          $('#tipo_agave').val('').trigger('change');
           $('#offcanvasAddLote').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
+          $('.datatables-users').DataTable().ajax.reload(null, false);
 
           // Mostrar alerta de éxito
           Swal.fire({
@@ -868,7 +922,6 @@ $(function () {
     $(document).on('click', '.edit-record', function () {
       var loteId = $(this).data('id');
       $('#edit_lote_id').val(loteId);
-
       $.ajax({
         url: '/lotes-a-granel/' + loteId + '/edit',
         method: 'GET',
@@ -880,11 +933,11 @@ $(function () {
             var volumenes = data.volumenes;
             var nombreLotes = data.nombreLotes; // Este array contiene los nombres de los lote
             var organismoId = data.organismo;
-            var tipos = data.tipos;
+            var tipos = data.tipos || [];
             var lote_original_id = data.lote.lote_original_id;
-            if(lote_original_id){
+            if (lote_original_id) {
               $('#edit_es_creado_a_partir').val('si').trigger('change');
-            }else{
+            } else {
               $('#edit_es_creado_a_partir').val('no').trigger('change');
             }
 
@@ -941,15 +994,29 @@ $(function () {
 
             var fqs = data.lote.folio_fq.split(',');
             $('#folio_fq_completo_58').val(fqs[0]);
-            $('#folio_fq_ajuste_58').val(fqs[1]);
+            $('#folio_fq_ajuste_134').val(fqs[1]);
 
-            // Cargar las opciones estáticas (de $tipos)
-            $.each(tipos, function (index, tipo) {
-              var option = new Option(tipo.nombre, tipo.id_tipo);
-              $('#edit_tipo_agave').append(option);
+
+            var id_tipo = Array.isArray(data.id_tipo) ? data.id_tipo.map(String) : [];
+
+            var $select = $('#edit_tipo_agave');
+            $select.empty();
+            // 1. Agregar primero los seleccionados en el orden exacto de `id_tipo`
+            id_tipo.forEach(function (id) {
+              var tipo = tipos.find(t => String(t.id_tipo) === id);
+              if (tipo) {
+                var option = new Option(`${tipo.nombre} (${tipo.cientifico})`, tipo.id_tipo, true, true);
+                $select.append(option);
+              }
             });
-            // Asignar las opciones seleccionadas del lote
-            $('#edit_tipo_agave').val(data.id_tipo).trigger('change');
+            // 2. Agregar el resto de tipos que no están seleccionados
+            tipos.forEach(function (tipo) {
+              if (!id_tipo.includes(String(tipo.id_tipo))) {
+                var option = new Option(`${tipo.nombre} (${tipo.cientifico})`, tipo.id_tipo);
+                $select.append(option);
+              }
+            });
+
             // Mostrar campos condicionales
             if (lote.tipo_lote == '1') {
               $('#edit_oc_cidam_fields').removeClass('d-none');
@@ -977,86 +1044,116 @@ $(function () {
               // Eliminar las opciones de guías si es tipo 2
               $('#edit_id_guia').empty();
               // Mostrar enlace al archivo PDF si está disponible
+              // Mostrar enlace al archivo PDF si está disponible
+              $('#archivo_url_display_otro_organismo').html('');
               var archivoDisponible = false;
               var documentos = data.documentos;
+
               documentos.forEach(function (documento) {
-                if (documento.url) {
+                const id = documento.id_documento;
+
+                if (id == 59 && documento.url) { // Solo si id_documento es 59 y tiene URL
                   archivoDisponible = true;
                   var fileName = documento.url.split('/').pop();
-                  $('#archivo_url_display_otro_organismo').html('Documento disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>');
+
+                  let botonEliminar = `
+                    <button type="button"
+                            class="btn btn-danger btn-sm btn-eliminar-doc"
+                            data-id="${documento.id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                        Eliminar documento
+                    </button>
+                  `;
+
+                  $('#archivo_url_display_otro_organismo').html('Documento disponible: <a href="../files/' + data.numeroCliente + '/certificados_granel/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>' + '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + botonEliminar + '</span>');
                 }
               });
+
               if (!archivoDisponible) {
                 $('#archivo_url_display_otro_organismo').html('No hay archivo disponible.');
               }
+
+
             } else {
               $('#edit_oc_cidam_fields').addClass('d-none');
               $('#edit_otro_organismo_fields').addClass('d-none');
             }
 
-        // Actualizar la tabla de documentos
-        var documentos = data.documentos;
-        if (documentos && documentos.length > 0) {
-          var documentoCompletoUrlAsignado = false; // Variable para controlar la asignación del documento completo
-          var documentoAjusteUrlAsignado = false;   // Variable para controlar la asignación del documento de ajuste
-          var ultimoDocumentoCompletoId = null;     // Variable para almacenar el último ID de documento completo
-          var ultimoDocumentoAjusteId = null;       // Variable para almacenar el último ID de documento de ajuste
-  // Limpiar previamente los mensajes y valores en el modal antes de asignar nuevos documentos
-        documentos.forEach(function (documento) {
-          $('#archivo_url_display_completo_' + documento.id_documento).html(''); // Limpiar mensaje de "No hay archivo disponible"
-          $('#archivo_url_display_ajuste_' + documento.id_documento).html(''); // Limpiar mensaje de "No hay archivo disponible"
-          $('#folio_fq_completo_' + documento.id_documento).val(''); // Limpiar campo de folio completo
-          $('#folio_fq_ajuste_' + documento.id_documento).val(''); // Limpiar campo de folio ajuste
-        });
+            var documentos = data.documentos;
 
-        documentos.forEach(function (documento) {
-          var archivoUrlDisplayCompleto = $('#archivo_url_display_completo_' + documento.id_documento);
-          var archivoUrlDisplayAjuste = $('#archivo_url_display_ajuste_' + documento.id_documento);
-          var folioFqCompletoInput = $('#folio_fq_completo_' + documento.id_documento);
-          var folioFqAjusteInput = $('#folio_fq_ajuste_' + documento.id_documento);
+            if (Array.isArray(fqs)) {
+              // Asignar siempre los valores de los folios, aunque no haya documentos
+              if (fqs[0]) {
+                $('input[id^="folio_fq_completo_"]').val(fqs[0].split(',')[0]);
+              }
 
-          var nombreExtraido = documento.nombre.split('-').pop().trim();
+              if (fqs[1]) {
+                $('input[id^="folio_fq_ajuste_"]').val(fqs[1].split(',')[0]);
+              }
+            }
 
-          
-        
+            if (documentos && documentos.length > 0) {
+              var documentoCompletoUrlAsignado = false;
+              var documentoAjusteUrlAsignado = false;
 
-          // Mostrar el documento completo
-          if (documento.tipo.includes('Análisis completo') && documento.url && !documentoCompletoUrlAsignado) {
-            var fileNameCompleto = documento.url.split('/').pop();
-            archivoUrlDisplayCompleto.html('Documento completo disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameCompleto + '</a>');
-            folioFqCompletoInput.val(fqs);
-            documentoCompletoUrlAsignado = true; // Marcar como asignado
-            ultimoDocumentoCompletoId = documento.id_documento; // Guardar el ID
-          }
+              // Limpiar previamente los mensajes en el modal (ya no limpiamos inputs)
+              $('#archivo_url_display_completo_58').html('');
+              $('#archivo_url_display_ajuste_134').html('');
+              $('#deleteArchivo58').html('');
+              $('#deleteArchivo134').html('');
 
-          // Mostrar el documento de ajuste
-          if (documento.tipo.includes('Ajuste de grado') && documento.url && !documentoAjusteUrlAsignado) {
-            var fileNameAjuste = documento.url.split('/').pop();
-            archivoUrlDisplayAjuste.html('Documento ajuste disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameAjuste + '</a>');
-            folioFqAjusteInput.val(fqs);
-            documentoAjusteUrlAsignado = true; // Marcar como asignado
-            ultimoDocumentoAjusteId = documento.id_documento; // Guardar el ID
-          }
-        });
 
-        // Si no se asignó un documento completo, mostrar un mensaje
-        if (!documentoCompletoUrlAsignado && ultimoDocumentoCompletoId !== null) {
-          console.log('Mostrando mensaje de "No hay archivo completo disponible" para el ID: ', ultimoDocumentoCompletoId);
-          $('#archivo_url_display_completo_' + ultimoDocumentoCompletoId).html('No hay archivo completo disponible.');
-        }
+              documentos.forEach(function (documento) {
+                const id = documento.id_documento;
+                const fileName = documento.url.split('/').pop();
+                const fileUrl = '../files/' + data.numeroCliente + '/fqs/' + documento.url;
 
-        // Si no se asignó un documento de ajuste, mostrar un mensaje
-        if (!documentoAjusteUrlAsignado && ultimoDocumentoAjusteId !== null) {
-          console.log('Mostrando mensaje de "No hay archivo de ajuste disponible" para el ID: ', ultimoDocumentoAjusteId);
-          $('#archivo_url_display_ajuste_' + ultimoDocumentoAjusteId).html('No hay archivo de ajuste disponible.');
-          $('input[id^="folio_fq_completo_"]').val(''); // Limpiar todos los inputs de folio completo
-          $('input[id^="folio_fq_ajuste_"]').val('');   // Limpiar todos los inputs de folio ajuste
-        }
+                let botonEliminar = `
 
-      } else {
-        console.log('No hay documentos disponibles.');
-        $('td[id^="archivo_url_display_"]').html('No hay documentos disponibles.');
-      }
+                    <button type="button"
+                            class="btn btn-danger btn-sm btn-eliminar-doc"
+                            data-id="${documento.id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                        Eliminar documento
+                    </button>
+
+                `;
+                if (id == 58) {
+                  $('#archivo_url_display_completo_58').html(
+                    `Documento completo disponible: <a href="${fileUrl}" target="_blank" class="text-primary">${fileName}</a>`
+                  );
+                  $('#deleteArchivo58').html(`${botonEliminar}`);
+
+                  documentoCompletoUrlAsignado = true;
+                }
+                if (id == 134) {
+                  $('#archivo_url_display_ajuste_134').html(
+                    `Documento ajuste disponible: <a href="${fileUrl}" target="_blank" class="text-primary">${fileName}</a>`
+                  );
+                  $('#deleteArchivo134').html(`${botonEliminar}`);
+                  documentoAjusteUrlAsignado = true;
+                }
+              });
+
+              // Mostrar mensajes si no se asignó alguno
+              if (!documentoCompletoUrlAsignado) {
+                $('#archivo_url_display_completo_58').html('No hay archivo completo disponible.');
+                $('#deleteArchivo58').html('');
+
+              }
+              if (!documentoAjusteUrlAsignado) {
+                $('#archivo_url_display_ajuste_134').html('No hay archivo de ajuste disponible.');
+                $('#deleteArchivo134').html('');
+              }
+
+
+            } else {
+              console.log('No hay documentos disponibles.');
+              $('td[id^="archivo_url_display_"]').html('No hay documentos disponibles.');
+               $('#deleteArchivo58').html('');
+              $('#deleteArchivo134').html('');
+            }
+
+            /* aqui termina lo de mostar rutas */
+
 
             // Mostrar el modal
             $('#offcanvasEditLote').modal('show');
@@ -1279,7 +1376,9 @@ $(function () {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         success: function (response) {
-          dt_user.ajax.reload();
+          $('#edit_certificado_lote').val('');
+          $('input[type="file"][name="url[]"]').val('');
+          dt_user.ajax.reload(null, false);
           $('#offcanvasEditLote').modal('hide');
           Swal.fire({
             icon: 'success',
@@ -1332,6 +1431,101 @@ $(function () {
     edit_tipoLoteSelect.addEventListener('change', updateFieldsAndValidation);
 
   });
+
+  // Mover el último seleccionado al final visualmente
+  $('#tipo_agave').on('select2:select', function (e) {
+    const selectedElement = $(e.params.data.element);
+    selectedElement.detach();
+    $(this).append(selectedElement).trigger('change.select2');
+  });
+
+  $('#edit_tipo_agave').on('select2:select', function (e) {
+    const selectedElement = $(e.params.data.element);
+    selectedElement.detach();
+    $(this).append(selectedElement).trigger('change.select2');
+  });
+
+
+
+  $(document).on('click', '.btn-eliminar-doc', function () {
+    var idDocumento = $(this).data('id');
+    var dtrModal = $('.dtr-bs-modal.show');
+
+    if (dtrModal.length) {
+      dtrModal.modal('hide');
+    }
+
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: 'Este documento será eliminado y no podrá recuperarse.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-danger me-3',
+        cancelButton: 'btn btn-label-secondary'
+      },
+      buttonsStyling: false
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: 'POST', // o DELETE si defines la ruta así
+          url: `${baseUrl}eliminar_documento`, // ajusta esta URL a tu ruta
+          data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            id: idDocumento
+          },
+          success: function (response) {
+            if (response.success) {
+              $('#edit_certificado_lote').val('');
+              $('input[type="file"][name="url[]"]').val('');
+              dt_user.ajax.reload(null, false);
+              $('#offcanvasEditLote').modal('hide');
+              Swal.fire({
+                icon: 'success',
+                title: '¡Eliminado!',
+                text: 'El documento ha sido eliminado correctamente.',
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                }
+              })
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo eliminar el documento.',
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
+            }
+          },
+          error: function (xhr) {
+            console.error(xhr.responseText);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Ocurrió un error en el servidor.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelado',
+          text: 'La eliminación del documento ha sido cancelada.',
+          icon: 'info',
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      }
+    });
+  });
+
 
 
 

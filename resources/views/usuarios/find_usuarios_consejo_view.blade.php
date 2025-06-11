@@ -51,6 +51,7 @@
           <th>Id</th>
           <th>Usuario</th>
           <th>Correo</th>
+          <th>Puesto</th>
           <th>Contraseña</th>
           <th>Firma</th>
           <th>Estatus</th>
@@ -75,6 +76,10 @@
         <div class="form-floating form-floating-outline mb-5">
           <input type="text" id="add-user-email" class="form-control" placeholder="ana.gmz@example.com" aria-label="ana.gmz@example.com" name="email" />
           <label for="add-user-email">Correo</label>
+        </div>
+        <div class="form-floating form-floating-outline mb-5">
+          <input id="add-puesto" type="text" class="form-control" placeholder="Puesto" aria-label="" name="puesto" />
+          <label for="">Puesto</label>
         </div>
         <div id="statusDnone" class="d-none">
           <div class="form-floating form-floating-outline mb-5">

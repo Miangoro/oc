@@ -47,16 +47,16 @@ $(function () {
           render: function (data, type, row) {
               var tipoRevision = row['tipo_revision'];
               var icono = '';
-      
+
               if (tipoRevision === 'Instalaciones de productor' || tipoRevision === 'Instalaciones de envasador' || tipoRevision === 'Instalaciones de comercializador' || tipoRevision === 'Instalaciones de almacén o bodega' || tipoRevision === 'Instalaciones de área de maduración') {
                   icono = `<span class="fw-bold mt-1 badge bg-secondary">${tipoRevision}</span>`;
-              } 
+              }
               if (tipoRevision === 'Granel') {
                 icono = `<span class="fw-bold mt-1 badge bg-dark">${tipoRevision}</span>`;
-            } 
+            }
             if (tipoRevision === 'Exportación') {
               icono = `<span class="fw-bold mt-1 badge bg-primary">${tipoRevision}</span>`;
-          } 
+          }
               return icono;
           }
         },
@@ -65,7 +65,7 @@ $(function () {
           render: function (data, type, full, meta) {
             var $num_certificado = full['num_certificado'];
 
-            
+
               return `
               <div style="display: flex; flex-direction: column; align-items: start; gap: 4px;">
                 <span class="fw-bold">
@@ -73,8 +73,8 @@ $(function () {
                 </span>
               </div>
               `;
-            } 
-          
+            }
+
         },
         {
           targets: 4,
@@ -83,7 +83,7 @@ $(function () {
             return '<span class="user-email">' + $id_revisor + '</span>';
           }
         },
-               
+
         {
           targets: 5,
           render: function (data, type, full, meta) {
@@ -122,27 +122,35 @@ $(function () {
                       <i class="ri-file-pdf-2-fill ri-40px cursor-not-allowed" style="color: lightgray;"></i>`;
               }
           }
-        },                    
+        },
         {
           targets: 8,
           orderable: 0,
           render: function (data, type, full, meta) {
-            var $decision = full['decision'];
-            var $colorDesicion;
-            var $nombreDesicion;
+            let $decision = full['decision'];
+            let $colorDesicion;
+            let $nombreDesicion;
+            let num_revision = '';
+
+
+            if(full['num_revision'] == 1){
+              num_revision = 'Primera';
+            }else{
+               num_revision = 'Segunda';
+            }
 
             switch ($decision) {
               case "positiva":
-                $nombreDesicion = 'Revisión positiva';
+                $nombreDesicion = num_revision +' Revisión positiva';
                 $colorDesicion = 'primary';
-              break; 
+              break;
 
               case "negativa":
-                $nombreDesicion = 'Revisión negativa';
+                $nombreDesicion = num_revision + ' Revisión negativa';
                 $colorDesicion = 'danger';
               break;
               default:
-                $nombreDesicion = 'Pendiente';
+                $nombreDesicion = num_revision + ' Revisión pendiente';
                 $colorDesicion = 'warning';
             }
 
@@ -175,20 +183,20 @@ $(function () {
               `data-fecha-vencimiento="${full['fecha_vigencia']}" ` +
               `data-tipo="${full['tipo_dictamen']}" ` +
               `data-tipo_revision="${full['tipo_revision']}" ` +
-   
+
               `data-bs-target="#fullscreenModal">` +
               '<i class="ri-eye-fill ri-20px text-info"></i> Revisar' +
               '</a>' +
               // Botón para editar revisión
-              `<a class="dropdown-item waves-effect text-primary editar-revision" ` + 
+              `<a class="dropdown-item waves-effect text-primary editar-revision" ` +
               `href="/edit_revision/${full['id_revision']}" ` +
               `data-id="${full['id_revision']}" ` +
               `data-tipo="${full['tipo_dictamen']}" ` +
               `data-tipo_revision="${full['tipo_revision']}" ` +
               `data-accion="editar" ` +  // Identificador
-              `data-bs-toggle="modal" ` +
-              `data-bs-target="#fullscreenModal">` +
-              '<i class="ri-pencil-fill ri-20px text-primary"></i> Editar Revisión' + 
+
+              `>` +
+              '<i class="ri-pencil-fill ri-20px text-primary"></i> Editar Revisión' +
               '</a>' +
               // Botón para Aprobación
               `<a data-id='${full['id_revision']}' data-num-certificado="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAprobacion" class="dropdown-item Aprobacion-record waves-effect text-success">` +
@@ -201,7 +209,7 @@ $(function () {
               '</a>' +
               '</div>' +
               '</div>'
-            );            
+            );
          }
         }
       ],
@@ -209,7 +217,7 @@ $(function () {
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' +
-        '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
+        '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"l>>' +
         '>t' +
         '<"row mx-1"' +
         '<"col-sm-12 col-md-6"i>' +
@@ -228,149 +236,6 @@ $(function () {
           "sPrevious": "Anterior"
         }
       },
-
-      // Opciones Exportar Documentos
-      buttons: [
-        {
-          extend: 'collection',
-          className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-          text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-          buttons: [
-            {
-              extend: 'print',
-              title: 'Certificados Instalaciones',
-              text: '<i class="ri-printer-line me-1" ></i>Print',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4],
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              },
-              customize: function (win) {
-                $(win.document.body)
-                  .css('color', config.colors.headingColor)
-                  .css('border-color', config.colors.borderColor)
-                  .css('background-color', config.colors.body);
-                $(win.document.body)
-                  .find('table')
-                  .addClass('compact')
-                  .css('color', 'inherit')
-                  .css('border-color', 'inherit')
-                  .css('background-color', 'inherit');
-              }
-            },
-            {
-              extend: 'csv',
-              title: 'Certificados Instalaciones',
-              text: '<i class="ri-file-text-line me-1" ></i>Csv',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4],
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'excel',
-              title: 'Certificados Instalaciones',
-              text: '<i class="ri-file-excel-line me-1"></i>Excel',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4],
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'pdf',
-              title: 'Certificados Instalaciones',
-              text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4],
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'copy',
-              title: 'Certificados Instalaciones',
-              text: '<i class="ri-file-copy-line me-1"></i>Copy',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4],
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            }
-          ]
-        },
-      ],
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({
@@ -441,7 +306,7 @@ $(document).on('click', '.cuest', function () {
   $('#pdfViewerFrame').hide();
 
   $('#Registrar').show();
-  $('#Editar').hide(); 
+  $('#Editar').hide();
 
   // Genera un parámetro único para evitar el caché
   let timestamp = new Date().getTime();
@@ -486,7 +351,7 @@ $(document).on('click', '.cuest', function () {
     $('#modalFullTitle').text('REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (INSTALACIONES)');
     $('tbody#revisor').show();
     $('tbody#revisorGranel').hide();
-    cargarRespuestas(id_revision); 
+    cargarRespuestas(id_revision);
   } else if (tipoRevision === 'RevisorGranel') {
     $('#modalFullTitle').text('REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (GRANEL)');
     $('tbody#revisorGranel').show();
@@ -576,7 +441,7 @@ $(document).on('click', '#registrarRevision', function () {
       id_revision: id_revision,
       respuestas: respuestas,
       observaciones: observaciones,
-      decision: decision 
+      decision: decision
     }),
     success: function (response) {
       Swal.fire({
@@ -606,15 +471,15 @@ $(document).on('click', '#registrarRevision', function () {
 
 // Quitar Validacion al llenar Select
 $(document).on('change', 'select[name^="respuesta"], textarea[name^="observaciones"], select[name^="tipo"]', function () {
-  $(this).removeClass('is-invalid'); 
+  $(this).removeClass('is-invalid');
 });
 
 // Limpiar Validacion al cerrar Modal
 $(document).on('hidden.bs.modal', '#fullscreenModal', function () {
   const respuestas = document.querySelectorAll('select[name^="respuesta"]');
   respuestas.forEach((respuesta) => {
-      respuesta.classList.remove('is-invalid'); 
-      respuesta.value = ''; 
+      respuesta.classList.remove('is-invalid');
+      respuesta.value = '';
   });
 });
 
@@ -683,7 +548,7 @@ $(document).on('click', '.pdf', function () {
 
   // Mostrar modal de PDF
   $('#mostrarPdf').modal('show');
-  $('#loading-spinner').show();
+  $('#cargando').show();
   $('#pdfViewer').hide();
 
   // Cargar PDF en iframe
@@ -692,7 +557,7 @@ $(document).on('click', '.pdf', function () {
 
 // Ocultar spinner y mostrar PDF cuando el iframe se haya cargado
 $('#pdfViewer').on('load', function () {
-  $('#loading-spinner').hide();
+  $('#cargando').hide();
   $('#pdfViewer').show();
 });
 
@@ -700,13 +565,13 @@ $('#pdfViewer').on('load', function () {
 $(document).on('click', '.Aprobacion-record', function() {
   const idRevision = $(this).data('id');
   const certificado = $(this).data('num-certificado');
-  const select2Elements = $('#id_firmante'); 
+  const select2Elements = $('#id_firmante');
   initializeSelect2(select2Elements);
 
   $('#modalAprobacion').modal('show');
   $('#numero-certificado').text(certificado);
   $('#btnRegistrar').data('id-revisor', idRevision);
-  
+
   // Cargar los datos de aprobación
   $.ajax({
       url: `/aprobacion/${idRevision}`,
@@ -717,7 +582,7 @@ $(document).on('click', '.Aprobacion-record', function() {
           if (data.revisor.fecha_aprobacion && data.revisor.fecha_aprobacion !== '0000-00-00') {
               $('#fecha-aprobacion').val(data.revisor.fecha_aprobacion);
           } else {
-              $('#fecha-aprobacion').val(''); 
+              $('#fecha-aprobacion').val('');
           }
       },
       error: function(xhr) {
@@ -776,20 +641,20 @@ $(function () {
           autoFocus: new FormValidation.plugins.AutoFocus()
       }
   }).on('core.form.valid', function () {
-      const idRevisor = $('#btnRegistrar').data('id-revisor'); 
-      const aprobacion = $('#respuesta-aprobacion').val(); 
-      const fechaAprobacion = $('#fecha-aprobacion').val(); 
-      const idAprobador = $('#id_firmante').val(); 
+      const idRevisor = $('#btnRegistrar').data('id-revisor');
+      const aprobacion = $('#respuesta-aprobacion').val();
+      const fechaAprobacion = $('#fecha-aprobacion').val();
+      const idAprobador = $('#id_firmante').val();
 
       $.ajax({
-          url: '/registrar-aprobacion', 
+          url: '/registrar-aprobacion',
           type: 'POST',
           data: {
               _token: $('meta[name="csrf-token"]').attr('content'),
               id_revisor: idRevisor,
               aprobacion: aprobacion,
               fecha_aprobacion: fechaAprobacion,
-              id_aprobador: idAprobador 
+              id_aprobador: idAprobador
           },
           success: function(response) {
               Swal.fire({
@@ -842,18 +707,18 @@ $('#modalAprobacion').on('hidden.bs.modal', function () {
 
 // Historial
 $(document).on('click', '.abrir-historial', function() {
-  const id_revision = $(this).data('id'); 
-  console.log('ID de revisión clicado:', id_revision); 
-  $('#historialModal').modal('show'); 
+  const id_revision = $(this).data('id');
+  console.log('ID de revisión clicado:', id_revision);
+  $('#historialModal').modal('show');
 });
 
 function cargarHistorial(id_revision) {
   console.log('Cargando historial para ID de revisión:', id_revision);
   $('#historialRespuestasContainer').html('<p>Cargando historial...</p>');
-  $('#respuestasContainer').html(''); 
+  $('#respuestasContainer').html('');
 
   $.ajax({
-      url: `/obtener/historial/${id_revision}`, 
+      url: `/obtener/historial/${id_revision}`,
       method: 'GET',
       success: function(data) {
           console.log('Datos recibidos:', data);
@@ -862,33 +727,33 @@ function cargarHistorial(id_revision) {
               return;
           }
 
-          let botonesHTML = ''; 
+          let botonesHTML = '';
           if (!data.respuestas[0].respuestas || Object.keys(data.respuestas[0].respuestas).length === 0) {
               $('#historialRespuestasContainer').html('<p>No hay historial disponible para esta revisión.</p>');
-              return; 
+              return;
           }
 
           data.respuestas[0].respuestas.forEach(function(revisionItem) {
             botonesHTML += `
-                <button class="btn btn-primary btn-lg mb-2" 
-                        data-revision="${revisionItem.nombre_revision}" 
+                <button class="btn btn-primary btn-lg mb-2"
+                        data-revision="${revisionItem.nombre_revision}"
                         data-respuestas='${JSON.stringify(revisionItem.respuestas)}'>
                     <i class="fas fa-history"></i> ${revisionItem.nombre_revision}
                 </button>
             `;
         });
-        
+
 
           $('#historialRespuestasContainer').html(botonesHTML);
           $('.btn-primary').on('click', function() {
-              const respuestas = $(this).data('respuestas'); 
-              mostrarRespuestas(respuestas); 
+              const respuestas = $(this).data('respuestas');
+              mostrarRespuestas(respuestas);
           });
       },
       error: function(xhr) {
           $('#historialRespuestasContainer').html('<p>Error al cargar el historial.</p>');
-          $('#respuestasContainer').html(''); 
-          console.error('Error al cargar el historial:', xhr); 
+          $('#respuestasContainer').html('');
+          console.error('Error al cargar el historial:', xhr);
       }
   });
 }
@@ -943,203 +808,185 @@ function mostrarRespuestas(respuestas) {
 // Editar Respuestas
 let id_revision_edit;
 $(document).on('click', '.abrir-historial', function() {
-  id_revision_edit = $(this).data('id'); 
+  id_revision_edit = $(this).data('id');
   console.log('ID de revisión clicado:', id_revision_edit);
-  cargarHistorial(id_revision_edit); 
-  $('#historialModal').modal('show'); 
+  cargarHistorial(id_revision_edit);
+  $('#historialModal').modal('show');
 });
 
-$(document).on('click', '.editar-revision', function () {
-  id_revision_edit = $(this).data('id'); 
-  let tipox = $(this).data('tipo');
-  console.log('ID de revisión clicado:', id_revision_edit);
-  console.log('Tipo:', tipox);
-  cargarRespuestas(id_revision_edit);
 
-  let tipoRevision = $(this).data('tipo_revision');
-  console.log("Tipo de revisión: " + tipoRevision);
 
-  // Ajuste de títulos y visibilidad según el tipo de revisión
-  if (tipoRevision === 'Revisor') {
-    $('#modalFullTitle').text('REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (INSTALACIONES)');
-    $('tbody#revisor').show();
-    $('tbody#revisorGranel').hide();
-    cargarRespuestas(id_revision_edit);
-  } else if (tipoRevision === 'RevisorGranel') {
-    $('#modalFullTitle').text('REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (GRANEL)');
-    $('tbody#revisorGranel').show();
-    $('tbody#revisor').hide();
-  }
-
-  $('#fullscreenModal').modal('show');
-  $('#Editar').show(); 
-  $('#Registrar').hide();
-  $('#modal-loading-spinner').show();
-  $('#pdfViewerFrame').hide();
-
-  // Genera un parámetro único para evitar el caché
-  let timestamp = new Date().getTime();
-  let url;
-
-  // Ruta del PDF según el tipo de revisión
-  if (tipoRevision === 'Revisor') {
-    url = '/get-certificado-url/' + id_revision_edit + '/' + tipox + '?t=' + timestamp;
-  } else if (tipoRevision === 'RevisorGranel') {
-    url = '/Pre-certificado/' + id_revision_edit + '?t=' + timestamp;
-  }
-
-  $.ajax({
-      url: url,
-      type: 'GET',
-      success: function (response) {
-          if (response.certificado_url || tipoRevision === 'RevisorGranel') {
-              let uniqueUrl = response.certificado_url 
-                ? response.certificado_url + '?t=' + timestamp 
-                : url;
-              $('#pdfViewerFrame').attr('src', uniqueUrl + '#zoom=80');
-              console.log('PDF cargado: ' + uniqueUrl);
-          } else {
-              console.log('No se encontró el certificado para la revisión ' + id_revision_edit);
-          }
-      },
-      error: function (xhr) {
-          console.error('Error al obtener la URL del certificado: ', xhr.responseText);
-      },
-      complete: function () {
-          $('#pdfViewerFrame').on('load', function () {
-              $('#modal-loading-spinner').hide();
-              $(this).show();
-          });
-      }
-  });
-});
-
-$(document).on('click', '#editarRevision', function () {
-  $('#registrarRevision').hide(); 
-
-  console.log('ID de revisión usado en editarRevision:', id_revision_edit);
-  
-  if (!id_revision_edit) {
-    Swal.fire({
-      icon: 'error',
-      title: '¡Error!',
-      text: 'El ID de revisión no está definido.',
-      customClass: {
-        confirmButton: 'btn btn-danger'
-      }
-    });
-    return;
-  }
-
-  const respuestas = {};
-  const observaciones = {};
-  const rows = $('#fullscreenModal .table-container table tbody tr');
-  let todasLasRespuestasSonC = true;
-  let valid = true;
-
-  rows.each(function (index) {
-    if ($(this).is(':visible')) {
-    let respuesta = $(this).find('select').val();
-    const observacion = $(this).find('textarea').val();
-
-    if (!respuesta) {
-      $(this).find('select').addClass('is-invalid');
-      valid = false;
-    } else {
-      $(this).find('select').removeClass('is-invalid');
-    }
-
-    if (respuesta === '1') {
-      respuesta = 'C';
-    } else if (respuesta === '2') {
-      respuesta = 'NC';
-      todasLasRespuestasSonC = false;
-    } else if (respuesta === '3') {
-      respuesta = 'NA';
-      todasLasRespuestasSonC = false;
-    } else {
-      respuesta = null;
-      todasLasRespuestasSonC = false;
-    }
-
-    respuestas[`pregunta${index + 1}`] = respuesta;
-    observaciones[`pregunta${index + 1}`] = observacion || null;
-  }
-  });
-
-  if (!valid) {
-    Swal.fire({
-      icon: 'error',
-      title: '¡Error!',
-      text: 'Por favor, completa todos los campos requeridos.',
-      customClass: {
-        confirmButton: 'btn btn-danger'
-      }
-    });
-    return;
-  }
-
-  const decision = todasLasRespuestasSonC ? 'positiva' : 'negativa';
-
-  console.log({
-    id_revision: id_revision_edit,
-    respuestas: respuestas,
-    observaciones: observaciones,
-    decision: decision
-  });
-
-  $.ajax({
-    url: `/editar-respuestas`,
-    type: 'POST',
-    contentType: 'application/json',
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    data: JSON.stringify({
-      id_revision: id_revision_edit,
-      respuestas: respuestas,
-      observaciones: observaciones,
-      decision: decision 
-    }),
-    success: function (response) {
-      Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: response.message,
-        customClass: {
-          confirmButton: 'btn btn-success'
-        }
-      });
-
-      $('#fullscreenModal').modal('hide');
-      $('.datatables-users').DataTable().ajax.reload();
-    },
-    error: function (xhr) {
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al editar las respuestas: ' + xhr.responseJSON.message,
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    }
-  });
-});
 
 // Quitar Validación al llenar Select
 $(document).on('change', 'select[name^="respuesta"], textarea[name^="observaciones"], select[name^="tipo"]', function () {
-  $(this).removeClass('is-invalid'); 
+  $(this).removeClass('is-invalid');
 });
 
 // Limpiar Validación al cerrar Modal
 $(document).on('hidden.bs.modal', '#fullscreenModal', function () {
   const respuestas = document.querySelectorAll('select[name^="respuesta"]');
   respuestas.forEach((respuesta) => {
-    respuesta.classList.remove('is-invalid'); 
-    respuesta.value = ''; 
+    respuesta.classList.remove('is-invalid');
+    respuesta.value = '';
   });
 });
 
 //end
 });
+
+
+
+'use strict';
+
+$(function () {
+    // Configuración de AJAX para enviar el token CSRF
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // Inicializar FormValidation en el formulario
+    const form = document.getElementById('formulario');
+    const fv = FormValidation.formValidation(form, {
+        fields: {
+            'respuesta[]': {
+                validators: {
+                    notEmpty: {
+                        message: 'Selecciona una respuesta.'
+                    }
+                }
+            },
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: '.resp'
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+    }).on('core.form.valid', function () {
+        // Este evento se dispara cuando el formulario es válido
+
+        // Crear un objeto FormData con todos los datos del formulario
+        const formData = new FormData(form);
+
+        // Enviar la solicitud AJAX con todos los datos del formulario
+        $.ajax({
+            url: '/registrar_revision',
+            type: 'POST',
+            data: formData,
+            contentType: false,  // Importante para enviar los datos correctamente
+            processData: false,  // Importante para evitar la transformación de los datos en cadena de consulta
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: 'Revisión registrada exitosamente.',
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                }).then(() => {
+                    // Redirigir a la ruta después de mostrar el mensaje de éxito
+                    window.location.href = '/revision/personal';
+                });
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: xhr.responseJSON.message,
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        });
+
+    });
+
+
+
+});
+
+
+'use strict';
+
+$(function () {
+    // Configuración de AJAX para enviar el token CSRF
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // Inicializar FormValidation en el formulario de edición de personal
+    const formEditar = document.getElementById('formularioEditar');
+    if (formEditar) {
+        const fvEditar = FormValidation.formValidation(formEditar, {
+            fields: {
+                'respuesta[]': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Selecciona una respuesta.'
+                        }
+                    }
+                },
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                    eleValidClass: '',
+                    eleInvalidClass: 'is-invalid',
+                    rowSelector: '.resp'
+                }),
+                submitButton: new FormValidation.plugins.SubmitButton(),
+                autoFocus: new FormValidation.plugins.AutoFocus()
+            }
+        }).on('core.form.valid', function () {
+            // Este evento se dispara cuando el formulario es válido
+
+            // Crear un objeto FormData con todos los datos del formulario
+            const formData = new FormData(formEditar);
+
+            // Enviar la solicitud AJAX con todos los datos del formulario
+            $.ajax({
+                url: '/editar_revision',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: 'Revisión editada exitosamente.',
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    }).then(() => {
+                        // Redirigir a la ruta después de mostrar el mensaje de éxito
+                        window.location.href = '/revision/personal';
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: xhr.responseJSON?.message || 'Ocurrió un error al editar la revisión.',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            });
+
+        });
+    }
+});
+
+
+

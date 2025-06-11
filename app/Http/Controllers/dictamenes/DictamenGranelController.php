@@ -5,17 +5,22 @@ namespace App\Http\Controllers\dictamenes;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\Helpers;
+use App\Models\categorias;
+use App\Models\clases;
 use App\Models\inspecciones;
 use App\Models\empresa;
 use App\Models\Documentacion_url;
 use App\Models\LotesGranel;
 use App\Models\Dictamen_Granel;
+use App\Models\CertificadosGranel;
+use App\Models\tipos;
 use App\Models\User;
 ///Extensiones
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
@@ -25,12 +30,13 @@ use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ValidationException;
+use Illuminate\Support\Facades\Storage;
 
 
 class DictamenGranelController extends Controller  {
 
 
-    public function UserManagement() 
+    public function UserManagement()
     {
         $inspecciones = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 3);
@@ -38,156 +44,193 @@ class DictamenGranelController extends Controller  {
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $inspectores = User::where('tipo', 2)->get(); // Obtener solo los usuarios con tipo '2' (inspectores)
         $lotesGranel = LotesGranel::all();
+        $categorias = categorias::all();
+        $clases = clases::all();
+        $tipos = tipos::all(); // Obtén todos los tipos de agave
 
         // Pasar los datos a la vista
-        return view('dictamenes.find_dictamen_granel', compact('inspecciones', 'empresas', 'lotesGranel', 'inspectores'));
+        return view('dictamenes.find_dictamen_granel', compact('inspecciones', 'empresas', 'lotesGranel', 'inspectores','categorias','clases','tipos'));
     }
 
 
-    public function index(Request $request)  
-    {
-        $columns = [
-        //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
-            1 => 'id_dictamen',
-            2 => 'id_inspeccion',//servicio
-            3 => '',//num-cliente
-            4 => '',//caracteristicas
-            5 => 'fecha_emision',
-            6 => 'estatus',
-        ];
-
-        $search = $request->input('search.value');//Obtener el valor de búsqueda
-        $totalData = Dictamen_Granel::count();// Contar todos los registros sin filtros
-        $totalFiltered = $totalData;// Inicializar totalFiltered con el valor total de registros
-
-        $limit = $request->input('length');// Número de registros por página
-        $start = $request->input('start');// Inicio de la paginación
-        //$order = $columns[$request->input('order.0.column')];//Orden de columna
-        $order = $request->input('order.0.column');//Orden de columna
-        $dir = $request->input('order.0.dir');// Dirección del orden (asc o desc)
-
-        // Validamos si el índice de la columna es válido
-    $orderColumn = isset($columns[$order]) ? $columns[$order] : 'id_dictamen'; //Por defecto ordenar por 'id_dictamen'
-    
-    // Si el índice de la columna es 2 (id_inspeccion), ignoramos la ordenación
-    if ($orderColumn === 'id_inspeccion') {
-        $orderColumn = 'id_dictamen';  // Cambiar a id_dictamen si la columna es id_inspeccion
+public function index(Request $request)
+{
+    //Permiso de empresa
+    $empresaId = null;
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaId = Auth::user()->empresa?->id_empresa;
     }
+
+    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
+    // Mapear las columnas según el orden DataTables (índice JS)
+    $columns = [
+        1 => 'num_dictamen',
+        2 => 'folio', 
+        3 => 'razon_social', 
+        4 => '', 
+        5 => 'fecha_emision',
+        6 => 'estatus',
+    ];
+
+    $limit = $request->input('length');
+    $start = $request->input('start');
+    // Columnas ordenadas desde DataTables
+    $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
+    $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
+    $orderColumn = $columns[$orderColumnIndex] ?? 'num_dictamen'; // Por defecto
     
-        //Declara la relacion
-        $query = Dictamen_Granel::with(['inspeccione.solicitud.empresa']);
+    $search = $request->input('search.value');//Define la búsqueda global.
 
-        //Buscador
-        if (!empty($search)) {
-            $query = $query->where(function ($q) use ($search) {
-                $q->where('id_dictamen', 'LIKE', "%{$search}%")
-                    ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-                    ->orWhere('estatus', 'LIKE', "%{$search}%")
-                    //empresa
-                    ->orWhereHas('inspeccione.solicitud.empresa', function ($q) use ($search) {
-                        $q->where('razon_social', 'LIKE', "%{$search}%");
-                    })
-                    //inspecciones
-                    ->orWhereHas('inspeccione', function ($q) use ($search) {
-                        $q->where('num_servicio', 'LIKE', "%{$search}%")
-                        ->orWhere('id_inspeccion', 'LIKE', "%{$search}%");
-                    })
-                    //num-cliente
-                    ->orWhereHas('inspeccione.solicitud.empresa.empresaNumClientes', function ($q) use ($search) {
-                        $q->where('numero_cliente', 'LIKE', "%{$search}%");
-                    })
-                    //solicitudes
-                    ->orWhereHas('inspeccione.solicitud', function ($q) use ($search) {
-                        $q->where('folio', 'LIKE', "%{$search}%")
-                        ->orWhere('caracteristicas', 'LIKE', "%{$search}%");
-                    });
-            });
-            // Calcular el total filtrado
-            $totalFiltered = $query->count();
-        }
 
-        // Obtener resultados con paginación
-        $res = $query->offset($start)//$query vincula al foreach del JS
-            ->limit($limit)
-            ->orderBy($orderColumn, $dir)// Ordenamos por la columna seleccionada
-            /*->orderByRaw("
-        CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
-        CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')
-        ")*/
-            //->orderBy('id_dictamen', 'desc')
-            ->get();
+    $query = Dictamen_Granel::query()
+    ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_granel.id_inspeccion')
+    ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+    ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+    ->select('dictamenes_granel.*', 'empresa.razon_social');
+
+    if ($empresaId) {
+        $query->where('solicitudes.id_empresa', $empresaId);
+    }
+    $baseQuery = clone $query;
+    $totalData = $baseQuery->count();// totalData (sin búsqueda)
+
+
+    // Búsqueda Global
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('dictamenes_granel.num_dictamen', 'LIKE', "%{$search}%")
+            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhereRaw("DATE_FORMAT(dictamenes_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+        });
+
+        $totalFiltered = $query->count();
+    } else {
+        $totalFiltered = $totalData;
+    }
+
+    // Ordenamiento especial para num_dictamen con formato 'UMG-###'
+    if ($orderColumn === 'num_dictamen') {
+        $query->orderByRaw("
+            CASE
+                WHEN num_dictamen LIKE 'UMG-%/%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) $orderDirection, -- Año
+            CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '/', 1), '-', -1) AS UNSIGNED) $orderDirection -- Número
+        ");
+    } elseif (!empty($orderColumn)) {
+        $query->orderBy($orderColumn, $orderDirection);
+    }
+
+
+    // Paginación
+    $dictamenes = $query
+        ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
+            'inspeccione',// Relación directa
+            'inspeccione.solicitud',// Relación anidada: inspeccione > solicitu
+            'inspeccione.solicitud.empresa',
+            'inspeccione.solicitud.empresa.empresaNumClientes',
+        ])->offset($start)->limit($limit)->get();
+
 
         
-        //MANDA LOS DATOS AL JS
-        $data = [];
-        if (!empty($res)) {
-            foreach ($res as $dictamen) {
-                $nestedData['id_dictamen'] = $dictamen->id_dictamen ?? 'No encontrado';
-                $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
-                $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
-                $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
-                $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
-                $nestedData['num_servicio'] = $dictamen->inspeccione->num_servicio ?? 'No encontrado';
-                $nestedData['folio_solicitud'] = $dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
-                ///numero y nombre empresa
-                $empresa = $dictamen->inspeccione->solicitud->empresa ?? null;
-                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                    ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
-                    ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
-                $nestedData['numero_cliente'] = $numero_cliente;
-                $nestedData['razon_social'] = $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
-                ///dias vigencia
-                $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
-                $nestedData['fecha_actual'] = $fechaActual;
-                $nestedData['vigencia'] = $dictamen->fecha_vigencia;
-                $fechaVigencia = Carbon::parse($dictamen->fecha_vigencia)->startOfDay();
-                    if ($fechaActual->isSameDay($fechaVigencia)) {
-                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
-                    } else {
-                        $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
-                        if ($diasRestantes > 0) {
-                            if ($diasRestantes > 15) {
-                                $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
-                            } else {
-                                $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
-                            }
-                            $nestedData['diasRestantes'] = $res;
+    //MANDA LOS DATOS AL JS
+    $data = [];
+    if (!empty($dictamenes)) {
+        foreach ($dictamenes as $dictamen) {
+            $nestedData['id_dictamen'] = $dictamen->id_dictamen ?? 'No encontrado';
+            $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
+            $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
+            $id_sustituye = json_decode($dictamen->observaciones, true) ['id_sustituye'] ?? null;
+            $nestedData['sustituye'] = $id_sustituye ? Dictamen_Granel::find($id_sustituye)->num_dictamen ?? 'No encontrado' : null;
+            $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
+            $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
+            $nestedData['num_servicio'] = $dictamen->inspeccione->num_servicio ?? 'No encontrado';
+            $nestedData['folio_solicitud'] = $dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
+            ///numero y nombre empresa
+            $empresa = $dictamen->inspeccione->solicitud->empresa ?? null;
+            $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+                ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+            $nestedData['numero_cliente'] = $numero_cliente;
+            $nestedData['razon_social'] = $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
+            ///dias vigencia
+            $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
+            $nestedData['fecha_actual'] = $fechaActual;
+            $nestedData['vigencia'] = $dictamen->fecha_vigencia;
+            $fechaVigencia = Carbon::parse($dictamen->fecha_vigencia)->startOfDay();
+                if ($fechaActual->isSameDay($fechaVigencia)) {
+                    $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
+                } else {
+                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+                    if ($diasRestantes > 0) {
+                        if ($diasRestantes > 15) {
+                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
                         } else {
-                            $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
                         }
+                        $nestedData['diasRestantes'] = $res;
+                    } else {
+                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
                     }
-                ///solicitud y acta
-                $nestedData['id_solicitud'] = $dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
-                $urls = $dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray() ?? null;
-                $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
+                }
+            ///solicitud y acta
+            $nestedData['id_solicitud'] = $dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
+            $urls = $dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray() ?? null;
+            $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
 
-                ///caractetisticas->id_lote_granel->nombre_lote
-                $nestedData['id_lote_granel'] = $dictamen->lote_granel->nombre_lote ?? 'N/A';
-                $nestedData['folio_fq'] = $dictamen->lote_granel->folio_fq ?? 'N/A';
-                $caracteristicas = json_decode($dictamen->inspeccione->solicitud->caracteristicas, true);
-                $idLoteGranel = $caracteristicas['id_lote_granel'] ?? null;
-                $loteGranel = LotesGranel::find($idLoteGranel); // Busca el lote a granel
-                $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
-                $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
-                
+            ///caractetisticas->id_lote_granel->nombre_lote
+            $nestedData['id_lote_granel'] = $dictamen->lote_granel->nombre_lote ?? 'N/A';
+            $nestedData['folio_fq'] = $dictamen->lote_granel->folio_fq ?? 'N/A';
+            $caracteristicas = json_decode($dictamen->inspeccione->solicitud->caracteristicas, true);
+            $idLoteGranel = $caracteristicas['id_lote_granel'] ?? null;
+            $loteGranel = LotesGranel::find($idLoteGranel); // Busca el lote a granel
+            $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'No encontrado';
+            $folioFq = $loteGranel->folio_fq ?? null;
 
-              $data[] = $nestedData;
+            $folioFq = $loteGranel->folio_fq ?? null;
+
+            if ($folioFq) {
+                // Separa por coma y elimina espacios alrededor de cada folio
+                $folios = array_filter(array_map('trim', explode(',', $folioFq))); // array_filter elimina vacíos
+
+                // Si hay más de uno, únelos con coma; si no, usa el primero o 'N/A'
+                $formatoFolios = count($folios) > 0 ? implode(', ', $folios) : 'N/A';
+
+                // Obtener el segundo folio si existe
+                $segundoFolio = $folios[1] ?? 'N/A';
+            } else {
+                $formatoFolios = 'N/A';
+                $segundoFolio = 'N/A';
             }
-        }
 
-        return response()->json([//Devuelve los datos y el total de registros filtrados
-            'draw' => intval($request->input('draw')),
-            'recordsTotal' => intval($totalData),
-            'recordsFiltered' => intval($totalFiltered),
-            'code' => 200,
-            'data' => $data,
-        ]);
+            // Ejemplo de asignación
+            $nestedData['analisis'] = $formatoFolios;
+            // o solo segundo si quieres:
+            // $nestedData['analisis'] = $segundoFolio;
+
+
+
+
+            $data[] = $nestedData;
+        }
     }
+
+    return response()->json([//Devuelve los datos y el total de registros filtrados
+        'draw' => intval($request->input('draw')),
+        'recordsTotal' => intval($totalData),
+        'recordsFiltered' => intval($totalFiltered),
+        'code' => 200,
+        'data' => $data,
+    ]);
+}
 
 
 
 ///FUNCION REGISTRAR
-public function store(Request $request) 
+public function store(Request $request)
 {
     try {
     $validated = $request->validate([
@@ -207,6 +250,77 @@ public function store(Request $request)
         $new->id_firmante = $validated['id_firmante'];
         $new->save();
 
+        $inspeccion = Inspecciones::with('solicitud.lote_granel')->find($new->id_inspeccion);
+
+        $id_lote_granel = null;
+        if ($inspeccion && $inspeccion->solicitud && $inspeccion->solicitud->lote_granel) {
+            $id_lote_granel = $inspeccion->solicitud->lote_granel->id_lote_granel;
+            $lote = LotesGranel::find($id_lote_granel);
+            $lote->nombre_lote = $request->nombre_lote;
+            $lote->folio_fq = rtrim($request->folio_fq, ', ');
+            $lote->volumen = $request->volumen;
+            $lote->cont_alc = $request->cont_alc;
+            $lote->edad = $request->edad;
+            $lote->ingredientes = $request->ingredientes;
+            $lote->id_categoria = $request->id_categoria;
+            $lote->id_clase = $request->id_clase;
+            $lote->id_tipo = json_encode($request->id_tipo); 
+            $lote->save(); 
+
+            $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
+
+            $documentos = [
+                'analisis_completo' => [
+                    'nombre_documento' => 'Análisis fisicoquímicos',
+                    'id_documento' => 58,
+                    'prefijo' => 'analisis_fisicoquimicos_'
+                ],
+                'analisis_ajuste' => [
+                    'nombre_documento' => 'Fisicoquímicos de ajuste de grado',
+                    'id_documento' => 134,
+                    'prefijo' => 'analisis_fisicoquimicos_ajuste_'
+                ]
+            ];
+
+            foreach ($documentos as $inputName => $info) {
+                $file = $request->file($inputName);
+
+                if ($file) {
+                    $filename = $info['prefijo'] . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs("uploads/{$numeroCliente}/fqs", $filename, 'public');
+
+                    $documentacion_url = Documentacion_url::where('id_relacion', $id_lote_granel)
+                        ->where('id_documento', $info['id_documento'])
+                        ->first();
+
+                    if ($documentacion_url) {
+                        $oldPath = "uploads/{$numeroCliente}/fqs/" . $documentacion_url->url;
+                        if (Storage::disk('public')->exists($oldPath)) {
+                            Storage::disk('public')->delete($oldPath);
+                        }
+                    } else {
+                        $documentacion_url = new Documentacion_url([
+                            'id_relacion' => $id_lote_granel,
+                            'id_documento' => $info['id_documento'],
+                            'id_empresa' => $lote->id_empresa
+                        ]);
+                    }
+
+                    $documentacion_url->nombre_documento = $info['nombre_documento'];
+                    $documentacion_url->url = $filename;
+                    $documentacion_url->save();
+                }
+            }
+
+
+
+        }
+
+
+
         return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
         Log::error('Error al registrar', [
@@ -220,7 +334,7 @@ public function store(Request $request)
 
 
 ///FUNCION ELIMINAR
-public function destroy($id_dictamen) 
+public function destroy($id_dictamen)
 {
     try {
         $eliminar = Dictamen_Granel::findOrFail($id_dictamen);
@@ -239,7 +353,7 @@ public function destroy($id_dictamen)
 
 
 ///FUNCION PARA OBTENER LOS REGISTROS
-public function edit($id_dictamen) 
+public function edit($id_dictamen)
 {
     try {
         // Cargar el dictamen específico
@@ -263,7 +377,7 @@ public function edit($id_dictamen)
 }
 
 ///FUNCION ACTUALIZAR
-public function update(Request $request, $id_dictamen) 
+public function update(Request $request, $id_dictamen)
 {
     try {
         $validated = $request->validate([
@@ -283,6 +397,72 @@ public function update(Request $request, $id_dictamen)
             'id_firmante' => $validated['id_firmante'],
         ]);
 
+        $inspeccion = Inspecciones::with('solicitud.lote_granel')->find($validated['id_inspeccion']);
+
+        $id_lote_granel = null;
+        if ($inspeccion && $inspeccion->solicitud && $inspeccion->solicitud->lote_granel) {
+            $id_lote_granel = $inspeccion->solicitud->lote_granel->id_lote_granel;
+            $lote = LotesGranel::find($id_lote_granel);
+            $lote->nombre_lote = $request->nombre_lote;
+            $lote->folio_fq = rtrim($request->folio_fq, ', ');
+            $lote->volumen = $request->volumen;
+            $lote->cont_alc = $request->cont_alc;
+            $lote->edad = $request->edad;
+            $lote->ingredientes = $request->ingredientes;
+            $lote->id_categoria = $request->id_categoria;
+            $lote->id_clase = $request->id_clase;
+            $lote->id_tipo = json_encode($request->id_tipo); 
+            $lote->save(); 
+
+            $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
+
+            $documentos = [
+                'analisis_completo' => [
+                    'nombre_documento' => 'Análisis fisicoquímicos',
+                    'id_documento' => 58,
+                    'prefijo' => 'analisis_fisicoquimicos_'
+                ],
+                'analisis_ajuste' => [
+                    'nombre_documento' => 'Fisicoquímicos de ajuste de grado',
+                    'id_documento' => 134,
+                    'prefijo' => 'analisis_fisicoquimicos_ajuste_'
+                ]
+            ];
+
+            foreach ($documentos as $inputName => $info) {
+                $file = $request->file($inputName);
+
+                if ($file) {
+                    $filename = $info['prefijo'] . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs("uploads/{$numeroCliente}/fqs", $filename, 'public');
+
+                    $documentacion_url = Documentacion_url::where('id_relacion', $id_lote_granel)
+                        ->where('id_documento', $info['id_documento'])
+                        ->first();
+
+                    if ($documentacion_url) {
+                        $oldPath = "uploads/{$numeroCliente}/fqs/" . $documentacion_url->url;
+                        if (Storage::disk('public')->exists($oldPath)) {
+                            Storage::disk('public')->delete($oldPath);
+                        }
+                    } else {
+                        $documentacion_url = new Documentacion_url([
+                            'id_relacion' => $id_lote_granel,
+                            'id_documento' => $info['id_documento'],
+                            'id_empresa' => $lote->id_empresa
+                        ]);
+                    }
+
+                    $documentacion_url->nombre_documento = $info['nombre_documento'];
+                    $documentacion_url->url = $filename;
+                    $documentacion_url->save();
+                }
+            }
+        }
+
         return response()->json(['message' => 'Actualizado correctamente.']);
     } catch (\Exception $e) {
         Log::error('Error al actualizar', [
@@ -295,8 +475,8 @@ public function update(Request $request, $id_dictamen)
 
 
 
-///FUNCION REEXPEDIR 
-public function reexpedir(Request $request) 
+///FUNCION REEXPEDIR
+public function reexpedir(Request $request)
 {
     try {
         $request->validate([
@@ -318,10 +498,10 @@ public function reexpedir(Request $request)
         $reexpedir = Dictamen_Granel::findOrFail($request->id_dictamen);
 
         if ($request->accion_reexpedir == '1') {
-            $reexpedir->estatus = 1; 
+            $reexpedir->estatus = 1;
                 $observacionesActuales = json_decode($reexpedir->observaciones, true);//Decodifica el JSON actual
                 $observacionesActuales['observaciones'] = $request->observaciones;//Actualiza solo 'observaciones'
-            $reexpedir->observaciones = json_encode($observacionesActuales); 
+            $reexpedir->observaciones = json_encode($observacionesActuales);
             $reexpedir->save();
 
             return response()->json(['message' => 'Cancelado correctamente.']);
@@ -331,7 +511,7 @@ public function reexpedir(Request $request)
                 $observacionesActuales = json_decode($reexpedir->observaciones, true);
                 $observacionesActuales['observaciones'] = $request->observaciones;
             $reexpedir->observaciones = json_encode($observacionesActuales);
-            $reexpedir->save(); 
+            $reexpedir->save();
 
             // Crear un nuevo registro de reexpedición
             $new = new Dictamen_Granel();
@@ -360,7 +540,7 @@ public function reexpedir(Request $request)
 
 
 ///PDF DICTAMEN
-public function MostrarDictamenGranel($id_dictamen) 
+public function MostrarDictamenGranel($id_dictamen)
 {
     // Obtener los datos del dictamen específico
     $data = Dictamen_Granel::find($id_dictamen);
@@ -399,16 +579,35 @@ public function MostrarDictamenGranel($id_dictamen)
         $pass = 'v921009villa';
     }
     $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccione?->num_servicio, $pass, $data->id_firmante);  // 9 es el ID del usuario en este ejemplo
-    
+
     $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
     $fecha_servicio = Helpers::formatearFecha($data->inspeccione->fecha_servicio);
     $watermarkText = $data->estatus == 1;
     $id_sustituye = json_decode($data->observaciones, true)['id_sustituye'] ?? null;
     $nombre_id_sustituye = $id_sustituye ? Dictamen_Granel::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
+    //origen
+    if ( empty($data->inspeccione->solicitud->lote_granel->lote_original_id) ){
+        $estado = $data->inspeccione->solicitud->instalacion->estados->nombre ?? 'NA';
+    }else{
+        //$estado = $certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id->lotes;
+        $id_lote = json_decode($data->inspeccione->solicitud->lote_granel->lote_original_id, true);
+        // Paso 2: Obtener el primer ID del array 'lotes'
+        $ultimoId = end($id_lote['lotes']) ?? null;
+
+        $certificadoGranel = CertificadosGranel::where('id_lote_granel', $ultimoId)->first();
+
+            if ($certificadoGranel) {
+                $estado = $certificadoGranel->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado';
+            } else {
+                $estado = "OAXACA";
+                //return response()->json([ 'message' => 'No se encontró Certificado Granel con ese lote granel.' ]);
+            }
+    }
 
     $pdf = Pdf::loadView('pdfs.dictamen_granel_ed7', [
         'data' => $data,
+        'estado' => $estado,
         'fecha_servicio' => $fecha_servicio,
         'fecha_emision' => $fecha_emision,
         'fecha_vigencia' => $fecha_vigencia,
@@ -418,12 +617,12 @@ public function MostrarDictamenGranel($id_dictamen)
         'qrCodeBase64' => $qrCodeBase64
     ]);
 
-    return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
+    return $pdf->stream('Dictamen de Cumplimiento NOM Mezcal a Granel F-UV-04-16.pdf');
 }
 
-
+/*
 ///FQ'S
-public function foliofq($id_dictamen) 
+public function foliofq($id_dictamen)
 {
     try {
         Log::info('ID del Dictamen: ' . $id_dictamen);
@@ -492,9 +691,15 @@ public function foliofq($id_dictamen)
         return response()->json(['success' => false, 'message' => 'Error inesperado'], 500);
     }
 }
+*/
+
+    public function getDatosLotes($id_inspeccion)
+    {
+
+        $datos = inspecciones::with('solicitud.lote_granel.fqs','solicitud.empresa.empresaNumClientes')->find($id_inspeccion);
+        return response()->json($datos); // Retorna en formato JSON
+    }
 
 
 
-
-    
 }//end-classController

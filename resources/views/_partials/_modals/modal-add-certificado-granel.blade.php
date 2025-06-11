@@ -16,7 +16,7 @@
                                 <select class="form-select select2" name="id_dictamen" data-placeholder="Selecciona un dictamen">
                                     <option value="" disabled selected>NULL</option>
                                     @foreach ($dictamenes as $dic)
-                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | </option>
+                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | {{ $dic->inspeccione->solicitud->folio }}</option>
                                     @endforeach
                                 </select>
                                 <label for="">No. de dictamen</label>
@@ -27,7 +27,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" name="num_certificado" placeholder="No. de certificado">
+                                <input type="text" class="form-control" name="num_certificado" placeholder="No. de certificado"
+                                    value="CIDAM C-GRA25-">
                                 <label for="">No. de certificado</label>
                             </div>
                         </div>
@@ -94,7 +95,7 @@
                                 <select class="form-select select2" name="id_dictamen" 
                                     id="edit_id_dictamen">
                                     @foreach ($dictamenes as $dic)
-                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | </option>
+                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | {{ $dic->inspeccione->solicitud->folio }}</option>
                                     @endforeach
                                 </select>
                                 <label for="">No. de dictamen</label>

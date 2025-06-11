@@ -46,6 +46,72 @@
 <!-- Page Scripts -->
 @section('page-script')
   @vite(['resources/js/certificados_exportacion.js'])
+
+{{-- <script>
+    // Asegúrate de pasar los datos correctamente a JavaScript antes de ejecutar cualquier otra cosa
+    window.dictamenes = @json($dictamenes);  // Pasar la variable dictamenes a JavaScript
+
+    // Verifica en la consola que se está recibiendo correctamente
+    console.log('Dictamenes:', window.dictamenes);
+</script>
+<script>
+    console.log('JS cargado');
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectDictamen = document.getElementById('id_dictamen');
+
+        if (!selectDictamen) {
+            console.error('No se encontró el select de dictamen');
+            return;
+        }
+
+        selectDictamen.addEventListener('change', function () {
+            const selectedId = this.value; // Obtenemos el ID del dictamen seleccionado
+            console.log('ID dictamen seleccionado:', selectedId);
+
+            // Buscamos el dictamen correspondiente en la variable dictamenes
+            const dictamen = window.dictamenes.find(d => d.id_dictamen == selectedId);
+            console.log('Dictamen completo:', dictamen);
+
+            // Si encontramos un dictamen, actualizamos los hologramas
+            if (dictamen) {
+                const detalles = dictamen.inspeccione.solicitud.caracteristicas || [];
+                updateHologramas(detalles);  // Actualizamos los hologramas
+            } else {
+                // Si no se encuentra el dictamen, limpiamos los hologramas
+                updateHologramas([]);
+            }
+        });
+
+        function updateHologramas(detalles) {
+            const hologramasSelect = document.querySelector('select[name="hologramas"]');
+            if (hologramasSelect) {
+                hologramasSelect.innerHTML = '';  // Limpiamos las opciones actuales
+
+                if (detalles.length > 0) {
+                    detalles.forEach(function(detalle) {
+                        const option = document.createElement('option');
+                        option.value = detalle.id_holograma;
+                        option.textContent = detalle.folio_activacion;
+                        hologramasSelect.appendChild(option);
+                    });
+                } else {
+                    const option = document.createElement('option');
+                    option.disabled = true;
+                    option.textContent = 'No hay hologramas disponibles';
+                    hologramasSelect.appendChild(option);
+                }
+
+                $(hologramasSelect).select2({
+                    placeholder: 'Selecciona un holograma'
+                });
+            }
+        }
+    });
+</script>  --}}
+
+
+
 @endsection
 
 @section('content')
@@ -74,15 +140,57 @@
             </thead>
         </table>
     </div>
-
+    
 </div>
 
 
+
+
+<!--MODAL VISTO BUENO-->
+<div class="modal fade" id="ModalVoBo" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header bg-primary pb-4">
+          <h5 class="modal-title text-white">Visto Bueno</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+        <form id="formVobo">
+            <input type="hidden" name="id_certificado">
+
+            <div class="row" id="contenidoVobo">
+            <!-- contenido dinámico -->
+            </div>
+            <div class="d-flex mt-6 justify-content-center">
+                <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
+                    Registrar</button>
+                <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ri-close-line"></i> Cancelar</button>
+            </div>
+        </form>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+
 <!-- Modal -->
+
+
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-certificado-exportacion')
+
 @include('_partials/_modals/modal-add-asignar-revisor')
 @include('_partials/_modals/modal-reexpedir-certificado-exportacion')
+@include('_partials/_modals/modal-trazabilidad-certificados')
+@include('_partials/_modals/modal-export-excel-certificados-exportacion')
+
+@include('_partials/_modals/modal-add-certificado-firmado')<!--subir certificado-->
+
+@include('_partials/_modals/modal-documentos-certificados')
+
+
 <!-- /Modal -->
 
 @endsection

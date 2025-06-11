@@ -8,6 +8,10 @@ use App\Models\inspecciones;
 use App\Models\instalaciones;
 use App\Models\solicitudTipo;
 use App\Models\User;
+use App\Models\Certificado_Exportacion;
+use App\Models\Dictamen_Exportacion;
+use App\Models\Revisor;
+
 use Illuminate\Http\Request;
 use Spatie\Activitylog\Models\Activity;
 
@@ -141,4 +145,215 @@ class TrazabilidadController extends Controller
     return response()->json(['success' => true, 'logs' => $logs]);
     
     }
+
+
+
+    
+
+
+    ///TRAZABILIDAD CERTIFICADOS
+    public function TrackingCertificados($id)
+    {   
+        //$inspeccionId = inspecciones::where('id_solicitud', $id)->pluck('id_inspeccion')->first();
+
+        $logs = Activity::where(function($query) use ($id) {
+            // Filtrar los registros del modelo inspecciones con el id_solicitud en las properties
+            $query->where('subject_type', 'App\Models\Certificado_Exportacion')
+                ->where('properties->attributes->id_certificado', $id);
+        })
+
+        ->orWhere(function($query) use ($id) {
+            $query->where('subject_type', 'App\Models\Revisor')
+                ->where('properties->attributes->id_certificado', $id);
+        })
+        /*->orWhere(function($query) use ($id, $inspeccionId) {
+            // Filtrar los registros del modelo Dictamen_instalaciones con id_inspeccion
+            $query->where('subject_type', 'App\Models\Dictamen_Exportacion')
+                ->where('properties->attributes->id_inspeccion', $id);
+        })*/
+
+        ->orderBy('created_at', 'asc')
+        ->get()
+        ->map(function($log) {
+
+
+        
+         $attributes = $log->properties['attributes'] ?? [];//todas las propiedades
+         $evento = $log->event ?? '';
+
+
+//VOBO
+// Procesar Vo.Bo. desde certificado si es que este log es del certificado
+$voboPersonalHtml = '';
+$voboClienteHtml = '';
+
+$personalMostrado = false;
+$clienteMostrado = false;
+
+if ($log->subject_type === 'App\Models\Certificado_Exportacion') {
+    $certificado = Certificado_Exportacion::find($attributes['id_certificado'] ?? null);
+
+    if ($certificado && $certificado->vobo) {
+        $voboData = json_decode($certificado->vobo, true);
+
+        foreach ($voboData as $item) {
+            if (!$personalMostrado && isset($item['id_personal'])) {
+                $usuario = User::find($item['id_personal']);
+                $voboPersonalHtml = "<p><b>Personal:</b> {$usuario->name} solicitó revisión.<br><b>Descripción:</b> {$item['descripcion']}</p>";
+                $personalMostrado = true;
+            }
+
+            if (!$clienteMostrado && isset($item['id_cliente'])) {
+                $usuario = User::find($item['id_cliente']);
+                $estado = $item['respuesta'] == 1 ? 'Aprobado' : 'No aprobado';
+                $voboClienteHtml = "<p><b>Cliente:</b> {$usuario->name} dio Vo.Bo.<br><b>Respuesta:</b> $estado<br><b>Descripción:</b> {$item['descripcion']}</p>";
+                $clienteMostrado = true;
+            }
+        }
+    }
+}
+
+    
+            // Buscar los objetos solo si los IDs están presentes
+            $num_certificado = $attributes['num_certificado'] ?? null;
+            //$num_certificado = $log->properties['attributes']['num_certificado'] ?? null;
+
+            /*$num_dictamen = isset($log->properties['attributes']['id_dictamen']) 
+                ? $log->properties['attributes']['id_dictamen'] ?? 'No encontrado' 
+                : null;*/
+            $num_dictamen = isset($log->properties['attributes']['id_dictamen']) 
+                ? Dictamen_Exportacion::find($log->properties['attributes']['id_dictamen'])->num_dictamen ?? 'No encontrado' 
+                : null;
+
+            $empresa = null;
+            if (isset($log->properties['attributes']['id_dictamen'])) {
+                $dictamen = Dictamen_Exportacion::find($log->properties['attributes']['id_dictamen']);
+                
+                if ($dictamen && $dictamen->inspeccione && $dictamen->inspeccione->solicitud && $dictamen->inspeccione->solicitud->empresa) {
+                    $empresa = $dictamen->inspeccione->solicitud->empresa->razon_social;
+                }
+            }
+
+            //revisiones
+            $num_revision = $attributes['numero_revision'] ?? null;
+            
+            $revisor = isset($attributes['id_revisor']) 
+                ? User::find($attributes['id_revisor'])->name ?? null 
+                : null;
+
+            //para el PDF BITACORA
+            $certificadoRevision = null;
+            $id_revision = null;
+                if (isset($attributes['id_certificado'], $attributes['id_revisor'])) {
+                    $certificadoRevision = Revisor::where([
+                        ['id_certificado', $attributes['id_certificado']],
+                        ['id_revisor', $attributes['id_revisor']]
+                    ])->first();
+
+                    $id_revision = $certificadoRevision->id_revision ?? null;
+                }
+            $decision = $attributes['decision'] ?? null;
+            $tipo_revision = $attributes['tipo_revision'] ?? null;
+            $tipo = null;
+             if ($tipo_revision == 2) {
+                $tipo = 'Granel';
+            }
+            if ($tipo_revision == 3) {
+                $tipo = 'Exportación';
+            }
+
+
+
+            $obs = $attributes['observaciones'] ?? null;
+                $observaciones = null;
+                if ($obs) {
+                    $parsed = json_decode($obs, true);
+                    // Si es JSON válido y tiene 'id_sustituye'
+                    if (json_last_error() === JSON_ERROR_NONE && isset($parsed['id_sustituye'])) {
+                        $cert_sust = Certificado_Exportacion::find($parsed['id_sustituye']);
+                        $num_sustituido = optional($cert_sust)->num_certificado ?? 'Desconocido';
+                        $observaciones = "Sustituye al certificado: <span class='badge bg-secondary'>$num_sustituido</span>";
+                    } else {
+                        // Si no es JSON válido, mostrar texto plano
+                        $observaciones = $obs;
+                    }
+                }
+
+
+            //CONTENIDO DE LA TABLA
+            $contenido = '';  // Inicializar vacío
+            //certificados
+            if ($num_certificado) {
+                $contenido .= "<b>Número del certificado:</b> <span class='badge bg-secondary'>$num_certificado</span>";
+            }
+            if ($empresa) {
+                $contenido .= ", <b>Cliente:</b> $empresa ";
+            }
+ 
+            
+            
+            //revisiones
+        if ( $evento === 'created' ){
+            if ($num_revision) {
+                $contenido .= "<b>Revisión:</b> $num_revision";
+            }
+            if ($revisor) {
+                $contenido .= ", <b>Persona asignada:</b> $revisor";
+            }
+        
+            if ($observaciones) {
+                $contenido .= ", <b>Observaciones para el revisor:</b> $observaciones";
+            }
+        }
+
+
+        $bitacora = '';
+        if ( $evento === 'updated' ){
+            if ($num_revision) {
+                $contenido .= "<b>Revisión:</b> $num_revision "." realizada";
+            }
+            if ($decision) {
+                $contenido .= ", <b>Resultado:</b> $decision";
+            }
+        
+            if ($obs) {
+                $contenido .= ", <b>Observaciones:</b> $obs";
+            }
+
+            //if ($num_certificado) {
+                $bitacora .= "
+                    <i class='ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdf'
+                        data-bs-target='#mostrarPdf'
+                        data-bs-toggle='modal'
+                        data-bs-dismiss='modal'
+                        data-num-certificado='$num_certificado'
+                        data-id='$id_revision'
+                        data-tipo_revision='$tipo_revision'>
+                    </i>";
+            //}
+        }
+
+        
+
+            // Retornar los datos con el contenido construido
+            return [
+                'description' => $log->description,
+                'properties' => $log->properties, 
+                'created_at' => $log->created_at->toDateTimeString(),
+                'contenido' => trim($contenido),  // Eliminar posibles espacios extra
+                'bitacora' => $bitacora,
+                'vobo_personal' => $voboPersonalHtml,
+                'vobo_cliente' => $voboClienteHtml,
+            ];
+        });
+    
+    return response()->json(['success' => true, 'logs' => $logs]);
+    
+    }
+
+
+
+
+
+
 }

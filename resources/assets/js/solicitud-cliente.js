@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+
   const mezcalCheckbox = document.getElementById('customRadioIcon1');
   const bebidaCheckbox = document.getElementById('customRadioIcon2');
   const coctelCheckbox = document.getElementById('customRadioIcon3');
@@ -14,20 +15,21 @@ document.addEventListener('DOMContentLoaded', function () {
     nom070Checkbox, nom251Checkbox, normexCheckbox, norm199Checkbox, otrabebida
   ];
 
-function updateBorder(checkbox) {
-  const parentDiv = checkbox.closest('.custom-option');
-  if (checkbox.checked) {
-    parentDiv.classList.add('active');
-    // Asegúrate de que el borde sea el color del botón en el tema actual
-    parentDiv.style.borderColor = getComputedStyle(document.body).getPropertyValue('--primary-color').trim();
-  } else {
-    parentDiv.classList.remove('active');
-    parentDiv.style.borderColor = ''; // Eliminar el color de borde si no está activo
+  function updateBorder(checkbox) {
+    const parentDiv = checkbox.closest('.custom-option');
+    if (checkbox.checked) {
+      parentDiv.classList.add('active');
+      // Asegúrate de que el borde sea el color del botón en el tema actual
+      parentDiv.style.borderColor = getComputedStyle(document.body).getPropertyValue('--primary-color').trim();
+    } else {
+      parentDiv.classList.remove('active');
+      parentDiv.style.borderColor = ''; // Eliminar el color de borde si no está activo
+    }
   }
-}
 
 
   function mostrarSecciones() {
+
     console.log('mezcalCheckbox:', mezcalCheckbox.checked);
     console.log('bebidaCheckbox:', bebidaCheckbox.checked);
     console.log('coctelCheckbox:', coctelCheckbox.checked);
@@ -49,6 +51,7 @@ function updateBorder(checkbox) {
 
     toggleSectionVisibility('nom070-section', nom070Checkbox.checked);
     toggleSectionVisibility('normex-section', normexCheckbox.checked);
+
   }
 
   function toggleSectionVisibility(sectionId, shouldShow) {
@@ -176,107 +179,277 @@ window.estadosOptions = `
     @endforeach
 `;
 
+import Stepper from 'bs-stepper/dist/js/bs-stepper';
 
-const wizardIcons = document.querySelector('.wizard-icons-example');
+const bsStepper = document.querySelectorAll('.bs-stepper');
 
-if (typeof wizardIcons !== undefined && wizardIcons !== null) {
-  const wizardIconsBtnNextList = [].slice.call(wizardIcons.querySelectorAll('.btn-next')),
-    wizardIconsBtnPrevList = [].slice.call(wizardIcons.querySelectorAll('.btn-prev')),
-    wizardIconsBtnSubmit = wizardIcons.querySelector('.btn-submit');
+// Adds crossed class
+bsStepper.forEach(el => {
+  el.addEventListener('show.bs-stepper', function (event) {
+    var index = event.detail.indexStep;
+    var numberOfSteps = el.querySelectorAll('.line').length;
+    var line = el.querySelectorAll('.step');
 
-  const iconsStepper = new Stepper(wizardIcons, {
-    linear: false
+    for (let i = 0; i < index; i++) {
+      line[i].classList.add('crossed');
+      for (let j = index; j < numberOfSteps; j++) {
+        line[j].classList.remove('crossed');
+      }
+    }
+    if (event.detail.to == 0) {
+      for (let k = index; k < numberOfSteps; k++) {
+        line[k].classList.remove('crossed');
+      }
+      line[0].classList.remove('crossed');
+    }
   });
-  if (wizardIconsBtnNextList) {
-    wizardIconsBtnNextList.forEach(wizardIconsBtnNext => {
-      wizardIconsBtnNext.addEventListener('click', event => {
-        iconsStepper.next();
-      });
+});
+
+try {
+  window.Stepper = Stepper;
+} catch (e) { }
+
+export { Stepper };
+
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  const wizard = document.querySelector('.wizard-icons-example');
+  if (!wizard) return;
+  const stepper = new Stepper(wizard, { linear: true, animation: true });
+  const form = wizard.querySelector('form');
+
+  // PASO 1: Información del cliente
+  const fvStep1 = FormValidation.formValidation(
+    document.getElementById('account-details'),
+    {
+      fields: {
+        regimen: { validators: { notEmpty: { message: 'Por favor selecciona un régimen' } } },
+        rfc: {
+          validators: {
+            notEmpty: { message: 'Por favor ingresa el RFC' },
+            stringLength: {
+              min: 12,
+              max: 13,
+              message: 'El RFC debe tener 12 o 13 caracteres'
+            }
+          }
+        },
+        razon_social: { validators: { notEmpty: { message: 'Por favor ingresa el nombre' } } },
+        correo: {
+          validators: {
+            notEmpty: { message: 'Por favor ingresa el correo' },
+            emailAddress: { message: 'Correo inválido' }
+          }
+        },
+        telefono: {
+          validators: {
+            notEmpty: { message: 'Por favor ingresa el teléfono' },
+            callback: {
+              message: 'El teléfono debe tener 10 dígitos numéricos',
+              callback: function (input) {
+                // Elimina todos los caracteres que no sean dígitos
+                const digits = (input.value || '').replace(/\D/g, '');
+                return digits.length === 10;
+              }
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: ''
+        }),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      }
+    }
+  ).on('core.form.valid', function () {
+    stepper.next();
+  });
+
+  // PASO 2: Producto a certificar
+  const fvStep2 = FormValidation.formValidation(
+    document.getElementById('social-links'),
+    {
+      fields: {
+        'producto[]': { validators: { notEmpty: { message: 'Por favor selecciona al menos un producto' } } },
+        // Puedes agregar más validaciones si lo necesitas
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: ''
+        }),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      }
+    }
+  ).on('core.form.valid', function () {
+    stepper.next();
+  });
+
+  // PASO 3: Domicilio Fiscal
+  const fvStep3 = FormValidation.formValidation(
+    document.getElementById('address'),
+    {
+      fields: {
+        domicilio_fiscal: { validators: { notEmpty: { message: 'Por favor ingresa el domicilio fiscal' } } },
+        estado_fiscal: { validators: { notEmpty: { message: 'Por favor selecciona un estado' } } }
+        // Puedes agregar más validaciones para los domicilios adicionales si son requeridos
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: ''
+        }),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      }
+    }
+  ).on('core.form.valid', function () {
+    stepper.next();
+  });
+
+  // PASO 4: Información sobre los procesos y productos
+  const fvStep4 = FormValidation.formValidation(
+    document.getElementById('personal-info-icon'),
+    {
+      fields: {
+        certificacion: { validators: { notEmpty: { message: 'Por favor selecciona una opción' } } },
+        info_procesos: { validators: { notEmpty: { message: 'Por favor describe los procesos' } } }
+        // Puedes agregar más validaciones si lo necesitas
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: ''
+        }),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      }
+    }
+  ).on('core.form.valid', function () {
+    form.submit();
+  });
+
+  // Botones de navegación
+  const btnNextList = wizard.querySelectorAll('.btn-next');
+  btnNextList.forEach(btn => {
+    btn.addEventListener('click', function (event) {
+      event.preventDefault();
+      switch (stepper._currentIndex) {
+        case 0: fvStep1.validate(); break;
+        case 1: fvStep2.validate(); break;
+        case 2: fvStep3.validate(); break;
+        case 3: fvStep4.validate(); break;
+      }
+    });
+  });
+
+  const btnPrevList = wizard.querySelectorAll('.btn-prev');
+  btnPrevList.forEach(btn => {
+    btn.addEventListener('click', function () {
+      stepper.previous();
+    });
+  });
+  // ...existing code...
+
+  // Validar antes de enviar en el último paso
+  const btnSubmit = wizard.querySelector('.btn-submit');
+  if (btnSubmit) {
+    btnSubmit.addEventListener('click', function (event) {
+      event.preventDefault();
+      fvStep4.validate();
     });
   }
-  if (wizardIconsBtnPrevList) {
-    wizardIconsBtnPrevList.forEach(wizardIconsBtnPrev => {
-      wizardIconsBtnPrev.addEventListener('click', event => {
-        iconsStepper.previous();
-      });
-    });
-  }
-  /*if (wizardIconsBtnSubmit) {
-    wizardIconsBtnSubmit.addEventListener('click', event => {
-      alert('Submitted..!!');
-    });
-  }*/
-}
+});
 
 
-
+// ...existing code...
 new Cleave(".phone-number-mask", {
   phone: true,
   phoneRegionCode: "US"
 });
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
-  // Función para mostrar u ocultar secciones según el checkbox seleccionado
   function toggleSection() {
-      // Obtener el estado de cada checkbox
-      const agaveCheckbox = document.getElementById('customRadioIcon8');
-      const envasadorCheckbox = document.getElementById('customRadioIcon9');
-      const productorMezcalCheckbox = document.getElementById('customRadioIcon10');
-      const comercializadorCheckbox = document.getElementById('customRadioIcon11');
-      const norm199Checkbox = document.getElementById('customRadioIcon68');
-      const otrasBebidasCheckbox = document.getElementById('customRadioIcon65');
-      const nom070Checkbox = document.getElementById('customRadioIcon5'); // Suponiendo que también necesitas este checkbox
+    // Obtener el estado de cada checkbox
+    const agaveCheckbox = document.getElementById('customRadioIcon8');
+    const envasadorCheckbox = document.getElementById('customRadioIcon9');
+    const productorMezcalCheckbox = document.getElementById('customRadioIcon10');
+    const comercializadorCheckbox = document.getElementById('customRadioIcon11');
+    const norm199Checkbox = document.getElementById('customRadioIcon68');
+    const otrasBebidasCheckbox = document.getElementById('customRadioIcon65');
+    const nom070Checkbox = document.getElementById('customRadioIcon5');
 
-      // Mostrar u ocultar secciones basadas en los checkboxes seleccionados
-      document.getElementById('domiProductAgace').style.display = agaveCheckbox.checked ? 'block' : 'none';
-      document.getElementById('domiEnvasaMezcal').style.display = envasadorCheckbox.checked ? 'block' : 'none';
-      document.getElementById('domiProductMezcal').style.display = productorMezcalCheckbox.checked ? 'block' : 'none';
-      document.getElementById('domiComerMezcal').style.display = comercializadorCheckbox.checked ? 'block' : 'none';
-
-      // Lógica para mostrar u ocultar la sección específica
-      const nom199Section = document.getElementById('nom199-section');
-      if (norm199Checkbox.checked || otrasBebidasCheckbox.checked) {
-          nom199Section.classList.remove('d-none'); // Mostrar sección NOM-199
-      } else {
-          nom199Section.classList.add('d-none'); // Ocultar sección NOM-199
-      }
-
-      // Lógica para mostrar/ocultar la sección de NMX-V-052-NORMEX-2016
-      const normexSection = document.getElementById('normex-section'); // Asegúrate de tener el ID correcto para esta sección
-      if (nom070Checkbox.checked || norm199Checkbox.checked || otrasBebidasCheckbox.checked) {
-          normexSection.classList.add('d-none'); // Ocultar sección de NMX-V-052-NORMEX-2016
-      } else {
-          normexSection.classList.remove('d-none'); // Mostrar sección de NMX-V-052-NORMEX-2016
-      }
-
-      // Limpia los campos de las secciones ocultas
+    // Mostrar u ocultar secciones basadas en los checkboxes seleccionados
+    const domiProductAgace = document.getElementById('domiProductAgace');
+    if (domiProductAgace && agaveCheckbox) {
+      domiProductAgace.style.display = agaveCheckbox.checked ? 'block' : 'none';
       if (!agaveCheckbox.checked) {
-          document.getElementById('domiProductAgace').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-          document.getElementById('domiProductAgace').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        domiProductAgace.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+        domiProductAgace.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
       }
+    }
+    const domiEnvasaMezcal = document.getElementById('domiEnvasaMezcal');
+    if (domiEnvasaMezcal && envasadorCheckbox) {
+      domiEnvasaMezcal.style.display = envasadorCheckbox.checked ? 'block' : 'none';
       if (!envasadorCheckbox.checked) {
-          document.getElementById('domiEnvasaMezcal').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-          document.getElementById('domiEnvasaMezcal').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        domiEnvasaMezcal.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+        domiEnvasaMezcal.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
       }
+    }
+    const domiProductMezcal = document.getElementById('domiProductMezcal');
+    if (domiProductMezcal && productorMezcalCheckbox) {
+      domiProductMezcal.style.display = productorMezcalCheckbox.checked ? 'block' : 'none';
       if (!productorMezcalCheckbox.checked) {
-          document.getElementById('domiProductMezcal').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-          document.getElementById('domiProductMezcal').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        domiProductMezcal.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+        domiProductMezcal.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
       }
+    }
+    const domiComerMezcal = document.getElementById('domiComerMezcal');
+    if (domiComerMezcal && comercializadorCheckbox) {
+      domiComerMezcal.style.display = comercializadorCheckbox.checked ? 'block' : 'none';
       if (!comercializadorCheckbox.checked) {
-          document.getElementById('domiComerMezcal').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-          document.getElementById('domiComerMezcal').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        domiComerMezcal.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+        domiComerMezcal.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
       }
+    }
+
+    // Lógica para mostrar u ocultar la sección específica
+    const nom199Section = document.getElementById('nom199-section');
+    if (nom199Section && (norm199Checkbox || otrasBebidasCheckbox)) {
+      if ((norm199Checkbox && norm199Checkbox.checked) || (otrasBebidasCheckbox && otrasBebidasCheckbox.checked)) {
+        nom199Section.classList.remove('d-none');
+      } else {
+        nom199Section.classList.add('d-none');
+      }
+    }
+
+    // Lógica para mostrar/ocultar la sección de NMX-V-052-NORMEX-2016
+    const normexSection = document.getElementById('normex-section');
+    if (normexSection && (nom070Checkbox || norm199Checkbox || otrasBebidasCheckbox)) {
+      if (
+        (nom070Checkbox && nom070Checkbox.checked) ||
+        (norm199Checkbox && norm199Checkbox.checked) ||
+        (otrasBebidasCheckbox && otrasBebidasCheckbox.checked)
+      ) {
+        normexSection.classList.add('d-none');
+      } else {
+        normexSection.classList.remove('d-none');
+      }
+    }
   }
 
-  // Añadir event listeners a los checkboxes
-  document.getElementById('customRadioIcon8').addEventListener('change', toggleSection);
-  document.getElementById('customRadioIcon9').addEventListener('change', toggleSection);
-  document.getElementById('customRadioIcon10').addEventListener('change', toggleSection);
-  document.getElementById('customRadioIcon11').addEventListener('change', toggleSection);
-  document.getElementById('customRadioIcon68').addEventListener('change', toggleSection);
-  document.getElementById('customRadioIcon65').addEventListener('change', toggleSection);
+  // Añadir event listeners a los checkboxes (solo si existen)
+  ['customRadioIcon8', 'customRadioIcon9', 'customRadioIcon10', 'customRadioIcon11', 'customRadioIcon68', 'customRadioIcon65'].forEach(id => {
+    const checkbox = document.getElementById(id);
+    if (checkbox) {
+      checkbox.addEventListener('change', toggleSection);
+    }
+  });
 
   // Inicializa el estado de las secciones al cargar la página
   toggleSection();
@@ -333,28 +506,57 @@ document.addEventListener('DOMContentLoaded', () => {
   switchInput.addEventListener('change', copyAddress);
 });
 
+
 $(document).ready(function () {
   // Mapeamos los valores de los checkboxes a sus respectivas secciones
   const sections = {
-      20: '#clasificacion-bebidas-section',     // Bebidas Alcohólicas Fermentadas (2% a 20%)
-      21: '#clasificacion-bebidas-section-2',   // Bebidas Alcohólicas Destiladas (32% a 55%)
-      22: '#clasificacion-bebidas-section-3',   // Licores o cremas (13.5% a 55%)
-      23: '#clasificacion-bebidas-section-4',   // Bebidas Alcohólicas Destiladas (32% a 55%)
-      24: '#clasificacion-cocteles-section-5',    // Cócteles (12% a 32%)
-      25: '#clasificacion-bebidas-section-6'
+    1: '#clasificacion-bebidas-section',     // Bebidas Alcohólicas Fermentadas (2% a 20%)
+    2: '#clasificacion-bebidas-section-2',   // Bebidas Alcohólicas Destiladas (32% a 55%)
+    3: '#clasificacion-bebidas-section-3',   // Licores o cremas (13.5% a 55%)
+    4: '#clasificacion-bebidas-section-4',   // Bebidas Alcohólicas Destiladas (32% a 55%)
+    5: '#clasificacion-cocteles-section-5',    // Cócteles (12% a 32%)
+    6: '#clasificacion-bebidas-section-6'
   };
 
   // Escuchar el cambio en los checkboxes
-  $('input[name="actividad[]"]').on('change', function () {
-      // Recorremos cada sección y la mostramos u ocultamos dependiendo del checkbox seleccionado
-      $.each(sections, function (value, section) {
-          // Si el checkbox con el valor 'value' está seleccionado, mostramos la sección
-          if ($(`input[name="actividad[]"][value="${value}"]`).is(':checked')) {
-              $(section).removeClass('d-none');
-          } else {
-              // Si no está seleccionado, ocultamos la sección
-              $(section).addClass('d-none');
-          }
+  $('input[name="clasificacion[]"]').on('change', function () {
+    // Recorremos cada sección y la mostramos u ocultamos dependiendo del checkbox seleccionado
+    $.each(sections, function (value, section) {
+      // Si el checkbox con el valor 'value' está seleccionado, mostramos la sección
+      if ($(`input[name="clasificacion[]"][value="${value}"]`).is(':checked')) {
+        $(section).removeClass('d-none');
+      } else {
+        // Si no está seleccionado, ocultamos la sección
+        $(section).addClass('d-none');
+      }
+    });
+  });
+
+});
+
+
+$(document).ready(function () {
+  $('#customRadioIcon32').on('change', function () {
+    if ($(this).is(':checked')) {
+      $('#otroBebidaInput').slideDown(); // Animación para mostrar
+    } else {
+      $('#otroBebidaInput').slideUp(function () {
+        $(this).find('input').val(''); // Limpia después de ocultar
       });
+    }
+  });
+
+  $('#customRadioIcon52').on('change', function () {
+    if ($(this).is(':checked')) {
+      $('#otroBebidaInput52').slideDown();
+    } else {
+      $('#otroBebidaInput52').slideUp(function () {
+        $(this).find('input').val('');
+      });
+    }
   });
 });
+
+
+
+

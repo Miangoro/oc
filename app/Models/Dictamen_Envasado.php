@@ -37,13 +37,14 @@ class Dictamen_Envasado extends Model
         return $this->belongsTo(lotes_envasado::class, 'id_lote_envasado');
     }
     
-    public function inspectores()
-    {
-        return $this->belongsTo(User::class, 'id_firmante', 'id');
-    }
     public function marca()
     {
         return $this->belongsTo(marcas::class, 'id_marca');
+    }
+
+    public function firmante()
+    {
+        return $this->belongsTo(User::class, 'id_firmante', 'id');
     }
 
 

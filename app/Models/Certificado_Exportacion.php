@@ -24,6 +24,10 @@ class Certificado_Exportacion extends Model
         'observaciones',
       ];
 
+      protected $casts = [
+    'hologramas' => 'array',
+];
+
     // Método para obtener el nombre del registro que sirve para la trazabilidad
     public function getLogName2(): string
     {
@@ -41,15 +45,34 @@ class Certificado_Exportacion extends Model
     {
         return $this->belongsTo(User::class, 'id_firmante', 'id');
     }
-
+    
     public function user()
     {
         return $this->belongsTo(User::class, 'id_firmante', 'id'); 
     }
 
-    public function revisor()
+    public function revisorPersonal()
     {
-        return $this->belongsTo(Revisor::class, 'id_certificado', 'id_certificado');
+        return $this->hasOne(Revisor::class, 'id_certificado')
+            ->where('tipo_revision', 1)
+            ->where('tipo_certificado', 3);
+    }
+
+    public function revisorConsejo()
+    {
+        return $this->hasOne(Revisor::class, 'id_certificado')
+            ->where('tipo_revision', 2)
+            ->where('tipo_certificado', 3);
+    }
+
+
+    public function certificadoReexpedido()
+    {
+        $datos = json_decode($this->observaciones, true);
+        if (isset($datos['id_sustituye'])) {
+            return Certificados::find($datos['id_sustituye']);
+        }
+        return null;
     }
 
 

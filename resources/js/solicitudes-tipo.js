@@ -11,33 +11,33 @@ function obtenerIcono(id_tipo) {
    // console.log('ID recibido:', id_tipoStr); 
     switch (id_tipoStr) {
         case '1': 
-            return 'assets/img/solicitudes/muestreo_agave.png'; 
+            return 'assets/img/solicitudes/muestreoDeAgave.png'; 
         case '2': 
-            return 'assets/img/solicitudes/vigilancia_producción.png'; 
+            return 'assets/img/solicitudes/Vigilancia en la producción de lote.png'; 
         case '3': 
-            return 'assets/img/icons/brands/cent.png'; 
+            return 'assets/img/solicitudes/muestreo de lote a granel.png'; 
         case '4': 
-            return 'assets/img/solicitudes/traslado.png'; 
+            return 'assets/img/solicitudes/Vigilancia en el transaldo.png'; 
         case '5': 
-            return 'assets/img/solicitudes/envasado.png'; 
+            return 'assets/img/solicitudes/inspección de envasado.png'; 
         case '6': 
-            return 'assets/img/solicitudes/muestreo_envasado.png'; 
+            return 'assets/img/solicitudes/muestreo de lote envasado.png'; 
         case '7': 
-            return 'assets/img/icons/brands/github.png'; 
+            return 'assets/img/solicitudes/Inspección de ingreso.png'; 
         case '8': 
-            return 'assets/img/solicitudes/terminado.png';  
+            return 'assets/img/solicitudes/liberación de producto.png';  
         case '9': 
-            return 'assets/img/icons/brands/mac.png'; 
+            return 'assets/img/solicitudes/Inspección en la liberación.png'; 
         case '10': 
-            return 'assets/img/solicitudes/georeferenciación.png'; 
+            return 'assets/img/solicitudes/geo.png'; 
         case '11': 
-            return 'assets/img/solicitudes/exportación.png'; 
+            return 'assets/img/solicitudes/pedidos para exportacion.png'; 
         case '12': 
             return 'assets/img/solicitudes/certificado_granel.png'; 
         case '13': 
             return 'assets/img/solicitudes/certificado_granel.png'; 
         case '14': 
-        return 'assets/img/solicitudes/dictaminación.png'; 
+        return 'assets/img/solicitudes/Dictaminación de instalaciones.png'; 
         case '15': 
             return 'assets/img/icons/brands/vue.png'; 
         default:
@@ -91,7 +91,7 @@ function obtenerIcono(id_tipo) {
                         card.innerHTML = ` 
                             <div data-bs-target="${solicitud}" data-bs-toggle="modal" data-bs-dismiss="modal" class="card card-hover shadow-sm border-light">
                                 <div class="card-body text-center d-flex flex-column align-items-center">
-                                    <img src="${icono}" alt="Icono" class="img-fluid mb-3" style="max-width: 50px;"/>
+                                    <img src="${icono}" alt="Icono" class="img-fluid mb-3" style="max-width: 80px;"/>
                                     <h5 class="card-title mb-4">${item.tipo || 'Tipo no disponible'}</h5>
                                 </div>
                             </div>
@@ -131,7 +131,31 @@ function obtenerIcono(id_tipo) {
 
     // Escuchar el clic en el botón de cancelar
 $(".btnCancelar").on('click', function () {
-    // Al cerrar el modal actual, abrir el anterior
+    // Obtener el modal actual desde el botón que se hizo clic
+    const modal = $(this).closest('.modal');
+
+    // Buscar un formulario dentro de ese modal
+    const form = modal.find('form')[0]; // obtiene el primer <form> dentro del modal
+
+    if (form && typeof form.reset === 'function') {
+        form.reset(); // Limpia inputs, textareas, etc.
+    }
+
+    // Limpiar Select2 dentro del modal
+    modal.find('.select2').val(null).trigger('change');
+
+    // Opcional: limpiar errores de validación visual (Bootstrap)
+    modal.find('.is-invalid').removeClass('is-invalid');
+    // No eliminar, solo limpiar y ocultar los mensajes de error
+    modal.find('.invalid-feedback').text('');
+
+    // Ocultar el modal actual
+    modal.modal('hide');
+
+    // Mostrar el modal anterior (ajusta si usas varios niveles)
     $("#verSolicitudes").modal('show');
 });
+
+
+
 });
