@@ -271,7 +271,7 @@
 
         $segundoFolio = $folios->count() > 1 ? $folios->get(1) : 'N/A';
     @endphp
-    <td><b>{{ $segundoFolio }}</b></td>
+    <td><b>{{ $segundoFolio }}</b>ddddddddd</td>
                                         @elseif($pregunta->filtro == 'aduana')
                                             <td><b>
                                                     {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['aduana_salida'] ?? 'N/A' }}
