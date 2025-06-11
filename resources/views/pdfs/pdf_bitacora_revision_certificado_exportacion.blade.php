@@ -7,6 +7,7 @@
     <style>
         body {
             font-weight: 12px;
+            margin-top: 80px;
         }
 
         @page {
@@ -35,12 +36,32 @@
 
 
         .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: -25px;
+            height: 100px;
+            /* Ajusta al tamaño real del header */
             font-family: 'Century Gothic';
             text-align: right;
             font-size: 14px;
-            margin-right: -30px;
-
+            padding: 5px;
+            z-index: 10;
         }
+
+        .header {
+            padding: 5px;
+            text-align: right;
+        }
+
+        .header img {
+            float: left;
+            max-width: 165px;
+            padding: 0;
+            margin-top: -30px;
+            margin-left: -50px;
+        }
+
 
         .title {
             text-align: center;
@@ -57,9 +78,9 @@
         td {
             border: 2px solid black;
             padding: 5px;
-/*             padding-bottom: 6px;
+            /*             padding-bottom: 6px;
             padding-top: 6px; */
-            font-size: 11px;
+            font-size: 10px;
             text-align: center;
             font-family: 'Century Gothic';
         }
@@ -124,7 +145,7 @@
             color: black;
             font-size: 12px;
             background-color: #9FC5E8;
-            text-align: center;
+            text-align: left;
 
         }
 
@@ -145,20 +166,6 @@
 
         }
 
-        .header {
-            padding: 10px;
-            text-align: right;
-        }
-
-        .header img {
-            float: left;
-            max-width: 165px;
-            padding: 0;
-            margin-top: -30px;
-            margin-left: -50px;
-
-
-        }
 
         /* Estilo para el texto de fondo */
         .background-text {
@@ -175,9 +182,7 @@
             text-align: left;
         }
 
-        .espacio_letras td {
-
-        }
+        .espacio_letras td {}
 
         .sin-border td {
             padding-top: 10px;
@@ -192,17 +197,46 @@
             padding: 0;
             padding-right: 5px;
         }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+
+        .footer {
+            /*  position: fixed; */
+            position: absolute;
+            left: 0;
+            bottom: 10px;
+            width: 100%;
+            font-size: 12px;
+        }
+
+        .recuadro_certificacion {
+            width: 100%;
+            border: 2px solid black;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .recuadro_certificacion td {
+            font-size: 12px;
+        }
     </style>
 
 
-    <div class="header">
-        <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
-        <div> Bitácora de revisión de certificado de exportación NOM-070-SCFI-2016 F7.1-01-33<br> Ed. 6 Entrada en vigor
-            07/11/2023<br>
-        </div>
 </head>
 
 <body>
+
+    <div class="header">
+        <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
+        <div>
+            Bitácora de revisión de certificado de exportación NOM-070-SCFI-2016 F7.1-01-33<br>
+            Ed. 6 Entrada en vigor 07/11/2023
+        </div>
+    </div>
+
     <div>
         <p class="letra-title">PRIMERA REVISIÓN POR PARTE DEL CONSEJO PARA LA DECISIÓN DE LA CERTIFICACIÓN</p>
     </div>
@@ -308,8 +342,9 @@
                 <table style="display: inline-table; width: 300px;" {{-- class="tabla-2" --}}>
                     <!-- ...contenido de la segunda tabla... -->
                     <tr>
-                        <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 110px;">Descripción del embarque que ampara el certificado
-                    </td>
+                        <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 110px;">Descripción
+                            del embarque que ampara el certificado
+                        </td>
                         <td class="letra-fondo" style="width: 50px">C </td>
                         <td class="letra-fondo" style="width: 50px">N/C </td>
                         <td class="letra-fondo" style="width: 50px">N/A</td>
@@ -329,6 +364,81 @@
         </tr>
     </table>
     </div>
+
+    {{-- segunda pagina --}}
+    <div class="page-break"></div>
+
+    <!-- Aquí inicia la nueva maquetación para la siguiente página -->
+    <div>
+        <p class="letra-title">SEGUNDA REVISIÓN POR PARTE DEL CONSEJO PARA LA DECISIÓN DE LA CERTIFICACIÓN</p>
+        <!-- Más contenido para la nueva página -->
+    </div>
+
+    <table style="width: 108%; border: none; ">
+        <tr>
+            <!-- Tabla 1 -->
+            <td style="width: 80%; vertical-align: top; text-align: left; border: none;">
+                <table style="width: 90%; text-align: left;">
+                    <tr>
+                        <td class="letra-fondo" style="height: 30px;">Revisión final de certificado </td>
+                        <td class="letra-fondo">C</td>
+                        <td class="letra-fondo">N/C</td>
+                        <td class="letra-fondo">N/A</td>
+                    </tr>
+                    <tr>
+                        <td class="leftLetter" style="height: 40px;"> Dictamen de cumplimiento para producto de
+                            exportación</td>
+                        <td class="leftLetter">C</td>
+                        <td class="leftLetter">------</td>
+                        <td class="leftLetter">------</td>
+                    </tr>
+                    
+                </table>
+            </td>
+
+            <!-- Tabla 2 -->
+            <td style="width: 50%; vertical-align: top; text-align: left; border: none;">
+                <table style="width: 80%; text-align: left;">
+                    <tr>
+                        <td class="letra-fondo">Fecha de segunda revisión</td>
+                    </tr>
+                    <tr>
+                        <td style="height: 60px;" class="">2025-05-29</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <div class="footer">
+        <table class="recuadro_certificacion">
+            <tr>
+                <td>
+                    Derivado de la revisión minuciosa y con la documentación completa entregada de manera digital por
+                    personal del OC CIDAM se revisa que el certificado cumple con cada uno de los requisitos mencionados
+                    en este
+                    documento, por consiguiente, se toma la decisión para otorgar la certificación de producto. <br>
+                    Responsable de Revisión:
+                    <div style="height: 20px;"></div>
+                    @php
+                        use Illuminate\Support\Facades\Storage;
+                        $firmaPath = $firmaRevisor ? 'firmas/' . $firmaRevisor : null;
+                    @endphp
+                    <div style="width: 100%; text-align: right; position: fixed; margin-top: -30px; right: 20px;">
+                        @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
+                            <img src="{{ public_path('storage/' . $firmaPath) }}" alt="Firma"
+                                style="width: 120px; height: auto;">
+                        @endif
+                    </div>
+                    <div style="height: 20px;"></div>
+                    {{ $id_revisor }} <br>
+                    {{ $puestoRevisor }}:
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
 </body>
 
 </html>
