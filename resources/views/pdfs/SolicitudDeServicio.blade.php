@@ -532,6 +532,7 @@
    
 
 @php
+    //para solicitud tipo-11 (exportacion combinado)
     use App\Models\lotes_envasado;
     $obtenerLote = $datos->caracteristicas ?? null; //Obtener Características Solicitud
         $caracteristicas =$obtenerLote ? json_decode($obtenerLote, true) : []; //Decodificar el JSON
@@ -539,11 +540,11 @@
         // Obtener todos los IDs de los lotes
         $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
         // Buscar los lotes envasados
-        $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
-            : collect();
+    $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
+        : collect();
 @endphp
-<!--INICIO DE TABLAS LOTES-->
-@if ($lotes->count() <= 1)<!--si es 1 lote-->
+<!--INICIO DE TABLA CARACTERISTICAS-->
+@if ($lotes->count() <= 1)<!--si es 1 lote (normal)-->
 
     <table>
         <tr>
@@ -629,7 +630,7 @@
     </table>
 
 
-@else<!--si hay mas de 1 lote (multiple)-->
+@else<!--si hay lotes multiples(combinado)-->
 
 
     @foreach ($lotes as $lote)<!--FOR COMBINADO-->
@@ -711,11 +712,9 @@
     </table>
 
 
+        @if ($loop->iteration == 1)<!--Aplicar despues de la interaccion 1, PARA EL TITULO HOJA 2 COMBINADO-->
+        <div style="page-break-before: always;"></div><!--Salto de pag después de tabla 1-->
 
-
-        @if ($loop->iteration == 1)<!--Aplicar solo en la interaccion 1-->
-            <!--Salto de pag después de tabla 1-->
-            <div style="page-break-before: always;"></div>
         <table>
         <tr>
             <td rowspan="3" colspan="2" style="padding: 0; ">
@@ -741,17 +740,15 @@
             <td style="font-size: 16px; color: red" class="con-negra" colspan="3">{{ $datos->folio }}</td>
         </tr>
         </table>
+        @endif<!--fin de la interaccion 1-->
 
-        @endif
+    @endforeach <!--FIN DEL FOR COMBINADO-->
 
-    @endforeach <!-- FIN DE TABLAS LOTES -->
-
-@endif<!--FIN del IF si es uno o multiple-->
-
+@endif<!--FIN DEL if DE TABLA CARACTERISTICAS-->
 
 
-@if ($lotes->count() <= 1) 
-    <div style="page-break-before: always;"></div>
+@if ($lotes->count() <= 1) <!--TITULO HOJA 2 NORMAL-->
+    <div style="page-break-before: always;"></div><!--Salto de pag-->
     
     <table>
         <tr>

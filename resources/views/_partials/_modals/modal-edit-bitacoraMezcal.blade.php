@@ -1,21 +1,22 @@
-<div class="modal fade" id="RegistrarBitacoraMezcal" tabindex="-1" aria-labelledby="registroInventarioModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="editarBitacoraMezcal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addBitacora">Agregar Bitácora</h5>
+                <h5 class="modal-title" id="editBitacora">Agregar Bitácora</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
-                <form id="registroInventarioForm" method="POST">
+                <form id="editInventarioForm" method="POST">
                     @csrf
+                    <input type="hidden" id="edit_bitacora_id" name="edit_bitacora_id">
                     <!-- Datos Iniciales -->
                     <div class="row">
                         <div class="col-md-7 mb-3">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerGraneles(this.value);" id="id_empresa" name="id_empresa"
-                                    class="select2 form-select" data-error-message="por favor selecciona la empresa">
+                                <select onchange="obtenerGranelesEdit(this.value);" id="edit_id_empresa"
+                                    name="id_empresa" class="select2 form-select"
+                                    data-error-message="por favor selecciona la empresa">
                                     <option value="" disabled selected>Selecciona el cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">
@@ -29,7 +30,7 @@
                         </div>
                         <div class="col-md-5 b-3">
                             <div class="form-floating form-floating-outline">
-                                <input type="date" class="form-control datepicker" id="fecha" name="fecha"
+                                <input type="date" class="form-control datepicker" id="edit_fecha" name="fecha"
                                     aria-label="Fecha" readonly>
                                 <label for="fecha">Fecha</label>
                             </div>
@@ -39,17 +40,18 @@
 
                         <div class="col-md-6 mb-3">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select id="id_lote_granel" name="id_lote_granel" class="select2 form-select">
+                                <select id="edit_id_lote_granel" name="id_lote_granel" class="select2 form-select">
                                     <option value="">Selecciona un lote</option>
                                 </select>
                                 <label for="id_lote_granel">Lote a granel</label>
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select select2" id="id_instalacion" name="id_instalacion"
+                                <select class=" form-select select2" id="edit_id_instalacion" name="id_instalacion"
                                     aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
@@ -64,14 +66,14 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="number" class="form-control" id="volumen_salida" name="volumen_salida"
-                                        placeholder="Volumen" aria-label="Volumen" required>
+                                    <input type="number" class="form-control" id="edit_volumen_salida"
+                                        name="volumen_salida" placeholder="Volumen" aria-label="Volumen" required>
                                     <label for="volumen_salida">Volumen</label>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="number" step="0.01" class="form-control" id="alc_vol_salida"
+                                    <input type="number" step="0.01" class="form-control" id="edit_alc_vol_salida"
                                         name="alc_vol_salida" placeholder="% Alc. Vol." aria-label="% Alc. Vol."
                                         required>
                                     <label for="alc_vol_salida">% Alc. Vol.</label>
@@ -79,7 +81,7 @@
                             </div>
                             <div class="col-md-12 mb-3">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" id="destino" name="destino"
+                                    <input type="text" class="form-control" id="edit_destino" name="destino"
                                         placeholder="Destino" aria-label="Destino" required>
                                     <label for="destino">Destino</label>
                                 </div>
@@ -93,14 +95,14 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="number" class="form-control" id="volumen_final" name="volumen_final"
-                                        placeholder="Volumen" aria-label="Volumen" required>
+                                    <input type="number" class="form-control" id="edit_volumen_final"
+                                        name="volumen_final" placeholder="Volumen" aria-label="Volumen" required>
                                     <label for="volumen_final">Volumen</label>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="number" step="0.01" class="form-control" id="alc_vol_final"
+                                    <input type="number" step="0.01" class="form-control" id="edit_alc_vol_final"
                                         name="alc_vol_final" placeholder="% Alc. Vol." aria-label="% Alc. Vol."
                                         required>
                                     <label for="alc_vol_final">% Alc. Vol.</label>
@@ -111,13 +113,13 @@
 
                     <!-- Observaciones -->
                     <div class="mb-3">
-                        <textarea class="form-control" id="observaciones" name="observaciones" rows="3"
+                        <textarea class="form-control" id="edit_observaciones" name="observaciones" rows="3"
                             placeholder="Escribe observaciones"></textarea>
                     </div>
 
                     <!-- Botones -->
                     <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary me-2">Registrar</button>
+                        <button type="submit" class="btn btn-primary me-2">Editar</button>
                         <button type="button" class="btn btn-outline-secondary"
                             data-bs-dismiss="modal">Cancelar</button>
                     </div>
@@ -128,7 +130,7 @@
 </div>
 
 <script>
-    function obtenerGraneles(empresa) {
+    function obtenerGranelesEdit(empresa) {
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
             $.ajax({
                 url: '/getDatos/' + empresa,
@@ -142,8 +144,15 @@
                     }
                     if (response.lotes_granel.length == 0) {
                         contenido = '<option value="">Sin lotes registrados</option>';
-                    } else {}
-                    $('#id_lote_granel').html(contenido);
+                    } else {
+
+                    }
+
+                    $('#edit_id_lote_granel').html(contenido);
+                    const idlote = $('#edit_id_lote_granel').data('selected');
+                    if (idlote) {
+                        $('#edit_id_lote_granel').val(idlote).trigger('change');
+                    }
 
                     var contenidoI = "";
                     for (let index = 0; index < response.instalaciones.length; index++) {
@@ -158,7 +167,11 @@
                     if (response.instalaciones.length == 0) {
                         contenidoI = '<option value="">Sin instalaciones registradas</option>';
                     }
-                    $('#id_instalacion').html(contenidoI);
+                    $('#edit_id_instalacion').html(contenidoI);
+                    const idInst = $('#edit_id_instalacion').data('selected');
+                    if (idInst) {
+                        $('#edit_id_instalacion').val(idInst).trigger('change');
+                    }
 
                 },
                 error: function() {}

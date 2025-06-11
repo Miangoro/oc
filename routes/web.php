@@ -900,6 +900,10 @@ Route::get('/bitacora_hologramas', [CartaAsignacionController::class, 'BitacoraH
 Route::get('/bitacoraMezcal', [BitacoraMezcalController::class, 'UserManagement'])->name('bitacora-mezcal');
 Route::resource('/bitacoraMezcal-list', BitacoraMezcalController::class);
 Route::get('/bitacora_mezcal', [BitacoraMezcalController::class, 'PDFBitacoraMezcal']);
+Route::post('/bitacoraMezcalStore', [BitacoraMezcalController::class, 'store'])->name('bitacora.store');
+Route::get('/bitacora_mezcal/{id_bitacora}/edit', [BitacoraMezcalController::class, 'edit'])->name('bitacora_mezcal.edit');
+Route::post('/bitacorasUpdate/{id_bitacora}', [BitacoraMezcalController::class, 'update'])->name('bitacoras.update');
+
 
 // BitacoraMaduracion
 Route::get('/bitacoraProductoMaduracion', [BitacoraProductoMaduracionController::class, 'UserManagement'])->name('bitacoraProductoMaduracion');
@@ -1055,7 +1059,7 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     //Asignar revisor
     Route::post('asignar_revisor_exportacion', [Certificado_ExportacionController::class, 'storeRevisor'])->name('cer-expor.asignarRevisor');
     Route::get('/certificados/exportar', 'exportar')->name('certificados.exportar');
-   
+
     //documentacion
     Route::get('/documentos/{id_certificado}', 'documentos')->name('documentos-cer-exportacion');
 
