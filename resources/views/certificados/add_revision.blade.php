@@ -257,7 +257,7 @@
         $segundoFolio = $folios->count() > 1 ? $folios->get(1) : 'N/A';
     @endphp
     <td><b>{{ $segundoFolio }}</b></td>
-@endif
+
 
                                        @elseif($pregunta->filtro == 'nanalisis_ajuste')
                                             @php
