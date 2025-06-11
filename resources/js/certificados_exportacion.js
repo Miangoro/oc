@@ -358,7 +358,7 @@ if (dt_user_table.length) {
               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
               `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
               //`<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalDocumentos" href="javascript:;" class="dropdown-item text-dark documentos"> <i class="ri-folder-line ri-20px text-secondary"></i> Ver documentación</a>` +
-              `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-dark"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
+              `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-dark"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalVoBo" href="javascript:;" class="dropdown-item text-dark VoBo"> <i class="ri-edit-box-line ri-20px text-light"></i> Vo. Bo.</a>` +
               `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>` +
               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor" class="dropdown-item waves-effect text-black reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
@@ -1465,8 +1465,9 @@ $(document).ready(function () {
   $('#asignarRevisorModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     var id_certificado = button.data('id');
+    var num_certificado = button.data('folio');
     $('#id_certificado').val(id_certificado);
-    console.log('ID Certificado al abrir modal:', id_certificado);
+     $('#folio_certificado').html('<span class="badge bg-info">'+num_certificado+'</span>');
     fv.resetForm();
     form.reset();
 

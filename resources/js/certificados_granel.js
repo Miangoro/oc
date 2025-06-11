@@ -308,7 +308,7 @@ var dataTable = $('.datatables-users').DataTable({
                 // Botón subir certificado firmado
                 `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
                 // Botón Asignar revisor
-                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">` + '<i class="ri-user-search-fill text-warning"></i> Asignar revisor</a>' +
+                `<a data-id="${full['id_certificado']}"  data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-black" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">` + '<i class="ri-user-search-fill text-warning"></i> Asignar revisor</a>' +
                 // Botón reexpedir
                 `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir" data-bs-toggle="modal" data-bs-target="#ModalReexpedir">` + '<i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>' +
                 // Botón eliminar
@@ -1005,14 +1005,15 @@ $('#nombreRevisor').on('change', function () {
 });
 
 $('#asignarRevisorModal').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget); 
-  var id_certificado = button.data('id'); 
-  $('#id_certificado').val(id_certificado);
-  console.log('ID Certificado al abrir modal:', id_certificado);
-  fv.resetForm();
-  form.reset();
+    var button = $(event.relatedTarget);
+    var id_certificado = button.data('id');
+    var num_certificado = button.data('folio');
+    $('#id_certificado').val(id_certificado);
+    $('#folio_certificado').html('<span class="badge bg-info">'+num_certificado+'</span>');
+    fv.resetForm();
+    form.reset();
 
-  $('#asignarRevisorForm').show();
+    $('#asignarRevisorForm').show();
 });
 
 
