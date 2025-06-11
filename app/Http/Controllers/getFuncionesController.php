@@ -345,7 +345,7 @@ foreach ($certificados as $certificado) {
     if ($documento) {
         $fqs->push([
             'url' => $documento->url,
-            'nombre' => $documento->nombre_documento
+            'nombre_documento' => $documento->nombre_documento
         ]);
     }
 }
