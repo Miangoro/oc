@@ -100,28 +100,28 @@ public function getIdLoteGranelAttribute()
         return $this->belongsTo(LotesGranel::class, 'id_lote_granel', 'id_lote_granel');
     }
 
-        public function getIdLoteEnvasadoAttribute()
-        {
-            $caracteristicas = json_decode($this->caracteristicas, true);
-            $ids = [];
+    public function getIdLoteEnvasadoAttribute()
+    {
+        $caracteristicas = json_decode($this->caracteristicas, true);
+        $ids = [];
 
-            // Verifica si hay uno directamente en la raíz
-            if (isset($caracteristicas['id_lote_envasado'])) {
-                $ids[] = $caracteristicas['id_lote_envasado'];
-            }
+        // Verifica si hay uno directamente en la raíz
+        if (isset($caracteristicas['id_lote_envasado'])) {
+            $ids[] = $caracteristicas['id_lote_envasado'];
+        }
 
-            // Verifica dentro del array "detalles"
-            if (isset($caracteristicas['detalles']) && is_array($caracteristicas['detalles'])) {
-                foreach ($caracteristicas['detalles'] as $detalle) {
-                    if (isset($detalle['id_lote_envasado'])) {
-                        $ids[] = $detalle['id_lote_envasado'];
-                    }
+        // Verifica dentro del array "detalles"
+        if (isset($caracteristicas['detalles']) && is_array($caracteristicas['detalles'])) {
+            foreach ($caracteristicas['detalles'] as $detalle) {
+                if (isset($detalle['id_lote_envasado'])) {
+                    $ids[] = $detalle['id_lote_envasado'];
                 }
             }
-
-            // Elimina duplicados (por si acaso)
-            return array_unique($ids);
         }
+
+        // Elimina duplicados (por si acaso)
+        return array_unique($ids);
+    }
 
 
 
