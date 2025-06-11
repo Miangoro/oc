@@ -298,7 +298,7 @@
                                         @elseif($pregunta->filtro == 'nanalisis')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b>
                                                
-                                                 @foreach ($datos->certificado->dictamen->inspeccione->solicitud->id_lote_granel_2 as $idLoteGranel)
+                                                 @foreach ($datos->certificado->dictamen->inspeccione->solicitud->id_lote_granel2 as $idLoteGranel)
                 @php
                     $loteGranel = \App\Models\LotesGranel::with(['fqs', 'empresa.empresaNumClientes'])->find($idLoteGranel);
                 @endphp
