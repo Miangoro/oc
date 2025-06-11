@@ -298,17 +298,22 @@
                                         @elseif($pregunta->filtro == 'nanalisis')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b>
                                                
-                                                 @foreach ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs as $documento)
-                                                        <a target="_blank"
-                                                            href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->empresa->empresaNumClientes->firstWhere(
-                                                                'numero_cliente',
-                                                                '!=',
-                                                                null,
-                                                            )->numero_cliente }}/fqs/{{ $documento->url }}">
-                                                            <i
-                                                                class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                        </a>
-                                                    @endforeach
+                                                 @foreach ($datos->certificado->dictamen->inspeccione->solicitud->id_lote_granel as $idLoteGranel)
+    @php
+        $loteGranel = \App\Models\LotesGranel::with(['fqs', 'empresa.empresaNumClientes'])->find($idLoteGranel);
+    @endphp
+
+    @if ($loteGranel)
+        @foreach ($loteGranel->fqs as $documento)
+            <a target="_blank"
+                href="/files/{{ $loteGranel->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}/fqs/{{ $documento->url }}">
+                <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+            </a>
+        @endforeach
+    @endif
+@endforeach
+
+
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis_ajuste')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b>

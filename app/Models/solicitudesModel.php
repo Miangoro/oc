@@ -74,20 +74,21 @@ public function getIdLoteGranelAttribute()
 {
     $caracteristicas = json_decode($this->caracteristicas, true);
 
-    // Busca directamente en la raíz del JSON
+    // Si está directamente en el JSON
     if (isset($caracteristicas['id_lote_granel'])) {
-        return $caracteristicas['id_lote_granel'];
+        return is_array($caracteristicas['id_lote_granel']) 
+            ? $caracteristicas['id_lote_granel'] 
+            : [$caracteristicas['id_lote_granel']];
     }
 
-    // Busca en los lotes relacionados a través de la tabla intermedia
+    // Si se encuentra en la relación muchos a muchos
     if ($this->lotes_envasado_granel && $this->lotes_envasado_granel->isNotEmpty()) {
-        // Devuelve SOLO el primer id_lote_granel, nunca un array
-        return $this->lotes_envasado_granel->pluck('id_lote_granel')->first();
+        return $this->lotes_envasado_granel->pluck('id_lote_granel')->unique()->values();
     }
 
-    // Devuelve null si no se encuentra
-    return null;
+    return collect(); // Siempre devolver una colección vacía en lugar de null
 }
+
 
     public function getTipoAnalisisAttribute()
     {
