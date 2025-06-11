@@ -464,11 +464,9 @@ public function MostrarDictamenExportacion($id_dictamen)
             $E_productor = $envasado_en ? (instalaciones::find($envasado_en)?->estados?->nombre ?? 'No encontrado') : '';
         $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
         // Acceder a los detalles
-        foreach ($detalles as $detalle) {
-            $botellas = $detalle['cantidad_botellas'] ?? '';
-            $cajas = $detalle['cantidad_cajas'] ?? '';
-            $presentacion = $detalle['presentacion'][0] ?? '';
-        }
+            $botellas = $detalles[0]['cantidad_botellas'] ?? '';
+            $cajas = $detalles[0]['cantidad_cajas'] ?? '';
+            $presentacion = $detalles[0]['presentacion'][0] ?? '';
         // Obtener todos los IDs de los lotes
         $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
         // Buscar los lotes envasados
