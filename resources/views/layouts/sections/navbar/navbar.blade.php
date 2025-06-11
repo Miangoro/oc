@@ -164,13 +164,13 @@ $navbarDetached = ($navbarDetached ?? '');
                     <a href="{{url('pages/faq')}}" class="stretched-link">FAQs</a>
                     <small class="mb-0">Preguntas Frecuentes</small>
                   </div>
-{{--                   <div class="dropdown-shortcuts-item col">
+                  <div class="dropdown-shortcuts-item col">
                     <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                      <i class="ri-tv-2-line ri-26px text-heading"></i>
+                      <i class="ri-file-edit-line ri-26px text-heading"></i>
                     </span>
-                    <a href="{{url('modal-examples')}}" class="stretched-link">Modals</a>
-                    <small class="mb-0">Useful Popups</small>
-                  </div> --}}
+                    <a href="{{url('solicitudes-historial')}}" class="stretched-link">Solicitudes</a>
+                    <small class="mb-0">Solicitudes de servicios</small>
+                  </div>
                 </div>
               </div>
             </div>
