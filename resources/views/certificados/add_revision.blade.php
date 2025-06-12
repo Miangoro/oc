@@ -371,11 +371,19 @@
                                                 @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'certificado_granel')
-                                            <td>Granel:
+                                            <td>Granel:ddd
                                                 <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}</b>
+                                                <a target="_blank" href="/Pre-certificado-granel/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->id_certificado }}">
+                                                            <i
+                                                                class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                </a>
                                                 <br>
                                                 Envasado:
                                                 <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }}</b>
+                                                <a target="_blank" href="/dictamen_envasado/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->dictamenEnvasado->id_dictamen }}">
+                                                            <i
+                                                                class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                </a>
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'N/A' }}</b>
