@@ -383,9 +383,7 @@ $solicitudQuery = solicitudesModel::with([
 
     'predios',
     'marcas',
-   
-    'lote_envasado.marca',
-    'lote_envasado.dictamenEnvasado',
+ 
    
 
 ]);
