@@ -380,14 +380,9 @@ foreach ($certificados as $certificado) {
 $solicitudQuery = solicitudesModel::with([
     'empresa.empresaNumClientes',
     'instalacion.certificado_instalacion',
-
     'predios',
     'marcas',
-     'lote_envasado.lotes_envasado_granel.lotes_granel.clase',
-    'lote_envasado.lotes_envasado_granel.lotes_granel.categoria',
-    'lote_envasado.marca',
-    'lote_envasado.dictamenEnvasado',
-    'lote_envasado.lotes_envasado_granel.lotes_granel.certificadoGranel'
+
 
 ]);
 
@@ -397,12 +392,31 @@ $solicitud = $solicitudQuery->where("id_solicitud", $id_solicitud)->first();
 if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
     // Si el id_tipo no es 11, agregamos las relaciones adicionales
     $solicitud->load([
-        'lote_granel.categoria',
-        'lote_granel.clase',
-        'lote_granel.certificadoGranel',
+    'lote_granel' => function ($query) {
+        $query->with(['categoria', 'clase', 'certificadoGranel']);
+    }
+]);
+}
 
+$solicitud = $solicitudQuery->where("id_solicitud", $id_solicitud)->first();
+
+if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
+    $solicitud->load([
+        'lote_granel' => function ($query) {
+            $query->with(['categoria', 'clase', 'certificadoGranel']);
+        }
     ]);
 }
+
+// ⚠️ Aquí cargas los lotes envasado manualmente con sus relaciones
+$lotesEnvasado = lotes_envasado::with([
+    'lotesGranel.clase',
+    'lotesGranel.categoria',
+    'marca',
+    'dictamenEnvasado',
+    'lotesGranel.certificadoGranel'
+])->whereIn('id_lote_envasado', $solicitud->id_lote_envasado)->get();
+
 
 
     if (!$solicitud) {

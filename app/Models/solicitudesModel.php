@@ -148,6 +148,13 @@ public function lote_envasado()
     return $this->belongsTo(lotes_envasado::class, 'id_lote_envasado', 'id_lote_envasado');
 }
 
+// En Solicitud
+public function lotes_envasado()
+{
+    $ids = $this->id_lote_envasado; // ya es array gracias al accessor
+    return lotes_envasado::whereIn('id_lote_envasado', $ids)->get();
+}
+
     public function getInstalacionVigilanciaAttribute()
     {
         $caracteristicas = json_decode($this->caracteristicas, true);

@@ -15,12 +15,15 @@ use App\Helpers\Helpers;
 use App\Models\preguntas_revision;
 use Illuminate\Support\Facades\Schema;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;//Autentificar
+use Illuminate\Support\Facades\Log;
 
 class RevisionPersonalController extends Controller
 {
     public function userManagement()
     {
-        $userId = auth()->id();
+        //$userId = auth()->id();
+        $userId = Auth::id();
         $EstadisticasInstalaciones = $this->calcularCertificados($userId, 1); // Estadisticas Instalaciones
         $EstadisticasGranel = $this->calcularCertificados($userId, 2); // Estadisticas Granel
 
@@ -47,7 +50,7 @@ class RevisionPersonalController extends Controller
     public function index(Request $request)
     {
         $columns = [
-            1 => 'id_revisor',
+            1 => 'id_revision',
             2 => 'decision',
             3 => 'observaciones',
             4 => 'tipo_revision',
@@ -58,7 +61,8 @@ class RevisionPersonalController extends Controller
         ];
 
         $search = $request->input('search.value');
-        $userId = auth()->id();
+        $userId = Auth::id();
+
         $tipoCertificado = $request->input('tipo_certificado');
         // Inicializar la consulta para Revisor y RevisorGranel
         $queryRevisor = Revisor::with([
@@ -69,7 +73,7 @@ class RevisionPersonalController extends Controller
 
 
         // Filtrar por usuario si no es admin (ID 8)
-        if ($userId != 1) {
+        if ($userId != 1 AND $userId !=2  AND $userId !=3  AND $userId !=4) {
             $queryRevisor->where('id_revisor', $userId);
         }
         if ($tipoCertificado) {
@@ -108,7 +112,7 @@ class RevisionPersonalController extends Controller
         $orderIndex = $request->input('order.0.column');
         $orderDir = $request->input('order.0.dir');
 
-        $order = $columns[$orderIndex] ?? 'id_revisor';
+        $order = $columns[$orderIndex] ?? 'id_revision';
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
 
         // Obtener los totales de registros por separado
@@ -305,7 +309,7 @@ class RevisionPersonalController extends Controller
                 'revisor' => $revisor
             ], 200);
         } catch (\Exception $e) {
-            \Log::error('Error al registrar la aprobación', ['exception' => $e]);
+            Log::error('Error al registrar la aprobación', ['exception' => $e]);
             return response()->json([
                 'message' => 'Error al registrar la aprobación: ' . $e->getMessage(),
             ], 500);
