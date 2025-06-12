@@ -397,11 +397,10 @@ $solicitud = $solicitudQuery->where("id_solicitud", $id_solicitud)->first();
 if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
     // Si el id_tipo no es 11, agregamos las relaciones adicionales
     $solicitud->load([
-        'lote_granel.categoria',
-        'lote_granel.clase',
-        'lote_granel.certificadoGranel',
-
-    ]);
+    'lote_granel' => function ($query) {
+        $query->with(['categoria', 'clase', 'certificadoGranel']);
+    }
+]);
 }
 
 
