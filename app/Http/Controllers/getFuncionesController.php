@@ -506,8 +506,12 @@ $lotesEnvasado = lotes_envasado::with([
                 ->value('url');
 
             $url_fqs = Documentacion_url::where('id_relacion', $solicitud->lote_granel->id_lote_granel)
-                ->where('id_documento', 58)->Orwhere('id_documento', 134)
-                ->value('url');
+    ->where(function ($query) {
+        $query->where('id_documento', 58)
+              ->orWhere('id_documento', 134);
+    })
+    ->value('url');
+
         }
 
         
