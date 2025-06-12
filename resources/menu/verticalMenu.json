@@ -289,7 +289,7 @@
           "url": "/bitacoraMezcal",
           "name": "Mezcal a granel",
           "slug": "bitacora-mezcal",
-          "can" : "Visualizar usuarios"
+          "can" : "Visualizar bitácoras"
         },
         {
           "url": "/bitacoraProductoMaduracion",
