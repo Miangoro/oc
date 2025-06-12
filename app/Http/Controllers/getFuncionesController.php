@@ -383,8 +383,7 @@ $solicitudQuery = solicitudesModel::with([
 
     'predios',
     'marcas',
-     'lote_envasado.lotes_envasado_granel.lotes_granel.clase',
-    'lote_envasado.lotes_envasado_granel.lotes_granel.categoria',
+   
     'lote_envasado.marca',
     'lote_envasado.dictamenEnvasado',
     'lote_envasado.lotes_envasado_granel.lotes_granel.certificadoGranel'
