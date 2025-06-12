@@ -371,7 +371,7 @@
                                                 @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'certificado_granel')
-                                            <td>Granel:ddd
+                                            <td>Granel:
                                                 <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}</b>
                                                 <a target="_blank" href="/Pre-certificado-granel/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->id_certificado }}">
                                                             <i
