@@ -1,5 +1,5 @@
 <div class="modal fade" id="editarBitacoraMezcal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editBitacora">Agregar Bitácora</h5>
@@ -36,17 +36,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-
-                        <div class="col-md-6 mb-3">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <select id="edit_id_lote_granel" name="id_lote_granel" class="select2 form-select">
-                                    <option value="">Selecciona un lote</option>
-                                </select>
-                                <label for="id_lote_granel">Lote a granel</label>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="row">
                         <div class="col-md-12">
@@ -56,6 +45,85 @@
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select id="edit_id_lote_granel" name="id_lote_granel" class="select2 form-select">
+                                    <option value="">Selecciona un lote</option>
+                                </select>
+                                <label for="id_lote_granel">Lote a granel</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating form-floating-outline">
+                                <input type="text" class="form-control" id="edit_operacion_adicional"
+                                    name="operacion_adicional" placeholder="Operación adicional"
+                                    aria-label="Operación adicional">
+                                <label for="operacion_adicional">Operación adicional</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating form-floating-outline">
+                                <input type="number" class="form-control" id="edit_volumen_inicial"
+                                    name="volumen_inicial" placeholder="Volumen inicial" aria-label="Volumen inicial">
+                                <label for="volumen_inicial">Volumen inicial</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating form-floating-outline">
+                                <input type="number" step="0.01" class="form-control" id="edit_alcohol_inicial"
+                                    name="alcohol_inicial" placeholder="% Alc. inicial" aria-label="% Alc. inicial">
+                                <label for="alcohol_inicial">% Alc. inicial</label>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Entradas --}}
+                    <div class="form-section mb-5 p-3 border rounded">
+                        <h6>ENTRADAS</h6>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" class="form-control" id="edit_procedencia_entrada"
+                                        name="procedencia_entrada" placeholder="Procedencia entrada"
+                                        aria-label="Procedencia entrada">
+                                    <label for="procedencia_entrada">Procedencia de la entrada</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="number" class="form-control" id="edit_volumen_entrada"
+                                        name="volumen_entrada" placeholder="Volumen entrada"
+                                        aria-label="Volumen entrada">
+                                    <label for="volumen_entrada">Volumen entrada</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="number" step="0.01" class="form-control"
+                                        id="edit_alcohol_entrada" name="alcohol_entrada" placeholder="% Alc. entrada"
+                                        aria-label="% Alc. entrada">
+                                    <label for="alcohol_entrada">% Alc. Vol. entrada</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="number" step="0.01" class="form-control" id="edit_agua_entrada"
+                                        name="agua_entrada" placeholder="Agua agregada (L)"
+                                        aria-label="Agua entrada">
+                                    <label for="agua_entrada">Agua agregada (L)</label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -73,9 +141,9 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="number" step="0.01" class="form-control" id="edit_alc_vol_salida"
-                                        name="alc_vol_salida" placeholder="% Alc. Vol." aria-label="% Alc. Vol."
-                                        required>
+                                    <input type="number" step="0.01" class="form-control"
+                                        id="edit_alc_vol_salida" name="alc_vol_salida" placeholder="% Alc. Vol."
+                                        aria-label="% Alc. Vol." required>
                                     <label for="alc_vol_salida">% Alc. Vol.</label>
                                 </div>
                             </div>
@@ -102,9 +170,9 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="number" step="0.01" class="form-control" id="edit_alc_vol_final"
-                                        name="alc_vol_final" placeholder="% Alc. Vol." aria-label="% Alc. Vol."
-                                        required>
+                                    <input type="number" step="0.01" class="form-control"
+                                        id="edit_alc_vol_final" name="alc_vol_final" placeholder="% Alc. Vol."
+                                        aria-label="% Alc. Vol." required>
                                     <label for="alc_vol_final">% Alc. Vol.</label>
                                 </div>
                             </div>
@@ -184,7 +252,7 @@
             let tipoArray = JSON.parse(tipo);
             return tipoArray.join(', ');
         } catch (error) {
-            return tipo; // En caso de que no sea un JSON válido, regresamos el texto original
+            return tipo;
         }
     }
 </script>

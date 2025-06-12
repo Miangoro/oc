@@ -53,10 +53,10 @@ $(function () {
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $fecha = full['fecha'] ?? 'N/A';
-            var $lote_a_granel = full['lote_a_granel'] ?? 'N/A';
+            var $id_lote_granel = full['id_lote_granel'] ?? 'N/A';
 
             return '<br><span class="fw-bold text-dark small">Lote a Granel: </span>' +
-              '<span class="small">' + $lote_a_granel + '</span>';
+              '<span class="small">' + $id_lote_granel + '</span>';
           }
         },
         {
@@ -429,27 +429,27 @@ $(function () {
             }
           }
         },
-        volumen_salida: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el volumen de salida'
-            }
-          }
-        },
-        alc_vol_salida: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el contenido alcohólico de salida'
-            }
-          }
-        },
-        destino: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el destino'
-            }
-          }
-        },
+          id_instalacion: {
+              validators: {
+                notEmpty: {
+                  message: 'Por favor seleccione la instalación'
+                }
+              }
+            },  /*
+            alc_vol_salida: {
+              validators: {
+                notEmpty: {
+                  message: 'Por favor ingrese el contenido alcohólico de salida'
+                }
+              }
+            },
+            destino: {
+              validators: {
+                notEmpty: {
+                  message: 'Por favor ingrese el destino'
+                }
+              }
+            }, */
         volumen_final: {
           validators: {
             notEmpty: {
@@ -488,6 +488,9 @@ $(function () {
           // Ocultar el offcanvas
           $('#RegistrarBitacoraMezcal').modal('hide');
           $('#registroInventarioForm')[0].reset();
+          $('#registroInventarioForm select').val(null).trigger('change');
+          $('#id_instalacion').empty().trigger('change');
+          $('#id_lote_granel').empty().trigger('change');
           $('.datatables-users').DataTable().ajax.reload();
           // Mostrar alerta de éxito
           Swal.fire({
@@ -504,7 +507,7 @@ $(function () {
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al agregar la clase',
+            text: 'Error al agregar la bitácora',
             customClass: {
               confirmButton: 'btn btn-danger'
             }
@@ -513,7 +516,7 @@ $(function () {
       });
     });
 
-        // Inicializar select2 y revalidar el campo cuando cambie
+    // Inicializar select2 y revalidar el campo cuando cambie
     $('#id_empresa, #id_lote_granel, #fecha').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
@@ -522,41 +525,36 @@ $(function () {
 
 
 
-    $(document).on('click', '.edit-record', function () {
-      var bitacoraID = $(this).data('id');
-      $('#edit_bitacora_id').val(bitacoraID);
-      $.ajax({
-        url: '/bitacora_mezcal/' + bitacoraID + '/edit',
-        method: 'GET',
-        success: function (data) {
-          if (data.success) {
-            var bitacora = data.bitacora;
+  $(document).on('click', '.edit-record', function () {
+    var bitacoraID = $(this).data('id');
+    $('#edit_bitacora_id').val(bitacoraID);
+    $.ajax({
+      url: '/bitacora_mezcal/' + bitacoraID + '/edit',
+      method: 'GET',
+      success: function (data) {
+        if (data.success) {
+          var bitacora = data.bitacora;
 
-            $('#edit_bitacora_id').val(bitacora.id);
-            $('#edit_id_empresa').val(bitacora.id_empresa).trigger('change');
-            $('#edit_fecha').val(bitacora.fecha);
-            $('#edit_id_lote_granel').data('selected', bitacora.id_lote_granel).trigger('change');
-            $('#edit_id_instalacion').data('selected', bitacora.id_instalacion).trigger('change');
-            $('#edit_volumen_salida').val(bitacora.volumen_salida);
-            $('#edit_alc_vol_salida').val(bitacora.alc_vol_salida);
-            $('#edit_destino').val(bitacora.destino);
-            $('#edit_volumen_final').val(bitacora.volumen_final);
-            $('#edit_alc_vol_final').val(bitacora.alc_vol_final);
-            $('#edit_observaciones').val(bitacora.observaciones);
-            $('#editarBitacoraMezcal').modal('show');
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo cargar los datos.',
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          }
-        },
-        error: function (error) {
-          console.error('Error al cargar los datos', error);
+          $('#edit_bitacora_id').val(bitacora.id);
+          $('#edit_id_empresa').val(bitacora.id_empresa).trigger('change');
+          $('#edit_fecha').val(bitacora.fecha);
+          $('#edit_id_lote_granel').data('selected', bitacora.id_lote_granel).trigger('change');
+          $('#edit_id_instalacion').data('selected', bitacora.id_instalacion).trigger('change');
+          $('#edit_operacion_adicional').val(bitacora.operacion_adicional);
+          $('#edit_volumen_inicial').val(bitacora.volumen_inicial);
+          $('#edit_alcohol_inicial').val(bitacora.alcohol_inicial);
+          $('#edit_procedencia_entrada').val(bitacora.procedencia_entrada);
+          $('#edit_volumen_entrada').val(bitacora.volumen_entrada);
+          $('#edit_alcohol_entrada').val(bitacora.alcohol_entrada);
+          $('#edit_agua_entrada').val(bitacora.agua_entrada);
+          $('#edit_volumen_salida').val(bitacora.volumen_salida);
+          $('#edit_alc_vol_salida').val(bitacora.alc_vol_salida);
+          $('#edit_destino').val(bitacora.destino);
+          $('#edit_volumen_final').val(bitacora.volumen_final);
+          $('#edit_alc_vol_final').val(bitacora.alc_vol_final);
+          $('#edit_observaciones').val(bitacora.observaciones);
+          $('#editarBitacoraMezcal').modal('show');
+        } else {
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -566,132 +564,170 @@ $(function () {
             }
           });
         }
+      },
+      error: function (error) {
+        console.error('Error al cargar los datos', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo cargar los datos.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  });
+
+
+  $(function () {
+    // Configurar CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation
+    const form = document.getElementById('editInventarioForm');
+    const fv = FormValidation.formValidation(form, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una empresa.'
+            }
+          }
+        },
+        id_lote_granel: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un lote a granel.'
+            }
+          }
+        },
+        /*    volumen_salida: {
+               validators: {
+                   notEmpty: {
+                       message: 'Ingresa el volumen de salida.'
+                   },
+                   numeric: {
+                       message: 'Debe ser un número.'
+                   }
+               }
+           },
+           alc_vol_salida: {
+               validators: {
+                   notEmpty: {
+                       message: 'Ingresa el % Alc. Vol. de salida.'
+                   },
+                   numeric: {
+                       message: 'Debe ser un número decimal.'
+                   }
+               }
+           }, */
+        destino: {
+          validators: {
+            notEmpty: {
+              message: 'Ingresa el destino.'
+            }
+          }
+        },
+        volumen_final: {
+          validators: {
+            notEmpty: {
+              message: 'Ingresa el volumen final.'
+            },
+            numeric: {
+              message: 'Debe ser un número.'
+            }
+          }
+        },
+        alc_vol_final: {
+          validators: {
+            notEmpty: {
+              message: 'Ingresa el % Alc. Vol. final.'
+            },
+            numeric: {
+              message: 'Debe ser un número decimal.'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      const formData = $(form).serialize();
+      const id = $('#edit_bitacora_id').val();
+
+      $.ajax({
+        url: '/bitacorasUpdate/' + id,
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+          $('#editarBitacoraMezcal').modal('hide');
+          $('#editInventarioForm')[0].reset();
+          $('.datatables-users').DataTable().ajax.reload();
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.success || 'La bitácora fue actualizada correctamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la bitácora.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
       });
     });
-
-
-    $(function () {
-        // Configurar CSRF para Laravel
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        // Inicializar FormValidation
-        const form = document.getElementById('editInventarioForm');
-        const fv = FormValidation.formValidation(form, {
-            fields: {
-                id_empresa: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Selecciona una empresa.'
-                        }
-                    }
-                },
-                id_lote_granel: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Selecciona un lote a granel.'
-                        }
-                    }
-                },
-                volumen_salida: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Ingresa el volumen de salida.'
-                        },
-                        numeric: {
-                            message: 'Debe ser un número.'
-                        }
-                    }
-                },
-                alc_vol_salida: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Ingresa el % Alc. Vol. de salida.'
-                        },
-                        numeric: {
-                            message: 'Debe ser un número decimal.'
-                        }
-                    }
-                },
-                destino: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Ingresa el destino.'
-                        }
-                    }
-                },
-                volumen_final: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Ingresa el volumen final.'
-                        },
-                        numeric: {
-                            message: 'Debe ser un número.'
-                        }
-                    }
-                },
-                alc_vol_final: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Ingresa el % Alc. Vol. final.'
-                        },
-                        numeric: {
-                            message: 'Debe ser un número decimal.'
-                        }
-                    }
-                }
-            },
-            plugins: {
-                trigger: new FormValidation.plugins.Trigger(),
-                bootstrap5: new FormValidation.plugins.Bootstrap5({
-                    eleValidClass: '',
-                    eleInvalidClass: 'is-invalid',
-                    rowSelector: '.form-floating'
-                }),
-                submitButton: new FormValidation.plugins.SubmitButton(),
-                autoFocus: new FormValidation.plugins.AutoFocus()
-            }
-        }).on('core.form.valid', function () {
-            const formData = $(form).serialize();
-            const id = $('#edit_bitacora_id').val();
-
-            $.ajax({
-                url: '/bitacorasUpdate/' + id,
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                    $('#editarBitacoraMezcal').modal('hide');
-                    $('#editInventarioForm')[0].reset();
-                    $('.datatables-users').DataTable().ajax.reload();
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Éxito!',
-                        text: response.success || 'La bitácora fue actualizada correctamente.',
-                        customClass: {
-                            confirmButton: 'btn btn-success'
-                        }
-                    });
-                },
-                error: function (xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: '¡Error!',
-                        text: 'Error al actualizar la bitácora.',
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                }
-            });
-        });
-    });
+  });
 
 
 
+  $(document).ready(function () {
+    function calcular() {
+      let volumenInicial = parseFloat($('#volumen_inicial').val()) || 0;
+      let alcoholInicial = parseFloat($('#alcohol_inicial').val()) || 0;
 
+      let volumenEntrada = parseFloat($('#volumen_entrada').val()) || 0;
+      let alcoholEntrada = parseFloat($('#alcohol_entrada').val()) || 0;
+
+      let volumenSalida = parseFloat($('#volumen_salida').val()) || 0;
+      let alcoholSalida = parseFloat($('#alc_vol_salida').val()) || 0;
+
+      let volumenFinal = (volumenInicial + volumenEntrada) - volumenSalida;
+      let alcoholFinal = 0;
+
+      if (volumenFinal > 0) {
+        let alcoholTotal = (volumenInicial * alcoholInicial) +
+          (volumenEntrada * alcoholEntrada) -
+          (volumenSalida * alcoholSalida);
+
+        alcoholFinal = alcoholTotal / volumenFinal;
+      }
+      $('#volumen_final').val(volumenFinal.toFixed(2));
+      $('#alc_vol_final').val(alcoholFinal.toFixed(2));
+    }
+    // Ejecutar cálculo al cambiar cualquier campo
+    $('#volumen_inicial, #alcohol_inicial, #volumen_entrada, #alcohol_entrada, #volumen_salida, #alc_vol_salida').on('input', calcular);
+  });
   //end
 });
 

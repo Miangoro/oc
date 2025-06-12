@@ -9,6 +9,7 @@ use App\Models\BitacoraMezcal;
 use App\Models\empresa;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
+use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class BitacoraMezcalController extends Controller
@@ -26,7 +27,7 @@ class BitacoraMezcalController extends Controller
         $columns = [
             1 => 'id',
             2 => 'fecha',
-            3 => 'lote_a_granel',
+            3 => 'id_lote_granel',
         ];
 
         $search = $request->input('search.value');
@@ -42,7 +43,7 @@ class BitacoraMezcalController extends Controller
         if (!empty($search)) {
             $query->where(function ($query) use ($search) {
                 $query->where('fecha', 'LIKE', "%{$search}%")
-                    ->orWhere('lote_a_granel', 'LIKE', "%{$search}%");
+                    ->orWhere('id_lote_granel', 'LIKE', "%{$search}%");
             });
             $totalFiltered = $query->count();
         }
@@ -60,7 +61,7 @@ class BitacoraMezcalController extends Controller
                 'fake_id' => $counter++,
                 'fecha' => Helpers::formatearFecha($bitacora->fecha),
                 'id' => $bitacora->id,
-                'lote_a_granel' => $bitacora->lote_a_granel ?? 'N/A',
+                'id_lote_granel' => $bitacora->id_lote_granel ?? 'N/A',
 
                 // Salidas
                 'volumen_salidas' => $bitacora->volumen_salidas ?? 'N/A',
@@ -100,9 +101,16 @@ class BitacoraMezcalController extends Controller
             'id_empresa' => 'required|integer|exists:empresa,id_empresa',
             'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
             'id_instalacion' => 'required|integer',
-            'volumen_salida' => 'required|numeric|min:0' ,
-            'alc_vol_salida' => 'required|numeric|min:0',
-            'destino' => 'required|string|max:255',
+            'operacion_adicional' => 'nullable|string',
+            'volumen_inicial' => 'nullable|numeric|min:0',
+            'alcohol_inicial' => 'nullable|numeric|min:0',
+            'procedencia_entrada' => 'nullable|string',
+            'volumen_entrada'=> 'nullable|numeric|min:0',
+            'alcohol_entrada' => 'nullable|numeric|min:0',
+            'agua_entrada' => 'nullable|numeric|min:0',
+            'volumen_salida' => 'nullable|numeric|min:0' ,
+            'alc_vol_salida' => 'nullable|numeric|min:0',
+            'destino' => 'nullable|string|max:255',
             'volumen_final' => 'required|numeric|',
             'alc_vol_final' => 'required|numeric|',
             'observaciones' => 'nullable|string|',
@@ -114,18 +122,28 @@ class BitacoraMezcalController extends Controller
             $bitacora->id_empresa = $request->id_empresa;
             $bitacora->id_instalacion = $request->id_instalacion;
             $bitacora->id_lote_granel = $request->id_lote_granel;
-            $bitacora->volumen_salidas = $request->volumen_salida;
-            $bitacora->alcohol_salidas = $request->alc_vol_salida;
-            $bitacora->destino_salidas = $request->destino;
+            $bitacora->operacion_adicional = $request->operacion_adicional;
+            $bitacora->volumen_inicial = $request->volumen_inicial;
+            $bitacora->alcohol_inicial = $request->alcohol_inicial;
+            $bitacora->procedencia_entrada  = $request->procedencia_entrada ?? 0;
+            $bitacora->volumen_entrada  = $request->volumen_entrada ?? 0;
+            $bitacora->alcohol_entrada  = $request->alcohol_entrada ?? 0;
+            $bitacora->agua_entrada  = $request->agua_entrada ?? 0;
+            $bitacora->volumen_salidas = $request->volumen_salida ?? 0;
+            $bitacora->alcohol_salidas = $request->alc_vol_salida ?? 0;
+            $bitacora->destino_salidas = $request->destino ?? 0;
             $bitacora->volumen_final = $request->volumen_final;
             $bitacora->alcohol_final = $request->alc_vol_final;
             $bitacora->observaciones = $request->observaciones;
+
             $bitacora->save();
 
             return response()->json(['success' => 'Bitácora registrada correctamente']);
         } catch (\Exception $e) {
-            \Log::error('Error al registrar bitácora: ' . $e->getMessage());
-            return response()->json(['error' => 'Error al registrar la bitácora'], 500);
+          /*   Log::error('Error al registrar bitácora: ' . $e->getMessage()); */
+          /*   return response()->json(['error' => 'Error al registrar la bitácora'], 500); */
+          return response()->json(['error' => $e->getMessage()], 500);
+
         }
     }
 
@@ -142,6 +160,13 @@ class BitacoraMezcalController extends Controller
                     'id_instalacion' => $bitacora->id_instalacion,
                     'fecha' => $fecha_formateada, // para que el input date lo acepte
                     'id_lote_granel' => $bitacora->id_lote_granel,
+                    'operacion_adicional' => $bitacora->operacion_adicional,
+                    'volumen_inicial'    =>     $bitacora->volumen_inicial,
+                    'alcohol_inicial'   =>     $bitacora->alcohol_inicial,
+                    'procedencia_entrada'  =>     $bitacora->procedencia_entrada,
+                    'volumen_entrada'   =>    $bitacora->volumen_entrada,
+                    'alcohol_entrada'  =>     $bitacora->alcohol_entrada,
+                    'agua_entrada' => $bitacora->agua_entrada,
                     'volumen_salida' => $bitacora->volumen_salidas,
                     'alc_vol_salida' => $bitacora->alcohol_salidas,
                     'destino' => $bitacora->destino_salidas,
@@ -164,14 +189,20 @@ class BitacoraMezcalController extends Controller
           $request->validate([
               'edit_bitacora_id' => 'required|exists:bitacora_mezcal,id',
               'id_empresa'       => 'required|exists:empresa,id_empresa',
-              'id_lote_granel'   => 'required|exists:lotes_granel,id_lote_granel',
-              'id_instalacion'   => 'required|integer',
-              'fecha'            => 'required|date',
-              'volumen_salida'   => 'required|numeric|min:0',
-              'alc_vol_salida'   => 'required|numeric|min:0',
-              'destino'          => 'required|string|max:255',
-              'volumen_final'    => 'required|numeric|min:0',
-              'alc_vol_final'    => 'required|numeric|min:0',
+              'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
+              'id_instalacion' => 'required|integer',
+              'operacion_adicional' => 'nullable|string',
+              'volumen_inicial' => 'nullable|numeric|min:0',
+              'alcohol_inicial' => 'nullable|numeric|min:0',
+              'procedencia_entrada' => 'nullable|string',
+              'volumen_entrada'=> 'nullable|numeric|min:0',
+              'alcohol_entrada' => 'nullable|numeric|min:0',
+              'agua_entrada' => 'nullable|numeric|min:0',
+              'volumen_salida' => 'nullable|numeric|min:0' ,
+              'alc_vol_salida' => 'nullable|numeric|min:0',
+              'destino' => 'nullable|string|max:255',
+              'volumen_final' => 'required|numeric|',
+              'alc_vol_final' => 'required|numeric|',
               'observaciones'    => 'nullable|string',
           ]);
 
@@ -182,9 +213,16 @@ class BitacoraMezcalController extends Controller
               'id_lote_granel'   => $request->id_lote_granel,
               'id_instalacion'   => $request->id_instalacion,
               'fecha'            => $request->fecha,
-              'volumen_salidas'   => $request->volumen_salida,
-              'alcohol_salidas'   => $request->alc_vol_salida,
-              'destino_salidas'  => $request->destino,
+              'operacion_adicional' => $request->operacion_adicional,
+              'volumen_inicial' => $request->volumen_inicial,
+              'alcohol_inicial' => $request->alcohol_inicial ,
+              'procedencia_entrada' => $request->procedencia_entrada ?? 0,
+              'volumen_entrada'=> $request->volumen_entrada ?? 0,
+              'alcohol_entrada' => $request->alcohol_entrada ?? 0,
+              'agua_entrada' => $request->agua_entrada ?? 0,
+              'volumen_salidas'   => $request->volumen_salida ?? 0,
+              'alcohol_salidas'   => $request->alc_vol_salida ?? 0,
+              'destino_salidas'  => $request->destino ?? 0,
               'volumen_final'    => $request->volumen_final,
               'alcohol_final'    => $request->alc_vol_final,
               'observaciones'    => $request->observaciones,

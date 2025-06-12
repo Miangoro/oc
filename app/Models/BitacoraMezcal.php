@@ -18,13 +18,6 @@ class BitacoraMezcal extends Model
         'id_lote_granel',
         'id_instalacion',
         'operacion_adicional',
-        'categoria',
-        'clase',
-        'ingredientes',
-        'edad',
-        'tipo_agave',
-        'num_analisis',
-        'num_certificado',
 
         //INVENTARIO INICIAL
         'volumen_inicial',
@@ -51,7 +44,7 @@ class BitacoraMezcal extends Model
        // En BitacoraMezcal.php
 public function loteBitacora()
 {
-    return $this->belongsTo(LotesGranel::class, 'lote_a_granel', 'id_lote_granel');
+    return $this->belongsTo(LotesGranel::class, 'id_lote_granel', 'id_lote_granel');
 }
 
 }
