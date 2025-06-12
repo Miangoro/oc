@@ -380,14 +380,9 @@ foreach ($certificados as $certificado) {
 $solicitudQuery = solicitudesModel::with([
     'empresa.empresaNumClientes',
     'instalacion.certificado_instalacion',
-
     'predios',
     'marcas',
-     'lotes_envasado.lotesGranel.clase',
-    'lotes_envasado.lotesGranel.categoria',
-    'lotes_envasado.marca',
-    'lotes_envasado.dictamenEnvasado',
-    'lotes_envasado.lotesGranel.certificadoGranel'
+
 
 ]);
 
@@ -402,6 +397,26 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
     }
 ]);
 }
+
+$solicitud = $solicitudQuery->where("id_solicitud", $id_solicitud)->first();
+
+if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
+    $solicitud->load([
+        'lote_granel' => function ($query) {
+            $query->with(['categoria', 'clase', 'certificadoGranel']);
+        }
+    ]);
+}
+
+// ⚠️ Aquí cargas los lotes envasado manualmente con sus relaciones
+$lotesEnvasado = lotes_envasado::with([
+    'lotesGranel.clase',
+    'lotesGranel.categoria',
+    'marca',
+    'dictamenEnvasado',
+    'lotesGranel.certificadoGranel'
+])->whereIn('id_lote_envasado', $solicitud->id_lote_envasado)->get();
+
 
 
     if (!$solicitud) {
