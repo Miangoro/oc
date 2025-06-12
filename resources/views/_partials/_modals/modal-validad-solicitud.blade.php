@@ -1513,27 +1513,13 @@
                                     <tbody>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Razón
-                                                Social:</th>
-                                            <td class="razonSocial"></td>
+                                                Razón social y domicilio fiscal:</th>
+                                            <td class="csf"></td>
                                             <td>
                                                 <select name="razonSocial" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="Si">Sí</option>
                                                     <option value="No">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Domicilio Fiscal:</th>
-                                            <td class="domicilioFiscal"></td>
-                                            <td>
-                                                <select name="domicilioFiscal" class="form-control form-control-sm"
-                                                    id="cumpleDomicilioFiscalEmisorDictamen">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
                                                 </select>
                                             </td>
                                         </tr>
@@ -1574,6 +1560,16 @@
                                                 </select></td>
                                         </tr>
                                         <tr>
+                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                                Solicitud:</th>
+                                            <td class="solicitudPdf"></td>
+                                            <td><select name="solicitudPdf" class="form-control form-control-sm">
+                                                    <option value="" disabled selected>Seleccionar</option>
+                                                    <option value="si">Sí</option>
+                                                    <option value="no">No</option>
+                                                </select></td>
+                                        </tr>
+                                        <!--<tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Cajas/Botellas:</th>
                                             <td class="cajasBotellas"></td>
@@ -1622,7 +1618,7 @@
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select></td>
-                                        </tr>
+                                        </tr>-->
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 FQ:

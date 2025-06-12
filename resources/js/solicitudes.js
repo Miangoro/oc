@@ -4533,13 +4533,14 @@ $(function () {
       success: function (response) {
         if (response.success) {
           $('#solicitud_id').val(id_solicitud);
-          $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
+          $('.razonSocial').append(response?.data?.empresa?.razon_social || 'No disponible');
+          $('.domicilioFiscal').append(response.data.empresa.domicilio_fiscal);
           // Validar si `direccion_completa` no está vacío
           if (response.data.instalacion) {
-            $('.domicilioInstalacion').html(response.data.instalacion.direccion_completa + " <b>Vigencia: </b>" + response.data.instalacion.fecha_vigencia);
+            $('.domicilioInstalacion').append(response.data.instalacion.direccion_completa + " <b>Vigencia: </b>" + response.data.instalacion.fecha_vigencia);
           } else {
             // Si está vacío, usar `ubicacion_predio`
-            $('.domicilioInstalacion').text(response.data?.predios?.ubicacion_predio);
+            $('.domicilioInstalacion').append(response.data?.predios?.ubicacion_predio);
             $('.nombrePredio').text(response.data?.predios?.nombre_predio);
             $('.preregistro').html(
               "<a target='_Blank' href='/pre-registro_predios/" +
@@ -4550,7 +4551,7 @@ $(function () {
 
 
 
-          $('.razonSocial').text(response?.data?.empresa?.razon_social || 'No disponible');
+          
           $('.fechaHora').text(response?.fecha_visita_formateada || 'No disponible');
 
           $('.nombreLote').text(response?.data?.lote_granel?.nombre_lote || 'No disponible');
@@ -4577,6 +4578,8 @@ $(function () {
           $('.certificadoGranel').text(response?.data?.lote_granel?.certificado_granel?.num_certificado ||
             response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.certificado_granel?.num_certificado ||
             'No disponible');
+          $('.certificadoGranel').append('<a href="/files/' + response?.data?.lote_granel.empresa?.empresa_num_clientes[0]?.numero_cliente + '/certificados_granel/' + response?.url_certificado_granel + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+           $('.fq').append('<a href="/files/' + response?.data?.lote_granel.empresa?.empresa_num_clientes[0]?.numero_cliente + '/fqs/' + response?.url_fqs + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
 
 
 
@@ -4584,7 +4587,7 @@ $(function () {
 
 
           // Validar nombre del lote envasado
-          $('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
+          $('.nombreLoteEnvasado').text(response?.lotesEnvasado[0].nombre || 'Nombre no disponible');
 
           var caracteristicas = JSON.parse(response.data?.caracteristicas);
           var tipos = {
@@ -4606,10 +4609,10 @@ $(function () {
           $('.volumenTrasladado').text(caracteristicas.id_vol_traslado);
           $('.volumenSobrante').text(caracteristicas.id_vol_res);
           $('.volumenIngresado').text(caracteristicas.volumen_ingresado);
-          $('.tipoEtiquetaEnvasado').text(response?.data?.lote_envasado.tipo);
+         // $('.tipoEtiquetaEnvasado').text(response?.data?.lotes_envasado.tipo);
           $('.inicioTerminoEnvasado').text(caracteristicas.fecha_inicio + ' a ' + caracteristicas.fecha_fin);
           let destino;
-          if (response?.data?.lote_envasado.destino_lote == 1) {
+         /* if (response?.data?.lote_envasado.destino_lote == 1) {
             destino = 'Nacional';
           }
           if (response?.data?.lote_envasado.destino_lote == 2) {
@@ -4619,10 +4622,32 @@ $(function () {
             destino = 'stock';
           }
 
-          $('.destinoEnvasado').text(destino);
+          $('.destinoEnvasado').text(destino);*/
           $('.etiqueta').html('<a href="files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + response?.url_etiqueta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-          $('.dictamenEnvasado').html('<a href="/dictamen_envasado/' + response?.data?.lote_envasado?.dictamen_envasado?.id_dictamen_envasado + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          
+          response.lotesEnvasado.forEach((lote, index) => {
+          let html = 'N/A';
+
+          if (lote.dictamen_envasado) {
+              const idDictamen = lote.dictamen_envasado.id_dictamen_envasado;
+              const numDictamen = lote.dictamen_envasado.num_dictamen;
+              const url = `/dictamen_envasado/${idDictamen}`;
+
+              html = `${numDictamen} 
+                  <a href="${url}" target="_blank">
+                      <i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>
+                  </a>
+              `;
+          }
+
+          // Suponiendo que tus elementos .dictamenEnvasado tienen data-index
+          $(`.dictamenEnvasado`).html(html);
+      });
+
+
           $('.acta').html('<a href="/files/' + response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente + '/actas/' + response?.url_acta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          $('.solicitudPdf').html('<a href="/solicitud_de_servicio/' + response?.data?.id_solicitud + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          $('.proforma').html('<a href="/files/' + response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente + '/' + response?.url_proforma + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
           // Verificar si 'detalles' existe y es un arreglo
           if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
             // Recorrer cada elemento de 'detalles'
@@ -4670,13 +4695,13 @@ $(function () {
               noDocMessage: 'No hay acta constitutiva',
               condition: (documento, response) => documento.id_empresa == response.data.id_empresa
             },
-            {
+           /*/ {
               ids: [55],
               targetClass: '.proforma',
               noDocMessage: 'No hay factura proforma',
               condition: (documento, response) => documento.id_empresa == response.data.id_empresa
             },
-            /*/  {
+              {
                 ids: [128],
                 targetClass: '.domicilioInstalacion',
                 noDocMessage: 'No hay dictamen de instalaciones',
@@ -4712,7 +4737,7 @@ $(function () {
                   });
 
                   link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
-                  if (documento.id_documento === 128) {
+                  if (documento.id_documento === 128 || documento.id_documento === 76) {
                     $(config.targetClass).append(link);
                   } else {
                     $(config.targetClass).empty().append(link);

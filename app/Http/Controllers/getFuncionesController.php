@@ -365,6 +365,7 @@ foreach ($certificados as $certificado) {
         'url_etiqueta' => $url_etiqueta ?? '',
         'url_corrugado' => $url_corrugado ?? '',
         'url_certificado' => $urls_certificados ?? '',
+        'url_fqs' => $url_fqs ?? '',
         'id_lote_envasado' => $certificados ?? '',
 
             ]);
@@ -400,10 +401,10 @@ if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
 
 $solicitud = $solicitudQuery->where("id_solicitud", $id_solicitud)->first();
 
-if ($solicitud && $solicitud->id_tipo != 11 && $solicitud->id_tipo != 5) {
+if ($solicitud  && $solicitud->id_tipo != 5) {
     $solicitud->load([
         'lote_granel' => function ($query) {
-            $query->with(['categoria', 'clase', 'certificadoGranel']);
+            $query->with(['categoria', 'clase', 'certificadoGranel','empresa.empresaNumClientes']);
         }
     ]);
 }
@@ -414,7 +415,8 @@ $lotesEnvasado = lotes_envasado::with([
     'lotesGranel.categoria',
     'marca',
     'dictamenEnvasado',
-    'lotesGranel.certificadoGranel'
+    'lotesGranel.certificadoGranel',
+    'lotesGranel.empresa.empresaNumClientes'
 ])->whereIn('id_lote_envasado', $solicitud->id_lote_envasado)->get();
 
 
@@ -435,7 +437,7 @@ $lotesEnvasado = lotes_envasado::with([
     }
 
     // Obtener documentos relacionados
-    $documentos = Documentacion_url::where("id_empresa", $solicitud->empresa->id_empresa)->get();
+    $documentos = Documentacion_url::where("id_empresa", $solicitud->empresa->id_empresa)->where('id_documento','!=',55)->where('id_documento','!=',60)->where('id_documento','!=',69)->get();
 
     if ($solicitud && $solicitud->id_tipo == 11) {
         $caracteristicas = is_string($solicitud->caracteristicas)
@@ -482,13 +484,34 @@ $lotesEnvasado = lotes_envasado::with([
                 return is_array($car) && ($car['id_lote_granel'] ?? null) == $id_lote_granel;
             });
 
-        if ($id_solicitud) {
-            $url_acta = Documentacion_url::where('id_relacion', $id_solicitud->id_solicitud)
+       
+    }
+}
+
+        if ($solicitud) {
+            $url_acta = Documentacion_url::where('id_relacion', $solicitud->id_solicitud)
                 ->where('id_documento', 69)
                 ->value('url');
         }
-    }
-}
+
+        if ($solicitud) {
+            $url_proforma = Documentacion_url::where('id_relacion', $solicitud->id_solicitud)
+                ->where('id_documento', 55)
+                ->value('url');
+        }
+
+        if ($solicitud->lote_granel) {
+            $url_certificado_granel = Documentacion_url::where('id_relacion', $solicitud->lote_granel->id_lote_granel)
+                ->where('id_documento', 59)
+                ->value('url');
+
+            $url_fqs = Documentacion_url::where('id_relacion', $solicitud->lote_granel->id_lote_granel)
+                ->where('id_documento', 58)->Orwhere('id_documento', 134)
+                ->value('url');
+        }
+
+        
+
 
 
 
@@ -499,8 +522,13 @@ $lotesEnvasado = lotes_envasado::with([
         'url_etiqueta' => $url_etiqueta ?? '',
         'url_corrugado' => $url_corrugado ?? '',
         'url_acta' => $url_acta ?? '',
+        'url_proforma' => $url_proforma ?? '',
+        'url_certificado_granel' => $url_certificado_granel ?? '',
+        'url_fqs' => $url_fqs ?? '',
         'fecha_visita_formateada' => Helpers::formatearFechaHora($solicitud->fecha_visita),
-        'tipos_agave' => $tipos
+        'tipos_agave' => $tipos,
+        'lotesEnvasado' => $lotesEnvasado,
+        
     ]);
 }
 
