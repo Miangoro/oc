@@ -61,8 +61,15 @@ class BitacoraMezcalController extends Controller
                 'fake_id' => $counter++,
                 'fecha' => Helpers::formatearFecha($bitacora->fecha),
                 'id' => $bitacora->id,
-                'id_lote_granel' => $bitacora->id_lote_granel ?? 'N/A',
+                'nombre_lote' => $bitacora->loteBitacora->nombre_lote ?? 'N/A',
+/*                 'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
+                'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A', */
 
+                //Entradas
+                'procedencia_entrada' => $bitacora->procedencia_entrada ?? 'N/A',
+                'volumen_entrada' => $bitacora->volumen_entrada ?? 'N/A',
+                'alcohol_entrada' => $bitacora->alcohol_entrada ?? 'N/A',
+                'agua_entrada' => $bitacora->agua_entrada ?? 'N/A',
                 // Salidas
                 'volumen_salidas' => $bitacora->volumen_salidas ?? 'N/A',
                 'alcohol_salidas' => $bitacora->alcohol_salidas ?? 'N/A',
@@ -89,8 +96,9 @@ class BitacoraMezcalController extends Controller
 
     public function PDFBitacoraMezcal() {
         $bitacoras = BitacoraMezcal::with('loteBitacora')->orderBy('fecha', 'desc')->get();
-        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras'))
-        ->setPaper('a4', 'landscape');
+      $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras'))
+          ->setPaper([0, 0, 1190.55, 1681.75 ], 'landscape');
+
           return $pdf->stream('Bitácora Mezcal a Granel.pdf');
     }
 
@@ -146,7 +154,22 @@ class BitacoraMezcalController extends Controller
 
         }
     }
+    public function destroy($id_bitacora)
+    {
+        $bitacora = BitacoraMezcal::find($id_bitacora);
 
+        if (!$bitacora) {
+            return response()->json([
+                'error' => 'Bitácora no encontrada.'
+            ], 404);
+        }
+
+        $bitacora->delete();
+
+        return response()->json([
+            'success' => 'Bitácora eliminada correctamente.'
+        ]);
+    }
     public function edit($id_bitacora)
     {
         try {

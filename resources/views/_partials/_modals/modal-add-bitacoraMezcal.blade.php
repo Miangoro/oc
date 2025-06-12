@@ -2,12 +2,12 @@
     aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addBitacora">Agregar Bitácora</h5>
+            <div class="modal-header bg-primary pb-4">
+                <h5 class="modal-title text-white" id="addBitacora">Agregar Bitácora de mezcal a granel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body py-8">
                 <form id="registroInventarioForm" method="POST">
                     @csrf
                     <!-- Datos Iniciales -->
@@ -37,24 +37,15 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <div class="form-floating form-floating-outline">
-                                <select class=" form-select select2" id="id_instalacion" name="id_instalacion"
-                                    aria-label="id_instalacion">
-                                    <option value="" disabled selected>Lista de instalaciones</option>
-                                    <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
-                                </select>
-                                <label for="id_instalacion" class="form-label">Instalaciones</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-6 mb-3">
-                            <div class="form-floating form-floating-outline">
-                                <select onchange="obtenerDatosGraneles();" id="id_lote_granel" name="id_lote_granel" class="select2 form-select">
-                                    <option value="" disabled selected>Selecciona un lote</option>
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select id="tipo_op" name="tipo_op" class=" form-select"
+                                    data-error-message="Por favor selecciona el tipo de operación">
+                                    <option value="" disabled selected>Selecciona el tipo de operación</option>
+                                    <option value="1">Entradas</option>
+                                    <option value="2">Salidas</option>
                                 </select>
-                                <label for="id_lote_granel">Lote a granel</label>
+                                <label for="tipo_op">Tipo de operación</label>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -65,6 +56,28 @@
                                 <label for="operacion_adicional">Operación adicional</label>
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="form-floating form-floating-outline">
+                                <select onchange="obtenerDatosGraneles();" id="id_lote_granel" name="id_lote_granel"
+                                    class="select2 form-select">
+                                    <option value="" disabled selected>Selecciona un lote</option>
+                                </select>
+                                <label for="id_lote_granel">Lote a granel</label>
+                            </div>
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            <div class="form-floating form-floating-outline">
+                                <select class=" form-select select2" id="id_instalacion" name="id_instalacion"
+                                    aria-label="id_instalacion">
+                                    <option value="" disabled selected>Lista de instalaciones</option>
+                                    <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
+                                </select>
+                                <label for="id_instalacion" class="form-label">Instalaciones</label>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -85,7 +98,7 @@
 
                     </div>
                     <!-- Entradas / Operaciones Adicionales -->
-                    <div class="form-section mb-5 p-3 border rounded">
+                    <div id="displayEntradas" class="form-section mb-5 p-3 border rounded">
                         <h6>ENTRADAS</h6>
                         <div class="row">
                             <div class="col-md-12 mb-3">
@@ -127,7 +140,7 @@
                     </div>
 
                     <!-- Salidas -->
-                    <div class="form-section mb-5 p-3 border rounded">
+                    <div id="displaySalidas" class="form-section mb-5 p-3 border rounded Small shadow">
                         <h6>SALIDAS</h6>
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -184,10 +197,11 @@
                     </div>
 
                     <!-- Botones -->
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary me-2">Registrar</button>
-                        <button type="button" class="btn btn-outline-secondary"
-                            data-bs-dismiss="modal">Cancelar</button>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line me-1"></i>
+                            Registrar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i
+                                class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -243,7 +257,7 @@
         }
     }
 
-        function obtenerDatosGraneles() {
+    function obtenerDatosGraneles() {
         var lote_granel_id = $("#id_lote_granel").val();
         if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
             $.ajax({

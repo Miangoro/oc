@@ -53,14 +53,41 @@ $(function () {
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $fecha = full['fecha'] ?? 'N/A';
-            var $id_lote_granel = full['id_lote_granel'] ?? 'N/A';
+            var $id_lote_granel = full['nombre_lote'] ?? 'N/A';
+            // var $volumen_inicial = full['volumen_inicial'] ?? 'N/A';
+            // var $alcohol_inicial = full['alcohol_inicial'] ?? 'N/A';
 
-            return '<br><span class="fw-bold text-dark small">Lote a Granel: </span>' +
+            return '<span class="fw-bold text-dark small">Fecha: </span>' +
+              '<span class="small">' + $fecha + '</span>' +
+              '<br><span class="fw-bold text-dark small">Lote a Granel: </span>' +
               '<span class="small">' + $id_lote_granel + '</span>';
+              // + '<br><span class="fw-bold text-dark small">Volumen Inicial: </span>' +
+              // '<span class="small">' + $volumen_inicial + '</span>' +
+              // '<br><span class="fw-bold text-dark small">Alcohol Inicial: </span>' +
+              // '<span class="small">' + $alcohol_inicial + '</span>';
           }
         },
         {
           targets: 3,
+          responsivePriority: 1,
+          render: function (data, type, full, meta) {
+            var $procedencia_entrada = full['procedencia_entrada'] ?? 'N/A';
+            var $volumen_entrada = full['volumen_entrada'] ?? 'N/A';
+            var $alcohol_entrada = full['alcohol_entrada'] ?? 'N/A';
+            var $agua_entrada = full['agua_entrada'] ?? 'N/A';
+
+            return '<span class="fw-bold text-dark small">Procedencia: </span>' +
+              '<span class="small">' + $procedencia_entrada + '</span>' +
+              '<br><span class="fw-bold text-dark small">Volumen: </span>' +
+              '<span class="small">' + $volumen_entrada + '</span>' +
+              '<br><span class="fw-bold text-dark small">Alcohol: </span>' +
+              '<span class="small">' + $alcohol_entrada + '</span>' +
+              '<br><span class="fw-bold text-dark small">Agua Agregada: </span>' +
+              '<span class="small">' + $agua_entrada + '</span>';
+          }
+        },
+        {
+          targets: 4,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $volumen_salidas = full['volumen_salidas'] ?? 'N/A';
@@ -76,7 +103,7 @@ $(function () {
           }
         },
         {
-          targets: 4,
+          targets: 5,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $volumen_final = full['volumen_final'] ?? 'N/A';
@@ -99,7 +126,7 @@ $(function () {
                 }, */
         {
           // Actions
-          targets: 5,
+          targets: 6,
           title: 'Acciones',
           searchable: false,
           orderable: false,
@@ -112,11 +139,11 @@ $(function () {
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               // Botón para editar
               `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info">` +
-              '<i class="ri-edit-box-line ri-20px text-info"></i> Editar' +
+              '<i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora ' +
               '</a>' +
               // Botón para eliminar
               `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger">` +
-              '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar' +
+              '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora ' +
               '</a>' +
               '</div>' +
               '</div>'
@@ -395,6 +422,77 @@ $(function () {
   });
 
 
+  $(document).on('click', '.delete-record', function () {
+    var id_bitacora = $(this).data('id');
+    var dtrModal = $('.dtr-bs-modal.show');
+
+    // Ocultar modal responsivo en pantalla pequeña si está abierto
+    if (dtrModal.length) {
+      dtrModal.modal('hide');
+    }
+
+    // SweetAlert para confirmar la eliminación
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: 'No podrá revertir este evento',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-primary me-3',
+        cancelButton: 'btn btn-label-secondary'
+      },
+      buttonsStyling: false
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        // Enviar solicitud DELETE al servidor
+        $.ajax({
+          type: 'DELETE',
+          url: `${baseUrl}bitacoras-list/${id_bitacora}`,
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function () {
+            dt_user.draw();
+
+            Swal.fire({
+              icon: 'success',
+              title: '¡Eliminado!',
+              text: '¡La bitácora ha sido eliminada correctamente!',
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            });
+          },
+          error: function (error) {
+            console.log(error);
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo eliminar la bitácora. Inténtalo de nuevo más tarde.',
+              footer: `<pre>${error.responseText}</pre>`,
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelado',
+          text: 'La eliminación de la bitácora ha sido cancelada',
+          icon: 'info',
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      }
+    });
+  });
+
+
 
   $(function () {
     // Configuración de CSRF para Laravel
@@ -429,13 +527,13 @@ $(function () {
             }
           }
         },
-          id_instalacion: {
-              validators: {
-                notEmpty: {
-                  message: 'Por favor seleccione la instalación'
-                }
-              }
-            },  /*
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la instalación'
+            }
+          }
+        },  /*
             alc_vol_salida: {
               validators: {
                 notEmpty: {
@@ -708,11 +806,13 @@ $(function () {
 
       let volumenEntrada = parseFloat($('#volumen_entrada').val()) || 0;
       let alcoholEntrada = parseFloat($('#alcohol_entrada').val()) || 0;
+      let aguaEntrada = parseFloat($('#agua_entrada').val()) || 0;
 
       let volumenSalida = parseFloat($('#volumen_salida').val()) || 0;
       let alcoholSalida = parseFloat($('#alc_vol_salida').val()) || 0;
 
-      let volumenFinal = (volumenInicial + volumenEntrada) - volumenSalida;
+      // Cálculo con agua incluida
+      let volumenFinal = volumenInicial + volumenEntrada + aguaEntrada - volumenSalida;
       let alcoholFinal = 0;
 
       if (volumenFinal > 0) {
@@ -722,12 +822,59 @@ $(function () {
 
         alcoholFinal = alcoholTotal / volumenFinal;
       }
+
       $('#volumen_final').val(volumenFinal.toFixed(2));
       $('#alc_vol_final').val(alcoholFinal.toFixed(2));
     }
-    // Ejecutar cálculo al cambiar cualquier campo
-    $('#volumen_inicial, #alcohol_inicial, #volumen_entrada, #alcohol_entrada, #volumen_salida, #alc_vol_salida').on('input', calcular);
+
+    $('#volumen_inicial, #alcohol_inicial, #volumen_entrada, #alcohol_entrada, #agua_entrada, #volumen_salida, #alc_vol_salida').on('input', calcular);
   });
+
+  $(document).ready(function () {
+    $('#tipo_op').on('change', function () {
+      const tipo = $(this).val();
+
+      if (tipo == '1') {
+        $('#displaySalidas').fadeOut(100, function () {
+          $(this).css('display', 'none');
+          $('#displayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
+        });
+      } else if (tipo == '2') {
+        $('#displayEntradas').fadeOut(100, function () {
+          $(this).css('display', 'none');
+          $('#displaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
+        });
+      } else {
+        $('#displayEntradas, #displaySalidas').fadeOut(200);
+      }
+    });
+
+    $('#displayEntradas, #displaySalidas').hide();
+  });
+
+  $(document).ready(function () {
+    $('#edit_tipo_op').on('change', function () {
+      const tipo = $(this).val();
+
+      if (tipo == '1') {
+        $('#editDisplaySalidas').fadeOut(100, function () {
+          $(this).css('display', 'none');
+          $('#editDisplayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
+        });
+      } else if (tipo == '2') {
+        $('#editDisplayEntradas').fadeOut(100, function () {
+          $(this).css('display', 'none');
+          $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
+        });
+      } else {
+        $('#editDisplayEntradas, #editDisplaySalidas').fadeOut(200);
+      }
+    });
+
+    $('#editDisplayEntradas, #editDisplaySalidas').hide();
+  });
+
+
   //end
 });
 

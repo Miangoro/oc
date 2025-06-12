@@ -129,16 +129,25 @@
             @forelse($bitacoras as $bitacora)
                 <tr class="bitacora-row">
                     <td>{{ $bitacora->fecha ?? '-' }}</td>
-                    <td>{{ $bitacora->id_tanque ?? '-' }}</td>
-<td>{{ $bitacora->loteBitacora ? $bitacora->loteBitacora->nombre_lote : '-' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->id_tanque ?? '-' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->nombre_lote ?? '-' }}</td>
                     <td>{{ $bitacora->operacion_adicional ?? '-' }}</td>
-                    <td>{{ $bitacora->categoria ?? '-' }}</td>
-                    <td>{{ $bitacora->clase ?? '-' }}</td>
-                    <td>{{ $bitacora->ingredientes ?? '-' }}</td>
-                    <td>{{ $bitacora->edad ?? '-' }}</td>
-                    <td>{{ $bitacora->tipo_agave ?? '-' }}</td>
-                    <td>{{ $bitacora->num_analisis ?? '-' }}</td>
-                    <td>{{ $bitacora->num_certificado ?? '-' }}</td>
+                    <td>{{ $bitacora->loteBitacora->categoria->categoria ?? '-' }}</td>
+                    <td>{{ $bitacora->loteBitacora->clase->clase ?? '-' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->ingredientes ?? '-' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->edad ?? '-' }}</td>
+                    <td>
+                      @if ($bitacora->loteBitacora && $bitacora->loteBitacora->tiposRelacionados->isNotEmpty())
+                        {!! $bitacora->loteBitacora->tiposRelacionados->map(function ($tipo) {
+                            return $tipo->nombre . ' (<em>' . $tipo->cientifico . '</em>)';
+                        })->implode(', ') !!}
+                      @else
+                        -
+                      @endif
+                    </td>
+
+                    <td>{{ $bitacora->loteBitacora?->folio_fq ?? '-' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->folio_certificado ?? '-' }}</td>
                     <td>{{ $bitacora->volumen_inicial ?? '-' }}</td>
                     <td>{{ $bitacora->alcohol_inicial ?? '-' }}</td>
                     <td>{{ $bitacora->procedencia_entrada ?? '-' }}</td>

@@ -49,6 +49,7 @@
                     <th>#</th>
                     <th>ID</th>
                     <th>Datos Iniciales</th>
+                    <th>Entradas</th>
                     <th>Salidas</th>
                     <th>Inventario Final</th>
 {{--                     <th>Bitácora</th> --}}
