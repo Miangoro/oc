@@ -229,14 +229,18 @@
                             </div>
                             <h6 class="mb-0 fw-normal">Pendiente de crear certificado de graneles</h6>
                             <hr>
-                            <div class="d-flex align-items-center mb-2">
-                                <div class="avatar me-4">
-                                    <span class="avatar-initial rounded-3 bg-label-danger"><i
-                                            class="ri-file-warning-line ri-24px"></i></span>
-                                </div>
-                                <h4 class="mb-0">{{ $dictamenesExportacionSinCertificado }}</h4>
-                            </div>
-                            <h6 class="mb-0 fw-normal">Pendiente de crear certificado de exportación</h6>
+                            <!-- BOTÓN o DIV CLICKABLE para abrir el modal -->
+<div class="d-flex align-items-center mb-2 cursor-pointer"
+     data-bs-toggle="modal" data-bs-target="#modalDictamenesPendientes">
+    <div class="avatar me-4">
+        <span class="avatar-initial rounded-3 bg-label-danger">
+            <i class="ri-file-warning-line ri-24px"></i>
+        </span>
+    </div>
+    <h4 class="mb-0">{{ $dictamenesExportacionSinCertificado->count() }}</h4>
+</div>
+<h6 class="mb-0 fw-normal">Pendiente de crear certificado de exportación</h6>
+
                         </div>
                     </div>
                 </div>
@@ -269,54 +273,8 @@
                     </div>
                 </div>
             @endcan
-            @can('Estadísticas oc')
-                <!-- Line Chart -->
-                <div class="col-12 mb-6">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between">
-                            <div>
-                                <h5 class="card-title mb-0">Certificados emitidos por mes</h5>
-                                <div class="mb-0">
-                                    <label for="selectAnio" class="form-label">Selecciona un año:</label>
-                                    <select id="selectAnio" class="form-select w-auto">
-                                        @for ($i = now()->year; $i >= 2022; $i--)
-                                            <option value="{{ $i }}">{{ $i }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div id="lineChart"></div>
-                        </div>
-                    </div>
-                </div>
-            @endcan
             @can('Estadísticas ui')
-                <!-- Line Chart -->
-                <div class="col-12 mb-6">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between">
-                            <div>
-                                <h5 class="card-title mb-0">Servicios realizados por mes</h5>
-                                <div class="mb-0">
-                                    <label for="selectAnio2" class="form-label">Selecciona un año:</label>
-                                    <select id="selectAnio2" class="form-select w-auto">
-                                        @for ($i = now()->year; $i >= 2022; $i--)
-                                            <option value="{{ $i }}">{{ $i }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div id="lineChart2"></div>
-                        </div>
-                    </div>
-                </div>
-            @endcan
-            @can('Estadísticas ui')
-            <div class="col-md-6 col-xxl-4">
+            <div class="col-md-6 col-xxl-3">
                 <div class="card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <h5 class="card-title m-0 me-2">Inspecciones por inspector 2025</h5>
@@ -358,8 +316,103 @@
                 </div>
             </div>
             @endcan
+            @can('Estadísticas oc')
+                <!-- Line Chart -->
+                <div class="col-6 mb-6">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title mb-0">Certificados emitidos por mes</h5>
+                                <div class="mb-0">
+                                    <label for="selectAnio" class="form-label">Selecciona un año:</label>
+                                    <select id="selectAnio" class="form-select w-auto">
+                                        @for ($i = now()->year; $i >= 2022; $i--)
+                                            <option value="{{ $i }}">{{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="lineChart"></div>
+                        </div>
+                    </div>
+                </div>
+            @endcan
+            @can('Estadísticas ui')
+                <!-- Line Chart -->
+                <div class="col-6 mb-6">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title mb-0">Servicios realizados por mes</h5>
+                                <div class="mb-0">
+                                    <label for="selectAnio2" class="form-label">Selecciona un año:</label>
+                                    <select id="selectAnio2" class="form-select w-auto">
+                                        @for ($i = now()->year; $i >= 2022; $i--)
+                                            <option value="{{ $i }}">{{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="lineChart2"></div>
+                        </div>
+                    </div>
+                </div>
+            @endcan
+            
         </div>
 
+<!-- Modal -->
+<div class="modal fade" id="modalDictamenesPendientes" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Dictámenes sin Certificado de Exportación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        @if($dictamenesExportacionSinCertificado->count())
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Folio</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Inspector</th>
+                            <!--<th>Acciones</th>-->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($dictamenesExportacionSinCertificado as $dictamen)
+                            <tr>
+                                <td>{{ $dictamen->num_dictamen }}</td>
+                                <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
+                                <td>{{ \Carbon\Carbon::parse($dictamen->created_at)->format('d/m/Y') }}</td>
+                                <td>{{ $dictamen->inspeccione->inspector->name ?? 'N/A' }}</td>
+                                <!--<td>
+                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                        Ver
+                                    </a>
+                                </td>-->
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <p>No hay dictámenes pendientes.</p>
+        @endif
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
     @endsection
