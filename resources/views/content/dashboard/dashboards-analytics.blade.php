@@ -225,21 +225,21 @@
                                     <span class="avatar-initial rounded-3 bg-label-danger"><i
                                             class="ri-file-warning-line ri-24px"></i></span>
                                 </div>
-                                <h4 class="mb-0">{{ $dictamenesGranelesSinCertificado }}</h4>
+                                <h4 class="mb-0">{{ $dictamenesGranelesSinCertificado->count() }}</h4>
                             </div>
                             <h6 class="mb-0 fw-normal">Pendiente de crear certificado de graneles</h6>
                             <hr>
                             <!-- BOTÓN o DIV CLICKABLE para abrir el modal -->
-<div class="d-flex align-items-center mb-2 cursor-pointer"
-     data-bs-toggle="modal" data-bs-target="#modalDictamenesPendientes">
-    <div class="avatar me-4">
-        <span class="avatar-initial rounded-3 bg-label-danger">
-            <i class="ri-file-warning-line ri-24px"></i>
-        </span>
-    </div>
-    <h4 class="mb-0">{{ $dictamenesExportacionSinCertificado->count() }}</h4>
-</div>
-<h6 class="mb-0 fw-normal">Pendiente de crear certificado de exportación</h6>
+                    <div class="d-flex align-items-center mb-2 cursor-pointer"
+                        data-bs-toggle="modal" data-bs-target="#modalDictamenesPendientes">
+                        <div class="avatar me-4">
+                            <span class="avatar-initial rounded-3 bg-label-danger">
+                                <i class="ri-file-warning-line ri-24px"></i>
+                            </span>
+                        </div>
+                        <h4 class="mb-0">{{ $dictamenesExportacionSinCertificado->count() }}</h4>
+                    </div>
+                    <h6 class="mb-0 fw-normal">Pendiente de crear certificado de exportación</h6>
 
                         </div>
                     </div>
@@ -391,7 +391,7 @@
                             <tr>
                                 <td>{{ $dictamen->num_dictamen }}</td>
                                 <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
-                                <td>{{ \Carbon\Carbon::parse($dictamen->created_at)->format('d/m/Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}</td>
                                 <td>{{ $dictamen->inspeccione->inspector->name ?? 'N/A' }}</td>
                                 <!--<td>
                                     <a href="" class="btn btn-sm btn-primary" target="_blank">

@@ -56,7 +56,7 @@ class Analytics extends Controller
 
 
     $dictamenesInstalacionesSinCertificado = Dictamen_instalaciones::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->count();
-    $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->count();
+    $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
     $dictamenesExportacionSinCertificado  = Dictamen_Exportacion::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
 
     
@@ -80,7 +80,7 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
         'foto' => $inspector->profile_photo_path,
         'total_inspecciones' => $grupo->count(),
     ];
-});
+})->sortByDesc('total_inspecciones'); 
 
 
     return view('content.dashboard.dashboards-analytics', compact('inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
@@ -154,4 +154,7 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
       ]);
   }
   
+
+
+
 }
