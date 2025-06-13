@@ -62,11 +62,12 @@ class Analytics extends Controller
     
 
 
-    // Traer las inspecciones futuras con su inspector
+// Traer las inspecciones futuras con su inspector
 $inspecciones = inspecciones::with('inspector')
     ->whereHas('inspector') // asegura que tenga inspector
     ->where('fecha_servicio', '>', Carbon::parse('2024-12-31'))
     ->get()
+    ->unique('num_servicio') // <-- omite duplicados por num_servicio
     ->groupBy(function ($inspeccion) {
         return $inspeccion->inspector->id; // agrupamos por ID del inspector
     });
