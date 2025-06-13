@@ -1698,18 +1698,13 @@ $(document).on('click', '.subirPDF', function () {
 
 
 
-
-
 ///VER DOCUMENTOS RELACIONADOS
 $(document).on('click', '.documentos', function () {
     var id_certificado = $(this).data('id');
     $(".titulo").text('Documentación relacionada al certificado ' + $(this).data('folio'));
-
     var url = '/documentos/' + id_certificado;
-
-    const noDisponibleImg = `<a href="/img_pdf/FaltaPDF.png">
-        <img src="/img_pdf/FaltaPDF.png" height="40" width="40" title="Ver documento" alt="FaltaPDF">
-    </a>`;
+    const noDisponibleImg = `<a href="/img_pdf/FaltaPDF.png"> 
+          <img src="/img_pdf/FaltaPDF.png" height="40" width="40" alt="FaltaPDF"> </a>`;
 
     $.get(url, function (data) {
         if (data.success) {
@@ -1722,23 +1717,28 @@ $(document).on('click', '.documentos', function () {
 
             // Concatenar certificados granel separados por coma
             let certificadoLinks = data.documentos
-                .map(d => d.certificadoGranel)
-                .filter(Boolean)
-                .map(url => `<a href="/files/${data.numeroCliente}/certificados_granel/${url}" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>`)
+                .filter(d => d.certificadoGranel && d.clienteOrigen)
+                .map(d => `<a href="/files/${d.clienteOrigen}/certificados_granel/${d.certificadoGranel}" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>`)
                 .join(', ') || noDisponibleImg;
 
             // Concatenar FQs separados por coma
             let fqsLinks = data.documentos
-                .flatMap(d => d.fqs)
-                .filter(Boolean)
-                .map(url => `<a href="/files/${data.numeroCliente}/fqs/${url}" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>`)
+                .flatMap(d => (d.fqs || []).map(fq => ({
+                    url: fq,
+                    clienteOrigen: d.clienteOrigen
+                })))
+                .filter(d => d.url && d.clienteOrigen)
+                .map(d => `<a href="/files/${d.clienteOrigen}/fqs/${d.url}" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>`)
                 .join(', ') || noDisponibleImg;
 
             // Concatenar FQ Ajustes separados por coma
             let fqAjusteLinks = data.documentos
-                .flatMap(d => d.fqs_ajuste)
-                .filter(Boolean)
-                .map(url => `<a href="/files/${data.numeroCliente}/fqs/${url}" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>`)
+                .flatMap(d => (d.fqs_ajuste || []).map(fq => ({
+                    url: fq,
+                    clienteOrigen: d.clienteOrigen
+                })))
+                .filter(d => d.url && d.clienteOrigen)
+                .map(d => `<a href="/files/${d.clienteOrigen}/fqs/${d.url}" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>`)
                 .join(', ') || noDisponibleImg;
 
             // Etiqueta, Corrugado y Proforma únicos
@@ -1774,9 +1774,6 @@ $(document).on('click', '.documentos', function () {
         });
     });
 });
-
-
-
 
 
 

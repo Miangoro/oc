@@ -897,8 +897,8 @@ public function documentos($id)
     }
 
     $caracteristicas = $certificado->dictamen?->inspeccione?->solicitud?->caracteristicasDecodificadas() ?? [];
-    $detalles = $caracteristicas['detalles'] ?? [];
     $id_etiqueta = $caracteristicas['id_etiqueta'] ?? null;
+    $detalles = $caracteristicas['detalles'] ?? [];
 
     $documentosPorLote = [];
 
@@ -945,6 +945,7 @@ public function documentos($id)
         ];
     }
 
+
     $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->id_empresa)->first();
     $numeroCliente = $empresa->empresaNumClientes
         ->pluck('numero_cliente')
@@ -959,6 +960,7 @@ public function documentos($id)
 
     $proformaDoc = Documentacion_url::where('id_relacion', $certificado->dictamen?->inspeccione?->solicitud->id_solicitud)
         ->where('id_documento', 55)->first();
+
 
     return response()->json([
         'success' => true,

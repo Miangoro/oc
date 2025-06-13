@@ -310,7 +310,7 @@ public function update(Request $request, $id_dictamen_envasado)
         //$inspeccion = inspecciones::with(['solicitud'])->find($validated['id_inspeccion']);
         $inspeccion = inspecciones::find($validated['id_inspeccion']);
         // Obtener el lote directamente
-        $id_lote_envasado = $inspeccion->solicitud->id_lote_envasado;
+        $id_lote_envasado = $inspeccion->solicitud->lote_envasado->id_lote_envasado;
         if (!$id_lote_envasado) {
             return response()->json(['error' => 'No se encontró el lote asociado a la solicitud'], 404);
         }

@@ -19,32 +19,32 @@
 
             <tbody class="table-border-bottom-0 ">
               <tr class="table-success">
-                <td><i class="ri-bank-fill ri-22px text-primary me-4"></i><span class="fw-medium">Dictamen NOM envasado</span></td>
-                <td><a id="dictamen" href="#" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                <td><i class="ri-file-list-3-line ri-22px text-primary me-4"></i><span class="fw-medium">Dictamen NOM envasado</span></td>
+                <td><a id="dictamen"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
               </tr>
               <tr class="table-danger">
-                <td><i class="ri-palette-line ri-22px text-danger me-4"></i><span class="fw-medium">Certificado Nom granel</span></td>
-                <td><a id="certificado" href="#" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                <td><i class="ri-award-line ri-22px text-danger me-4"></i><span class="fw-medium">Certificado Nom granel</span></td>
+                <td><a id="certificado"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
               </tr>
               <tr class="table-warning">
-                <td><i class="ri-shield-user-line ri-22px text-info me-4"></i><span class="fw-medium">No. de análisis</span></td>
-                <td><a id="fq" href="#" target="_blank"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                <td><i class="ri-microscope-line ri-22px text-info me-4"></i><span class="fw-medium">No. de análisis</span></td>
+                <td><a id="fq"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
               </tr>
               <tr class="table-light">
-                <td><i class="ri-angularjs-line ri-22px text-danger me-4"></i><span class="fw-medium etiqueta_name"></span>No. de análisis ajuste</td>
-                <td><a id="fq_ajuste" href="#" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i> </a> </td>
+                <td><i class="ri-flask-line ri-22px text-danger me-4"></i><span class="fw-medium etiqueta_name"></span>No. de análisis ajuste</td>
+                <td><a id="fq_ajuste"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i> </a> </td>
               </tr>
               <tr class="table-success">
-                <td><i class="ri-bank-fill ri-22px text-primary me-4"></i><span class="fw-medium">Etiquetas</span></td>
-                <td><a id="etiquetas" href="#" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                <td><i class="ri-price-tag-3-line ri-22px text-primary me-4"></i><span class="fw-medium">Etiquetas</span></td>
+                <td><a id="etiquetas"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
               </tr>
               <tr class="table-danger">
-                <td><i class="ri-palette-line ri-22px text-danger me-4"></i><span class="fw-medium">Corrugado</span></td>
-                <td><a id="corrugado" href="#" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                <td><i class="ri-archive-line ri-22px text-danger me-4"></i><span class="fw-medium">Corrugado</span></td>
+                <td><a id="corrugado"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
               </tr>
               <tr class="table-warning">
-                <td><i class="ri-shield-user-line ri-22px text-info me-4"></i><span class="fw-medium">Factura Proforma</span></td>
-                <td><a id="proforma" href="#" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                <td><i class="ri-file-paper-2-line ri-22px text-info me-4"></i><span class="fw-medium">Factura Proforma</span></td>
+                <td><a id="proforma"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
               </tr>
             </tbody>
           </table>
