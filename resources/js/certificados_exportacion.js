@@ -1700,7 +1700,6 @@ $(document).on('click', '.subirPDF', function () {
 
 
 
-
 ///VER DOCUMENTOS RELACIONADOS
 $(document).on('click', '.documentos', function () {
     var id_certificado = $(this).data('id');
@@ -1708,33 +1707,72 @@ $(document).on('click', '.documentos', function () {
 
     var url = '/documentos/' + id_certificado;
 
-      $.get(url, function (data) {
+    const noDisponibleImg = `<a href="/img_pdf/FaltaPDF.png">
+        <img src="/img_pdf/FaltaPDF.png" height="40" width="40" title="Ver documento" alt="FaltaPDF">
+    </a>`;
+
+    $.get(url, function (data) {
         if (data.success) {
-              var dato = data;   
-              // Actualizar href del enlace con id="#"
-              $('#dictamen').attr('href', '/dictamen_envasado/' + dato.dictamen);
-              $('#certificado').attr('href', '/files/'+dato.numeroCliente+'/certificados_granel/'+dato.certificado);
-              $('#fq').attr('href', '/files/' + dato.clienteOrigen + '/fqs/'+dato.fq);
-              $('#fq_ajuste').attr('href', '/files/' + dato.clienteOrigen + '/fqs/' +dato.fq_ajuste);
-              $('#etiquetas').attr('href', '/files/'+dato.numeroCliente+'/'+dato.etiquetas);
-              $('#corrugado').attr('href', '/files/'+dato.numeroCliente+'/'+dato.corrugado);
-              $('#proforma').attr('href', '/storage/uploads/' +dato.numeroCliente+ '/' + dato.proforma);
-             
-          $('#ModalDocumentos').modal('show');
+            // Concatenar dictamenes (puede haber uno por lote) separados por coma
+            let dictamenLinks = data.documentos
+                .map(d => d.dictamen)
+                .filter(Boolean)
+                .map(id => `<a href="/dictamen_envasado/${id}" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>`)
+                .join(', ') || noDisponibleImg;
+
+            // Concatenar certificados granel separados por coma
+            let certificadoLinks = data.documentos
+                .map(d => d.certificadoGranel)
+                .filter(Boolean)
+                .map(url => `<a href="/files/${data.numeroCliente}/certificados_granel/${url}" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>`)
+                .join(', ') || noDisponibleImg;
+
+            // Concatenar FQs separados por coma
+            let fqsLinks = data.documentos
+                .flatMap(d => d.fqs)
+                .filter(Boolean)
+                .map(url => `<a href="/files/${data.numeroCliente}/fqs/${url}" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>`)
+                .join(', ') || noDisponibleImg;
+
+            // Concatenar FQ Ajustes separados por coma
+            let fqAjusteLinks = data.documentos
+                .flatMap(d => d.fqs_ajuste)
+                .filter(Boolean)
+                .map(url => `<a href="/files/${data.numeroCliente}/fqs/${url}" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>`)
+                .join(', ') || noDisponibleImg;
+
+            // Etiqueta, Corrugado y Proforma únicos
+            let etiquetasLink = data.etiquetas
+                ? `<a href="/files/${data.numeroCliente}/${data.etiquetas}" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>`
+                : noDisponibleImg;
+
+            let corrugadoLink = data.corrugado
+                ? `<a href="/files/${data.numeroCliente}/${data.corrugado}" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>`
+                : noDisponibleImg;
+
+            let proformaLink = data.proforma
+                ? `<a href="/storage/uploads/${data.numeroCliente}/${data.proforma}" target="_blank"><i class="ri-file-pdf-2-fill ri-40px text-danger"></i></a>`
+                : noDisponibleImg;
+
+            $('#dictamen').html(dictamenLinks);
+            $('#certificado').html(certificadoLinks);
+            $('#fq').html(fqsLinks);
+            $('#fq_ajuste').html(fqAjusteLinks);
+            $('#etiquetas').html(etiquetasLink);
+            $('#corrugado').html(corrugadoLink);
+            $('#proforma').html(proformaLink);
+
+            $('#ModalDocumentos').modal('show');
         }
     }).fail(function (xhr) {
         console.error(xhr.responseText);
-        // Mostrar alerta de error
         Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al obtener los documentos.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al obtener los documentos.',
+            customClass: { confirmButton: 'btn btn-danger' }
         });
     });
-
 });
 
 
@@ -1850,8 +1888,6 @@ $(document).on('submit', '#formVobo', function (e) {
       }
     });
 });
-
-
 
 
 

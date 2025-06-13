@@ -888,79 +888,89 @@ public function CertificadoFirmado($id)
 
 
 
-
 ///VER DOCUMENTACION
 public function documentos($id)
-{   
+{
     $certificado = Certificado_Exportacion::find($id);
     if (!$certificado) {
         return abort(404, 'Registro no encontrado.');
-        //return response()->json(['message' => 'Registro no encontrado.', $certificado], 404);
     }
 
-    // Obtener todos los IDs de los lotes
     $caracteristicas = $certificado->dictamen?->inspeccione?->solicitud?->caracteristicasDecodificadas() ?? [];
-    $id_etiqueta= $caracteristicas['id_etiqueta'] ?? 'No encontrado';
-        $detalles = $caracteristicas['detalles'] ?? [];
-    $id_lote_envasado = collect($detalles)->pluck('id_lote_envasado')->filter()->first();//obtiene 1er id_lote
+    $detalles = $caracteristicas['detalles'] ?? [];
+    $id_etiqueta = $caracteristicas['id_etiqueta'] ?? null;
+
+    $documentosPorLote = [];
+
+    foreach ($detalles as $detalle) {
+        $id_lote_envasado = $detalle['id_lote_envasado'] ?? null;
+        if (!$id_lote_envasado) {
+            continue;
+        }
+
         $lote_envasado = lotes_envasado::where('id_lote_envasado', $id_lote_envasado)->first();
-    $id_lote_granel = $lote_envasado->lotesGranel->first()->id_lote_granel;
-        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->id_empresa)->first();
+        if (!$lote_envasado) {
+            continue;
+        }
+
+        $id_lote_granel = $lote_envasado->lotesGranel->first()->id_lote_granel ?? null;
+        if (!$id_lote_granel) {
+            continue;
+        }
+
+        $empresaOrigen = empresa::with("empresaNumClientes")->where("id_empresa", $lote_envasado->lotesGranel->first()->id_empresa)->first();
+        $clienteOrigen = $empresaOrigen->empresaNumClientes
+            ->pluck('numero_cliente')
+            ->filter()
+            ->first();
+
+        $dictamenEnvasado = Dictamen_Envasado::where('id_lote_envasado', $id_lote_envasado)->first();
+
+        $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel)
+            ->where('id_documento', 59)->first();
+
+        $fqs = Documentacion_url::where('id_relacion', $id_lote_granel)
+            ->where('id_documento', 58)->get()->pluck('url')->toArray();
+
+        $fqs_ajuste = Documentacion_url::where('id_relacion', $id_lote_granel)
+            ->where('id_documento', 134)->get()->pluck('url')->toArray();
+
+        $documentosPorLote[] = [
+            'id_lote_envasado' => $id_lote_envasado,
+            'dictamen' => $dictamenEnvasado->id_dictamen_envasado ?? null,
+            'certificadoGranel' => $certificadoGranel->url ?? null,
+            'fqs' => $fqs,
+            'fqs_ajuste' => $fqs_ajuste,
+            'clienteOrigen' => $clienteOrigen,
+        ];
+    }
+
+    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->id_empresa)->first();
     $numeroCliente = $empresa->empresaNumClientes
         ->pluck('numero_cliente')
-        ->filter()  // elimina valores vacíos o null
-        ->first();
-        $empresaOrigen = empresa::with("empresaNumClientes")->where("id_empresa", $lote_envasado->lotesGranel->first()->id_empresa)->first();
-    $clienteOrigen = $empresaOrigen->empresaNumClientes
-        ->pluck('numero_cliente')
-        ->filter()  // elimina valores vacíos o null
+        ->filter()
         ->first();
 
-    //foreach ($loteIds as $idLote) {
-        $dictamenEnvasado = Dictamen_Envasado::where('id_lote_envasado', $id_lote_envasado)->first();//toma el id_lote con id_dictamen
-        $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel)
-            ->Where('id_documento', 59)->first();
-        $fq = Documentacion_url::where('id_relacion', $id_lote_granel)
-            ->Where('id_documento', 58)->first();
-        $fq_ajuste = Documentacion_url::where('id_relacion', $id_lote_granel)
-            ->Where('id_documento', 134)->first();
-        $etiqueta = Documentacion_url::where('id_relacion', $id_etiqueta)
-            ->Where('id_documento', 60)->first();
-        $corrugado = Documentacion_url::where('id_relacion', $id_etiqueta)
-            ->Where('id_documento', 75)->first();
-        $proforma = Documentacion_url::where('id_relacion', $certificado->dictamen?->inspeccione?->solicitud->id_solicitud)
-            ->Where('id_documento', 55)->first();
-           
+    $etiquetaDoc = Documentacion_url::where('id_relacion', $id_etiqueta)
+        ->where('id_documento', 60)->first();
 
-        //if ($dictamenEnvasado) {
-            $numeroCliente = $numeroCliente ?? null;
-            $clienteOrigen = $clienteOrigen ?? null;
+    $corrugadoDoc = Documentacion_url::where('id_relacion', $id_etiqueta)
+        ->where('id_documento', 75)->first();
 
-            $dictamen = $dictamenEnvasado->id_dictamen_envasado ?? null;
-            $certificado = $certificadoGranel->url ?? null;
-            $fq = $fq->url ?? null;
-            $fq_ajuste = $fq_ajuste->url ?? null;
-            $etiquetas = $etiqueta->url ?? null;
-            $corrugado = $corrugado->url ?? null;
-            $proforma = $proforma->url ?? null;
-            
-        //}
-    //}
+    $proformaDoc = Documentacion_url::where('id_relacion', $certificado->dictamen?->inspeccione?->solicitud->id_solicitud)
+        ->where('id_documento', 55)->first();
 
     return response()->json([
         'success' => true,
         'numeroCliente' => $numeroCliente,
-        'clienteOrigen' => $clienteOrigen,
-
-        'dictamen' => $dictamen,
-        'certificado' => $certificado,
-        'fq' => $fq,
-        'fq_ajuste' => $fq_ajuste,
-        'etiquetas' => $etiquetas,
-        'corrugado' => $corrugado,
-        'proforma' => $proforma,
+        'documentos' => $documentosPorLote,
+        'etiquetas' => $etiquetaDoc->url ?? null,
+        'corrugado' => $corrugadoDoc->url ?? null,
+        'proforma' => $proformaDoc->url ?? null,
     ]);
 }
+
+
 
 
 
