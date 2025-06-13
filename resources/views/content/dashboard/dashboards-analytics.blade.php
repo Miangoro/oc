@@ -544,7 +544,7 @@
                                 <td>{{ $solicitud->tipo_solicitud->tipo }}</td>
                                 <td>{{ $solicitud->empresa->razon_social ?? 'N/A' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($solicitud->fecha_solicitud)->format('d/m/Y') }}</td>
-                                <td>{{ $solicitud->inspeccione->inspector->name ?? 'N/A' }}</td>
+                                <td>{{ $solicitud->inspeccion->inspector->name ?? 'Sin asignar' }}</td>
                                 <!--<td>
                                     <a href="" class="btn btn-sm btn-primary" target="_blank">
                                         Ver
