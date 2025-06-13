@@ -2,11 +2,11 @@
 <div class="modal fade" id="modalAddPredio" tabindex="-1" aria-labelledby="modalAddPredioLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 id="modalAddPredioLabel" class="modal-title">Nuevo pre-registro de predio</h5>
+            <div class="modal-header bg-primary pb-4">
+                <h5 id="modalAddPredioLabel" class="modal-title text-white">Nuevo pre-registro de predio</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body py8">
                 <form id="addNewPredioForm" method="POST">
                     @csrf
                     <!-- Select de Empresa Cliente -->
@@ -203,10 +203,10 @@
                                 </div>
                             </div>
                         </div>
-                    <div class="d-flex justify-content-end mt-3">
-                        <button type="submit" class="btn btn-primary me-2">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary"
-                            data-bs-dismiss="modal">Cancelar</button>
+                    <div class="d-flex justify-content-center mt-3">
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line me-1"></i> Registrar</button>
+                        <button type="reset" class="btn btn-danger"
+                            data-bs-dismiss="modal"><i class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
                 </form>
             </div>

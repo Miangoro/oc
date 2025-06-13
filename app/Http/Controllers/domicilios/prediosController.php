@@ -585,26 +585,7 @@ class PrediosController extends Controller
             'estado' => 'required|exists:estados,id',
             'nombre_paraje' => 'required|string|max:255',
             'zona_dom' => 'required|string|in:si,no',
-            'marco_plantacion' => 'required|numeric',
-            'distancia_surcos' => 'required|numeric',
-            'distancia_plantas' => 'required|numeric',
-            'tiene_coordenadas' => 'required|string|max:2',
-            'superficie' => 'required|numeric',
-            'latitud' => 'nullable|array',
-            'longitud' => 'nullable|array',
-            'id_tipo' => 'nullable|array',
-            'numero_plantas' => 'nullable|array',
-            'edad_plantacion' => 'nullable|array',
-            'tipo_plantacion' => 'nullable|array',
-            'no_planta' => 'nullable|array',
-            'altura' => 'nullable|array',
-            'diametro' => 'nullable|array',
-            'numero_hojas' => 'nullable|array',
-
             'id_empresa' => 'required|exists:empresa,id_empresa', // Asegúrate de validar id_empresa
-            'titulo_foto.*' => 'required|string|max:255', // Títulos de las fotos
-            'fotografias_inspeccion' => 'sometimes|array', // Para las fotos, si existen
-            'fotografias_inspeccion.*' => 'image|mimes:jpeg,png,jpg,gif' // Validación de imágenes
         ]);
 
         // Crear una nueva instancia del modelo Predios_Inspeccion
@@ -617,15 +598,11 @@ class PrediosController extends Controller
         $inspeccion->id_estado = $validatedData['estado'];
         $inspeccion->nombre_paraje = $validatedData['nombre_paraje'];
         $inspeccion->zona_dom = $validatedData['zona_dom'];
-        $inspeccion->marco_plantacion = $validatedData['marco_plantacion'];
-        $inspeccion->distancia_surcos = $validatedData['distancia_surcos'];
-        $inspeccion->distancia_plantas = $validatedData['distancia_plantas'];
-        $inspeccion->superficie = $validatedData['superficie'];
 
         // Guardar el nuevo registro de inspección en la base de datos
         $inspeccion->save();
 
-                // Recuperar el predio
+        // Recuperar el predio
         $predio = Predios::findOrFail($id_predio);
 
         // Cambiar el estatus a 'Inspeccionado'
@@ -634,59 +611,12 @@ class PrediosController extends Controller
         // Guardar los cambios en el predio
         $predio->save();
 
-
-        // Solo guardar coordenadas si tiene_coordenadas es 'Si'
-        if ($validatedData['tiene_coordenadas'] === 'Si') {
-            if ($request->has('latitud') && $request->has('longitud')) {
-                foreach ($request->latitud as $index => $latitud) {
-                    if (!is_null($latitud) && !is_null($request->longitud[$index])) {
-                        PredioCoordenadas::create([
-                           /*  'id_predio' => $id_predio, */
-                            'id_inspeccion' => $inspeccion->id_inspeccion,
-                            'latitud' => $latitud,
-                            'longitud' => $request->longitud[$index],
-                        ]);
-                    }
-                }
-            }
-        }
-
-        // Guardar plantaciones, si existen y no son nulas
-        if ($request->has('id_tipo')) {
-            foreach ($request->id_tipo as $index => $id_tipo) {
-                if (!is_null($id_tipo) && !is_null($request->numero_plantas[$index]) && !is_null($request->edad_plantacion[$index]) && !is_null($request->tipo_plantacion[$index])) {
-                    predio_plantacion::create([
-                        /* 'id_predio' => $id_predio, */
-                        'id_inspeccion' => $inspeccion->id_inspeccion,
-                        'id_tipo' => $id_tipo,
-                        'num_plantas' => $request->numero_plantas[$index],
-                        'anio_plantacion' => $request->edad_plantacion[$index],
-                        'tipo_plantacion' => $request->tipo_plantacion[$index],
-                    ]);
-                }
-            }
-        }
-
-        // Guardar características, si existen y no son nulas
-        if ($request->has('no_planta')) {
-            foreach ($request->no_planta as $index => $no_planta) {
-                if (!is_null($no_planta) && !is_null($request->altura[$index]) && !is_null($request->diametro[$index]) && !is_null($request->numero_hojas[$index])) {
-                    PrediosCaracteristicasMaguey::create([
-                        'id_predio' => $id_predio,
-                        'id_inspeccion' => $inspeccion->id_inspeccion,
-                        'no_planta' => $no_planta,
-                        'altura' => $request->altura[$index],
-                        'diametro' => $request->diametro[$index],
-                        'numero_hojas' => $request->numero_hojas[$index],
-                    ]);
-                }
-            }
-        }
-
         // Obtener el número del cliente
-        $empresaNumCliente = DB::table('empresa_num_cliente')
-            ->where('id_empresa', $validatedData['id_empresa'])
-            ->value('numero_cliente');
+      $empresaNumCliente = DB::table('empresa_num_cliente')
+          ->where('id_empresa', $validatedData['id_empresa'])
+          ->whereNotNull('numero_cliente')
+          ->value('numero_cliente');
+
 
         if (!$empresaNumCliente) {
             return response()->json([
@@ -697,7 +627,7 @@ class PrediosController extends Controller
 
         // Obtener el nombre del documento donde id_documento es 70
         $nombreDocumento = DB::table('documentacion')
-            ->where('id_documento', 70)
+            ->where('id_documento', 135)
             ->value('nombre');
 
         if (!$nombreDocumento) {
@@ -707,42 +637,34 @@ class PrediosController extends Controller
             ], 404);
         }
 
-        // Almacenar archivos si se envían
-        if ($request->hasFile('fotografias_inspeccion')) {
-            foreach ($request->file('fotografias_inspeccion') as $index => $file) {
-                if ($file->isValid()) {
-                    // Generar un nombre único para el archivo
-                    $uniqueId = uniqid();
-                    $filename = $validatedData['titulo_foto'][$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+          if ($request->hasFile('inspeccion_geo_Doc') && $request->file('inspeccion_geo_Doc')->isValid()) {
+          $file = $request->file('inspeccion_geo_Doc');
 
-                    // Crear una carpeta con el número de cliente
-                    $directory = $empresaNumCliente; // Utiliza el número de cliente
-                    $path = storage_path('app/public/uploads/' . $directory);
+          // Generar nombre único para el archivo
+          $uniqueId = uniqid();
+          $filename = 'inspeccion_geo_referenciacion ' . $uniqueId . '.' . $file->getClientOriginalExtension();
 
-                    // Verificar si la carpeta existe, si no, crearla
-                    if (!file_exists($path)) {
-                        mkdir($path, 0777, true);
-                    }
+          // Directorio: número de cliente
+          $directory = $empresaNumCliente;
+          $path = storage_path('app/public/uploads/' . $directory);
 
-                    // Guardar el archivo en la carpeta correspondiente
-                    $filePath = $file->storeAs('uploads/' . $directory, $filename, 'public');
+          // Crear carpeta si no existe
+          if (!file_exists($path)) {
+              mkdir($path, 0777, true);
+          }
 
-                    // Crear una nueva instancia del modelo para guardar la ruta del archivo
-                    $documentacion_url = new Documentacion_url();
-                    $documentacion_url->id_empresa = $validatedData['id_empresa']; // Asegúrate de que este campo esté en tu validación
-                    $documentacion_url->url = $validatedData['titulo_foto'][$index]; // Almacena el título de la foto como el nombre
-                    $documentacion_url->id_relacion = $inspeccion->id_inspeccion; // Relacionar con la inspección
-                    $documentacion_url->nombre_documento = $nombreDocumento; // Usar el nombre del documento obtenido
+          // Guardar archivo
+          $filePath = $file->storeAs('uploads/' . $directory, $filename, 'public');
 
-                    // Asignar el id_documento como 70
-                    $documentacion_url->id_documento = 70; // Agrega esta línea
-
-                    // Guardar el registro
-                    $documentacion_url->save();
-                }
-            }
-        }
-
+          // Guardar en la tabla documentacion_url
+          $documentacionUrl = new Documentacion_url();
+          $documentacionUrl->id_empresa = $validatedData['id_empresa'];
+          $documentacionUrl->url = $filename; // Aquí va la ruta del archivo
+          $documentacionUrl->id_relacion = $inspeccion->id_inspeccion; // Asegúrate que exista esta variable
+          $documentacionUrl->nombre_documento = $nombreDocumento; // Obtenido previamente (documento 135)
+          $documentacionUrl->id_documento = 135;
+          $documentacionUrl->save();
+      }
 
         // Notificación y retorno de respuesta
         $predio = Predios::find($id_predio);

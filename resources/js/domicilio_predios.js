@@ -1626,127 +1626,6 @@ $('#pdfViewerDictamen1').on('load', function () {
 });
 
 
-  $(document).ready(function () {
-    // Función para agregar una nueva fila de características
-    function addRow() {
-      const newRow = `
-              <tr class="caracteristicas-row">
-                  <td rowspan="5">
-                      <button type="button" class="btn btn-danger remove-row-caracteristicas"><i class="ri-delete-bin-5-fill"></i></button>
-                  </td>
-              </tr>
-              <tr class="caracteristicas-row">
-                  <td>No. planta</td>
-                  <td><input type="number" class="form-control" name="no_planta[]" placeholder="Número de planta" required></td>
-              </tr>
-              <tr class="caracteristicas-row">
-                  <td>Altura (m)</td>
-                  <td><input type="number" step="0.01" class="form-control" name="altura[]" placeholder="Altura (m)" required></td>
-              </tr>
-              <tr class="caracteristicas-row">
-                  <td>Diámetro (m)</td>
-                  <td><input type="number" step="0.01" class="form-control" name="diametro[]" placeholder="Diámetro (m)" required></td>
-              </tr>
-              <tr class="caracteristicas-row">
-                  <td>Número de hojas</td>
-                  <td><input type="number" class="form-control" name="numero_hojas[]" placeholder="Número de hojas" required></td>
-              </tr>`;
-
-      $('#plant-table tbody').append(newRow);
-
-      // Añadir validación a los nuevos campos
-      addValidationFields();
-
-      // Habilitar el botón de eliminar si hay más de una fila
-      if ($('#plant-table tbody .caracteristicas-row').length > 1) {
-        $('#plant-table .remove-row-caracteristicas').not(':first').prop('disabled', false);
-      }
-    }
-
-    // Función para agregar validaciones a los campos de características
-    function addValidationFields() {
-      // Validación para No. planta
-      fv.addField('no_planta[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingresa el número de planta'
-          },
-          integer: {
-            message: 'Por favor ingresa un número entero válido para el número de planta'
-          }
-        }
-      });
-
-      // Validación para Altura
-      fv.addField('altura[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingresa la altura'
-          },
-          numeric: {
-            message: 'Por favor ingresa un valor numérico válido para la altura'
-          },
-          greaterThan: {
-            value: 0,
-            message: 'La altura debe ser un número mayor que 0'
-          }
-        }
-      });
-
-      // Validación para Diámetro
-      fv.addField('diametro[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingresa el diámetro'
-          },
-          numeric: {
-            message: 'Por favor ingresa un valor numérico válido para el diámetro'
-          },
-          greaterThan: {
-            value: 0,
-            message: 'El diámetro debe ser un número mayor que 0'
-          }
-        }
-      });
-
-      // Validación para Número de hojas
-      fv.addField('numero_hojas[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingresa el número de hojas'
-          },
-          integer: {
-            message: 'Por favor ingresa un número entero válido para el número de hojas'
-          },
-          greaterThan: {
-            value: 0,
-            message: 'El número de hojas debe ser un número mayor que 0'
-          }
-        }
-      });
-    }
-
-    // Evento para agregar filas
-    $('.add-row-caracteristicas').on('click', function () {
-      addRow();
-    });
-
-    // Evento para eliminar filas
-    $(document).on('click', '.remove-row-caracteristicas', function () {
-      const $currentRow = $(this).closest('tr');
-      if ($currentRow.index() === 0) return; // No permitir eliminar la primera fila
-
-      $currentRow.nextUntil('tr:not(.caracteristicas-row)').addBack().remove();
-
-      // Deshabilitar el botón de eliminación si queda solo una fila
-      if ($('#plant-table tbody .caracteristicas-row').length <= 1) {
-        $('#plant-table .remove-row-caracteristicas').prop('disabled', true);
-      }
-    });
-
-    // Deshabilitar el botón de eliminación en la primera fila
-    $('#plant-table .remove-row-caracteristicas').first().prop('disabled', true);
-  });
 
 
   /* seccion para la inserccion de los datos de los predios inspecciones */
@@ -1808,44 +1687,6 @@ $('#pdfViewerDictamen1').on('load', function () {
           validators: {
             notEmpty: {
               message: 'Por favor selecciona la opción'
-            }
-          }
-        },
-        marco_plantacion: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el marco de plantación'
-            }
-          }
-        },
-        distancia_surcos: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese la distancia entre surcos '
-            }
-          }
-        },
-        distancia_plantas: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese la distancia entre plantas'
-            }
-          }
-        },
-        superficie: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingresa la superficie del predio'
-            },
-            numeric: {
-              message: 'Por favor ingresa un valor numérico válido'
-            }
-          }
-        },
-        tiene_coordenadas: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor selecciona si el predio cuenta con coordenadas'
             }
           }
         },
@@ -1912,187 +1753,18 @@ $('#pdfViewerDictamen1').on('load', function () {
           if (data.success) {
             var predio = data.predio;
             /* console.log(data) */
-
             // Rellenar el formulario con los datos del predio
             $('#inspeccion_id_empresa').val(predio.id_empresa);
             $('#inspeccion_ubicacion_predio').val(predio.ubicacion_predio);
-            $('#inspeccion_tiene_coordenadas').val(predio.cuenta_con_coordenadas);
+
             $('#inspeccion_superficie').val(predio.superficie);
             // Limpiar las filas de coordenadas anteriores
             $('#coordenadas-body-inspeccion').empty();
             // Rellenar coordenadas o añadir una fila vacía si no hay coordenadas
-            if (predio.cuenta_con_coordenadas === 'Si' && data.coordenadas.length > 0) {
-              data.coordenadas.forEach(function (coordenada) {
-                var newRow = `
-                      <tr>
-                          <td>
-                              <button type="button" class="btn btn-danger remove-row-cordenadas btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
-                          </td>
-                          <td>
-                              <div class="form-floating form-floating-outline">
-                                  <input type="text" class="form-control" name="latitud[]" value="${coordenada.latitud}" placeholder="Latitud" autocomplete="off">
-                                  <label for="latitud">Latitud</label>
-                              </div>
-                          </td>
-                          <td>
-                              <div class="form-floating form-floating-outline">
-                                  <input type="text" class="form-control" name="longitud[]" value="${coordenada.longitud}" placeholder="Longitud" autocomplete="off">
-                                  <label for="longitud">Longitud</label>
-                              </div>
-                          </td>
-                      </tr>`;
-                $('#coordenadas-body-inspeccion').append(newRow);
-              });
-            } else {
-              var emptyRow = `
-                  <tr>
-                      <td>
-                          <button type="button" class="btn btn-danger remove-row-cordenadas btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
-                      </td>
-                      <td>
-                          <div class="form-floating form-floating-outline">
-                              <input type="text" class="form-control" name="latitud[]" placeholder="Latitud">
-                              <label for="latitud">Latitud</label>
-                          </div>
-                      </td>
-                      <td>
-                          <div class="form-floating form-floating-outline">
-                              <input type="text" class="form-control" name="longitud[]" placeholder="Longitud">
-                              <label for="longitud">Longitud</label>
-                          </div>
-                      </td>
-                  </tr>`;
-              $('#inspeccion_coordenadas tbody').append(emptyRow);
-            }
-
-            // Mostrar u ocultar la sección de coordenadas basado en la presencia de coordenadas
-            if (predio.cuenta_con_coordenadas === 'Si' && data.coordenadas.length > 0) {
-              $('#inspeccion_coordenadas').removeClass('d-none');
-            } else {
-              $('#inspeccion_coordenadas').addClass('d-none');
-            }
-
-            // Limpiar las filas de plantaciones anteriores
-            $('.inspeccion_ContenidoPlantacion').empty();
-
-            // Cargar tipos de agave en el select
-            var tipoOptions = data.tipos.map(function (tipo) {
-              return `<option value="${tipo.id_tipo}">${tipo.nombre} (${tipo.cientifico})</option>`;
-            }).join('');
-
-            // Rellenar plantaciones o añadir una fila vacía si no hay plantaciones
-            if (data.plantaciones.length > 0) {
-              data.plantaciones.forEach(function (plantacion) {
-                var newRow = `
-                              <tr class="plantacion-row">
-                                  <td rowspan="4">
-                                      <button type="button" class="btn btn-danger remove-row-plantacion btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
-                                  </td>
-                                  <td><b>Nombre y Especie de Agave/Maguey</b></td>
-                                  <td>
-                                      <div class="form-floating form-floating-outline mb-3">
-                                          <select name="id_tipo[]" class="select2 form-select tipo_agave">
-                                              <option disabled>Tipo de agave</option>
-                                              ${tipoOptions}
-                                          </select>
-                                          <label for="especie_agave"></label>
-                                      </div>
-                                  </td>
-                              </tr>
-                              <tr class="plantacion-row">
-                                  <td><b>Número de Plantas</b></td>
-                                  <td>
-                                      <div class="form-floating form-floating-outline">
-                                          <input type="number" class="form-control" name="numero_plantas[]" value="${plantacion.num_plantas}" placeholder="Número de plantas" step="1" autocomplete="off">
-                                          <label for="numero_plantas">Número de Plantas</label>
-                                      </div>
-                                  </td>
-                              </tr>
-                              <tr class="plantacion-row">
-                                  <td><b>Año de plantación</b></td>
-                                  <td>
-                                      <div class="form-floating form-floating-outline">
-                                          <input type="number" class="form-control" name="edad_plantacion[]" value="${plantacion.anio_plantacion}" placeholder="Año de plantación" step="1" autocomplete="off">
-                                          <label for="edad_plantacion">Año de plantación</label>
-                                      </div>
-                                  </td>
-                              </tr>
-                              <tr class="plantacion-row">
-                                  <td><b>Tipo de Plantación</b></td>
-                                  <td>
-                                      <div class="form-floating form-floating-outline">
-                                          <input type="text" class="form-control" name="tipo_plantacion[]" value="${plantacion.tipo_plantacion}" placeholder="Tipo de plantación" autocomplete="off">
-                                          <label for="tipo_plantacion">Tipo de Plantación</label>
-                                      </div>
-                                  </td>
-                              </tr>`;
-                $('.inspeccion_ContenidoPlantacion').append(newRow);
-                // Seleccionar el tipo de agave actual
-                $('.inspeccion_ContenidoPlantacion').find('select[name="id_tipo[]"]').last().val(plantacion.id_tipo);
-              });
-              // Inicializar los elementos select2
-              var select2Elements = $('.select2');
-              initializeSelect2(select2Elements);
-            } else {
-              var emptyRow = `
-                          <tr>
-                              <td rowspan="4">
-                                  <button type="button" class="btn btn-danger remove-row-plantacion btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
-                              </td>
-                              <td><b>Nombre y Especie de Agave/Maguey</b></td>
-                              <td>
-                                  <div class="form-floating form-floating-outline mb-3">
-                                      <select name="id_tipo[]" class="select2 form-select tipo_agave">
-                                          <option value="" disabled>Tipo de agave</option>
-                                          ${tipoOptions}
-                                      </select>
-                                      <label for="especie_agave"></label>
-                                  </div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td><b>Número de Plantas</b></td>
-                              <td>
-                                  <div class="form-floating form-floating-outline">
-                                      <input type="number" class="form-control" name="numero_plantas[]" placeholder="Número de plantas" step="1">
-                                      <label for="numero_plantas">Número de Plantas</label>
-                                  </div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td><b>Año de plantación</b></td>
-                              <td>
-                                  <div class="form-floating form-floating-outline">
-                                      <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Año de plantación" step="1">
-                                      <label for="edad_plantacion">Año de plantación</label>
-                                  </div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td><b>Tipo de Plantación</b></td>
-                              <td>
-                                  <div class="form-floating form-floating-outline">
-                                      <input type="text" class="form-control" name="tipo_plantacion[]" placeholder="Tipo de plantación">
-                                      <label for="tipo_plantacion">Tipo de Plantación</label>
-                                  </div>
-                              </td>
-                          </tr>`;
-              $('.inspeccion_ContenidoPlantacion').append(emptyRow);
-            }
 
             // Mostrar el modal
             $('#modalAddPredioInspeccion').modal('show');
 
-            // Aplicar validaciones a las plantaciones dinámicas
-            $('.inspeccion_ContenidoPlantacion input').each(function () {
-              fv.addField($(this).attr('name'), {
-                validators: {
-                  notEmpty: {
-                    message: 'Este campo es requerido'
-                  },
-                }
-              });
-            });
           } else {
             Swal.fire({
               icon: 'error',
@@ -2121,19 +1793,6 @@ $('#pdfViewerDictamen1').on('load', function () {
     // Inicializar select2 y revalidar el campo cuando cambie
     $('#fecha_inspeccion, #tipoMaguey, #inspeccion_id_empresa, #tipoAgave, #estado').on('change', function () {
       fv.revalidateField($(this).attr('name'));
-    });
-  });
-
-  $(document).ready(function () {
-    $('#inspeccion_tiene_coordenadas').on('change', function () {
-      var tieneCoordenadasSelect = $(this);
-      var coordenadasDiv = $('#inspeccion_coordenadas');
-
-      if (tieneCoordenadasSelect.val() === 'Si') {
-        coordenadasDiv.removeClass('d-none');
-      } else {
-        coordenadasDiv.addClass('d-none');
-      }
     });
   });
 
