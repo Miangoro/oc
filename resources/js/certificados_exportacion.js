@@ -1701,7 +1701,7 @@ $(document).on('click', '.subirPDF', function () {
 ///VER DOCUMENTOS RELACIONADOS
 $(document).on('click', '.documentos', function () {
     var id_certificado = $(this).data('id');
-    $(".titulo").text('Documentación relacionada al certificado ' + $(this).data('folio'));
+    $(".titulo").html('Documentación relacionada al certificado <span class="badge bg-info">' +$(this).data('folio')+ '</span>');
     var url = '/documentos/' + id_certificado;
     const noDisponibleImg = `<a href="/img_pdf/FaltaPDF.png"> 
           <img src="/img_pdf/FaltaPDF.png" height="40" width="40" alt="FaltaPDF"> </a>`;
