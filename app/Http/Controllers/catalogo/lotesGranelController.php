@@ -18,6 +18,7 @@ use App\Helpers\Helpers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;//Permiso empresa
 
 
 class lotesGranelController extends Controller
@@ -57,11 +58,12 @@ class lotesGranelController extends Controller
                 15 => 'fecha_vigencia',
                 16 => 'estatus',
             ];
-              if (auth()->user()->tipo == 3) {
-                  $empresaId = auth()->user()->empresa?->id_empresa;
-              } else {
-                  $empresaId = null;
-              }
+
+            //Permiso de empresa
+            $empresaId = null;
+            if (Auth::check() && Auth::user()->tipo == 3) {
+                $empresaId = Auth::user()->empresa?->id_empresa;
+            }
 
             $search = $request->input('search.value');
             $totalData = LotesGranel::count();
@@ -337,7 +339,8 @@ class lotesGranelController extends Controller
     {
         $columns = ['id_lote', 'num_clientes', 'nombre_cliente', 'tipo', 'no_lote', 'categoria', 'clase', 'no_analisis', 'tipo_maguey', 'volumen', 'cont_alc'];
 
-        $query = Lote::query();
+        //$query = Lote::query();
+        $query = LotesGranel::query();
 
         // Filtrar y ordenar
         if ($request->has('search') && $request->input('search')['value']) {
@@ -699,7 +702,7 @@ if ($request->has('documentos')) {
                 'tipos' => $tipos, // Todos los tipos de agave
             ]);
 
-        } catch (ModelNotFoundException $e) {
+        } catch (\Exception $e) {
             return response()->json(['success' => false], 404);
         }
     }

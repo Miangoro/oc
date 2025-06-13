@@ -55,13 +55,35 @@ class Analytics extends Controller
       ->merge($certificadosExportacion);
 
 
-    $dictamenesInstalacionesSinCertificado = Dictamen_instalaciones::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->count();
-    $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->count();
-    $dictamenesExportacionSinCertificado  = Dictamen_Exportacion::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->count();
+    $dictamenesInstalacionesSinCertificado = Dictamen_instalaciones::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
+    $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
+    $dictamenesExportacionSinCertificado  = Dictamen_Exportacion::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
+
+    
 
 
+// Traer las inspecciones futuras con su inspector
+$inspecciones = inspecciones::with('inspector')
+    ->whereHas('inspector') // asegura que tenga inspector
+    ->where('fecha_servicio', '>', Carbon::parse('2024-12-31'))
+    ->get()
+    ->unique('num_servicio') // <-- omite duplicados por num_servicio
+    ->groupBy(function ($inspeccion) {
+        return $inspeccion->inspector->id; // agrupamos por ID del inspector
+    });
 
-    return view('content.dashboard.dashboards-analytics', compact('solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+// Preparar el resultado
+$inspeccionesInspector = $inspecciones->map(function ($grupo) {
+    $inspector = $grupo->first()->inspector;
+    return [
+        'nombre' => $inspector->name,
+        'foto' => $inspector->profile_photo_path,
+        'total_inspecciones' => $grupo->count(),
+    ];
+})->sortByDesc('total_inspecciones'); 
+
+
+    return view('content.dashboard.dashboards-analytics', compact('inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)
@@ -132,4 +154,7 @@ class Analytics extends Controller
       ]);
   }
   
+
+
+
 }

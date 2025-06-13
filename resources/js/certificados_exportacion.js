@@ -362,7 +362,7 @@ if (dt_user_table.length) {
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
               `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
-      //`<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalDocumentos" href="javascript:;" class="dropdown-item text-dark documentos"> <i class="ri-folder-line ri-20px text-secondary"></i> Ver documentación</a>` +
+    `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalDocumentos" href="javascript:;" class="dropdown-item text-dark documentos"> <i class="ri-folder-line ri-20px text-secondary"></i> Ver documentación</a>` +
               `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-dark"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalVoBo" href="javascript:;" class="dropdown-item text-dark VoBo"> <i class="ri-edit-box-line ri-20px text-light"></i> Vo. Bo.</a>` +
               `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>` +
@@ -1708,30 +1708,33 @@ $(document).on('click', '.documentos', function () {
 
     var url = '/documentos/' + id_certificado;
 
-    $.get(url, function (data) {
+      $.get(url, function (data) {
         if (data.success) {
-            var datosFinales = data.datosFinales;
-
-            // Primero quitamos solo las filas previas agregadas dinámicamente
-            $('.extra').remove();
-
-            // Luego insertamos debajo de las filas fijas
-            var contenedor = $('.fq');
-
-            datosFinales.forEach(function (dato) {
-                contenedor.append(`
-                    <tr class="extra">
-                        <td><span class="fw-medium">Lote: ${dato.id_lote_envasado}</span></td>
-                        <td>Dictamen: ${dato.dictamen_envasado ?? 'No encontrado'}</td>
-                    </tr>
-                `);
-            });
-
-            $('#ModalDocumentos').modal('show');
+              var dato = data;   
+              // Actualizar href del enlace con id="#"
+              $('#dictamen').attr('href', '/dictamen_envasado/' + dato.dictamen);
+              $('#certificado').attr('href', '/files/'+dato.numeroCliente+'/certificados_granel/'+dato.certificado);
+              $('#fq').attr('href', '/files/' + dato.clienteOrigen + '/fqs/'+dato.fq);
+              $('#fq_ajuste').attr('href', '/files/' + dato.clienteOrigen + '/fqs/' +dato.fq_ajuste);
+              $('#etiquetas').attr('href', '/files/'+dato.numeroCliente+'/'+dato.etiquetas);
+              $('#corrugado').attr('href', '/files/'+dato.numeroCliente+'/'+dato.corrugado);
+              $('#proforma').attr('href', '/storage/uploads/' +dato.numeroCliente+ '/' + dato.proforma);
+             
+          $('#ModalDocumentos').modal('show');
         }
     }).fail(function (xhr) {
         console.error(xhr.responseText);
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al obtener los documentos.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
     });
+
 });
 
 
