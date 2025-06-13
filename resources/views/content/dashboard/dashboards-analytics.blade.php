@@ -168,12 +168,13 @@
                             </div>
                             <h6 class="mb-0 fw-normal">Pendiente de asignar inspector</h6>
                             <hr>
-                            <div class="d-flex align-items-center mb-2">
+                            <div class="d-flex align-items-center mb-2 cursor-pointer"
+                        data-bs-toggle="modal" data-bs-target="#modalSolicitudesSinActa">  
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-warning"><i
                                             class="ri-file-list-fill ri-24px"></i></span>
                                 </div>
-                                <h4 class="mb-0">{{ $solicitudesSinActa }}</h4>
+                                <h4 class="mb-0">{{ $solicitudesSinActa->count() }}</h4>
                             </div>
                             <h6 class="mb-0 fw-normal">Pendiente de subir acta</h6>
                         </div>
@@ -493,6 +494,57 @@
                                 <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}</td>
                                 <td>{{ $dictamen->inspeccione->inspector->name ?? 'N/A' }}</td>
+                                <!--<td>
+                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                        Ver
+                                    </a>
+                                </td>-->
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <p>No hay dictámenes pendientes.</p>
+        @endif
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalSolicitudesSinActa" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Solicitudes pendientes de subir acta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        @if($solicitudesSinActa->count())
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Folio</th>
+                            <th>Tipo</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Inspector</th>
+                            <!--<th>Acciones</th>-->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($solicitudesSinActa as $solicitud)
+                            <tr>
+                                <td>{{ $solicitud->folio }}</td>
+                                <td>{{ $solicitud->tipo_solicitud->tipo }}</td>
+                                <td>{{ $solicitud->empresa->razon_social ?? 'N/A' }}</td>
+                                <td>{{ \Carbon\Carbon::parse($solicitud->fecha_solicitud)->format('d/m/Y') }}</td>
+                                <td>{{ $solicitud->inspeccione->inspector->name ?? 'N/A' }}</td>
                                 <!--<td>
                                     <a href="" class="btn btn-sm btn-primary" target="_blank">
                                         Ver

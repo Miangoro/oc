@@ -28,7 +28,7 @@ class Analytics extends Controller
           ->orWhereHas('documentacion_completa', function ($q) {
             $q->where('id_documento', '!=', 69);
           });
-      })->count();
+      })->get();
 
 
 
