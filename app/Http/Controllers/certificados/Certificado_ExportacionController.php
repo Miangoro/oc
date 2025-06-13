@@ -901,19 +901,29 @@ public function documentos($id)
     // Obtener todos los IDs de los lotes
     $caracteristicas = $certificado->dictamen?->inspeccione?->solicitud?->caracteristicasDecodificadas() ?? [];
     $id_etiqueta= $caracteristicas['id_etiqueta'] ?? 'No encontrado';
-    $detalles = $caracteristicas['detalles'] ?? [];
-    $idLote = collect($detalles)->pluck('id_lote_envasado')->filter()->first();
+        $detalles = $caracteristicas['detalles'] ?? [];
+    $id_lote_envasado = collect($detalles)->pluck('id_lote_envasado')->filter()->first();//obtiene 1er id_lote
+        $lote_envasado = lotes_envasado::where('id_lote_envasado', $id_lote_envasado)->first();
+    $lote_granel = $lote_envasado->lotesGranel->first()->id_lote_granel;
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->id_empresa)->first();
+    $numeroCliente = $empresa->empresaNumClientes
+        ->pluck('numero_cliente')
+        ->filter()  // elimina valores vacíos o null
+        ->first();
+        $empresaOrigen = empresa::with("empresaNumClientes")->where("id_empresa", $lote_granel->id_empresa)->first();
+    $clienteOrigen = $empresaOrigen->empresaNumClientes
+        ->pluck('numero_cliente')
+        ->filter()  // elimina valores vacíos o null
+        ->first();
 
     //foreach ($loteIds as $idLote) {
-        $dictamenEnvasado = Dictamen_Envasado::where('id_lote_envasado', $idLote)->first();
-            $loteGranel = $dictamenEnvasado->lote_envasado->lotesGranel->first()->id_lote_granel;
-        $certificado_granel = Documentacion_url::where('id_relacion', $loteGranel)
+        $dictamenEnvasado = Dictamen_Envasado::where('id_lote_envasado', $id_lote_envasado)->first();//toma el id_lote con id_dictamen
+        $certificadoGranel = Documentacion_url::where('id_relacion', $lote_granel)
             ->Where('id_documento', 59)->first();
-        $fq = Documentacion_url::where('id_relacion', $loteGranel)
+        $fq = Documentacion_url::where('id_relacion', $lote_granel)
             ->Where('id_documento', 58)->first();
-        $fq_ajuste = Documentacion_url::where('id_relacion', $loteGranel)
+        $fq_ajuste = Documentacion_url::where('id_relacion', $lote_granel)
             ->Where('id_documento', 134)->first();
-
         $etiqueta = Documentacion_url::where('id_relacion', $id_etiqueta)
             ->Where('id_documento', 60)->first();
         $corrugado = Documentacion_url::where('id_relacion', $id_etiqueta)
@@ -921,16 +931,13 @@ public function documentos($id)
         $proforma = Documentacion_url::where('id_relacion', $certificado->dictamen?->inspeccione?->solicitud->id_solicitud)
             ->Where('id_documento', 55)->first();
            
-$empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->id_empresa)->first();
-      $numeroCliente = $empresa->empresaNumClientes
-    ->pluck('numero_cliente')
-    ->filter()  // elimina valores vacíos o null
-    ->first();
+
         //if ($dictamenEnvasado) {
-        $numeroCliente = $numeroCliente ?? null;
+            $numeroCliente = $numeroCliente ?? null;
+            $clienteOrigen = $clienteOrigen ?? null;
 
             $dictamen = $dictamenEnvasado->id_dictamen_envasado ?? null;
-            $certificado = $certificado_granel->url ?? null;
+            $certificado = $certificadoGranel->url ?? null;
             $fq = $fq->url ?? null;
             $fq_ajuste = $fq_ajuste->url ?? null;
             $etiquetas = $etiqueta->url ?? null;
@@ -940,10 +947,10 @@ $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado
         //}
     //}
 
-            
     return response()->json([
         'success' => true,
         'numeroCliente' => $numeroCliente,
+        'clienteOrigen' => $clienteOrigen,
 
         'dictamen' => $dictamen,
         'certificado' => $certificado,
@@ -952,7 +959,6 @@ $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado
         'etiquetas' => $etiquetas,
         'corrugado' => $corrugado,
         'proforma' => $proforma,
-        
     ]);
 }
 

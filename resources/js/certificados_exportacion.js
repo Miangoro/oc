@@ -1711,21 +1711,13 @@ $(document).on('click', '.documentos', function () {
       $.get(url, function (data) {
         if (data.success) {
               var dato = data;   
-/*
- $documentacion = Documentacion_url::where('id_relacion', $idLote)
-            ->where('id_documento', 59)->where('id_doc', $certificado->id_certificado) ->first();
-            $nestedData['pdf_firmado'] = $documentacion?->url
-                ? asset("files/{$numero_cliente}/certificados_granel/{$documentacion->url}") : null;
-
-        $rutaArchivo = "{$numeroCliente}/certificados_granel/{$documentacion->url}";
-*/
               // Actualizar href del enlace con id="#"
               $('#dictamen').attr('href', '/dictamen_envasado/' + dato.dictamen);
-              $('#certificado').attr('href', 'files/'+dato.numerocliente+'/certificados_granel/'+dato.certificado);
-              $('#fq').attr('href', '/files/' + dato.numerocliente + '/fqs/'+dato.fq);
-              $('#fq_ajuste').attr('href', '/files/' + dato.numerocliente + '/fqs/' +dato.fq_ajuste);
-              $('#etiquetas').attr('href', '/files/'+dato.numerocliente+'/'+dato.etiquetas);
-              $('#corrugado').attr('href', '/files/'+dato.numerocliente+'/'+dato.corrugado);
+              $('#certificado').attr('href', '/files/'+dato.numeroCliente+'/certificados_granel/'+dato.certificado);
+              $('#fq').attr('href', '/files/' + dato.clienteOrigen + '/fqs/'+dato.fq);
+              $('#fq_ajuste').attr('href', '/files/' + dato.clienteOrigen + '/fqs/' +dato.fq_ajuste);
+              $('#etiquetas').attr('href', '/files/'+dato.numeroCliente+'/'+dato.etiquetas);
+              $('#corrugado').attr('href', '/files/'+dato.numeroCliente+'/'+dato.corrugado);
               $('#proforma').attr('href', '/storage/uploads/' +dato.numeroCliente+ '/' + dato.proforma);
              
           $('#ModalDocumentos').modal('show');
@@ -1741,7 +1733,6 @@ $(document).on('click', '.documentos', function () {
             confirmButton: 'btn btn-danger'
           }
         });
-      
     });
 
 });
