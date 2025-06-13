@@ -59,7 +59,7 @@ class solicitudesController extends Controller
             $empresas = empresa::with('empresaNumClientes')
                 ->where('tipo', 2)
                 ->get();
-        }
+        }  
 
         $organismos = organismos::all(); // Obtener todos los estados
         $LotesGranel = lotesGranel::all();
@@ -85,6 +85,8 @@ class solicitudesController extends Controller
         if (Auth::check() && Auth::user()->tipo == 3) {
             $empresaId = Auth::user()->empresa?->id_empresa;
         }
+
+        $userId = Auth::id();
 
         $columns = [
             1 => 'id_solicitud',
@@ -113,6 +115,12 @@ class solicitudesController extends Controller
         if ($empresaId) {
             $query->where('id_empresa', $empresaId);
         }
+
+        if ($userId == 49) {
+            $query->where('id_tipo', 11);
+        }
+
+         
 
         // Filtros específicos por columna
       $columnsInput = $request->input('columns');
@@ -161,6 +169,10 @@ class solicitudesController extends Controller
                 $query->where('id_empresa', $empresaId);
             }
 
+            if ($userId == 49) {
+            $query->where('id_tipo', 11);
+         }
+
             // Paginación
             $solicitudes = $query->offset($start)
                 ->limit($limit)
@@ -202,6 +214,10 @@ class solicitudesController extends Controller
 
                 if ($empresaId) {
                     $solicitudes->where('id_empresa', $empresaId);
+                }
+
+                if ($userId == 49) {
+                     $solicitudes->where('id_tipo', 11);
                 }
 
                 $solicitudes = $solicitudes->offset($start)
@@ -246,6 +262,10 @@ class solicitudesController extends Controller
 
                 if ($empresaId) {
                     $totalFiltered->where('id_empresa', $empresaId);
+                }
+
+                if ($userId == 49) {
+                     $totalFiltered->where('id_tipo', 11);
                 }
 
                 $totalFiltered = $totalFiltered->count();
