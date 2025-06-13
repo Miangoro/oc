@@ -59,9 +59,30 @@ class Analytics extends Controller
     $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->count();
     $dictamenesExportacionSinCertificado  = Dictamen_Exportacion::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->count();
 
+    
 
 
-    return view('content.dashboard.dashboards-analytics', compact('solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+    // Traer las inspecciones futuras con su inspector
+$inspecciones = inspecciones::with('inspector')
+    ->whereHas('inspector') // asegura que tenga inspector
+    ->where('fecha_servicio', '>', Carbon::parse('2024-12-31'))
+    ->get()
+    ->groupBy(function ($inspeccion) {
+        return $inspeccion->inspector->id; // agrupamos por ID del inspector
+    });
+
+// Preparar el resultado
+$inspeccionesInspector = $inspecciones->map(function ($grupo) {
+    $inspector = $grupo->first()->inspector;
+    return [
+        'nombre' => $inspector->name,
+        'foto' => $inspector->profile_photo_path,
+        'total_inspecciones' => $grupo->count(),
+    ];
+});
+
+
+    return view('content.dashboard.dashboards-analytics', compact('inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)

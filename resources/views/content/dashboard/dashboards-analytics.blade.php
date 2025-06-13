@@ -313,6 +313,46 @@
                     </div>
                 </div>
             @endcan
+
+            <div class="col-md-6 col-xxl-4">
+    <div class="card h-100">
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="card-title m-0 me-2">Inspecciones por inspector</h5>
+        <div class="dropdown">
+         <!-- <button class="btn text-body-secondary p-0" type="button" id="meetingSchedule" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="icon-base ri ri-more-2-line"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="meetingSchedule">
+            <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
+            <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
+            <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
+          </div>-->
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="p-0 m-0">
+
+        @foreach($inspeccionesInspector AS $inspector)
+          <li class="d-flex align-items-center mb-4 pb-2">
+            <div class="avatar flex-shrink-0 me-4">
+               <img src="{{ asset('storage/' . $inspector['foto']) }}" alt="Foto de {{ $inspector['nombre'] }}" class="rounded-3" width="50">
+            </div>
+            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+              <div class="me-2">
+                <h6 class="mb-0">{{ $inspector['nombre'] }}</h6>
+                <small class="d-flex align-items-center">
+                 <!-- <i class="icon-base ri ri-calendar-line icon-16px"></i>
+                  <span class="ms-2">21 Jul | 08:20-10:30</span>-->
+                </small>
+              </div>
+              <div class="badge bg-label-primary rounded-pill">{{ $inspector['total_inspecciones'] }}</div>
+            </div>
+          </li>
+          @endforeach
+        </ul>
+      </div>
+    </div>
+  </div>
         </div>
 
 
