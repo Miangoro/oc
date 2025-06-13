@@ -211,16 +211,18 @@
                 <div class="col-sm-6 col-lg-3">
                     <div class="card card-border-shadow-primary h-100">
                         <div class="card-body">
-                            <div class="d-flex align-items-center mb-2">
+                            <div class="d-flex align-items-center mb-2 cursor-pointer"
+                        data-bs-toggle="modal" data-bs-target="#modalDictamenesInstalacionesPendientes">
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-danger"><i
                                             class="ri-file-warning-line ri-24px"></i></span>
                                 </div>
-                                <h4 class="mb-0">{{ $dictamenesInstalacionesSinCertificado }}</h4>
+                                <h4 class="mb-0">{{ $dictamenesInstalacionesSinCertificado->count() }}</h4>
                             </div>
                             <h6 class="mb-0 fw-normal">Pendiente de crear certificado de instalaciones</h6>
                             <hr>
-                            <div class="d-flex align-items-center mb-2">
+                            <div class="d-flex align-items-center mb-2 cursor-pointer"
+                        data-bs-toggle="modal" data-bs-target="#modalDictamenesGranelPendientes">
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-danger"><i
                                             class="ri-file-warning-line ri-24px"></i></span>
@@ -231,7 +233,7 @@
                             <hr>
                             <!-- BOTÓN o DIV CLICKABLE para abrir el modal -->
                     <div class="d-flex align-items-center mb-2 cursor-pointer"
-                        data-bs-toggle="modal" data-bs-target="#modalDictamenesPendientes">
+                        data-bs-toggle="modal" data-bs-target="#modalDictamenesExportacionPendientes">
                         <div class="avatar me-4">
                             <span class="avatar-initial rounded-3 bg-label-danger">
                                 <i class="ri-file-warning-line ri-24px"></i>
@@ -366,11 +368,11 @@
         </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modalDictamenesPendientes" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+<div class="modal fade" id="modalDictamenesExportacionPendientes" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Dictámenes sin Certificado de Exportación</h5>
+        <h5 class="modal-title" id="modalLabel">Dictámenes sin certificado de exportación</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
@@ -388,6 +390,104 @@
                     </thead>
                     <tbody>
                         @foreach($dictamenesExportacionSinCertificado as $dictamen)
+                            <tr>
+                                <td>{{ $dictamen->num_dictamen }}</td>
+                                <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
+                                <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}</td>
+                                <td>{{ $dictamen->inspeccione->inspector->name ?? 'N/A' }}</td>
+                                <!--<td>
+                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                        Ver
+                                    </a>
+                                </td>-->
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <p>No hay dictámenes pendientes.</p>
+        @endif
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalDictamenesGranelPendientes" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Dictámenes sin certificado de Granel</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        @if($dictamenesGranelesSinCertificado->count())
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Folio</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Inspector</th>
+                            <!--<th>Acciones</th>-->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($dictamenesGranelesSinCertificado as $dictamen)
+                            <tr>
+                                <td>{{ $dictamen->num_dictamen }}</td>
+                                <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
+                                <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}</td>
+                                <td>{{ $dictamen->inspeccione->inspector->name ?? 'N/A' }}</td>
+                                <!--<td>
+                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                        Ver
+                                    </a>
+                                </td>-->
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <p>No hay dictámenes pendientes.</p>
+        @endif
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalDictamenesInstalacionesPendientes" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Dictámenes sin certificado de Instalaciones</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        @if($dictamenesInstalacionesSinCertificado->count())
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Folio</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Inspector</th>
+                            <!--<th>Acciones</th>-->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($dictamenesInstalacionesSinCertificado as $dictamen)
                             <tr>
                                 <td>{{ $dictamen->num_dictamen }}</td>
                                 <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
