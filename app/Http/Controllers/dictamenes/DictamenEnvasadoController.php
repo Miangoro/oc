@@ -225,7 +225,7 @@ public function store(Request $request)
     // Busca la inspección y carga la relacion con modelo inspeccion->solicitud
     $inspeccion = inspecciones::find($validated['id_inspeccion']);
     // Obtener el lote directamente
-    $id_lote_envasado = $inspeccion->solicitud->id_lote_envasado;
+    $id_lote_envasado = $inspeccion->solicitud->lote_envasado->id_lote_envasado;
     if (!$id_lote_envasado) {
         return response()->json(['error' => 'No se encontró el lote asociado a la solicitud'], 404);
     }
@@ -379,7 +379,7 @@ public function reexpedir(Request $request)
         // Busca la inspección y carga la relacion con modelo inspeccion->solicitud
         $inspeccion = inspecciones::find($request->validate['id_inspeccion']);
         // Obtener el lote directamente
-        $id_lote_envasado = $inspeccion->solicitud->id_lote_envasado;
+        $id_lote_envasado = $inspeccion->solicitud->lote_envasado->id_lote_envasado;
         if (!$id_lote_envasado) {
             return response()->json(['error' => 'No se encontró el lote asociado a la solicitud'], 404);
         }
