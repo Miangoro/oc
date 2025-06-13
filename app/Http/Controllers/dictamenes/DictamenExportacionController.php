@@ -126,7 +126,7 @@ public function index(Request $request)
 
 
     // Ordenamiento especial para num_dictamen con formato 'UMEXP##-###'
-    if ($orderColumn === 'num_dictamen') {
+    /*if ($orderColumn === 'num_dictamen') {
         $query->orderByRaw("
             CASE
                 WHEN num_dictamen LIKE 'UMEXP%' THEN 0
@@ -137,6 +137,16 @@ public function index(Request $request)
         ");
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
+    }*/
+    if ($orderColumn === 'num_dictamen') {
+        $query->orderByRaw("
+            CASE
+                WHEN num_dictamen LIKE 'UMEXP25-%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(SUBSTRING_INDEX(SUBSTRING(num_dictamen, 9), '-', 1) AS UNSIGNED) DESC,
+            CHAR_LENGTH(SUBSTRING_INDEX(SUBSTRING(num_dictamen, 9), '-', -1)) ASC
+        ");
     }
 
     

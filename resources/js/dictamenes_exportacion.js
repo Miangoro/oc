@@ -538,7 +538,7 @@ FormValidation.formValidation(FormAgregar, {
         $('#ModalAgregar').modal('hide');
         $('#FormAgregar')[0].reset();
         $('.select2').val(null).trigger('change');
-        dataTable.ajax.reload();//Recarga los datos del datatable
+        dataTable.ajax.reload(false);//Recarga los datos del datatable
         
         // Mostrar alerta de éxito
         Swal.fire({

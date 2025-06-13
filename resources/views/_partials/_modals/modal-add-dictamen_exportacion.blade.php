@@ -29,7 +29,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input type="text" class="form-control" id="num_dictamen" name="num_dictamen"
-                                    placeholder="No. de dictamen" value="UMEXP-">
+                                    placeholder="No. de dictamen" value="UMEXP25-">
                                 <label for="">No. de dictamen</label>
                             </div>
                         </div>
@@ -38,7 +38,9 @@
                                 <select  id="id_firmante" name="id_firmante" class="select2 form-select">
                                 <option value="" disabled selected>Selecciona un firmante</option>
                                 @foreach ($users as $inspector)
-                                    <option value="{{ $inspector->id }}">{{ $inspector->name }}</option>
+                                    <option value="{{ $inspector->id }}" {{ $inspector->id == 9 ? 'selected' : '' }}>
+                                        {{ $inspector->name }}
+                                    </option>
                                 @endforeach
                              </select>
                                 <label for="">Selecciona un firmante</label>
