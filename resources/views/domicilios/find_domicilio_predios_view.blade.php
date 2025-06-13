@@ -86,6 +86,6 @@
     @include('_partials/_modals/modal-edit-predio')
     @include('_partials/_modals/modal-add-predio-inspeccion')
     @include('_partials/_modals/modal-add-registro-predio')
-    @include('_partials/_modals/modal-add-solicitud-georeferenciacion')
-    <!-- /Modal -->
+    {{-- @include('_partials/_modals/modal-add-solicitud-georeferenciacion') --}}
+
 @endsection

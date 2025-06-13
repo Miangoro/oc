@@ -62,7 +62,7 @@ $(function () {
         { data: 'ubicacion_predio' },
         { data: 'tipo_predio' },
         //{ data: 'puntos_referencia' },
-       // { data: 'cuenta_con_coordenadas' },
+        // { data: 'cuenta_con_coordenadas' },
         { data: 'superficie' },
         {
           data: 'estatus',
@@ -115,17 +115,17 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-              if (full['hasSolicitud']) {
-                  return `${full['folio_solicitud']}<i class="ri-file-pdf-2-fill text-danger ri-40px pdfSolicitud cursor-pointer"
+            if (full['hasSolicitud']) {
+              return `${full['folio_solicitud']}<i class="ri-file-pdf-2-fill text-danger ri-40px pdfSolicitud cursor-pointer"
                           data-bs-target="#mostrarPdfDcitamen1" data-bs-toggle="modal"
                           data-bs-dismiss="modal" data-id="${full['id_solicitud']}"
                           data-registro="${full['id_empresa']}"></i>`;
-              } else {
-                  return `<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf" data-bs-placement="right" title="Necesita hacer la solicitud"
+            } else {
+              return `<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf" data-bs-placement="right" title="Necesita hacer la solicitud"
                           ></i>`;
-              }
+            }
           }
-      },
+        },
 
         // Pdf de pre-registro
         {
@@ -742,9 +742,9 @@ $(function () {
     }
     else {
       // Quitar validaciones antes de limpiar los campos
-      $(coordenadasBody).find('input[name="latitud[]"]').each(function() {
+      $(coordenadasBody).find('input[name="latitud[]"]').each(function () {
       });
-      $(coordenadasBody).find('input[name="longitud[]"]').each(function() {
+      $(coordenadasBody).find('input[name="longitud[]"]').each(function () {
       });
 
       coordenadasDiv.classList.add('d-none');
@@ -853,13 +853,13 @@ $(function () {
             }
           }
         },
-       /* url: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor adjunta el documento requerido'
-            }
-          }
-        },*/
+        /* url: {
+           validators: {
+             notEmpty: {
+               message: 'Por favor adjunta el documento requerido'
+             }
+           }
+         },*/
         'id_tipo[]': {
           validators: {
             notEmpty: {
@@ -934,9 +934,7 @@ $(function () {
             // Abre el modal de georreferenciación
             $('#addSolicitudGeoreferenciacion').modal('show');
             // Inicializa el modal de georreferenciación
-            inicializarGeoreferenciacion();
           });
-
         },
         error: function (xhr) {
           Swal.fire({
@@ -957,7 +955,7 @@ $(function () {
     });
   });
 
-/* traje la funcion de agregar solicitud de georeferenciacion en predios */
+  /* traje la funcion de agregar solicitud de georeferenciacion en predios */
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -965,7 +963,6 @@ $(function () {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-
     // Inicializar FormValidation para la solicitud de georreferenciación
     const addRegistrarSolicitudGeoreferenciacion = document.getElementById('addRegistrarSolicitudGeoreferenciacion');
     const fvGeoreferenciacion = FormValidation.formValidation(addRegistrarSolicitudGeoreferenciacion, {
@@ -1006,7 +1003,6 @@ $(function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(addRegistrarSolicitudGeoreferenciacion);
-
       $.ajax({
         url: '/registrar-solicitud-georeferenciacion', // Cambia esta URL según tu endpoint
         type: 'POST',
@@ -1016,7 +1012,6 @@ $(function () {
         success: function (response) {
           $('#addSolicitudGeoreferenciacion').modal('hide');
           addRegistrarSolicitudGeoreferenciacion.reset(); // Resetea el formulario
-          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla si es necesario
           $('.datatables-users').DataTable().ajax.reload();
           Swal.fire({
             icon: 'success',
@@ -1040,24 +1035,24 @@ $(function () {
         }
       });
     });
-
-    // Llama a la función al abrir el modal de georreferenciación
-    $('#addSolicitudGeoreferenciacion').on('show.bs.modal', function () {
-      if (typeof inicializarGeoreferenciacion === 'function') {
-        inicializarGeoreferenciacion(); // Llama a la función de solicitudes.js
-      }
-    });
   });
 
-  $(document).ready(function() {
+  // Llama a la función al abrir el modal de georreferenciación
+/*   $('#addSolicitudGeoreferenciacion').on('show.bs.modal', function () {
+    if (typeof inicializarGeoreferenciacion === 'function') {
+      inicializarGeoreferenciacion(); // Llama a la función de solicitudes.js
+    }
+  });
+ */
+  $(document).ready(function () {
     var contador = 1; // Contador para identificar cada sección
 
     // Al hacer clic en el botón de agregar sección
-    $('#agregar-seccion').on('click', function() {
-        contador++; // Incrementar el contador para cada nueva sección
+    $('#agregar-seccion').on('click', function () {
+      contador++; // Incrementar el contador para cada nueva sección
 
-        // Crear una nueva fila de la tabla
-        var nuevaSeccion = `
+      // Crear una nueva fila de la tabla
+      var nuevaSeccion = `
             <tr class="seccion-foto">
                 <td>
                     <button type="button" class="btn btn-danger eliminar-seccion"><i class="ri-delete-bin-5-fill"></i></button>
@@ -1070,15 +1065,15 @@ $(function () {
                 </td>
             </tr>`;
 
-        // Agregar la nueva fila a la tabla
-        $('#contenedor-secciones').append(nuevaSeccion);
+      // Agregar la nueva fila a la tabla
+      $('#contenedor-secciones').append(nuevaSeccion);
     });
 
     // Eliminar la fila correspondiente cuando se hace clic en el botón "Eliminar"
-    $(document).on('click', '.eliminar-seccion', function() {
-        $(this).closest('tr').remove(); // Eliminar la fila más cercana
+    $(document).on('click', '.eliminar-seccion', function () {
+      $(this).closest('tr').remove(); // Eliminar la fila más cercana
     });
-});
+  });
 
 
 
@@ -1489,76 +1484,76 @@ $(function () {
   });
 
 
- // Reciben los datos del PDF
-$(document).on('click', '.pdf', function () {
-  var id = $(this).data('id');
-  var registro = $(this).data('registro');
-  var iframe = $('#pdfViewerDictamen1');
-  var openPdfBtn = $('#openPdfBtnDictamen1'); // Botón para abrir en nueva pestaña
+  // Reciben los datos del PDF
+  $(document).on('click', '.pdf', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+    var iframe = $('#pdfViewerDictamen1');
+    var openPdfBtn = $('#openPdfBtnDictamen1'); // Botón para abrir en nueva pestaña
 
-  // Mostrar el spinner y ocultar el iframe
-  $('#loading-spinner1').show();
-  iframe.hide();
+    // Mostrar el spinner y ocultar el iframe
+    $('#loading-spinner1').show();
+    iframe.hide();
 
-  // Generar la URL del PDF
-  var pdfUrl = '../pre-registro_predios/' + id;
+    // Generar la URL del PDF
+    var pdfUrl = '../pre-registro_predios/' + id;
 
-  // Cargar el PDF en el iframe
-  iframe.attr('src', pdfUrl);
+    // Cargar el PDF en el iframe
+    iframe.attr('src', pdfUrl);
 
-  // Actualizar el texto y subtítulo del modal
-  $("#titulo_modal_Dictamen1").text("Pre-registro de predios de maguey o agave");
-  $("#subtitulo_modal_Dictamen1").html(registro);
+    // Actualizar el texto y subtítulo del modal
+    $("#titulo_modal_Dictamen1").text("Pre-registro de predios de maguey o agave");
+    $("#subtitulo_modal_Dictamen1").html(registro);
 
-  // Actualizar el botón para abrir en nueva pestaña
-  openPdfBtn.attr('href', pdfUrl);
-  openPdfBtn.show(); // Mostrar el botón
+    // Actualizar el botón para abrir en nueva pestaña
+    openPdfBtn.attr('href', pdfUrl);
+    openPdfBtn.show(); // Mostrar el botón
 
-  // Abrir el modal
-  $('#mostrarPdfDictamen1').modal('show');
-});
+    // Abrir el modal
+    $('#mostrarPdfDictamen1').modal('show');
+  });
 
-// Ocultar el spinner cuando el PDF esté completamente cargado
-$('#pdfViewerDictamen1').on('load', function () {
-  $('#loading-spinner1').hide(); // Ocultar el spinner
-  $(this).show(); // Mostrar el iframe con el PDF
-});
+  // Ocultar el spinner cuando el PDF esté completamente cargado
+  $('#pdfViewerDictamen1').on('load', function () {
+    $('#loading-spinner1').hide(); // Ocultar el spinner
+    $(this).show(); // Mostrar el iframe con el PDF
+  });
 
 
-// Reciben los datos del PDF
-$(document).on('click', '.pdf2', function () {
-  var id = $(this).data('id');
-  var registro = $(this).data('registro');
-  var iframe = $('#pdfViewerDictamen1');
-  var openPdfBtn = $('#openPdfBtnDictamen1'); // Botón para abrir en nueva pestaña
+  // Reciben los datos del PDF
+  $(document).on('click', '.pdf2', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+    var iframe = $('#pdfViewerDictamen1');
+    var openPdfBtn = $('#openPdfBtnDictamen1'); // Botón para abrir en nueva pestaña
 
-  // Mostrar el spinner y ocultar el iframe
-  $('#loading-spinner1').show();
-  iframe.hide();
+    // Mostrar el spinner y ocultar el iframe
+    $('#loading-spinner1').show();
+    iframe.hide();
 
-  // Generar la URL del PDF
-  var pdfUrl = '../inspeccion_geo_referenciacion/' + id;
+    // Generar la URL del PDF
+    var pdfUrl = '../inspeccion_geo_referenciacion/' + id;
 
-  // Cargar el PDF en el iframe
-  iframe.attr('src', pdfUrl);
+    // Cargar el PDF en el iframe
+    iframe.attr('src', pdfUrl);
 
-  // Actualizar el texto y subtítulo del modal
-  $("#titulo_modal_Dictamen1").text("Inspección para la geo-referenciación de los predios de maguey o agave");
-  $("#subtitulo_modal_Dictamen1").html(registro);
+    // Actualizar el texto y subtítulo del modal
+    $("#titulo_modal_Dictamen1").text("Inspección para la geo-referenciación de los predios de maguey o agave");
+    $("#subtitulo_modal_Dictamen1").html(registro);
 
-  // Actualizar el botón para abrir en nueva pestaña
-  openPdfBtn.attr('href', pdfUrl);
-  openPdfBtn.show(); // Mostrar el botón
+    // Actualizar el botón para abrir en nueva pestaña
+    openPdfBtn.attr('href', pdfUrl);
+    openPdfBtn.show(); // Mostrar el botón
 
-  // Abrir el modal
-  $('#mostrarPdfDictamen1').modal('show');
-});
+    // Abrir el modal
+    $('#mostrarPdfDictamen1').modal('show');
+  });
 
-// Ocultar el spinner cuando el PDF esté completamente cargado
-$('#pdfViewerDictamen1').on('load', function () {
-  $('#loading-spinner1').hide(); // Ocultar el spinner
-  $(this).show(); // Mostrar el iframe con el PDF
-});
+  // Ocultar el spinner cuando el PDF esté completamente cargado
+  $('#pdfViewerDictamen1').on('load', function () {
+    $('#loading-spinner1').hide(); // Ocultar el spinner
+    $(this).show(); // Mostrar el iframe con el PDF
+  });
 
 
   // Reciben los datos del PDF
@@ -1576,9 +1571,9 @@ $('#pdfViewerDictamen1').on('load', function () {
     iframe.attr('src', pdfUrl);
     $("#titulo_modal_Dictamen1").text("F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.");
     $("#subtitulo_modal_Dictamen1").html(registro);
-  // Actualizar el botón para abrir en nueva pestaña
-  openPdfBtn.attr('href', pdfUrl);
-  openPdfBtn.show(); // Mostrar el botón
+    // Actualizar el botón para abrir en nueva pestaña
+    openPdfBtn.attr('href', pdfUrl);
+    openPdfBtn.show(); // Mostrar el botón
     // Abrir el modal
     $('#mostrarPdfDictamen1').modal('show');
   });
@@ -1590,40 +1585,40 @@ $('#pdfViewerDictamen1').on('load', function () {
   });
 
 
-// Reciben los datos del PDF
-$(document).on('click', '.pdfSolicitud', function () {
-  var id = $(this).data('id');
-  var registro = $(this).data('registro');
-  var iframe = $('#pdfViewerDictamen1'); // Cambiado a pdfViewerDictamen1
-  var openPdfBtn = $('#openPdfBtnDictamen1'); // Botón para abrir en nueva pestaña
+  // Reciben los datos del PDF
+  $(document).on('click', '.pdfSolicitud', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+    var iframe = $('#pdfViewerDictamen1'); // Cambiado a pdfViewerDictamen1
+    var openPdfBtn = $('#openPdfBtnDictamen1'); // Botón para abrir en nueva pestaña
 
-  // Mostrar el spinner y ocultar el iframe
-  $('#loading-spinner1').show();
-  iframe.hide();
+    // Mostrar el spinner y ocultar el iframe
+    $('#loading-spinner1').show();
+    iframe.hide();
 
-  // Generar la URL del PDF
-  var pdfUrl = '../solicitud_de_servicio/' + id;
+    // Generar la URL del PDF
+    var pdfUrl = '../solicitud_de_servicio/' + id;
 
-  // Cargar el PDF en el iframe
-  iframe.attr('src', pdfUrl);
+    // Cargar el PDF en el iframe
+    iframe.attr('src', pdfUrl);
 
-  // Actualizar el texto y subtítulo del modal
-  $("#titulo_modal_Dictamen1").text("Inspección para la geo-referenciación de los predios de maguey o agave");
-  $("#subtitulo_modal_Dictamen1").html(registro);
+    // Actualizar el texto y subtítulo del modal
+    $("#titulo_modal_Dictamen1").text("Inspección para la geo-referenciación de los predios de maguey o agave");
+    $("#subtitulo_modal_Dictamen1").html(registro);
 
-  // Actualizar el botón para abrir en nueva pestaña
-  openPdfBtn.attr('href', pdfUrl);
-  openPdfBtn.show(); // Mostrar el botón
+    // Actualizar el botón para abrir en nueva pestaña
+    openPdfBtn.attr('href', pdfUrl);
+    openPdfBtn.show(); // Mostrar el botón
 
-  // Abrir el modal
-  $('#mostrarPdfDictamen1').modal('show'); // Cambiado a mostrarPdfDictamen1
-});
+    // Abrir el modal
+    $('#mostrarPdfDictamen1').modal('show'); // Cambiado a mostrarPdfDictamen1
+  });
 
-// Ocultar el spinner cuando el PDF esté completamente cargado
-$('#pdfViewerDictamen1').on('load', function () {
-  $('#loading-spinner1').hide(); // Ocultar el spinner
-  $(this).show(); // Mostrar el iframe con el PDF
-});
+  // Ocultar el spinner cuando el PDF esté completamente cargado
+  $('#pdfViewerDictamen1').on('load', function () {
+    $('#loading-spinner1').hide(); // Ocultar el spinner
+    $(this).show(); // Mostrar el iframe con el PDF
+  });
 
 
 
