@@ -904,13 +904,13 @@ public function documentos($id)
         $detalles = $caracteristicas['detalles'] ?? [];
     $id_lote_envasado = collect($detalles)->pluck('id_lote_envasado')->filter()->first();//obtiene 1er id_lote
         $lote_envasado = lotes_envasado::where('id_lote_envasado', $id_lote_envasado)->first();
-    $lote_granel = $lote_envasado->lotesGranel->first()->id_lote_granel;
+    $id_lote_granel = $lote_envasado->lotesGranel->first()->id_lote_granel;
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->id_empresa)->first();
     $numeroCliente = $empresa->empresaNumClientes
         ->pluck('numero_cliente')
         ->filter()  // elimina valores vacíos o null
         ->first();
-        $empresaOrigen = empresa::with("empresaNumClientes")->where("id_empresa", $lote_granel->id_empresa)->first();
+        $empresaOrigen = empresa::with("empresaNumClientes")->where("id_empresa", $lote_envasado->lotesGranel->first()->id_empresa)->first();
     $clienteOrigen = $empresaOrigen->empresaNumClientes
         ->pluck('numero_cliente')
         ->filter()  // elimina valores vacíos o null
@@ -918,11 +918,11 @@ public function documentos($id)
 
     //foreach ($loteIds as $idLote) {
         $dictamenEnvasado = Dictamen_Envasado::where('id_lote_envasado', $id_lote_envasado)->first();//toma el id_lote con id_dictamen
-        $certificadoGranel = Documentacion_url::where('id_relacion', $lote_granel)
+        $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel)
             ->Where('id_documento', 59)->first();
-        $fq = Documentacion_url::where('id_relacion', $lote_granel)
+        $fq = Documentacion_url::where('id_relacion', $id_lote_granel)
             ->Where('id_documento', 58)->first();
-        $fq_ajuste = Documentacion_url::where('id_relacion', $lote_granel)
+        $fq_ajuste = Documentacion_url::where('id_relacion', $id_lote_granel)
             ->Where('id_documento', 134)->first();
         $etiqueta = Documentacion_url::where('id_relacion', $id_etiqueta)
             ->Where('id_documento', 60)->first();
