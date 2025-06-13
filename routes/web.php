@@ -1017,7 +1017,27 @@ Route::middleware(['auth'])->controller(Certificado_InstalacionesController::cla
 
     Route::post('/certificados/instalacion/documento', [Certificado_InstalacionesController::class, 'subirCertificado']);
     Route::get('/certificados/instalacion/documento/{id}', [Certificado_InstalacionesController::class, 'CertificadoFirmado']);
+
+/*         Route::get('/certificado-sin-marca-ins/{id}', function($id) {
+        return app(Certificado_InstalacionesController::class)->pdf_certificado_productor($id, false);
+        })->name('PDF-cer-insta-sin-marca');
+ */
+
+        Route::get('/certificado_productor_mezcal_sin_marca/{id}', function ($id) {
+        return app(Certificado_InstalacionesController::class)->pdf_certificado_productor($id, false);
+      })->name('certificado_productor_sin_marca');
+
+      Route::get('/certificado_envasador_mezcal_sin_marca/{id}', function ($id) {
+          return app(Certificado_InstalacionesController::class)->pdf_certificado_envasador($id, false);
+      })->name('certificado_envasador_sin_marca');
+
+      Route::get('/certificado_comercializador_sin_marca/{id}', function ($id) {
+          return app(Certificado_InstalacionesController::class)->pdf_certificado_comercializador($id, false);
+      })->name('certificado_comercializador_sin_marca');
+
+
 });
+
 
 //-------------------CERTIFICADO GRANEL-------------------
 Route::middleware(['auth'])->controller(Certificado_GranelController::class)->group(function () {

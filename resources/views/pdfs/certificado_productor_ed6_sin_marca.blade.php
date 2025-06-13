@@ -14,6 +14,7 @@
     body {
       font-family: 'Calibri', sans-serif;
       font-size: 13px;
+      margin-top: 70px;
     }
 
     .watermark {
@@ -236,15 +237,14 @@
     Cancelado
     </div>
   @endif
-  <div class="img-fondo"> <img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Fondo CIDAM" class="watermark">
+{{--   <div class="img-fondo"> <img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Fondo CIDAM" class="watermark">
   </div>
   <div class="encabezado"> <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}"
       style="width: 325px; float: left; margin-left: -15px; margin-top: -20px;" alt="logo de CIDAM 3D">
 
     <div class="cidam" style="margin-bottom: 10px"> <b style="font-size: 24px;">Centro de Innovación y Desarrollo
-        <br>Agroalimentario de Michoacán, A.C</b> </div>
+        <br>Agroalimentario de Michoacán, A.C</b> </div> --}}
     <br>
-
     <div class="description3" style="margin-right: 30px; text-align: right; font-size: 13px; margin-top: 20px;">
       <b>No. de Certificado: {{ $num_certificado }}</b>
     </div>
@@ -427,7 +427,10 @@
         <br>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35<br>
         Edicion 6 Entrada en vigor: 01/04/25
       </p>
-      <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705px">
+      <div style="height: 52px;">
+        <br><br><br>
+      </div>
+      {{-- <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705px"> --}}
     </div>
 
 </body>

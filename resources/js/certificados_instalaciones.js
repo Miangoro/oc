@@ -15,30 +15,30 @@ $(document).ready(function () {
 $('#fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
   fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0];
   $('#fecha_vigencia').val(fechaVigencia);
   flatpickr("#fecha_vigencia", {
       dateFormat: "Y-m-d",
-      enableTime: false,  
-      allowInput: true,  
-      locale: "es",     
-      static: true,      
-      disable: true          
+      enableTime: false,
+      allowInput: true,
+      locale: "es",
+      static: true,
+      disable: true
   });
 });
 //FUNCION FECHAS EDIT
 $('#edit_fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
   fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-  var fechaVigencia = fechaInicial.toISOString().split('T')[0]; 
+  var fechaVigencia = fechaInicial.toISOString().split('T')[0];
   $('#edit_fecha_vigencia').val(fechaVigencia);
   flatpickr("#edit_fecha_vigencia", {
-      dateFormat: "Y-m-d",  
-      enableTime: false,   
-      allowInput: true,  
-      locale: "es",  
-      static: true,   
-      disable: true  
+      dateFormat: "Y-m-d",
+      enableTime: false,
+      allowInput: true,
+      locale: "es",
+      static: true,
+      disable: true
   });
 });
 
@@ -96,7 +96,7 @@ initializeSelect2(select2Elements);
            }
         },
         { data: '' },
-        { data: 'fechas' }, 
+        { data: 'fechas' },
         { data: '' },//Revisores
         { data: 'action' }
        ],
@@ -130,11 +130,11 @@ initializeSelect2(select2Elements);
 
             return '<small class="fw-bold">' +$num_certificado+ '</small>' +
                   $icono +
-                `<br><small><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']}</small> 
+                `<br><small><span class="fw-bold">Dictamen:</span> ${full['num_dictamen']}</small>
                   <i data-id="${full['id_dictamen']}" data-tipo="${full['tipo_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
 
             }
-        }, 
+        },
         {
         //Tabla 2
           targets: 2,
@@ -161,20 +161,20 @@ initializeSelect2(select2Elements);
               <i data-id="${full['id_solicitud']}" data-folio="${$folio_solicitud}"
                 class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
                 data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
-              </i> 
+              </i>
             `;
           }
-        }, 
+        },
         {
           targets: 4,
           searchable: true,
           orderable: false,
-          responsivePriority: 4, 
+          responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $tipoDictamen = parseInt(full['tipo_dictamen']);
             var $colorDictamen;
             var $nombreDictamen;
-        
+
             switch ($tipoDictamen) {
               case 1:
                 $nombreDictamen = 'Productor';
@@ -200,12 +200,12 @@ initializeSelect2(select2Elements);
                 $nombreDictamen = 'Desconocido';
                 $colorDictamen = 'secondary'; // Gris, color por defecto
             }
-        
+
             // Retorna el badge con el texto y color apropiado
             return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span>
                 <br><small>${full['direccion_completa']}
                 ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''} </small>`;
-          }  
+          }
         },
         {//fechas
           targets: 5,
@@ -213,7 +213,7 @@ initializeSelect2(select2Elements);
           orderable: true,
           className: 'text-center',
           render: function (data, type, full, meta) {
-            var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
+            var $fecha_emision = full['fecha_emision'] ?? 'No encontrado';
             var $fecha_vigencia = full['fecha_vigencia'] ?? 'No encontrado';
             return `
                 <div>
@@ -299,13 +299,13 @@ initializeSelect2(select2Elements);
               } else if (decision_consejo === 'Pendiente') {
                 colorClass2 = 'badge rounded-pill bg-warning text-dark';
               }
-              
-            return estatus + 
+
+            return estatus +
               `<div style="flex-direction: column; margin-top: 2px;">
-                <div class="small"> <b>Personal:</b> 
+                <div class="small"> <b>Personal:</b>
                   <span class="${colorClass}">${revision_oc} ${revisor_oc}</span>${icono_oc}
                 </div>
-                <div style="display: inline;" class="small"> <b>Consejo:</b> 
+                <div style="display: inline;" class="small"> <b>Consejo:</b>
                   <span class="${colorClass2}">${revision2} ${revisor2}</span>${icono2}
                 </div>
               </div> `;
@@ -321,7 +321,7 @@ initializeSelect2(select2Elements);
             return (
               '<div class="d-flex align-items-center gap-50">' +
                 `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info') + `" data-bs-toggle="dropdown">` +
-                (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
+                (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') +
                 '</button>' +
                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
                   `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar" data-bs-toggle="modal" data-bs-target="#ModalEditar">` + '<i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>' +
@@ -331,7 +331,7 @@ initializeSelect2(select2Elements);
                   `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar">` + '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>' +
                 '</div>' +
               '</div>'
-            );                                   
+            );
            }
          }
        ],
@@ -345,7 +345,7 @@ initializeSelect2(select2Elements);
          '<"col-sm-12 col-md-6"i>' +
          '<"col-sm-12 col-md-6"p>' +
          '>',
-       lengthMenu: [10, 20, 50, 70, 100], 
+       lengthMenu: [10, 20, 50, 70, 100],
        language: {
          sLengthMenu: '_MENU_',
          search: '',
@@ -358,7 +358,7 @@ initializeSelect2(select2Elements);
                  "sPrevious": "Anterior"
                }
        },
- 
+
        // Opciones Exportar Documentos
        buttons: [
          {
@@ -521,7 +521,7 @@ initializeSelect2(select2Elements);
            type: 'column',
            renderer: function (api, rowIdx, columns) {
              var data = $.map(columns, function (col, i) {
-               return col.title !== '' 
+               return col.title !== ''
                  ? '<tr data-dt-row="' +
                      col.rowIndex +
                      '" data-dt-column="' +
@@ -537,13 +537,13 @@ initializeSelect2(select2Elements);
                      '</tr>'
                  : '';
              }).join('');
-             
+
              return data ? $('<table class="table"/><tbody />').append(data) : false;
            }
          }
-       } 
+       }
      });
-   } 
+   }
 
 
 
@@ -691,7 +691,7 @@ $(function () {
 
 ///ELIMINAR
 $(document).on('click', '.eliminar', function () {
-  var id_certificado = $(this).data('id'); 
+  var id_certificado = $(this).data('id');
   var dtrModal = $('.dtr-bs-modal.show');
 
   // Ocultar modal responsivo en pantalla pequeña si está abierto
@@ -864,7 +864,7 @@ $(function () {
       // Validar y enviar el formulario cuando pase la validación
       var formData = new FormData(form);
       var id_certificado = $('#edit_id_certificado').val();
-  
+
       $.ajax({
           url: `/certificados-list/${id_certificado}`,
           type: 'POST',
@@ -890,7 +890,7 @@ $(function () {
               var errorMessages = Object.keys(errors).map(function (key) {
                 return errors[key].join('<br>');
               }).join('<br>');
-    
+
               Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
@@ -963,7 +963,7 @@ $(function () {
 
 ///REEXPEDIR
 let isLoadingData = false;
-let fieldsValidated = []; 
+let fieldsValidated = [];
 $(document).ready(function () {
 
   $(document).on('click', '.reexpedir', function () {
@@ -1017,11 +1017,11 @@ $(document).ready(function () {
   function cargarDatosReexpedicion(id_certificado) {
       console.log('Cargando datos para la reexpedición con ID:', id_certificado);
       clearFields();
-      
+
       //cargar los datos
       $.get(`/certificados-list/${id_certificado}/edit`).done(function (datos) {
       console.log('Respuesta completa:', datos);
-  
+
           if (datos.error) {
               showError(datos.error);
               return;
@@ -1032,7 +1032,7 @@ $(document).ready(function () {
           $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
           $('#rex_fecha_emision').val(datos.fecha_emision);
           $('#rex_fecha_vigencia').val(datos.fecha_vigencia);
-          
+
           // Mostrar campos adicionales si tipo_dictamen es 1
           if (parseInt(datos.tipo_dictamen) === 1) {
             $('#rex_CamposCondicionales_tipo').stop(true, true).slideDown('fast');
@@ -1045,7 +1045,7 @@ $(document).ready(function () {
             });
           }
 
-          $('#accion_reexpedir').trigger('change'); 
+          $('#accion_reexpedir').trigger('change');
           isLoadingData = false;
 
           flatpickr("#rex_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
@@ -1088,7 +1088,7 @@ $(document).ready(function () {
       $('#FormReexpedir')[0].reset();
       clearFields();
       $('#campos_condicionales').hide();
-      fieldsValidated = []; 
+      fieldsValidated = [];
   });
 
   //validar formulario
@@ -1238,7 +1238,7 @@ $(document).ready(function() {
       $('#nombreRevisor').empty().append('<option value="">Seleccione un nombre</option>');
 
       if (tipoRevisor) {
-          var tipo = (tipoRevisor === '1') ? 1 : 4; 
+          var tipo = (tipoRevisor === '1') ? 1 : 4;
 
           $.ajax({
               url: '/ruta-para-obtener-revisores',
@@ -1309,19 +1309,19 @@ const fv = FormValidation.formValidation(form, {
 }).on('core.form.valid', function (e) {
   var formData = new FormData(form);
   var id_certificado = $('#id_certificado').val();
-  var tipoRevisor = $('#tipoRevisor').val(); 
-  var revisorValue = $('#nombreRevisor').val(); 
-  
+  var tipoRevisor = $('#tipoRevisor').val();
+  var revisorValue = $('#nombreRevisor').val();
+
   console.log('ID Certificado:', id_certificado);
   console.log('Tipo de Revisor:', tipoRevisor);
   console.log('Valor del Revisor:', revisorValue);
 
-  if (tipoRevisor == '1') { 
+  if (tipoRevisor == '1') {
       formData.append('id_revisor', revisorValue);
-      formData.append('id_revisor2', null); 
+      formData.append('id_revisor2', null);
   } else if (tipoRevisor == '2') {
       formData.append('id_revisor2', revisorValue);
-      formData.append('id_revisor', null); 
+      formData.append('id_revisor', null);
   }
 
   // Añadir otros datos
@@ -1329,7 +1329,7 @@ const fv = FormValidation.formValidation(form, {
   var esCorreccion = $('#esCorreccion').is(':checked') ? 'si' : 'no';
   formData.append('esCorreccion', esCorreccion);
 
-  console.log('FormData:', Array.from(formData.entries())); 
+  console.log('FormData:', Array.from(formData.entries()));
 
   $.ajax({
       url: '/asignar-revisor',
@@ -1399,6 +1399,7 @@ $(document).on('click', '.pdfCertificado', function ()  {
   var tipo = $(this).data('tipo');
   var iframe = $('#pdfViewer');
   var spinner = $('#cargando');
+  let sinMarca;
   let titulo;
   let url;
 
@@ -1406,31 +1407,37 @@ $(document).on('click', '.pdfCertificado', function ()  {
       case 1:
         titulo = 'Certificado Productor';
         url = '../certificado_productor_mezcal/' + id;
+        sinMarca = '../certificado_productor_mezcal_sin_marca/' + id;
         break;
       case 2:
         titulo = 'Certificado Envasador';
         url = '../certificado_envasador_mezcal/' + id;
+        sinMarca = '../certificado_envasador_mezcal_sin_marca/' + id;
         break;
       case 3:
         titulo = 'Certificado Comercializador';
         url = '../certificado_comercializador/' + id;
+        sinMarca = '../certificado_comercializador_sin_marca/' + id;
         break;
       case 4:
         titulo = 'Certificado Almacén y bodega';
         url = '';
+        sinMarca = '';
         break;
       case 5:
         titulo = 'Certificado Área de maduración';
         url ='';
+        sinMarca = '';
         break;
       default:
         titulo = 'Desconocido';
         url ='';
+        sinMarca = '';
     }
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
     spinner.show();
     iframe.hide();
-    
+
     //Cargar el PDF con el ID
     iframe.attr('src', url);
     //Configurar el botón para abrir el PDF en una nueva pestaña
@@ -1438,6 +1445,20 @@ $(document).on('click', '.pdfCertificado', function ()  {
 
     $("#titulo_modal").text(titulo);
     $("#subtitulo_modal").text("PDF del Certificado");
+
+        if ($('#btnDescargarDinamico').length === 0) {
+      var botonDescarga = $(`
+        <a id="btnDescargarDinamico" href="${sinMarca}" class="btn btn-secondary ms-2" download>
+          Certificado sin marca de agua
+        </a>
+      `);
+      // Insertar el botón junto al de Nueva Pestaña
+      $('#NewPestana').after(botonDescarga);
+    } else {
+      // Solo actualizar el href si ya existe
+      $('#btnDescargarDinamico').attr('href', sinMarca).show();
+    }
+
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();
@@ -1451,7 +1472,7 @@ $(document).on('click', '.pdfDictamen', function ()  {
   var tipo = $(this).data('tipo');
   var iframe = $('#pdfViewer');
   var spinner = $('#cargando');
- 
+
     if(tipo == 1){ // Productor
       var url = '../dictamen_productor/'+id;
       var titulo = "Dictamen de productor";
@@ -1496,11 +1517,11 @@ $(document).on('click', '.pdfSolicitud', function ()  {
   var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
-      
+
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
     spinner.show();
     iframe.hide();
-    
+
     //Cargar el PDF con el ID
     iframe.attr('src', pdfUrl);
     //Configurar el botón para abrir el PDF en una nueva pestaña
@@ -1524,7 +1545,7 @@ $(document).on('click', '.pdfActa', function () {
   //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
   spinner.show();
   iframe.hide();
-  
+
     //Cargar el PDF con el ID
     iframe.attr('src', '/files/' + id_acta);
     //Configurar el botón para abrir el PDF en una nueva pestaña
@@ -1593,7 +1614,7 @@ $('#FormCertificadoFirmado').on('submit', function (e) {
           }
         });
       }
-      
+
     }
   });
 });
@@ -1611,7 +1632,7 @@ $(document).on('click', '.subirPDF', function () {
     success: function (response) {
       if (response.documento_url && response.nombre_archivo) {
         $('#documentoActual').html(
-          `<p>Documento actual: 
+          `<p>Documento actual:
             <a href="${response.documento_url}" target="_blank">${response.nombre_archivo}</a>
           </p>`);
       } else {

@@ -216,7 +216,7 @@
 
     .footer {
     position: fixed;
-    bottom: -45px; 
+    bottom: -45px;
     width: 100%;
     text-align: center;
 }
@@ -416,6 +416,7 @@
         <br>Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36<br>
         Edicion 5 Entrada en vigor: 01/04/25
       </p>
+
       <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705px">
     </div>
 

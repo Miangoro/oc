@@ -124,7 +124,7 @@
             margin-left: 0;
             margin-right: 5;
             margin-bottom: 10px;
-            font-family: 'Arial', sans-serif; 
+            font-family: 'Arial', sans-serif;
         }
 
         .td-margins {
@@ -194,7 +194,7 @@
 
         .footer {
             position: fixed;
-            bottom: -45px; 
+            bottom: -45px;
             width: 100%;
             text-align: center;
         }
@@ -399,7 +399,7 @@
             <div class="signature-name">{{ $nombre_firmante }}</div>
             <div class="signature-name">{{ $puesto_firmante }}</div>
         </div>
-    
+
 <br>
 <div class="footer">
     <p style="text-align: right; font-size: 9px; line-height: 1; margin-bottom: 1px;">

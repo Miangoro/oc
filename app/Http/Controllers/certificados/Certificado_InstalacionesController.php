@@ -74,7 +74,7 @@ public function index(Request $request)
         ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
         ->leftJoin('instalaciones', 'instalaciones.id_instalacion', '=', 'dictamenes_instalaciones.id_instalacion')
         ->select('certificados.*', 'empresa.razon_social');
-        
+
     if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
     }
@@ -750,7 +750,7 @@ public function index(Request $request)
 
 
     ///PDF CERTIFICADOS
-    public function pdf_certificado_productor($id_certificado, $guardar = false, $rutaGuardado = null)
+    public function pdf_certificado_productor($id_certificado, $conMarca = true, $rutaGuardado = null)
     {
         $datos = Certificados::with([
             'dictamen.inspeccione.solicitud.empresa',
@@ -768,7 +768,7 @@ public function index(Request $request)
 
         $watermarkText = $datos->estatus == 1;
 
-        
+
 
         // Preparar los datos para el PDF
         $pdfData = [
@@ -788,8 +788,8 @@ public function index(Request $request)
             'razon_social' => $empresa->razon_social ?? 'No encontrado',
             'maestro_mezcalero' => is_null($datos->maestro_mezcalero)
                 ? '---------------------------------------------------------------------------------------------------------------------'
-                : (trim($datos->maestro_mezcalero) === '' 
-                ? '---------------------------------------------------------------------------------------------------------------------' 
+                : (trim($datos->maestro_mezcalero) === ''
+                ? '---------------------------------------------------------------------------------------------------------------------'
                 : $datos->maestro_mezcalero),
             'num_autorizacion' => $empresa->registro_productor ?? 'No encontrado',
             'numero_cliente' => $numero_cliente,
@@ -807,15 +807,22 @@ public function index(Request $request)
             return $rutaGuardado;
         }*/
 
-        if ( $datos->fecha_emision >= '2025-04-01' ) {
-            return Pdf::loadView('pdfs.certificado_productor_ed6', $pdfData)->stream('Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35.pdf');
-        }else{
-            return Pdf::loadView('pdfs.certificado_productor_ed5', $pdfData)->stream('Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35.pdf');
-        }
+      $edicion = '';
+
+      if ($datos->fecha_emision >= '2025-04-01') {
+          $edicion = $conMarca ? 'pdfs.certificado_productor_ed6' : 'pdfs.certificado_productor_ed6_sin_marca';
+      } else {
+          $edicion = $conMarca ? 'pdfs.certificado_productor_ed5' : 'pdfs.certificado_productor_ed5_sin_marca';
+      }
+
+      return Pdf::loadView($edicion, $pdfData)
+          ->stream('Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35.pdf');
+
+
     }
 
 
-    public function pdf_certificado_envasador($id_certificado, $guardar = false, $rutaGuardado = null)
+    public function pdf_certificado_envasador($id_certificado, $conMarca = true, $rutaGuardado = null)
     {
         $datos = Certificados::with([
             'dictamen.inspeccione.solicitud.instalaciones.empresa',
@@ -868,19 +875,17 @@ public function index(Request $request)
             $pdf->save($rutaGuardado);
             return $rutaGuardado;
         }*/
-
-        if ($datos->fecha_emision >= "2025-04-01") {
-            $edicion = 'pdfs.certificado_envasador_ed5';
-        }else{
-            $edicion = 'pdfs.certificado_envasador_ed4';
+         if ($datos->fecha_emision >= "2025-04-01") {
+              $edicion = $conMarca ? 'pdfs.certificado_envasador_ed5' : 'pdfs.certificado_envasador_ed5_sin_marca';
+        } else {
+              $edicion = $conMarca ? 'pdfs.certificado_envasador_ed4' : 'pdfs.certificado_envasador_ed4_sin_marca';
         }
-        // Generar y retornar el PDF
-        return Pdf::loadView($edicion, $pdfData)->stream('Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36.pdf');
-        //return Pdf::loadView('pdfs.certificado_envasador_ed5', $pdfData)->stream('Cer.pdf');
+        return Pdf::loadView($edicion, $pdfData)
+            ->stream('Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36.pdf');
 }
 
 
-    public function pdf_certificado_comercializador($id_certificado, $guardar = false, $rutaGuardado = null)
+    public function pdf_certificado_comercializador($id_certificado, $conMarca = true, $rutaGuardado = null)
     {
         $datos = Certificados::with([
             'dictamen.inspeccione.solicitud.empresa',
@@ -934,13 +939,14 @@ public function index(Request $request)
             return $rutaGuardado;
         }*/
 
-        if ($datos->fecha_emision >= "2025-04-01") {
-            $edicion = 'pdfs.certificado_comercializador_ed6';
-        }else{
-            $edicion = 'pdfs.certificado_comercializador_ed5';
-        }
+    if ($datos->fecha_emision >= "2025-04-01") {
+        $edicion = $conMarca ? 'pdfs.certificado_comercializador_ed6' : 'pdfs.certificado_comercializador_ed6_sin_marca';
+    } else {
+        $edicion = $conMarca ? 'pdfs.certificado_comercializador_ed5' : 'pdfs.certificado_comercializador_ed5_sin_marca';
+    }
 
-        return Pdf::loadView($edicion, $pdfData)->stream('Certificado como Comercializador de Mezcal NOM-070-SCFI-2016 F7.1-01-37.pdf');
+    return Pdf::loadView($edicion, $pdfData)
+        ->stream('Certificado como Comercializador de Mezcal NOM-070-SCFI-2016 F7.1-01-37.pdf');
     }
 
 
@@ -962,14 +968,14 @@ public function index(Request $request)
         // Generar nombre de archivo con num_certificado + cadena aleatoria
         $nombreArchivo = $nombreCertificado.'_'. uniqid() .'.pdf'; //uniqid() para asegurar nombre único
 
-        
+
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->instalaciones->empresa->id_empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
             return !empty($numero);
         });
         // Ruta de carpeta física donde se guardará
         $rutaCarpeta = "public/uploads/{$numeroCliente}/certificados_instalaciones";
-    
+
         // Guardar nuevo archivo
         $upload = Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
         if (!$upload) {
@@ -1009,7 +1015,7 @@ public function index(Request $request)
             ->where('id_documento', $id_documento)
             ->where('id_doc', $certificado->id_certificado)//id del certificado
             ->first();
-            
+
         if ($documentacion) {
             $ArchivoAnterior = "public/uploads/{$numeroCliente}/certificados_instalaciones/{$documentacion->url}";
             if (Storage::exists($ArchivoAnterior)) {

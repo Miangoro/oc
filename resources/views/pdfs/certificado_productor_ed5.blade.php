@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35</title>
     <style>
-    
+
         body {
         font-family: 'Calibri', sans-serif;
         }
@@ -15,12 +15,12 @@
             top: 43%;
             left: 55%;
             width: 50%;
-            height: auto; 
+            height: auto;
             transform: translate(-50%, -50%);
             opacity: 0.1;
-            z-index: -1; 
+            z-index: -1;
         }
-        
+
         .watermark-cancelado {
             font-family: Arial;
             color: red;
@@ -37,9 +37,9 @@
         }
 
         .header img {
-            float: left; 
+            float: left;
             margin-left: -10px;
-            margin-top: -30px; 
+            margin-top: -30px;
         }
 
         .cidam {
@@ -48,7 +48,7 @@
             margin-left: 0;
             margin-right: 5;
             margin-bottom: 10px;
-            font-family: 'Arial', sans-serif; 
+            font-family: 'Arial', sans-serif;
         }
 
         .description3 {
@@ -90,17 +90,17 @@
         }
 
         table {
-            width: 95%; 
+            width: 95%;
             border-collapse: collapse;
-            margin: 25px 0; 
+            margin: 25px 0;
             font-size: 13px;
             margin: 10px 20px;
-            white-space: normal; 
+            white-space: normal;
         }
 
         td, th {
             border: 1px solid #595959;
-            padding: 8px; 
+            padding: 8px;
             text-align: left;
         }
 
@@ -124,25 +124,25 @@
         .odd {
             background: #fefcf9;
         }
-      
+
         .signature {
-            margin: 50px 20px; 
-            text-align: center; 
-            margin-top: 20px; 
+            margin: 50px 20px;
+            text-align: center;
+            margin-top: 20px;
         }
 
         .signature-line {
             line-height: 10;
-            border-top: 1px solid #000; 
-            width: 240px; 
-            margin: 0 auto; 
-            padding-top: 5px; 
+            border-top: 1px solid #000;
+            width: 240px;
+            margin: 0 auto;
+            padding-top: 5px;
         }
 
         .signature-name {
             font-family: Arial;
-            margin: 10px 0 0; 
-            font-size: 13px; 
+            margin: 10px 0 0;
+            font-size: 13px;
             font-weight: bold;
             line-height: 0.5;
         }
@@ -150,12 +150,12 @@
 
         .footer {
             position: fixed;
-            bottom: -22; 
-            width: 100%; 
-            text-align: center; 
+            bottom: -22;
+            width: 100%;
+            text-align: center;
         }
 
-        
+
 
         #tabla-principal td{
         line-height: 9px; /* Asegura que el contenido se ajuste a la altura */
