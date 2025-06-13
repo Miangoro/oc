@@ -903,8 +903,6 @@ Route::get('/bitacora_mezcal', [BitacoraMezcalController::class, 'PDFBitacoraMez
 Route::post('/bitacoraMezcalStore', [BitacoraMezcalController::class, 'store'])->name('bitacora.store');
 Route::get('/bitacora_mezcal/{id_bitacora}/edit', [BitacoraMezcalController::class, 'edit'])->name('bitacora_mezcal.edit');
 Route::post('/bitacorasUpdate/{id_bitacora}', [BitacoraMezcalController::class, 'update'])->name('bitacoras.update');
-Route::delete('/bitacoras-list/{id_bitacora}', [BitacoraMezcalController::class, 'destroy'])->name('bitacoras.destroy');
-
 
 
 // BitacoraMaduracion
