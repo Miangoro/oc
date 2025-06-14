@@ -360,9 +360,9 @@ if (dt_user_table.length) {
               (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') +
               '</button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-              `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
-    `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalDocumentos" href="javascript:;" class="dropdown-item text-dark documentos"> <i class="ri-folder-line ri-20px text-secondary"></i> Ver documentación</a>` +
+              `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+              `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
+              `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalDocumentos" href="javascript:;" class="dropdown-item text-dark documentos"> <i class="ri-folder-line ri-20px text-secondary"></i> Ver documentación</a>` +
               `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-dark"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalVoBo" href="javascript:;" class="dropdown-item text-dark VoBo"> <i class="ri-edit-box-line ri-20px text-light"></i> Vo. Bo.</a>` +
               `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>` +
@@ -866,8 +866,12 @@ $(document).ready(function () {
     // Función para cargar los datos
     $(document).on('click', '.editar', function () {//clase del boton "editar"
       var id_certificado = $(this).data('id');
-      $('#edit_id_certificado').val(id_certificado);
+      var num_certificado = $(this).data('folio');
+      $('#badge-certificado').text(num_certificado);
 
+
+      $('#edit_id_certificado').val(id_certificado);
+      
       $.ajax({
         url: '/editCerExp/' + id_certificado + '/edit',
         method: 'GET',
@@ -1328,7 +1332,7 @@ $(document).ready(function () {
   $(document).ready(function () {
     $('#tipoRevisor').on('change', function () {
       var tipoRevisor = $(this).val();
-
+      
       $('#nombreRevisor').empty().append('<option value="">Seleccione un revisor</option>');
 
       if (tipoRevisor) {
@@ -1472,7 +1476,9 @@ $(document).ready(function () {
     var id_certificado = button.data('id');
     var num_certificado = button.data('folio');
     $('#id_certificado').val(id_certificado);
-     $('#folio_certificado').html('<span class="badge bg-info">'+num_certificado+'</span>');
+    $('#folio_certificado').html('<span class="badge bg-info">'+num_certificado+'</span>');
+    //PENDIENTE $('.modal-title').html('Asignar revisor <span class="badge bg-info">' + num_certificado + '</span>');
+
     fv.resetForm();
     form.reset();
 
@@ -1672,9 +1678,10 @@ $('#FormCertificadoFirmado').on('submit', function (e) {
 ///OBTENER CERTIFICADO FIRMADO
 $(document).on('click', '.subirPDF', function () {
   var id = $(this).data('id');
+  var num_certificado = $(this).data('folio');
   $('#doc_id_certificado').val(id);
   $('#documentoActual').html('Cargando documento...');
-  $('#modalTitulo').text('Certificado exportación firmado');//Titulo
+  $('#modalTitulo').html('Certificado exportación firmado <span class="badge bg-info">' +num_certificado+ '</span>');
 
   $.ajax({
     url: `/certificados/exportacion/documento/${id}`,
