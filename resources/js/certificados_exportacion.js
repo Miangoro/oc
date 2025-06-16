@@ -978,8 +978,11 @@ $(document).ready(function () {
 
     $(document).on('click', '.reexpedir', function () {
       var id_certificado = $(this).data('id');
+      var num_certificado = $(this).data('folio');
+
       console.log('ID para reexpedir:', id_certificado);
       $('#rex_id_certificado').val(id_certificado);
+      $('#tituloreexpedido').html('Reexpedir/Cancelar certificado <span class="badge bg-info">'+num_certificado+'</span>');
       $('#ModalReexpedir').modal('show');
     });
 
@@ -1479,7 +1482,7 @@ $(document).ready(function () {
     var num_certificado = button.data('folio');
     $('#id_certificado').val(id_certificado);
     $('#folio_certificado').html('<span class="badge bg-info">'+num_certificado+'</span>');
-    //PENDIENTE $('.modal-title').html('Asignar revisor <span class="badge bg-info">' + num_certificado + '</span>');
+    $('#asignarRevisorModalLabel').html('Asignar revisor <span class="badge bg-info">' + num_certificado + '</span>');
 
     fv.resetForm();
     form.reset();
