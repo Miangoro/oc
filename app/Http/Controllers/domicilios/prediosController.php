@@ -943,6 +943,38 @@ class PrediosController extends Controller
 
   }
 
+public function editRegistroPredio(Request $request, $id_predio)
+{
+    try {
+        // Validar los datos que pueden cambiar
+        $validated = $request->validate([
+            'num_predio' => 'required|string',
+            'fecha_emision' => 'required|date',
+            'fecha_vigencia' => 'required|date',
+        ]);
+
+        // Buscar el predio
+        $predio = Predios::findOrFail($id_predio);
+
+        // Actualizar solo esos campos, sin tocar el estatus
+        $predio->update([
+            'num_predio' => $validated['num_predio'],
+            'fecha_emision' => $validated['fecha_emision'],
+            'fecha_vigencia' => $validated['fecha_vigencia'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Predio actualizado correctamente.',
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al actualizar el predio: ' . $e->getMessage(),
+        ], 500);
+    }
+}
 
 
   public function pdf_solicitud_servicios_070($id_predio)

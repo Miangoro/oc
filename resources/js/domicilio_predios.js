@@ -224,7 +224,7 @@ $(function () {
               `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddPredioInspeccion" class="dropdown-item inspeccion-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar inspección</a>` +
               `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredioInspeccion" class="dropdown-item edit-inspeccion-record waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar inspección</a>` +
               `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddRegistroPredio" class="dropdown-item registro-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar predio</a>` +
-              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditRegistroPredio" class="dropdown-item waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar registro</a>` +
+              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditRegistroPredio" class="dropdown-item edit_registro-record waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar registro</a>` +
               `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar pre-registro</a>` +
               `<a data-id="${full['id_predio']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
               '</div>' +
@@ -1162,7 +1162,7 @@ $(function () {
         success: function (response) {
           addEditPredioForm.reset();
           $('#modalEditPredio').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
+          $('.datatables-users').DataTable().ajax.reload(null, false);
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -1856,7 +1856,7 @@ $(function () {
     // Manejar el clic en el botón de editar
     $(document).on('click', '.registro-record', function () {
       var predioId = $(this).data('id'); // Obtener el ID del predio a editar
-      $('#id_predio').val(predioId); // Establecer el ID en el input correspondiente
+      $('#id_predio_registro').val(predioId); // Establecer el ID en el input correspondiente
     });
 
     updateDatepickerValidation(fv);
@@ -2056,7 +2056,7 @@ $(function () {
         success: function (response) {
           addAddPredioInspeccionForm.reset();
           $('#modalEditPredioInspeccion').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
+          $('.datatables-users').DataTable().ajax.reload(null, false);
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -2085,6 +2085,154 @@ $(function () {
       fv.revalidateField($(this).attr('name'));
     });
   });
+
+
+
+
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation para el formulario de agregar predio
+    const modalAddRegistroPredioForm = document.getElementById('modalEditRegistroPredioForm');
+    const fv = FormValidation.formValidation(modalAddRegistroPredioForm, {
+      fields: {
+        num_predio: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el número de predio'
+            }
+          }
+        },
+        fecha_emision: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha de emisión'
+            }
+          }
+        },
+        fecha_vigencia: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha de vigencia'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: function (field, ele) {
+            return '.form-floating';
+          }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      var formData = new FormData(modalAddRegistroPredioForm);
+      var predioId = $('#edit_id_predio_registro').val(); // ID del predio
+      $.ajax({
+        url: '/edit-registro-Predio/' + predioId,
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+          modalAddRegistroPredioForm.reset();
+          $('#modalEditRegistroPredio').modal('hide');
+          $('.datatables-users').DataTable().ajax.reload(null, false); // Recargar la tabla de usuarios
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al agregar el predio',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+
+    updateDatepickerValidationEdit(fv);
+
+  });
+
+      // Manejar el clic en el botón de editar
+    $(document).on('click', '.edit_registro-record', function () {
+      var predioId = $(this).data('id'); // Obtener el ID del predio a editar
+      $('#edit_id_predio_registro').val(predioId); // Establecer el ID en el input correspondiente
+      $.ajax({
+        url: '/domicilios-predios/' + predioId + '/edit',
+        method: 'GET',
+        success: function (data) {
+          if (data.success) {
+            var predio = data.predio;
+            // Rellenar el formulario con los datos del predio
+/*             $('#edit_id_predio_registro').val(predio.id_empresa).trigger('change'); */
+            $('#edit_num_predio').val(predio.num_predio);
+            $('#edit_fecha_emision').val(predio.fecha_emision);
+            $('#edit_fecha_vigencia').val(predio.fecha_vigencia);
+            // Mostrar el modal
+            $('#modalEditRegistroPredio').modal('show');
+
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo cargar los datos del predio.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        },
+        error: function (error) {
+          console.error('Error al cargar los datos del predio:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo cargar los datos del predio.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+
+    });
+
+  // Función para agregar 5 años a la fecha de emisión y actualizar la fecha de vigencia
+  function updateDatepickerValidationEdit(fv) {
+    $('#edit_fecha_emision').on('change', function () {
+      var fechaEmision = $(this).val();
+      if (fechaEmision) {
+        var fecha = moment(fechaEmision, 'YYYY-MM-DD'); // Asegurarse del formato
+        var fechaVencimiento = fecha.add(5, 'years').format('YYYY-MM-DD'); // Agregar 5 años
+        $('#edit_fecha_vigencia').val(fechaVencimiento); // Actualizar el campo de vigencia
+        // Revalidar ambos campos de fechas
+        fv.revalidateField('fecha_emision');
+        fv.revalidateField('fecha_vigencia');
+      }
+    });
+  }
+
 
 
 });

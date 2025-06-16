@@ -10,7 +10,7 @@
                <div class="modal-body py-8">
                    <form id="modalAddRegistroPredioForm">
                        @csrf
-                       <input type="hidden" id="id_predio" name="id_predio" value="">
+                       <input type="hidden" id="id_predio_registro" name="id_predio" value="">
                        {{--  --}}
                        <!-- Datos del Predio -->
                         <div class="row mb-4">
@@ -52,4 +52,3 @@
        </div>
    </div>
       {{--  modal de edicion equisde --}}
-  
