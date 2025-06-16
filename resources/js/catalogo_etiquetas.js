@@ -47,37 +47,37 @@ $(function () {
           }
         },
         {
-            searchable: false,
-            orderable: false,
-            targets: 1,
-            render: function (data, type, full, meta) {
-                var $numero_cliente = full['numero_cliente'];
-                var $razon_social = full['razon_social'];
-                return `
+          searchable: false,
+          orderable: false,
+          targets: 1,
+          render: function (data, type, full, meta) {
+            var $numero_cliente = full['numero_cliente'];
+            var $razon_social = full['razon_social'];
+            return `
                   <div>
                     <span class="fw-bold">${$numero_cliente}</span><br>
                     <small style="font-size:12px;" class="user-email">${$razon_social}</small>
                   </div>
                 `;
-              }
-          },
+          }
+        },
         {
-            searchable: false,
-            orderable: false,
-            targets: 4,
-            render: function (data, type, full, meta) {
-              return `${full.presentacion} ${full.unidad}`;
-            }
-          },
-          {
-            // pdf
-            targets: 10,
-            className: 'text-center',
-            render: function (data, type, full, meta) {
-              var $id = full['id_empresa'];
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-url="${full['numero_cliente']}/${full['url_etiqueta']}" data-registro="${full['name']} "></i>`;
-            }
-          },
+          searchable: false,
+          orderable: false,
+          targets: 4,
+          render: function (data, type, full, meta) {
+            return `${full.presentacion} ${full.unidad}`;
+          }
+        },
+        {
+          // pdf
+          targets: 10,
+          className: 'text-center',
+          render: function (data, type, full, meta) {
+            var $id = full['id_empresa'];
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-url="${full['numero_cliente']}/${full['url_etiqueta']}" data-registro="${full['name']} "></i>`;
+          }
+        },
         {
           // Actions
           targets: -1,
@@ -333,66 +333,66 @@ $(function () {
 
     // Función para inicializar el validador
 
-      fv = FormValidation.formValidation(addNewEtiqueta, {
-        fields: {
-          'id_destino[]': {
-            validators: {
-              notEmpty: {
-                message: 'Por favor seleccione un destino'
-              }
+    fv = FormValidation.formValidation(addNewEtiqueta, {
+      fields: {
+        'id_destino[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un destino'
             }
-          },
-          id_marca: {
-            validators: {
-              notEmpty: {
-                message: 'Por favor seleccione la marca'
-              }
+          }
+        },
+        id_marca: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la marca'
             }
-          },
-          presentacion: {
-            validators: {
-              notEmpty: {
-                message: 'Por introduzca el cont. neto'
-              }
+          }
+        },
+        presentacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por introduzca el cont. neto'
             }
-          },
-          unidad: {
-            validators: {
-              notEmpty: {
-                message: 'Por favor seleccione la unidad'
-              }
+          }
+        },
+        unidad: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la unidad'
             }
-          },
-          alc_vol: {
-            validators: {
-              notEmpty: {
-                message: 'Por favor introduzca el %Alc. Vol.'
-              }
+          }
+        },
+        alc_vol: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor introduzca el %Alc. Vol.'
             }
-          },
-          id_categoria: {
-            validators: {
-              notEmpty: {
-                message: 'Por favor seleccione la categoría'
-              }
+          }
+        },
+        id_categoria: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la categoría'
             }
-          },
-          id_clase: {
-            validators: {
-              notEmpty: {
-                message: 'Por favor seleccione la clase'
-              }
+          }
+        },
+        id_clase: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la clase'
             }
-          },
-          'id_tipo[]': {
-            validators: {
-              notEmpty: {
-                message: 'Por favor seleccione un tipo de agave'
-              }
+          }
+        },
+        'id_tipo[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un tipo de agave'
             }
-          },
-          botellas_caja: {
-            validators: {
+          }
+        },
+        botellas_caja: {
+          validators: {
             digits: {
               message: 'Solo se permiten números enteros'
             },
@@ -400,51 +400,51 @@ $(function () {
         },
       },
 
-        plugins: {
-          trigger: new FormValidation.plugins.Trigger(),
-          bootstrap5: new FormValidation.plugins.Bootstrap5({
-            eleValidClass: '',
-            rowSelector: function (field, ele) {
-              return '.mb-5';
-            }
-          }),
-          submitButton: new FormValidation.plugins.SubmitButton(),
-          autoFocus: new FormValidation.plugins.AutoFocus(),
-
-        }
-      }).on('core.form.valid', function (e) {
-        var formData = new FormData(addNewEtiqueta);
-        $.ajax({
-          url: '/registrar-etiqueta',
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function (response) {
-            $('#etiquetas').modal('hide');
-            addNewEtiqueta.reset();
-            $('.datatables-users').DataTable().ajax.reload();
-            Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.success,
-              customClass: {
-                confirmButton: 'btn btn-success'
-              }
-            });
-          },
-          error: function (xhr) {
-            Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al agregar la etiqueta',
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-5';
           }
-        });
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+
+      }
+    }).on('core.form.valid', function (e) {
+      var formData = new FormData(addNewEtiqueta);
+      $.ajax({
+        url: '/registrar-etiqueta',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#etiquetas').modal('hide');
+          addNewEtiqueta.reset();
+          $('.datatables-users').DataTable().ajax.reload();
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.success,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al agregar la etiqueta',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
       });
+    });
 
 
 
@@ -508,43 +508,50 @@ $(function () {
   //Editar etiquetas - Obtener datos para el modal de editar etiquetas
   $(document).ready(function () {
     function limpiarFormulario() {
-        $('#etiquetasForm')[0].reset(); // Reinicia los inputs
-        $('#etiquetasForm').find('select').val(null).trigger('change');
-        $('#doc_etiqueta').html('');
-        $('#doc_corrugado').html('');
-         $('#id_etiqueta').val('');
+      $('#etiquetasForm')[0].reset(); // Reinicia los inputs
+      $('#etiquetasForm').find('select').val(null).trigger('change');
+      $('#id_tipo').val(null).trigger('change');
+      $('#doc_etiqueta').html('');
+      $('#doc_corrugado').html('');
+      $('#id_etiqueta').val('');
+      $('#titleSubirEtiquetas').text('Subir etiquetas');
+      $('#subirBtnEtiqueta').html('<i class="ri-add-line me-1"></i> Registrar');
+      $('#id_marca').html('<option value="" disabled selected>Selecciona una marca</option>').val(null).trigger('change');
+      $('#id_destino').html('').val(null).trigger('change');
     }
 
     $('#etiquetas').on('hidden.bs.modal', function () {
-        limpiarFormulario();
+      limpiarFormulario();
     });
     $(document).on('click', '.edit-record', function () {
+      $('#subirBtnEtiqueta').html('<i class="ri-pencil-fill me-1"></i> Editar');
+      $('#titleSubirEtiquetas').text('Editar Etiqueta');
       var id_etiqueta = $(this).data('id');
       $("#modo_formulario").val("editar");
       $.get('/edit-etiqueta/' + id_etiqueta, function (data) {
+
         var datos = data.etiqueta;
         var documentacion_urls = data.documentacion_urls;
         var documentacion_urls_corrugado = data.documentacion_urls_corrugado;
         var numCliente = data.numeroCliente;
         var tipos = JSON.parse(data.etiqueta.id_tipo);
-
+        let valores = datos.destinos.map(d => d.id_direccion);
         // Rellenar el formulario con los datos obtenidos
         $('#id_empresa').val(datos.id_empresa).trigger('change');
+        obtenerdestinos(datos.id_empresa, valores, datos.id_marca);
 
         $('#id_etiqueta').val(datos.id_etiqueta);
 
-        let valores = datos.destinos.map(d => d.id_direccion);
 
-        $('#id_destino').val(valores).trigger('change');
-  setTimeout(() => {
-    cargarDestinosPorEmpresa(datos.id_empresa, valores);
-  }, 200);
+
+        /* $('#id_destino').val(valores).trigger('change'); */
 
         $('#sku').val(datos.sku);
         $('#presentacion').val(datos.presentacion);
         $('#alc_vol').val(datos.alc_vol);
         $('#unidad').val(datos.unidad).trigger('change');
-        $('#id_marca').val(datos.id_marca).trigger('change');
+
+        /* $('#id_marca').val(datos.id_marca).trigger('change'); */
         $('#id_categoria').val(datos.id_categoria).trigger('change');
         $('#id_clase').val(datos.id_clase).trigger('change');
         //$('#id_tipo').val(datos.etiqueta.id_tipo).trigger('change');
@@ -556,16 +563,16 @@ $(function () {
             <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i>
          </a>
         </div>`
-            );
-            if (documentacion_urls_corrugado.length > 0 && documentacion_urls_corrugado[0].url) {
-                $('#doc_corrugado').html(`
+        );
+        if (documentacion_urls_corrugado.length > 0 && documentacion_urls_corrugado[0].url) {
+          $('#doc_corrugado').html(`
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <a href="/files/${numCliente}/${documentacion_urls_corrugado[0].url}" target="_blank">
                             <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i>
                         </a>
                     </div>
                 `);
-            }
+        }
       });
     });
   });
@@ -575,42 +582,9 @@ $(function () {
 
 });
 
-function cargarDestinosPorEmpresa(empresaId, destinosSeleccionados = []) {
-  const $destinoSelect = $('#id_destino');
 
-  $.ajax({
-    url: `/destinos-por-empresa/${empresaId}`,
-    method: 'GET',
-    success: function (data) {
-      $destinoSelect.empty();
 
-      if (data.length === 0) {
-        $destinoSelect.append('<option value="">Sin direcciones registradas</option>');
-        $destinoSelect.trigger('change');
-        return;
-      }
-
-      // Agregar nuevas opciones
-      data.forEach(destino => {
-        $destinoSelect.append(
-          `<option value="${destino.id_direccion}">${destino.destinatario} | ${destino.direccion}</option>`
-        );
-      });
-
-      // Si se pasó un arreglo de destinos seleccionados, seleccionarlos
-      if (destinosSeleccionados.length > 0) {
-        $destinoSelect.val(destinosSeleccionados).trigger('change');
-      } else {
-        $destinoSelect.trigger('change');
-      }
-    },
-    error: function () {
-      alert('Error al cargar direcciones de destino.');
-    }
-  });
-}
-
-/* 
+/*
 $('#id_empresa').on('change', function () {
   const empresaId = $(this).val();
   if (empresaId) {
@@ -622,33 +596,33 @@ $('#id_empresa').on('change', function () {
 $(document).on('click', '.pdf', function () {
 
 
-    // Verificar si el tipo es igual a 3
+  // Verificar si el tipo es igual a 3
 
-        var url = $(this).data("url");  // URL de la ruta
+  var url = $(this).data("url");  // URL de la ruta
 
-        $('#NewPestana').attr('href', "/files/"+url);
+  $('#NewPestana').attr('href', "/files/" + url);
 
-        var iframe = $('#pdfViewer');
-        var spinner = $('#cargando');  // Spinner
-        spinner.show();
-        iframe.hide();
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');  // Spinner
+  spinner.show();
+  iframe.hide();
 
-        // Asegurarse de que la URL esté bien formada
-        iframe.attr('src', "/files/"+url);    // Concatenar la URL con el ID de la solicitud
+  // Asegurarse de que la URL esté bien formada
+  iframe.attr('src', "/files/" + url);    // Concatenar la URL con el ID de la solicitud
 
-        // Configurar el botón para abrir el PDF en una nueva pestaña
-        $('#pdfViewer')
-          .attr('href', "/files/"+url)
-          .show();
+  // Configurar el botón para abrir el PDF en una nueva pestaña
+  $('#pdfViewer')
+    .attr('href', "/files/" + url)
+    .show();
 
-        // Mostrar el modal
-        $('#mostrarPdf').modal('show');
+  // Mostrar el modal
+  $('#mostrarPdf').modal('show');
 
-        // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-        iframe.on('load', function () {
-            console.log('PDF cargado en el iframe.');
-            spinner.hide();
-            iframe.show();
-        });
+  // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+  iframe.on('load', function () {
+    console.log('PDF cargado en el iframe.');
+    spinner.hide();
+    iframe.show();
+  });
 
 });

@@ -379,8 +379,13 @@ public function UserManagement()
     public function getDestinosPorEmpresa($id_empresa)
     {
         $destinos = direcciones::where('id_empresa', $id_empresa)->get();
+         $marcas = marcas::where('id_empresa', $id_empresa)->get();
 
-        return response()->json($destinos);
+        return response()->json([
+            'destinos' => $destinos,
+            'marcas' => $marcas
+        ]);
+
     }
 
 

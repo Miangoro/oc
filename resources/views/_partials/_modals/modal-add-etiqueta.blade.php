@@ -9,7 +9,7 @@
                     <p class="subtitulo badge bg-primary"></p>
                 </div> --}}
             <div class="modal-header bg-primary pb-4">
-                <h5 class="modal-title text-white">Subir etiquetas</h5>
+                <h5 id="titleSubirEtiquetas" class="modal-title text-white">Subir etiquetas</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -22,7 +22,7 @@
 
                         <div class="col-sm-12">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select id="id_empresa"  onchange="obtenerdestinos(this.value);" name="id_empresa"
+                                <select id="id_empresa" onchange="obtenerdestinos(this.value);" name="id_empresa"
                                     class="select2 form-select">
                                     <option value="" disabled selected>Selecciona el cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -38,7 +38,7 @@
                         <div class="col-sm-12">
                             <div class="form-floating form-floating-outline mb-5">
                                 <select multiple id="id_destino" name="id_destino[]" class="select2 form-select">
-                                    <option value=""> selecciona un destino</option>
+                                    {{-- <option value="" disabled selected> selecciona un destino</option> --}}
                                     {{--                                     @foreach ($destinos as $destino)
                                         <option value="{{ $destino->id_direccion }}">{{ $destino->destinatario }} |
                                             {{ $destino->direccion }}</option>
@@ -50,9 +50,10 @@
                         <div class="col-sm-8">
                             <div class="form-floating form-floating-outline mb-5">
                                 <select id="id_marca" name="id_marca" class="select2 form-select" required>
-                                    @foreach ($marcas as $marca)
+                                  <option value="" disabled selected>Seleccione una marca</option>
+{{--                                     @foreach ($marcas as $marca)
                                         <option value="{{ $marca->id_marca }}">{{ $marca->marca }}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                                 <label for="id_marca">Marca</label>
                             </div>
@@ -118,7 +119,7 @@
                         <div class="col-sm-6">
                             <div class="form-floating form-floating-outline mb-5 select2-primary">
                                 <select id="id_tipo" name="id_tipo[]" class="select2 form-select" multiple required>
-                                    <option value="" disabled>Tipos de agave</option>
+                                    {{-- <option value="" disabled selected>Tipos de agave</option> --}}
                                     @foreach ($tipos as $tipo)
                                         <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}
                                             ({{ $tipo->cientifico }})
@@ -169,7 +170,7 @@
                                 aria-label="Close">Cancelar</button>
                         </div> --}}
                     <div class="d-flex mt-6 justify-content-center">
-                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line mb-1"></i>
+                        <button type="submit" id="subirBtnEtiqueta" class="btn btn-primary me-2"><i class="ri-add-line mb-1"></i>
                             Registrar</button>
                         <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
                                 class="ri-close-line me-1"></i> Cancelar</button>
@@ -181,69 +182,53 @@
     </div>
 </div>
 <script>
-/*     $(document).ready(function() {
-        $('#id_empresa').on('change', function() {
-            const empresaId = $(this).val();
 
-            if (!empresaId) return;
-
-            $.ajax({
-                url: `/destinos-por-empresa/${empresaId}`,
-                method: 'GET',
-                success: function(data) {
-                    const $destinoSelect = $('#id_destino');
-
-                    // Limpia opciones actuales
-                    $destinoSelect.empty();
-
-                    if (data.length === 0) {
-                        $destinoSelect.append(
-                            '<option value="">Sin direcciones registradas</option>');
-                        return;
-                    }
-
-                    // Agrega las nuevas opciones
-                    data.forEach(destino => {
-                        $destinoSelect.append(
-                            `<option value="${destino.id_direccion}">${destino.destinatario} | ${destino.direccion}</option>`
-                        );
-                    });
-
-                    // Refresca Select2 si lo usas
-                    $destinoSelect.trigger('change');
-                },
-                error: function() {
-                    alert('Error al cargar direcciones de destino.');
-                }
-            });
-
-        });
-
-    }); */
-
-
-function obtenerdestinos(empresa) {
+function obtenerdestinos(empresa, destinoSeleccionado = null, marcaSeleccionada = null) {
     if (empresa !== "" && empresa !== null && empresa !== undefined) {
         $.ajax({
             url: '/destinos-por-empresa/' + empresa,
             method: 'GET',
-            success: function (data) {
+            success: function(data) {
+                // Llenar destinos
                 const $destinoSelect = $('#id_destino');
-                let contenido = '';
-
-                if (data.length === 0) {
-                    contenido = '<option value="">Sin direcciones registradas</option>';
+                let opcionesDestino = '';
+                $destinoSelect.val(null).trigger('change');
+                if (!data.destinos.length) {
+                    opcionesDestino = '<option value="" disabled selected>Sin direcciones registradas</option>';
                 } else {
-                    data.forEach(destino => {
-                        contenido += `<option value="${destino.id_direccion}">${destino.destinatario} | ${destino.direccion}</option>`;
+                    data.destinos.forEach(destino => {
+                        opcionesDestino += `<option value="${destino.id_direccion}">${destino.destinatario} | ${destino.direccion}</option>`;
                     });
                 }
 
-                $destinoSelect.html(contenido);
-                $destinoSelect.trigger('change'); // útil si usas select2
+                $destinoSelect.html(opcionesDestino);
+
+                // ✅ Reasignar destino si viene como parámetro
+                if (destinoSeleccionado) {
+                    $destinoSelect.val(destinoSeleccionado).trigger('change');
+                }
+
+                // Llenar marcas
+                const $marcaSelect = $('#id_marca');
+                let opcionesMarca = '';
+
+                if (!data.marcas.length) {
+                    opcionesMarca = '<option value="" disabled selected>Sin marcas registradas</option>';
+                } else {
+                    data.marcas.forEach(marca => {
+                        opcionesMarca += `<option value="${marca.id_marca}">${marca.marca}</option>`;
+                    });
+                }
+
+                $marcaSelect.html(opcionesMarca);
+
+                // ✅ Reasignar marca si viene como parámetro
+                if (marcaSeleccionada) {
+                    $marcaSelect.val(marcaSeleccionada).trigger('change');
+                }
             },
-            error: function () {
-                alert('Error al cargar direcciones de destino.');
+            error: function() {
+                alert('Error al cargar direcciones de destino y marcas.');
             }
         });
     }

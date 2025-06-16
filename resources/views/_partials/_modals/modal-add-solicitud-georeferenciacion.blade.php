@@ -59,9 +59,9 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnRegistrarGeo" ><i class="ri-add-line"></i> Registrar</button>
+                        <button type="submit" class="btn btn-primary" id="btnRegistrarGeo" ><i class="ri-add-line me-1"></i> Registrar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
-                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                            aria-label="Close"><i class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
