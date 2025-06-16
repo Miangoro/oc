@@ -43,12 +43,10 @@ class inspeccionesController extends Controller
         $estados = estados::all(); // Obtener todos los estados
         $tipos = tipos::all(); // Obtener todos los estados
         $equipos = equipos::all(); // Obtener todos los estados
-
-
-
+        $todasSolicitudes = solicitudesModel::select('id_solicitud', 'folio')->get();
 
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
-        return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos', 'equipos'));
+        return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos', 'equipos','todasSolicitudes'));
     }
 
     public function index(Request $request)
