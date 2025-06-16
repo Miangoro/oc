@@ -14,7 +14,7 @@
                        <input type="hidden" id="edit_inspeccion_id_empresa" name="id_empresa">
                        {{--  --}}
                        <!-- Datos del Predio -->
-                       <div class="mb-4 p-3">
+                     
                            <h6 class="mb-4">Datos del Predio</h6>
                            <div class="row">
                                <div class="col-md-4">
