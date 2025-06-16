@@ -395,7 +395,7 @@
                                 <td>{{ $dictamen->num_dictamen }}</td>
                                 <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}</td>
-                                <td>{{ $dictamen->inspeccione->inspector->name ?? 'N/A' }}</td>
+                                <td>{{ $dictamen->firmante->name ?? 'N/A' }}</td>
                                 <!--<td>
                                     <a href="" class="btn btn-sm btn-primary" target="_blank">
                                         Ver

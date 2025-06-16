@@ -439,7 +439,7 @@ public function MostrarDictamenExportacion($id_dictamen)
     if($data->id_firmante == 14){ //Mario
         $pass = 'v921009villa';
     }
-    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccione?->num_servicio, $pass, $data->id_firmante);
+    $firmaDigital = '';
 
 
     // Verifica qué valor tiene esta variable
@@ -490,7 +490,7 @@ public function MostrarDictamenExportacion($id_dictamen)
         'pais' => $data->inspeccione->solicitud->direccion_destino->pais_destino ?? "No encontrado",
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
-        'firmaDigital' => $firmaDigital,
+        //'firmaDigital' => $firmaDigital,
         'qrCodeBase64' => $qrCodeBase64,
         ///caracteristicas
         'aduana' => $aduana_salida ?? "No encontrado",

@@ -421,7 +421,7 @@
         <p class="textx" style="font-size: 9px; margin-bottom:-8px">
             <strong>CADENA ORIGINAL</strong>
             <span style="margin-left: 14px;">
-                <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+                {{-- <strong>{{ $firmaDigital['cadena_original'] }}</strong> --}}
             </span>
         </p>
 
@@ -430,7 +430,7 @@
         </p>
 
         <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
-            {{ $firmaDigital['firma'] }}
+            {{-- {{ $firmaDigital['firma'] }} --}}
         </p>
 </div> 
 
