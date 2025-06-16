@@ -433,7 +433,7 @@ $(function () {
           type: 'DELETE',
           url: `${baseUrl}instalaciones/${id_instalacion}`, // Ajusta la URL aquí
           success: function () {
-            dt_instalaciones_table.ajax.reload();
+            dt_instalaciones_table.ajax.reload(null,false);
 
             // Mostrar mensaje de éxito
             Swal.fire({
@@ -520,7 +520,7 @@ $(function () {
           $('#asignarInspector').modal('hide');
           $('#addAsignarInspector')[0].reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-users').DataTable().ajax.reload();
+          $('.datatables-users').DataTable().ajax.reload(null,false);
           console.log(response);
 
           Swal.fire({
@@ -593,7 +593,7 @@ $(function () {
           success: function (response) {
             $('#resultadosInspeccion').modal('hide');
             $('#addResultadosInspeccion')[0].reset();
-            $('.datatables-users').DataTable().ajax.reload();
+            $('.datatables-users').DataTable().ajax.reload(null,false);
             console.log(response);
 
             Swal.fire({
@@ -768,7 +768,7 @@ $(function () {
           xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
         },
         success: function (response) {
-          dt_instalaciones_table.ajax.reload();
+          dt_instalaciones_table.ajax.reload(null,false);
           $('#modalEditInstalacion').modal('hide');
           $('#editInstalacionForm')[0].reset();
           $('.select2').val(null).trigger('change');
@@ -1021,7 +1021,7 @@ $(function () {
           xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
         },
         success: function (response) {
-          dt_instalaciones_table.ajax.reload();
+          dt_instalaciones_table.ajax.reload(null,false);
           $('#modalEditInstalacion').modal('hide');
 
           Swal.fire({

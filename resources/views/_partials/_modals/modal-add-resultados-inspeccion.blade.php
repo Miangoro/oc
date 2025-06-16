@@ -57,10 +57,10 @@
               </div>
 
                <div class="form-floating form-floating-outline mb-5">
-                    <select class="select2 form-select" name="solicitudes_dicionales">
+                    <select class="select2 form-select" name="solicitudes_adicionales[]">
                         <option value="" selected>Lista de solicitudes</option>
                         @foreach ($todasSolicitudes as $solicitud) 
-                          <option value="{{ $solicitud->id_solicitud }}">{{ $solicitud->folio }}</option>
+                          <option value="{{ $solicitud->id_solicitud }}">{{ $solicitud->folio }} {{ $solicitud->inspeccion->num_servicio ?? '' }}</option>
                       @endforeach
 
                     </select>
