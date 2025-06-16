@@ -216,11 +216,11 @@ $(function () {
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddPredioInspeccion" class="dropdown-item inspeccion-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar inspección</a>` +
+              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredioInspeccion" class="dropdown-item waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar inspección</a>` +
               `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddRegistroPredio" class="dropdown-item registro-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar predio</a>` +
-              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditRegistroPredio" class="dropdown-item waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar registro</a>` +
+              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar pre-registro</a>` +
               `<a data-id="${full['id_predio']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
               '</div>' +
               '</div>'
             );
@@ -1038,12 +1038,12 @@ $(function () {
   });
 
   // Llama a la función al abrir el modal de georreferenciación
-/*   $('#addSolicitudGeoreferenciacion').on('show.bs.modal', function () {
-    if (typeof inicializarGeoreferenciacion === 'function') {
-      inicializarGeoreferenciacion(); // Llama a la función de solicitudes.js
-    }
-  });
- */
+  /*   $('#addSolicitudGeoreferenciacion').on('show.bs.modal', function () {
+      if (typeof inicializarGeoreferenciacion === 'function') {
+        inicializarGeoreferenciacion(); // Llama a la función de solicitudes.js
+      }
+    });
+   */
   $(document).ready(function () {
     var contador = 1; // Contador para identificar cada sección
 

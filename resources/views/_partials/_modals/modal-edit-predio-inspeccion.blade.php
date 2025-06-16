@@ -1,17 +1,17 @@
    {{--  modal de edicion equisde --}}
-   <div class="modal fade" id="modalAddPredioInspeccion" tabindex="-1"
+   <div class="modal fade" id="modalEditPredioInspeccion" tabindex="-1"
        aria-hidden="true">
        <div class="modal-dialog modal-xl">
            <div class="modal-content">
                <div class="modal-header bg-primary pb-4">
-                   <h5 class="modal-title text-white">Agregar Inspección del Predio</h5>
+                   <h5 class="modal-title text-white">Editar inspección del Predio</h5>
                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                </div>
                <div class="modal-body py-8">
-                   <form id="addAddPredioInspeccionForm">
+                   <form id="EditPredioInspeccionForm">
                        @csrf
-                       <input type="hidden" id="inspeccion_id_predio" name="id_predio" value="">
-                       <input type="hidden" id="inspeccion_id_empresa" name="id_empresa">
+                       <input type="hidden" id="edit_inspeccion_id_predio" name="id_predio" value="">
+                       <input type="hidden" id="edit_inspeccion_id_empresa" name="id_empresa">
                        {{--  --}}
                        <!-- Datos del Predio -->
                        <div class="mb-4 p-3">
@@ -19,7 +19,7 @@
                            <div class="row">
                                <div class="col-md-4">
                                    <div class="form-floating form-floating-outline mb-4">
-                                       <input type="text" class="form-control" id="inspeccion_ubicacion_predio"
+                                       <input type="text" class="form-control" id="edit_inspeccion_ubicacion_predio"
                                            autocomplete="off" name="ubicacion_predio"
                                            placeholder="Ubicación del predio"></input>
                                        <label for="ubicacion_predio">Ubicación del Predio</label>
@@ -27,14 +27,14 @@
                                </div>
                                <div class="col-md-4">
                                    <div class="form-floating form-floating-outline mb-4">
-                                       <input type="text" class="form-control" id="localidad" autocomplete="off"
+                                       <input type="text" class="form-control" id="edit_localidad" autocomplete="off"
                                            name="localidad" placeholder="Localidad">
                                        <label for="localidad">Localidad</label>
                                    </div>
                                </div>
                                <div class="col-md-4">
                                    <div class="form-floating form-floating-outline">
-                                       <input type="text" class="form-control" id="municipio" autocomplete="off"
+                                       <input type="text" class="form-control" id="edit_municipio" autocomplete="off"
                                            name="municipio" placeholder="Municipio">
                                        <label for="municipio">Municipio</label>
                                    </div>
@@ -43,14 +43,14 @@
                            <div class="row">
                                <div class="col-md-6">
                                    <div class="form-floating form-floating-outline mb-4">
-                                       <input type="text" class="form-control" id="distrito" autocomplete="off"
+                                       <input type="text" class="form-control" id="edit_distrito" autocomplete="off"
                                            name="distrito" placeholder="Distrito">
                                        <label for="distrito">Distrito</label>
                                    </div>
                                </div>
                                <div class="col-md-6">
                                    <div class="form-floating form-floating-outline">
-                                       <select class="form-select select2" name="estado" id="estado">
+                                       <select class="form-select select2" name="estado" id="edit_estado">
                                            <option value="" disabled selected>Selecciona un estado</option>
                                            @foreach ($estados as $estado)
                                                <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
@@ -63,14 +63,14 @@
                            <div class="row">
                                <div class="col-md-6">
                                    <div class="form-floating form-floating-outline mb-4">
-                                       <input type="text" class="form-control" id="nombreParaje" autocomplete="off"
+                                       <input type="text" class="form-control" id="edit_nombreParaje" autocomplete="off"
                                            name="nombre_paraje" placeholder="Nombre del Paraje">
                                        <label for="nombreParaje">Nombre del Paraje</label>
                                    </div>
                                </div>
                                <div class="col-md-6">
                                    <div class="form-floating form-floating-outline">
-                                       <select class="form-select" id="zonaDom" name="zona_dom" aria-label="Zona DOM">
+                                       <select class="form-select" id="edit_zonaDom" name="zona_dom" aria-label="Zona DOM">
                                            <option value="" disabled selected>Selecciona una opción</option>
                                            <option value="si">Sí</option>
                                            <option value="no">No</option>
@@ -82,14 +82,14 @@
                            <div class="row">
                                    <div class="col-md-12">
                                        <div class="form-floating form-floating-outline mb-4">
-                                           <input type="file" class="form-control" id="documentoGeo"
+                                           <input type="file" class="form-control" id="edit_documentoGeo"
                                                name="inspeccion_geo_Doc" value="135">
                                            <label for="inspeccion_geo_Doc">Subir Inspección Geo-referenciación</label>
                                        </div>
                                    </div>
                            </div>
                            <div class="d-flex justify-content-center mt-3">
-                               <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line me-1"></i> Registrar</button>
+                               <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill me-1"></i> Editar</button>
                                <button type="reset" class="btn btn-danger"
                                    data-bs-dismiss="modal"><i class="ri-close-line me-1"></i> Cancelar</button>
                            </div>
@@ -98,4 +98,3 @@
            </div>
        </div>
    </div>
-
