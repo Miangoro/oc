@@ -116,13 +116,16 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             if (full['hasSolicitud']) {
-              return `${full['folio_solicitud']}<i class="ri-file-pdf-2-fill text-danger ri-40px pdfSolicitud cursor-pointer"
-                          data-bs-target="#mostrarPdfDcitamen1" data-bs-toggle="modal"
-                          data-bs-dismiss="modal" data-id="${full['id_solicitud']}"
-                          data-registro="${full['id_empresa']}"></i>`;
+              return `<a href="#" class="text-primary pdfSolicitud"
+                        data-bs-toggle="modal"
+                        data-bs-target="#mostrarPdfDictamen1"
+                        data-id="${full['id_solicitud']}"
+                        data-registro="${full['id_empresa']}">
+                        ${full['folio_solicitud']}
+                      </a>`;
             } else {
-              return `<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf" data-bs-placement="right" title="Necesita hacer la solicitud"
-                          ></i>`;
+              return `<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"
+                        data-bs-placement="right" title="Necesita hacer la solicitud"></i>`;
             }
           }
         },
@@ -144,19 +147,22 @@ $(function () {
             }
           }
         },
-        // Pdf de pre-registro (Dictamen)
         {
           targets: 11,
           className: 'text-center',
-          searchable: false, orderable: false,
+          searchable: false,
+          orderable: false,
           render: function (data, type, full, meta) {
-            if (full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
+            const estatusValido = full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente';
+            const tieneDoc = full['url_documento_geo'];
+
+            if (estatusValido && tieneDoc) {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"
-                      data-bs-target="#mostrarPdfDictamen1" data-bs-toggle="modal"
-                      data-bs-dismiss="modal" data-id="${full['id_predio']}"
-                      data-registro="${full['id_empresa']}"></i>`;
+                          data-id="${full['id_predio']}"
+                          data-registro="${full['id_empresa']}"
+                          data-url="${tieneDoc}"></i>`;
             } else {
-              return '<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
+              return '<i class="ri-file-pdf-2-fill ri-40px text-muted icon-no-pdf"></i>';
             }
           }
         },
@@ -216,7 +222,7 @@ $(function () {
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddPredioInspeccion" class="dropdown-item inspeccion-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar inspección</a>` +
-              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredioInspeccion" class="dropdown-item waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar inspección</a>` +
+              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredioInspeccion" class="dropdown-item edit-inspeccion-record waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar inspección</a>` +
               `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddRegistroPredio" class="dropdown-item registro-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar predio</a>` +
               `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditRegistroPredio" class="dropdown-item waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar registro</a>` +
               `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar pre-registro</a>` +
@@ -1044,36 +1050,7 @@ $(function () {
       }
     });
    */
-  $(document).ready(function () {
-    var contador = 1; // Contador para identificar cada sección
 
-    // Al hacer clic en el botón de agregar sección
-    $('#agregar-seccion').on('click', function () {
-      contador++; // Incrementar el contador para cada nueva sección
-
-      // Crear una nueva fila de la tabla
-      var nuevaSeccion = `
-            <tr class="seccion-foto">
-                <td>
-                    <button type="button" class="btn btn-danger eliminar-seccion"><i class="ri-delete-bin-5-fill"></i></button>
-                </td>
-                <td>
-                    <input type="text" class="form-control" name="titulo_foto[]" placeholder="Título o descripción de la foto">
-                </td>
-                <td>
-                    <input type="file" class="form-control" name="fotografias_inspeccion[]" accept="image/*">
-                </td>
-            </tr>`;
-
-      // Agregar la nueva fila a la tabla
-      $('#contenedor-secciones').append(nuevaSeccion);
-    });
-
-    // Eliminar la fila correspondiente cuando se hace clic en el botón "Eliminar"
-    $(document).on('click', '.eliminar-seccion', function () {
-      $(this).closest('tr').remove(); // Eliminar la fila más cercana
-    });
-  });
 
 
 
@@ -1520,40 +1497,30 @@ $(function () {
   });
 
 
-  // Reciben los datos del PDF
   $(document).on('click', '.pdf2', function () {
-    var id = $(this).data('id');
-    var registro = $(this).data('registro');
-    var iframe = $('#pdfViewerDictamen1');
-    var openPdfBtn = $('#openPdfBtnDictamen1'); // Botón para abrir en nueva pestaña
+    var pdfUrl = $(this).data('url'); // ahora sí debe traer la URL
 
-    // Mostrar el spinner y ocultar el iframe
+    if (!pdfUrl) {
+      alert('No hay documento para mostrar');
+      return;
+    }
+
     $('#loading-spinner1').show();
-    iframe.hide();
+    $('#pdfViewerDictamen1').hide().attr('src', pdfUrl);
 
-    // Generar la URL del PDF
-    var pdfUrl = '../inspeccion_geo_referenciacion/' + id;
-
-    // Cargar el PDF en el iframe
-    iframe.attr('src', pdfUrl);
-
-    // Actualizar el texto y subtítulo del modal
     $("#titulo_modal_Dictamen1").text("Inspección para la geo-referenciación de los predios de maguey o agave");
-    $("#subtitulo_modal_Dictamen1").html(registro);
+    $("#subtitulo_modal_Dictamen1").html($(this).data('registro'));
 
-    // Actualizar el botón para abrir en nueva pestaña
-    openPdfBtn.attr('href', pdfUrl);
-    openPdfBtn.show(); // Mostrar el botón
+    $('#openPdfBtnDictamen1').attr('href', pdfUrl).show();
 
-    // Abrir el modal
     $('#mostrarPdfDictamen1').modal('show');
   });
 
-  // Ocultar el spinner cuando el PDF esté completamente cargado
   $('#pdfViewerDictamen1').on('load', function () {
-    $('#loading-spinner1').hide(); // Ocultar el spinner
-    $(this).show(); // Mostrar el iframe con el PDF
+    $('#loading-spinner1').hide();
+    $(this).show();
   });
+
 
 
   // Reciben los datos del PDF
@@ -1685,6 +1652,13 @@ $(function () {
             }
           }
         },
+        inspeccion_geo_Doc: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor adjunta el documento requerido'
+            }
+          }
+        }
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -1790,6 +1764,12 @@ $(function () {
       fv.revalidateField($(this).attr('name'));
     });
   });
+
+
+
+
+
+
 
 
   $(function () {
@@ -1917,5 +1897,194 @@ $(function () {
       });
     }
   });
+
+
+
+  $(document).on('click', '.edit-inspeccion-record', function () {
+    var predioId = $(this).data('id'); // Obtener el ID del predio a editar
+    $('#edit_inspeccion_id_predio').val(predioId);
+
+    // Solicitar los datos del predio desde el servidor
+    $.ajax({
+      url: '/domicilios-predios/' + predioId + '/edit-inspeccion',
+      method: 'GET',
+      success: function (data) {
+        if (data.success) {
+          var inspeccion = data.data; // inspección con todos los campos directos
+          var url = data.document_url;  // Aquí está la URL correcta
+              console.log('url:', url);
+          $('#edit_inspeccion_id_empresa').val(inspeccion.predio.id_empresa);
+          $('#edit_inspeccion_ubicacion_predio').val(inspeccion.ubicacion_predio);
+          $('#edit_inspeccion_superficie').val(inspeccion.superficie);
+          $('#edit_localidad').val(inspeccion.localidad);
+          $('#edit_municipio').val(inspeccion.municipio);
+          $('#edit_estado').val(inspeccion.id_estado).trigger('change');
+          $('#edit_distrito').val(inspeccion.distrito);
+          $('#edit_nombreParaje').val(inspeccion.nombre_paraje);
+          $('#edit_zonaDom').val(inspeccion.zona_dom).trigger('change');
+           $('#url_documento_geo_edit').html(`<span class="text-muted">No hay documento cargado</span>`);
+/*           $('#edit_inspeccion_geo_Doc').val(predio.inspeccion_geo_Doc); */
+            if (url) {
+              $('#url_documento_geo_edit').html(`
+                <a href="${url}" target="_blank" class="">
+                  Inspección para la geo-referenciación de los predios de maguey o agave
+                </a>
+              `);
+            } else {
+              $('#url_documento_geo_edit').html(`<span class="text-muted">No hay documento cargado</span>`);
+            }
+
+
+
+          // Mostrar el modal
+          $('#modalEditPredioInspeccion').modal('show');
+
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo cargar los datos del predio.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      },
+      error: function (error) {
+        console.error('Error al cargar los datos del predio:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo cargar los datos del predio.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+
+  });
+
+
+
+
+  /* seccion para la inserccion de los datos de los predios inspecciones */
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation para el formulario de edición
+    const addAddPredioInspeccionForm = document.getElementById('EditPredioInspeccionForm');
+    const fv = FormValidation.formValidation(addAddPredioInspeccionForm, {
+      fields: {
+        ubicacion_predio: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingresa la ubicación del predio'
+            }
+          }
+        },
+        localidad: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la localidad'
+            }
+          }
+        },
+        distrito: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el distrito'
+            }
+          }
+        },
+        municipio: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el municipio'
+            }
+          }
+        },
+        estado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el estado'
+            }
+          }
+        },
+        nombre_paraje: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el nombre del paraje'
+            }
+          }
+        },
+        zona_dom: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor selecciona la opción'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: function (field, ele) {
+            return '.form-floating';
+          }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      var formData = new FormData(addAddPredioInspeccionForm);
+      var predioId = $('#edit_inspeccion_id_predio').val(); // Asegúrate de que este ID esté correctamente asignado
+
+      $.ajax({
+        url: '/domicilios-predios/' + predioId + '/inspeccion-update',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+          addAddPredioInspeccionForm.reset();
+          $('#modalEditPredioInspeccion').modal('hide');
+          $('.datatables-users').DataTable().ajax.reload();
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al agregar el predio',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+
+    });
+
+    // Inicializar select2 y revalidar el campo cuando cambie
+    $('#edit_fecha_inspeccion, #edit_estado').on('change', function () {
+      fv.revalidateField($(this).attr('name'));
+    });
+  });
+
 
 });

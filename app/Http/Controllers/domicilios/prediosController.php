@@ -19,6 +19,7 @@ use App\Models\PrediosCaracteristicasMaguey;
 use App\Notifications\GeneralNotification;
 use App\Models\User;
 use App\Helpers\Helpers;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -194,6 +195,26 @@ class PrediosController extends Controller
                 $nestedData['hasSolicitud'] = $hasSolicitud;
                 $nestedData['id_solicitud'] = $predio->solicitudes()->first()->id_solicitud ?? null;
                 $nestedData['folio_solicitud'] = $predio->solicitudes()->first()->folio ?? null;
+
+                $inspeccion = DB::table('predios_inspeccion')
+                    ->where('id_predio', $predio->id_predio)
+                    ->first();
+
+                $documentoGeo = null;
+                if ($inspeccion) {
+                    $documentoGeo = DB::table('documentacion_url')
+                        ->where('id_relacion', $inspeccion->id_inspeccion)
+                        ->where('id_documento', 135)
+                        ->first();
+                }
+
+                $urlDocumento = null;
+                if ($documentoGeo && $numeroCliente) {
+                    $urlDocumento = asset('storage/uploads/' . $numeroCliente . '/' . $documentoGeo->url);
+                }
+
+                $nestedData['url_documento_geo'] = $urlDocumento;
+
 
                 $data[] = $nestedData;
             }
@@ -535,6 +556,38 @@ class PrediosController extends Controller
             }
         }
 
+    public function editInspeccion($id_predio) {
+        $inspeccion = Predios_Inspeccion::with('predio.empresa.empresaNumClientes')
+            ->where('id_predio', $id_predio)
+            ->first();
+
+        if (!$inspeccion) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró inspección para este predio.',
+            ]);
+        }
+
+        $documentacion = DB::table('documentacion_url')
+            ->where('id_relacion', $inspeccion->id_inspeccion)
+            ->where('id_documento', 135) // Cambiar según el tipo documento
+            ->first();
+
+        $numeroCliente = $inspeccion->predio->empresa->empresaNumClientes[0]->numero_cliente ?? null;
+
+        $urlDocumento = null;
+        if ($documentacion && $numeroCliente) {
+            $urlDocumento = url("storage/uploads/{$numeroCliente}/" . $documentacion->url);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $inspeccion,
+            'document_url' => $urlDocumento,
+        ]);
+    }
+
+
 
 
         public function PdfPreRegistroPredios($id_predio)
@@ -686,6 +739,111 @@ class PrediosController extends Controller
             'message' => 'Inspección registrada exitosamente.',
         ]);
     }
+
+        public function inspeccion_update(Request $request, $id_predio)
+        {
+            $validatedData = $request->validate([
+                'ubicacion_predio' => 'required|string|max:255',
+                'localidad' => 'required|string|max:255',
+                'municipio' => 'required|string|max:255',
+                'distrito' => 'required|string|max:255',
+                'estado' => 'required|exists:estados,id',
+                'nombre_paraje' => 'required|string|max:255',
+                'zona_dom' => 'required|string|in:si,no',
+                'id_empresa' => 'required|exists:empresa,id_empresa',
+            ]);
+
+            $inspeccion = Predios_Inspeccion::where('id_predio', $id_predio)->first();
+
+            if (!$inspeccion) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontró inspección para este predio.',
+                ], 404);
+            }
+
+            $inspeccion->ubicacion_predio = $validatedData['ubicacion_predio'];
+            $inspeccion->localidad = $validatedData['localidad'];
+            $inspeccion->municipio = $validatedData['municipio'];
+            $inspeccion->distrito = $validatedData['distrito'];
+            $inspeccion->id_estado = $validatedData['estado'];
+            $inspeccion->nombre_paraje = $validatedData['nombre_paraje'];
+            $inspeccion->zona_dom = $validatedData['zona_dom'];
+            $inspeccion->save();
+
+            $predio = Predios::findOrFail($id_predio);
+            $predio->estatus = 'Inspeccionado';
+            $predio->save();
+
+            $empresaNumCliente = DB::table('empresa_num_cliente')
+                ->where('id_empresa', $validatedData['id_empresa'])
+                ->whereNotNull('numero_cliente')
+                ->value('numero_cliente');
+
+            if (!$empresaNumCliente) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Número de cliente no encontrado.',
+                ], 404);
+            }
+
+            $nombreDocumento = DB::table('documentacion')
+                ->where('id_documento', 135)
+                ->value('nombre');
+
+            if (!$nombreDocumento) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Nombre del documento no encontrado.',
+                ], 404);
+            }
+
+            // 🧠 SOLO si se sube un nuevo archivo
+            if ($request->hasFile('inspeccion_geo_Doc') && $request->file('inspeccion_geo_Doc')->isValid()) {
+                $file = $request->file('inspeccion_geo_Doc');
+
+                // Buscar el documento actual (si existe)
+                $documentacionUrl = Documentacion_url::where('id_relacion', $inspeccion->id_inspeccion)
+                    ->where('id_documento', 135)
+                    ->first();
+
+                $directory = $empresaNumCliente;
+                $storageDisk = 'public';
+
+                // Si ya existe un archivo, eliminarlo del disco
+                if ($documentacionUrl && $documentacionUrl->url) {
+                    Storage::disk($storageDisk)->delete('uploads/' . $directory . '/' . $documentacionUrl->url);
+                }
+
+                // Subir el nuevo archivo
+                $uniqueId = uniqid();
+                $filename = 'inspeccion_geo_referenciacion ' . $uniqueId . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('uploads/' . $directory, $filename, $storageDisk);
+
+                // Si ya existía el registro: actualizarlo
+                if ($documentacionUrl) {
+                    $documentacionUrl->url = $filename;
+                    $documentacionUrl->save();
+                } else {
+                    // Si no existía: crear uno nuevo
+                    Documentacion_url::create([
+                        'id_empresa' => $validatedData['id_empresa'],
+                        'url' => $filename,
+                        'id_relacion' => $inspeccion->id_inspeccion,
+                        'nombre_documento' => $nombreDocumento,
+                        'id_documento' => 135,
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Inspección actualizada correctamente.',
+            ]);
+        }
+
+
+
 
     public function PDFInspeccionGeoreferenciacion($id_predio) {
       // Obtener la primera (y única) inspección relacionada con el predio
