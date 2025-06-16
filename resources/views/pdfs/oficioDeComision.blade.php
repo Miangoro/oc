@@ -136,10 +136,12 @@
             </p>
 
             <p><br>
+            @if ($datos?->solicitud)
                 <img style="position: absolute; left: 250; margin-top: -7%" src="{{ public_path('storage/firmas/' . $id_inspector->firma) }}" width="50px" height="70px">
                 <u>{{ $id_inspector->name }}</u><br>
 
                 {{ $id_inspector->puesto }}
+            @endif
             </p>
         </div>
     </div>
