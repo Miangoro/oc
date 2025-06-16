@@ -98,7 +98,7 @@
     <div class="content">
         <div style="text-align: right; margin-top: 0px;">
             <p>
-                Oficio No. _____/20___<br>
+                Oficio No. {{$datos?->solicitud?->folio}}<br>
                 Oficina: Gerencia Técnica<br>
                 <span class="negrita">Morelia, Michoacán a {{ $fecha_servicio }}</span>
             </p>
@@ -134,9 +134,12 @@
             <p>
                 Atentamente
             </p>
-            <p>
-                ________________________________<br>
-                Gerente Técnico
+
+            <p><br>
+                <img style="position: absolute; left: 250; margin-top: -7%" src="{{ public_path('storage/firmas/' . $id_inspector->firma) }}" width="50px" height="70px">
+                <u>{{ $id_inspector->name }}</u><br>
+
+                {{ $id_inspector->puesto }}
             </p>
         </div>
     </div>
