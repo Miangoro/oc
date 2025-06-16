@@ -1072,7 +1072,7 @@ $(function () {
     //Cargar el PDF con el ID
       iframe.attr('src', id_inspeccion);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-      $("#NewPestana").attr('href',  + id_inspeccion).show();
+      $("#NewPestana").attr('href', id_inspeccion).show();
 
       $("#titulo_modal").text("Acta de inspección");
       $("#subtitulo_modal").text(registro);
