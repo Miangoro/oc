@@ -55,13 +55,24 @@
                 <textarea name="observaciones" class="form-control h-px-100" id="observaciones" placeholder="Indicaciones..."></textarea>
                 <label for="observaciones">Observaciones acerca de este servicio</label>
               </div>
+
+               <div class="form-floating form-floating-outline mb-5">
+                    <select multiple class="select2 form-select" name="solicitudes_adicionales[]">
+                       
+                        @foreach ($todasSolicitudes as $solicitud) 
+                          <option value="{{ $solicitud->id_solicitud }}">{{ $solicitud->folio }} {{ $solicitud->inspeccion->num_servicio ?? '' }}</option>
+                      @endforeach
+
+                    </select>
+                    <label for="domicilio">Elegir a que otra solicitudes aplica esta documentación</label>
+                </div>
             
 
 
             
             <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-              <button type="submit" class="btn btn-primary">Registrar</button>
-              <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+              <button type="submit" class="btn btn-primary"><i class="ri-upload-2-fill"></i> Subir</button>
+              <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
             </div>
           </form>
         </div>

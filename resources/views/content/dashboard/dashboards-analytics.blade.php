@@ -386,6 +386,7 @@
                             <th>Cliente</th>
                             <th>Fecha</th>
                             <th>Inspector</th>
+                            <th>Dictamen</th>
                             <!--<th>Acciones</th>-->
                         </tr>
                     </thead>
@@ -396,6 +397,7 @@
                                 <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}</td>
                                 <td>{{ $dictamen->firmante->name ?? 'N/A' }}</td>
+                                <th><a target="_Blank" href="/dictamen_exportacion/{{ $dictamen->id_dictamen }}"><i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a></th>
                                 <!--<td>
                                     <a href="" class="btn btn-sm btn-primary" target="_blank">
                                         Ver
@@ -435,6 +437,7 @@
                             <th>Cliente</th>
                             <th>Fecha</th>
                             <th>Inspector</th>
+                            <th>Dictamen</th>
                             <!--<th>Acciones</th>-->
                         </tr>
                     </thead>
@@ -445,6 +448,7 @@
                                 <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}</td>
                                 <td>{{ $dictamen->inspeccione->inspector->name ?? 'N/A' }}</td>
+                                <th><a target="_Blank" href="/dictamen_granel/{{ $dictamen->id_dictamen }}"><i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a></th>
                                 <!--<td>
                                     <a href="" class="btn btn-sm btn-primary" target="_blank">
                                         Ver
@@ -484,6 +488,7 @@
                             <th>Cliente</th>
                             <th>Fecha</th>
                             <th>Inspector</th>
+                            <th>Dictamen</th>
                             <!--<th>Acciones</th>-->
                         </tr>
                     </thead>
@@ -494,6 +499,24 @@
                                 <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}</td>
                                 <td>{{ $dictamen->inspeccione->inspector->name ?? 'N/A' }}</td>
+                                @php
+                                    if($dictamen->tipo_dictamen == 1){
+                                        $pdf_dictamen = "/dictamen_productor/". $dictamen->id_dictamen;
+                                    }
+
+                                    if($dictamen->tipo_dictamen == 2){
+                                        $pdf_dictamen = "/dictamen_envasador/".$dictamen->id_dictamen;
+                                    }
+
+                                    if($dictamen->tipo_dictamen == 3){
+                                        $pdf_dictamen = "/dictamen_comercializador/".$dictamen->id_dictamen;
+                                    } 
+
+                                    if($dictamen->tipo_dictamen == 4){
+                                        $pdf_dictamen = "/dictamen_almacen/".$dictamen->id_dictamen;
+                                    }
+                                @endphp
+                                <th><a target="_Blank" href="{{ $pdf_dictamen }}"><i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a></th>
                                 <!--<td>
                                     <a href="" class="btn btn-sm btn-primary" target="_blank">
                                         Ver
