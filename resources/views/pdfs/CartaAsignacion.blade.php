@@ -135,10 +135,12 @@
     <div style="margin-bottom: 50px; text-align: center">
         {{-- <p class="text_al text-center">Q.F.B. MAYRA GUTIÉRREZ ROMERO</p> --}}
         {{--<img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_Q.F.B._Mayra_Gutiérrez_Romero_1739201715.png') }}">--}}        
-        <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_Q.F.B._Mayra_Gutiérrez_Romero_1739201715.png') }}">
+        <img style="position: absolute; left: 250; margin-top: -7%" height="60px" src="{{ storage_path('app/public/firmas/firma_Q.F.B._Mayra_Gutiérrez_Romero_1739201715.png') }}">
         <p class="text-center">Q.F.B. MAYRA GUTIÉRREZ ROMERO</p>
-        <p class="text-center">Gerente Técnico del Organismo Certificador CIDAM</p>
+        <p class="text-center">GERENTE TÉCNICO DEL ORGANISMO CERTIFICADOR CIDAM</p>
     </div>
+    
+
     
     <div style="margin-bottom: 20px;">
         <p class="text_al">Carta asignación del número de cliente NOM-070-SCFI-2016 F7.1-01-27</p>
