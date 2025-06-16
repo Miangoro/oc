@@ -86,7 +86,7 @@ class Helpers
 
         // Formatear el consecutivo con ceros a la izquierda (5 dígitos)
         //$consecutivo = str_pad($count, 5, '0', STR_PAD_LEFT);
-        $consecutivo =  str_pad($count + 12686, 5, '0', STR_PAD_LEFT);
+        $consecutivo =  str_pad($count + 12691, 5, '0', STR_PAD_LEFT);
 
         // Retornar el folio en el formato SOL-año-consecutivo
         return "SOL-$consecutivo";
