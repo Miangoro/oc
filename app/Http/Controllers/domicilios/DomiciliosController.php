@@ -220,7 +220,8 @@ class DomiciliosController extends Controller
             return response()->json(['error' => 'Ocurrió un error al eliminar la instalación y los registros: ' . $e->getMessage()], 500);
         }
     }
-    
+
+
 
     ///FUNCION AGREGAR
     public function store(Request $request)
@@ -231,15 +232,21 @@ class DomiciliosController extends Controller
             'estado' => 'required|exists:estados,id',
             'direccion_completa' => 'required|string',
             'responsable' => 'required|string', 
-            'folio' => 'nullable|string',
-            'id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo',
-            'fecha_emision' => 'nullable|date',
-            'fecha_vigencia' => 'nullable|date',
+            'eslabon' => 'nullable|string|in:Productora,Envasadora,Comercializadora', // Validación del campo eslabon
             'certificacion' => 'nullable|string',
+
+            //'folio' => 'nullable|string',
+            //'id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo',
             'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
             'nombre_documento.*' => 'nullable|string', 
             'id_documento.*' => 'nullable|integer', 
-            'eslabon' => 'nullable|string|in:Productora,Envasadora,Comercializadora', // Validación del campo eslabon
+            //'fecha_emision' => 'nullable|date',
+            //'fecha_vigencia' => 'nullable|date',
+
+            'folio' => $request->certificacion === 'otro_organismo' ? 'required|string' : 'nullable|string',
+            'id_organismo' => $request->certificacion === 'otro_organismo' ? 'required|exists:catalogo_organismos,id_organismo' : 'nullable|exists:catalogo_organismos,id_organismo',
+            'fecha_emision' => $request->certificacion === 'otro_organismo' ? 'required|date' : 'nullable|date',
+            'fecha_vigencia' => $request->certificacion === 'otro_organismo' ? 'required|date' : 'nullable|date',
         ]);
     
         try {
@@ -250,16 +257,17 @@ class DomiciliosController extends Controller
                 'estado' => $request->input('estado'),
                 'direccion_completa' => $request->input('direccion_completa'),
                 'responsable' => $request->input('responsable'),
+                'certificacion' => $request->input('certificacion', null),
+                'eslabon' => $request->input('eslabon', null),  // Guardar el campo eslabon
+
                 'folio' => $request->input('folio', null),
                 'id_organismo' => $request->input('id_organismo', null),
                 'fecha_emision' => $request->input('fecha_emision', null),
                 'fecha_vigencia' => $request->input('fecha_vigencia', null),
-                'certificacion' => $request->input('certificacion', null),
-                'eslabon' => $request->input('eslabon', null),  // Guardar el campo eslabon
             ]);
     
             // Obtener información de la empresa
-            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->cliente)->first();
+            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->id_empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
                 return !empty($numero);
             });
@@ -295,8 +303,12 @@ class DomiciliosController extends Controller
             return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.', 'error' => $e->getMessage()]);
         }
     }
-    
-    
+
+
+
+
+
+
     ///FUNCION OBTENER REGISTRO
     public function edit($id_instalacion)
     {
@@ -338,7 +350,19 @@ class DomiciliosController extends Controller
             'edit_fecha_vigencia' => 'nullable|date',
             'edit_eslabon' => 'nullable|string|in:Productora,Envasadora,Comercializadora',
             'edit_certificacion' => 'nullable|string',
-            'edit_url' => 'nullable|array',
+            //'edit_url' => 'nullable|array',
+            'edit_url' => [
+                'nullable',
+                'array',
+                function ($attribute, $value, $fail) use ($request, $id) {
+                    if ($request->edit_certificacion === 'otro_organismo') {
+                        $documentosExistentes = Documentacion_url::where('id_relacion', $id)->exists();
+                        if (!$documentosExistentes && !$request->hasFile('edit_url')) {
+                            $fail('El archivo es obligatorio al seleccionar "Otro organismo" y no existir un archivo previo.');
+                        }
+                    }
+                },
+            ],
             'edit_url.*' => 'file|mimes:jpg,jpeg,png,pdf', 
             'edit_nombre_documento' => 'nullable|array',
             'edit_nombre_documento.*' => 'string', 
@@ -365,9 +389,9 @@ class DomiciliosController extends Controller
             ]);
     
             // Obtener número de cliente de la empresa
-            $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $request->input('edit_id_empresa'))->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
-                return !empty($numero);
+            $empresa = Empresa::with("empresaNumClientes")->find($request->input('edit_id_empresa'));
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($n) {
+                return !empty($n);
             });
     
             // Eliminar documentos antiguos antes de actualizar
@@ -410,6 +434,10 @@ class DomiciliosController extends Controller
             return response()->json(['code' => 500, 'message' => 'Error al actualizar la instalación.', 'error' => $e->getMessage()]);
         }
     }
+
+
+
+    
 
     public function getDocumentosPorInstalacion(Request $request)
     {

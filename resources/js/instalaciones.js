@@ -510,6 +510,9 @@ $(function () {
 
 
 
+
+
+
   //AGREGAR
   $(document).ready(function () {
     const formAdd = document.getElementById('addNewInstalacionForm');
@@ -549,7 +552,7 @@ $(function () {
             'certificacion': {
               validators: {
                   notEmpty: {
-                      message: 'La dirección es obligatoria.'
+                      message: 'Selecciona una opcion.'
                   }
               }
           },
@@ -874,6 +877,10 @@ $(function () {
 
 
 
+
+
+
+
 //EDITAR
 $(document).ready(function () {
   let instalacionData = {};
@@ -1181,7 +1188,7 @@ $(document).ready(function () {
                 id_organismo: instalacion.id_organismo || '',
                 fecha_emision: instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '',
                 fecha_vigencia: instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '',
-                archivoUrl: data.archivo_url || '',
+                archivoUrl: data.archivo_urls || '',
                 numeroCliente: data.numeroCliente || ''
             };
 
@@ -1223,6 +1230,12 @@ $(document).ready(function () {
     });
 });
 });
+
+
+
+
+
+
 
 $(document).on('click', '.verDocumentosBtn', function () {
   var idInstalacion = $(this).data('id');

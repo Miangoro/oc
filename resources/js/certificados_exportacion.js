@@ -171,7 +171,7 @@ if (dt_user_table.length) {
             var $num_servicio = full['num_servicio'];
 
             if (full['url_acta'] == 'Sin subir') {
-              var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
+              var $acta = '<a href="/img_pdf/FaltaPDF.png" target="_blank"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
             } else {
               var $acta = full['url_acta'].map(url => `
                 <i data-id="${full['numero_cliente']}/actas/${url}" data-empresa="${full['razon_social']}"

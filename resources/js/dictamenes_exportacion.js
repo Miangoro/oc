@@ -134,7 +134,7 @@ if (dt_user_table.length) {
           /*if ( full['url_acta'] == 'No encontrado' ) {
             var $acta = `<i class="ri-error-warning-line text-warning ri-28px"></i>`;
           }else*/ if ( full['url_acta'] == 'Sin subir' ) {
-            var $acta = '<a href="/img_pdf/FaltaPDF.png"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
+            var $acta = '<a href="/img_pdf/FaltaPDF.png" target="_blank"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
           }else {
             //var $acta = `<i data-id="${full['numero_cliente']}/${full['url_acta']}" data-empresa="${full['razon_social']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
             var $acta = full['url_acta'].map(url => `
