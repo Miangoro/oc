@@ -133,9 +133,11 @@
 
     </div>
     <div style="margin-bottom: 50px; text-align: center">
-        {{-- <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_Q.F.B._Mayra_Gutiérrez_Romero_1739201715.png') }}"> --}}
-        <p class="text_al text-center">GERENTE TÉCNICO DEL ORGANISMO</p>
-        <p class="text_al text-center">CERTIFICADOR CIDAM A.C.</p>
+        {{-- <p class="text_al text-center">Q.F.B. MAYRA GUTIÉRREZ ROMERO</p> --}}
+        {{--<img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_Q.F.B._Mayra_Gutiérrez_Romero_1739201715.png') }}">--}}        
+        <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_Q.F.B._Mayra_Gutiérrez_Romero_1739201715.png') }}">
+        <p class="text-center">Q.F.B. MAYRA GUTIÉRREZ ROMERO</p>
+        <p class="text-center">Gerente Técnico del Organismo Certificador CIDAM</p>
     </div>
     
     <div style="margin-bottom: 20px;">
