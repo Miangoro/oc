@@ -326,11 +326,11 @@ $(function () {
 
 
   $(function () {
- 
-  
+
+
     const addNewEtiqueta = document.getElementById('etiquetasForm');
     let fv = null; // Inicializamos la variable del validador afuera para reutilizar
-  
+
     // Función para inicializar el validador
 
       fv = FormValidation.formValidation(addNewEtiqueta, {
@@ -399,7 +399,7 @@ $(function () {
           },
         },
       },
-        
+
         plugins: {
           trigger: new FormValidation.plugins.Trigger(),
           bootstrap5: new FormValidation.plugins.Bootstrap5({
@@ -410,7 +410,7 @@ $(function () {
           }),
           submitButton: new FormValidation.plugins.SubmitButton(),
           autoFocus: new FormValidation.plugins.AutoFocus(),
-          
+
         }
       }).on('core.form.valid', function (e) {
         var formData = new FormData(addNewEtiqueta);
@@ -418,8 +418,8 @@ $(function () {
           url: '/registrar-etiqueta',
           type: 'POST',
           data: formData,
-          processData: false, 
-          contentType: false, 
+          processData: false,
+          contentType: false,
           success: function (response) {
             $('#etiquetas').modal('hide');
             addNewEtiqueta.reset();
@@ -445,12 +445,12 @@ $(function () {
           }
         });
       });
-    
-  
+
+
 
 
   });
-  
+
 
   initializeSelect2(select2Elements);
 
@@ -509,8 +509,8 @@ $(function () {
   $(document).ready(function () {
     function limpiarFormulario() {
         $('#etiquetasForm')[0].reset(); // Reinicia los inputs
-        $('#etiquetasForm').find('select').val(null).trigger('change'); 
-        $('#doc_etiqueta').html(''); 
+        $('#etiquetasForm').find('select').val(null).trigger('change');
+        $('#doc_etiqueta').html('');
         $('#doc_corrugado').html('');
          $('#id_etiqueta').val('');
     }
@@ -527,11 +527,19 @@ $(function () {
         var documentacion_urls_corrugado = data.documentacion_urls_corrugado;
         var numCliente = data.numeroCliente;
         var tipos = JSON.parse(data.etiqueta.id_tipo);
-        
+
         // Rellenar el formulario con los datos obtenidos
+        $('#id_empresa').val(datos.id_empresa).trigger('change');
+
         $('#id_etiqueta').val(datos.id_etiqueta);
+
         let valores = datos.destinos.map(d => d.id_direccion);
+
         $('#id_destino').val(valores).trigger('change');
+  setTimeout(() => {
+    cargarDestinosPorEmpresa(datos.id_empresa, valores);
+  }, 200);
+
         $('#sku').val(datos.sku);
         $('#presentacion').val(datos.presentacion);
         $('#alc_vol').val(datos.alc_vol);
@@ -547,7 +555,7 @@ $(function () {
         <a href="/files/${numCliente}/${documentacion_urls[0].url}" target="_blank">
             <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i>
          </a>
-        </div>` 
+        </div>`
             );
             if (documentacion_urls_corrugado.length > 0 && documentacion_urls_corrugado[0].url) {
                 $('#doc_corrugado').html(`
@@ -561,17 +569,61 @@ $(function () {
       });
     });
   });
-  
-  
+
+
 
 
 });
+
+function cargarDestinosPorEmpresa(empresaId, destinosSeleccionados = []) {
+  const $destinoSelect = $('#id_destino');
+
+  $.ajax({
+    url: `/destinos-por-empresa/${empresaId}`,
+    method: 'GET',
+    success: function (data) {
+      $destinoSelect.empty();
+
+      if (data.length === 0) {
+        $destinoSelect.append('<option value="">Sin direcciones registradas</option>');
+        $destinoSelect.trigger('change');
+        return;
+      }
+
+      // Agregar nuevas opciones
+      data.forEach(destino => {
+        $destinoSelect.append(
+          `<option value="${destino.id_direccion}">${destino.destinatario} | ${destino.direccion}</option>`
+        );
+      });
+
+      // Si se pasó un arreglo de destinos seleccionados, seleccionarlos
+      if (destinosSeleccionados.length > 0) {
+        $destinoSelect.val(destinosSeleccionados).trigger('change');
+      } else {
+        $destinoSelect.trigger('change');
+      }
+    },
+    error: function () {
+      alert('Error al cargar direcciones de destino.');
+    }
+  });
+}
+
+/* 
+$('#id_empresa').on('change', function () {
+  const empresaId = $(this).val();
+  if (empresaId) {
+    cargarDestinosPorEmpresa(empresaId);
+  }
+});
+ */
 
 $(document).on('click', '.pdf', function () {
 
 
     // Verificar si el tipo es igual a 3
-   
+
         var url = $(this).data("url");  // URL de la ruta
 
         $('#NewPestana').attr('href', "/files/"+url);
@@ -598,5 +650,5 @@ $(document).on('click', '.pdf', function () {
             spinner.hide();
             iframe.show();
         });
-    
+
 });

@@ -18,15 +18,31 @@
                 <form id="etiquetasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
                         <input type="hidden" id="id_etiqueta" name="id_etiqueta">
-                        <input type="hidden" id="modo_formulario" value="registrar"> 
+                        <input type="hidden" id="modo_formulario" value="registrar">
 
-                        
+                        <div class="col-sm-12">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select id="id_empresa"  onchange="obtenerdestinos(this.value);" name="id_empresa"
+                                    class="select2 form-select">
+                                    <option value="" disabled selected>Selecciona el cliente</option>
+                                    @foreach ($empresas as $empresa)
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_empresa">Cliente</label>
+                            </div>
+                        </div>
+
                         <div class="col-sm-12">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select multiple id="id_destino" name="id_destino[]" class="select2 form-select" required>
-                                    @foreach ($destinos as $destino)
-                                        <option value="{{ $destino->id_direccion }}">{{ $destino->destinatario }} | {{ $destino->direccion }}</option>
-                                    @endforeach
+                                <select multiple id="id_destino" name="id_destino[]" class="select2 form-select">
+                                    <option value=""> selecciona un destino</option>
+                                    {{--                                     @foreach ($destinos as $destino)
+                                        <option value="{{ $destino->id_direccion }}">{{ $destino->destinatario }} |
+                                            {{ $destino->direccion }}</option>
+                                    @endforeach --}}
                                 </select>
                                 <label for="id_destino">Destinos</label>
                             </div>
@@ -52,7 +68,7 @@
                             <div class="form-floating form-floating-outline mb-5">
                                 <input id="presentacion" type="text" name="presentacion" class="form-control"
                                     placeholder="Introduce el cont. neto" />
-                                    
+
                                 <label for="presentacion">Cont. Neto</label>
                             </div>
                         </div>
@@ -66,7 +82,7 @@
                                 <label for="unidad">Unidad</label>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-4 col-sm-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input id="alc_vol" type="text" name="alc_vol" class="form-control"
@@ -80,7 +96,8 @@
                                 <select id="id_categoria" name="id_categoria" class="form-select" required>
                                     <option value="" disabled selected>Categoría de mezcal</option>
                                     @foreach ($categorias as $categoria)
-                                        <option value="{{ $categoria->id_categoria }}">{{ $categoria->categoria }}</option>
+                                        <option value="{{ $categoria->id_categoria }}">{{ $categoria->categoria }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <label for="id_norma">Categoría de mezcal</label>
@@ -101,9 +118,11 @@
                         <div class="col-sm-6">
                             <div class="form-floating form-floating-outline mb-5 select2-primary">
                                 <select id="id_tipo" name="id_tipo[]" class="select2 form-select" multiple required>
-                                    <option value="" disabled >Tipos de agave</option>
+                                    <option value="" disabled>Tipos de agave</option>
                                     @foreach ($tipos as $tipo)
-                                        <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
+                                        <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}
+                                            ({{ $tipo->cientifico }})
+                                        </option>
                                     @endforeach
                                 </select>
                                 <label for="id_tipo">Tipos de agave</label>
@@ -111,48 +130,123 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input id="botellas_caja" name="botellas_caja" type="number" min="1" class="form-control" placeholder="Botellas por caja" />
+                                <input id="botellas_caja" name="botellas_caja" type="number" min="1"
+                                    class="form-control" placeholder="Botellas por caja" />
                                 <label for="botellas_caja">Botellas por caja</label>
                             </div>
                         </div>
 
-            
+
                         <div class="col-md-10  mb-5">
                             <label for="file60" class="form-label">Etiqueta</label>
-                            <input class="form-control" type="file" id="file60" data-id="60" name="url_etiqueta">
+                            <input class="form-control" type="file" id="file60" data-id="60"
+                                name="url_etiqueta">
                             <input value="60" class="form-control" type="hidden" name="id_documento_etiqueta">
-                            <input value="Etiqueta" class="form-control" type="hidden" name="nombre_documento_etiqueta">
-                           
+                            <input value="Etiqueta" class="form-control" type="hidden"
+                                name="nombre_documento_etiqueta">
+
                         </div>
 
                         <div class="col-md-2" id="doc_etiqueta"></div>
-                        
+
                         <div class="col-md-10  mb-5">
                             <label for="file75" class="form-label">Corrugado</label>
-                            <input class="form-control" type="file" id="file75" data-id="75" name="url_corrugado">
+                            <input class="form-control" type="file" id="file75" data-id="75"
+                                name="url_corrugado">
                             <input value="75" class="form-control" type="hidden" name="id_documento_corrugado">
-                            <input value="Corrugado" class="form-control" type="hidden" name="nombre_documento_corrugado">
+                            <input value="Corrugado" class="form-control" type="hidden"
+                                name="nombre_documento_corrugado">
                         </div>
                         <div class="col-md-2" id="doc_corrugado"></div>
 
-                     
+
 
                     </div>
-                        
-                        {{-- <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+
+                    {{-- <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                             <button type="submit" class="btn btn-primary">Registrar</button>
                             <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
                                 aria-label="Close">Cancelar</button>
                         </div> --}}
                     <div class="d-flex mt-6 justify-content-center">
-                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line mb-1"></i>
                             Registrar</button>
                         <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
-                                class="ri-close-line"></i> Cancelar</button>
+                                class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
-                    
+
                 </form>
             </div>
         </div>
     </div>
 </div>
+<script>
+/*     $(document).ready(function() {
+        $('#id_empresa').on('change', function() {
+            const empresaId = $(this).val();
+
+            if (!empresaId) return;
+
+            $.ajax({
+                url: `/destinos-por-empresa/${empresaId}`,
+                method: 'GET',
+                success: function(data) {
+                    const $destinoSelect = $('#id_destino');
+
+                    // Limpia opciones actuales
+                    $destinoSelect.empty();
+
+                    if (data.length === 0) {
+                        $destinoSelect.append(
+                            '<option value="">Sin direcciones registradas</option>');
+                        return;
+                    }
+
+                    // Agrega las nuevas opciones
+                    data.forEach(destino => {
+                        $destinoSelect.append(
+                            `<option value="${destino.id_direccion}">${destino.destinatario} | ${destino.direccion}</option>`
+                        );
+                    });
+
+                    // Refresca Select2 si lo usas
+                    $destinoSelect.trigger('change');
+                },
+                error: function() {
+                    alert('Error al cargar direcciones de destino.');
+                }
+            });
+
+        });
+
+    }); */
+
+
+function obtenerdestinos(empresa) {
+    if (empresa !== "" && empresa !== null && empresa !== undefined) {
+        $.ajax({
+            url: '/destinos-por-empresa/' + empresa,
+            method: 'GET',
+            success: function (data) {
+                const $destinoSelect = $('#id_destino');
+                let contenido = '';
+
+                if (data.length === 0) {
+                    contenido = '<option value="">Sin direcciones registradas</option>';
+                } else {
+                    data.forEach(destino => {
+                        contenido += `<option value="${destino.id_direccion}">${destino.destinatario} | ${destino.direccion}</option>`;
+                    });
+                }
+
+                $destinoSelect.html(contenido);
+                $destinoSelect.trigger('change'); // útil si usas select2
+            },
+            error: function () {
+                alert('Error al cargar direcciones de destino.');
+            }
+        });
+    }
+}
+
+</script>

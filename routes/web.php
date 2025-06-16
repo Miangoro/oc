@@ -558,6 +558,7 @@ Route::get('/catalogo/etiquetas', [EtiquetasController::class, 'UserManagement']
 Route::resource('/etiquetas-list', EtiquetasController::class)->middleware(['auth']);
 Route::post('/registrar-etiqueta', [EtiquetasController::class, 'store'])->middleware(['auth']);
 Route::get('/edit-etiqueta/{id_etiqueta}', [EtiquetasController::class, 'edit_etiqueta'])->middleware(['auth']);
+Route::get('/destinos-por-empresa/{id_empresa}', [EtiquetasController::class, 'getDestinosPorEmpresa']);
 //oute::get('/eliminar-etiqueta/{id_etiqueta}', [EtiquetasController::class, 'destroy']);
 
 /* ruta de clases catalogo */

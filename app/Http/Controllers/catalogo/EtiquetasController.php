@@ -28,32 +28,45 @@ use Illuminate\Support\Facades\Auth;//Permiso empresa
 class EtiquetasController extends Controller
 {
     /*Crea la solicitud JSEON*/
-    public function UserManagement()
-    {
-        // Obtener listado de clientes (empresas)
-        $clientes = Empresa::with('empresaNumClientes')->where('tipo', 2)->get();
+public function UserManagement()
+{
+    $empresaId = null;
 
-
-        // Otros datos que puedas querer pasar a la vista
-        $marcas = marcas::all();
-        //$direcciones = direcciones::where('id_empresa',$marca->id_empresa)->get();
-
-        $tipos = tipos::all();
-        $clases = clases::all();
-        $categorias = categorias::all();
-        $destinos = direcciones::all();
-
-
-        return view('catalogo.find_etiquetas', [
-            'clientes' => $clientes,
-            'tipos' => $tipos,
-            'clases' => $clases,
-            'categorias' => $categorias,
-            'destinos' => $destinos,
-            'marcas' => $marcas,
-
-        ]);
+    // Solo si el usuario es tipo 3 (empresa)
+    if (auth()->user()->tipo == 3) {
+        $empresaId = auth()->user()->empresa?->id_empresa;
     }
+
+    // Marcas filtradas por empresa
+    $marcasQuery = marcas::with('empresa');
+    if ($empresaId) {
+        $marcasQuery->where('id_empresa', $empresaId);
+    }
+    $marcas = $marcasQuery->get();
+
+    // Empresas (clientes) filtradas
+    $empresasQuery = empresa::where('tipo', 2);
+    if ($empresaId) {
+        $empresasQuery->where('id_empresa', $empresaId);
+    }
+    $clientes = $empresasQuery->with('empresaNumClientes')->get();
+
+    // Direcciones solo de la empresa si es tipo 3
+    $destinosQuery = direcciones::query();
+    if ($empresaId) {
+        $destinosQuery->where('id_empresa', $empresaId);
+    }
+    $destinos = $destinosQuery->get();
+
+    return view('catalogo.find_etiquetas', [
+       'empresas' => $clientes,
+        'tipos' => tipos::all(),
+        'clases' => clases::all(),
+        'categorias' => categorias::all(),
+        'destinos' => $destinos,
+        'marcas' => $marcas,
+    ]);
+}
 
     public function index(Request $request)
     {
@@ -64,7 +77,7 @@ class EtiquetasController extends Controller
             4 => 'unidad',
             5 => 'alc_vol',
         ];
-        
+
         //Permiso de empresa
         $empresaId = null;
         if (Auth::check() && Auth::user()->tipo == 3) {
@@ -211,6 +224,7 @@ class EtiquetasController extends Controller
 
         // Asignar valores al modelo
         $etiqueta->id_marca = $request->id_marca;
+        $etiqueta->id_empresa = $request->id_empresa;
         $etiqueta->sku = $request->sku ?? '';
         $etiqueta->id_categoria = $request->id_categoria;
         $etiqueta->id_clase = $request->id_clase;
@@ -335,6 +349,7 @@ class EtiquetasController extends Controller
         try {
             $marca = marcas::findOrFail($request->input('id_marca'));
             $marca->marca = $request->marca;
+
             $marca->id_empresa = $request->cliente;
             $marca->id_norma = $request->edit_id_norma;
             $marca->save();
@@ -361,6 +376,12 @@ class EtiquetasController extends Controller
         return response()->json(['success' => 'Etiqueta eliminada correctamente']);
     }
 
+    public function getDestinosPorEmpresa($id_empresa)
+    {
+        $destinos = direcciones::where('id_empresa', $id_empresa)->get();
+
+        return response()->json($destinos);
+    }
 
 
 }
