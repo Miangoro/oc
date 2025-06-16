@@ -21,7 +21,6 @@ use App\Models\Predios;
 use App\Models\tipos;
 use App\Models\equipos;
 
-
 use App\Models\Organismos;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
@@ -32,6 +31,8 @@ use App\Models\solicitudesModel;
 use App\Models\User;
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Str;
+
 
 class inspeccionesController extends Controller
 {
@@ -313,7 +314,6 @@ class inspeccionesController extends Controller
 
 
     //Pdfs de inspecciones
-
     public function pdf_oficio_comision($id_inspeccion)
     {
 
@@ -323,7 +323,17 @@ class inspeccionesController extends Controller
             ? Helpers::formatearFecha($datos->fecha_servicio)
             : null;
 
-        $pdf = Pdf::loadView('pdfs.oficioDeComision', ['datos' => $datos, 'fecha_servicio' => $fecha_servicio]);
+        if (Str::endsWith($datos?->solicitud?->folio, '-O')) {
+            $id_inspector = User::find(6);
+        } else {
+            $id_inspector = User::find(9);
+        }
+
+        $pdf = Pdf::loadView('pdfs.oficioDeComision', [
+                'datos' => $datos, 
+                'fecha_servicio' => $fecha_servicio,
+                'id_inspector' => $id_inspector,
+            ]);
         return $pdf->stream('F-UV-02-09 Oficio de Comisión Ed.5, Vigente.pdf');
     }
 

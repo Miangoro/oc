@@ -571,6 +571,7 @@
                             `<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`
                         );
                     }
+                     cargarMarcasEdit();
                 },
                 error: function() {
                     console.error('Error al cargar el detalle del lote envasado.');

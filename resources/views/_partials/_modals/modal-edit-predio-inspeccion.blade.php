@@ -14,7 +14,7 @@
                        <input type="hidden" id="edit_inspeccion_id_empresa" name="id_empresa">
                        {{--  --}}
                        <!-- Datos del Predio -->
-                     
+
                            <h6 class="mb-4">Datos del Predio</h6>
                            <div class="row">
                                <div class="col-md-4">
@@ -86,6 +86,8 @@
                                                name="inspeccion_geo_Doc" value="135">
                                            <label for="inspeccion_geo_Doc">Subir Inspección Geo-referenciación</label>
                                        </div>
+                                   </div>
+                                   <div id="url_documento_geo_edit" class="url_documento mb-2">
                                    </div>
                            </div>
                            <div class="d-flex justify-content-center mt-3">
