@@ -27,7 +27,19 @@ $(function () {
 
       { data: '' },
       { data: 'folio' },
-      { data: 'num_servicio' },
+       {
+        data: 'num_servicio',
+        render: function(data, type, row) {
+          if (!data || data.toLowerCase().includes('sin asignar')) {
+            // No hay número, o es "sin asignar", entonces mostrar badge
+            return `<p class="badge bg-danger">Sin asignar</p>`;
+          } else {
+            // Hay número de servicio, solo texto plano, sin etiquetas extra
+            // Si viene con HTML, limpiarlo
+            return $('<div>').html(data).text();
+          }
+        }
+      },
       {
         render: function (data, type, full, meta) {
           var $numero_cliente = full['numero_cliente'];

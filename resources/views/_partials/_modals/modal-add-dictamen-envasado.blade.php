@@ -65,7 +65,6 @@
                             </div>
                         </div>
                     </div>
-                    {{--
                     <hr>
                     <h5 class="mt-2 text-center fw-bold">Información del Lote envasado</h5>
                     <hr>
@@ -119,7 +118,6 @@
                         </div>
 
                     </div>
-                     --}}
 
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
@@ -203,7 +201,7 @@
                             </div>
                         </div>
                     </div>
-                    {{--
+
                     <hr>
                     <h5 class="mt-2 text-center fw-bold">Información del Lote envasado</h5>
                     <hr>
@@ -256,7 +254,7 @@
                             </div>
                         </div>
 
-                    </div> --}}
+                    </div>
 
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i>

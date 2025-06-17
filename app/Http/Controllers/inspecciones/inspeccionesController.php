@@ -160,7 +160,7 @@ class inspeccionesController extends Controller
                 $nestedData['folio'] = '<b class="text-primary">' . $solicitud->folio . '</b>';
                 $nestedData['folio_info'] = $solicitud->folio;
                 $nestedData['num_servicio_info'] = $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
-                $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</apan>';
+                $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
                 $nestedData['razon_social'] = $solicitud->empresa->razon_social  ?? 'N/A';
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
                 $nestedData['tipo'] = $solicitud->tipo_solicitud->tipo  ?? 'N/A';
@@ -314,7 +314,7 @@ class inspeccionesController extends Controller
 
     }
 
-    
+
 
 
     //Pdfs de inspecciones
@@ -334,7 +334,7 @@ class inspeccionesController extends Controller
         }
 
         $pdf = Pdf::loadView('pdfs.oficioDeComision', [
-                'datos' => $datos, 
+                'datos' => $datos,
                 'fecha_servicio' => $fecha_servicio,
                 'id_inspector' => $id_inspector,
             ]);
@@ -401,9 +401,9 @@ class inspeccionesController extends Controller
 
                 foreach ($solicitudesAdicionales as $idAdicional) {
                     // Verificar si ya existe el registro
-             
 
-                 
+
+
                         $nuevoDoc = new Documentacion_url();
                         $nuevoDoc->id_relacion = $idAdicional;
                         $nuevoDoc->id_documento = $request->id_documento[$index];
@@ -412,7 +412,7 @@ class inspeccionesController extends Controller
                         $nuevoDoc->url = $filename;
                         $nuevoDoc->fecha_vigencia = $request->fecha_vigencia[$index] ?? null;
                         $nuevoDoc->save();
-                    
+
                 }
             }
         }

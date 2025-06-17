@@ -212,38 +212,54 @@ public function index(Request $request)
 
 
 ///FUNCION REGISTRAR
-public function store(Request $request)
+  public function store(Request $request)
 {
     try {
-    $validated = $request->validate([
-        'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
-        'num_dictamen' => 'required|string|max:40',
-        'fecha_emision' => 'required|date',
-        'fecha_vigencia' => 'required|date',
-        'id_firmante' => 'required|exists:users,id',
-    ]);
+        $validated = $request->validate([
+            'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
+            'num_dictamen' => 'required|string|max:40',
+            'fecha_emision' => 'required|date',
+            'fecha_vigencia' => 'required|date',
+            'id_firmante' => 'required|exists:users,id',
 
-    // Busca la inspección y carga la relacion con modelo inspeccion->solicitud
-    $inspeccion = inspecciones::find($validated['id_inspeccion']);
-    // Obtener el lote directamente
-    $id_lote_envasado = $inspeccion->solicitud->lote_envasado->id_lote_envasado;
-    if (!$id_lote_envasado) {
-        return response()->json(['error' => 'No se encontró el lote asociado a la solicitud'], 404);
-    }
+            'nombre_lote' => 'nullable|string',
+            'cant_botellas' => 'nullable|numeric',
+            'presentacion' => 'nullable|string',
+            'unidad' => 'nullable|string',
+            'volumen_total' => 'nullable|numeric',
+            'id_marca' => 'nullable|exists:marcas,id_marca',
+        ]);
 
-        // Crear un registro
-        $new = new Dictamen_Envasado();
-        $new->id_lote_envasado = $id_lote_envasado;
-        $new->id_inspeccion = $validated['id_inspeccion'];
-        $new->num_dictamen = $validated['num_dictamen'];
-        $new->fecha_emision = $validated['fecha_emision'];
-        $new->fecha_vigencia = $validated['fecha_vigencia'];
-        $new->id_firmante = $validated['id_firmante'];
-        $new->save();
+        $inspeccion = inspecciones::find($validated['id_inspeccion']);
 
-        return response()->json(['message' => 'Registrado correctamente.']);
+        if (!$inspeccion || !$inspeccion->solicitud || !$inspeccion->solicitud->lote_envasado) {
+            return response()->json(['error' => 'No se encontró el lote asociado a la solicitud'], 404);
+        }
+
+        $lote = $inspeccion->solicitud->lote_envasado;
+
+        // Guardar el dictamen
+        $dictamen = new Dictamen_Envasado();
+        $dictamen->id_lote_envasado = $lote->id_lote_envasado;
+        $dictamen->id_inspeccion = $validated['id_inspeccion'];
+        $dictamen->num_dictamen = $validated['num_dictamen'];
+        $dictamen->fecha_emision = $validated['fecha_emision'];
+        $dictamen->fecha_vigencia = $validated['fecha_vigencia'];
+        $dictamen->id_firmante = $validated['id_firmante'];
+        $dictamen->save();
+
+        // Actualizar datos del lote
+        $lote->nombre = $validated['nombre_lote'] ?? $lote->nombre;
+        $lote->cant_botellas = $validated['cant_botellas'] ?? $lote->cant_botellas;
+        $lote->presentacion = $validated['presentacion'] ?? $lote->presentacion;
+        $lote->unidad = $validated['unidad'] ?? $lote->unidad;
+        $lote->volumen_total = $validated['volumen_total'] ?? $lote->volumen_total;
+        $lote->id_marca = $validated['id_marca'] ?? $lote->id_marca;
+        $lote->save();
+
+        return response()->json(['message' => 'Dictamen registrado correctamente.']);
     } catch (\Exception $e) {
-        Log::error('Error al registrar', [
+        Log::error('Error al registrar dictamen', [
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
@@ -305,31 +321,45 @@ public function update(Request $request, $id_dictamen_envasado)
             'fecha_emision' => 'required|date',
             'fecha_vigencia' => 'required|date',
             'id_firmante' => 'required|exists:users,id',
+
+            'nombre_lote' => 'nullable|string',
+            'cant_botellas' => 'nullable|numeric',
+            'presentacion' => 'nullable|string',
+            'unidad' => 'nullable|string',
+            'volumen_total' => 'nullable|numeric',
+            'id_marca' => 'nullable|exists:marcas,id_marca',
         ]);
 
-        // Busca la inspección y carga la relacion con modelo inspeccion->solicitud
-        //$inspeccion = inspecciones::with(['solicitud'])->find($validated['id_inspeccion']);
-        $inspeccion = inspecciones::find($validated['id_inspeccion']);
-        // Obtener el lote directamente
-        $id_lote_envasado = $inspeccion->solicitud->lote_envasado->id_lote_envasado;
-        if (!$id_lote_envasado) {
+               $inspeccion = inspecciones::find($validated['id_inspeccion']);
+
+        if (!$inspeccion || !$inspeccion->solicitud || !$inspeccion->solicitud->lote_envasado) {
             return response()->json(['error' => 'No se encontró el lote asociado a la solicitud'], 404);
         }
 
+        $lote = $inspeccion->solicitud->lote_envasado;
 
-        $actualizar = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
-        $actualizar->update([// Actualizar
-            'id_lote_envasado' => $id_lote_envasado,
-            'num_dictamen' => $validated['num_dictamen'],
-            'id_inspeccion' => $validated['id_inspeccion'],
-            'fecha_emision' => $validated['fecha_emision'],
-            'fecha_vigencia' => $validated['fecha_vigencia'],
-            'id_firmante' => $validated['id_firmante'],
-        ]);
+        // Actualizar dictamen
+        $dictamen = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
+        $dictamen->id_lote_envasado = $lote->id_lote_envasado;
+        $dictamen->num_dictamen = $validated['num_dictamen'];
+        $dictamen->id_inspeccion = $validated['id_inspeccion'];
+        $dictamen->fecha_emision = $validated['fecha_emision'];
+        $dictamen->fecha_vigencia = $validated['fecha_vigencia'];
+        $dictamen->id_firmante = $validated['id_firmante'];
+        $dictamen->save();
+
+        // Actualizar campos opcionales del lote si vienen
+        $lote->nombre = $validated['nombre_lote'] ?? $lote->nombre;
+        $lote->cant_botellas = $validated['cant_botellas'] ?? $lote->cant_botellas;
+        $lote->presentacion = $validated['presentacion'] ?? $lote->presentacion;
+        $lote->unidad = $validated['unidad'] ?? $lote->unidad;
+        $lote->volumen_total = $validated['volumen_total'] ?? $lote->volumen_total;
+        $lote->id_marca = $validated['id_marca'] ?? $lote->id_marca;
+        $lote->save();
 
         return response()->json(['message' => 'Actualizado correctamente.']);
     } catch (\Exception $e) {
-        Log::error('Error al actualizar', [
+        Log::error('Error al actualizar dictamen', [
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);

@@ -71,8 +71,8 @@
 
 
             <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-              <button type="submit" class="btn btn-primary" id="btnSubirInsp"><i class="ri-upload-2-fill"></i> Subir</button>
-              <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+              <button type="submit" class="btn btn-primary" id="btnSubirInsp"><i class="ri-upload-2-fill me-1"></i> Subir</button>
+              <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="ri-close-line me-1"></i> Cancelar</button>
             </div>
           </form>
         </div>
