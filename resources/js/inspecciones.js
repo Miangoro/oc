@@ -581,6 +581,7 @@ $(function () {
         }
 
       }).on('core.form.valid', function (e) {
+          $('#btnSubirInsp').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Subiendo...');
         // Validar el formulario
         var formData = new FormData(form);
 
@@ -604,6 +605,7 @@ $(function () {
                 confirmButton: 'btn btn-success'
               }
             });
+              $('#btnSubirInsp').prop('disabled', false).html('<i class="ri-upload-2-fill"></i> Subir');
           },
           error: function (xhr) {
             console.log('Error:', xhr.responseText);
@@ -616,6 +618,7 @@ $(function () {
                 confirmButton: 'btn btn-danger'
               }
             });
+            $('#btnSubirInsp').prop('disabled', false).html('<i class="ri-upload-2-fill"></i> Subir');
           }
         });
       });
