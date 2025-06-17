@@ -321,7 +321,15 @@
         </tr>
         <tr>
             <td class="column2">No. de Certificado NOM a Granel</td>
-            <td>{{ $data->certificado_nom_granel ?? 'N/A' }}</td>
+            <td>{{-- {{ $data->certificado_nom_granel ?? 'N/A' }} --}}
+                @if ($lotesGranel->isNotEmpty())
+                    @foreach ($lotesGranel as $loteGranel)
+                        {{ $loteGranel->folio_certificado ?? 'N/A' }}
+                    @endforeach
+                @else
+                    N/A
+                @endif
+            </td>
             <td class="column2">No. de Lote a Granel</td>
             <td>
                 @if ($lotesGranel->isNotEmpty())

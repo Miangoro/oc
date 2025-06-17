@@ -83,10 +83,13 @@
                     </div>
 
                     <!-- Campos adicionales para "Certificado por otro organismo" -->
-                            <div id="certificado-otros" class="d-none mt-4">
-                            <div class="col-md-12 mb-3">
-                                <div class="form-floating form-floating-outline"></div>
+                    <div id="certificado-otros" class="d-none mt-4">
+
+                        <div class="col-md-12 mb-3">
+                            <div class="form-floating form-floating-outline">
+                                {{-- subida de archivos --}}
                             </div>
+                        </div>
 
                         <div class="form-floating form-floating-outline mb-3">
                             <input type="text" class="form-control" id="folio" placeholder="Folio/Número del certificado" name="folio" aria-label="Folio/Número del certificado">

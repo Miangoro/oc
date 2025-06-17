@@ -350,19 +350,7 @@ class DomiciliosController extends Controller
             'edit_fecha_vigencia' => 'nullable|date',
             'edit_eslabon' => 'nullable|string|in:Productora,Envasadora,Comercializadora',
             'edit_certificacion' => 'nullable|string',
-            //'edit_url' => 'nullable|array',
-            'edit_url' => [
-                'nullable',
-                'array',
-                function ($attribute, $value, $fail) use ($request, $id) {
-                    if ($request->edit_certificacion === 'otro_organismo') {
-                        $documentosExistentes = Documentacion_url::where('id_relacion', $id)->exists();
-                        if (!$documentosExistentes && !$request->hasFile('edit_url')) {
-                            $fail('El archivo es obligatorio al seleccionar "Otro organismo" y no existir un archivo previo.');
-                        }
-                    }
-                },
-            ],
+            'edit_url' => 'nullable|array',
             'edit_url.*' => 'file|mimes:jpg,jpeg,png,pdf', 
             'edit_nombre_documento' => 'nullable|array',
             'edit_nombre_documento.*' => 'string', 
@@ -389,9 +377,9 @@ class DomiciliosController extends Controller
             ]);
     
             // Obtener número de cliente de la empresa
-            $empresa = Empresa::with("empresaNumClientes")->find($request->input('edit_id_empresa'));
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($n) {
-                return !empty($n);
+            $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $request->input('edit_id_empresa'))->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
             });
     
             // Eliminar documentos antiguos antes de actualizar
