@@ -12,6 +12,7 @@ use App\Models\lotes_envasado;
 use App\Models\Dictamen_Envasado;
 use App\Models\marcas;
 use App\Models\LotesGranel;
+use App\Models\solicitudesModel;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -61,9 +62,9 @@ public function index(Request $request)
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
         1 => 'num_dictamen',
-        2 => 'folio', 
-        3 => 'razon_social', 
-        4 => '', 
+        2 => 'folio',
+        3 => 'razon_social',
+        4 => '',
         5 => 'fecha_emision',
         6 => 'estatus',
     ];
@@ -74,7 +75,7 @@ public function index(Request $request)
     $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
     $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
     $orderColumn = $columns[$orderColumnIndex] ?? 'num_dictamen'; // Por defecto
-    
+
     $search = $request->input('search.value');//Define la búsqueda global.
 
 
@@ -86,7 +87,7 @@ public function index(Request $request)
         ->leftJoin('lotes_envasado_granel', 'lotes_envasado_granel.id_lote_envasado', '=', 'lotes_envasado.id_lote_envasado')
         ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'lotes_envasado_granel.id_lote_granel')
         ->select('dictamenes_envasado.*', 'empresa.razon_social');
-        
+
     if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
     }
@@ -158,8 +159,8 @@ public function index(Request $request)
             $nestedData['tipo_maguey'] = $dictamen->lote_envasado->lotesGranel->first()?->tiposRelacionados
                 ?->map(fn($t) => $t->nombre.' ('.$t->cientifico.')')->implode(', ') ?? 'No encontrado';
             $nestedData['marca'] = $dictamen->lote_envasado->marca->marca ?? 'No encontrado';
-            $nestedData['presentacion'] = 
-                ($dictamen->lote_envasado->presentacion ?? 'No encontrado') . ' ' . 
+            $nestedData['presentacion'] =
+                ($dictamen->lote_envasado->presentacion ?? 'No encontrado') . ' ' .
                 ($dictamen->lote_envasado->unidad ?? 'No encontrado');
             $nestedData['sku'] = json_decode($dictamen->lote_envasado->sku, true)['inicial'] ?? 'No encontrado';
             ///numero y nombre empresa
@@ -491,6 +492,24 @@ public function MostrarDictamenEnvasado($id_dictamen)
 }
 
 
+    public function getDatosLotesEnv($id_inspeccion)
+    {
+        $inspeccion = inspecciones::with('solicitud.empresa.empresaNumClientes')->find($id_inspeccion);
+        $solicitud = $inspeccion->solicitud;
+
+       /* $marcas = marcas::where('id_empresa', $solicitud->id_empresa)->get(); cambio este */
+       /* por este */
+        $marcas = $solicitud->empresa->todasLasMarcas()->get();
+
+        $lote = $solicitud->lote_envasado;
+
+        return response()->json([
+            'inspeccion' => $inspeccion,
+            'solicitud' => $solicitud,
+            'lote_envasado' => $lote,
+            'marcas' => $marcas,
+        ]);
+    }
 
 
 

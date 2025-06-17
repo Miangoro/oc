@@ -969,7 +969,7 @@ Route::middleware(['auth'])->group(function () {//agrupa distintos controladores
     //Route::get('/dictamenes/granel/{id_dictamen}/foliofq', [DictamenGranelController::class, 'foliofq'])->name('dictamenes.foliofq');
     Route::post('/registrar/reexpedir-granel', [DictamenGranelController::class, 'reexpedir'])->name('dic-granel.reex');
     Route::get('/dictamen_granel/{id_dictamen}', [DictamenGranelController::class, 'MostrarDictamenGranel'])->name('formato-dictamen-granel');
-      Route::get('/getDatosLotes/{id_inspeccion}', [DictamenGranelController::class, 'getDatosLotes'])->name('getDatosLotes');
+    Route::get('/getDatosLotes/{id_inspeccion}', [DictamenGranelController::class, 'getDatosLotes'])->name('getDatosLotes');
 });
 
 //-------------------DICTAMEN ENVASADO-------------------
@@ -982,6 +982,7 @@ Route::middleware(['auth'])->group(function () {//agrupa distintos controladores
     Route::post('/dictamenes/envasado/{id_dictamen}/update', [DictamenEnvasadoController::class, 'update'])->name('dictamen.update');
     Route::post('/registrar/reexpedir-envasado', [DictamenEnvasadoController::class, 'reexpedir'])->name('dic-envasado.reex');
     Route::get('/dictamen_envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'MostrarDictamenEnvasado'])->name('formato-dictamen-envasado');
+    Route::get('/getDatosLotesEnv/{id_inspeccion}', [DictamenEnvasadoController::class, 'getDatosLotesEnv'])->name('getDatosLotesEnv');
 });
 
 //-------------------DICTAMEN EXPORTACION-------------------
