@@ -260,6 +260,7 @@
             dataType: 'json',            // Puede ser 'html', 'text', 'json', etc.
            success: function(response) {
             if (response.success) {
+
                 const documentos = response.data;
                 const fqs = response.fqs;
                 const url_etiqueta = response.url_etiqueta;
@@ -325,7 +326,7 @@
                 }
 
                  if (url_etiqueta) {
-                   
+
                         html += `
                             <tr>
                                 <td>Etiqueta</td>
@@ -335,11 +336,11 @@
                                     </a>
                                 </td>
                             </tr>`;
-                    
+
                 }
 
                  if (url_corrugado) {
-                   
+
                         html += `
                             <tr>
                                 <td>Corrugado</td>
@@ -349,7 +350,7 @@
                                     </a>
                                 </td>
                             </tr>`;
-                    
+
                 }
 
 
@@ -362,6 +363,7 @@
             error: function(xhr, status, error) {
                 // Aquí si algo salió mal
                 console.error('Error AJAX:', error);
+                $('#contenedor-documentos').html('');
             }
         });
 
