@@ -166,17 +166,62 @@ class DomiciliosController extends Controller
                 $nestedData['responsable'] = $instalacion->responsable ?? 'N/A';
                 $nestedData['estado'] = $instalacion->estados->nombre  ?? 'N/A';
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
-                $nestedData['folio'] =
+                /*$nestedData['folio'] =
                     '<b>Certificadora:</b>' . ($instalacion->organismos->organismo ?? 'OC CIDAM') . '<br>' .
                     '<b>Número de certificado:</b>' . ($instalacion->folio ?? 'N/A') . '<br>' .
                     '<b>Fecha de emisión:</b>' . (Helpers::formatearFecha($instalacion->fecha_emision)) . '<br>' .
                     '<b>Fecha de vigencia:</b>' . (Helpers::formatearFecha($instalacion->fecha_vigencia)) . '<br>';
-                $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; 
+                */$nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; 
                 $nestedData['url'] = !empty($instalacion->documentos_certificados_instalaciones->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first() . '/' . implode(',', $instalacion->documentos_certificados_instalaciones->pluck('url')->toArray()) : '';
                 $nestedData['nombre_documento'] = !empty($instalacion->documentos_certificados_instalaciones->pluck('nombre_documento')->toArray()) ? implode(',', $instalacion->documentos_certificados_instalaciones->pluck('nombre_documento')->toArray()) : 'Documento sin nombre';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($instalacion->fecha_vigencia);
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
+
+/* $nestedData['certificadora'] = $instalacion->organismos->organismo ?? 'OC CIDAM';
+
+
+$nestedData['folio'] = $instalacion->folio ?? 'N/A';
+$relacionCertificado = $instalacion->dictame->certificado ?? null;
+$nestedData['folio_relacion'] = $relacionCertificado->num_certificado ?? 'N/A';
+
+// Ahora puedes usar el número de cliente en la URL
+if ($relacionCertificado) {
+    // Obtén la URL del certificado desde la tabla Documentacion_url
+$documentacion = Documentacion_url::where('id_relacion', $instalacion->id_instalacion)
+    ->where('id_documento',128)
+    ->where('id_doc', $relacionCertificado->id_certificado)
+    ->first();
+
+$nestedData['url_certificado'] = '/files/' .$numeroCliente. '/certificados_instalaciones/' . rawurlencode($documentacion->url);
+} else {
+$documentacion = Documentacion_url::where('id_relacion', $instalacion->id_instalacion)
+    ->where('id_documento',128)
+    ->where('id_doc', null)
+    ->first();
+
+$nestedData['url_certificado'] = null;
+} */
+$nestedData['certificadora'] = $instalacion->organismos->organismo ?? 'OC CIDAM';
+$folio = $instalacion->folio ?? null;
+
+$documentos = Documentacion_url::where('id_relacion', $instalacion->id_instalacion)
+    ->whereIn('id_documento', [127, 128, 129])
+    ->get()
+    ->map(function ($doc) use ($numeroCliente) {
+        return [
+            'url' => '/files/' . $numeroCliente . '/certificados_instalaciones/' . rawurlencode($doc->url),
+            'nombre' => $doc->nombre_documento,
+        ];
+    })
+    ->toArray();
+
+$nestedData['folio'] = $instalacion->folio ?? null;
+$nestedData['documentos'] = $documentos;
+
+
+
+
 
                 $data[] = $nestedData;
             }
@@ -274,7 +319,7 @@ class DomiciliosController extends Controller
     
             // Manejo de archivos si se suben
             if ($request->hasFile('url')) {
-                $directory = 'uploads/' . $numeroCliente;
+                $directory = 'uploads/' . $numeroCliente. '/certificados_instalaciones';
                 $path = storage_path('app/public/' . $directory);
                 if (!file_exists($path)) {
                     mkdir($path, 0777, true); 
@@ -386,8 +431,10 @@ class DomiciliosController extends Controller
             $documentacionUrls = Documentacion_url::where('id_relacion', $id)->get();
     
             if ($request->hasFile('edit_url')) {
+                $rutaBase = 'uploads/' . $numeroCliente . '/certificados_instalaciones';
+
                 foreach ($documentacionUrls as $documentacionUrl) {
-                    $filePath = 'uploads/' . $numeroCliente . '/' . $documentacionUrl->url;
+                    $filePath = $rutaBase . '/' . $documentacionUrl->url;
                     if (Storage::disk('public')->exists($filePath)) {
                         Storage::disk('public')->delete($filePath);
                     }
@@ -403,8 +450,8 @@ class DomiciliosController extends Controller
                     $documentoNombre = $documentoNombres[$index] ?? 'Documento sin nombre';
                     $documentoId = $documentoIds[$index] ?? null;    
                     $filename = $documentoNombre . '_' . $instalacion->id_instalacion . '_' . ($index + 1) . '.' . $file->getClientOriginalExtension();
-                    $directoryPath = 'uploads/' . $numeroCliente;
-                    $filePath = $file->storeAs($directoryPath, $filename, 'public');
+                    //$directoryPath = 'uploads/' . $numeroCliente;
+                    $filePath = $file->storeAs($rutaBase, $filename, 'public');
     
                     // Guardar la nueva entrada en la base de datos
                     Documentacion_url::create([
