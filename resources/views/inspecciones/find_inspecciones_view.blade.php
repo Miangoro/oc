@@ -736,11 +736,16 @@
 
 
     //modal resulatdos
-    function abrirModalSubirResultados(id_solicitud, num_servicio) {
+    function abrirModalSubirResultados(id_solicitud, nombre_empresa, folio, inspectorName, num_servicio  ) {
 
         $(".id_solicitud").val(id_solicitud);
         $("#nombre_documento").val('Acta de inspección ' + num_servicio);
         $(".num_servicio").text(num_servicio);
+
+        $('.nombre_empresa').text(nombre_empresa);
+        $('.folio_solicitud').html('<b class="text-primary">' + (folio) + '</b>');
+        $('.inspectorName').html(inspectorName);
+
         $('#resultadosInspeccion').modal('show');
     }
 
