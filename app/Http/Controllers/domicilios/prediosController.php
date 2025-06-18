@@ -686,7 +686,7 @@ class PrediosController extends Controller
         if (!$nombreDocumento) {
             return response()->json([
                 'success' => false,
-                'message' => 'Nombre del documento no encontrado para el ID de documento 70.',
+                'message' => 'Nombre del documento no encontrado para el ID de documento 136.',
             ], 404);
         }
 
