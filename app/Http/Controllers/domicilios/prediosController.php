@@ -204,7 +204,7 @@ class PrediosController extends Controller
                 if ($inspeccion) {
                     $documentoGeo = DB::table('documentacion_url')
                         ->where('id_relacion', $inspeccion->id_inspeccion)
-                        ->where('id_documento', 135)
+                        ->where('id_documento', 136)
                         ->first();
                 }
 
@@ -570,7 +570,7 @@ class PrediosController extends Controller
 
         $documentacion = DB::table('documentacion_url')
             ->where('id_relacion', $inspeccion->id_inspeccion)
-            ->where('id_documento', 135) // Cambiar según el tipo documento
+            ->where('id_documento', 136) // Cambiar según el tipo documento
             ->first();
 
         $numeroCliente = $inspeccion->predio->empresa->empresaNumClientes[0]->numero_cliente ?? null;
@@ -680,7 +680,7 @@ class PrediosController extends Controller
 
         // Obtener el nombre del documento donde id_documento es 70
         $nombreDocumento = DB::table('documentacion')
-            ->where('id_documento', 135)
+            ->where('id_documento', 136)
             ->value('nombre');
 
         if (!$nombreDocumento) {
@@ -715,7 +715,7 @@ class PrediosController extends Controller
           $documentacionUrl->url = $filename; // Aquí va la ruta del archivo
           $documentacionUrl->id_relacion = $inspeccion->id_inspeccion; // Asegúrate que exista esta variable
           $documentacionUrl->nombre_documento = $nombreDocumento; // Obtenido previamente (documento 135)
-          $documentacionUrl->id_documento = 135;
+          $documentacionUrl->id_documento = 136;
           $documentacionUrl->save();
       }
 
@@ -788,7 +788,7 @@ class PrediosController extends Controller
             }
 
             $nombreDocumento = DB::table('documentacion')
-                ->where('id_documento', 135)
+                ->where('id_documento', 136)
                 ->value('nombre');
 
             if (!$nombreDocumento) {
@@ -804,7 +804,7 @@ class PrediosController extends Controller
 
                 // Buscar el documento actual (si existe)
                 $documentacionUrl = Documentacion_url::where('id_relacion', $inspeccion->id_inspeccion)
-                    ->where('id_documento', 135)
+                    ->where('id_documento', 136)
                     ->first();
 
                 $directory = $empresaNumCliente;
@@ -831,7 +831,7 @@ class PrediosController extends Controller
                         'url' => $filename,
                         'id_relacion' => $inspeccion->id_inspeccion,
                         'nombre_documento' => $nombreDocumento,
-                        'id_documento' => 135,
+                        'id_documento' => 136,
                     ]);
                 }
             }

@@ -14,7 +14,7 @@
                        <input type="hidden" id="inspeccion_id_empresa" name="id_empresa">
                        {{--  --}}
                        <!-- Datos del Predio -->
-                       
+
                            <h6 class="mb-4">Datos del Predio</h6>
                            <div class="row">
                                <div class="col-md-4">
@@ -83,7 +83,7 @@
                                    <div class="col-md-12">
                                        <div class="form-floating form-floating-outline mb-4">
                                            <input type="file" class="form-control" id="documentoGeo"
-                                               name="inspeccion_geo_Doc" value="135">
+                                               name="inspeccion_geo_Doc" value="136">
                                            <label for="inspeccion_geo_Doc">Subir Inspección Geo-referenciación</label>
                                        </div>
                                    </div>
