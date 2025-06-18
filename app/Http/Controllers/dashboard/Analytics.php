@@ -11,6 +11,7 @@ use App\Models\Dictamen_Exportacion;
 use App\Models\Dictamen_Granel;
 use App\Models\Dictamen_instalaciones;
 use App\Models\inspecciones;
+use App\Models\LotesGranel;
 use App\Models\solicitudesModel;
 use App\Models\solicitudTipo;
 use Carbon\Carbon;
@@ -62,6 +63,9 @@ class Analytics extends Controller
     $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
     $dictamenesExportacionSinCertificado  = Dictamen_Exportacion::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
 
+    $lotesSinFq = LotesGranel::whereDoesntHave('fqs')->get();
+
+    $certificadoGranelSinEscaneado = CertificadosGranel::whereDoesntHave('certificadoEscaneado')->get();
     
 
 
@@ -86,7 +90,7 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
 })->sortByDesc('total_inspecciones'); 
 
 
-    return view('content.dashboard.dashboards-analytics', compact('inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+    return view('content.dashboard.dashboards-analytics', compact('certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)
