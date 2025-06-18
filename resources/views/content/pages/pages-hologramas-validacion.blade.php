@@ -43,10 +43,7 @@
 
                     @if($ya_activado == true)
                     <div id="trazabilidad" class="panel-heading">Trazabilidad</div>
-<<<<<<< HEAD
-=======
                    
->>>>>>> 895f03a777a42a8aec5677c609f3b7e6165253b2
 
                     <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;" class="alert">
                         <strong>FOLIO DE HOLOGRAMA: {{ $folio }}</strong>
@@ -127,21 +124,12 @@
                             </tr>
                         </tbody>
                     </table>
-<<<<<<< HEAD
-                    
-                    <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;"class="alert">
-=======
                    <!-- <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;"class="alert">
->>>>>>> 895f03a777a42a8aec5677c609f3b7e6165253b2
                         <strong>CERTIFICADO
                             VENTA
                             NACIONAL Y/O EXPORTACIÓN: <br>
                             CIDAM C-EXP-497/2024</strong>
-<<<<<<< HEAD
-                    </div>
-=======
                     </div>-->
->>>>>>> 895f03a777a42a8aec5677c609f3b7e6165253b2
                     @else
                     <div class="alert alert-danger text-center fw-bold fs-4">
                         HOLOGRAMA NO ACTIVADO
@@ -178,11 +166,7 @@
                <div class="row">
                     <div class="col-sm-12" style="text-align: center"></div>
                 </div>
-<<<<<<< HEAD
-                <!-- <div class="row">
-=======
                 <!--<div class="row">
->>>>>>> 895f03a777a42a8aec5677c609f3b7e6165253b2
                     <div class="col-sm-12 contenedor-imagenes">
                         <img src="{{ asset('assets/img/illustrations/holograma_cidam.png') }}"
                             alt="Holograma de organismo certificador de cidam" id="holograma" class="imagen-holograma" />

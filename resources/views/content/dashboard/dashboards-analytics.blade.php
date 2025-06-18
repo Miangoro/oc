@@ -188,16 +188,7 @@
                                 <h4 class="mb-0">{{ $lotesSinFq->count() }}</h4>
                             </div>
                             <h6 class="mb-0 fw-normal">Lotes pendientes de subir FQ</h6>
-                            <hr>
-                            <div class="d-flex align-items-center mb-2 cursor-pointer"
-                        data-bs-toggle="modal" data-bs-target="#modalSolicitudesSinActa">  
-                                <div class="avatar me-4">
-                                    <span class="avatar-initial rounded-3 bg-label-warning"><i
-                                            class="ri-file-list-fill ri-24px"></i></span>
-                                </div>
-                                <h4 class="mb-0">{{ $certificadoGranelSinEscaneado->count() }}</h4>
-                            </div>
-                            <h6 class="mb-0 fw-normal">Certificados pendientes de subir escaneado</h6>
+                            
                         </div>
                     </div>
                 </div>
@@ -289,6 +280,16 @@
                                 </h5>
                             </div>
                             <h6 class="mb-0 fw-normal">Certificados por vencer</h6>
+                            <hr>
+                            <div class="d-flex align-items-center mb-2 cursor-pointer"
+                        data-bs-toggle="modal" data-bs-target="#modalSolicitudesSinActa">  
+                                <div class="avatar me-4">
+                                    <span class="avatar-initial rounded-3 bg-label-warning"><i
+                                            class="ri-file-list-fill ri-24px"></i></span>
+                                </div>
+                                <h4 class="mb-0">{{ $certificadoGranelSinEscaneado->count() }}</h4>
+                            </div>
+                            <h6 class="mb-0 fw-normal">Certificados pendientes de subir escaneado</h6>
                             <p class="mb-0">
                                 <!--<span class="me-1 fw-medium">-2.5%</span>
                                     <small class="text-muted">than last week</small>-->
