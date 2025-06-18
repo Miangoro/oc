@@ -196,13 +196,13 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <input type="file" id="edit_certificado_lote" name="url[]"
+                                    <input type="file" id="edit_certificado_lote" name="documentos[0][url]"
                                         class="form-control" />
                                     <label for="edit_certificado_lote">Adjuntar certificado de lote a granel</label>
-                                    <input value="59" class="form-control" type="hidden" name="id_documento[]">
+                                    <input value="59" class="form-control" type="hidden" name="documentos[0][id_documento]">
                                     <!-- ID del documento -->
                                     <input value="Certificado de lote a granel" class="form-control" type="hidden"
-                                        name="nombre_documento[]"> <!-- Nombre del documento -->
+                                        name="documentos[0][nombre_documento]"> <!-- Nombre del documento -->
                                 </div>
                                 <div id="archivo_url_display_otro_organismo" class="mb-4"></div>
                             </div>
@@ -277,11 +277,11 @@
                                         </td>
                                         <td>
                                             <input class="form-control form-control-sm" type="file"
-                                                id="file_completo_{{ $documento->id_documento }}" name="url[]">
+                                                id="file_completo_{{ $documento->id_documento }}" name="documentos[1][url]">
                                             <input value="{{ $documento->id_documento }}" class="form-control"
-                                                type="hidden" name="id_documento[]">
+                                                type="hidden" name="documentos[1][id_documento]">
                                             <input value="{{ $documento->nombre }}" class="form-control"
-                                                type="hidden" name="nombre_documento[]">
+                                                type="hidden" name="documentos[1][nombre_documento]">
                                         </td>
                                     </tr>
                                     <tr>
@@ -308,11 +308,11 @@
                                         </td>
                                         <td>
                                             <input class="form-control form-control-sm" type="file"
-                                                id="file_ajuste_134" name="url[]">
+                                                id="file_ajuste_134" name="documentos[2][url]">
                                             <input value="134" class="form-control" type="hidden"
-                                                name="id_documento[]">
+                                                name="documentos[2][id_documento]">
                                             <input value="Fisicoquímicos de ajuste de grado" class="form-control"
-                                                type="hidden" name="nombre_documento[]">
+                                                type="hidden" name="documentos[2][nombre_documento]">
                                         </td>
                                     </tr>
                                     <tr>

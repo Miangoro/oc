@@ -774,6 +774,94 @@ if ($request->has('documentos')) {
           $lote->update($updateData);
 
 
+
+      // Obtener el número de cliente
+      $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
+      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+
+ if ($request->has('documentos')) {
+    foreach ($request->documentos as $index => $documento) {
+        if (
+            isset($documento['url']) &&
+            $documento['url'] instanceof \Illuminate\Http\UploadedFile &&
+            $documento['url']->isValid()
+        ) {
+            $file = $documento['url'];
+            $idDoc = (int) $documento['id_documento'];
+            $nombreDocumento = $documento['nombre_documento'] ?? null;
+
+            // Eliminar archivo anterior
+            $documentacionUrl = Documentacion_url::where('id_relacion', $lote->id_lote_granel)
+                ->where('id_documento', $idDoc)
+                ->first();
+
+            if ($documentacionUrl) {
+                $carpeta = ($idDoc === 59) ? 'certificados_granel' : 'fqs';
+                $filePath = "uploads/{$numeroCliente}/{$carpeta}/{$documentacionUrl->url}";
+                if (Storage::disk('public')->exists($filePath)) {
+                    Storage::disk('public')->delete($filePath);
+                }
+                $documentacionUrl->delete();
+            }
+
+            // Guardar nuevo archivo
+            $carpeta = match($idDoc) {
+                58, 134 => 'fqs',
+                59 => 'certificados_granel',
+                default => 'otros',
+            };
+
+            $nombre_base = match($idDoc) {
+                58 => 'Análisis fisicoquímicos',
+                134 => 'Fisicoquímicos de ajuste de grado',
+                59 => 'Certificado de lote a granel',
+                default => $nombreDocumento ?? 'Desconocido',
+            };
+
+            $prefix = match($idDoc) {
+                58 => 'analisis_fisicoquimicos',
+                134 => 'fisicoquimicos_ajuste_grado',
+                59 => 'certificado_granel',
+                default => 'documento',
+            };
+
+            $filename = $prefix . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+            try {
+                $filePath = $file->storeAs("uploads/{$numeroCliente}/{$carpeta}", $filename, 'public');
+                Log::info('Archivo guardado', ['file' => $filename]);
+            } catch (\Exception $e) {
+                Log::error('Error al guardar archivo', ['error' => $e->getMessage()]);
+                continue;
+            }
+
+            $doc = new Documentacion_url();
+            $doc->id_relacion = $lote->id_lote_granel;
+            $doc->id_documento = $idDoc;
+            $doc->nombre_documento = $nombre_base;
+            $doc->url = $filename;
+            $doc->id_empresa = $lote->id_empresa;
+            $doc->save();
+        }
+    }
+}
+
+
+      // Actualizar el campo folio_fq
+            $folio_fq_Completo = $validated['folio_fq_completo'] ?? '';
+            $folio_fq_ajuste = $validated['folio_fq_ajuste'] ?? '';
+
+            if (!empty($folio_fq_Completo) || !empty($folio_fq_ajuste)) {
+                $fqFinal = trim($folio_fq_Completo);
+                if (!empty($folio_fq_ajuste)) {
+                    $fqFinal .= ',' . trim($folio_fq_ajuste);
+                }
+                $lote->folio_fq = substr($fqFinal, 0, 50);
+            }
+      $lote->save();
+
         // Actualizar lotes relacionados solo si hay datos de 'edit_lotes' y 'edit_volumenes'
         if ($request->has('edit_lotes') && $request->has('edit_volumenes')) {
           $nuevosLotes = [];
@@ -829,105 +917,6 @@ if ($request->has('documentos')) {
           ]);
           $lote->save();
       }
-
-      // Obtener el número de cliente
-      $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
-      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
-        return !empty($numero);
-    });
-
-      // Solo eliminar archivos antiguos y guardar nuevos si se han enviado nuevos archivos
-      if ($request->hasFile('url')) {
-
-          // Eliminar archivos antiguos
-        foreach ($request->file('url') as $index => $file) {
-            if (isset($request->id_documento[$index])) {
-                $idDoc = (int) $request->id_documento[$index];
-
-                // Buscar documento existente solo para este id_documento y id_relacion
-                $documentacionUrl = Documentacion_url::where('id_relacion', $id_lote_granel)
-                    ->where('id_documento', $idDoc)
-                    ->first();
-
-                if ($documentacionUrl) {
-                    // Definir carpeta correcta según id_documento
-                    $carpeta = ($idDoc === 59) ? 'certificados_granel' : 'fqs';
-
-                    $filePath = 'uploads/' . $numeroCliente . '/' . $carpeta . '/' . $documentacionUrl->url;
-
-                    if (Storage::disk('public')->exists($filePath)) {
-                        Storage::disk('public')->delete($filePath);
-                    }
-
-                    $documentacionUrl->delete();
-                }
-            }
-        }
-
-
-
-
-//almacenar nuevos documentos
-    foreach ($request->file('url') as $index => $file) {
-        if (isset($request->id_documento[$index])) {
-          $idDoc = (int) $request->id_documento[$index]; // 👈 conversión segura
-            $folio_fq = '';
-
-            $carpeta = 'fqs';
-
-            $prefix = match($idDoc) {
-                58 => 'analisis_fisicoquimicos',
-                134 => 'fisicoquimicos_ajuste_grado',
-                59 => 'certificado_granel',
-                default => 'documento',
-            };
-
-            $nombre_base = match($idDoc) {
-                58 => 'Análisis fisicoquímicos',
-                134 => 'Fisicoquímicos de ajuste de grado',
-                59 => 'Certificado de lote a granel',
-                default => 'Desconocido',
-            };
-            if ($idDoc === 59) {
-                $carpeta = 'certificados_granel'; // ✅ sin slash
-            }
-
-
-            $filename = $prefix . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-            try {
-               $filePath = $file->storeAs("uploads/{$numeroCliente}/{$carpeta}", $filename, 'public');
-                Log::info('Archivo guardado:', ['path' => $filePath, 'filename' => $filename]);
-            } catch (\Exception $e) {
-                Log::error('Error al guardar el archivo:', ['error' => $e->getMessage()]);
-                continue; // No guardar en la base si falla el archivo
-            }
-
-            $documentacion_url = new Documentacion_url();
-            $documentacion_url->id_relacion = $lote->id_lote_granel;
-            $documentacion_url->id_documento = $idDoc;
-            $documentacion_url->nombre_documento = $nombre_base;
-            $documentacion_url->url = $filename;
-            $documentacion_url->id_empresa = $lote->id_empresa;
-
-            $documentacion_url->save();
-        }
-    }
-      }
-
-      // Actualizar el campo folio_fq
-            $folio_fq_Completo = $validated['folio_fq_completo'] ?? '';
-            $folio_fq_ajuste = $validated['folio_fq_ajuste'] ?? '';
-
-            if (!empty($folio_fq_Completo) || !empty($folio_fq_ajuste)) {
-                $fqFinal = trim($folio_fq_Completo);
-                if (!empty($folio_fq_ajuste)) {
-                    $fqFinal .= ',' . trim($folio_fq_ajuste);
-                }
-                $lote->folio_fq = substr($fqFinal, 0, 50);
-            }
-      $lote->save();
-
 
             // Almacenar las guías en la tabla intermedia usando el modelo LotesGranelGuia
             LotesGranelGuia::where('id_lote_granel', $id_lote_granel)->delete();
