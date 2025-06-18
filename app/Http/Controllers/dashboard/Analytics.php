@@ -64,6 +64,8 @@ class Analytics extends Controller
     $dictamenesExportacionSinCertificado  = Dictamen_Exportacion::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
 
     $lotesSinFq = LotesGranel::whereDoesntHave('fqs')->get();
+
+    $certificadoGranelSinEscaneado = LotesGranel::whereDoesntHave('certificadoEscaneado')->get();
     
 
 
@@ -88,7 +90,7 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
 })->sortByDesc('total_inspecciones'); 
 
 
-    return view('content.dashboard.dashboards-analytics', compact('lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+    return view('content.dashboard.dashboards-analytics', compact('certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)
