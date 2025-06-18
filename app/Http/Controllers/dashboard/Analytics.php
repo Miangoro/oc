@@ -65,7 +65,7 @@ class Analytics extends Controller
 
     $lotesSinFq = LotesGranel::whereDoesntHave('fqs')->get();
 
-    $certificadoGranelSinEscaneado = LotesGranel::whereDoesntHave('certificadoEscaneado')->get();
+    $certificadoGranelSinEscaneado = CertificadosGranel::whereDoesntHave('certificadoEscaneado')->get();
     
 
 

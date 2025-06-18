@@ -58,4 +58,10 @@ class CertificadosGranel extends Model
         }
         return null;
     }
+
+        public function certificadoEscaneado()
+    {
+        return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_lote_granel')->where('id_documento', 59);
+    }
+
 }
