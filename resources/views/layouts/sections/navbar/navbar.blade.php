@@ -171,6 +171,13 @@ $navbarDetached = ($navbarDetached ?? '');
                     <a href="{{url('solicitudes-historial')}}" class="stretched-link">Solicitudes</a>
                     <small class="mb-0">Solicitudes de servicios</small>
                   </div>
+                  <div class="dropdown-shortcuts-item col">
+                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
+                      <i class="ri-arrow-down-circle-fill ri-26px text-heading"></i>
+                    </span>
+                    <a target="_Blank" href="https://www.ilovepdf.com/es/comprimir_pdf" class="stretched-link">Bajar peso</a>
+                    <small class="mb-0">Bajar el peso a pdfs</small>
+                  </div>
                 </div>
               </div>
             </div>
