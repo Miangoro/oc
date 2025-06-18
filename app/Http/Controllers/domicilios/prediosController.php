@@ -174,6 +174,7 @@ class PrediosController extends Controller
             foreach ($predios as $predio) {
 
               $hasSolicitud = $predio->solicitudes()->exists();
+              $solicitud = $predio->solicitudes()->first();
 
                 $nestedData['id_predio'] = $predio->id_predio;
                 $nestedData['fake_id'] = ++$ids;
@@ -195,7 +196,7 @@ class PrediosController extends Controller
                 $nestedData['hasSolicitud'] = $hasSolicitud;
                 $nestedData['id_solicitud'] = $predio->solicitudes()->first()->id_solicitud ?? null;
                 $nestedData['folio_solicitud'] = $predio->solicitudes()->first()->folio ?? null;
-
+                $nestedData['num_servicio'] = $solicitud?->inspeccion?->num_servicio ?? 'Sin asignar';
                 $inspeccion = DB::table('predios_inspeccion')
                     ->where('id_predio', $predio->id_predio)
                     ->first();
