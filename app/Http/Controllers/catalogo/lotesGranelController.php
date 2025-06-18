@@ -873,7 +873,8 @@ if ($request->has('documentos')) {
 
               $loteRelacionado = LotesGranel::find($idLote);
 
-              if ($volumenParcial && $loteRelacionado) {
+              if (!is_null($volumenParcial) && $loteRelacionado)
+ {
                   $keyAnterior = array_search($idLote, $lotesPrevios);
 
                   // Restaurar el volumen previo si estaba en el JSON anterior
@@ -897,6 +898,11 @@ if ($request->has('documentos')) {
                   $nuevosLotes[] = $idLote;
                   $nuevosVolumenes[] = $volumenParcial;
               } else {
+                  dd([
+                      'id_lote' => $idLote,
+                      'volumenParcial' => $volumenParcial,
+                      'loteRelacionado' => $loteRelacionado
+                  ]);
                   return response()->json(['success' => false, 'message' => 'Error al actualizar el lote relacionado']);
               }
           }
