@@ -61,7 +61,7 @@ class CertificadosGranel extends Model
 
         public function certificadoEscaneado()
     {
-        return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_certificado')->where('id_documento', 59);
+        return $this->hasMany(Documentacion_url::class, 'id_doc', 'id_certificado')->where('id_documento', 59);
     }
 
 }
