@@ -27,9 +27,9 @@ $(function () {
 
       { data: '' },
       { data: 'folio' },
-       {
+      {
         data: 'num_servicio',
-        render: function(data, type, row) {
+        render: function (data, type, row) {
           if (!data || data.toLowerCase().includes('sin asignar')) {
             // No hay número, o es "sin asignar", entonces mostrar badge
             return `<p class="badge bg-danger">Sin asignar</p>`;
@@ -110,27 +110,27 @@ $(function () {
           return '';
         }
       },
-     /*   {
-        searchable: false,
-        orderable: true,
-        targets: 1,
-        render: function (data, type, full, meta) {
-          return `<span>${full.fake_id}</span>`;
-        }
-      },
-           {
+      /*   {
+         searchable: false,
+         orderable: true,
+         targets: 1,
+         render: function (data, type, full, meta) {
+           return `<span>${full.fake_id}</span>`;
+         }
+       },
+            {
 
-        targets: 11,
-        className: 'text-center',
-        render: function (data, type, full, meta) {
+         targets: 11,
+         className: 'text-center',
+         render: function (data, type, full, meta) {
 
-          if (full['id_inspeccion'] && full['razon_social'].trim() !== '') {
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_inspeccion']}" data-registro="${full['razon_social']}"></i>`;
-        } else {
-            return '---';
-        }
-        }
-      },*/
+           if (full['id_inspeccion'] && full['razon_social'].trim() !== '') {
+             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_inspeccion']}" data-registro="${full['razon_social']}"></i>`;
+         } else {
+             return '---';
+         }
+         }
+       },*/
 
       {
         targets: 9,
@@ -192,7 +192,7 @@ $(function () {
             '<div class="dropdown-menu dropdown-menu-end m-0">' +
 
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Trazabilidad</a>` +
-                          // Botón de Validar Solicitud
+            // Botón de Validar Solicitud
             `<a
               data-id="${full['id']}"
               data-id-solicitud="${full['id_solicitud']}"
@@ -208,8 +208,8 @@ $(function () {
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${full['razon_social']}', '${full['folio_info']}','${full['inspectorName']}','${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['id_inspeccion']}', '${full['tipo']}', '${full['razon_social']}', '${full['id_tipo']}','${full['folio_info']}', '${full['num_servicio_info']}','${full['inspectorName']}')" href="javascript:;" class="dropdown-item"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
 
-          //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['tipo_instalacion']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
-          //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="editModalActaProduccion('${full['id_acta']}')" href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px textStatus"></i>Editar Acta</a>` +
+            //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['tipo_instalacion']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
+            //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="editModalActaProduccion('${full['id_acta']}')" href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px textStatus"></i>Editar Acta</a>` +
 
 
             '</div>' +
@@ -363,8 +363,18 @@ $(function () {
             }
           }
         ]
+      },
+      {
+        text: '<i class="ri-file-excel-2-fill ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
+        className: 'btn btn-info waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4  mt-md-0',
+        attr: {
+          'data-bs-toggle': 'modal',
+          'data-bs-dismiss': 'modal',
+          'data-bs-target': '#exportarExcel'
+        }
       }
     ],
+
     // For responsive popup
     responsive: {
       details: {
@@ -445,7 +455,7 @@ $(function () {
           type: 'DELETE',
           url: `${baseUrl}instalaciones/${id_instalacion}`, // Ajusta la URL aquí
           success: function () {
-            dt_instalaciones_table.ajax.reload(null,false);
+            dt_instalaciones_table.ajax.reload(null, false);
 
             // Mostrar mensaje de éxito
             Swal.fire({
@@ -478,6 +488,101 @@ $(function () {
       }
     });
   });
+
+    $(document).ready(function () {
+    $('#reporteForm').on('submit', function (e) {
+      e.preventDefault(); // Prevenir el envío tradicional del formulario
+      const exportUrl = $(this).attr('action'); // Obtener la URL del formulario
+      // Obtener los datos del formulario (filtros)
+      const formData = $(this).serialize(); // serializa los datos del formulario en una cadena de consulta
+      // Mostrar el SweetAlert de "Generando Reporte"
+      Swal.fire({
+        title: 'Generando Reporte...',
+        text: 'Por favor espera mientras se genera el reporte.',
+        icon: 'info',
+        didOpen: () => {
+          Swal.showLoading(); // Muestra el icono de carga
+        },
+        customClass: {
+          confirmButton: false
+        }
+      });
+      // Realizar la solicitud GET para descargar el archivo
+      $.ajax({
+        url: exportUrl,
+        type: 'GET',
+        data: formData,
+        xhrFields: {
+          responseType: 'blob' // Necesario para manejar la descarga de archivos
+        },
+        success: function (response) {
+          // Crear un enlace para descargar el archivo
+          const link = document.createElement('a');
+          const url = window.URL.createObjectURL(response);
+          link.href = url;
+          link.download = 'reporte_solicitudes.xlsx';
+          link.click();
+          window.URL.revokeObjectURL(url);
+          $('#exportarExcel').modal('hide');
+          Swal.fire({
+            title: '¡Éxito!',
+            text: 'El reporte se generó exitosamente.',
+            icon: 'success',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error('Error al generar el reporte:', error);
+          $('#exportarExcel').modal('hide');
+          Swal.fire({
+            title: '¡Error!',
+            text: 'Ocurrió un error al generar el reporte.',
+            icon: 'error',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+  });
+  //funcion para exportar en excel
+  $(document).ready(function () {
+    $('#restablecerFiltros').on('click', function () {
+      $('#reporteForm')[0].reset();
+      $('.select2').val('').trigger('change');
+      console.log('Filtros restablecidos.');
+    });
+  });
+
+  $(document).ready(function () {
+    $('#id_soli').on('change', function () {
+      var selectedValues = $(this).val(); // Obtener los valores seleccionados
+
+      if (selectedValues && selectedValues.includes('')) {
+        // Si "Todas" es seleccionado
+        $('#id_soli option').each(function () {
+          if ($(this).val() !== '') {
+            $(this).prop('selected', false); // Deseleccionar otras opciones
+            $(this).prop('disabled', true); // Deshabilitar otras opciones
+          }
+        });
+      } else {
+        // Si seleccionas cualquier otra opción
+        if (selectedValues && selectedValues.length > 0) {
+          $('#id_soli option[value=""]').prop('disabled', true); // Deshabilitar "Todas"
+        } else {
+          // Si no hay opciones seleccionadas, habilitar todas
+          $('#id_soli option').each(function () {
+            $(this).prop('disabled', false); // Habilitar todas las opciones
+          });
+        }
+      }
+    });
+  });
+
 
 
   $(function () {
@@ -532,7 +637,7 @@ $(function () {
           $('#asignarInspector').modal('hide');
           $('#addAsignarInspector')[0].reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-users').DataTable().ajax.reload(null,false);
+          $('.datatables-users').DataTable().ajax.reload(null, false);
           console.log(response);
 
           Swal.fire({
@@ -593,7 +698,7 @@ $(function () {
         }
 
       }).on('core.form.valid', function (e) {
-          $('#btnSubirInsp').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Subiendo...');
+        $('#btnSubirInsp').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Subiendo...');
         // Validar el formulario
         var formData = new FormData(form);
 
@@ -606,7 +711,7 @@ $(function () {
           success: function (response) {
             $('#resultadosInspeccion').modal('hide');
             $('#addResultadosInspeccion')[0].reset();
-            $('.datatables-users').DataTable().ajax.reload(null,false);
+            $('.datatables-users').DataTable().ajax.reload(null, false);
             console.log(response);
 
             Swal.fire({
@@ -617,7 +722,7 @@ $(function () {
                 confirmButton: 'btn btn-success'
               }
             });
-              $('#btnSubirInsp').prop('disabled', false).html('<i class="ri-upload-2-fill"></i> Subir');
+            $('#btnSubirInsp').prop('disabled', false).html('<i class="ri-upload-2-fill"></i> Subir');
           },
           error: function (xhr) {
             console.log('Error:', xhr.responseText);
@@ -783,7 +888,7 @@ $(function () {
           xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
         },
         success: function (response) {
-          dt_instalaciones_table.ajax.reload(null,false);
+          dt_instalaciones_table.ajax.reload(null, false);
           $('#modalEditInstalacion').modal('hide');
           $('#editInstalacionForm')[0].reset();
           $('.select2').val(null).trigger('change');
@@ -1036,7 +1141,7 @@ $(function () {
           xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
         },
         success: function (response) {
-          dt_instalaciones_table.ajax.reload(null,false);
+          dt_instalaciones_table.ajax.reload(null, false);
           $('#modalEditInstalacion').modal('hide');
 
           Swal.fire({
@@ -1085,18 +1190,18 @@ $(function () {
     iframe.hide();
 
     //Cargar el PDF con el ID
-      iframe.attr('src', id_inspeccion);
+    iframe.attr('src', id_inspeccion);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-      $("#NewPestana").attr('href', id_inspeccion).show();
+    $("#NewPestana").attr('href', id_inspeccion).show();
 
-      $("#titulo_modal").text("Acta de inspección");
-      $("#subtitulo_modal").text(registro);
+    $("#titulo_modal").text("Acta de inspección");
+    $("#subtitulo_modal").text(registro);
 
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-      iframe.on('load', function () {
-        spinner.hide();
-        iframe.show();
-      });
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
   });
   //Añadir row
 
