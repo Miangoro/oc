@@ -124,8 +124,8 @@ $(function () {
                         ${full['folio_solicitud']}
                       </a>`;
             } else {
-              return `<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"
-                        data-bs-placement="right" title="Necesita hacer la solicitud"></i>`;
+              return `<span class="text-muted"
+                        data-bs-placement="right" title="Necesita hacer la solicitud">Sin asignar</span>`;
             }
           }
         },
@@ -155,14 +155,22 @@ $(function () {
           render: function (data, type, full, meta) {
             const estatusValido = full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente';
             const tieneDoc = full['url_documento_geo'];
+            const numServicio = full['num_servicio'] || 'Sin asignar';
+
+            // Escapar por seguridad, por si algún num_servicio trae comillas o símbolos
+            const escapeHtml = (text) => $('<div>').text(text).html();
+            const numServicioHtml = `<p class="mb-1">${escapeHtml(numServicio)}</p>`;
 
             if (estatusValido && tieneDoc) {
-              return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"
-                          data-id="${full['id_predio']}"
-                          data-registro="${full['id_empresa']}"
-                          data-url="${tieneDoc}"></i>`;
+              return `
+                <a class="text-primary text-danger pdf2 cursor-pointer"
+                  data-id="${full['id_predio']}"
+                  data-registro="${full['id_empresa']}"
+                  data-url="${tieneDoc}">
+                  ${full['num_servicio'] || 'Sin Asignar'}
+                </a>`;
             } else {
-              return '<i class="ri-file-pdf-2-fill ri-40px text-muted icon-no-pdf"></i>';
+              return '<span class="text-muted">Sin asignar</span>';
             }
           }
         },

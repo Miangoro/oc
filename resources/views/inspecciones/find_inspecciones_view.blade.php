@@ -164,6 +164,7 @@
         @include('_partials._modals.modal-add-asignar-inspector')
         @include('_partials._modals.modal-trazabilidad')
         @include('_partials._modals.modal-add-resultados-inspeccion')
+        @include('_partials._modals.modal-export-excel-inspecciones')
 
 
 

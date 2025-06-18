@@ -20,6 +20,7 @@ use App\Models\actas_unidad_envasado;
 use App\Models\Predios;
 use App\Models\tipos;
 use App\Models\equipos;
+use App\Models\solicitudTipo;
 
 use App\Models\Organismos;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -32,12 +33,17 @@ use App\Models\User;
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
+/* clases de exportacion */
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SolicitudesExport;
+use App\Exports\InspeccionesExport;
 
 
 class inspeccionesController extends Controller
 {
     public function UserManagement()
     {
+        $solicitudesTipos = solicitudTipo::all();
         $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
         $Predios = Predios::all(); // Obtener todas las instalaciones
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
@@ -51,7 +57,7 @@ class inspeccionesController extends Controller
 
 
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
-        return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos', 'equipos','todasSolicitudes'));
+        return view('inspecciones.find_inspecciones_view', compact('solicitudesTipos','instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos', 'equipos','todasSolicitudes'));
     }
 
     public function index(Request $request)
@@ -663,5 +669,12 @@ class inspeccionesController extends Controller
 
         $pdf = Pdf::loadView('pdfs.Etiquetas_tapas_sellado',  ['datos' => $datos]);
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
+    }
+
+        public function exportar(Request $request)
+    {
+        $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes', 'id_soli']);
+        // Pasar los filtros a la clase InspeccionesExport
+        return Excel::download(new InspeccionesExport($filtros), 'reporte_inspecciones.xlsx');
     }
 }
