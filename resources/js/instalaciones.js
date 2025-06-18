@@ -176,8 +176,48 @@ $(function () {
       {
         targets: 7,
         render: function (data, type, full, meta) {
-          var $folio = full['folio'] ?? 'N/A';
-          return '<span class="user-email">' + $folio + '</span>';
+          //var $folio = full['folio'] ?? 'N/A';
+          //return '<span class="user-email">' + $folio + '</span>';
+          
+/* if (folio !== 'N/A') {//si hay folio
+    certificado=   `<u><a href="${$numeroCliente}/certificados_instalaciones/${url}" target="_blank"> </a></u>` ;
+  (relacionCertificado ?//si hay folio del certificado subido
+        certificado= `<u><a href="${$numeroCliente}/certificados_instalaciones/${url}" target="_blank" class="text-decoration-underline waves-effect text-primary"> </a></u>`
+      :  certificado= folio) +//solo folio
+} else {
+  certificado=  `<span class="badge rounded-pill bg-danger">Sin certificado</span>`;
+
+}
+
+return `<span><b>Certificadora: </b>${full['certificadora']} <br>
+        <b>Número de certificado: </b>${certificado} <br>
+          <b>Fecha de emisión: </b>${full['fecha_emision']} <br>
+          <b>Fecha de vigencia: </b>${full['fecha_vigencia']} <br>
+  </span>`; */
+const folio = full['folio'];
+const documentos = Array.isArray(full['documentos']) ? full['documentos'] : [];
+
+let certificado = '';
+
+if (!folio) {
+    certificado = `<span class="badge rounded-pill bg-danger">Sin certificado</span>`;
+} else if (documentos.length > 0) {
+    certificado = documentos
+        .filter(doc => doc.url && doc.nombre)
+        .map(doc => `<a href="${doc.url}" target="_blank" class="text-primary text-decoration-underline fw-bold">${doc.nombre}</a>`)
+        .join(', ');
+} else {
+    certificado = `${folio}`;
+}
+
+return `<span class="small">
+    <b>Certificadora: </b>${full['certificadora']} <br>
+    <b>Certificado: </b>${certificado} <br>
+    <b>Fecha de emisión: </b>${full['fecha_emision'] ?? 'N/A'} <br>
+    <b>Fecha de vigencia: </b>${full['fecha_vigencia'] ?? 'N/A'} <br>
+</span>`;
+
+
         }
       },
     /*  {
@@ -896,15 +936,31 @@ $(document).ready(function () {
           $('#edit_id_organismo').val(instalacionData.id_organismo || '').trigger('change');
           $('#edit_fecha_emision').val(instalacionData.fecha_emision || '');
           $('#edit_fecha_vigencia').val(instalacionData.fecha_vigencia || '');
-          
-          if (instalacionData.archivoUrl) {
+        
+          /*if (instalacionData.archivoUrl) {
               $('#archivo_url_display').html(`
                   <p>Archivo existente: <a href="../files/${instalacionData.numeroCliente}/${instalacionData.archivoUrl}" target="_blank">${instalacionData.archivoUrl}</a></p>`);
               archivo = true; // Si existe un archivo, asignamos true
           } else {
               $('#archivo_url_display').html('No hay archivo disponible.');
               archivo = false; // Si no existe archivo, asignamos false
-          }
+          }*/
+
+if (instalacionData.archivoUrl && Array.isArray(instalacionData.archivoUrl)) {
+    const enlaces = instalacionData.archivoUrl.map(function (url) {
+        return `<a href="../files/${instalacionData.numeroCliente}/${url}" target="_blank">${url}</a>`;
+    });
+    $('#archivo_url_display').html(`Archivo existente: ${enlaces.join(', ')}`);
+    archivo = true;
+} else if (instalacionData.archivoUrl) {
+    // Caso en que sea solo un string
+    $('#archivo_url_display').html(`
+        Archivo existente: <a href="../files/${instalacionData.numeroCliente}/${instalacionData.archivoUrl}" target="_blank">${instalacionData.archivoUrl}</a>`);
+    archivo = true;
+} else {
+    $('#archivo_url_display').html('No hay archivo disponible.');
+    archivo = false;
+}
 
           // Deshabilitar o habilitar la validación del archivo según la existencia del archivo
           if (archivo) {

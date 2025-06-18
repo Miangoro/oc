@@ -1533,7 +1533,7 @@ $(document).on('click', '.trazabilidad', function () {
   var id_certificado = $(this).data('id');
   $('.num_certificado').text($(this).data('folio'));
 
-
+  
   var url = '/trazabilidad-certificados/' + id_certificado;//ruta de la informacion/controller trazabilidad
 
   // Hacer la solicitud AJAX para obtener los logs
@@ -1715,7 +1715,7 @@ $(document).on('click', '.documentos', function () {
     var id_certificado = $(this).data('id');
     $(".titulo").html('Documentación relacionada al certificado <span class="badge bg-info">' +$(this).data('folio')+ '</span>');
     var url = '/documentos/' + id_certificado;
-    const noDisponibleImg = `<a href="/img_pdf/FaltaPDF.png"> 
+    const noDisponibleImg = `<a href="/img_pdf/FaltaPDF.png" target="_blank"> 
           <img src="/img_pdf/FaltaPDF.png" height="40" width="40" alt="FaltaPDF"> </a>`;
 
     $.get(url, function (data) {

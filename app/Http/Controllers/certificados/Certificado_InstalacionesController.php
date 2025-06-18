@@ -318,6 +318,13 @@ public function index(Request $request)
             'id_firmante' => 'required|integer',
         ]);
 
+        //Busca el dictamen y carga la relacion con modelo dictamen->solicitud
+        $dictamen = Dictamen_instalaciones::find($validatedData['id_dictamen']);
+        $id_instalacion = $dictamen->inspeccione->solicitud->instalaciones->id_instalacion ?? null;
+        if (!$id_instalacion) {
+            return response()->json(['error' => 'No se encontró la instalacion asociada a la solicitud'], 404);
+        }
+
         //$certificado =
         Certificados::create([
             'id_dictamen' => $validatedData['id_dictamen'],
@@ -328,6 +335,13 @@ public function index(Request $request)
             //'num_autorizacion' => $validatedData['num_autorizacion'] ?: null,
             'id_firmante' => $validatedData['id_firmante']
         ]);
+
+        $instalacion = instalaciones::find($id_instalacion);
+        $instalacion->folio = $validatedData['num_certificado'];
+        $instalacion->fecha_emision = $validatedData['fecha_emision'];
+        $instalacion->fecha_vigencia = $validatedData['fecha_vigencia'];
+        $instalacion->update();
+
         /*
         $id_instalacion = $certificado->dictamen->inspeccione->solicitud->id_instalacion;
         $instalaciones = instalaciones::find($id_instalacion);
@@ -446,6 +460,13 @@ public function index(Request $request)
         try {
             $certificado = Certificados::findOrFail($id);
 
+        //Busca el dictamen y carga la relacion con modelo dictamen->solicitud
+        $dictamen = Dictamen_instalaciones::find($validated['id_dictamen']);
+        $id_instalacion = $dictamen->inspeccione->solicitud->instalaciones->id_instalacion ?? null;
+        if (!$id_instalacion) {
+            return response()->json(['error' => 'No se encontró la instalacion asociada a la solicitud'], 404);
+        }
+
             /*
             // Obtener información de la empresa
             $numeroCliente = $certificado->dictamen->instalaciones->empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
@@ -482,6 +503,14 @@ public function index(Request $request)
             //$certificado->num_autorizacion = $validated['num_autorizacion'] ?: null;
             $certificado->id_firmante = $validated['id_firmante'];
             $certificado->save();
+
+
+            $instalacion = instalaciones::find($id_instalacion);
+            $instalacion->folio = $validated['num_certificado'];
+            $instalacion->fecha_emision = $validated['fecha_emision'];
+            $instalacion->fecha_vigencia = $validated['fecha_vigencia'];
+            $instalacion->update();
+
 
             /*
             $id_instalacion = $certificado->dictamen->id_instalacion;
