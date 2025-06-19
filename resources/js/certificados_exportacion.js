@@ -1492,32 +1492,9 @@ $(document).ready(function () {
 
 
 
-/*
- ///FORMATO PDF ACTA
-  $(document).on('click', '.pdfActa', function () {
-    var id_acta = $(this).data('id');
-    var empresa = $(this).data('empresa');
-    var iframe = $('#pdfViewer');
-    var spinner = $('#cargando');
-    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-    spinner.show();
-    iframe.hide();
 
-    //Cargar el PDF con el ID
-    iframe.attr('src', '/files/' + id_acta);
-    //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', '/files/' + id_acta).show();
 
-    $("#titulo_modal").text("Acta de inspección");
-    $("#subtitulo_modal").text(empresa);
 
-    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-    iframe.on('load', function () {
-      spinner.hide();
-      iframe.show();
-    });
-  });
-*/
   //Abrir PDF Bitacora
 $(document).on('click', '.pdf', function () {
   var id_revisor = $(this).data('id'); // <-- ¡Esta línea es clave!
@@ -1640,6 +1617,8 @@ if (voboClienteHtml) {
     console.error(xhr.responseText);
   });
 });
+
+
 
 
 
