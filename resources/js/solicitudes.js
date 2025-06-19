@@ -67,9 +67,9 @@ $(function () {
     },
 
     columns: [
-    
+
       { data: '' },
-      { 
+      {
           data: 'folio',
           render: function(data, type, row) {
               return `<span style="font-weight: bold; font-size: 1.1em;">${data}</span>`;
@@ -284,7 +284,7 @@ $(function () {
           return '';
         }
       },
-   
+
       {
         targets: 1,
         searchable: false,
@@ -294,12 +294,12 @@ $(function () {
         targets: 2,
         searchable: false,
         orderable: false,
-      }, 
+      },
       {
         targets: 3,
         responsivePriority: 4,
         orderable: false,
-      }, 
+      },
       {
         targets: 4,
         searchable: false,
@@ -4235,9 +4235,13 @@ $(function () {
           // Verifica si hay lotes a granel asociados y los muestra
           if (response.detalle && response.detalle.length > 0) {
             tbody.append(`
-                        <tr>
-                            <td style='background-color: #f5f5f7' colspan="5" class="text-center font-weight-bold fw-bold">Lotes a granel asociados</td>
-                        </tr>`);
+            <tr style="background-color: #f5f5f7;">
+                <th>#</th>
+                <th>Nombre de lote a granel</th>
+                <th>Folio FQ</th>
+                <th>Cont. Alc.</th>
+                <th>Categoría / Clase / Tipos de Maguey</th>
+            </tr>`);
             let nombre_lote_granel = "";
             response.detalle.forEach((lote, index) => {
               let filaGranel = `
@@ -4551,7 +4555,7 @@ $(function () {
 
 
 
-          
+
           $('.fechaHora').text(response?.fecha_visita_formateada || 'No disponible');
 
           $('.nombreLote').text(response?.data?.lote_granel?.nombre_lote || 'No disponible');
@@ -4624,7 +4628,7 @@ $(function () {
 
           $('.destinoEnvasado').text(destino);*/
           $('.etiqueta').html('<a href="files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + response?.url_etiqueta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-          
+
           response.lotesEnvasado.forEach((lote, index) => {
           let html = 'N/A';
 
@@ -4633,7 +4637,7 @@ $(function () {
               const numDictamen = lote.dictamen_envasado.num_dictamen;
               const url = `/dictamen_envasado/${idDictamen}`;
 
-              html = `${numDictamen} 
+              html = `${numDictamen}
                   <a href="${url}" target="_blank">
                       <i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>
                   </a>

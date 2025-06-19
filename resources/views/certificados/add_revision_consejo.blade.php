@@ -199,9 +199,19 @@
                                             <td><b
                                                     class="text-danger">{{ $datos->certificado->num_certificado ?? 'N/A' }}</b>
                                             </td>
-                                        @elseif($pregunta->filtro == 'direccion_fiscal')
-                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }}</b>
-                                            </td>
+@elseif($pregunta->filtro == 'direccion_fiscal')
+    @php
+        $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa;
+    @endphp
+    <td>
+        <b>
+            {{ $empresa->domicilio_fiscal ?? 'N/A' }}<br>
+           País: México<br>C.P:
+            {{ $empresa->cp ?? 'N/A' }}
+        </b>
+    </td>
+
+
                                         @elseif($pregunta->filtro == 'solicitud_exportacion')
                                             <td>
                                                 <a target="_blank"
@@ -217,10 +227,10 @@
                                             <td><b>C.P.:
                                                     {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}
                                                     País: México</b></td>
-                                         @elseif($pregunta->filtro == 'pais_origen')
+{{--                                          @elseif($pregunta->filtro == 'pais_origen')
                                             <td><b>México</b></td>
                                         @elseif($pregunta->filtro == 'cp')
-                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}</b></td>
+                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}</b></td> --}}
                                         @elseif($pregunta->filtro == 'destinatario')
                                             <td><b>
                                                     {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'N/A' }}
@@ -297,7 +307,7 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b>
-                                               
+
                                                  @foreach ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs as $documento)
                                                         <a target="_blank"
                                                             href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->empresa->empresaNumClientes->firstWhere(
@@ -412,7 +422,7 @@
                                                 $url = "/dictamen_envasado/" . $dictamen->id_dictamen;
                                             }
 
-                                            
+
                                             @endphp
 
                                         <td>

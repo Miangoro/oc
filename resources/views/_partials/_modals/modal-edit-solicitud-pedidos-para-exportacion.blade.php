@@ -526,9 +526,13 @@
                     // Verifica si hay lotes a granel asociados y los muestra
                     if (response.detalle && response.detalle.length > 0) {
                         tbody.append(`
-                        <tr>
-                            <td style='background-color: #f5f5f7' colspan="5" class="text-center font-weight-bold fw-bold">Lotes a granel asociados</td>
-                        </tr>`);
+                          <tr style="background-color: #f5f5f7;">
+                              <th>#</th>
+                              <th>Nombre de lote a granel</th>
+                              <th>Folio FQ</th>
+                              <th>Cont. Alc.</th>
+                              <th>Categoría / Clase / Tipos de Maguey</th>
+                          </tr>`);
                         let nombre_lote_granel = "";
                         response.detalle.forEach((lote, index) => {
                             let filaGranel = `
