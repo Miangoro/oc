@@ -211,18 +211,16 @@
         </b>
     </td>
 
-@elseif($pregunta->filtro == 'solicitud_certificado_exportac')
-    @php
-        $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
-    @endphp
-    <td>
-        <b>Folio: {{ $solicitud->folio ?? 'N/A' }}</b><br>
-        <a target="_blank" href="{{ route('revision.pdf.solicitud_exportacion', $datos->id_revision) }}">
-            <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-        </a>
-    </td>
-
-
+                                        @elseif($pregunta->filtro == 'solicitud_certificado_exportac')
+                                            @php
+                                                $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
+                                            @endphp
+                                            <td>
+                                                <b>Folio: {{ $solicitud->folio ?? 'N/A' }}</b><br>
+                                                <a target="_blank" href="{{ route('revision.pdf.solicitud_exportacion', $datos->id_revision) }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                </a>
+                                            </td>
 
                                         @elseif($pregunta->filtro == 'solicitud_exportacion')
                                             <td>
@@ -547,7 +545,6 @@
                                                   <span class="text-muted">Sin etiqueta</span>
                                               @endif
 
-                                              <br>
 
                                               {{-- Corrugado --}}
                                               @if ($solicitud->corrugado())

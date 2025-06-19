@@ -125,10 +125,10 @@
                             <tbody>
                                 @foreach ($preguntas as $index => $pregunta)
 
-                                @php
-                                    $respuesta = $respuestas_map[$pregunta->id_pregunta] ?? null;
-                                     $respuesta_actual = $respuesta['respuesta'] ?? null;
-                                @endphp
+                                    @php
+                                        $respuesta = $respuestas_map[$pregunta->id_pregunta] ?? null;
+                                        $respuesta_actual = $respuesta['respuesta'] ?? null;
+                                    @endphp
                                     <tr>
                                         <th>{{ $index + 1 }}</th>
                                         <th>{{ $pregunta->pregunta }} <input value="{{ $pregunta->id_pregunta }}"
@@ -159,7 +159,7 @@
                                                     <span class="text-muted">Sin documento</span>
                                                 @endif
                                             </td>
-                                       @elseif($pregunta->filtro == 'nombre_empresa')
+                                        @elseif($pregunta->filtro == 'nombre_empresa')
                                             @php
                                                 $cliente = $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
                                                     'numero_cliente',
@@ -179,7 +179,7 @@
                                                 );
                                             @endphp
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</b>
-                                                 @if ($cliente && $documento)
+                                                @if ($cliente && $documento)
                                                     <a target="_blank"
                                                         href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
                                                         <i
@@ -206,7 +206,32 @@
                                                     class="text-danger">{{ $datos->certificado->num_certificado ?? 'N/A' }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'direccion_fiscal')
-                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }}</b>
+                                            @php
+                                                $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa;
+                                            @endphp
+                                            <td>
+                                                <b>
+                                                    {{ $empresa->domicilio_fiscal ?? 'N/A' }}<br>
+                                                    México<br>
+                                                    {{ $empresa->cp ?? 'N/A' }}
+                                                </b>
+                                            </td>
+                                        @elseif($pregunta->filtro == 'solicitud_certificado_exportac')
+                                            @php
+                                                $solicitud =
+                                                    $datos->certificado->dictamen->inspeccione->solicitud ?? null;
+                                            @endphp
+                                            <td>
+                                                @if ($solicitud)
+                                                    <b>Folio: {{ $solicitud->folio ?? 'N/A' }}</b><br>
+                                                    <a target="_blank"
+                                                        href="{{ route('revision.pdf.solicitud_exportacion', $datos->id_revision) }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">Sin solicitud</span>
+                                                @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'solicitud_exportacion')
                                             <td>
@@ -223,10 +248,11 @@
                                             <td><b>C.P.:
                                                     {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}
                                                     País: México</b></td>
-                                         @elseif($pregunta->filtro == 'pais_origen')
+{{--                                         @elseif($pregunta->filtro == 'pais_origen')
                                             <td><b>México</b></td>
                                         @elseif($pregunta->filtro == 'cp')
-                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}</b></td>
+                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}</b>
+                                            </td> --}}
                                         @elseif($pregunta->filtro == 'destinatario')
                                             <td><b>
                                                     {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'N/A' }}
@@ -303,59 +329,46 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b>
-                                                 @foreach ($datos->certificado->dictamen->inspeccione->solicitud->documentacion(58)->get() as $documento)
-                                                        <a target="_blank"
-                                                            href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->empresa->empresaNumClientes->firstWhere(
-                                                                'numero_cliente',
-                                                                '!=',
-                                                                null,
-                                                            )->numero_cliente }}/fqs/{{ $documento->url }}">
-                                                            <i
-                                                                class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                        </a>
-                                                    @endforeach
+                                                @foreach ($datos->certificado->dictamen->inspeccione->solicitud->documentacion(58)->get() as $documento)
+                                                    <a target="_blank"
+                                                        href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->empresa->empresaNumClientes->firstWhere(
+                                                            'numero_cliente',
+                                                            '!=',
+                                                            null,
+                                                        )->numero_cliente }}/fqs/{{ $documento->url }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                    </a>
+                                                @endforeach
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis_ajuste')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'aduana')
-                                            <td><b>
-                                                    {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['aduana_salida'] ?? 'N/A' }}
-                                                    2208.90.05.00
-                                                    {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['no_pedido'] ?? 'N/A' }}
+                                            @php
+                                                $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
+                                                $carac = json_decode($solicitud->caracteristicas, true);
+                                                $aduana = $carac['aduana_salida'] ?? 'N/A';
+                                                $proforma = $carac['no_pedido'] ?? 'N/A';
+                                                $numero_cliente = $solicitud->empresa?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
+                                            @endphp
 
-                                                    @foreach ($datos->certificado->dictamen->inspeccione->solicitud->documentacion(55)->get() as $documento)
-                                                        <a target="_blank"
-                                                            href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
-                                                                'numero_cliente',
-                                                                '!=',
-                                                                null,
-                                                            )->numero_cliente }}/{{ $documento->url }}">
-                                                            <i
-                                                                class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                            <td>
+                                                <b>
+                                                    {{ $aduana }}<br>
+                                                    2208.90.05.00<br>
+                                                    {{ $proforma }}
+                                                </b>
+
+                                                @foreach ($solicitud->documentacion(55)->get() as $documento)
+                                                    @if ($numero_cliente)
+                                                        <a target="_blank" href="/files/{{ $numero_cliente }}/{{ $documento->url }}">
+                                                            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                         </a>
-                                                    @endforeach
+                                                    @endif
+                                                @endforeach
+                                            </td>
 
-                                                </b><br></td>
-                                        @elseif($pregunta->filtro == 'fraccion_arancelaria')
-                                            <td><b>2208.90.05.00</b><br></td>
-                                        @elseif($pregunta->filtro == 'proforma')
-                                            <td><b>
-                                                    {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['no_pedido'] ?? 'N/A' }}
-
-                                                    @foreach ($datos->certificado->dictamen->inspeccione->solicitud->documentacion(55)->get() as $documento)
-                                                        <a target="_blank"
-                                                            href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
-                                                                'numero_cliente',
-                                                                '!=',
-                                                                null,
-                                                            )->numero_cliente }}/{{ $documento->url }}">
-                                                            <i
-                                                                class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                        </a>
-                                                    @endforeach
-
-                                                </b><br></td>
                                         @elseif($pregunta->filtro == 'domicilio_insta')
                                             <td>
                                                 <b>
@@ -373,84 +386,96 @@
                                                 <b>{{ $datos?->certificado?->fecha_emision ? Helpers::formatearFecha($datos->certificado->fecha_emision) : 'NA' }}</b><br>
                                                 <b>{{ $datos?->certificado?->fecha_vigencia ? Helpers::formatearFecha($datos->certificado->fecha_vigencia) : 'NA' }}</b>
                                             </td>
-                                            @elseif($pregunta->filtro == 'num_dictamen')
-                                                @php
-                                            // Determina tipo y URL del certificado
-                                            $tipo = 'Desconocido';
-                                            $url = null;
+                                        @elseif($pregunta->filtro == 'num_dictamen')
+                                            @php
+                                                // Determina tipo y URL del certificado
+                                                $tipo = 'Desconocido';
+                                                $url = null;
 
-                                            $dictamen = $datos->certificado?->dictamen;
+                                                $dictamen = $datos->certificado?->dictamen;
 
-                                            if ($datos->tipo_certificado == 1 && $datos->certificado?->dictamen) {
-                                                // Certificado normal con dictamen
-                                                $id_dictamen = $datos->certificado->dictamen->tipo_dictamen ?? null;
+                                                if ($datos->tipo_certificado == 1 && $datos->certificado?->dictamen) {
+                                                    // Certificado normal con dictamen
+                                                    $id_dictamen = $datos->certificado->dictamen->tipo_dictamen ?? null;
 
-                                                switch ($id_dictamen) {
-                                                    case 1:
-                                                        $tipo = 'Instalaciones de productor';
-                                                        $url = "/dictamen_productor/" . $dictamen->id_dictamen;
-                                                        break;
-                                                    case 2:
-                                                        $tipo = 'Instalaciones de envasador';
-                                                        $url = "/dictamen_envasador/" . $dictamen->id_dictamen;
-                                                        break;
-                                                    case 3:
-                                                        $tipo = 'Instalaciones de comercializador';
-                                                        $url = "/dictamen_comercializador/" . $dictamen->id_dictamen;
-                                                        break;
-                                                    case 4:
-                                                        $tipo = 'Instalaciones de almacén y bodega';
-                                                        $url = "/dictamen_almacen/" . $dictamen->id_dictamen;
-                                                        break;
-                                                    case 5:
-                                                        $tipo = 'Instalaciones de área de maduración';
-                                                        $url = "/dictamen_bodega/" . $dictamen->id_dictamen;
-                                                        break;
-                                                    default:
-                                                        $tipo = 'Desconocido';
+                                                    switch ($id_dictamen) {
+                                                        case 1:
+                                                            $tipo = 'Instalaciones de productor';
+                                                            $url = '/dictamen_productor/' . $dictamen->id_dictamen;
+                                                            break;
+                                                        case 2:
+                                                            $tipo = 'Instalaciones de envasador';
+                                                            $url = '/dictamen_envasador/' . $dictamen->id_dictamen;
+                                                            break;
+                                                        case 3:
+                                                            $tipo = 'Instalaciones de comercializador';
+                                                            $url =
+                                                                '/dictamen_comercializador/' . $dictamen->id_dictamen;
+                                                            break;
+                                                        case 4:
+                                                            $tipo = 'Instalaciones de almacén y bodega';
+                                                            $url = '/dictamen_almacen/' . $dictamen->id_dictamen;
+                                                            break;
+                                                        case 5:
+                                                            $tipo = 'Instalaciones de área de maduración';
+                                                            $url = '/dictamen_bodega/' . $dictamen->id_dictamen;
+                                                            break;
+                                                        default:
+                                                            $tipo = 'Desconocido';
+                                                    }
+                                                } elseif ($datos->tipo_certificado == 2) {
+                                                    $tipo = 'Granel';
+                                                    $url = '/dictamen_granel/' . $dictamen->id_dictamen;
+                                                } elseif ($datos->tipo_certificado == 3) {
+                                                    $tipo = 'Exportación';
+                                                    $url = '/dictamen_envasado/' . $dictamen->id_dictamen;
                                                 }
-                                            } elseif ($datos->tipo_certificado == 2) {
-                                                $tipo = "Granel";
-                                                $url = "/dictamen_granel/" . $dictamen->id_dictamen;
-                                            } elseif ($datos->tipo_certificado == 3) {
-                                                $tipo = "Exportación";
-                                                $url = "/dictamen_envasado/" . $dictamen->id_dictamen;
-                                            }
 
-                                            
                                             @endphp
 
-                                        <td>
-                                            @if ($dictamen)
-                                                <b>{{ $dictamen->num_dictamen }}</b>
-                                                @if ($url)
-                                                    <a target="_blank" href="{{ $url }}">
-                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                    </a>
+                                            <td>
+                                                @if ($dictamen)
+                                                    <b>{{ $dictamen->num_dictamen }}</b>
+                                                    @if ($url)
+                                                        <a target="_blank" href="{{ $url }}">
+                                                            <i
+                                                                class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                        </a>
+                                                    @else
+                                                        <span>Dictamen no disponible</span>
+                                                    @endif
                                                 @else
                                                     <span>Dictamen no disponible</span>
                                                 @endif
-                                            @else
-                                                <span>Dictamen no disponible</span>
-                                            @endif
-                                        </td>
+                                            </td>
                                         @elseif($pregunta->filtro == 'certificado_granel')
                                             <td>Granel:
                                                 <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}</b>
-                                                <a target="_blank" href="/Pre-certificado-granel/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->id_certificado }}">
-                                                            <i
-                                                                class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                <a target="_blank"
+                                                    href="/Pre-certificado-granel/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->id_certificado }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                 </a>
                                                 <br>
                                                 Envasado:
                                                 <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }}</b>
-                                                <a target="_blank" href="/dictamen_envasado/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->dictamenEnvasado->id_dictamen }}">
-                                                            <i
-                                                                class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                <a target="_blank"
+                                                    href="/dictamen_envasado/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->dictamenEnvasado->id_dictamen }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                 </a>
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria')
-                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'N/A' }}</b>
+                                            @php
+                                                $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
+                                                $lote_granel = $solicitud->lote_granel;
+                                                $lote_envasado = $solicitud->lote_envasado;
+                                            @endphp
+                                            <td>
+                                                <b>
+                                                    {{ $lote_granel->categoria->categoria ?? 'N/A' }} <br>
+                                                    {{ $lote_envasado->marca->marca ?? 'N/A' }} <br>
+                                                    {{ $lote_granel->clase->clase ?? 'N/A' }} <br>
+                                                    {{ $lote_granel->edad ?? 'N/A' }}
+                                                </b>
                                             </td>
                                         @elseif($pregunta->filtro == 'ingredientes')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->ingredientes ?? 'N/A' }}</b>
@@ -458,9 +483,9 @@
                                         @elseif($pregunta->filtro == 'edad')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? 'N/A' }}</b>
                                             </td>
-                                        @elseif($pregunta->filtro == 'marca')
+                                            {{--                                         @elseif($pregunta->filtro == 'marca')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->marca->marca ?? 'N/A' }}</b>
-                                            </td>
+                                            </td> --}}
                                         @elseif($pregunta->filtro == 'clase')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->clase->clase ?? 'N/A' }}</b>
                                             </td>
@@ -513,50 +538,34 @@
                                                 @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'etiqueta')
+                                            @php
+                                                $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
+                                                $empresa = $solicitud->empresa;
+                                                $numero_cliente = $empresa?->empresaNumClientes->firstWhere(
+                                                    'numero_cliente',
+                                                    '!=',
+                                                    null,
+                                                )?->numero_cliente;
+                                                $etiqueta = $solicitud->etiqueta();
+                                                $corrugado = $solicitud->corrugado();
+                                            @endphp
+
                                             <td>
-                                                @if ($datos->certificado->dictamen->inspeccione->solicitud->etiqueta())
+                                                @if ($etiqueta && $numero_cliente)
                                                     <a target="_blank"
-                                                        href="{{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
-                                                            'numero_cliente',
-                                                            '!=',
-                                                            null,
-                                                        )?->numero_cliente
-                                                            ? '../files/' .
-                                                                $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
-                                                                    'numero_cliente',
-                                                                    '!=',
-                                                                    null,
-                                                                )->numero_cliente .
-                                                                '/' .
-                                                                $datos->certificado->dictamen->inspeccione->solicitud->etiqueta()
-                                                            : 'NA' }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                        href="{{ '../files/' . $numero_cliente . '/' . $etiqueta }}">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"
+                                                            title="Etiqueta"></i>
                                                     </a>
                                                 @else
                                                     <span class="text-muted">Sin etiqueta</span>
                                                 @endif
-                                            </td>
-                                        @elseif($pregunta->filtro == 'corrugado')
-                                            <td>
-                                                @if ($datos->certificado->dictamen->inspeccione->solicitud->corrugado())
+
+                                                @if ($corrugado && $numero_cliente)
                                                     <a target="_blank"
-                                                        href="{{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
-                                                            'numero_cliente',
-                                                            '!=',
-                                                            null,
-                                                        )?->numero_cliente
-                                                            ? '../files/' .
-                                                                $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
-                                                                    'numero_cliente',
-                                                                    '!=',
-                                                                    null,
-                                                                )->numero_cliente .
-                                                                '/' .
-                                                                $datos->certificado->dictamen->inspeccione->solicitud->corrugado()
-                                                            : 'NA' }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                        href="{{ '../files/' . $numero_cliente . '/' . $corrugado }}">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"
+                                                            title="Corrugado"></i>
                                                     </a>
                                                 @else
                                                     <span class="text-muted">Sin corrugado</span>
@@ -567,19 +576,25 @@
                                         @endif
                                         <td>
                                             <div class="resp">
-                                                <select class="form-select form-select-sm" aria-label="Elige la respuesta" name="respuesta[]">
-                                                    <option value="" disabled {{ $respuesta_actual == null ? 'selected' : '' }}>Seleccione</option>
-                                                    <option value="C" {{ $respuesta_actual == 'C' ? 'selected' : '' }}>C</option>
-                                                    <option value="NC" {{ $respuesta_actual == 'NC' ? 'selected' : '' }}>NC</option>
-                                                    <option value="NA" {{ $respuesta_actual == 'NA' ? 'selected' : '' }}>NA</option>
+                                                <select class="form-select form-select-sm" aria-label="Elige la respuesta"
+                                                    name="respuesta[]">
+                                                    <option value="" disabled
+                                                        {{ $respuesta_actual == null ? 'selected' : '' }}>Seleccione
+                                                    </option>
+                                                    <option value="C"
+                                                        {{ $respuesta_actual == 'C' ? 'selected' : '' }}>C</option>
+                                                    <option value="NC"
+                                                        {{ $respuesta_actual == 'NC' ? 'selected' : '' }}>NC</option>
+                                                    <option value="NA"
+                                                        {{ $respuesta_actual == 'NA' ? 'selected' : '' }}>NA</option>
                                                 </select>
 
                                             </div>
                                         </td>
 
                                         <td>
-                                            <textarea name="observaciones[{{ $index }}]" rows="1" name="" id="" class="form-control"
-                                                placeholder="Observaciones">{{ $respuesta['observacion'] ?? '' }}</textarea>
+                                            <textarea name="observaciones[{{ $index }}]" rows="1" name="" id=""
+                                                class="form-control" placeholder="Observaciones">{{ $respuesta['observacion'] ?? '' }}</textarea>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -590,13 +605,14 @@
                 </div>
             </div>
             <!-- <div class="col-md-4">
-                                            <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" src="{{ $url }}" frameborder="0"
-                                                style="border-radius: 10px; overflow: hidden;">
-                                            </iframe>
-                                        </div>-->
+                                                <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" src="{{ $url }}" frameborder="0"
+                                                    style="border-radius: 10px; overflow: hidden;">
+                                                </iframe>
+                                            </div>-->
 
             <div class="d-flex justify-content-center mt-3">
-                <button  type="submit" class="btn btn-primary me-2 waves-effect waves-light"><i class="ri-pencil-fill"></i> Editar {{ $datos->numero_revision }}ª revisión</button>
+                <button type="submit" class="btn btn-primary me-2 waves-effect waves-light"><i
+                        class="ri-pencil-fill"></i> Editar {{ $datos->numero_revision }}ª revisión</button>
                 <a href="/revision/consejo" class="btn btn-danger waves-effect"><i class="ri-close-line"></i>Cancelar</a>
             </div>
 
