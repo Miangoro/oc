@@ -757,6 +757,7 @@ const fv = FormValidation.formValidation(FormAgregar, {
         console.log('Error222:', response);
         $('#ModalAgregar').modal('hide');//modal
         $('#FormAgregar')[0].reset();//formulario
+        $('.select2').val(null).trigger('change'); //Reset del select2
 
         // Actualizar la tabla sin reinicializar DataTables
         dataTable.ajax.reload();
