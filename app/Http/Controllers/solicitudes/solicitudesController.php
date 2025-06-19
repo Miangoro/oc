@@ -657,7 +657,7 @@ class solicitudesController extends Controller
 
         $VigilanciaTras->save();
         // Crear nuevo registro en la Bitácora de Mezcal
-        $bitacora = new BitacoraMezcal();
+      /*  $bitacora = new BitacoraMezcal();
         $bitacora->fecha = now(); // o $request->fecha_visita si aplica
         $bitacora->id_tanque = $request->id_contenedor;
         $bitacora->lote_a_granel = $request->id_lote_granel_traslado;
@@ -694,7 +694,7 @@ class solicitudesController extends Controller
         $bitacora->observaciones = "Registro automático desde vigilancia en traslado.";
 
 
-        $bitacora->save();
+        $bitacora->save();*/
 
 
 
