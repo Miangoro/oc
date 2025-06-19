@@ -872,6 +872,8 @@ Route::middleware(['auth'])->controller(RevisionPersonalController::class)->grou
 
 //-------------------REVISION CONSEJO-------------------
 Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group(function () {
+  Route::get('/pdf/solicitud-exportacion/{id_revision}', [RevisionConsejoController::class, 'mostrarSolicitudPDFDesdeRevision'])
+    ->name('revision.pdf.solicitud_exportacion');
     Route::get('/revision/consejo', 'UserManagement')->name('revision-consejo');
     Route::resource('/revision-consejo-list', RevisionConsejoController::class);
     Route::post('/revisor/registrar-respuestas-consejo', 'registrarRespuestasConsejo')->name('registrar.respuestas.consejo');

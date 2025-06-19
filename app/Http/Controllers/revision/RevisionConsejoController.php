@@ -12,6 +12,8 @@ use App\Models\User;
 use App\Models\empresaNumCliente;
 use App\Helpers\Helpers;
 use App\Models\preguntas_revision;
+/* controller */
+use App\Http\Controllers\solicitudes\solicitudesController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;//Autentificar
@@ -628,7 +630,7 @@ class RevisionConsejoController extends Controller
 
 
 
-   
+
 
     public function cargarHistorialConsejo($id_revision)
     {
@@ -788,7 +790,7 @@ class RevisionConsejoController extends Controller
             'id_aprobador' => $id_aprobador,
             'fecha_aprobacion' => Helpers::formatearFecha($fecha_aprobacion),
             'preguntas' => $preguntasConRespuestas
-        ]; 
+        ];
 
         $pdf = Pdf::loadView('pdfs.pdf_bitacora_revision_certificado_instalaciones',$pdfData)
             ->setPaper('letter'); // Define tamaño carta
@@ -797,8 +799,8 @@ class RevisionConsejoController extends Controller
     }
 
     public function pdf_bitacora_revision_certificado_granel($id)
-    {   
-        
+    {
+
         $revisor = Revisor::findOrFail($id);
 
         // Decodificar el JSON correctamente
@@ -827,7 +829,7 @@ class RevisionConsejoController extends Controller
 
 
         $tipo_certificado = "NOM a Granel";
- 
+
         $decision = $revisor->decision;
         $nameRevisor = $revisor->user->name ?? null;
         $firmaRevisor = $revisor->user->firma ?? '';
@@ -859,7 +861,7 @@ class RevisionConsejoController extends Controller
             'id_aprobador' => $id_aprobador,
             'fecha_aprobacion' => Helpers::formatearFecha($fecha_aprobacion),
             'preguntas' => $preguntasConRespuestas
-        ]; 
+        ];
 
             $pdf = Pdf::loadView('pdfs.pdf_bitacora_revision_certificado_granel', $pdfData)
             ->setPaper('letter'); // Define tamaño carta
@@ -868,7 +870,7 @@ class RevisionConsejoController extends Controller
     }
 
     public function pdf_bitacora_revision_certificado_exportacion($id)
-    {   
+    {
         $revisor = Revisor::findOrFail($id);
 
         // Decodificar el JSON correctamente
@@ -897,7 +899,7 @@ class RevisionConsejoController extends Controller
 
 
         $tipo_certificado = "NOM a Granel";
- 
+
         $decision = $revisor->decision;
         $nameRevisor = $revisor->user->name ?? null;
         $firmaRevisor = $revisor->user->firma ?? '';
@@ -929,12 +931,23 @@ class RevisionConsejoController extends Controller
             'id_aprobador' => $id_aprobador,
             'fecha_aprobacion' => Helpers::formatearFecha($fecha_aprobacion),
             'preguntas' => $preguntasConRespuestas
-        ]; 
-            
+        ];
 
             $pdf = Pdf::loadView('pdfs.pdf_bitacora_revision_certificado_exportacion',$pdfData)
             ->setPaper('letter'); // Define tamaño carta
 
         return $pdf->stream('Bitácora de revisión de certificado de exportación NOM-070-SCFI-2016 F7.1-01-33.pdf');
     }
+
+    public function mostrarSolicitudPDFDesdeRevision($id_revision)
+    {
+        $revision = Revisor::findOrFail($id_revision);
+        $solicitud = $revision->certificado->dictamen->inspeccione->solicitud;
+
+        return app(solicitudesController::class)
+            ->pdf_solicitud_servicios_070($solicitud->id_solicitud);
+
+
+    }
+
 }

@@ -211,6 +211,18 @@
         </b>
     </td>
 
+@elseif($pregunta->filtro == 'solicitud_certificado_exportac')
+    @php
+        $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
+    @endphp
+    <td>
+        <b>Folio: {{ $solicitud->folio ?? 'N/A' }}</b><br>
+        <a target="_blank" href="{{ route('revision.pdf.solicitud_exportacion', $datos->id_revision) }}">
+            <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+        </a>
+    </td>
+
+
 
                                         @elseif($pregunta->filtro == 'solicitud_exportacion')
                                             <td>
@@ -323,44 +335,33 @@
                                         @elseif($pregunta->filtro == 'nanalisis_ajuste')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}</b>
                                             </td>
-                                        @elseif($pregunta->filtro == 'aduana')
-                                            <td><b>
-                                                    {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['aduana_salida'] ?? 'N/A' }}
-                                                    2208.90.05.00
-                                                    {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['no_pedido'] ?? 'N/A' }}
+                                      @elseif($pregunta->filtro == 'aduana')
+                                          @php
+                                              $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
+                                              $caracteristicas = json_decode($solicitud->caracteristicas, true);
+                                              $empresa = $solicitud->empresa;
+                                              $cliente_folder = $empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
+                                              $documentos = $solicitud->documentacion(55)->get();
+                                          @endphp
+                                          <td>
+                                              <b>
+                                                  {{-- Aduana --}}
+                                                  {{ $caracteristicas['aduana_salida'] ?? 'N/A' }}<br>
 
-                                                    @foreach ($datos->certificado->dictamen->inspeccione->solicitud->documentacion(55)->get() as $documento)
-                                                        <a target="_blank"
-                                                            href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
-                                                                'numero_cliente',
-                                                                '!=',
-                                                                null,
-                                                            )->numero_cliente }}/{{ $documento->url }}">
-                                                            <i
-                                                                class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                        </a>
-                                                    @endforeach
+                                                  {{-- Fracción arancelaria --}}
+                                                  2208.90.05.00<br>
 
-                                                </b><br></td>
-                                        @elseif($pregunta->filtro == 'fraccion_arancelaria')
-                                            <td><b>2208.90.05.00</b><br></td>
-                                        @elseif($pregunta->filtro == 'proforma')
-                                            <td><b>
-                                                    {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['no_pedido'] ?? 'N/A' }}
+                                                  {{-- Número de factura proforma --}}
+                                                  {{ $caracteristicas['no_pedido'] ?? 'N/A' }}
 
-                                                    @foreach ($datos->certificado->dictamen->inspeccione->solicitud->documentacion(55)->get() as $documento)
-                                                        <a target="_blank"
-                                                            href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
-                                                                'numero_cliente',
-                                                                '!=',
-                                                                null,
-                                                            )->numero_cliente }}/{{ $documento->url }}">
-                                                            <i
-                                                                class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                        </a>
-                                                    @endforeach
-
-                                                </b><br></td>
+                                                  {{-- Documentos adjuntos --}}
+                                                  @foreach ($documentos as $documento)
+                                                      <a target="_blank" href="/files/{{ $cliente_folder }}/{{ $documento->url }}">
+                                                          <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                      </a>
+                                                  @endforeach
+                                              </b>
+                                          </td>
                                         @elseif($pregunta->filtro == 'domicilio_insta')
                                             <td>
                                                 <b>
@@ -456,17 +457,29 @@
                                                 </a>
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria')
-                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'N/A' }}</b>
+                                            @php
+                                                $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
+                                                $lote_granel = $solicitud->lote_granel;
+                                                $lote_envasado = $solicitud->lote_envasado;
+                                            @endphp
+                                            <td>
+                                                <b>
+                                                    {{ $lote_granel->categoria->categoria ?? 'N/A' }}<br>
+                                                    {{ $lote_envasado->marca->marca ?? 'N/A' }}<br>
+                                                    {{ $lote_granel->clase->clase ?? 'N/A' }}<br>
+                                                    {{ $lote_granel->edad ?? 'N/A' }}
+                                                </b>
                                             </td>
+
                                         @elseif($pregunta->filtro == 'ingredientes')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->ingredientes ?? 'N/A' }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'edad')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? 'N/A' }}</b>
                                             </td>
-                                        @elseif($pregunta->filtro == 'marca')
+{{--                                         @elseif($pregunta->filtro == 'marca')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->marca->marca ?? 'N/A' }}</b>
-                                            </td>
+                                            </td> --}}
                                         @elseif($pregunta->filtro == 'clase')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->clase->clase ?? 'N/A' }}</b>
                                             </td>
@@ -518,56 +531,34 @@
                                                     <span class="text-muted">Sin acta</span>
                                                 @endif
                                             </td>
-                                        @elseif($pregunta->filtro == 'etiqueta')
-                                            <td>
-                                                @if ($datos->certificado->dictamen->inspeccione->solicitud->etiqueta())
-                                                    <a target="_blank"
-                                                        href="{{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
-                                                            'numero_cliente',
-                                                            '!=',
-                                                            null,
-                                                        )?->numero_cliente
-                                                            ? '../files/' .
-                                                                $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
-                                                                    'numero_cliente',
-                                                                    '!=',
-                                                                    null,
-                                                                )->numero_cliente .
-                                                                '/' .
-                                                                $datos->certificado->dictamen->inspeccione->solicitud->etiqueta()
-                                                            : 'NA' }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                    </a>
-                                                @else
-                                                    <span class="text-muted">Sin etiqueta</span>
-                                                @endif
-                                            </td>
-                                        @elseif($pregunta->filtro == 'corrugado')
-                                            <td>
-                                                @if ($datos->certificado->dictamen->inspeccione->solicitud->corrugado())
-                                                    <a target="_blank"
-                                                        href="{{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
-                                                            'numero_cliente',
-                                                            '!=',
-                                                            null,
-                                                        )?->numero_cliente
-                                                            ? '../files/' .
-                                                                $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
-                                                                    'numero_cliente',
-                                                                    '!=',
-                                                                    null,
-                                                                )->numero_cliente .
-                                                                '/' .
-                                                                $datos->certificado->dictamen->inspeccione->solicitud->corrugado()
-                                                            : 'NA' }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                    </a>
-                                                @else
-                                                    <span class="text-muted">Sin corrugado</span>
-                                                @endif
-                                            </td>
+                                      @elseif($pregunta->filtro == 'etiqueta')
+                                          @php
+                                              $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
+                                              $empresa = $solicitud->empresa;
+                                              $cliente_folder = $empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
+                                          @endphp
+                                          <td>
+                                              {{-- Etiqueta --}}
+                                              @if ($solicitud->etiqueta())
+                                                  <a target="_blank" href="{{ $cliente_folder ? '../files/' . $cliente_folder . '/' . $solicitud->etiqueta() : 'NA' }}">
+                                                      <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                  </a>
+                                              @else
+                                                  <span class="text-muted">Sin etiqueta</span>
+                                              @endif
+
+                                              <br>
+
+                                              {{-- Corrugado --}}
+                                              @if ($solicitud->corrugado())
+                                                  <a target="_blank" href="{{ $cliente_folder ? '../files/' . $cliente_folder . '/' . $solicitud->corrugado() : 'NA' }}">
+                                                      <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                  </a>
+                                              @else
+                                                  <span class="text-muted">Sin corrugado</span>
+                                              @endif
+                                          </td>
+
                                         @elseif($pregunta->filtro == 'dictamen_exportacion')
                                             <td>
                                                 <a target="_blank"
