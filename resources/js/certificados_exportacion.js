@@ -1494,39 +1494,35 @@ $(document).ready(function () {
 
 
 
+
   //Abrir PDF Bitacora
 $(document).on('click', '.pdf', function () {
-  var id_revisor = $(this).data('id'); // <-- ¡Esta línea es clave!
+  var id_revisor = $(this).data('id');
   var num_certificado = $(this).data('num-certificado');
   var tipoRevision = $(this).data('tipo_revision');
 
-  console.log('ID del Revisor:', id_revisor);
-  console.log('Tipo de Revisión:', tipoRevision);
-  console.log('Número de Certificado:', num_certificado);
-  
-  // Definir URL según el tipo de revisión
-  var url_pdf = '../pdf_bitacora_revision_personal/' + id_revisor;
+    console.log('ID del Revisor:', id_revisor);
+    console.log('Tipo de Revisión:', tipoRevision);
+    console.log('Número de Certificado:', num_certificado);
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    $('#cargando').show();
+    $('#pdfViewer').hide();
 
-  console.log('URL del PDF:', url_pdf);
+    //Cargar el PDF con el ID
+    $('#pdfViewer').attr('src', '../pdf_bitacora_revision_certificado_exportacion/' + id_revisor);
+    //Abrir PDF en nueva pestaña
+    $("#NewPestana").attr('href', '../pdf_bitacora_revision_certificado_exportacion/' + id_revisor).show();
 
-  // Configurar encabezados del modal
-  $('#titulo_modal_Dictamen').text("Bitácora de revisión documental");
-  $('#subtitulo_modal_Dictamen').text(num_certificado);
+    $("#titulo_modal").text("Bitácora de revisión documental");
+    $("#subtitulo_modal").html('<span class="badge bg-info">'+num_certificado+'</span>');
 
-  // Configurar botón para abrir PDF
-  var openPdfBtn = $('#openPdfBtnDictamen');
-  openPdfBtn.attr('href', url_pdf);
-  openPdfBtn.show();
-
-  // Mostrar modal de PDF
-  $('#mostrarPdf').modal('show');
-  $('#cargando').show();
-  $('#pdfViewer').hide();
-
-  // Cargar PDF en iframe
-  $('#pdfViewer').attr('src', url_pdf);
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    $('#pdfViewer').on('load', function () {
+      $('#cargando').hide();
+      $('#pdfViewer').show();
+    });
 });
-
+  
 ///VER TRAZABILIDAD
 $(document).on('click', '.trazabilidad', function () {
   // Función para cargar los datos
@@ -1621,6 +1617,8 @@ if (voboClienteHtml) {
     console.error(xhr.responseText);
   });
 });
+
+
 
 
 
