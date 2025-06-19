@@ -176,13 +176,34 @@
                                             <label for="presentacion">Presentación</label>
                                         </div>
                                     </div>
+
+                                    <div class="p-2">
+                                        <table id="tablaLotes" class="table table-bordered table-sm mb-2"
+                                            style="width: 100%; border-collapse: collapse;">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Nombre del Lote</th>
+                                                    <th>SKU</th>
+                                                    <th>Presentación</th>
+                                                    <th>Cantidad de botellas</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Aquí se insertarán dinámicamente los datos -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
                                 </div>
+
                             </div>
+
+
                         </div>
 
-
                     </div>
-
 
                     <!-- Botones -->
                     <div id="botones_characteristics" class="d-none">
@@ -193,36 +214,6 @@
                             class="btn btn-danger btn-sm mb-2 float-end">
                             <i class="ri-delete-bin-6-fill"></i> Eliminar tabla
                         </button>
-                    </div>
-
-                    <div class="card mt-2">
-                        <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
-                            Información del lote envasado
-                        </div>
-                        <div class="card-body">
-
-
-
-                            {{--  <h6>Información del lote envasado</h6> --}}
-                            <div class="row">
-                                <table id="tablaLotes" class="table table-bordered mb-2 table-sm"
-                                    style="width: 100%; border-collapse: collapse;">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Nombre del Lote</th>
-                                            <th>SKU</th>
-                                            <th>Presentación</th>
-                                            <th>Cantidad de botellas</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Aquí se insertarán dinámicamente los datos -->
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </div>
                     </div>
 
 

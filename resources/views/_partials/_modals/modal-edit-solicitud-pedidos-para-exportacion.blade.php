@@ -183,6 +183,24 @@
                                             <label for="presentacion">Presentación</label>
                                         </div>
                                     </div>
+                                    <div class="p-2">
+                                        <table id="tablaLotes" class="table table-bordered mb-2 table-sm"
+                                            style="width: 100%; border-collapse: collapse;">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Nombre del Lote</th>
+                                                    <th>SKU</th>
+                                                    <th>Presentación</th>
+                                                    <th>Cantidad de botellas</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Aquí se insertarán dinámicamente los datos -->
+                                            </tbody>
+                                        </table>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -201,7 +219,7 @@
                             <i class="ri-delete-bin-6-fill"></i> Eliminar tabla
                         </button>
                     </div>
-{{--                     <div id="botones_characteristics_edit_1" class="d-none">
+                    {{--                     <div id="botones_characteristics_edit_1" class="d-none">
                         <button type="button" id="add-characteristics_edit_1" class="btn btn-primary btn-sm mb-2">
                             <i class="ri-add-line"></i> Agregar Tabla
                         </button>
@@ -211,32 +229,8 @@
                         </button>
                     </div> --}}
 
-                    <div class="card mt-2">
-                        <div class="badge rounded-2 bg-label-primary  fw-bold fs-6 px-4 py-4 mb-5">
-                            Información del lote envasado
-                        </div>
-                        <div class="card-body">
 
-                            <div class="row">
-                                <table id="tablaLotes" class="table table-bordered mb-2 table-sm"
-                                    style="width: 100%; border-collapse: collapse;">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Nombre del Lote</th>
-                                            <th>SKU</th>
-                                            <th>Presentación</th>
-                                            <th>Cantidad de botellas</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Aquí se insertarán dinámicamente los datos -->
-                                    </tbody>
-                                </table>
 
-                            </div>
-                        </div>
-                    </div>
 
 
                     <!-- Sección: Elegir Etiquetas y Corrugados -->
@@ -498,7 +492,7 @@
 
 
     function cargarDetallesLoteEnvasadoEdit2(idLoteEnvasado) {
-      if (!$('#editPedidoExportacion').is(':visible')) {
+        if (!$('#editPedidoExportacion').is(':visible')) {
             return; // No hagas nada si el modal no está abierto
         }
         if (idLoteEnvasado) {
@@ -571,7 +565,7 @@
                             `<tr><td colspan="4" class="text-center">No hay lotes a granel asociados</td></tr>`
                         );
                     }
-                     cargarMarcasEdit();
+                    cargarMarcasEdit();
                 },
                 error: function() {
                     console.error('Error al cargar el detalle del lote envasado.');
@@ -722,10 +716,10 @@
                         response.detalle.map(lote => lote.nombre_lote).join(', ') :
                         ''
                     );
-                // Genera la tabla de lotes a granel asociados en la sección correspondiente
+                    // Genera la tabla de lotes a granel asociados en la sección correspondiente
                     let $tabla = $(`#tablaLotes_edit_${sectionCountEdit}`);
-                if ($tabla.length === 0) {
-                    // Si no existe la tabla, créala dinámicamente en el contenedor correcto
+                    if ($tabla.length === 0) {
+                        // Si no existe la tabla, créala dinámicamente en el contenedor correcto
                         $(`#caracteristicas_Ex_edit_${sectionCountEdit} .card-body`).append(`
                           <table id="tablaLotes_edit_${sectionCountEdit}" class="table table-bordered table-sm mt-3">
                             <thead>
@@ -740,14 +734,14 @@
                             <tbody></tbody>
                         </table>
                     `);
-                    $tabla = $(`#tablaLotes_edit_${sectionCountEdit}`);
-                }
-                let $tbody = $tabla.find('tbody');
-                $tbody.empty();
+                        $tabla = $(`#tablaLotes_edit_${sectionCountEdit}`);
+                    }
+                    let $tbody = $tabla.find('tbody');
+                    $tbody.empty();
 
-                if (response.detalle && response.detalle.length > 0) {
-                    response.detalle.forEach((lote, index) => {
-                        $tbody.append(`
+                    if (response.detalle && response.detalle.length > 0) {
+                        response.detalle.forEach((lote, index) => {
+                            $tbody.append(`
                             <tr>
                                 <td>${index + 1}</td>
                                 <td>
@@ -768,12 +762,12 @@
                                 </td>
                             </tr>
                         `);
-                    });
-                } else {
-                    $tbody.append(
-                        `<tr><td colspan="8" class="text-center">No hay lotes a granel asociados</td></tr>`
-                    );
-                }
+                        });
+                    } else {
+                        $tbody.append(
+                            `<tr><td colspan="8" class="text-center">No hay lotes a granel asociados</td></tr>`
+                        );
+                    }
 
                 },
                 error: function() {
@@ -784,76 +778,76 @@
     }
 
     // Función para llenar campos en editar
-/*     function cargarDetallesLoteEnvasadoDinamicoEdit2(select, sectionCountEdit) {
-        var idLoteEnvasado = $(select).val();
-        if (idLoteEnvasado) {
-            $.ajax({
-                url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
-                method: 'GET',
-                success: function(response) {
-                    $(`#lote_granel_edit_${sectionCountEdit}`).val(
-                        response.detalle && response.detalle.length > 0 ?
-                        response.detalle.map(lote => lote.nombre_lote).join(', ') :
-                        ''
-                    );
+    /*     function cargarDetallesLoteEnvasadoDinamicoEdit2(select, sectionCountEdit) {
+            var idLoteEnvasado = $(select).val();
+            if (idLoteEnvasado) {
+                $.ajax({
+                    url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+                    method: 'GET',
+                    success: function(response) {
+                        $(`#lote_granel_edit_${sectionCountEdit}`).val(
+                            response.detalle && response.detalle.length > 0 ?
+                            response.detalle.map(lote => lote.nombre_lote).join(', ') :
+                            ''
+                        );
 
-                    // Genera la tabla de lotes a granel asociados en la sección correspondiente
-                      let $tabla = $(`#tablaLotes_edit_${sectionCountEdit}`);
-                if ($tabla.length === 0) {
-                    // Si no existe la tabla, créala dinámicamente en el contenedor correcto
-                    $(`#caracteristicas_Ex_edit_ .card-body`).append(`
-                        <table id="tablaLotes_edit_${sectionCountEdit}" class="table table-bordered table-sm mt-3">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Certificado</th>
-                                    <th>Folio FQ</th>
-                                    <th>Cont. Alc.</th>
-                                    <th>Categoría / Clase / Tipos de Maguey</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    `);
-                    $tabla = $(`#tablaLotes_edit_${sectionCountEdit}`);
-                }
-                let $tbody = $tabla.find('tbody');
-                $tbody.empty();
-
-                if (response.detalle && response.detalle.length > 0) {
-                    response.detalle.forEach((lote, index) => {
-                        $tbody.append(`
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td>
-                                    ${lote.nombre_lote}<br>
-                                    <b>Certificado: </b>
-                                    ${lote.certificado_granel ? lote.certificado_granel.num_certificado : 'Sin definir'}
-                                </td>
-                                <td>${lote.folio_fq || ''}</td>
-                                <td>${lote.cont_alc || ''}</td>
-                                <td>
-                                    ${lote.categoria?.categoria || 'N/A'}<br>
-                                    ${lote.clase?.clase || 'N/A'}<br>
-                                    ${
-                                        lote.tiposMaguey && lote.tiposMaguey.length
-                                            ? lote.tiposMaguey.map(tipo => `${tipo.nombre} (<i>${tipo.cientifico}</i>)`).join('<br>')
-                                            : 'N/A'
-                                    }
-                                </td>
-                            </tr>
+                        // Genera la tabla de lotes a granel asociados en la sección correspondiente
+                          let $tabla = $(`#tablaLotes_edit_${sectionCountEdit}`);
+                    if ($tabla.length === 0) {
+                        // Si no existe la tabla, créala dinámicamente en el contenedor correcto
+                        $(`#caracteristicas_Ex_edit_ .card-body`).append(`
+                            <table id="tablaLotes_edit_${sectionCountEdit}" class="table table-bordered table-sm mt-3">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Certificado</th>
+                                        <th>Folio FQ</th>
+                                        <th>Cont. Alc.</th>
+                                        <th>Categoría / Clase / Tipos de Maguey</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         `);
-                    });
-                } else {
-                    $tbody.append(
-                        `<tr><td colspan="8" class="text-center">No hay lotes a granel asociados</td></tr>`
-                    );
-                }
-                },
-                error: function() {
-                    console.error('Error al cargar el detalle del lote envasado.');
-                }
-            });
-        }
-    } */
+                        $tabla = $(`#tablaLotes_edit_${sectionCountEdit}`);
+                    }
+                    let $tbody = $tabla.find('tbody');
+                    $tbody.empty();
+
+                    if (response.detalle && response.detalle.length > 0) {
+                        response.detalle.forEach((lote, index) => {
+                            $tbody.append(`
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>
+                                        ${lote.nombre_lote}<br>
+                                        <b>Certificado: </b>
+                                        ${lote.certificado_granel ? lote.certificado_granel.num_certificado : 'Sin definir'}
+                                    </td>
+                                    <td>${lote.folio_fq || ''}</td>
+                                    <td>${lote.cont_alc || ''}</td>
+                                    <td>
+                                        ${lote.categoria?.categoria || 'N/A'}<br>
+                                        ${lote.clase?.clase || 'N/A'}<br>
+                                        ${
+                                            lote.tiposMaguey && lote.tiposMaguey.length
+                                                ? lote.tiposMaguey.map(tipo => `${tipo.nombre} (<i>${tipo.cientifico}</i>)`).join('<br>')
+                                                : 'N/A'
+                                        }
+                                    </td>
+                                </tr>
+                            `);
+                        });
+                    } else {
+                        $tbody.append(
+                            `<tr><td colspan="8" class="text-center">No hay lotes a granel asociados</td></tr>`
+                        );
+                    }
+                    },
+                    error: function() {
+                        console.error('Error al cargar el detalle del lote envasado.');
+                    }
+                });
+            }
+        } */
 </script>
