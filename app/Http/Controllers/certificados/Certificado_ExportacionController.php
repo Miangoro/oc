@@ -1053,6 +1053,8 @@ public function guardarVobo(Request $request)
 
     }
 
+     
+    activity()->disableLogging();//Desactivar TRAZABILIDAD para este registro
     $certificado->vobo = json_encode($vobo);
     $certificado->save();
 
