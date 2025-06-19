@@ -1497,7 +1497,7 @@ $(document).ready(function () {
 
   //Abrir PDF Bitacora
 $(document).on('click', '.pdf', function () {
-  var id_revisor = $(this).data('id'); // <-- ¡Esta línea es clave!
+  var id_revisor = $(this).data('id');
   var num_certificado = $(this).data('num-certificado');
   var tipoRevision = $(this).data('tipo_revision');
 
@@ -1516,7 +1516,7 @@ $(document).on('click', '.pdf', function () {
     $("#titulo_modal").text("Bitácora de revisión documental");
     $("#subtitulo_modal").html('<span class="badge bg-info">'+num_certificado+'</span>');
 
-   //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     $('#pdfViewer').on('load', function () {
       $('#cargando').hide();
       $('#pdfViewer').show();
