@@ -1,5 +1,5 @@
 <!-- Modal para agregar nuevo predio -->
-<div class="modal fade" id="modalAddPredio" tabindex="-1"  aria-hidden="true">
+<div class="modal fade" id="modalAddPredio" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
@@ -14,7 +14,9 @@
                         <select id="id_empresa" name="id_empresa" class="select2 form-select">
                             <option value="" disabled selected>Selecciona el cliente</option>
                             @foreach ($empresas as $empresa)
-                                <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                <option value="{{ $empresa->id_empresa }}">
+                                    {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                    | {{ $empresa->razon_social }}</option>
                             @endforeach
                         </select>
                         <label for="id_empresa">Cliente</label>
@@ -108,109 +110,116 @@
                     </div>
                     <!-- ¿Cuenta con Coordenadas? -->
                     <div id="coordenadas" class="d-none mb-4">
-                      <div class="card">
-                        <div class="table-responsive text-nowrap">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th><button type="button" class="btn btn-primary add-row-cordenadas btn-sm"><i
-                                                    class="ri-add-line"></i></button></th>
-                                        <th colspan="2" style="width: 95%"><h5 class="card-title mb-0 text-center">Coordenadas</h5></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="coordenadas-body">
-                                    <!-- Campos de coordenadas se agregarán aquí dinámicamente -->
-                                </tbody>
-                            </table>
-                          </div>
-                        </div>
-                    </div>
-                        <div class="informacionAgave mb-4">
-                            <div class="card">
-                                <div class="table-responsive text-nowrap">
-                                    <table class="table  table-bordered table-striped mb-3">
+                        <div class="card">
+                            <div class="table-responsive text-nowrap">
+                                <table class="table table-bordered">
+                                    <thead>
                                         <tr>
-                                            <th>
-                                                <button type="button" class="btn btn-primary add-row-plantacion btn-sm"><i
-                                                        class="ri-add-line"></i></button>
-                                            </th>
+                                            <th><button type="button"
+                                                    class="btn btn-primary add-row-cordenadas btn-sm"><i
+                                                        class="ri-add-line"></i></button></th>
                                             <th colspan="2" style="width: 95%">
-                                                <h5 class="card-title mb-0 text-center">Información del Agave/Maguey y
-                                                    Plantación</h5>
+                                                <h5 class="card-title mb-0 text-center">Coordenadas</h5>
                                             </th>
                                         </tr>
-                                        <tbody class="contenidoPlantacion">
-                                            <tr>
-                                                <td rowspan="4">
-                                                    <button type="button"
-                                                        class="btn btn-danger remove-row-plantacion btn-sm" disabled><i
-                                                            class="ri-delete-bin-5-fill"></i></button>
-                                                </td>
-                                                <td><b>Nombre/Especie de Agave/Maguey</b></td>
-                                                <td>
-                                                    <div class="form-floating form-floating-outline mb-3">
-                                                        <select name="id_tipo[]"
-                                                            class="select2 form-select tipo_agave">
-                                                            <option value="" disabled selected>Tipo de agave
-                                                            </option>
-                                                            @foreach ($tipos as $tipo)
-                                                                <option value="{{ $tipo->id_tipo }}">
-                                                                    {{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <label for="especie_agave"></label>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Número de Plantas</b></td>
-                                                <td>
-                                                    <div class="form-floating form-floating-outline">
-                                                        <input type="number" class="form-control" autocomplete="off"
-                                                            name="numero_plantas[]" placeholder="Número de plantas"
-                                                            step="1">
-                                                        <label for="numero_plantas">Número de Plantas</label>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Año de la plantación</b></td>
-                                                <td>
-                                                    <div class="form-floating form-floating-outline">
-                                                        <input type="number" class="form-control"
-                                                            name="edad_plantacion[]" autocomplete="off"
-                                                            placeholder="Año de la plantación" step="1">
-                                                        <label for="edad_plantacion">Año de la plantación</label>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <b>Tipo de Plantación</b>
-                                                </td>
-                                                <td>
-                                                    <div class="form-floating form-floating-outline">
-                                                        <select class="form-control" name="tipo_plantacion[]" >
-                                                            <option value="Cultivado">Cultivado</option>
-                                                            <option value="Silvestre">Silvestre</option>
-                                                        </select>
-                                                        <label for="tipo_plantacion">Tipo de Plantación</label>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                    </thead>
+                                    <tbody id="coordenadas-body">
+                                        <!-- Campos de coordenadas se agregarán aquí dinámicamente -->
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+                    </div>
+                    <div class="informacionAgave mb-4">
+                        <div class="card">
+                            <div class="table-responsive text-nowrap">
+                                <table class="table  table-bordered table-striped mb-3">
+                                    <tr>
+                                        <th>
+                                            <button type="button"
+                                                class="btn btn-primary add-row-plantacion btn-sm"><i
+                                                    class="ri-add-line"></i></button>
+                                        </th>
+                                        <th colspan="2" style="width: 95%">
+                                            <h5 class="card-title mb-0 text-center">Información del Agave/Maguey y
+                                                Plantación</h5>
+                                        </th>
+                                    </tr>
+                                    <tbody class="contenidoPlantacion">
+                                        <tr>
+                                            <td rowspan="4">
+                                                <button type="button"
+                                                    class="btn btn-danger remove-row-plantacion btn-sm" disabled><i
+                                                        class="ri-delete-bin-5-fill"></i></button>
+                                            </td>
+                                            <td><b>Nombre/Especie de Agave/Maguey</b></td>
+                                            <td>
+                                                <div class="form-floating form-floating-outline mb-3">
+                                                    <select name="id_tipo[]" class="select2 form-select tipo_agave">
+                                                        <option value="" disabled selected>Tipo de agave
+                                                        </option>
+                                                        @foreach ($tipos as $tipo)
+                                                            <option value="{{ $tipo->id_tipo }}">
+                                                                {{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <label for="especie_agave"></label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Número de Plantas</b></td>
+                                            <td>
+                                                <div class="form-floating form-floating-outline">
+                                                    <input type="number" class="form-control" autocomplete="off"
+                                                        name="numero_plantas[]" placeholder="Número de plantas"
+                                                        step="1">
+                                                    <label for="numero_plantas">Número de Plantas</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Año de la plantación</b></td>
+                                            <td>
+                                                <div class="form-floating form-floating-outline">
+                                                    <input type="number" class="form-control"
+                                                        name="edad_plantacion[]" autocomplete="off"
+                                                        placeholder="Año de la plantación" step="1">
+                                                    <label for="edad_plantacion">Año de la plantación</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b>Tipo de Plantación</b>
+                                            </td>
+                                            <td>
+                                                <div class="form-floating form-floating-outline">
+                                                    <select class="form-control" name="tipo_plantacion[]">
+                                                        <option value="Cultivado">Cultivado</option>
+                                                        <option value="Silvestre">Silvestre</option>
+                                                    </select>
+                                                    <label for="tipo_plantacion">Tipo de Plantación</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                     <div class="d-flex justify-content-center mt-3">
-                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line me-1"></i> Registrar</button>
-                        <button type="reset" class="btn btn-danger"
-                            data-bs-dismiss="modal"><i class="ri-close-line me-1"></i> Cancelar</button>
+                        <button disabled class="btn btn-primary me-2 d-none" type="button" id="btnSpinnerPredio">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Registrando...
+                        </button>
+                        <button type="submit" class="btn btn-primary me-2" id="btnAddNewPredio"><i class="ri-add-line me-1"></i>
+                            Registrar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"><i
+                                class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-

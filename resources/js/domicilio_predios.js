@@ -924,6 +924,8 @@ $(function () {
     });
     // Manejo del envío del formulario
     fv.on('core.form.valid', function (e) {
+      $('#btnAddNewPredio').addClass('d-none');
+      $('#btnSpinnerPredio').removeClass('d-none');
       var formData = new FormData(addNewPredio);
       $.ajax({
         url: '/predios-list',
@@ -934,6 +936,8 @@ $(function () {
         success: function (response) {
           addNewPredio.reset();
           $('#id_empresa').val('').trigger('change');
+          $('#btnSpinnerPredio').addClass('d-none');
+          $('#btnAddNewPredio').removeClass('d-none');
           $('#modalAddPredio').modal('hide');
           $('.datatables-users').DataTable().ajax.reload();
           Swal.fire({
@@ -959,6 +963,8 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#btnSpinnerPredio').addClass('d-none');
+          $('#btnAddNewPredio').removeClass('d-none');
         }
       });
     });
@@ -1015,6 +1021,8 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function (e) {
+      $('#btnRegistrarGeo').addClass('d-none');
+      $('#btnSpinnerGeoreferenciacion').removeClass('d-none');
       // Validar el formulario
       var formData = new FormData(addRegistrarSolicitudGeoreferenciacion);
       $.ajax({
@@ -1024,6 +1032,8 @@ $(function () {
         processData: false,
         contentType: false,
         success: function (response) {
+          $('#btnSpinnerGeoreferenciacion').addClass('d-none');
+          $('#btnRegistrarGeo').removeClass('d-none');
           $('#addSolicitudGeoreferenciacion').modal('hide');
           addRegistrarSolicitudGeoreferenciacion.reset(); // Resetea el formulario
           $('.datatables-users').DataTable().ajax.reload();
@@ -1046,6 +1056,8 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#btnSpinnerGeoreferenciacion').addClass('d-none');
+          $('#btnRegistrarGeo').removeClass('d-none');
         }
       });
     });
@@ -1158,6 +1170,8 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function (e) {
+      $('#btnEditPredioPre').addClass('d-none');
+      $('#btnSpinnerEditPredio').removeClass('d-none');
       var formData = new FormData(addEditPredioForm);
       var predioId = $('#edit_id_predio').val(); // Asegúrate de que este ID esté correctamente asignado
 
@@ -1169,6 +1183,8 @@ $(function () {
         processData: false,
         success: function (response) {
           addEditPredioForm.reset();
+          $('#btnEditPredioPre').removeClass('d-none');
+          $('#btnSpinnerEditPredio').addClass('d-none');
           $('#modalEditPredio').modal('hide');
           $('.datatables-users').DataTable().ajax.reload(null, false);
           Swal.fire({
@@ -1205,6 +1221,8 @@ $(function () {
               }
             });
           }
+          $('#btnEditPredioPre').removeClass('d-none');
+          $('#btnSpinnerEditPredio').addClass('d-none');
         }
       });
     });
@@ -1681,6 +1699,8 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function (e) {
+      $('#btnAddPredioInspeccion').addClass('d-none');
+      $('#btnSpinnerPredioInspeccion').removeClass('d-none');
       var formData = new FormData(addAddPredioInspeccionForm);
       var predioId = $('#inspeccion_id_predio').val(); // Asegúrate de que este ID esté correctamente asignado
 
@@ -1692,6 +1712,8 @@ $(function () {
         processData: false,
         success: function (response) {
           addAddPredioInspeccionForm.reset();
+          $('#btnAddPredioInspeccion').removeClass('d-none');
+          $('#btnSpinnerPredioInspeccion').addClass('d-none');
           $('#modalAddPredioInspeccion').modal('hide');
           $('.datatables-users').DataTable().ajax.reload();
           Swal.fire({
@@ -1712,6 +1734,8 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#btnAddPredioInspeccion').removeClass('d-none');
+          $('#btnSpinnerPredioInspeccion').addClass('d-none');
         }
       });
 
@@ -1828,7 +1852,9 @@ $(function () {
       }
     }).on('core.form.valid', function (e) {
       var formData = new FormData(modalAddRegistroPredioForm);
-      var predioId = $('#id_predio').val(); // ID del predio
+      var predioId = $('#id_predio_registro').val(); // ID del predio
+      $('#btnRegistroPredio').addClass('d-none');
+      $('#btnSpinnerRegistroPredio').removeClass('d-none');
       $.ajax({
         url: '/registro-Predio/' + predioId,
         type: 'POST',
@@ -1837,6 +1863,8 @@ $(function () {
         processData: false,
         success: function (response) {
           modalAddRegistroPredioForm.reset();
+          $('#btnRegistroPredio').removeClass('d-none');
+          $('#btnSpinnerRegistroPredio').addClass('d-none');
           $('#modalAddRegistroPredio').modal('hide');
           $('.datatables-users').DataTable().ajax.reload(); // Recargar la tabla de usuarios
           Swal.fire({
@@ -1849,14 +1877,36 @@ $(function () {
           });
         },
         error: function (xhr) {
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al agregar el predio',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
+          $('#btnRegistroPredio').removeClass('d-none');
+          $('#btnSpinnerRegistroPredio').addClass('d-none');
+
+          // Errores de validación (Laravel 422)
+          if (xhr.status === 422) {
+            let errores = xhr.responseJSON.errors;
+            let mensajes = Object.values(errores).flat().join('\n');
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Errores de validación',
+              text: mensajes,
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+
+            // Errores del catch (500 u otros)
+          } else {
+            const mensaje = xhr.responseJSON?.message || 'Ocurrió un error inesperado.';
+
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: mensaje,
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
         }
       });
     });
@@ -1920,7 +1970,7 @@ $(function () {
         if (data.success) {
           var inspeccion = data.data; // inspección con todos los campos directos
           var url = data.document_url;  // Aquí está la URL correcta
-              console.log('url:', url);
+          console.log('url:', url);
           $('#edit_inspeccion_id_empresa').val(inspeccion.predio.id_empresa);
           $('#edit_inspeccion_ubicacion_predio').val(inspeccion.ubicacion_predio);
           $('#edit_inspeccion_superficie').val(inspeccion.superficie);
@@ -1930,17 +1980,17 @@ $(function () {
           $('#edit_distrito').val(inspeccion.distrito);
           $('#edit_nombreParaje').val(inspeccion.nombre_paraje);
           $('#edit_zonaDom').val(inspeccion.zona_dom).trigger('change');
-           $('#url_documento_geo_edit').html(`<span class="text-muted">No hay documento cargado</span>`);
-/*           $('#edit_inspeccion_geo_Doc').val(predio.inspeccion_geo_Doc); */
-            if (url) {
-              $('#url_documento_geo_edit').html(`
+          $('#url_documento_geo_edit').html(`<span class="text-muted">No hay documento cargado</span>`);
+          /*           $('#edit_inspeccion_geo_Doc').val(predio.inspeccion_geo_Doc); */
+          if (url) {
+            $('#url_documento_geo_edit').html(`
                 <a href="${url}" target="_blank" class="">
                   Inspección para la geo-referenciación de los predios de maguey o agave
                 </a>
               `);
-            } else {
-              $('#url_documento_geo_edit').html(`<span class="text-muted">No hay documento cargado</span>`);
-            }
+          } else {
+            $('#url_documento_geo_edit').html(`<span class="text-muted">No hay documento cargado</span>`);
+          }
 
 
 
@@ -2052,6 +2102,8 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function (e) {
+      $('#btnEditInspeccionPredio').addClass('d-none');
+      $('#btnSpinnerEditPredioInspeccion').removeClass('d-none');
       var formData = new FormData(addAddPredioInspeccionForm);
       var predioId = $('#edit_inspeccion_id_predio').val(); // Asegúrate de que este ID esté correctamente asignado
 
@@ -2063,6 +2115,8 @@ $(function () {
         processData: false,
         success: function (response) {
           addAddPredioInspeccionForm.reset();
+          $('#btnEditInspeccionPredio').removeClass('d-none');
+          $('#btnSpinnerEditPredioInspeccion').addClass('d-none');
           $('#modalEditPredioInspeccion').modal('hide');
           $('.datatables-users').DataTable().ajax.reload(null, false);
           Swal.fire({
@@ -2083,6 +2137,8 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#btnEditInspeccionPredio').removeClass('d-none');
+          $('#btnSpinnerEditPredioInspeccion').addClass('d-none');
         }
       });
 
@@ -2144,6 +2200,8 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function (e) {
+      $('#btnEditRegistroPredio').addClass('d-none');
+      $('#btnSpinnerEditRegistroPredio').removeClass('d-none');
       var formData = new FormData(modalAddRegistroPredioForm);
       var predioId = $('#edit_id_predio_registro').val(); // ID del predio
       $.ajax({
@@ -2154,6 +2212,8 @@ $(function () {
         processData: false,
         success: function (response) {
           modalAddRegistroPredioForm.reset();
+          $('#btnEditRegistroPredio').removeClass('d-none');
+          $('#btnSpinnerEditRegistroPredio').addClass('d-none');
           $('#modalEditRegistroPredio').modal('hide');
           $('.datatables-users').DataTable().ajax.reload(null, false); // Recargar la tabla de usuarios
           Swal.fire({
@@ -2174,6 +2234,8 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#btnEditRegistroPredio').removeClass('d-none');
+          $('#btnSpinnerEditRegistroPredio').addClass('d-none');
         }
       });
     });
@@ -2182,37 +2244,25 @@ $(function () {
 
   });
 
-      // Manejar el clic en el botón de editar
-    $(document).on('click', '.edit_registro-record', function () {
-      var predioId = $(this).data('id'); // Obtener el ID del predio a editar
-      $('#edit_id_predio_registro').val(predioId); // Establecer el ID en el input correspondiente
-      $.ajax({
-        url: '/domicilios-predios/' + predioId + '/edit',
-        method: 'GET',
-        success: function (data) {
-          if (data.success) {
-            var predio = data.predio;
-            // Rellenar el formulario con los datos del predio
-/*             $('#edit_id_predio_registro').val(predio.id_empresa).trigger('change'); */
-            $('#edit_num_predio').val(predio.num_predio);
-            $('#edit_fecha_emision').val(predio.fecha_emision);
-            $('#edit_fecha_vigencia').val(predio.fecha_vigencia);
-            // Mostrar el modal
-            $('#modalEditRegistroPredio').modal('show');
+  // Manejar el clic en el botón de editar
+  $(document).on('click', '.edit_registro-record', function () {
+    var predioId = $(this).data('id'); // Obtener el ID del predio a editar
+    $('#edit_id_predio_registro').val(predioId); // Establecer el ID en el input correspondiente
+    $.ajax({
+      url: '/domicilios-predios/' + predioId + '/edit',
+      method: 'GET',
+      success: function (data) {
+        if (data.success) {
+          var predio = data.predio;
+          // Rellenar el formulario con los datos del predio
+          /*             $('#edit_id_predio_registro').val(predio.id_empresa).trigger('change'); */
+          $('#edit_num_predio').val(predio.num_predio);
+          $('#edit_fecha_emision').val(predio.fecha_emision);
+          $('#edit_fecha_vigencia').val(predio.fecha_vigencia);
+          // Mostrar el modal
+          $('#modalEditRegistroPredio').modal('show');
 
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo cargar los datos del predio.',
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          }
-        },
-        error: function (error) {
-          console.error('Error al cargar los datos del predio:', error);
+        } else {
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -2222,9 +2272,21 @@ $(function () {
             }
           });
         }
-      });
-
+      },
+      error: function (error) {
+        console.error('Error al cargar los datos del predio:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo cargar los datos del predio.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
     });
+
+  });
 
   // Función para agregar 5 años a la fecha de emisión y actualizar la fecha de vigencia
   function updateDatepickerValidationEdit(fv) {

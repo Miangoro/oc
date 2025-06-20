@@ -938,7 +938,7 @@ class PrediosController extends Controller
       } catch (\Exception $e) {
           return response()->json([
               'success' => false,
-              'message' => 'Error al actualizar el predio: ' . $e->getMessage(),
+              'message' => $e->getMessage(),
           ], 500);
       }
 

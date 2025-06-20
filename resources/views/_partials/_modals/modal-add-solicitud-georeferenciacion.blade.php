@@ -1,6 +1,6 @@
 <!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="addSolicitudGeoreferenciacion" tabindex="-1" aria-hidden="true">
-   <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
                 <h5 class="modal-title text-white">Registrar nueva solicitud de georeferenciación</h5>
@@ -28,7 +28,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    name="fecha_visita" id="fecha_visita_geo"/>
+                                    name="fecha_visita" id="fecha_visita_geo" />
                                 <label for="num_anterior">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -46,7 +46,7 @@
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="Dirección del punto de reunión" class="form-control" type="text"
-                                    name="punto_reunion" id="punto_reunion_georefere"/>
+                                    name="punto_reunion" id="punto_reunion_georefere" />
                                 <label for="num_anterior">Dirección del punto de reunión</label>
                             </div>
                         </div>
@@ -59,7 +59,12 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnRegistrarGeo" ><i class="ri-add-line me-1"></i> Registrar</button>
+                        <button disabled class="btn btn-primary me-1 d-none" type="button" id="btnSpinnerGeoreferenciacion">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Registrando...
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnRegistrarGeo"><i
+                                class="ri-add-line me-1"></i> Registrar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
