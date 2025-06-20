@@ -1178,9 +1178,9 @@ $(function () {
                   for (var i = 1; i < cantidadDeLotes; i++) {
                     $('#add-characteristics_edit').click();
                     // Primero actualiza el índice 0 (parece error: debería ser i)
-                    modal.find(`#cantidad_cajas_edit0`).val(response.caracteristicas.detalles[0].cantidad_cajas);
-                    modal.find(`#cantidad_botellas_edit0`).val(response.caracteristicas.detalles[0].cantidad_botellas);
-                    modal.find(`#presentacion_edit0`).val(response.caracteristicas.detalles[0].presentacion || '');
+                    modal.find(`#2cantidad_cajas_edit0`).val(response.caracteristicas.detalles[0].cantidad_cajas);
+                    modal.find(`#2cantidad_botellas_edit0`).val(response.caracteristicas.detalles[0].cantidad_botellas);
+                    modal.find(`#2presentacion_edit0`).val(response.caracteristicas.detalles[0].presentacion || '');
                     modal.find(`#lote_granel_edit_0`).val(response.caracteristicas.detalles[0].lote_granel || '');
                     modal.find('#lote_envasado_edit_0').data('selected', response.caracteristicas.detalles[0].id_lote_envasado).trigger('change');
                     let idLoteEnvasado = response.caracteristicas.detalles[0].id_lote_envasado;
@@ -3889,25 +3889,56 @@ $(function () {
   });
 
   /* seccion para exportacion */
-  $(document).ready(function () {
-    // Obtener el select y las secciones
-    var $tipoSolicitud = $('#tipo_solicitud');
-    var $pedidosEx = $('#pedidos_Ex');
-    var $etiquetasEx = $('#etiquetas_Ex');
-    var $botonesCharacteristics = $('#botones_characteristics');
+$(document).ready(function () {
+  const $tipoSolicitud = $('#tipo_solicitud');
+  const $seccionCombinado = $('#seccionCajasBotellasCombinado');
+  const $seccionExportacion = $('#seccionCajasBotellas');
+  const $botonesCharacteristics = $('#botones_characteristics');
 
-    // Manejar el evento de cambio
-    $tipoSolicitud.on('change', function () {
-      var valorSeleccionado = $tipoSolicitud.val();
+  $tipoSolicitud.on('change', function () {
+    const tipo = $(this).val();
 
+    if (tipo === '2') {
+      // Combinado: ocultar inputs originales y activar sección nueva
+      $('#cant_botellas_exportac').removeAttr('name');
+      $('#cant_cajas_exportac').removeAttr('name');
+      $('#presentacion_exportac').removeAttr('name');
 
-      if (valorSeleccionado === '2' || valorSeleccionado === '5') {
-        $botonesCharacteristics.removeClass('d-none'); // Mostrar los botones
-      } else {
-        $botonesCharacteristics.addClass('d-none'); // Ocultar los botones
-      }
-    });
+      $('#cant_botellas_exportac2').attr('name', 'cantidad_botellas[0]');
+      $('#cant_cajas_exportac2').attr('name', 'cantidad_cajas[0]');
+      $('#presentacion_exportac2').attr('name', 'presentacion[0]');
+
+      $seccionExportacion.removeClass('d-none');
+      $seccionCombinado.addClass('d-none');
+
+      // Mostrar botones para tablas adicionales
+      $botonesCharacteristics.removeClass('d-none');
+    } else {
+      // Otro tipo: regresar a inputs originales
+      $('#cant_botellas_exportac2').removeAttr('name');
+      $('#cant_cajas_exportac2').removeAttr('name');
+      $('#presentacion_exportac2').removeAttr('name');
+
+      $('#cant_botellas_exportac').attr('name', 'cantidad_botellas[0]');
+      $('#cant_cajas_exportac').attr('name', 'cantidad_cajas[0]');
+      $('#presentacion_exportac').attr('name', 'presentacion[0]');
+
+      $seccionCombinado.removeClass('d-none');
+      $seccionExportacion.addClass('d-none');
+
+      // Ocultar botones
+      $botonesCharacteristics.addClass('d-none');
+    }
   });
+
+  // Ejecutar una vez al cargar (por si ya tiene valor)
+  if ($tipoSolicitud.val() === '2') {
+    $tipoSolicitud.trigger('change');
+  }
+});
+
+
+
 
   $(document).ready(function () {
     $('#editPedidoExportacion').on('hidden.bs.modal', function () {
@@ -3917,28 +3948,53 @@ $(function () {
     });
   });
 
-  $(document).ready(function () {
-    var $tipoSolicitudEdit = $('#tipo_solicitud_edit');
-    var $botonesCharacteristicsEdit = $('#botones_characteristics_edit');
+$(document).ready(function () {
+  var $tipoSolicitudEdit = $('#tipo_solicitud_edit');
+  var $botonesCharacteristicsEdit = $('#botones_characteristics_edit');
+  var $seccionCombinadoEdit = $('#seccionCajasBotellasCombinadoEdit');
+  var $seccionExportacionEdit = $('#seccionCajasBotellasEdit');
 
-    // Mostrar/ocultar los botones al cambiar el tipo en el modal de editar
-    $tipoSolicitudEdit.on('change', function () {
-      if ($(this).val() === '2') {
-        $botonesCharacteristicsEdit.removeClass('d-none');
-      } else {
-        $botonesCharacteristicsEdit.addClass('d-none');
-      }
-    });
+  function actualizarSeccionesEdit() {
+    if ($tipoSolicitudEdit.val() === '2') {
+      // COMBINADO (tipo 2) => mostrar card, ocultar combinado
+      $botonesCharacteristicsEdit.removeClass('d-none');
+      $seccionExportacionEdit.removeClass('d-none');
+      $seccionCombinadoEdit.addClass('d-none');
 
-    // Al abrir el modal de editar, asegúrate de mostrar/ocultar según el valor actual
-    if ($tipoSolicitudEdit.length) {
-      if ($tipoSolicitudEdit.val() === '2') {
-        $botonesCharacteristicsEdit.removeClass('d-none');
-      } else {
-        $botonesCharacteristicsEdit.addClass('d-none');
-      }
+      // Remover name del combinado
+      $('#cantidad_botellas_edit0').removeAttr('name');
+      $('#cantidad_cajas_edit0').removeAttr('name');
+      $('#presentacion_edit0').removeAttr('name');
+
+      // Agregar name a la sección "card"
+      $('#2cantidad_botellas_edit0').attr('name', 'cantidad_botellas[0]');
+      $('#2cantidad_cajas_edit0').attr('name', 'cantidad_cajas[0]');
+      $('#2presentacion_edit0').attr('name', 'presentacion[0]');
+    } else {
+      // Otro tipo => mostrar combinado, ocultar card
+      $botonesCharacteristicsEdit.addClass('d-none');
+      $seccionExportacionEdit.addClass('d-none');
+      $seccionCombinadoEdit.removeClass('d-none');
+
+      // Remover name del card
+      $('#2cantidad_botellas_edit0').removeAttr('name');
+      $('#2cantidad_cajas_edit0').removeAttr('name');
+      $('#2presentacion_edit0').removeAttr('name');
+
+      // Agregar name a la sección original
+      $('#cantidad_botellas_edit0').attr('name', 'cantidad_botellas[0]');
+      $('#cantidad_cajas_edit0').attr('name', 'cantidad_cajas[0]');
+      $('#presentacion_edit0').attr('name', 'presentacion[0]');
     }
-  });
+  }
+
+  // Evento change
+  $tipoSolicitudEdit.on('change', actualizarSeccionesEdit);
+
+  // Llamar una vez al cargar por si ya tiene valor
+  actualizarSeccionesEdit();
+});
+
 
   $(document).ready(function () {
     let sectionCount = 1;

@@ -155,27 +155,32 @@
                                             <label for="lote_granel">Lote a granel</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" class="form-control cantidad_botellas0"
-                                                name="cantidad_botellas[0]" placeholder="Cantidad de botellas">
-                                            <label for="cantidad_botellas">Cantidad de botellas</label>
+                                    <span id="seccionCajasBotellasCombinado" class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-floating form-floating-outline mb-4">
+                                                <input id="cant_botellas_exportac" type="number"
+                                                    class="form-control cantidad_botellas0"
+                                                    name="cantidad_botellas[0]" placeholder="Cantidad de botellas">
+                                                <label for="cantidad_botellas">Cantidad de botellas</label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" class="form-control" name="cantidad_cajas[0]"
-                                                placeholder="Cantidad de cajas">
-                                            <label for="cantidad_cajas">Cantidad de cajas</label>
+                                        <div class="col-md-4">
+                                            <div class="form-floating form-floating-outline mb-4">
+                                                <input id="cant_cajas_exportac" type="number" class="form-control"
+                                                    name="cantidad_cajas[0]" placeholder="Cantidad de cajas">
+                                                <label for="cantidad_cajas">Cantidad de cajas</label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" class="form-control presentacion"
-                                                name="presentacion[0]" placeholder="Ej. 750ml">
-                                            <label for="presentacion">Presentación</label>
+                                        <div class="col-md-4">
+                                            <div class="form-floating form-floating-outline mb-4">
+                                                <input id="presentacion_exportac" type="text"
+                                                    class="form-control presentacion" name="presentacion[0]"
+                                                    placeholder="Ej. 750ml">
+                                                <label for="presentacion">Presentación</label>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </span>
+
 
                                     <div class="p-2">
                                         <table id="tablaLotes" class="table table-bordered table-sm mb-2"
@@ -208,14 +213,46 @@
                     <!-- Botones -->
                     <div id="botones_characteristics" class="d-none">
                         <button type="button" id="add-characteristics" class="btn btn-primary btn-sm mb-2">
-                            <i class="ri-add-line"></i> Agregar Tabla
+                            <i class="ri-add-line me-1"></i> Agregar Tabla
                         </button>
                         <button type="button" id="delete-characteristics"
                             class="btn btn-danger btn-sm mb-2 float-end">
-                            <i class="ri-delete-bin-6-fill"></i> Eliminar tabla
+                            <i class="ri-delete-bin-6-fill me-1"></i> Eliminar tabla
                         </button>
                     </div>
 
+                    <div id="seccionCajasBotellas" class="card d-none">
+                        <div class="badge rounded-2 bg-label-warning fw-bold fs-6 px-4 py-4 mb-5">
+                            <span>Información de los lotes</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-floating form-floating-outline mb-2">
+                                        <input id="cant_botellas_exportac2" type="number"
+                                            class="form-control cantidad_botellas0"
+                                            placeholder="Cantidad de botellas">
+                                        <label for="cantidad_botellas">Cantidad de botellas</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating form-floating-outline mb-2">
+                                        <input id="cant_cajas_exportac2" type="number" class="form-control"
+                                             placeholder="Cantidad de cajas">
+                                        <label for="cantidad_cajas">Cantidad de cajas</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating form-floating-outline mb-2">
+                                        <input id="presentacion_exportac2" type="text"
+                                            class="form-control presentacion"
+                                            placeholder="Ej. 750ml">
+                                        <label for="presentacion">Presentación</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Sección: Elegir Etiquetas y Corrugados -->
                     <div class="card mt-4" id="etiquetas_Ex">
@@ -257,10 +294,10 @@
                             </div>
                             <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                                 <button type="submit" class="btn btn-primary" id="btnAddExport"><i
-                                        class="ri-add-line"></i>
+                                        class="ri-add-line me-1"></i>
                                     Registrar</button>
                                 <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
-                                    aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                                    aria-label="Close"><i class="ri-close-line me-1"></i> Cancelar</button>
                             </div>
                         </div>
                     </div>
