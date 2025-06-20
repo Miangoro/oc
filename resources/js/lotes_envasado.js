@@ -35,7 +35,7 @@ $(function () {
 
             if (row.id_empresa != 'N/A') {
               id_empresa =
-                '<br><span class="fw-bold text-dark small">' +row.id_empresa +'</span>';
+                '<br><span class="fw-bold text-dark small">' + row.id_empresa + '</span>';
             }
             if (row.razon_social != 'N/A') {
               razon_social =
@@ -47,7 +47,7 @@ $(function () {
             return (
               '<span class="fw-bold text-dark">' +
               row.id_empresa +
-              '</span> <br><span class="small">'+ row.razon_social+'</span>'
+              '</span> <br><span class="small">' + row.razon_social + '</span>'
 
             );
           }
@@ -506,6 +506,8 @@ $(function () {
     });
   }
 
+
+
   // Registrar Lotes y validar
   $(function () {
     $.ajaxSetup({
@@ -533,7 +535,7 @@ $(function () {
           $('.id_lote_granel').html(contenido);
           //fv.revalidateField('id_lote_granel');
           /* contenido marcas */
-           var Macontenido = "";
+          var Macontenido = "";
           for (let index = 0; index < response.marcas.length; index++) {
             Macontenido = '<option value="' + response.marcas[index].id_marca + '">' + response
               .marcas[index].marca + '</option>' + Macontenido;
@@ -565,109 +567,122 @@ $(function () {
     }
 
     //Obtener marcas
-/*     function obtenerMarcas() {
-      var empresa = $("#id_empresa").val();
-      $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function (response) {
+    /*     function obtenerMarcas() {
+          var empresa = $("#id_empresa").val();
+          $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function (response) {
 
 
 
 
 
-        },
-        error: function () { }
-      });
-    }
+            },
+            error: function () { }
+          });
+        }
 
-    //Obtener direcciones
-    function obtenerDirecciones() {
-      var empresa = $("#id_empresa").val();
-      $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function (response) {
+        //Obtener direcciones
+        function obtenerDirecciones() {
+          var empresa = $("#id_empresa").val();
+          $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function (response) {
 
 
 
-        },
-        error: function () { }
-      });
-    }
- */
+            },
+            error: function () { }
+          });
+        }
+    */
 
     function cargarMarcas() {
       var id_empresa = $('#id_empresa').val();
 
       if (id_empresa) {
-          $.ajax({
-              url: '/marcas/' + id_empresa,
-              method: 'GET',
-              success: function(marcas) {
-                  var tbody = '';
+        $.ajax({
+          url: '/marcas/' + id_empresa,
+          method: 'GET',
+          success: function (marcas) {
+            var tbody = '';
 
-                  marcas.forEach(function(marca) {
-                      // Verifica que 'etiquetado' sea un objeto válido
-                      if (marca.etiquetado && typeof marca.etiquetado === 'object') {
-                          for (var i = 0; i < marca.etiquetado.sku.length; i++) {
-                              tbody += '<tr>';
-                              tbody += `<td>${(marca.direccion_nombre && marca.direccion_nombre[i]) || 'N/A'}</td>`;
-                              tbody += `<td>${marca.etiquetado.sku[i] || 'N/A'}</td>`;
-                              tbody += `<td>${marca.tipo_nombre[i] || 'N/A'}</td>`;
-                              tbody += `<td>${marca.etiquetado.presentacion[i] || 'N/A'}</td>`;
-                              tbody += `<td>${marca.clase_nombre[i] || 'N/A'}</td>`;
-                              tbody += `<td>${marca.categoria_nombre[i] || 'N/A'}</td>`;
-/*                               tbody += '<td>' + (marca.etiquetado.etiqueta || 'N/A') + '</td>';
-                              tbody += '<td>' + (marca.etiquetado.corrugado || 'N/A') + '</td>'; */
+            marcas.forEach(function (marca) {
+              // Verifica que 'etiquetado' sea un objeto válido
+              if (marca.etiquetado && typeof marca.etiquetado === 'object') {
+                for (var i = 0; i < marca.etiquetado.sku.length; i++) {
+                  tbody += '<tr>';
+                  tbody += `<td>${(marca.direccion_nombre && marca.direccion_nombre[i]) || 'N/A'}</td>`;
+                  tbody += `<td>${marca.etiquetado.sku[i] || 'N/A'}</td>`;
+                  tbody += `<td>${marca.tipo_nombre[i] || 'N/A'}</td>`;
+                  tbody += `<td>${marca.etiquetado.presentacion[i] || 'N/A'}</td>`;
+                  tbody += `<td>${marca.clase_nombre[i] || 'N/A'}</td>`;
+                  tbody += `<td>${marca.categoria_nombre[i] || 'N/A'}</td>`;
+                  /*                          tbody += '<td>' + (marca.etiquetado.etiqueta || 'N/A') + '</td>';
+                                              tbody += '<td>' + (marca.etiquetado.corrugado || 'N/A') + '</td>'; */
 
-                              // Agregar documento de etiquetas si existe
-                              var documentoEtiquetas = marca.documentos.find(function(doc) {
-                                  return doc.nombre_documento === "Etiquetas";
-                              });
-
-                              if (documentoEtiquetas) {
-                                  var rutaArchivo = '/files/' + marca.numero_cliente + '/' + documentoEtiquetas.url;
-                                  tbody += `<td><a href="${rutaArchivo}" target="_blank" class="btn btn-sm btn-primary"><i class="ri-file-pdf-2-fill"></i> Visualizar</a></td>`;
-                              } else {
-                                  tbody += '<td>No disponible</td>';
-                              }
-
-                              tbody += '</tr>';
-                          }
-                      } else {
-                          tbody += '<tr><td colspan="9" class="text-center">Datos de etiquetado no disponibles.</td></tr>';
-                      }
+                  // Agregar documento de etiquetas si existe
+                  var documentoEtiquetas = marca.documentos.find(function (doc) {
+                    return doc.nombre_documento === "Etiquetas";
                   });
 
-                  // Si no hay filas, mostrar mensaje
-                  if (!tbody) {
-                      tbody = '<tr><td colspan="9" class="text-center">No hay datos disponibles.</td></tr>';
+                  if (documentoEtiquetas) {
+                    var rutaArchivo = '/files/' + marca.numero_cliente + '/' + documentoEtiquetas.url;
+                    tbody += `<td><a href="${rutaArchivo}" target="_blank" class="btn btn-sm btn-primary"><i class="ri-file-pdf-2-fill"></i> Visualizar</a></td>`;
+                  } else {
+                    tbody += '<td>No disponible</td>';
                   }
 
-                  // Agregar las filas a la tabla
-                  $('#tabla_marcas tbody').html(tbody);
-              },
-              error: function(xhr) {
-                  console.error('Error al obtener marcas:', xhr);
-                  $('#tabla_marcas tbody').html('<tr><td colspan="9">Error al cargar los datos</td></tr>');
+                  tbody += '</tr>';
+                }
+              } else {
+                tbody += '<tr><td colspan="9" class="text-center">Datos de etiquetado no disponibles.</td></tr>';
               }
-          });
+            });
+
+            // Si no hay filas, mostrar mensaje
+            if (!tbody) {
+              tbody = '<tr><td colspan="9" class="text-center">No hay datos disponibles.</td></tr>';
+            }
+
+            // Agregar las filas a la tabla
+            $('#tabla_marcas tbody').html(tbody);
+          },
+          error: function (xhr) {
+            console.error('Error al obtener marcas:', xhr);
+            $('#tabla_marcas tbody').html('<tr><td colspan="9">Error al cargar los datos</td></tr>');
+          }
+        });
       } else {
-          $('#tabla_marcas tbody').html('<tr><td colspan="9">Seleccione una empresa para ver los datos</td></tr>');
+        $('#tabla_marcas tbody').html('<tr><td colspan="9">Seleccione una empresa para ver los datos</td></tr>');
       }
-  }
+    }
 
 
     $('#id_empresa').on('change', function () {
       obtenerGraneles();  // Cargar las marcas
-     /*  obtenerMarcas();  */ // Cargar las direcciones
+      /*  obtenerMarcas();  */ // Cargar las direcciones
       cargarMarcas();  // Cargar las direcciones
       /* obtenerDirecciones();  */ // Cargar las direcciones
       //fv.revalidateField('id_empresa');  // Revalidar el campo de empresa
     });
 
-    const addNewLoteForm = document.getElementById('addNewLoteForm');
+
+
+  });
+
+
+
+
+$(function () {
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+   const addNewLoteForm = document.getElementById('addNewLoteForm');
     const fv = FormValidation.formValidation(addNewLoteForm, {
       fields: {
         id_empresa: {
@@ -691,13 +706,13 @@ $(function () {
             }
           }
         },
-     /*   'volumen_parcial[]': {
-          validators: {
-            notEmpty: {
-              message: 'Por favor introduzca el volumen del lote'
-            }
-          }
-        },*/
+        /*   'volumen_parcial[]': {
+             validators: {
+               notEmpty: {
+                 message: 'Por favor introduzca el volumen del lote'
+               }
+             }
+           },*/
         /*         presentacion: {
                   validators: {
                     notEmpty: {
@@ -777,7 +792,7 @@ $(function () {
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
-            text: response.success,
+            text: response.message,
             customClass: {
               confirmButton: 'btn btn-success'
             }
@@ -796,7 +811,7 @@ $(function () {
         }
       });
     });
-  });
+    });
 
   // Limpiar campos al cerrar el modal
   $('#addlostesEnvasado').on('hidden.bs.modal', function () {
@@ -888,8 +903,8 @@ $(function () {
       $('#edit_presentacion').val(data.presentacion);
       $('#edit_unidad').val(data.unidad);
       $('#edit_volumen_total').val(data.volumen_total);
-      $('#edit_Instalaciones').data('selected',data.lugar_envasado).trigger('change');
-      $('#edit_marca').data('selected',data.id_marca).trigger('change');
+      $('#edit_Instalaciones').data('selected', data.lugar_envasado).trigger('change');
+      $('#edit_marca').data('selected', data.id_marca).trigger('change');
 
       // Limpiar contenido previo de lotes de envasado de granel
       $('#edit_contenidoGraneles').empty();
@@ -1128,7 +1143,7 @@ $(function () {
       data: formData,
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Agregar token CSRF
-    },
+      },
       processData: false,
       contentType: false,
       success: function (response) {
