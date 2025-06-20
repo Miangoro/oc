@@ -1,12 +1,11 @@
 <div class="modal fade" id="addlostesEnvasado" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Registrar nuevo lote envasado</h4>
-                    <p class="address-subtitle"></p>
-                </div>
+            <div class="modal-header bg-primary pb-2">
+                <h5 class="address-title text-white">Registrar nuevo lote envasado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-8">
                 <form id="addNewLoteForm">
                     <div class="col-12">
                         <div class="form-floating form-floating-outline mb-4">
@@ -47,8 +46,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select id_marca" id="id_marca" name="id_marca"
-                                    aria-label="Marca">
+                                <select class=" form-select id_marca" id="id_marca" name="id_marca" aria-label="Marca">
                                     <option value="" selected>Selecciona una marca</option>
                                 </select>
                                 <label for="id_marca">Marca</label>
@@ -90,8 +88,8 @@
                     <table class="table table-bordered table-sm">
                         <thead>
                             <tr>
-                                <th style="width: 40px"><button type="button" class="btn btn-primary btn-sm add-row"> <i
-                                            class="ri-add-line"></i> </button></th>
+                                <th style="width: 40px"><button type="button" class="btn btn-primary btn-sm add-row">
+                                        <i class="ri-add-line"></i> </button></th>
                                 <th>Lote a granel</th>
                                 <th>Volumen en litros</th>
                             </tr>
@@ -103,8 +101,8 @@
                                             class="ri-delete-bin-5-fill"></i> </button>
                                 </th>
                                 <td>
-                                    <select class="id_lote_granel form-control form-control-sm select2" name="id_lote_granel[]"
-                                        id="id_lote_granel">
+                                    <select class="id_lote_granel form-control form-control-sm select2"
+                                        name="id_lote_granel[]" id="id_lote_granel">
                                     </select>
                                 </td>
                                 <td>
@@ -116,7 +114,8 @@
                     </table>
                     <div class="row">
                         <div class="col-md-12 mb-4">
-                            <label class="form-label" for="basic-default-password42">Instalación de envasado certificada</label>
+                            <label class="form-label" for="basic-default-password42">Instalación de envasado
+                                certificada</label>
                             <div class="form-floating form-floating-outline mb-6">
                                 <select placeholder="Selecciona el cliente" class="form-select select2 id_instalacion"
                                     id="lugar_envasado" name="lugar_envasado" aria-label="Default select example">
@@ -133,8 +132,8 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="number" step="0.01" placeholder="Volumen total"
-                                    id="volumen_total" name="volumen_total"  />
+                                <input class="form-control" type="number" step="0.01"
+                                    placeholder="Volumen total" id="volumen_total" name="volumen_total" />
                                 <label for="volumen_total">Volumen total en Litros</label>
                             </div>
                         </div>
@@ -148,7 +147,7 @@
                             </div>
                         </div>
                     </div>
-                  <!--  <div class="card-body table-responsive text-nowrap">
+                    <!--  <div class="card-body table-responsive text-nowrap">
                         <h5>Datos de Etiquetas</h5>
                         <table class="table" id="tabla_marcas">
                             <thead>
@@ -168,9 +167,10 @@
                     </div>-->
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="bntAddEnvasado"><i
+                                class="ri-add-line me-1"></i>Registrar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -179,35 +179,12 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        function calcularVolumenTotal() {
-            var cantidadBotellas = parseFloat(document.getElementById('cantidad_botellas').value) || 0;
-            var presentacion = parseFloat(document.getElementById('presentacion').value) || 0;
-            var unidad = document.getElementById('unidad').value;
-            var volumenTotal;
-            if (unidad === "Litros") {
-                volumenTotal = cantidadBotellas * presentacion;
-            } else if (unidad === "Mililitros") {
-                volumenTotal = (cantidadBotellas * presentacion) / 1000;
-            } else if (unidad === "Centrilitros") {
-                volumenTotal = (cantidadBotellas * presentacion) / 100;
-            } else {
-                volumenTotal = ''; // Limpiar el campo si la unidad no es Litros ni Mililitros
-            }
-            document.getElementById('volumen_total').value = volumenTotal ? volumenTotal.toFixed(2) : '';
-            document.getElementById('volumen_parcial').value = volumenTotal ? volumenTotal.toFixed(2) : '';
-        }
-        document.getElementById('cantidad_botellas').addEventListener('input', calcularVolumenTotal);
-        document.getElementById('presentacion').addEventListener('input', calcularVolumenTotal);
-        document.getElementById('unidad').addEventListener('change', calcularVolumenTotal);
-    });
-
     //Limpia en cancelar
-/*     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelector('#addlostesEnvasado .btn-outline-secondary').addEventListener('click',
-            function() {
-                document.getElementById('addNewLoteForm').reset();
-                $('.select2').val(null).trigger('change'); // Reset select2 fields
-            });
-    }); */
+    /*     document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('#addlostesEnvasado .btn-outline-secondary').addEventListener('click',
+                function() {
+                    document.getElementById('addNewLoteForm').reset();
+                    $('.select2').val(null).trigger('change'); // Reset select2 fields
+                });
+        }); */
 </script>
