@@ -1,20 +1,18 @@
 <div class="modal fade" id="editLoteEnvasado" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-edit-address">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Editar lote envasado</h4>
-                    <p class="address-subtitle"></p>
-                </div>
+            <div class="modal-header bg-primary pb-2">
+                <h5 class="address-title text-white">Editar lote envasado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-8">
                 <form id="editLoteEnvasadoForm" method="POST" onsubmit="return false">
                     <input type="hidden" id="edit_id_lote_envasado" name="id">
                     <div class="row">
                         <div class="col-12">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select
-                                    onchange=" edit_obtenerGraneles();"
-                                    id="edit_cliente" name="edit_cliente" class="select2 form-select" required>
+                                <select onchange=" edit_obtenerGraneles();" id="edit_cliente" name="edit_cliente"
+                                    class="select2 form-select" required>
                                     <option value="" disabled>Selecciona cliente</option>
                                     @foreach ($clientes as $cliente)
                                         <option value="{{ $cliente->id_empresa }}">
@@ -140,8 +138,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="number" step="0.01"
-                                    placeholder="Volumen total" id="edit_volumen_total" name="edit_volumen_total"
-                                     />
+                                    placeholder="Volumen total" id="edit_volumen_total" name="edit_volumen_total" />
                                 <label for="edit_volumen_total">Volumen total</label>
                             </div>
                         </div>
@@ -156,9 +153,14 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Actualizar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button disabled class="btn btn-primary d-none" type="button" id="btnSpinnerEdit">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Actualizando...
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnEditEnvasado"><i
+                                class="ri-pencil-fill me-1"></i>Editar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-line me-1"></i>Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -191,7 +193,8 @@
                     /*  */
                     var contenidomar = "";
                     for (let index = 0; index < response.marcas.length; index++) {
-                        contenidomar = '<option value="' + response.marcas[index].id_marca + '">' + response
+                        contenidomar = '<option value="' + response.marcas[index].id_marca + '">' +
+                            response
                             .marcas[index].marca + '</option>' + contenidomar;
                     }
                     if (response.marcas.length == 0) {
@@ -205,11 +208,14 @@
 
                     var contenidoDierc = "";
                     for (let index = 0; index < response.instalaciones.length; index++) {
-                        contenidoDierc = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                            response.instalaciones[index].direccion_completa + '</option>' + contenidoDierc;
+                        contenidoDierc = '<option value="' + response.instalaciones[index]
+                            .id_instalacion + '">' +
+                            response.instalaciones[index].direccion_completa + '</option>' +
+                            contenidoDierc;
                     }
                     if (response.instalaciones.length == 0) {
-                        contenidoDierc = '<option value="">Sin instalaciones de envasado registrados</option>';
+                        contenidoDierc =
+                            '<option value="">Sin instalaciones de envasado registrados</option>';
                     }
                     $('.edit_Instalaciones').html(contenidoDierc);
 

@@ -519,9 +519,9 @@ $(function () {
     //Obtener graneles
     function obtenerGraneles() {
       var empresa = $("#id_empresa").val();
-        if (!empresa) {
-          return; // No hace la petición
-        }
+      if (!empresa) {
+        return; // No hace la petición
+      }
       $.ajax({
         url: '/getDatos/' + empresa,
         method: 'GET',
@@ -779,6 +779,8 @@ $(function () {
       }
     }).on('core.form.valid', function (e) {
       //e.preventDefault();
+      $('#bntAddEnvasado').addClass('d-none');
+      $('#btnSpinner').removeClass('d-none');
       var formData = new FormData(addNewLoteForm);
 
       $.ajax({
@@ -790,7 +792,8 @@ $(function () {
         success: function (response) {
           $('#addlostesEnvasado').modal('hide');
           $('.datatables-users').DataTable().ajax.reload();
-
+          $('#btnSpinner').addClass('d-none');
+          $('#bntAddEnvasado').removeClass('d-none');
           // Mostrar alerta de éxito
           Swal.fire({
             icon: 'success',
@@ -811,30 +814,32 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#btnSpinner').addClass('d-none');
+          $('#bntAddEnvasado').removeClass('d-none');
         }
       });
     });
 
-      // Limpiar campos al cerrar el modal
-      $('#addlostesEnvasado').on('hidden.bs.modal', function () {
-        // Restablecer select de empresa
-        $('.id_lote_granel').html('');
-        $('#id_marca').html('');
-        $('.id_instalacion').html('');
-        $('#nombre').val('');
-        $('#destino_lote').val('');
-        $('#id_empresa').val('').trigger('change');
-        $('#lugar_envasado').val('').trigger('change');
-        $('#cant_botellas').val('');
-        $('#presentacion').val('');
-        $('#sku').val('');
-        $('#cantidad_botellas').val('');
-        $('#volumen_total').val('');
-        $('#volumen_parcial').val('');
+    // Limpiar campos al cerrar el modal
+    $('#addlostesEnvasado').on('hidden.bs.modal', function () {
+      // Restablecer select de empresa
+      $('.id_lote_granel').html('');
+      $('#id_marca').html('');
+      $('.id_instalacion').html('');
+      $('#nombre').val('');
+      $('#destino_lote').val('');
+      $('#id_empresa').val('').trigger('change');
+      $('#lugar_envasado').val('').trigger('change');
+      $('#cant_botellas').val('');
+      $('#presentacion').val('');
+      $('#sku').val('');
+      $('#cantidad_botellas').val('');
+      $('#volumen_total').val('');
+      $('#volumen_parcial').val('');
 
-        // Restablecer la validación del formulario
-        fv.resetForm(true);
-      });
+      // Restablecer la validación del formulario
+      fv.resetForm(true);
+    });
 
 
   });
@@ -1149,9 +1154,9 @@ $(function () {
       }
     }).on('core.form.valid', function (e) {
       //e.preventDefault();
+      $('#btnEditEnvasado').addClass('d-none');
+      $('#btnSpinnerEdit').removeClass('d-none');
       var formData = new FormData(editLoteEnvasadoForm);
-
-
       $.ajax({
         url: '/lotes-envasado/update', // Actualiza con la URL correcta
         type: 'POST',
@@ -1164,7 +1169,8 @@ $(function () {
         success: function (response) {
           $('#editLoteEnvasado').modal('hide');
           $('.datatables-users').DataTable().ajax.reload();
-
+          $('#btnSpinnerEdit').addClass('d-none');
+          $('#btnEditEnvasado').removeClass('d-none');
           // Mostrar alerta de éxito
           Swal.fire({
             icon: 'success',
@@ -1185,6 +1191,8 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#btnSpinnerEdit').addClass('d-none');
+          $('#btnEditEnvasado').removeClass('d-none');
         }
       });
     });
