@@ -35,8 +35,8 @@
 
     <div class="container mt-3 mb-3">
         <div class="card shadow-sm border-0 rounded-3" style="max-width: 100%; margin: auto;">
-            <div class="card-header bg-primary text-white text-center py-2">
-                <h5 class="mb-0">Editar revisión de certificado</h5>
+            <div class="card-header bg-primary  text-center py-2">
+                <h5 class="mb-0 text-white">Editar revisión de certificado consejo</h5>
             </div>
             <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-start">
@@ -178,7 +178,7 @@
                                                         ->id_empresa,
                                                 );
                                             @endphp
-                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</b>
+                                            <td>
                                                 @if ($cliente && $documento)
                                                     <a target="_blank"
                                                         href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
@@ -197,6 +197,7 @@
                                                 @else
                                                     <span class="text-muted">Sin contrato subido</span>
                                                 @endif
+                                                <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'representante_legal')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'N/A' }}</b>
@@ -270,12 +271,12 @@
                                                 </b></td>
                                         @elseif($pregunta->filtro == 'solicitud')
                                             <td>
-                                                <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->folio ?? 'N/A' }}</b>
                                                 <a target="_blank"
                                                     href="/solicitud_de_servicio/{{ $datos->certificado->dictamen->inspeccione->id_solicitud ?? 'N/A' }}">
                                                     <i
                                                         class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                 </a>
+                                                <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->folio ?? 'N/A' }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria_clase')
                                             <td><b>
@@ -445,7 +446,7 @@
 
                                             <td>
                                                 @if ($dictamen)
-                                                    <b>{{ $dictamen->num_dictamen }}</b>
+
                                                     @if ($url)
                                                         <a target="_blank" href="{{ $url }}">
                                                             <i
@@ -457,6 +458,7 @@
                                                 @else
                                                     <span>Dictamen no disponible</span>
                                                 @endif
+                                                <b>{{ $dictamen->num_dictamen }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'certificado_granel')
                                             <td> <a target="_blank"
@@ -526,7 +528,7 @@
                                         @elseif($pregunta->filtro == 'acta')
                                             <td>
                                                 @if ($datos->obtenerDocumentoActa($pregunta->id_documento, $datos->certificado->dictamen->inspeccione->id_solicitud))
-                                                    <b>{{ $datos->certificado->dictamen->inspeccione->num_servicio }}</b>
+
                                                     <a target="_blank"
                                                         href="{{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
                                                             'numero_cliente',
@@ -545,6 +547,7 @@
                                                         <i
                                                             class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
+                                                     <b>{{ $datos->certificado->dictamen->inspeccione->num_servicio }}</b>
                                                 @else
                                                     <span class="text-muted">Sin acta</span>
                                                 @endif

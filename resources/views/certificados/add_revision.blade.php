@@ -35,8 +35,8 @@
 
     <div class="container mt-3 mb-3">
         <div class="card shadow-sm border-0 rounded-3" style="max-width: 100%; margin: auto;">
-            <div class="card-header bg-primary text-white text-center py-2">
-                <h5 class="mb-0">Revisión de certificado</h5>
+            <div class="card-header bg-primary  text-center py-2">
+                <h5 class="mb-0 text-white">Revisión de certificado personal</h5>
             </div>
             <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-start">
@@ -186,12 +186,12 @@
                                                 </b></td>
                                         @elseif($pregunta->filtro == 'solicitud')
                                             <td>
-                                                <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->folio ?? 'N/A' }}</b>
                                                 <a target="_blank"
                                                     href="/solicitud_de_servicio/{{ $datos->certificado->dictamen->inspeccione->id_solicitud ?? 'N/A' }}">
                                                     <i
                                                         class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                 </a>
+                                                <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->folio ?? 'N/A' }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria_clase')
                                             <td><b>
@@ -260,7 +260,7 @@
                                                 $segundoFolio = $folios->get(1, 'N/A');
                                             @endphp
                                             <td>
-                                                <b>{{ $primerFolio }}</b>
+
 
                                                 @foreach ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs as $documento)
                                                     <a target="_blank"
@@ -269,6 +269,7 @@
                                                             class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                     </a>
                                                 @endforeach
+                                                <b>{{ $primerFolio }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis_ajuste')
                                             <td><b>{{ $segundoFolio }}</b></td>
@@ -276,8 +277,7 @@
                                             <td><b>
                                                     {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['aduana_salida'] ?? 'N/A' }}
                                                     2208.90.05.00
-                                                    {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['no_pedido'] ?? 'N/A' }}
-
+                                                    <br>
                                                     @foreach ($datos->certificado->dictamen->inspeccione->solicitud->documentacion(55)->get() as $documento)
                                                         <a target="_blank"
                                                             href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
@@ -289,6 +289,7 @@
                                                                 class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                         </a>
                                                     @endforeach
+                                                    {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['no_pedido'] ?? 'N/A' }}
 
                                                 </b><br></td>
                                         @elseif($pregunta->filtro == 'domicilio_insta')
@@ -357,7 +358,6 @@
 
                                             <td>
                                                 @if ($dictamen)
-                                                    <b>{{ $dictamen->num_dictamen }}</b>
                                                     @if ($url)
                                                         <a target="_blank" href="{{ $url }}">
                                                             <i
@@ -369,21 +369,25 @@
                                                 @else
                                                     <span>Dictamen no disponible</span>
                                                 @endif
+                                                <b>{{ $dictamen->num_dictamen }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'certificado_granel')
-                                            <td>Granel:
-                                                <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}</b>
-                                                <a target="_blank" href="/Pre-certificado-granel/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->id_certificado }}">
-                                                            <i
-                                                                class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                            <td>
+                                                <a target="_blank"
+                                                    href="/Pre-certificado-granel/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->id_certificado }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                 </a>
+                                                Granel:
+                                                <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}</b>
+
                                                 <br>
+                                                <a target="_blank"
+                                                    href="/dictamen_envasado/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->dictamenEnvasado->id_dictamen }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                </a>
                                                 Envasado:
                                                 <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }}</b>
-                                                <a target="_blank" href="/dictamen_envasado/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->dictamenEnvasado->id_dictamen }}">
-                                                            <i
-                                                                class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                </a>
+
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'N/A' }}</b>
@@ -425,7 +429,6 @@
                                         @elseif($pregunta->filtro == 'acta')
                                             <td>
                                                 @if ($datos->obtenerDocumentoActa($pregunta->id_documento, $datos->certificado->dictamen->inspeccione->id_solicitud))
-                                                    <b>{{ $datos->certificado->dictamen->inspeccione->num_servicio }}</b>
                                                     <a target="_blank"
                                                         href="{{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
                                                             'numero_cliente',
@@ -444,6 +447,7 @@
                                                         <i
                                                             class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
+                                                    <b>{{ $datos->certificado->dictamen->inspeccione->num_servicio }}</b>
                                                 @else
                                                     <span class="text-muted">Sin acta</span>
                                                 @endif
@@ -534,15 +538,16 @@
                 </div>
             </div>
             <!-- <div class="col-md-4">
-                                                <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" src="{{ $url }}" frameborder="0"
-                                                    style="border-radius: 10px; overflow: hidden;">
-                                                </iframe>
-                                            </div>-->
+                                                                    <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" src="{{ $url }}" frameborder="0"
+                                                                        style="border-radius: 10px; overflow: hidden;">
+                                                                    </iframe>
+                                                                </div>-->
 
             <div class="d-flex justify-content-center mt-3">
                 <button type="submit" class="btn btn-primary me-2 waves-effect waves-light"><i class="ri-add-line"></i>
                     Registrar {{ $datos->numero_revision }}ª revisión</button>
-                <a href="/revision/personal" class="btn btn-danger waves-effect"><i class="ri-close-line"></i>Cancelar</a>
+                <a href="/revision/personal" class="btn btn-danger waves-effect"><i
+                        class="ri-close-line"></i>Cancelar</a>
             </div>
 
         </div>
