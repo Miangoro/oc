@@ -10,7 +10,7 @@ $(function () {
     'Muestreo de lote a granel',
     'Vigilancia en el traslado del lote',
     'Emisión de certificado NOM a granel',
-    'Inspección ingreso a barrica/contenedor de vidrio',
+    'Inspección ingreso a barrica/ contenedor de vidrio',
     'Inspección de liberación a barrica/contenedor de vidrio',
     'Georreferenciación',
     'Inspección de envasado',
@@ -70,10 +70,10 @@ $(function () {
 
       { data: '' },
       {
-          data: 'folio',
-          render: function(data, type, row) {
-              return `<span style="font-weight: bold; font-size: 1.1em;">${data}</span>`;
-          }
+        data: 'folio',
+        render: function (data, type, row) {
+          return `<span style="font-weight: bold; font-size: 1.1em;">${data}</span>`;
+        }
       },
       { data: 'num_servicio' },
       {
@@ -368,7 +368,7 @@ $(function () {
         searchable: false,
         orderable: false,
         render: function (data, type, full, meta) {
-              let dropdown = `
+          let dropdown = `
                 <div class="d-flex align-items-center gap-50">
                   <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                     <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
@@ -378,9 +378,9 @@ $(function () {
                       <i class="text-warning ri-user-search-fill"></i> Trazabilidad
                     </a>`;
 
-              // Si puede agregar usuario, incluir opción adicional
-              if (puedeValidarSolicitud) {
-                dropdown += `
+          // Si puede agregar usuario, incluir opción adicional
+          if (puedeValidarSolicitud) {
+            dropdown += `
                   <a
                     data-id="${full['id_tipo']}"
                     data-id-solicitud="${full['id_solicitud']}"
@@ -391,10 +391,10 @@ $(function () {
                     class="dropdown-item text-dark waves-effect validar-solicitudes">
                     <i class="text-success ri-search-eye-line"></i> Validar solicitud
                   </a>`;
-              }
+          }
 
-              if (puedeEditarSolicitud) {
-                dropdown += `
+          if (puedeEditarSolicitud) {
+            dropdown += `
                   <a
                     data-id="${full['id']}"
                     data-id-solicitud="${full['id_solicitud']}"
@@ -404,20 +404,20 @@ $(function () {
                     class="cursor-pointer dropdown-item text-dark edit-record-tipo">
                     <i class="text-warning ri-edit-fill"></i> Editar
                   </a>`;
-              }
-            if (puedeEliminarSolicitud) {
-              dropdown += `
+          }
+          if (puedeEliminarSolicitud) {
+            dropdown += `
                     <a data-id="${full['id']}" data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">
                       <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
                     </a>`;
-            }
+          }
 
-            dropdown += `
+          dropdown += `
                   </div>
                 </div>`;
 
-              return dropdown;
-            }
+          return dropdown;
+        }
 
       }
     ],
@@ -3889,53 +3889,53 @@ $(function () {
   });
 
   /* seccion para exportacion */
-$(document).ready(function () {
-  const $tipoSolicitud = $('#tipo_solicitud');
-  const $seccionCombinado = $('#seccionCajasBotellasCombinado');
-  const $seccionExportacion = $('#seccionCajasBotellas');
-  const $botonesCharacteristics = $('#botones_characteristics');
+  $(document).ready(function () {
+    const $tipoSolicitud = $('#tipo_solicitud');
+    const $seccionCombinado = $('#seccionCajasBotellasCombinado');
+    const $seccionExportacion = $('#seccionCajasBotellas');
+    const $botonesCharacteristics = $('#botones_characteristics');
 
-  $tipoSolicitud.on('change', function () {
-    const tipo = $(this).val();
+    $tipoSolicitud.on('change', function () {
+      const tipo = $(this).val();
 
-    if (tipo === '2') {
-      // Combinado: ocultar inputs originales y activar sección nueva
-      $('#cant_botellas_exportac').removeAttr('name');
-      $('#cant_cajas_exportac').removeAttr('name');
-      $('#presentacion_exportac').removeAttr('name');
+      if (tipo === '2') {
+        // Combinado: ocultar inputs originales y activar sección nueva
+        $('#cant_botellas_exportac').removeAttr('name');
+        $('#cant_cajas_exportac').removeAttr('name');
+        $('#presentacion_exportac').removeAttr('name');
 
-      $('#cant_botellas_exportac2').attr('name', 'cantidad_botellas[0]');
-      $('#cant_cajas_exportac2').attr('name', 'cantidad_cajas[0]');
-      $('#presentacion_exportac2').attr('name', 'presentacion[0]');
+        $('#cant_botellas_exportac2').attr('name', 'cantidad_botellas[0]');
+        $('#cant_cajas_exportac2').attr('name', 'cantidad_cajas[0]');
+        $('#presentacion_exportac2').attr('name', 'presentacion[0]');
 
-      $seccionExportacion.removeClass('d-none');
-      $seccionCombinado.addClass('d-none');
+        $seccionExportacion.removeClass('d-none');
+        $seccionCombinado.addClass('d-none');
 
-      // Mostrar botones para tablas adicionales
-      $botonesCharacteristics.removeClass('d-none');
-    } else {
-      // Otro tipo: regresar a inputs originales
-      $('#cant_botellas_exportac2').removeAttr('name');
-      $('#cant_cajas_exportac2').removeAttr('name');
-      $('#presentacion_exportac2').removeAttr('name');
+        // Mostrar botones para tablas adicionales
+        $botonesCharacteristics.removeClass('d-none');
+      } else {
+        // Otro tipo: regresar a inputs originales
+        $('#cant_botellas_exportac2').removeAttr('name');
+        $('#cant_cajas_exportac2').removeAttr('name');
+        $('#presentacion_exportac2').removeAttr('name');
 
-      $('#cant_botellas_exportac').attr('name', 'cantidad_botellas[0]');
-      $('#cant_cajas_exportac').attr('name', 'cantidad_cajas[0]');
-      $('#presentacion_exportac').attr('name', 'presentacion[0]');
+        $('#cant_botellas_exportac').attr('name', 'cantidad_botellas[0]');
+        $('#cant_cajas_exportac').attr('name', 'cantidad_cajas[0]');
+        $('#presentacion_exportac').attr('name', 'presentacion[0]');
 
-      $seccionCombinado.removeClass('d-none');
-      $seccionExportacion.addClass('d-none');
+        $seccionCombinado.removeClass('d-none');
+        $seccionExportacion.addClass('d-none');
 
-      // Ocultar botones
-      $botonesCharacteristics.addClass('d-none');
+        // Ocultar botones
+        $botonesCharacteristics.addClass('d-none');
+      }
+    });
+
+    // Ejecutar una vez al cargar (por si ya tiene valor)
+    if ($tipoSolicitud.val() === '2') {
+      $tipoSolicitud.trigger('change');
     }
   });
-
-  // Ejecutar una vez al cargar (por si ya tiene valor)
-  if ($tipoSolicitud.val() === '2') {
-    $tipoSolicitud.trigger('change');
-  }
-});
 
 
 
@@ -3948,52 +3948,52 @@ $(document).ready(function () {
     });
   });
 
-$(document).ready(function () {
-  var $tipoSolicitudEdit = $('#tipo_solicitud_edit');
-  var $botonesCharacteristicsEdit = $('#botones_characteristics_edit');
-  var $seccionCombinadoEdit = $('#seccionCajasBotellasCombinadoEdit');
-  var $seccionExportacionEdit = $('#seccionCajasBotellasEdit');
+  $(document).ready(function () {
+    var $tipoSolicitudEdit = $('#tipo_solicitud_edit');
+    var $botonesCharacteristicsEdit = $('#botones_characteristics_edit');
+    var $seccionCombinadoEdit = $('#seccionCajasBotellasCombinadoEdit');
+    var $seccionExportacionEdit = $('#seccionCajasBotellasEdit');
 
-  function actualizarSeccionesEdit() {
-    if ($tipoSolicitudEdit.val() === '2') {
-      // COMBINADO (tipo 2) => mostrar card, ocultar combinado
-      $botonesCharacteristicsEdit.removeClass('d-none');
-      $seccionExportacionEdit.removeClass('d-none');
-      $seccionCombinadoEdit.addClass('d-none');
+    function actualizarSeccionesEdit() {
+      if ($tipoSolicitudEdit.val() === '2') {
+        // COMBINADO (tipo 2) => mostrar card, ocultar combinado
+        $botonesCharacteristicsEdit.removeClass('d-none');
+        $seccionExportacionEdit.removeClass('d-none');
+        $seccionCombinadoEdit.addClass('d-none');
 
-      // Remover name del combinado
-      $('#cantidad_botellas_edit0').removeAttr('name');
-      $('#cantidad_cajas_edit0').removeAttr('name');
-      $('#presentacion_edit0').removeAttr('name');
+        // Remover name del combinado
+        $('#cantidad_botellas_edit0').removeAttr('name');
+        $('#cantidad_cajas_edit0').removeAttr('name');
+        $('#presentacion_edit0').removeAttr('name');
 
-      // Agregar name a la sección "card"
-      $('#2cantidad_botellas_edit0').attr('name', 'cantidad_botellas[0]');
-      $('#2cantidad_cajas_edit0').attr('name', 'cantidad_cajas[0]');
-      $('#2presentacion_edit0').attr('name', 'presentacion[0]');
-    } else {
-      // Otro tipo => mostrar combinado, ocultar card
-      $botonesCharacteristicsEdit.addClass('d-none');
-      $seccionExportacionEdit.addClass('d-none');
-      $seccionCombinadoEdit.removeClass('d-none');
+        // Agregar name a la sección "card"
+        $('#2cantidad_botellas_edit0').attr('name', 'cantidad_botellas[0]');
+        $('#2cantidad_cajas_edit0').attr('name', 'cantidad_cajas[0]');
+        $('#2presentacion_edit0').attr('name', 'presentacion[0]');
+      } else {
+        // Otro tipo => mostrar combinado, ocultar card
+        $botonesCharacteristicsEdit.addClass('d-none');
+        $seccionExportacionEdit.addClass('d-none');
+        $seccionCombinadoEdit.removeClass('d-none');
 
-      // Remover name del card
-      $('#2cantidad_botellas_edit0').removeAttr('name');
-      $('#2cantidad_cajas_edit0').removeAttr('name');
-      $('#2presentacion_edit0').removeAttr('name');
+        // Remover name del card
+        $('#2cantidad_botellas_edit0').removeAttr('name');
+        $('#2cantidad_cajas_edit0').removeAttr('name');
+        $('#2presentacion_edit0').removeAttr('name');
 
-      // Agregar name a la sección original
-      $('#cantidad_botellas_edit0').attr('name', 'cantidad_botellas[0]');
-      $('#cantidad_cajas_edit0').attr('name', 'cantidad_cajas[0]');
-      $('#presentacion_edit0').attr('name', 'presentacion[0]');
+        // Agregar name a la sección original
+        $('#cantidad_botellas_edit0').attr('name', 'cantidad_botellas[0]');
+        $('#cantidad_cajas_edit0').attr('name', 'cantidad_cajas[0]');
+        $('#presentacion_edit0').attr('name', 'presentacion[0]');
+      }
     }
-  }
 
-  // Evento change
-  $tipoSolicitudEdit.on('change', actualizarSeccionesEdit);
+    // Evento change
+    $tipoSolicitudEdit.on('change', actualizarSeccionesEdit);
 
-  // Llamar una vez al cargar por si ya tiene valor
-  actualizarSeccionesEdit();
-});
+    // Llamar una vez al cargar por si ya tiene valor
+    actualizarSeccionesEdit();
+  });
 
 
   $(document).ready(function () {
@@ -4573,8 +4573,14 @@ $(document).ready(function () {
     }
 
   }
+
+  function limpiarCamposDictamen() {
+    $('.cajasBotellas, .guiasTraslado, .cajasBotellasTN, .solicitudPdf, .proforma, .csf, .razonSocial, .domicilioFiscal, .domicilioInstalacion, .nombrePredio, .preregistro, .fechaHora, .nombreLote, .guiasTraslado, .categoria, .clase, .cont_alc, .fq, .certificadoGranel, .tipos, .nombreLoteEnvasado, .tipoAnalisis, .materialRecipiente, .capacidadRecipiente, .numeroRecipiente, .tiempoMaduracion, .tipoIngreso, .volumenLiberado, .tipoLiberacion, .volumenActual, .volumenTrasladado, .volumenSobrante, .volumenIngresado, .inicioTerminoEnvasado, .destinoEnvasado, .etiqueta, .acta').html('');
+  }
+
   // Manejar el clic en los enlaces con clase "validar-solicitudes"
   $(document).on('click', '.validar-solicitudes', function () {
+    limpiarCamposDictamen();
     // Leer los datos desde los atributos data-*
     var idTipo = $(this).data('id');
     var id_solicitud = $(this).data('id-solicitud');
@@ -4593,8 +4599,9 @@ $(document).ready(function () {
       success: function (response) {
         if (response.success) {
           $('#solicitud_id').val(id_solicitud);
-          $('.razonSocial').append(response?.data?.empresa?.razon_social || 'No disponible');
-          $('.domicilioFiscal').append(response.data.empresa.domicilio_fiscal);
+          $('.razonSocial').html(response?.data?.empresa?.razon_social || 'No disponible');
+          $('.id_empresa').html(response?.data?.empresa?.id_empresa || 'No disponible');
+          $('.domicilioFiscal').html(response.data.empresa.domicilio_fiscal);
           // Validar si `direccion_completa` no está vacío
           if (response.data.instalacion) {
             $('.domicilioInstalacion').append(response.data.instalacion.direccion_completa + " <b>Vigencia: </b>" + response.data.instalacion.fecha_vigencia);
@@ -4632,98 +4639,6 @@ $(document).ready(function () {
             response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
             'No disponible'
           );
-
-          $('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
-          $('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
-          $('.certificadoGranel').text(response?.data?.lote_granel?.certificado_granel?.num_certificado ||
-            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.certificado_granel?.num_certificado ||
-            'No disponible');
-          $('.certificadoGranel').append('<a href="/files/' + response?.data?.lote_granel.empresa?.empresa_num_clientes[0]?.numero_cliente + '/certificados_granel/' + response?.url_certificado_granel + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-           $('.fq').append('<a href="/files/' + response?.data?.lote_granel.empresa?.empresa_num_clientes[0]?.numero_cliente + '/fqs/' + response?.url_fqs + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-
-
-
-          $('.tipos').text(response?.tipos_agave || 'No disponible');
-
-
-          // Validar nombre del lote envasado
-          $('.nombreLoteEnvasado').text(response?.lotesEnvasado[0].nombre || 'Nombre no disponible');
-
-          var caracteristicas = JSON.parse(response.data?.caracteristicas);
-          var tipos = {
-            1: 'Análisis completo',
-            2: 'Ajuste de grado alcohólico'
-          };
-
-          var texto = tipos[caracteristicas?.tipo_analisis] || 'No disponible';
-
-          $('.tipoAnalisis').text(texto);
-          $('.materialRecipiente').text(caracteristicas.material);
-          $('.capacidadRecipiente').text(caracteristicas.capacidad);
-          $('.numeroRecipiente').text(caracteristicas.num_recipientes);
-          $('.tiempoMaduracion').text(caracteristicas.tiempo_dura);
-          $('.tipoIngreso').text(caracteristicas.tipoIngreso);
-          $('.volumenLiberado').text(caracteristicas.volumen_liberacion);
-          $('.tipoLiberacion').text(caracteristicas.tipoLiberacion);
-          $('.volumenActual').text(caracteristicas.id_vol_actual);
-          $('.volumenTrasladado').text(caracteristicas.id_vol_traslado);
-          $('.volumenSobrante').text(caracteristicas.id_vol_res);
-          $('.volumenIngresado').text(caracteristicas.volumen_ingresado);
-         // $('.tipoEtiquetaEnvasado').text(response?.data?.lotes_envasado.tipo);
-          $('.inicioTerminoEnvasado').text(caracteristicas.fecha_inicio + ' a ' + caracteristicas.fecha_fin);
-          let destino;
-         /* if (response?.data?.lote_envasado.destino_lote == 1) {
-            destino = 'Nacional';
-          }
-          if (response?.data?.lote_envasado.destino_lote == 2) {
-            destino = 'Exportación';
-          }
-          if (response?.data?.lote_envasado.destino_lote == 3) {
-            destino = 'stock';
-          }
-
-          $('.destinoEnvasado').text(destino);*/
-          $('.etiqueta').html('<a href="files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + response?.url_etiqueta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-
-          response.lotesEnvasado.forEach((lote, index) => {
-          let html = 'N/A';
-
-          if (lote.dictamen_envasado) {
-              const idDictamen = lote.dictamen_envasado.id_dictamen_envasado;
-              const numDictamen = lote.dictamen_envasado.num_dictamen;
-              const url = `/dictamen_envasado/${idDictamen}`;
-
-              html = `${numDictamen}
-                  <a href="${url}" target="_blank">
-                      <i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>
-                  </a>
-              `;
-          }
-
-          // Suponiendo que tus elementos .dictamenEnvasado tienen data-index
-          $(`.dictamenEnvasado`).html(html);
-      });
-
-
-          $('.acta').html('<a href="/files/' + response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente + '/actas/' + response?.url_acta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-          $('.solicitudPdf').html('<a href="/solicitud_de_servicio/' + response?.data?.id_solicitud + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-          $('.proforma').html('<a href="/files/' + response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente + '/' + response?.url_proforma + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-          // Verificar si 'detalles' existe y es un arreglo
-          if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
-            // Recorrer cada elemento de 'detalles'
-            $('.cajasBotellas').text('');
-            caracteristicas.detalles.forEach(function (detalle) {
-              // Asumiendo que '.cajasBotellas' es un contenedor de varias cajas, agregamos el texto en cada una
-              $('.cajasBotellas').append(
-                detalle.cantidad_cajas + ' Cajas y ' + detalle.cantidad_botellas + ' Botellas<br>'
-              );
-            });
-          } else {
-            // Si 'detalles' no existe o no es un arreglo
-            $('.cajasBotellas').text(caracteristicas.cantidad_caja + ' Cajas y ' + response?.data?.lote_envasado.cant_botellas + ' Botellas');
-          }
-
-          // Estructura de configuración para los documentos
           const documentConfig = [
             {
               ids: [45, 66, 113],
@@ -4755,18 +4670,18 @@ $(document).ready(function () {
               noDocMessage: 'No hay acta constitutiva',
               condition: (documento, response) => documento.id_empresa == response.data.id_empresa
             },
-           /*/ {
-              ids: [55],
-              targetClass: '.proforma',
-              noDocMessage: 'No hay factura proforma',
-              condition: (documento, response) => documento.id_empresa == response.data.id_empresa
-            },
-              {
-                ids: [128],
-                targetClass: '.domicilioInstalacion',
-                noDocMessage: 'No hay dictamen de instalaciones',
-                condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
-              }*/
+            /*/ {
+               ids: [55],
+               targetClass: '.proforma',
+               noDocMessage: 'No hay factura proforma',
+               condition: (documento, response) => documento.id_empresa == response.data.id_empresa
+             },
+               {
+                 ids: [128],
+                 targetClass: '.domicilioInstalacion',
+                 noDocMessage: 'No hay dictamen de instalaciones',
+                 condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
+               }*/
           ];
 
           // Variable para seguimiento de documentos encontrados
@@ -4798,9 +4713,9 @@ $(document).ready(function () {
 
                   link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
                   if (documento.id_documento === 128 || documento.id_documento === 76) {
-                    $(config.targetClass).append(link);
+                    $(config.targetClass).html(link);
                   } else {
-                    $(config.targetClass).empty().append(link);
+                    $(config.targetClass).empty().html(link);
                   }
                   documentsFound[config.targetClass] = true;
                 }
@@ -4809,6 +4724,158 @@ $(document).ready(function () {
           } else {
             console.warn('No se encontró un número de cliente válido.');
           }
+
+
+          $('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
+          $('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
+          $('.certificadoGranel').text(response?.data?.lote_granel?.certificado_granel?.num_certificado ||
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.certificado_granel?.num_certificado ||
+            'No disponible');
+          /* $('.certificadoGranel').html('<a href="/files/' + response?.data?.lote_granel.empresa?.empresa_num_clientes[0]?.numero_cliente + '/certificados_granel/' + response?.url_certificado_granel + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'); */
+          if (response?.data?.lote_granel?.empresa?.empresa_num_clientes?.[0] && response?.url_certificado_granel) {
+            const cliente = response.data.lote_granel.empresa.empresa_num_clientes[0].numero_cliente;
+            const url = '/files/' + cliente + '/certificados_granel/' + response.url_certificado_granel;
+
+            $('.certificadoGranel').html(
+              `<a href="${url}" target="_blank">
+                <i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>
+            </a>`
+            );
+          }
+
+          /* $('.fq').html('<a href="/files/' + response?.data?.lote_granel.empresa?.empresa_num_clientes[0]?.numero_cliente + '/fqs/' + response?.url_fqs + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'); */
+          if (
+            response?.data?.lote_granel?.empresa?.empresa_num_clientes?.[0] &&
+            response?.url_fqs
+          ) {
+            const cliente = response.data.lote_granel.empresa.empresa_num_clientes[0].numero_cliente;
+            const url = '/files/' + cliente + '/fqs/' + response.url_fqs;
+
+            $('.fq').html(
+              `<a href="${url}" target="_blank">
+                 <i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>
+               </a>`
+            );
+          }
+
+
+          if (response.guias && Array.isArray(response.guias) && response.guias.length > 0) {
+            const folios = response.guias.map(g => g.folio || 'Sin folio').join(', ');
+            $('.guiasTraslado').text(folios);
+          } else {
+            $('.guiasTraslado').text('No disponibles');
+          }
+
+
+          $('.tipos').text(response?.tipos_agave || 'No disponible');
+
+
+          // Validar nombre del lote envasado
+
+
+          var caracteristicas = JSON.parse(response.data?.caracteristicas);
+          var tipos = {
+            1: 'Análisis completo',
+            2: 'Ajuste de grado alcohólico'
+          };
+
+          var texto = tipos[caracteristicas?.tipo_analisis] || 'No disponible';
+
+          $('.tipoAnalisis').text(texto);
+          $('.materialRecipiente').text(caracteristicas.material);
+          $('.capacidadRecipiente').text(caracteristicas.capacidad);
+          $('.numeroRecipiente').text(caracteristicas.num_recipientes);
+          $('.tiempoMaduracion').text(caracteristicas.tiempo_dura);
+          $('.tipoIngreso').text(caracteristicas.tipoIngreso);
+          $('.volumenLiberado').text(caracteristicas.volumen_liberacion);
+          $('.tipoLiberacion').text(caracteristicas.tipoLiberacion);
+          $('.volumenActual').text(caracteristicas.id_vol_actual);
+          $('.volumenTrasladado').text(caracteristicas.id_vol_traslado);
+          $('.volumenSobrante').text(caracteristicas.id_vol_res);
+          $('.volumenIngresado').text(caracteristicas.volumen_ingresado);
+          // $('.tipoEtiquetaEnvasado').text(response?.data?.lotes_envasado.tipo);
+          $('.inicioTerminoEnvasado').text(caracteristicas.fecha_inicio + ' a ' + caracteristicas.fecha_fin);
+          let destino;
+          /* if (response?.data?.lote_envasado.destino_lote == 1) {
+             destino = 'Nacional';
+           }
+           if (response?.data?.lote_envasado.destino_lote == 2) {
+             destino = 'Exportación';
+           }
+           if (response?.data?.lote_envasado.destino_lote == 3) {
+             destino = 'stock';
+           }
+
+           $('.destinoEnvasado').text(destino);*/
+          $('.etiqueta').html('<a href="files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + response?.url_etiqueta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          if (Array.isArray(response.lotesEnvasado) && response.lotesEnvasado.length > 0) {
+            $('.nombreLoteEnvasado').text(response.lotesEnvasado[0].nombre || 'Nombre no disponible');
+
+            response.lotesEnvasado.forEach((lote, index) => {
+              let html = 'N/A';
+
+              if (lote.dictamen_envasado) {
+                const idDictamen = lote.dictamen_envasado.id_dictamen_envasado;
+                const numDictamen = lote.dictamen_envasado.num_dictamen;
+                const url = `/dictamen_envasado/${idDictamen}`;
+
+                html = `${numDictamen}
+                  <a href="${url}" target="_blank">
+                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>
+                  </a>`;
+              }
+
+              // Aplicar por índice si hay varios
+              $(`.dictamenEnvasado[data-index="${index}"]`).html(html);
+            });
+          } else {
+            // Si no hay lotes, dejar los campos limpios o con texto por defecto
+            $('.nombreLoteEnvasado').text('Nombre no disponible');
+            $('.dictamenEnvasado').html('Dictamen no disponible');
+          }
+
+
+          $('.acta').html('<a href="/files/' + response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente + '/actas/' + response?.url_acta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          $('.solicitudPdf').html('<a href="/solicitud_de_servicio/' + response?.data?.id_solicitud + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          $('.proforma').html('<a href="/files/' + response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente + '/' + response?.url_proforma + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          // Verificar si 'detalles' existe y es un arreglo
+          if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
+            // Recorrer cada elemento de 'detalles'
+            $('.cajasBotellas').text('');
+            caracteristicas.detalles.forEach(function (detalle) {
+              // Asumiendo que '.cajasBotellas' es un contenedor de varias cajas, agregamos el texto en cada una
+              $('.cajasBotellas').append(
+                detalle.cantidad_cajas + ' Cajas y ' + detalle.cantidad_botellas + ' Botellas<br>'
+              );
+            });
+          } else {
+            // Si 'detalles' no existe o no es un arreglo
+            $('.cajasBotellas').text(
+              caracteristicas.cantidad_caja + ' Cajas y ' + (response?.lotesEnvasado?.[0]?.cant_botellas ?? '0') + ' Botellas'
+            );
+          }
+          const cajas = caracteristicas.cajas_por_pallet || '0';
+          const botellas = caracteristicas.botellas_por_caja || '0';
+
+          $('.cajasBotellasTN').text(`Cajas por pallet: ${cajas} Botellas por caja: ${botellas}`);
+
+          let destinoTexto = 'No disponible';
+
+          switch (response?.lotesEnvasado?.[0]?.destino_lote) {
+            case 1:
+              destinoTexto = 'Nacional';
+              break;
+            case 2:
+              destinoTexto = 'Exportación';
+              break;
+            case 3:
+              destinoTexto = 'Stock';
+              break;
+          }
+
+          $('.destinoEnvasado').text(destinoTexto);
+
+          // Estructura de configuración para los documentos
 
 
           // Mostrar mensajes para documentos no encontrados

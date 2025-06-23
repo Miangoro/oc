@@ -7,7 +7,7 @@
                     <h4 class="address-title mb-2">Validación de la solicitud de servicio</h4>
                     <p id="tipoSolicitud" class="solicitud badge bg-primary fs-4"></p>
                     <div class="datos-importantes">
-
+                      {{-- <div class="id_empresa"></div> --}}
                     </div>
                 </div>
                 <form id="addValidarSolicitud">
@@ -25,8 +25,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Razón Social:</th>
-                                            <td class="razonSocial"></td>
+                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                                Razón social y domicilio fiscal:</th>
+                                            <td class="csf"></td>
                                             <td class="marcar">
                                                 <select name="razonSocial" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
@@ -35,7 +36,7 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr>
+{{--                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Domicilio Fiscal:</th>
                                             <td class="domicilioFiscal"></td>
@@ -47,7 +48,7 @@
                                                     <option value="no">No</option>
                                                 </select>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Domicilio de Instalaciones (Unidad de Producción Autorizada):
@@ -106,8 +107,8 @@
                                     <tbody>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Razón Social:</th>
-                                            <td class="razonSocial"></td>
+                                                Razón social y domicilio fiscal:</th>
+                                            <td class="csf"></td>
                                             <td>
                                                 <select name="razonSocial" name="razonSocial" class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
@@ -117,7 +118,7 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr>
+{{--                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Domicilio Fiscal:</th>
                                             <td class="domicilioFiscal"></td>
@@ -129,7 +130,7 @@
                                                     <option value="no">No</option>
                                                 </select>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Domicilio de Instalaciones (Unidad de Producción Autorizada):
@@ -187,8 +188,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Razón Social:</th>
-                                            <td class="razonSocial"></td>
+                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                                Razón social y domicilio fiscal:</th>
+                                            <td class="csf"></td>
                                             <td class="marcar">
                                                 <select name="razonSocial" class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
@@ -198,7 +200,7 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr>
+{{--                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Domicilio Fiscal:</th>
                                             <td class="domicilioFiscal"></td>
@@ -209,7 +211,7 @@
                                                     <option value="no">No</option>
                                                 </select>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Domicilio de Instalaciones (Unidad de Producción o Envasadora
@@ -251,7 +253,7 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr>
+{{--                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 CSF:
                                             </th>
@@ -263,7 +265,7 @@
                                                     <option value="no">No</option>
                                                 </select>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Comprobante de Posesión:</th>
@@ -308,9 +310,8 @@
                                     <tbody>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Razón
-                                                Social:</th>
-                                            <td class="razonSocial"></td>
+                                                Razón social y domicilio fiscal:</th>
+                                            <td class="csf"></td>
                                             <td class="marcar">
                                                 <select name="razonSocial" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
@@ -319,7 +320,7 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr>
+{{--                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Domicilio Fiscal:</th>
                                             <td class="domicilioFiscal"></td>
@@ -331,7 +332,7 @@
                                                     <option value="no">No</option>
                                                 </select>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Domicilio de Instalaciones (Unidad de Producción o Envasadora
@@ -377,47 +378,6 @@
                                         </tr>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Categoría:</th>
-                                            <td class="categoria"></td>
-                                            <td>
-                                                <select name="categoria" class="form-control form-control-sm"
-                                                    id="cumpleCategoriaRemuestreo">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Clase:
-                                            </th>
-                                            <td class="clase"></td>
-                                            <td>
-                                                <select name="clase" class="form-control form-control-sm"
-                                                    id="cumpleClaseRemuestreo">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Especie
-                                                de Agave:</th>
-                                            <td class="tipos"></td>
-                                            <td>
-                                                <select name="tipos" class="form-control form-control-sm"
-                                                    id="cumpleEspecieAgaveRemuestreo">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Tipo de
                                                 Análisis:</th>
                                             <td class="tipoAnalisis"></td>
@@ -432,7 +392,7 @@
                                         </tr>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Acta de dfsdf
+                                                Acta de
                                                 Vigilancia de producción:</th>
                                             <td class="acta"></td>
                                             <td>
@@ -464,25 +424,11 @@
                                     <tbody>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Razón
-                                                Social:</th>
-                                            <td class="razonSocial"></td>
+                                                Razón social y domicilio fiscal:</th>
+                                            <td class="csf"></td>
                                             <td>
                                                 <select name="razonSocial" class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Domicilio Fiscal:</th>
-                                            <td class="domicilioFiscal"></td>
-                                            <td>
-                                                <select class="form-control form-control-sm"
-                                                    id="cumpleDomicilioFiscalEmisorDictamen">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
@@ -532,58 +478,7 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Categoría:</th>
-                                            <td class="categoria"></td>
-                                            <td>
-                                                <select name="categoria" class="form-control form-control-sm"
-                                                    id="cumpleCategoriaTraslado">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Clase:
-                                            </th>
-                                            <td class="clase"></td>
-                                            <td>
-                                                <select name="clase" class="form-control form-control-sm" id="cumpleClaseTraslado">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Especie de Agave:</th>
-                                            <td class="tipos"></td>
-                                            <td>
-                                                <select name="tipos" class="form-control form-control-sm"
-                                                    id="cumpleEspecieAgaveTraslado">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Contenido Alcohólico:</th>
-                                            <td class="cont_alc"></td>
-                                            <td>
-                                                <select name="cont_alc" class="form-control form-control-sm"
-                                                    id="cumpleContenidoAlcoholTraslado">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
+
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">FQ:
                                             </th>
@@ -669,25 +564,11 @@
                                     <tbody>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Razón
-                                                Social:</th>
-                                            <td class="razonSocial"></td>
+                                                Razón social y domicilio fiscal:</th>
+                                            <td class="csf"></td>
                                             <td>
                                                 <select name="razonSocial" class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Domicilio Fiscal:</th>
-                                            <td class="domicilioFiscal"></td>
-                                            <td>
-                                                <select name="domicilioFiscal" class="form-control form-control-sm"
-                                                    id="cumpleDomicilioFiscalEmisorDictamen">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
@@ -755,37 +636,7 @@
                                                     <option value="no">No</option>
                                                 </select></td>
                                         </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Categoría:</th>
-                                            <td class="categoria"></td>
-                                            <td><select name="categoria" class="form-control form-control-sm">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Clase:</th>
-                                            <td class="clase"></td>
-                                            <td><select name="clase" class="form-control form-control-sm">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Especie de Agave:</th>
-                                            <td class="tipos"></td>
-                                            <td><select name="tipos" class="form-control form-control-sm">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
+{{--                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Contenido Alcohólico:</th>
                                             <td class="cont_alc"></td>
@@ -794,7 +645,7 @@
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select></td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">FQ:
                                             </th>
@@ -879,9 +730,8 @@
                                     <tbody>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Razón
-                                                Social:</th>
-                                            <td class="razonSocial"></td>
+                                                Razón social y domicilio fiscal:</th>
+                                            <td class="csf"></td>
                                             <td>
                                                 <select name="razonSocial" class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
@@ -891,7 +741,7 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr>
+{{--                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Domicilio Fiscal:</th>
                                             <td class="domicilioFiscal"></td>
@@ -903,7 +753,7 @@
                                                     <option value="no">No</option>
                                                 </select>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Domicilio de Instalaciones (Unidad de Producción o Envasadora
@@ -944,7 +794,7 @@
                                                     <option value="no">No</option>
                                                 </select></td>
                                         </tr>
-                                        <tr>
+                                       {{--  <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                                 Categoría:</th>
                                             <td class="categoria"></td>
@@ -983,7 +833,7 @@
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
                                                 </select></td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">FQ:
                                             </th>
@@ -1099,25 +949,11 @@
                                     <tbody>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Razón
-                                                Social:</th>
-                                            <td class="razonSocial"></td>
+                                                Razón social y domicilio fiscal:</th>
+                                            <td class="csf"></td>
                                             <td>
                                                 <select name="razonSocial" class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Domicilio Fiscal:</th>
-                                            <td class="domicilioFiscal"></td>
-                                            <td>
-                                                <select name="domicilioFiscal" class="form-control form-control-sm"
-                                                    id="cumpleDomicilioFiscalEmisorDictamen">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
@@ -1164,46 +1000,7 @@
                                                     <option value="no">No</option>
                                                 </select></td>
                                         </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Categoría:</th>
-                                            <td class="categoria"></td>
-                                            <td><select name="categoria" class="form-control form-control-sm">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Clase:</th>
-                                            <td class="clase"></td>
-                                            <td><select name="clase" class="form-control form-control-sm">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Especie de Agave:</th>
-                                            <td class="tipos"></td>
-                                            <td><select name="tipos" class="form-control form-control-sm">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Contenido Alcohólico:</th>
-                                            <td class="cont_alc"></td>
-                                            <td><select name="cont_alc" class="form-control form-control-sm">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select></td>
-                                        </tr>
+
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">FQ:
                                             </th>
@@ -1326,22 +1123,11 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <th class="text-dark fw-bold" scope="row">Razón Social:</th>
-                                            <td id="" class="razonSocial"></td>
+                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                                Razón social y domicilio fiscal:</th>
+                                            <td class="csf"></td>
                                             <td>
                                                 <select name="razonSocial" class="form-control form-control-sm">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" scope="row">Domicilio Fiscal:
-                                            </th>
-                                            <td id="" class="domicilioFiscal"></td>
-                                            <td>
-                                                <select name="domicilioFiscal" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>
@@ -1397,7 +1183,7 @@
                                         </tr>
                                         <tr>
                                             <th class="text-dark fw-bold" scope="row">Cajas/Botellas:</th>
-                                            <td class="cajasBotellas"></td>
+                                            <td class="cajasBotellasTN"></td>
                                             <td>
                                                 <select name="cajasBotellas" class="form-control form-control-sm">
                                                     <option value="" disabled selected>Seleccionar</option>
@@ -1406,7 +1192,7 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        {{-- <tr>
                                             <th class="text-dark fw-bold" scope="row">Categoría:</th>
                                             <td class="categoria"></td>
                                             <td>
@@ -1449,7 +1235,7 @@
                                                     <option value="no">No</option>
                                                 </select>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr>
                                             <th class="text-dark fw-bold" scope="row">FQ:</th>
                                             <td class="fq"></td>
@@ -1704,25 +1490,11 @@
                                     <tbody>
                                         <tr>
                                             <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Razón
-                                                Social:</th>
-                                            <td class="razonSocial"></td>
+                                                Razón social y domicilio fiscal:</th>
+                                            <td class="csf"></td>
                                             <td>
                                                 <select name="razonSocial" class="form-control form-control-sm"
                                                     id="cumpleRazonSocialEmisorDictamen">
-                                                    <option value="" disabled selected>Seleccionar</option>
-                                                    <option value="si">Sí</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                                Domicilio Fiscal:</th>
-                                            <td class="domicilioFiscal"></td>
-                                            <td>
-                                                <select name="domicilioFiscal" class="form-control form-control-sm"
-                                                    id="cumpleDomicilioFiscalEmisorDictamen">
                                                     <option value="" disabled selected>Seleccionar</option>
                                                     <option value="si">Sí</option>
                                                     <option value="no">No</option>

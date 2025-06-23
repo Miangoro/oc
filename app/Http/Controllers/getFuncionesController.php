@@ -9,6 +9,7 @@ use App\Models\empresa;
 use App\Models\Instalaciones;
 use App\Models\LotesGranel;
 use App\Models\tipos;
+use App\Models\guias;
 use App\Models\lotes_envasado;
 use App\Models\maquiladores_model;
 use App\Models\normas;
@@ -318,7 +319,7 @@ foreach ($ids as $id) {
     }
 }
 
-   
+
 $urls_certificados = collect();
 
 foreach ($certificados as $certificado) {
@@ -331,7 +332,7 @@ foreach ($certificados as $certificado) {
     }
 }
 
-   
+
 $fqs = collect();
 
 foreach ($certificados as $certificado) {
@@ -351,7 +352,7 @@ foreach ($certificados as $certificado) {
 
 
 
-    
+
 
 
     return response()->json([
@@ -484,7 +485,7 @@ $lotesEnvasado = lotes_envasado::with([
                 return is_array($car) && ($car['id_lote_granel'] ?? null) == $id_lote_granel;
             });
 
-       
+
     }
 }
 
@@ -514,8 +515,17 @@ $lotesEnvasado = lotes_envasado::with([
 
         }
 
-        
 
+
+    // Obtener guías si están definidas en características
+      $guias = [];
+      $caracteristicas = is_string($solicitud->caracteristicas)
+          ? json_decode($solicitud->caracteristicas, true)
+          : $solicitud->caracteristicas;
+
+      if (isset($caracteristicas['id_guia']) && is_array($caracteristicas['id_guia'])) {
+          $guias = guias::whereIn('id_guia', $caracteristicas['id_guia'])->get();
+      }
 
 
 
@@ -532,7 +542,7 @@ $lotesEnvasado = lotes_envasado::with([
         'fecha_visita_formateada' => Helpers::formatearFechaHora($solicitud->fecha_visita),
         'tipos_agave' => $tipos,
         'lotesEnvasado' => $lotesEnvasado,
-        
+        'guias' => $guias,
     ]);
 }
 
