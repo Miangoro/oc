@@ -13,8 +13,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange=" obtenerGranelesedit(this.value);obtenerGraneles2(this.value);"
-                                    id="edit_id_empresa_vig" name="id_empresa" class="select2 form-select id_empresa">
+                                <select onchange="obtenerGranelesInsta2(this.value);" id="edit_id_empresa_vig"
+                                    name="id_empresa" class="select2 form-select">
                                     <option value="" selected disabled>Selecciona Empresa</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">
@@ -46,6 +46,45 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control" id="edit_nombre_produccion"
+                                    name="nombre_produccion" placeholder="Nombre de la producción o tapada" required />
+                                <label for="nombre_produccion">Nombre de la producción o tapada</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control" id="edit_etapa_proceso" name="etapa_proceso"
+                                    placeholder="Etapa del proceso" required />
+                                <label for="etapa_proceso">Etapa del proceso (cocción, molienda, etc.)</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="number" class="form-control" id="edit_cantidad_pinas"
+                                    name="cantidad_pinas" placeholder="Cantidad de piñas" required />
+                                <label for="cantidad_pinas">Cantidad de piñas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="file" class="form-control" id="edit_documento_guias"
+                                    name="documento_guias[]" multiple>
+                                <label for="documento_guias">Adjuntar guía(s) en PDF</label>
+                            </div>
+                        </div>
+                        <div class="linksGuias mb-3">
+
+                        </div>
+                    </div>
+
+                    {{--                     <div class="row">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select onchange="obtenerDatosGranelesedit();" id="edit_id_lote_granel_vig"
                                     name="id_lote_granel" class="select2 form-select">
@@ -71,8 +110,8 @@
                                 <label for="id_categoria">Categoria</label>
                             </div>
                         </div>
-                    </div>
-
+                    </div> --}}
+                    {{--
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
@@ -107,8 +146,8 @@
                                 <label for="analisis">Ingresa Análisis fisicoquímico</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
+                    </div> --}}
+                    {{--                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" class="form-control" id="edit_volumen_vig" name="volumen"
@@ -130,8 +169,8 @@
                                 <label for="kg_maguey">Kg. de maguey</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
+                    </div> --}}
+                    {{--                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" class="form-control" id="edit_cant_pinas_vig"
@@ -153,8 +192,8 @@
                                 <label for="etapa">Etapa de proceso en la que se encuentra</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
+                    </div> --}}
+                    {{--                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <!-- Select para seleccionar múltiples guías -->
@@ -172,7 +211,7 @@
                                 <label for="nombre_predio">Predio de la procedencia</label>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional_vig"
@@ -181,9 +220,15 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnEditVigiProd"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button disabled class="btn btn-primary me-1 d-none" type="button"
+                            id="btnSpinnerEditVigilanciaProduccion">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Actualizando...
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnEditVigiProd"><i
+                                class="ri-pencil-fill me-1"></i> Editar</button>
                         <button type="reset" class="btn btn-danger " data-bs-dismiss="modal" aria-label="Close"><i
-                                class="ri-close-line"></i> Cancelar</button>
+                                class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
             </div>
 
@@ -193,94 +238,7 @@
 </div>
 
 <script>
-    function obtenerDatosGranelesedit() {
-        var lote_granel_id = $("#edit_id_lote_granel_vig").val();
-        if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
-            $.ajax({
-                url: `/getDatos2/${lote_granel_id}`,
-                method: 'GET',
-                success: function(response) {
-                    if (response && response.lotes_granel) {
-                        $('#edit_id_categoria_vig').val(response.lotes_granel.id_categoria || '');
-                        $('#edit_id_clase_vig').val(response.lotes_granel.id_clase || '');
-                        var idTiposvigiEdit = response.tipo.map(function(tipo) {
-                            return tipo.id_tipo; // Asegúrate de devolver id_tipo desde el backend
-                        });
-                        $('#edit_id_tipo_vig').val(idTiposvigiEdit).trigger(
-                        'change'); // Asignar y refrescar select2
-
-                        $('#edit_analisis_vig').val(response.lotes_granel.folio_fq || '');
-                        $('#edit_volumen_vig').val(response.lotes_granel.cont_alc || '');
-                    }
-                    if (response && response.lotes_granel_guias && response.lotes_granel_guias.length > 0) {
-                        var primeraGuia = response.lotes_granel_guias[0].guia || {};
-                        $('#edit_kg_maguey_vig').val(primeraGuia.kg_maguey || '');
-                        $('#edit_cant_pinas_vig').val(primeraGuia.num_comercializadas || '');
-                        $('#edit_art_vig').val(primeraGuia.art || '');
-                        $('#edit_folio_vig').val(primeraGuia.folio || '');
-                        if (primeraGuia.predios) {
-                            $('#edit_nombre_predio_vig').val(primeraGuia.predios.nombre_predio || '');
-                        } else {
-                            $('#edit_nombre_predio_vig').val('');
-                        }
-                    } else {
-                        $('#edit_kg_maguey_vig').val('');
-                        $('#edit_cant_pinas_vig').val('');
-                        $('#edit_art_vig').val('');
-                        $('#edit_edit_id_guias_vigiP').val('');
-                        $('#edit_nombre_predio_vig').val('');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error al obtener datos del lote a granel:", error);
-                }
-            });
-        }
-    }
-
-    function obtenerGranelesedit(empresa) {
-        if (empresa !== "" && empresa !== null && empresa !== undefined) {
-            $.ajax({
-                url: '/getDatos/' + empresa,
-                method: 'GET',
-                success: function(response) {
-                    var contenido = "";
-                    for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                            response
-                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
-                    }
-                    if (response.lotes_granel.length == 0) {
-                        contenido = '<option value="">Sin lotes registrados</option>';
-                    } else {}
-                    $('#edit_id_lote_granel_vig').html(contenido);
-
-                    //guias de traslado
-                    var contenidoGuiass = "";
-                    for (let index = 0; index < response.guias.length; index++) {
-                        contenidoGuiass = '<option value="' + response.guias[index].id_guia + '">' +
-                            response
-                            .guias[index].folio + '</option>' + contenidoGuiass;
-                    }
-                    if (response.guias.length == 0) {
-                        contenidoGuiass = '<option value="">Sin guias registrados</option>';
-                    } else {}
-                    $('#edit_edit_id_guias_vigiP').html(contenidoGuiass);
-
-                    const idguias = $('#edit_edit_id_guias_vigiP').data('selected');
-                    if (idguias) {
-                        $('#edit_edit_id_guias_vigiP').val(idguias).trigger('change');
-                    } else if (response.id_guias.length == 0) {
-                        console.log('no hay se');
-                    }
-
-                },
-                error: function() {}
-            });
-        }
-    }
-
-    function obtenerGraneles2(empresa) {
+    function obtenerGranelesInsta2(empresa) {
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
             $.ajax({
                 url: '/getDatos/' + empresa,
@@ -289,36 +247,35 @@
                     var contenido = "";
                     for (let index = 0; index < response.instalaciones.length; index++) {
                         var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-
                         contenido = '<option value="' + response.instalaciones[index].id_instalacion +
                             '">' +
                             tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                            '</option>' + contenido;
+                            '</option>' +
+                            contenido;
                     }
                     if (response.instalaciones.length == 0) {
                         contenido = '<option value="">Sin instalaciones registradas</option>';
                     }
-                    $('#edit_id_instalacion_vig').html(contenido);
-                    // Mantener el dato del select
-                    const idInstalacionSeleccionada = $('#edit_id_instalacion_vig').data('selected');
-                    if (idInstalacionSeleccionada) {
-                        $('#edit_id_instalacion_vig')
-                            .val(idInstalacionSeleccionada)
-                            .trigger('change');
+                    $('.id_instalacion').html(contenido);
+
+                    const idInsPrevio = $('#edit_id_instalacion_vig').data('selected');
+                    if (idInsPrevio) {
+                        $('#edit_id_instalacion_vig').val(idInsPrevio);
                     }
+
                 },
                 error: function() {
-                    console.error("Error al cargar las instalaciones.");
+                    console.error('Error al obtener las instalaciones.');
                 }
             });
         }
     }
 
-    function limpiarTipo(tipo) {
-        try {
-            return JSON.parse(tipo).join(', ');
-        } catch (e) {
-            return tipo;
-        }
-    }
+    /*     function limpiarTipo(tipo) {
+            try {
+                return JSON.parse(tipo).join(', ');
+            } catch (e) {
+                return tipo;
+            }
+        } */
 </script>

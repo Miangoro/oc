@@ -28,6 +28,8 @@ use App\Models\Destinos;
 use App\Models\BitacoraMezcal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 //clase de exportacion
 use App\Exports\SolicitudesExport;
 use App\Models\etiquetas;
@@ -59,7 +61,7 @@ class solicitudesController extends Controller
             $empresas = empresa::with('empresaNumClientes')
                 ->where('tipo', 2)
                 ->get();
-        }  
+        }
 
         $organismos = organismos::all(); // Obtener todos los estados
         $LotesGranel = lotesGranel::all();
@@ -120,7 +122,7 @@ class solicitudesController extends Controller
             $query->where('id_tipo', 11);
         }
 
-         
+
 
         // Filtros específicos por columna
       $columnsInput = $request->input('columns');
@@ -489,53 +491,115 @@ class solicitudesController extends Controller
     }
 
 
-    public function storeVigilanciaProduccion(Request $request)
-    {
-        $VigilanciaProdu = new solicitudesModel();
-        $VigilanciaProdu->folio = Helpers::generarFolioSolicitud();
-        $VigilanciaProdu->id_empresa = $request->id_empresa;
-        $VigilanciaProdu->id_tipo = 2;
-        $VigilanciaProdu->id_predio = 0;
-        $VigilanciaProdu->fecha_visita = $request->fecha_visita;
-        $VigilanciaProdu->id_instalacion = $request->id_instalacion;
-        $VigilanciaProdu->info_adicional = $request->info_adicional;
+  public function storeVigilanciaProduccion(Request $request)
+  {
+      $validated = $request->validate([
+          'id_empresa' => 'required|integer',
+          'fecha_visita' => 'required|date',
+          'id_instalacion' => 'required|integer',
+          'nombre_produccion' => 'required|string|max:255',
+          'etapa_proceso' => 'nullable|string|max:255',
+          'cantidad_pinas' => 'nullable|integer|min:1',
+          'info_adicional' => 'nullable|string',
+          'documento_guias.*' => 'nullable|file|max:10240' // 10 MB por archivo
+      ]);
 
-        $idGuias = $request->has('id_guias') ? $request->id_guias : [];
-        // Los valores ya llegarán como un array directo
+      DB::beginTransaction();
 
-        $VigilanciaProdu->caracteristicas = json_encode([
-            'id_lote_granel' => $request->id_lote_granel,
-            'id_categoria' => $request->id_categoria,
-            'id_clase' => $request->id_clase,
-            'id_tipo_maguey' => $request->id_tipo_maguey,
-            'analisis' => $request->analisis,
-            'cont_alc' => $request->volumen,
-            'fecha_corte' => $request->fecha_corte,
-            'kg_maguey' => $request->kg_maguey,
-            'cant_pinas' => $request->cant_pinas,
-            'art' => $request->art,
-            'etapa' => $request->etapa,
-            'id_guias' => $idGuias,
-            'nombre_predio' => $request->nombre_predio,
-        ]);
+      try {
+          // Obtener número de cliente
+          $empresa = empresa::with("empresaNumClientes")
+              ->where("id_empresa", $validated['id_empresa'])
+              ->first();
 
-        $VigilanciaProdu->save();
+          $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+              return !empty($numero);
+          });
 
-        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
+          if (!$numeroCliente) {
+              return response()->json(['message' => 'No se encontró un número de cliente válido'], 422);
+          }
 
-        // Notificación 1
-        $data1 = [
-            'title' => 'Nuevo registro de solicitud',
-            'message' => $VigilanciaProdu->folio . " " . $VigilanciaProdu->tipo_solicitud->tipo,
-            'url' => 'solicitudes-historial',
-        ];
+          $VigilanciaProdu = new solicitudesModel();
+          $VigilanciaProdu->folio = Helpers::generarFolioSolicitud();
+          $VigilanciaProdu->id_empresa = $validated['id_empresa'];
+          $VigilanciaProdu->id_tipo = 2;
+          $VigilanciaProdu->id_predio = 0;
+          $VigilanciaProdu->fecha_visita = $validated['fecha_visita'];
+          $VigilanciaProdu->id_instalacion = $validated['id_instalacion'];
+          $VigilanciaProdu->info_adicional = $validated['info_adicional'] ?? null;
 
-        // Iterar sobre cada usuario y enviar la notificación
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
-        }
-        return response()->json(['message' => 'Vigilancia en producción de lote registrada exitosamente']);
-    }
+          $VigilanciaProdu->caracteristicas = json_encode([
+              'nombre_produccion' => $validated['nombre_produccion'],
+              'etapa_proceso' => $validated['etapa_proceso'],
+              'cantidad_pinas' => $validated['cantidad_pinas'],
+          ]);
+
+          $VigilanciaProdu->save();
+
+          // Guardar archivos si hay
+          $carpetaDestino = "uploads/{$numeroCliente}";
+
+          if (!Storage::disk('public')->exists($carpetaDestino)) {
+              Storage::disk('public')->makeDirectory($carpetaDestino);
+          }
+
+          if ($request->hasFile('documento_guias')) {
+              foreach ($request->file('documento_guias') as $file) {
+                  if (!$file->isValid()) {
+                      throw new \Exception("Uno de los archivos no se pudo cargar correctamente.");
+                  }
+
+                    $extension = $file->getClientOriginalExtension();
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $originalNameSlug = Str::slug($originalName); // Limpia y convierte a formato tipo "factura-12345"
+                    $uniq = uniqid();
+                    $nombreArchivo = "Guía de agave {$originalNameSlug}_{$uniq}.{$extension}";
+
+                    $ruta = $file->storeAs($carpetaDestino, $nombreArchivo, 'public');
+
+                    if (!$ruta) {
+                        throw new \Exception("No se pudo guardar el archivo en el servidor.");
+                    }
+
+                  DB::table('documentacion_url')->insert([
+                      'id_documento' => 71,
+                      'nombre_documento' => 'Guía de traslado de agave',
+                      'id_empresa' => $VigilanciaProdu->id_empresa,
+                      'id_relacion' => $VigilanciaProdu->id_solicitud,
+                      'url' => $nombreArchivo,
+                      'created_at' => now(),
+                      'updated_at' => now(),
+                  ]);
+              }
+          }
+
+          // Notificar
+          $users = User::whereIn('id', [4, 2, 3, 7])->get();
+
+          $data1 = [
+              'title' => 'Nuevo registro de solicitud',
+              'message' => $VigilanciaProdu->folio . " " . $VigilanciaProdu->tipo_solicitud->tipo,
+              'url' => 'solicitudes-historial',
+          ];
+
+          foreach ($users as $user) {
+              $user->notify(new GeneralNotification($data1));
+          }
+
+          DB::commit();
+
+          return response()->json(['message' => 'Vigilancia en producción de lote registrada exitosamente']);
+
+      } catch (\Throwable $e) {
+          DB::rollBack();
+
+          return response()->json([
+              'message' =>  $e->getMessage()
+          ], 500);
+      }
+  }
+
 
         public function storeEmisionCertificadoVentaNacional(Request $request)
     {
@@ -1132,40 +1196,84 @@ class solicitudesController extends Controller
 
         switch ($formType) {
             case 'vigilanciaenproduccion':
-                // Validar datos para georreferenciación
+                // Validar solo los campos que sí estás enviando
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                    'nombre_produccion' => 'required|string|max:255',
+                    'etapa_proceso' => 'nullable|string|max:255',
+                    'cantidad_pinas' => 'nullable|integer|min:1',
                     'info_adicional' => 'nullable|string',
-                    'id_guias' => 'nullable|array',
-                    'id_guias.*' => 'integer|exists:guias,id_guia',
-                    'edit_id_tipo_vig' => 'nullable|array',
-                    'edit_id_tipo_vig.*' => 'integer',
+                    'documento_guias.*' => 'nullable|file|max:10240', // 10MB por archivo
                 ]);
 
-                $caracteristicas = [
-                    'id_lote_granel' => $request->id_lote_granel,
-                    'id_categoria' => $request->id_categoria,
-                    'id_clase' => $request->id_clase,
-                    'id_tipo_maguey' => !empty($request->edit_id_tipo_vig) ? $request->edit_id_tipo_vig : null,
-                    'analisis' => $request->analisis,
-                    'cont_alc' => $request->volumen,
-                    'fecha_corte' => $request->fecha_corte,
-                    'kg_maguey' => $request->kg_maguey,
-                    'cant_pinas' => $request->cant_pinas,
-                    'art' => $request->art,
-                    'etapa' => $request->etapa,
-                    'id_guias' => !empty($request->id_guias) ? $request->id_guias : null,
-                    'nombre_predio' => $request->nombre_predio,
-                ];
+                // Actualizar la solicitud con solo los datos actuales
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
-                    'caracteristicas' => json_encode($caracteristicas),
+                    'caracteristicas' => json_encode([
+                        'nombre_produccion' => $request->nombre_produccion,
+                        'etapa_proceso' => $request->etapa_proceso,
+                        'cantidad_pinas' => $request->cantidad_pinas,
+                    ]),
                 ]);
+
+                if ($request->hasFile('documento_guias')) {
+                    // 1. Obtener el número de cliente
+                    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->id_empresa)->first();
+                    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                        return !empty($numero);
+                    });
+
+                    if (!$numeroCliente) {
+                        return response()->json(['message' => 'No se encontró un número de cliente válido'], 422);
+                    }
+
+                    // 2. Eliminar archivos anteriores del disco y registros de la base
+                    $documentosAnteriores = DB::table('documentacion_url')
+                        ->where('id_relacion', $solicitud->id_solicitud)
+                        ->where('id_documento', 71)
+                        ->get();
+
+                    foreach ($documentosAnteriores as $doc) {
+                        Storage::disk('public')->delete("uploads/{$numeroCliente}/{$doc->url}");
+                    }
+
+                    DB::table('documentacion_url')
+                        ->where('id_relacion', $solicitud->id_solicitud)
+                        ->where('id_documento', 71)
+                        ->delete();
+
+                    // 3. Guardar nuevos archivos
+                    $carpetaDestino = "uploads/{$numeroCliente}";
+
+                    if (!Storage::disk('public')->exists($carpetaDestino)) {
+                        Storage::disk('public')->makeDirectory($carpetaDestino);
+                    }
+
+                    foreach ($request->file('documento_guias') as $file) {
+                        $extension = $file->getClientOriginalExtension();
+                        $nombreOriginal = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                        $nombreSeguro = preg_replace('/[^A-Za-z0-9_\-]/', '-', $nombreOriginal); // sanitiza el nombre
+                        $nombreArchivo = "Guía de traslado de agave {$nombreSeguro}_" . uniqid() . '.' . $extension;
+
+                        $ruta = $file->storeAs($carpetaDestino, $nombreArchivo, 'public');
+
+                        DB::table('documentacion_url')->insert([
+                            'id_documento' => 71,
+                            'nombre_documento' => 'Guía de traslado de agave',
+                            'id_empresa' => $solicitud->id_empresa,
+                            'id_relacion' => $solicitud->id_solicitud,
+                            'url' => $nombreArchivo,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+                  }
+
 
                 break;
 

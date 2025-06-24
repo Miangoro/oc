@@ -762,77 +762,42 @@ $(function () {
               modal.find('#edit_id_empresa_vig').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita_vig').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_vig').data('selected', response.data.id_instalacion);
+              modal.find('.linksGuias').html('');
+              if (response.documentos && Array.isArray(response.documentos)) {
+                const numeroCliente = response.numero_cliente;
 
-              // Acceder al campo `punto_reunion` desde `caracteristicas`
-              if (response.caracteristicas && response.caracteristicas.id_lote_granel) {
-                modal.find('#edit_id_lote_granel_vig').val(response.caracteristicas.id_lote_granel);
-              } else {
-                modal.find('#edit_id_lote_granel_vig').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_categoria) {
-                modal.find('#edit_id_categoria_vig').val(response.caracteristicas.id_categoria);
-              } else {
-                modal.find('#edit_id_categoria_vig').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_clase) {
-                modal.find('#edit_id_clase_vig').val(response.caracteristicas.id_clase);
-              } else {
-                modal.find('#edit_id_clase_vig').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_tipo_maguey) {
-                const idTipos = response.caracteristicas.id_tipo_maguey; // Asegúrate de que sea un arreglo
-                modal.find('#edit_id_tipo_vig').val(idTipos).trigger('change'); // Asigna los valores seleccionados
-              } else {
-                modal.find('#edit_id_tipo_vig').val([]).trigger('change'); // Si no hay valores, limpia el select
-              }
+                const guias = response.documentos.filter(doc => doc.id_documento === 71);
 
-              if (response.caracteristicas && response.caracteristicas.analisis) {
-                modal.find('#edit_analisis_vig').val(response.caracteristicas.analisis);
+                if (guias.length > 0) {
+                  guias.forEach(doc => {
+                    const url = `/storage/uploads/${numeroCliente}/${doc.url}`;
+                    const linkHtml = `<a href="${url}" target="_blank" class="d-block text-end mb-1">
+                      <i class="ri-file-check-fill me-1"></i> ${doc.url}
+                    </a>`;
+                    modal.find('.linksGuias').append(linkHtml);
+                  });
+                } else {
+                  modal.find('.linksGuias').html('<div class="text-muted text-end me-6">Sin guías de traslado</div>');
+                }
               } else {
-                modal.find('#edit_analisis_vig').val('');
+                modal.find('.linksGuias').html('<div class="text-muted text-end me-6">Sin guías de traslado</div>');
               }
-              if (response.caracteristicas && response.caracteristicas.cont_alc) {
-                modal.find('#edit_volumen_vig').val(response.caracteristicas.cont_alc);
+              if (response.caracteristicas && response.caracteristicas.nombre_produccion) {
+                modal.find('#edit_nombre_produccion').val(response.caracteristicas.nombre_produccion);
               } else {
-                modal.find('#edit_volumen_vig').val('');
+                modal.find('#edit_nombre_produccion').val('');
               }
-              if (response.caracteristicas && response.caracteristicas.fecha_corte) {
-                modal.find('#edit_fecha_corte_vig').val(response.caracteristicas.fecha_corte);
+              if (response.caracteristicas && response.caracteristicas.etapa_proceso) {
+                modal.find('#edit_etapa_proceso').val(response.caracteristicas.etapa_proceso);
               } else {
-                modal.find('#edit_fecha_corte_vig').val('');
+                modal.find('#edit_etapa_proceso').val('');
               }
-              if (response.caracteristicas && response.caracteristicas.kg_maguey) {
-                modal.find('#edit_kg_maguey_vig').val(response.caracteristicas.kg_maguey);
+              if (response.caracteristicas && response.caracteristicas.cantidad_pinas) {
+                modal.find('#edit_cantidad_pinas').val(response.caracteristicas.cantidad_pinas);
               } else {
-                modal.find('#edit_kg_maguey_vig').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.cant_pinas) {
-                modal.find('#edit_cant_pinas_vig').val(response.caracteristicas.cant_pinas);
-              } else {
-                modal.find('#edit_cant_pinas_vig').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.art) {
-                modal.find('#edit_art_vig').val(response.caracteristicas.art);
-              } else {
-                modal.find('#edit_art_vig').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.etapa) {
-                modal.find('#edit_etapa_vig').val(response.caracteristicas.etapa);
-              } else {
-                modal.find('#edit_etapa_vig').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_guias) {
-                modal.find('#edit_edit_id_guias_vigiP').data('selected', response.caracteristicas.id_guias);
-              } else {
-                modal.find('#edit_edit_id_guias_vigiPs').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.nombre_predio) {
-                modal.find('#edit_nombre_predio_vig').val(response.caracteristicas.nombre_predio);
-              } else {
-                modal.find('#edit_nombre_predio_vig').val('');
+                modal.find('#edit_cantidad_pinas').val('');
               }
               modal.find('#edit_info_adicional_vig').val(response.data.info_adicional);
-
               //Muestreo lote a granel
             } else if (id_tipo === 3) {
               modal.find('#edit_id_solicitud_muestreo').val(id_solicitud);
@@ -1537,13 +1502,8 @@ $(function () {
       }
     }).on('core.form.valid', function (e) {
       var formData = new FormData(formUpdate);
-      $('#btnEditVigiProd').prop('disabled', true);
-      $('#btnEditVigiProd').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
-      setTimeout(function () {
-        $('#btnEditVigiProd').prop('disabled', false);
-        $('#btnEditVigiProd').html('<i class="ri-add-line"></i> Editar');
-      }, 3000);
-
+      $('#btnEditVigiProd').addClass('d-none');
+      $('#btnSpinnerEditVigilanciaProduccion').removeClass('d-none');
       // Agregar los valores seleccionados del select múltiple al FormData
       $('#edit_id_tipo_vig')
         .find('option:selected')
@@ -1565,6 +1525,8 @@ $(function () {
         processData: false,
         contentType: false,
         success: function (response) {
+          $('#btnSpinnerEditVigilanciaProduccion').addClass('d-none');
+          $('#btnEditVigiProd').removeClass('d-none');
           $('#editVigilanciaProduccion').modal('hide'); // Oculta el modal
           $('#editVigilanciaProduccionForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
@@ -1583,16 +1545,50 @@ $(function () {
           });
         },
         error: function (xhr) {
-          console.log('Error:', xhr.responseText);
+          if (xhr.status === 422) {
+            let errores = xhr.responseJSON.errors;
+            let mensaje = '';
 
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al actualizar la solicitud',
-            customClass: {
-              confirmButton: 'btn btn-danger'
+            // Armar el listado de errores
+            for (let campo in errores) {
+              if (errores.hasOwnProperty(campo)) {
+                mensaje += `<div>• ${errores[campo][0]}</div>`;
+              }
             }
-          });
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Errores de validación',
+              html: mensaje,
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+
+          } else if (xhr.status === 404) {
+            Swal.fire({
+              icon: 'warning',
+              title: 'No encontrado',
+              text: 'Solicitud no encontrada',
+              customClass: {
+                confirmButton: 'btn btn-warning'
+              }
+            });
+
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error inesperado al actualizar la solicitud',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+            console.error("Error inesperado:", xhr.responseText);
+          }
+
+          $('#btnSpinnerEditVigilanciaProduccion').addClass('d-none');
+          $('#btnEditVigiProd').removeClass('d-none');
         }
       });
     });
@@ -2902,13 +2898,8 @@ $(function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(form2);
-      $('#btnRegistrarGeo').prop('disabled', true);
-
-      $('#btnRegistrarGeo').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
-      setTimeout(function () {
-        $('#btnRegistrarGeo').prop('disabled', false);
-        $('#btnRegistrarGeo').html('<i class="ri-add-line"></i> Registrar');
-      }, 3000);
+      $('#btnRegistrarGeo').addClass('d-none');
+      $('#btnSpinnerGeoreferenciacion').removeClass('d-none');
       $.ajax({
         url: '/registrar-solicitud-georeferenciacion',
         type: 'POST',
@@ -2916,6 +2907,8 @@ $(function () {
         processData: false,
         contentType: false,
         success: function (response) {
+          $('#btnRegistrarGeo').removeClass('d-none');
+          $('#btnSpinnerGeoreferenciacion').addClass('d-none');
           $('#addSolicitudGeoreferenciacion').modal('hide');
           $('#addRegistrarSolicitudGeoreferenciacion')[0].reset();
           $('.select2').val(null).trigger('change');
@@ -2942,6 +2935,8 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#btnRegistrarGeo').removeClass('d-none');
+          $('#btnSpinnerGeoreferenciacion').addClass('d-none');
         }
       });
     });
@@ -3078,14 +3073,8 @@ $(function () {
       }
     }).on('core.form.valid', function () {
       var formData = new FormData(addVigilanciaProduccionForm);
-
-      $('#btnRegisVigiPro').prop('disabled', true);
-      $('#btnRegisVigiPro').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
-      setTimeout(function () {
-        $('#btnRegisVigiPro').prop('disabled', false);
-        $('#btnRegisVigiPro').html('<i class="ri-add-line"></i> Registrar');
-      }, 3000);
-
+      $('#btnRegisVigiPro').addClass('d-none');
+      $('#btnSpinnerVigilanciaProduccion').removeClass('d-none');
       $('#id_tipo_maguey')
         .find('option:selected')
         .each(function () {
@@ -3105,6 +3094,8 @@ $(function () {
         processData: false,
         contentType: false,
         success: function (response) {
+          $('#btnRegisVigiPro').removeClass('d-none');
+          $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
           $('#addVigilanciaProduccion').modal('hide');
           $('#addVigilanciaProduccionForm')[0].reset();
           $('.select2').val(null).trigger('change');
@@ -3120,17 +3111,53 @@ $(function () {
             }
           });
         },
-        error: function () {
-          // Mostrar alerta de error
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al registrar la vigilancia en producción.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
+        error: function (xhr) {
+          if (xhr.status === 422) {
+            let errores = xhr.responseJSON.errors;
+            let mensaje = '';
+
+            // Recorremos y formateamos los errores
+            for (let campo in errores) {
+              if (errores.hasOwnProperty(campo)) {
+                mensaje += `<div>• ${errores[campo][0]}</div>`;
+              }
             }
-          });
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Errores de validación',
+              html: mensaje,
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+
+          } else if (xhr.status === 404) {
+            Swal.fire({
+              icon: 'warning',
+              title: 'No encontrado',
+              text: 'Solicitud no encontrada',
+              customClass: {
+                confirmButton: 'btn btn-warning'
+              }
+            });
+
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error inesperado al registrar la vigilancia en producción.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+            console.error("Error inesperado:", xhr.responseText);
+          }
+
+          $('#btnRegisVigiPro').removeClass('d-none');
+          $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
         }
+
       });
     });
     $('#id_empresa_vigilancia, #fecha_visita_vigi, #id_instalacion_vigi').on('change', function () {
@@ -5242,6 +5269,34 @@ $(function () {
     });
 
   });
+
+
+  $(function () {
+    if ($('#dropzone-multi').length) {
+      new Dropzone('#dropzone-multi', {
+        url: '/upload',
+        acceptedFiles: 'application/pdf',
+        maxFilesize: 5,
+        addRemoveLinks: true,
+        dictDefaultMessage: 'Arrastra aquí los archivos o haz clic para seleccionar',
+        dictRemoveFile: 'Eliminar',
+        previewTemplate: document.querySelector('#tpl-preview').innerHTML,
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        init: function () {
+          this.on('success', function (file, response) {
+            console.log('Subido:', response);
+          });
+          this.on('removedfile', function (file) {
+            console.log('Archivo eliminado:', file);
+          });
+        }
+      });
+    }
+  });
+
+
 
 });
 
