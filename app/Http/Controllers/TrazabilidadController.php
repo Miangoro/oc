@@ -150,7 +150,29 @@ class TrazabilidadController extends Controller
 
     
 
+private function determinarTipoBloque($log, $attributes)
+{
+    $attributes = $log->properties['attributes'] ?? [];
 
+    if ($log->subject_type === 'App\Models\Certificado_Exportacion') {
+        return 'registro'; // Azul
+    }
+
+    if ($log->subject_type === 'App\Models\Revisor') {
+        if ($attributes['decision'] === 'Pendiente') {
+            return 'asignacion'; // Morado
+        }
+
+        // Definimos resultado positivo/negativo
+        if ($attributes['decision'] === 'positiva') {
+            return 'resultado_positivo'; // Verde
+        }
+
+        return 'resultado_negativo'; // Rojo
+    }
+
+    return 'otro'; // sin color específico
+}
 ///TRAZABILIDAD CERTIFICADOS
 public function TrackingCertificados($id)
 {   
@@ -402,6 +424,7 @@ public function TrackingCertificados($id)
             'vobo_personal' => $voboPersonalHtml,
             'vobo_cliente' => $voboClienteHtml,
             'orden_personalizado' => $orden_personalizado,
+            'tipo_bloque' => $this->determinarTipoBloque($log, $attributes), // NUEVO
         ];
     });
 
