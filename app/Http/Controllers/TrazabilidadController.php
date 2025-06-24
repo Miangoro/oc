@@ -151,7 +151,7 @@ class TrazabilidadController extends Controller
     
 
 
-    ///TRAZABILIDAD CERTIFICADOS
+///TRAZABILIDAD CERTIFICADOS
 public function TrackingCertificados($id)
 {   
     $logs = Activity::where(function($query) use ($id) {
@@ -169,7 +169,57 @@ public function TrackingCertificados($id)
         $attributes = $log->properties['attributes'] ?? [];
         $evento = $log->event ?? '';
 
-        // Vo.Bo.
+    //Variables generales
+        $num_certificado = $attributes['num_certificado'] ?? null;
+        $obs = $attributes['observaciones'] ?? null;
+        $num_revision = $attributes['numero_revision'] ?? null;
+        $es_correccion = ($attributes['es_correccion'] ?? null) === 'si';//si, siempre se activa
+        $tipo_revision = $attributes['tipo_revision'] ?? null;
+        //$tipo = $tipo_revision == 2 ? 'Granel' : ($tipo_revision == 3 ? 'Exportación' : null);
+        $decision = $attributes['decision'] ?? null;
+
+
+    // Preparar variables para contenido
+        $num_dictamen = isset($attributes['id_dictamen']) 
+            ? Dictamen_Exportacion::find($attributes['id_dictamen'])->num_dictamen ?? 'No encontrado' 
+            : null;
+
+        $empresa = null;
+        if (isset($attributes['id_dictamen'])) {
+            $dictamen = Dictamen_Exportacion::find($attributes['id_dictamen']);
+            if ($dictamen && $dictamen->inspeccione && $dictamen->inspeccione->solicitud && $dictamen->inspeccione->solicitud->empresa) {
+                $empresa = $dictamen->inspeccione->solicitud->empresa->razon_social;
+            }
+        }
+
+        $observaciones = null;
+        if ($obs) {
+            $parsed = json_decode($obs, true);
+            if (json_last_error() === JSON_ERROR_NONE && isset($parsed['id_sustituye'])) {
+                $cert_sust = Certificado_Exportacion::find($parsed['id_sustituye']);
+                $num_sustituido = optional($cert_sust)->num_certificado ?? 'Desconocido';
+                $observaciones = "Sustituye al certificado: <span class='badge bg-secondary'>$num_sustituido</span>";
+            } else {
+                $observaciones = $obs;
+            }
+        }
+
+        $revisor = isset($attributes['id_revisor']) 
+            ? User::find($attributes['id_revisor'])->name ?? null 
+            : null;
+
+        $certificadoRevision = null;
+        $id_revision = null;
+        if (isset($attributes['id_certificado'], $attributes['id_revisor'])) {
+            $certificadoRevision = Revisor::where([
+                ['id_certificado', $attributes['id_certificado']],
+                ['id_revisor', $attributes['id_revisor']]
+            ])->first();
+            $id_revision = $certificadoRevision->id_revision ?? null;
+        }
+
+
+    //VO.BO.
         $voboPersonalHtml = '';
         $voboClienteHtml = '';
         $personalMostrado = false;
@@ -198,55 +248,9 @@ public function TrackingCertificados($id)
             }
         }
 
-        // Preparar variables para contenido
-        $num_certificado = $attributes['num_certificado'] ?? null;
-        $num_dictamen = isset($attributes['id_dictamen']) 
-            ? Dictamen_Exportacion::find($attributes['id_dictamen'])->num_dictamen ?? 'No encontrado' 
-            : null;
 
-        $empresa = null;
-        if (isset($attributes['id_dictamen'])) {
-            $dictamen = Dictamen_Exportacion::find($attributes['id_dictamen']);
-            if ($dictamen && $dictamen->inspeccione && $dictamen->inspeccione->solicitud && $dictamen->inspeccione->solicitud->empresa) {
-                $empresa = $dictamen->inspeccione->solicitud->empresa->razon_social;
-            }
-        }
 
-        $num_revision = $attributes['numero_revision'] ?? null;
-        $revisor = isset($attributes['id_revisor']) 
-            ? User::find($attributes['id_revisor'])->name ?? null 
-            : null;
-
-        $certificadoRevision = null;
-        $id_revision = null;
-        if (isset($attributes['id_certificado'], $attributes['id_revisor'])) {
-            $certificadoRevision = Revisor::where([
-                ['id_certificado', $attributes['id_certificado']],
-                ['id_revisor', $attributes['id_revisor']]
-            ])->first();
-            $id_revision = $certificadoRevision->id_revision ?? null;
-        }
-
-        $decision = $attributes['decision'] ?? null;
-        $tipo_revision = $attributes['tipo_revision'] ?? null;
-        $tipo = null;
-        if ($tipo_revision == 2) $tipo = 'Granel';
-        if ($tipo_revision == 3) $tipo = 'Exportación';
-
-        $obs = $attributes['observaciones'] ?? null;
-        $observaciones = null;
-        if ($obs) {
-            $parsed = json_decode($obs, true);
-            if (json_last_error() === JSON_ERROR_NONE && isset($parsed['id_sustituye'])) {
-                $cert_sust = Certificado_Exportacion::find($parsed['id_sustituye']);
-                $num_sustituido = optional($cert_sust)->num_certificado ?? 'Desconocido';
-                $observaciones = "Sustituye al certificado: <span class='badge bg-secondary'>$num_sustituido</span>";
-            } else {
-                $observaciones = $obs;
-            }
-        }
-
-        // Construcción del contenido para mostrar
+    // Construcción del contenido para mostrar
         $contenido = '';
         if ($num_certificado) {
             $contenido .= "<b>Número del certificado:</b> <span class='badge bg-secondary'>$num_certificado</span>";
@@ -278,6 +282,7 @@ public function TrackingCertificados($id)
             if ($obs) {
                 $contenido .= ", <b>Observaciones:</b> $obs";
             }
+            if ( $decision != 'Pendiente') {
             $bitacora .= "
                 <i class='ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdf'
                    data-bs-target='#mostrarPdf'
@@ -287,6 +292,7 @@ public function TrackingCertificados($id)
                    data-id='$id_revision'
                    data-tipo_revision='$tipo_revision'>
                 </i>";
+            }
         }
 
         if ($num_revision && $num_revision == 2 && $decision == 'Pendiente') {
@@ -312,6 +318,7 @@ public function TrackingCertificados($id)
             if ($obs) {
                 $contenido .= ", <b>Observaciones:</b> $obs";
             }
+            if ( $decision != 'Pendiente') {
             $bitacora2 .= "
                 <i class='ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdf'
                    data-bs-target='#mostrarPdf'
@@ -321,23 +328,69 @@ public function TrackingCertificados($id)
                    data-id='$id_revision'
                    data-tipo_revision='$tipo_revision'>
                 </i>";
+            }
         }
 
-        // Orden personalizado
-        $orden_personalizado = 99;
+
+    // Orden personalizado
+    $orden_personalizado = 99;
         if ($log->subject_type === 'App\Models\Certificado_Exportacion' && $evento === 'created') {
             $orden_personalizado = 1;
         }
+
         if ($log->subject_type === 'App\Models\Revisor') {
+            //1era revision OC
             if ($tipo_revision == 1 && $num_revision == 1 && $decision == 'Pendiente') $orden_personalizado = 2;
             if ($tipo_revision == 1 && $num_revision == 1 && $decision != 'Pendiente') $orden_personalizado = 3;
-            if ($tipo_revision == 2 && $num_revision == 1 && $decision == 'Pendiente') $orden_personalizado = 5;
-            if ($tipo_revision == 2 && $num_revision == 1 && $decision != 'Pendiente') $orden_personalizado = 6;
-            if ($tipo_revision == 1 && $num_revision == 2 && $decision == 'Pendiente') $orden_personalizado = 8;
-            if ($tipo_revision == 1 && $num_revision == 2 && $decision != 'Pendiente') $orden_personalizado = 9;
-            if ($tipo_revision == 2 && $num_revision == 2 && $decision == 'Pendiente') $orden_personalizado = 10;
-            if ($tipo_revision == 2 && $num_revision == 2 && $decision != 'Pendiente') $orden_personalizado = 11;
+            //1era revision CONSEJO
+            if ($tipo_revision == 2 && $num_revision == 1 && $decision == 'Pendiente') $orden_personalizado = 13;//CODIGO AJUSTADO para 3 correcciones 
+            if ($tipo_revision == 2 && $num_revision == 1 && $decision != 'Pendiente') $orden_personalizado = 14;
+            //2da revision OC
+            if ($tipo_revision == 1 && $num_revision == 2 && $decision == 'Pendiente') $orden_personalizado = 24;
+            if ($tipo_revision == 1 && $num_revision == 2 && $decision != 'Pendiente') $orden_personalizado = 25;
+            //2da revision CONSEJO
+            if ($tipo_revision == 2 && $num_revision == 2 && $decision == 'Pendiente') $orden_personalizado = 35;
+            if ($tipo_revision == 2 && $num_revision == 2 && $decision != 'Pendiente') $orden_personalizado = 36;
         }
+
+    //si hay correcciones en 1er Revision OC
+    if ($es_correccion == 'si' && $tipo_revision == 1 && $num_revision == 1) {
+        $respuestas = json_decode($log->properties['attributes']['respuestas'] ?? '[]', true);
+        $decision = $attributes['decision'] ?? null;
+        $num = is_array($respuestas) ? count($respuestas) : 0;//Esto cuenta cuántas correcciones hay.
+        //si { "Revision 1": ..., "Revision 2": ... } - Entonces $num vale 2.
+    /* Ejemplos: Asignación (Pendiente)
+    Si hay 0 respuestas aún (es la 1ra corrección):
+        4 + (0 * 2) = 4
+    Si hay 1 respuesta ya registrada (vas por la 2da corrección):
+        4 + (1 * 2) = 6
+
+    Ejemplos: Resultado (negativa o positiva)
+    Si estás cerrando la 1ra corrección (hay 1 respuesta ya hecha):
+        5 + ((1-1) * 2) = 5
+    Si estás cerrando la 2da corrección (hay 2 respuestas):
+        5 + ((2-1) * 2) = 7
+    Si estás cerrando la 3ra corrección:
+        5 + ((3-1) * 2) = 9
+
+    Los números pares (4, 6, 8, ...) son asignaciones.
+    Los números impares (5, 7, 9, ...) son resultados.
+    Esto asegura que el orden sea consistente y que siempre estén agrupadas correctamente. */
+        if ($decision == 'Pendiente') $orden_personalizado = 4 + ($num * 2);
+        if ($decision == 'negativa') $orden_personalizado = 5 + (($num - 1) * 2);
+        if ($decision == 'positiva') $orden_personalizado = 5 + (($num - 1) * 2);
+    }
+
+    //si hay correcciones en 1er Revision CONSEJO
+    if ($es_correccion == 'si' && $tipo_revision == 2 && $num_revision == 1) {
+        $respuestas = json_decode($log->properties['attributes']['respuestas'] ?? '[]', true);
+        $decision = $attributes['decision'] ?? null;
+        $num = is_array($respuestas) ? count($respuestas) : 0;
+        if ($decision == 'Pendiente') $orden_personalizado = 15 + ($num * 2);
+        if ($decision == 'negativa') $orden_personalizado = 16 + (($num - 1) * 2);
+        if ($decision == 'positiva') $orden_personalizado = 16 + (($num - 1) * 2);
+    }
+
 
         return [
             'description' => $log->description,
@@ -356,7 +409,6 @@ public function TrackingCertificados($id)
 
     return response()->json(['success' => true, 'logs' => $logs]);
 }
-
 
 
 

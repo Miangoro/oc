@@ -1605,11 +1605,11 @@ $(document).on('click', '.trazabilidad', function () {
           }
         });
 
-        // Insertar Vo.Bo. en orden 4 y 7
-        if (i === 4 && voboPersonalHtml) {
+        // Insertar Vo.Bo. en orden 12 y 23
+        if (i === 12 && voboPersonalHtml) {
           contenedor.append(voboPersonalHtml);
         }
-        if (i === 7 && voboClienteHtml) {
+        if (i === 23 && voboClienteHtml) {
           contenedor.append(voboClienteHtml);
         }
       }
