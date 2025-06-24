@@ -9,8 +9,11 @@ use App\Models\instalaciones;
 use App\Models\solicitudTipo;
 use App\Models\User;
 use App\Models\Certificado_Exportacion;
+use App\Models\Certificados;
+use App\Models\CertificadosGranel;
 use App\Models\Dictamen_Exportacion;
 use App\Models\Revisor;
+
 
 use Illuminate\Http\Request;
 use Spatie\Activitylog\Models\Activity;
@@ -155,6 +158,10 @@ private function determinarTipoBloque($log, $attributes)
     $attributes = $log->properties['attributes'] ?? [];
 
     if ($log->subject_type === 'App\Models\Certificado_Exportacion') {
+        if ( $attributes['estatus'] === 1) {
+            return 'cancelado';
+        }
+
         return 'registro'; // Azul
     }
 
@@ -192,12 +199,12 @@ public function TrackingCertificados($id)
         $evento = $log->event ?? '';
 
     //Variables generales
+        $tipo_certificado = $attributes['tipo_certificado'] ?? null;
         $num_certificado = $attributes['num_certificado'] ?? null;
         $obs = $attributes['observaciones'] ?? null;
         $num_revision = $attributes['numero_revision'] ?? null;
         $es_correccion = ($attributes['es_correccion'] ?? null) === 'si';//si, siempre se activa
         $tipo_revision = $attributes['tipo_revision'] ?? null;
-        //$tipo = $tipo_revision == 2 ? 'Granel' : ($tipo_revision == 3 ? 'Exportación' : null);
         $decision = $attributes['decision'] ?? null;
 
 
@@ -246,6 +253,7 @@ public function TrackingCertificados($id)
         $voboClienteHtml = '';
         $personalMostrado = false;
         $clienteMostrado = false;
+        $motivoCancelado='';
 
         if ($log->subject_type === 'App\Models\Certificado_Exportacion') {
             $certificado = Certificado_Exportacion::find($attributes['id_certificado'] ?? null);
@@ -268,12 +276,19 @@ public function TrackingCertificados($id)
                     }
                 }
             }
+            $obsCancelado = json_decode($certificado->observaciones, true);
+            $motivoCancelado = $obsCancelado['observaciones'] ?? null;
         }
 
 
 
     // Construcción del contenido para mostrar
+        
         $contenido = '';
+        if ( $log->subject_type === 'App\Models\Certificado_Exportacion' && $attributes['estatus'] == 1 ) {
+            $contenido .= "<span class='badge bg-danger'>CANCELADO</span>, <b>Motivo de la cancelación:</b> $motivoCancelado ";
+        }
+        
         if ($num_certificado) {
             $contenido .= "<b>Número del certificado:</b> <span class='badge bg-secondary'>$num_certificado</span>";
         }
@@ -427,6 +442,88 @@ public function TrackingCertificados($id)
             'tipo_bloque' => $this->determinarTipoBloque($log, $attributes), // NUEVO
         ];
     });
+
+
+// Insertar log dinámico "creado" AL PRINCIPIO si tipo_certificado es 1 o 2 
+$primerLog = $logs->first();
+$tipoCertificado = $primerLog['properties']['attributes']['tipo_certificado'] ?? null;
+$esAsignacionInicial = $primerLog['tipo_bloque'] === 'asignacion';
+// Obtenemos el certificado para mostrar su número (si existe)
+$idCertificado = $primerLog['properties']['attributes']['id_certificado'] ?? null;
+
+// Según el tipo de certificado, buscamos en el modelo correspondiente
+$certificado2 = null;
+if ($tipoCertificado == 1) {
+    $certificado2 = Certificados::find($idCertificado);
+} elseif ($tipoCertificado == 2) {
+    $certificado2 = CertificadosGranel::find($idCertificado);
+}
+
+$numCertificado = $certificado2->num_certificado ?? '';
+$empresa = $certificado2->dictamen->inspeccione->solicitud->empresa->razon_social ?? '';
+
+
+if ($esAsignacionInicial && in_array($tipoCertificado, [1, 2])) {
+    
+    $descripcion = $tipoCertificado == 1
+        ? 'Generación del certificado INSTALACIONES '.$numCertificado
+        : 'Generación del certificado GRANEL '.$numCertificado;
+
+/*if ($certificado2 && $certificado2->estatus==1) {
+    $obsCancelado2 = json_decode($certificado2->observaciones, true);
+    $motivoCancelado2 = $obsCancelado['observaciones'] ?? null;
+    $descripcion = 'Cancelacion del certificado '.$numCertificado;
+    $contenido = "<span class='badge bg-danger'>CANCELADO</span>, <b>Motivo de la cancelación:</b> $motivoCancelado2";
+}*/
+
+    $logs->prepend([
+        'description' => $descripcion,
+        'properties' => ['attributes' => ['tipo_certificado' => $tipoCertificado]],
+        'created_at' => $primerLog['created_at'],
+        'contenido' => '<b>Número del certificado:</b> <span class="badge bg-secondary">'.$numCertificado. '</span>, <b>Cliente:</b> '.$empresa,
+        'bitacora' => '',
+        'bitacora2' => '',
+        'vobo_personal' => '',
+        'vobo_cliente' => '',
+        'orden_personalizado' => 1,
+        'tipo_bloque' => 'registro',
+    ]);
+}
+
+
+//Insertar log dinámico "cancelado" AL FINAL si tipo_certificado es 1 o 2 
+$ultimoLog = $logs->last();
+$tipoCertificado = $ultimoLog['properties']['attributes']['tipo_certificado'] ?? null;
+$idCertificado = $ultimoLog['properties']['attributes']['id_certificado'] ?? null;
+
+$certificadoCancelado = null;
+if ($tipoCertificado == 1) {
+    $certificadoCancelado = Certificados::find($idCertificado);
+} elseif ($tipoCertificado == 2) {
+    $certificadoCancelado = CertificadosGranel::find($idCertificado);
+} 
+
+if ($certificadoCancelado && $certificadoCancelado->estatus == 1) {
+    $numCertificado = $certificadoCancelado->num_certificado ?? '';
+    $empresa = $certificadoCancelado->dictamen->inspeccione->solicitud->empresa->razon_social ?? '';
+    $obsCancelado = json_decode($certificadoCancelado->observaciones, true);
+    $motivo = $obsCancelado['observaciones'] ?? 'Sin motivo registrado';
+
+    $logs->push([
+        'description' => 'Cancelación del certificado ' . $numCertificado,
+        'properties' => ['attributes' => ['tipo_certificado' => $tipoCertificado]],
+        'created_at' => $ultimoLog['created_at'],
+        'contenido' => "<span class='badge bg-danger'>CANCELADO</span>, <b>Motivo de la cancelación:</b> $motivo, <b>Número del certificado:</b> <span class='badge bg-secondary'>$numCertificado</span>, <b>Cliente:</b> $empresa",
+        'bitacora' => '',
+        'bitacora2' => '',
+        'vobo_personal' => '',
+        'vobo_cliente' => '',
+        'orden_personalizado' => 999,
+        'tipo_bloque' => 'cancelado',
+    ]);
+}
+
+
 
     $logs = $logs->sortBy('orden_personalizado')->values();
 

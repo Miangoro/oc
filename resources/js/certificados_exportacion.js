@@ -1496,7 +1496,7 @@ $(document).ready(function () {
 
 
 
-  //Abrir PDF Bitacora
+//Abrir PDF Bitacora
 $(document).on('click', '.pdf', function () {
   var id_revisor = $(this).data('id');
   var num_certificado = $(this).data('num-certificado');
@@ -1609,6 +1609,9 @@ $(document).on('click', '.trazabilidad', function () {
                 borderClase = 'border-primary';
                 break;
               case 'resultado_negativo':
+                borderClase = 'border-danger';
+                break;
+              case 'cancelado':
                 borderClase = 'border-danger';
                 break;
               default:
