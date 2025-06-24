@@ -872,8 +872,12 @@ Route::middleware(['auth'])->controller(RevisionPersonalController::class)->grou
 
 //-------------------REVISION CONSEJO-------------------
 Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group(function () {
-  Route::get('/pdf/solicitud-exportacion/{id_revision}', [RevisionConsejoController::class, 'mostrarSolicitudPDFDesdeRevision'])
-    ->name('revision.pdf.solicitud_exportacion');
+/*   Route::get('/pdf/solicitud-exportacion/{id_revision}', [RevisionConsejoController::class, 'mostrarSolicitudPDFDesdeRevision'])
+    ->name('revision.pdf.solicitud_exportacion'); */
+  Route::get('/solicitud_certificado_exportacion/{id_certificado}', [Certificado_ExportacionController::class, 'MostrarSolicitudCertificadoExportacion'])
+      ->name('PDF-SOL-cer-exportacion');
+/*     Route::get('/solicitud_certificado_exportacion/{id_certificado}', 'MostrarSolicitudCertificadoExportacion')->name('PDF-SOL-cer-exportacion');
+ */
     Route::get('/revision/consejo', 'UserManagement')->name('revision-consejo');
     Route::resource('/revision-consejo-list', RevisionConsejoController::class);
     Route::post('/revisor/registrar-respuestas-consejo', 'registrarRespuestasConsejo')->name('registrar.respuestas.consejo');
@@ -894,6 +898,7 @@ Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group
     Route::get('/pdf_bitacora_revision_certificado_instalaciones/{id}', 'pdf_bitacora_revision_certificado_instalaciones');
     Route::get('/pdf_bitacora_revision_certificado_granel/{id}', 'pdf_bitacora_revision_certificado_granel');
     Route::get('/pdf_bitacora_revision_certificado_exportacion/{id}', 'pdf_bitacora_revision_certificado_exportacion');
+
 });
 
 // Pdfs Bitacoras

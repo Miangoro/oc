@@ -434,6 +434,7 @@ class RevisionConsejoController extends Controller
         } elseif ($datos->tipo_certificado == 3) { //Exportación
             $url = "/certificado_exportacion/" . $datos->id_certificado;
             $tipo = "Exportación";
+
         }
         return view('certificados.add_revision_consejo', compact('datos', 'preguntas', 'url', 'tipo'));
     }
@@ -939,7 +940,7 @@ class RevisionConsejoController extends Controller
         return $pdf->stream('Bitácora de revisión de certificado de exportación NOM-070-SCFI-2016 F7.1-01-33.pdf');
     }
 
-    public function mostrarSolicitudPDFDesdeRevision($id_revision)
+/*     public function mostrarSolicitudPDFDesdeRevision($id_revision)
     {
         $revision = Revisor::findOrFail($id_revision);
         $solicitud = $revision->certificado->dictamen->inspeccione->solicitud;
@@ -949,5 +950,5 @@ class RevisionConsejoController extends Controller
 
 
     }
-
+ */
 }

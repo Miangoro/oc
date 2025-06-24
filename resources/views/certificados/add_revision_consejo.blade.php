@@ -35,7 +35,7 @@
 
     <div class="container mt-3 mb-3">
         <div class="card shadow-sm border-0 rounded-3" style="max-width: 100%; margin: auto;">
-            <div class="card-header bg-primary  text-center py-2">
+            <div class="card-header bg-menu-theme  text-center py-2">
                 <h5 class="mb-0 text-white">Revisión de certificado consejo</h5>
             </div>
             <div class="card-body p-3">
@@ -217,9 +217,9 @@
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
                                             @endphp
                                             <td>
-                                                <b>Folio: {{ $solicitud->folio ?? 'N/A' }}</b><br>
+                                                {{-- <b>Folio: {{ $solicitud->folio ?? 'N/A' }}</b><br> --}}
                                                 <a target="_blank"
-                                                    href="{{ route('revision.pdf.solicitud_exportacion', $datos->id_revision) }}">
+                                                    href="{{ route('PDF-SOL-cer-exportacion', $datos->certificado->id_certificado) }}">
                                                     <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                 </a>
                                             </td>
@@ -263,7 +263,7 @@
                                                     <i
                                                         class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                 </a>
-                                                  <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->folio ?? 'N/A' }}</b>
+                                                <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->folio ?? 'N/A' }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria_clase')
                                             <td><b>
@@ -445,14 +445,57 @@
                                                 @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'certificado_granel')
-                                            <td>
-                                                <a target="_blank"
-                                                    href="/Pre-certificado-granel/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->id_certificado }}">
-                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                </a>Granel:
-                                                <b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}</b>
+                                            @php
+                                                $solicitud =
+                                                    $datos->certificado->dictamen->inspeccione->solicitud ?? null;
+                                                $loteGranel = $solicitud->lote_granel ?? null;
+                                                $loteEnvasado = $solicitud->lote_envasado ?? null;
+                                                $empresa = $solicitud->empresa ?? null;
 
+                                                $numero_cliente =
+                                                    $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                                                        ? $empresa->empresaNumClientes->first(
+                                                                fn($item) => $item->empresa_id === $empresa->id &&
+                                                                    !empty($item->numero_cliente),
+                                                            )?->numero_cliente ?? null
+                                                        : null;
+
+                                                $docFirmado = $loteGranel
+                                                    ? \App\Models\documentacion_url::where(
+                                                        'id_relacion',
+                                                        $loteGranel->id_lote_granel,
+                                                    )
+                                                        ->where('id_documento', 59)
+                                                        ->first()
+                                                    : null;
+
+                                                $urlFirmado =
+                                                    $docFirmado &&
+                                                    $docFirmado->url &&
+                                                    $numero_cliente &&
+                                                    str_ends_with(strtolower($docFirmado->url), '.pdf')
+                                                        ? asset(
+                                                            "files/{$numero_cliente}/certificados_granel/{$docFirmado->url}",
+                                                        )
+                                                        : null;
+                                            @endphp
+
+                                            <td>
+                                                {{-- 📎 Documento firmado PDF (si existe) --}}
+                                                @if ($urlFirmado)
+                                                    <a target="_blank" href="{{ $urlFirmado }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">Sin certificado firmado adjunto</span>
+                                                @endif
+
+                                                {{-- 🧪 Granel --}}
+                                                Granel:
+                                                <b>{{ $loteGranel?->nombre_lote ?? 'N/A' }}</b>
                                                 <br>
+                                                {{-- 🧴 Envasado --}}
                                                 <a target="_blank"
                                                     href="/dictamen_envasado/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->dictamenEnvasado->id_dictamen }}">
                                                     <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
@@ -511,7 +554,7 @@
                                         @elseif($pregunta->filtro == 'acta')
                                             <td>
                                                 @if ($datos->obtenerDocumentoActa($pregunta->id_documento, $datos->certificado->dictamen->inspeccione->id_solicitud))
-                                                   {{--  <b>{{ $datos->certificado->dictamen->inspeccione->num_servicio }}</b> --}}
+                                                    {{--  <b>{{ $datos->certificado->dictamen->inspeccione->num_servicio }}</b> --}}
                                                     <a target="_blank"
                                                         href="{{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
                                                             'numero_cliente',
@@ -530,7 +573,7 @@
                                                         <i
                                                             class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
-                                                     <b>{{ $datos->certificado->dictamen->inspeccione->num_servicio }}</b>
+                                                    <b>{{ $datos->certificado->dictamen->inspeccione->num_servicio }}</b>
                                                 @else
                                                     <span class="text-muted">Sin acta</span>
                                                 @endif
@@ -593,8 +636,8 @@
                                         </td>
 
                                         <td>
-                                            <textarea name="observaciones[{{ $index }}]" rows="1" name="" id="" class="form-control"
-                                                placeholder="Observaciones"></textarea>
+                                            <textarea name="observaciones[{{ $index }}]" rows="1" name="" id=""
+                                                class="form-control" placeholder="Observaciones"></textarea>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -605,10 +648,10 @@
                 </div>
             </div>
             <!-- <div class="col-md-4">
-                                                            <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" src="{{ $url }}" frameborder="0"
-                                                                style="border-radius: 10px; overflow: hidden;">
-                                                            </iframe>
-                                                        </div>-->
+                                                                <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" src="{{ $url }}" frameborder="0"
+                                                                    style="border-radius: 10px; overflow: hidden;">
+                                                                </iframe>
+                                                            </div>-->
 
             <div class="d-flex justify-content-center mt-3">
                 <button type="submit" class="btn btn-primary me-2 waves-effect waves-light"><i class="ri-add-line"></i>
