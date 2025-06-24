@@ -208,10 +208,19 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'direccion_fiscal')
                                             @php
-                                                $empresa =
-                                                    $datos->certificado->dictamen->inspeccione->solicitud->empresa;
+                                                $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa;
+                                                $cliente = $empresa?->empresaNumClientes->firstWhere('numero_cliente', '!=', null);
+                                                $documento = $datos->obtenerDocumentosClientes(77, $empresa->id_empresa);
                                             @endphp
                                             <td>
+                                                {{-- Documento adjunto (PDF) --}}
+                                                @if ($cliente && $documento)
+                                                    <a target="_blank" href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">Sin comprobante de domicilio</span><br>
+                                                @endif
                                                 <b>
                                                     {{ $empresa->domicilio_fiscal ?? 'N/A' }}<br>
                                                   País: México<br>
@@ -511,7 +520,7 @@
                                                 <b>{{ $loteGranel?->nombre_lote ?? 'N/A' }}</b>
                                                 <br>
                                                 <a target="_blank"
-                                                    href="/dictamen_envasado/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->dictamenEnvasado->id_dictamen }}">
+                                                    href="/dictamen_envasado/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->dictamenEnvasado->id_dictamen_envasado }}">
                                                     <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                 </a>
                                                 Envasado:
