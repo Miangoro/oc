@@ -40,6 +40,7 @@
                                </label>
                                <input class="form-control" type="file" id="fuv2103" name="fuv2103">
                            </div>
+                           <div id="PrdocumentoPreview" class="mb-3"></div>
                        </div>
 
 

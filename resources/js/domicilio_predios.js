@@ -1977,6 +1977,59 @@ $(function () {
     $(document).on('click', '.registro-record', function () {
       var predioId = $(this).data('id'); // Obtener el ID del predio a editar
       $('#id_predio_registro').val(predioId); // Establecer el ID en el input correspondiente
+
+    $.ajax({
+      url: '/domicilios-predios/' + predioId + '/edit',
+      method: 'GET',
+      success: function (data) {
+        if (data.success) {
+          $('#PrdocumentoPreview').html(''); // Limpiar el contenido previo del documento
+          var predio = data.predio;
+          var url = data.url_documento;
+          var documento = data.documento;
+          // Rellenar el formulario con los datos del predio
+          /*             $('#edit_id_predio_registro').val(predio.id_empresa).trigger('change'); */
+          $('#num_predio').val(predio.num_predio);
+          $('#fecha_emision').val(predio.fecha_emision);
+          $('#fecha_vigencia').val(predio.fecha_vigencia);
+            if (url && documento) {
+              $('#documentoPreview').html(`
+                <a href="${url}" target="_blank" class="text-primary">
+                  ${documento.url}
+                </a>
+              `);
+            } else {
+              $('#PrdocumentoPreview').html(`<span class="text-muted">No hay documento cargado</span>`);
+            }
+
+          // Mostrar el modal
+          $('#modalAddRegistroPredio').modal('show');
+
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo cargar los datos del predio.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      },
+      error: function (error) {
+        console.error('Error al cargar los datos del predio:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo cargar los datos del predio.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+
+
     });
 
     updateDatepickerValidation(fv);
