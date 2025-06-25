@@ -179,6 +179,7 @@
                                                 );
                                             @endphp
                                             <td>
+                                              Carta de asignación:
                                                 @if ($cliente && $documento)
                                                     <a target="_blank"
                                                         href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
@@ -188,6 +189,8 @@
                                                 @else
                                                     <span class="text-muted">Sin carta de asignación</span>
                                                 @endif
+                                                <br>
+                                                Contrato:
                                                 @if ($cliente && $documento2)
                                                     <a target="_blank"
                                                         href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento2 }}">
@@ -197,7 +200,17 @@
                                                 @else
                                                     <span class="text-muted">Sin contrato subido</span>
                                                 @endif
-                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                                                <br>
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }} <br>
+                                              Solicitud:
+                                              @if ($datos->certificado->dictamen->inspeccione->solicitud?->id_solicitud)
+                                                  <a target="_blank"
+                                                      href="/solicitud_de_servicio/{{ $datos->certificado->dictamen->inspeccione->solicitud->id_solicitud }}">
+                                                      <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                  </a>
+                                              @else
+                                                  <span class="text-muted">Sin solicitud</span>
+                                              @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'representante_legal')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'N/A' }}
@@ -677,8 +690,8 @@
 
             <div class="d-flex justify-content-center mt-3">
                 <button type="submit" class="btn btn-primary me-2 waves-effect waves-light"><i
-                        class="ri-pencil-fill"></i> Editar {{ $datos->numero_revision }}ª revisión</button>
-                <a href="/revision/consejo" class="btn btn-danger waves-effect"><i class="ri-close-line"></i>Cancelar</a>
+                        class="ri-pencil-fill me-1"></i> Editar {{ $datos->numero_revision }}ª revisión</button>
+                <a href="/revision/consejo" class="btn btn-danger waves-effect"><i class="ri-close-line me-1"></i>Cancelar</a>
             </div>
 
         </div>
