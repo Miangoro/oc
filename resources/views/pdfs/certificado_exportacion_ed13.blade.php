@@ -291,7 +291,7 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 Volumen:</td>
             <td style="text-align: left; padding-left: 4px;">
-                {{ $presentacion}}
+                {{ $lote->presentacion ?? 'No encontrado' }} {{ $lote->unidad ?? 'No encontrado' }}
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 %Alc. Vol.:</td>
