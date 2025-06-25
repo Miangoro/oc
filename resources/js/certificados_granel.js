@@ -297,7 +297,7 @@ var dataTable = $('.datatables-users').DataTable({
         searchable: false,
         orderable: false,
         render: function (data, type, full, meta) {
-        return (
+        /*return (
           '<div class="d-flex align-items-center gap-50">' +
             `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info') + `" data-bs-toggle="dropdown">` +
                 (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
@@ -315,7 +315,33 @@ var dataTable = $('.datatables-users').DataTable({
                 `<a data-id="${full['id_certificado']}" class="dropdown-item  waves-effect text-black eliminar">` + '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>'+
             '</div>' +
           '</div>'
-        );                                   
+        );*/               
+        return (
+              '<div class="d-flex align-items-center gap-50">' +
+              `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger' : 'btn-info') + `" data-bs-toggle="dropdown">` +
+              (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') +
+              '</button>' +
+
+              '<div class="dropdown-menu dropdown-menu-end m-0">' +
+              ( full['estatus'] == 1 ?  //Mostrar solo trazabilidad si está cancelado
+                `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>`
+              :// Mostrar todas las opciones
+                 // Botón Editar
+                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar" data-bs-toggle="modal" data-bs-target="#ModalEditar">` + '<i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>' +
+                // Botón subir certificado firmado
+                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
+                // Botón Asignar revisor
+                `<a data-id="${full['id_certificado']}"  data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-black" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">` + '<i class="ri-user-search-fill text-warning"></i> Asignar revisor</a>' +
+                //Botón trazabilidad
+                `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>` +
+                // Botón reexpedir
+                `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir" data-bs-toggle="modal" data-bs-target="#ModalReexpedir">` + '<i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>' +
+                // Botón eliminar
+                `<a data-id="${full['id_certificado']}" class="dropdown-item  waves-effect text-black eliminar">` + '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>'
+              ) +
+              '</div>' +
+              '</div>'
+          );                
         }
       }
     ],
@@ -1357,6 +1383,157 @@ $(document).on('click', '.pdfActa', function () {
       spinner.hide();
       iframe.show();
     });
+});
+
+
+
+
+//Abrir PDF Bitacora
+$(document).on('click', '.pdf', function () {
+  var id_revision = $(this).data('id');
+  var num_certificado = $(this).data('num-certificado');
+  var tipoRevision = $(this).data('tipo_revision');
+    console.log('ID de la revision:', id_revision);
+    console.log('Tipo revisor OC/consejo:', tipoRevision);//1=OC, 2=Consejo
+    console.log('Número Certificado:', num_certificado);
+
+    // Definir URL según el tipo de revisión
+    if (tipoRevision === 1) {  
+      var url_pdf = '../pdf_bitacora_revision_personal/' + id_revision;
+    } else  { 
+      var url_pdf = '../pdf_bitacora_revision_certificado_granel/' + id_revision;
+    }
+
+    
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    $('#cargando').show();
+    $('#pdfViewer').hide();
+
+    //Cargar el PDF con el ID
+    $('#pdfViewer').attr('src', url_pdf);
+    //Abrir PDF en nueva pestaña
+    $("#NewPestana").attr('href', url_pdf).show();
+
+    $("#titulo_modal").text("Bitácora de revisión documental");
+    $("#subtitulo_modal").html('<span class="badge bg-info">'+num_certificado+'</span>');
+
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    $('#pdfViewer').on('load', function () {
+      $('#cargando').hide();
+      $('#pdfViewer').show();
+    });
+});
+  
+///VER TRAZABILIDAD
+$(document).on('click', '.trazabilidad', function () {
+  var id_certificado = $(this).data('id');
+  $('.num_certificado').text($(this).data('folio'));
+  var url = '/trazabilidad-certificados/' + id_certificado;
+
+  $.get(url, function (data) {
+    if (data.success) {
+      var logs = data.logs;
+      var contenedor = $('#ListTracking');
+      contenedor.empty();
+
+      let voboPersonalHtml = '';
+      let voboClienteHtml = '';
+      $('<style>')
+      .prop('type', 'text/css')
+      .html(`
+        .border-blue { border: 2px solid #007bff !important; }
+        .border-purple { border: 2px solid #6f42c1 !important; }
+        .border-danger { border: 2px solid #ff0000 !important; }
+      `)
+      .appendTo('head');
+      
+
+      // Extraemos y guardamos los Vo.Bo. (solo uno de cada)
+      logs.forEach(function (log) {
+        if (!voboPersonalHtml && log.vobo_personal) {
+          voboPersonalHtml = `
+            <li class="timeline-item timeline-item-transparent">
+              <span class="timeline-point timeline-point-primary"></span>
+              <div class="mt-2 pb-3 border border-blue p-3 rounded">
+                <h6 class="text-primary"><i class="ri-user-line me-1"></i> Vo.Bo. del Personal</h6>
+                ${log.vobo_personal}
+              </div>
+            </li><hr>`;
+        }
+        if (!voboClienteHtml && log.vobo_cliente) {
+          voboClienteHtml = `
+            <li class="timeline-item timeline-item-transparent">
+              <span class="timeline-point timeline-point-primary"></span>
+              <div class="mt-2 pb-3 border border-blue p-3 rounded">
+                <h6 class="text-success"><i class="ri-user-line me-1"></i> Revisión del cliente</h6>
+                ${log.vobo_cliente}
+              </div>
+            </li><hr>`;
+        }
+      });
+
+      // Calculamos el máximo orden_personalizado (aseguramos cubrir hasta 7)
+      const maxOrdenLogs = logs.length > 0 ? Math.max(...logs.map(l => l.orden_personalizado)) : 0;
+      const maxOrden = Math.max(maxOrdenLogs, 7);
+
+      // Insertar logs en orden y colocar Vo.Bo. en posiciones 4 y 7
+      for (let i = 1; i <= maxOrden; i++) {
+        logs.forEach(log => {
+          if (log.orden_personalizado === i) {
+            // Mapeamos el tipo a una clase de color
+            let borderClase = '';
+            switch (log.tipo_bloque) {
+              case 'registro':
+                borderClase = 'border-blue';
+                break;
+              case 'asignacion':
+                borderClase = 'border-purple';
+                break;
+              case 'resultado_positivo':
+                borderClase = 'border-primary';
+                break;
+              case 'resultado_negativo':
+                borderClase = 'border-danger';
+                break;
+              case 'cancelado':
+                borderClase = 'border-danger';
+                break;
+              default:
+                borderClase = 'border-secondary';
+            }
+
+            contenedor.append(`
+              <li class="timeline-item timeline-item-transparent">
+                <span class="timeline-point timeline-point-primary"></span>
+                <div class="timeline-event border ${borderClase} p-3 rounded">
+                  <div class="timeline-header mb-3">
+                    <h6 class="mb-0">${log.description}</h6>
+                    <small class="text-muted">${log.created_at}</small>
+                  </div>
+                  <p class="mb-2">${log.contenido}</p>
+                  <div class="d-flex align-items-center mb-1">
+                    ${log.bitacora} ${log.bitacora2}
+                  </div>
+                </div>
+              </li><hr>
+            `);
+          }
+        });
+
+        // Insertar Vo.Bo. en orden 12 y 23
+        if (i === 12 && voboPersonalHtml) {
+          contenedor.append(voboPersonalHtml);
+        }
+        if (i === 23 && voboClienteHtml) {
+          contenedor.append(voboClienteHtml);
+        }
+      }
+
+      $('#ModalTracking').modal('show');
+    }
+  }).fail(function (xhr) {
+    console.error(xhr.responseText);
+  });
 });
 
 

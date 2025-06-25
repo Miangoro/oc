@@ -643,7 +643,12 @@ public function MostrarCertificadoExportacion($id_certificado)
             $botellas = $detalles[0]['cantidad_botellas'] ?? '';
             $cajas = $detalles[0]['cantidad_cajas'] ?? '';
             //$cajas = $detalle['cantidad_cajas'][0] ?? '';
-            $presentacion = $detalles[0]['presentacion'][0] ?? '';
+            /*$presentacion = '';
+            if (!empty($detalles) && isset($detalles[0]['presentacion'])) {
+                $pres = $detalles[0]['presentacion'];
+                $presentacion = is_array($pres) ? ($pres[0] ?? '') : $pres;
+            }*/
+            //$presentacion = $detalles[0]['presentacion'][0] ?? '';
         // Obtener todos los IDs de los lotes
         $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
         // Buscar los lotes envasados
@@ -684,7 +689,7 @@ public function MostrarCertificadoExportacion($id_certificado)
         'n_pedido' => $no_pedido ?? 'No encontrado',
         'botellas' => $botellas ?? 'No encontrado',
         'cajas' => $cajas ?? 'No encontrado',
-        'presentacion' => $presentacion ?? 'No encontrado',
+        //'presentacion' => $presentacion ?? 'No encontrado',
     ];
 
     if ( $data->fecha_emision >= '2025-07-01' ) {

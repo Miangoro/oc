@@ -77,6 +77,7 @@
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-certificado-granel')
 @include('_partials/_modals/modal-add-asignar-revisor')
+@include('_partials/_modals/modal-trazabilidad-certificados')
 @include('_partials/_modals/modal-reexpedir-certificado-granel')
 @include('_partials/_modals/modal-add-certificado-firmado')
 <!-- /Modal -->
