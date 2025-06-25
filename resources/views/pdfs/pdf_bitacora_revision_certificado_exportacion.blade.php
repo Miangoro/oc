@@ -155,6 +155,7 @@
             font-size: 15px;
             background-color: #9FC5E8;
             text-align: left;
+            margin-top: -10px;
             padding: 3px;
 
         }
@@ -200,6 +201,7 @@
 
         .page-break {
             page-break-before: always;
+            border-color: #000000 1px;
         }
 
 
@@ -210,6 +212,10 @@
             bottom: 10px;
             width: 100%;
             font-size: 12px;
+        }
+        .background-text{
+          margin-top: -13px;
+          margin-bottom: 2px; /* 5 */
         }
 
         .recuadro_certificacion {
@@ -272,7 +278,6 @@
             </td>
         </tr>
     </table>
-    <br>
     <table style="width:100%; border: none;">
         <tr class="sin-padding">
             <td style="vertical-align: top; text-align: left; border: none;">
@@ -306,12 +311,8 @@
                     <tr class="sin-border">
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
                     </tr>
                     <tr class="sin-border">
-                        <td></td>
-                        <td></td>
                         <td></td>
                         <td></td>
                     </tr>
@@ -336,7 +337,6 @@
                     @endforeach
                 </table>
                 {{-- segunda tabla --}}
-
             </td>
             <td style="vertical-align: top; text-align: center; border: none;">
                 <table style="display: inline-table; width: 300px;" {{-- class="tabla-2" --}}>
@@ -392,7 +392,7 @@
                         <td class="leftLetter">------</td>
                         <td class="leftLetter">------</td>
                     </tr>
-                    
+
                 </table>
             </td>
 
