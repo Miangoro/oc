@@ -2226,17 +2226,31 @@ $(function () {
           });
         },
         error: function (xhr) {
+          let mensajeError = 'Error desconocido';
+          if (xhr.status === 422 && xhr.responseJSON) {
+            const errores = xhr.responseJSON.errors;
+            if (errores) {
+              const primerCampo = Object.keys(errores)[0];
+              mensajeError = errores[primerCampo][0];
+            } else if (xhr.responseJSON.message) {
+              mensajeError = xhr.responseJSON.message;
+            }
+          } else if (xhr.responseJSON && xhr.responseJSON.message) {
+            mensajeError = xhr.responseJSON.message;
+          }
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al agregar el predio',
+            text: mensajeError,
             customClass: {
               confirmButton: 'btn btn-danger'
             }
           });
+
           $('#btnEditRegistroPredio').removeClass('d-none');
           $('#btnSpinnerEditRegistroPredio').addClass('d-none');
         }
+
       });
     });
 
@@ -2253,12 +2267,25 @@ $(function () {
       method: 'GET',
       success: function (data) {
         if (data.success) {
+          $('#documentoPreview').html(''); // Limpiar el contenido previo del documento
           var predio = data.predio;
+          var url = data.url_documento;
+          var documento = data.documento;
           // Rellenar el formulario con los datos del predio
           /*             $('#edit_id_predio_registro').val(predio.id_empresa).trigger('change'); */
           $('#edit_num_predio').val(predio.num_predio);
           $('#edit_fecha_emision').val(predio.fecha_emision);
           $('#edit_fecha_vigencia').val(predio.fecha_vigencia);
+            if (url && documento) {
+              $('#documentoPreview').html(`
+                <a href="${url}" target="_blank" class="text-primary">
+                  ${documento.url}
+                </a>
+              `);
+            } else {
+              $('#documentoPreview').html(`<span class="text-muted">No hay documento cargado</span>`);
+            }
+
           // Mostrar el modal
           $('#modalEditRegistroPredio').modal('show');
 

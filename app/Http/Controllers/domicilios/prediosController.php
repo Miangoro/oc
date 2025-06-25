@@ -20,6 +20,7 @@ use App\Notifications\GeneralNotification;
 use App\Models\User;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -389,6 +390,15 @@ class PrediosController extends Controller
                     ];
                 });
 
+              $documento = Documentacion_url::where('id_relacion', $id_predio)
+                  ->where('id_documento', 137)
+                  ->first();
+
+                $urlDocumento = null;
+                if ($documento && $numeroCliente) {
+                    $urlDocumento = url("storage/uploads/{$numeroCliente}/" . $documento->url);
+                }
+
                 return response()->json([
                     'success' => true,
                     'predio' => $predio,
@@ -396,6 +406,8 @@ class PrediosController extends Controller
                     'plantaciones' => $predio->predio_plantaciones,
                     'tipos' => $tipos,
                     'documentos' => $documentos,
+                    'documento' => $documento, // Incluye el documento específico
+                    'url_documento' => $urlDocumento, // URL del documento
                     'numeroCliente' => $numeroCliente // Incluye el número del cliente
                 ]);
             } catch (ModelNotFoundException $e) {
@@ -911,71 +923,168 @@ class PrediosController extends Controller
       return $pdf->stream('F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.pdf');
     }
 
-  public function registroPredio(Request $request, $id_predio)
+public function registroPredio(Request $request, $id_predio)
+{
+    try {
+        $validated = $request->validate([
+            'num_predio' => 'required|string',
+            'fecha_emision' => 'required|date',
+            'fecha_vigencia' => 'required|date',
+            'fuv2103' => 'nullable|file|mimes:pdf,jpg,png|max:10240'
+        ]);
+
+        $predio = Predios::findOrFail($id_predio);
+        $id_empresa = $predio->id_empresa;
+
+        // Actualizar predio
+        $predio->update([
+            'num_predio' => $validated['num_predio'],
+            'fecha_emision' => $validated['fecha_emision'],
+            'fecha_vigencia' => $validated['fecha_vigencia'],
+            'estatus' => 'Vigente'
+        ]);
+
+        // Obtener número de cliente
+        $empresaNumCliente = DB::table('empresa_num_cliente')
+            ->where('id_empresa', $id_empresa)
+            ->whereNotNull('numero_cliente')
+            ->value('numero_cliente');
+
+        if (!$empresaNumCliente) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Número de cliente no encontrado.',
+            ], 404);
+        }
+
+        // Obtener nombre del documento
+        $nombreDocumento = DB::table('documentacion')
+            ->where('id_documento', 137)
+            ->value('nombre');
+
+        if (!$nombreDocumento) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nombre del documento no encontrado.',
+            ], 404);
+        }
+
+        // Guardar archivo si viene
+        if ($request->hasFile('fuv2103')) {
+            $file = $request->file('fuv2103');
+            $nombreArchivo = 'registro_predio_' . Str::uuid() . '.' . $file->getClientOriginalExtension();
+            $rutaCarpeta = 'public/uploads/' . $empresaNumCliente;
+
+            $file->storeAs($rutaCarpeta, $nombreArchivo);
+
+            // Registrar en documentacion_url
+            Documentacion_url::create([
+                'id_documento' => 137,
+                'nombre_documento' => $nombreDocumento,
+                'id_empresa' => $id_empresa,
+                'url' => $nombreArchivo,
+                'id_relacion' => $predio->id_predio,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Predio registrado correctamente.',
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+
+  public function editRegistroPredio(Request $request, $id_predio)
   {
       try {
-          // Validar los datos del formulario
+          // Validar los datos principales
           $validated = $request->validate([
               'num_predio' => 'required|string',
               'fecha_emision' => 'required|date',
               'fecha_vigencia' => 'required|date',
+              'fuv2103' => 'nullable|file|mimes:pdf,jpg,png|max:10240'
           ]);
 
           $predio = Predios::findOrFail($id_predio);
+          $id_empresa = $predio->id_empresa;
 
-          // Actualizar los datos del predio, incluyendo el estatus
+          // Actualizar datos del predio
           $predio->update([
               'num_predio' => $validated['num_predio'],
               'fecha_emision' => $validated['fecha_emision'],
               'fecha_vigencia' => $validated['fecha_vigencia'],
-              'estatus' => 'Vigente'
           ]);
+
+          // Solo si se sube un archivo nuevo
+          if ($request->hasFile('fuv2103')) {
+              // Buscar documento anterior
+              $documentoAnterior = Documentacion_url::where('id_documento', 137)
+                  ->where('id_relacion', $predio->id_predio)
+                  ->first();
+
+              // Eliminar el archivo anterior si existe
+              if ($documentoAnterior) {
+                  $rutaAnterior = 'public/uploads/' . $documentoAnterior->id_empresa . '/' . $documentoAnterior->url;
+                  if (Storage::exists($rutaAnterior)) {
+                      Storage::delete($rutaAnterior);
+                  }
+
+                  // Eliminar el registro de la base de datos
+                  $documentoAnterior->delete();
+              }
+
+              // Obtener número de cliente desde la tabla intermedia
+              $numeroCliente = DB::table('empresa_num_cliente')
+                  ->where('id_empresa', $id_empresa)
+                  ->whereNotNull('numero_cliente')
+                  ->value('numero_cliente');
+
+              if (!$numeroCliente) {
+                  return response()->json([
+                      'success' => false,
+                      'message' => 'Número de cliente no encontrado.',
+                  ], 404);
+              }
+
+              // Obtener nombre del documento
+              $nombreDocumento = DB::table('documentacion')
+                  ->where('id_documento', 137)
+                  ->value('nombre') ?? 'Registro de predios de maguey o agave';
+
+              // Guardar el nuevo archivo
+              $file = $request->file('fuv2103');
+              $nombreArchivo = 'registro_predio_' . Str::uuid() . '.' . $file->getClientOriginalExtension();
+              $rutaCarpeta = 'public/uploads/' . $numeroCliente; // ajusta si usas relación directa
+              $file->storeAs($rutaCarpeta, $nombreArchivo);
+
+              // Guardar nuevo registro
+              Documentacion_url::create([
+                  'id_documento' => 137,
+                  'nombre_documento' => $nombreDocumento,
+                  'url' => $nombreArchivo,
+                  'id_relacion' => $predio->id_predio,
+                  'id_empresa' => $id_empresa,
+              ]);
+          }
 
           return response()->json([
               'success' => true,
-              'message' => 'Predio registrado exitosamente',
+              'message' => 'Predio actualizado correctamente.',
           ]);
+
       } catch (\Exception $e) {
           return response()->json([
               'success' => false,
               'message' => $e->getMessage(),
           ], 500);
       }
-
   }
-
-public function editRegistroPredio(Request $request, $id_predio)
-{
-    try {
-        // Validar los datos que pueden cambiar
-        $validated = $request->validate([
-            'num_predio' => 'required|string',
-            'fecha_emision' => 'required|date',
-            'fecha_vigencia' => 'required|date',
-        ]);
-
-        // Buscar el predio
-        $predio = Predios::findOrFail($id_predio);
-
-        // Actualizar solo esos campos, sin tocar el estatus
-        $predio->update([
-            'num_predio' => $validated['num_predio'],
-            'fecha_emision' => $validated['fecha_emision'],
-            'fecha_vigencia' => $validated['fecha_vigencia'],
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Predio actualizado correctamente.',
-        ]);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Error al actualizar el predio: ' . $e->getMessage(),
-        ], 500);
-    }
-}
 
 
   public function pdf_solicitud_servicios_070($id_predio)

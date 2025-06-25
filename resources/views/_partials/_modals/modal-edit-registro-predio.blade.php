@@ -34,6 +34,15 @@
                                    <label for="fecha_vigencia">Fecha de vigencia</label>
                                </div>
                            </div>
+                           <div class="mb-3">
+                               <label for="fuv2103" class="form-label mt-1">
+                                   Adjuntar registro de predios de maguey o agave
+                               </label>
+                               <input class="form-control" type="file" id="fuv2103" name="fuv2103">
+                           </div>
+
+                            <div id="documentoPreview" class="mb-3"></div>
+
                        </div>
 
 
@@ -43,7 +52,8 @@
                                <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
                                Actualizando...
                            </button>
-                           <button type="submit" class="btn btn-primary me-2" id="btnEditRegistroPredio"><i class="ri-pencil-fill me-1"></i>
+                           <button type="submit" class="btn btn-primary me-2" id="btnEditRegistroPredio"><i
+                                   class="ri-pencil-fill me-1"></i>
                                Editar</button>
                            <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"><i
                                    class="ri-close-line me-1"></i> Cancelar</button>

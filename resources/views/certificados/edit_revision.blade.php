@@ -28,7 +28,7 @@
     th {
         color: black !important;
         font-weight: bold !important;
-        font-size: 16px !important;
+        font-size: 15px !important;
     }
 </style>
 @section('content')
