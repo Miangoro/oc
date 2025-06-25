@@ -102,8 +102,8 @@ class PrediosController extends Controller
 
         $limit = $request->input('length');
         $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
+        $order = $columns[$request->input('order.0.column')] ?? 'id_predio';
+        $dir = $request->input('order.0.dir') ?? 'asc';
 
         if (empty($request->input('search.value'))) {
             $predios = Predios::with('empresa') // Carga la relación
@@ -115,7 +115,8 @@ class PrediosController extends Controller
                 })
                 ->offset($start)
                 ->limit($limit)
-                ->orderBy($order, $dir)
+                ->orderByDesc('id_predio')
+
                 ->get();
         } else {
             $search = $request->input('search.value');
@@ -143,7 +144,8 @@ class PrediosController extends Controller
                 })
                 ->offset($start)
                 ->limit($limit)
-                ->orderBy($order, $dir)
+                ->orderByDesc('id_predio')
+
                 ->get();
 
             $totalFiltered = Predios::with('empresa')
