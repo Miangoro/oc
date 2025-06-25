@@ -200,6 +200,24 @@ class PrediosController extends Controller
                 $nestedData['id_solicitud'] = $predio->solicitudes()->first()->id_solicitud ?? null;
                 $nestedData['folio_solicitud'] = $predio->solicitudes()->first()->folio ?? null;
                 $nestedData['num_servicio'] = $solicitud?->inspeccion?->num_servicio ?? 'Sin asignar';
+                /* ACTAS INSPECCION */
+                $documentoActaInspeccion = null;
+                $urlActaInspeccion = null;
+
+                if ($solicitud) {
+                    $documentoActaInspeccion = DB::table('documentacion_url')
+                        ->where('id_relacion', $solicitud->id_solicitud)
+                        ->where('id_documento', 69)
+                        ->first();
+
+                    if ($documentoActaInspeccion && $numeroCliente) {
+                        $urlActaInspeccion = asset('storage/uploads/' . $numeroCliente . '/actas/' . $documentoActaInspeccion->url);
+                    }
+                }
+
+                $nestedData['url_acta_inspeccion'] = $urlActaInspeccion;
+                /*  */
+
                 $inspeccion = DB::table('predios_inspeccion')
                     ->where('id_predio', $predio->id_predio)
                     ->first();

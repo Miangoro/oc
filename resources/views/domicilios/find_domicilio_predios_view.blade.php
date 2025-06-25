@@ -38,6 +38,10 @@
         opacity: 0.5;
         /* Baja la opacidad para hacer que se vea más tenue */
     }
+    .col-id-empresa {
+  font-size: 13px;
+}
+
 </style>
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -64,7 +68,7 @@
                         <th>estatus</th>
                         <th>Solicitud</th>
                         <th>Pre-registro</th>
-                        <th>Inspección</th>
+                        <th>Inspección / Acta inspeccion</th>
                         <th>Registro</th>
                         <th>Acciones</th>
                     </tr>
@@ -75,22 +79,22 @@
     <!-- Modal -->
 
     @include('_partials/_modals/modal-edit-registro-predio')
-        
+
     @include('_partials/_modals/modal-add-registro-predio')
-    
+
     @include('_partials/_modals/modal-add-solicitud-georeferenciacion')
-    
+
     @include('_partials/_modals/modal-add-new-predio')
-    
+
     @include('_partials/_modals/modal-edit-predio')
-    
+
     @include('_partials/_modals/modal-add-predio-inspeccion')
     @include('_partials/_modals/modal-pdfs-frames')
 
 
 
 
-    @include('_partials/_modals/modal-edit-predio-inspeccion') 
+    @include('_partials/_modals/modal-edit-predio-inspeccion')
 
-    
+
 @endsection

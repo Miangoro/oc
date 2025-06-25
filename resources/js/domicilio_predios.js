@@ -56,16 +56,25 @@ $(function () {
         // columns according to JSON
         { data: '' },
         { data: 'id_predio' },
-        { data: 'id_empresa' },
-        { data: 'num_predio' },
-        { data: 'nombre_predio' },
-        { data: 'ubicacion_predio' },
-        { data: 'tipo_predio' },
+        { data: 'id_empresa', className: 'col-id-empresa' },
+        {
+          data: 'num_predio',
+          className: 'col-id-empresa text-center',
+          render: function (data, type, full, meta) {
+            if (data === 'Sin asignar') {
+              return '<span class="badge bg-danger rounded-pill">Sin asignar</span>';
+            }
+            return data ?? '';
+          }
+        },
+        { data: 'nombre_predio' , className: 'col-id-empresa'},
+        { data: 'ubicacion_predio', className: 'col-id-empresa' },
+        { data: 'tipo_predio', className: 'col-id-empresa' },
         //{ data: 'puntos_referencia' },
         // { data: 'cuenta_con_coordenadas' },
-        { data: 'superficie' },
+        { data: 'superficie', className: 'col-id-empresa' },
         {
-          data: 'estatus',
+          data: 'estatus', className: 'col-id-empresa',
           searchable: true, orderable: true,
           render: function (data, type, row) {
             var estatusClass = '';
@@ -116,7 +125,7 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             if (full['hasSolicitud']) {
-              return `<a href="#" class="text-primary pdfSolicitud"
+              return `<a href="#" class="text-primary pdfSolicitud col-id-empresa"
                         data-bs-toggle="modal"
                         data-bs-target="#mostrarPdfDictamen1"
                         data-id="${full['id_solicitud']}"
@@ -124,7 +133,7 @@ $(function () {
                         ${full['folio_solicitud']}
                       </a>`;
             } else {
-              return `<span class="text-muted"
+              return `<span class="text-muted col-id-empresa"
                         data-bs-placement="right" title="Necesita hacer la solicitud">Sin asignar</span>`;
             }
           }
@@ -138,56 +147,74 @@ $(function () {
           render: function (data, type, full, meta) {
             var $id = full['id_guia'];
             if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
-              return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"
+              return `<i class="ri-file-pdf-2-fill text-danger ri-32px pdf cursor-pointer"
                       data-bs-target="#mostrarPdfDcitamen1" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
                       data-registro="${full['id_empresa']}"></i>`;
             } else {
-              return '<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
+              return '<i class="ri-file-pdf-2-fill ri-32px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
             }
           }
         },
         {
-          targets: 11,
+          targets: 11, // o el índice que te corresponda
           className: 'text-center',
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            const estatusValido = full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente';
-            const tieneDoc = full['url_documento_geo'];
-            const numServicio = full['num_servicio'] || 'Sin asignar';
+          const estatusValido = full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente';
+          const tieneGeo = full['url_documento_geo'];
+          const tieneActa = full['url_acta_inspeccion'];
+          const numServicio = full['num_servicio'] || 'Sin asignar';
 
-            // Escapar por seguridad, por si algún num_servicio trae comillas o símbolos
-            const escapeHtml = (text) => $('<div>').text(text).html();
-            const numServicioHtml = `<p class="mb-1">${escapeHtml(numServicio)}</p>`;
+          const escapeHtml = (text) => $('<div>').text(text).html();
+          const numServicioHtml = `<span class="me-2 col-id-empresa">${escapeHtml(numServicio)}</span>`;
 
-            if (estatusValido && tieneDoc) {
-              return `
-                <a class="text-primary text-danger pdf2 cursor-pointer"
-                  data-id="${full['id_predio']}"
-                  data-registro="${full['id_empresa']}"
-                  data-url="${tieneDoc}">
-                  ${full['num_servicio'] || 'Sin Asignar'}
-                </a>`;
-            } else {
-              return '<span class="text-muted">Sin asignar</span>';
-            }
+          let actaIcon = '';
+          if (tieneActa) {
+            actaIcon = `
+              <a class="text-danger pdf2 cursor-pointer"
+                data-id="${full['id_predio']}"
+                data-registro="${full['id_empresa']}"
+                data-url="${tieneActa}"
+                data-tipo="acta"
+                title="Acta de inspección">
+                <i class="ri-file-pdf-2-fill ri-32px"></i>
+              </a>`;
+          } else {
+            actaIcon = `<i class="ri-file-pdf-2-fill ri-32px text-muted" title="Sin acta"></i>`;
           }
+
+          if (estatusValido && tieneGeo) {
+            return `
+              <a class="text-primary text-danger pdf2 cursor-pointer me-2"
+                data-id="${full['id_predio']}"
+                data-registro="${full['id_empresa']}"
+                data-url="${tieneGeo}"
+                data-tipo="geo">
+                ${numServicioHtml}
+              </a>${actaIcon}`;
+          } else {
+            return `<span class="text-muted col-id-empresa">Sin asignar</span>`;
+          }
+        }
+
         },
-        // Pdf de pre-registro (Dictamen final)
+
+        // Pdf de registro (Dictamen final)
         {
           targets: 12,
           className: 'text-center',
           searchable: false, orderable: false,
             render: function (data, type, full, meta) {
               if (full['estatus'] === 'Vigente' && full['url_documento_registro_predio']) {
-                return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf3 cursor-pointer"
+                return `<i class="ri-file-pdf-2-fill text-danger ri-32px pdf3 cursor-pointer"
                             data-bs-target="#mostrarPdfDictamen1" data-bs-toggle="modal"
                             data-bs-dismiss="modal" data-id="${full['id_predio']}"
                             data-registro="${full['id_empresa']}"
                             data-url="${full['url_documento_registro_predio']}"></i>`;
               } else {
-                return '<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"></i>';
+                return '<i class="ri-file-pdf-2-fill ri-32px icon-no-pdf"></i>';
               }
             }
         },
@@ -1524,24 +1551,33 @@ $(function () {
   });
 
 
-  $(document).on('click', '.pdf2', function () {
-    var pdfUrl = $(this).data('url'); // ahora sí debe traer la URL
+    $(document).on('click', '.pdf2', function () {
+      const pdfUrl = $(this).data('url');
+      const tipo = $(this).data('tipo');
+      const registro = $(this).data('registro');
 
-    if (!pdfUrl) {
-      alert('No hay documento para mostrar');
-      return;
-    }
+      if (!pdfUrl) {
+        alert('No hay documento para mostrar');
+        return;
+      }
 
-    $('#loading-spinner1').show();
-    $('#pdfViewerDictamen1').hide().attr('src', pdfUrl);
+      $('#loading-spinner1').show();
+      $('#pdfViewerDictamen1').hide().attr('src', pdfUrl);
 
-    $("#titulo_modal_Dictamen1").text("Inspección para la geo-referenciación de los predios de maguey o agave");
-    $("#subtitulo_modal_Dictamen1").html($(this).data('registro'));
+      let titulo = '';
+      if (tipo === 'geo') {
+        titulo = 'Inspección para la geo-referenciación de los predios de maguey o agave';
+      } else if (tipo === 'acta') {
+        titulo = 'Acta de inspección';
+      }
 
-    $('#openPdfBtnDictamen1').attr('href', pdfUrl).show();
+      $('#titulo_modal_Dictamen1').text(titulo);
+      $('#subtitulo_modal_Dictamen1').html(registro);
+      $('#openPdfBtnDictamen1').attr('href', pdfUrl).show();
 
-    $('#mostrarPdfDictamen1').modal('show');
-  });
+      $('#mostrarPdfDictamen1').modal('show');
+    });
+
 
   $('#pdfViewerDictamen1').on('load', function () {
     $('#loading-spinner1').hide();
