@@ -214,9 +214,17 @@ class PrediosController extends Controller
                 if ($documentoGeo && $numeroCliente) {
                     $urlDocumento = asset('storage/uploads/' . $numeroCliente . '/' . $documentoGeo->url);
                 }
-
                 $nestedData['url_documento_geo'] = $urlDocumento;
-
+                  /* documento de registro predio */
+                $documentoRegistroPredio = DB::table('documentacion_url')
+              ->where('id_relacion', $predio->id_predio)
+              ->where('id_documento', 137)
+              ->first();
+              $urlDocumentoRegistroPredio = null;
+              if ($documentoRegistroPredio && $numeroCliente) {
+                  $urlDocumentoRegistroPredio = asset('storage/uploads/' . $numeroCliente . '/' . $documentoRegistroPredio->url);
+              }
+              $nestedData['url_documento_registro_predio'] = $urlDocumentoRegistroPredio ?? null;
 
                 $data[] = $nestedData;
             }

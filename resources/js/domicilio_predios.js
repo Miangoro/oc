@@ -179,16 +179,17 @@ $(function () {
           targets: 12,
           className: 'text-center',
           searchable: false, orderable: false,
-          render: function (data, type, full, meta) {
-            if (full['estatus'] === 'Vigente') {
-              return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf3 cursor-pointer"
-                      data-bs-target="#mostrarPdfDictamen1" data-bs-toggle="modal"
-                      data-bs-dismiss="modal" data-id="${full['id_predio']}"
-                      data-registro="${full['id_empresa']}"></i>`;
-            } else {
-              return '<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Añadimos la clase icon-no-pdf
+            render: function (data, type, full, meta) {
+              if (full['estatus'] === 'Vigente' && full['url_documento_registro_predio']) {
+                return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf3 cursor-pointer"
+                            data-bs-target="#mostrarPdfDictamen1" data-bs-toggle="modal"
+                            data-bs-dismiss="modal" data-id="${full['id_predio']}"
+                            data-registro="${full['id_empresa']}"
+                            data-url="${full['url_documento_registro_predio']}"></i>`;
+              } else {
+                return '<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"></i>';
+              }
             }
-          }
         },
         {
           // User full name
@@ -1550,26 +1551,30 @@ $(function () {
 
 
   // Reciben los datos del PDF
-  $(document).on('click', '.pdf3', function () {
-    var id = $(this).data('id');
-    var registro = $(this).data('registro');
-    var iframe = $('#pdfViewerDictamen1');
-    var openPdfBtn = $('#openPdfBtnDictamen1');
+      $(document).on('click', '.pdf3', function () {
+        var id = $(this).data('id');
+        var registro = $(this).data('registro');
+        var pdfUrl = $(this).data('url'); // <- Aquí tomas la URL directamente
+        var iframe = $('#pdfViewerDictamen1');
+        var openPdfBtn = $('#openPdfBtnDictamen1');
 
-    // Mostrar el spinner y ocultar el iframe
-    $('#loading-spinner1').show();
-    iframe.hide();
-    var pdfUrl = '../Registro_de_Predios_Maguey_Agave/' + id;
-    // Cargar el PDF
-    iframe.attr('src', pdfUrl);
-    $("#titulo_modal_Dictamen1").text("F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.");
-    $("#subtitulo_modal_Dictamen1").html(registro);
-    // Actualizar el botón para abrir en nueva pestaña
-    openPdfBtn.attr('href', pdfUrl);
-    openPdfBtn.show(); // Mostrar el botón
-    // Abrir el modal
-    $('#mostrarPdfDictamen1').modal('show');
-  });
+        // Mostrar el spinner y ocultar el iframe
+        $('#loading-spinner1').show();
+        iframe.hide();
+
+        // Cargar el PDF
+        iframe.attr('src', pdfUrl);
+        $("#titulo_modal_Dictamen1").text("F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.");
+        $("#subtitulo_modal_Dictamen1").html(registro);
+
+        // Botón para abrir en nueva pestaña
+        openPdfBtn.attr('href', pdfUrl);
+        openPdfBtn.show();
+
+        // Abrir el modal
+        $('#mostrarPdfDictamen1').modal('show');
+      });
+
 
   // Ocultar el spinner cuando el PDF esté completamente cargado
   $('#pdfViewerDictamen1').on('load', function () {
