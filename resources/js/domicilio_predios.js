@@ -245,29 +245,50 @@ $(function () {
             return $row_output;
           }
         },
-
         {
-          // Actions botones de eliminar y actualizar(editar)
           targets: -1,
           title: 'Acciones',
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddPredioInspeccion" class="dropdown-item inspeccion-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar inspección</a>` +
-              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredioInspeccion" class="dropdown-item edit-inspeccion-record waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar inspección</a>` +
-              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddRegistroPredio" class="dropdown-item registro-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar predio</a>` +
-              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditRegistroPredio" class="dropdown-item edit_registro-record waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar registro</a>` +
-              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar pre-registro</a>` +
-              `<a data-id="${full['id_predio']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
-              '</div>' +
-              '</div>'
-            );
+            const estatus = full['estatus']; // "Pendiente", "Inspeccionado", "Vigente"
+
+            let opciones = `
+              <div class="d-flex align-items-center gap-50">
+                <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end m-0">
+            `;
+
+            // Pendiente → solo registrar inspección
+            if (estatus === 'Pendiente') {
+              opciones += `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddPredioInspeccion" class="dropdown-item inspeccion-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar inspección</a>`;
+            }
+
+            // Inspeccionado → editar inspección y registrar predio
+            if (estatus === 'Inspeccionado') {
+              opciones += `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredioInspeccion" class="dropdown-item edit-inspeccion-record waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar inspección</a>`;
+              opciones += `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddRegistroPredio" class="dropdown-item registro-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar predio</a>`;
+            }
+
+            // Vigente → editar inspección y editar registro
+            if (estatus === 'Vigente') {
+              opciones += `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredioInspeccion" class="dropdown-item edit-inspeccion-record waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar inspección</a>`;
+              opciones += `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditRegistroPredio" class="dropdown-item waves-effect edit_registro-record text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar registro</a>`;
+            }
+
+            // Todos pueden editar el pre-registro
+            opciones += `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar pre-registro</a>`;
+
+            // Todos pueden eliminar
+            opciones += `<a data-id="${full['id_predio']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>`;
+
+            opciones += '</div></div>';
+            return opciones;
           }
         }
+
       ],
 
       order: [[2, 'desc']],
