@@ -208,6 +208,19 @@ public function TrackingCertificados($id)
         $decision = $attributes['decision'] ?? null;
 
 
+        $num_cer = null;
+        if ($tipo_certificado == 1) {
+            $certAux = Certificados::find($attributes['id_certificado']);
+        }else if ($tipo_certificado == 2) {
+            $certAux = CertificadosGranel::find($attributes['id_certificado']);
+        }else{
+            $certAux = Certificado_Exportacion::find($attributes['id_certificado']);
+        }
+        if ($certAux) {
+            $num_cer = $certAux->num_certificado;
+        }
+
+
     // Preparar variables para contenido
         $num_dictamen = isset($attributes['id_dictamen']) 
             ? Dictamen_Exportacion::find($attributes['id_dictamen'])->num_dictamen ?? 'No encontrado' 
@@ -247,7 +260,7 @@ public function TrackingCertificados($id)
             $id_revision = $certificadoRevision->id_revision ?? null;
         }
 
-
+        
     //VO.BO.
         $voboPersonalHtml = '';
         $voboClienteHtml = '';
@@ -325,7 +338,7 @@ public function TrackingCertificados($id)
                    data-bs-target='#mostrarPdf'
                    data-bs-toggle='modal'
                    data-bs-dismiss='modal'
-                   data-num-certificado='$num_certificado'
+                   data-num-certificado='$num_cer'
                    data-id='$id_revision'
                    data-tipo_revision='$tipo_revision'>
                 </i>";

@@ -1390,26 +1390,18 @@ $(document).on('click', '.pdfActa', function () {
 
 //Abrir PDF Bitacora
 $(document).on('click', '.pdf', function () {
-  var id_revisor = $(this).data('id');
+  var id_revision = $(this).data('id');
   var num_certificado = $(this).data('num-certificado');
   var tipoRevision = $(this).data('tipo_revision');
-    console.log('ID de la revision:', id_revisor);
+    console.log('ID de la revision:', id_revision);
     console.log('Tipo revisor OC/consejo:', tipoRevision);//1=OC, 2=Consejo
     console.log('Número Certificado:', num_certificado);
+
     // Definir URL según el tipo de revisión
-    //if (tipoRevision === 'Instalaciones de productor' || tipoRevision === 'Instalaciones de envasador' || tipoRevision === 'Instalaciones de comercializador' || tipoRevision === 'Instalaciones de almacén o bodega' || tipoRevision === 'Instalaciones de área de maduración') {
-    if (tipoRevision === 'Instalaciones de productor' || tipoRevision === 'Instalaciones de envasador' || tipoRevision === 'Instalaciones de comercializador' || tipoRevision === 'Instalaciones de almacén o bodega' || tipoRevision === 'Instalaciones de área de maduración') {
-      var url_pdf = '../pdf_bitacora_revision_certificado_instalaciones/' + id_revisor;
-    }
-    if (tipoRevision === 'Granel') {
-      var url_pdf = '../pdf_bitacora_revision_certificado_granel/' + id_revisor;
-    }
-    //if (tipoRevision === 'Exportación') {
-    if (tipoRevision === 2) {  
-      var url_pdf = '../pdf_bitacora_revision_certificado_granel/' + id_revisor;
-    }
     if (tipoRevision === 1) {  
-      var url_pdf = '../pdf_bitacora_revision_certificado_granel/' + id_revisor;
+      var url_pdf = '../pdf_bitacora_revision_personal/' + id_revision;
+    } else  { 
+      var url_pdf = '../pdf_bitacora_revision_certificado_granel/' + id_revision;
     }
 
     

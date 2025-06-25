@@ -1504,20 +1504,12 @@ $(document).on('click', '.pdf', function () {
     console.log('ID de la revision:', id_revisor);
     console.log('Tipo revisor OC/consejo:', tipoRevision);//1=OC, 2=Consejo
     console.log('Número Certificado:', num_certificado);
+    
     // Definir URL según el tipo de revisión
-    //if (tipoRevision === 'Instalaciones de productor' || tipoRevision === 'Instalaciones de envasador' || tipoRevision === 'Instalaciones de comercializador' || tipoRevision === 'Instalaciones de almacén o bodega' || tipoRevision === 'Instalaciones de área de maduración') {
-    if (tipoRevision === 'Instalaciones de productor' || tipoRevision === 'Instalaciones de envasador' || tipoRevision === 'Instalaciones de comercializador' || tipoRevision === 'Instalaciones de almacén o bodega' || tipoRevision === 'Instalaciones de área de maduración') {
-      var url_pdf = '../pdf_bitacora_revision_certificado_instalaciones/' + id_revisor;
-    }
-    if (tipoRevision === 'Granel') {
-      var url_pdf = '../pdf_bitacora_revision_certificado_granel/' + id_revisor;
-    }
-    //if (tipoRevision === 'Exportación') {
-    if (tipoRevision === 2) {  
-      var url_pdf = '../pdf_bitacora_revision_certificado_exportacion/' + id_revisor;
-    }
     if (tipoRevision === 1) {  
       var url_pdf = '../pdf_bitacora_revision_personal/' + id_revisor;
+    }else{
+      var url_pdf = '../pdf_bitacora_revision_certificado_exportacion/' + id_revisor;
     }
 
     
