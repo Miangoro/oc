@@ -378,6 +378,8 @@
         $("#id_solicitud").val(id_solicitud);
         $('.solicitud').text(tipo);
         $('#nombre_empresa').text(nombre_empresa); // Mostrar nombre de la empresa en el modal
+        $('#solInspecciones').val(null).trigger('change');
+
         $('#asignarInspector').modal('show');
 
         $.ajax({

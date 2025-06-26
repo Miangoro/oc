@@ -61,10 +61,6 @@
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline">
                             <select multiple id="solInspecciones" name="solInspecciones[]" class="select2 form-select">
-{{--                                 @foreach ($todasSolicitudes as $solicitud)
-                                    <option value="{{ $solicitud->id_solicitud }}">{{ $solicitud->folio }}
-                                        {{ $solicitud->inspeccion->num_servicio ?? '' }}</option>
-                                @endforeach --}}
                                 @foreach ($solcitudesSinInspeccion as $solicitud)
                                     <option value="{{ $solicitud->id_solicitud }}">
                                         {{ $solicitud->folio }}
