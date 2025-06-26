@@ -156,19 +156,17 @@ $(function () {
             }
           }
         },
+        //inspeccion y acta
         {
           targets: 11, // o el índice que te corresponda
           className: 'text-center',
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-          const estatusValido = full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente';
           const tieneGeo = full['url_documento_geo'];
           const tieneActa = full['url_acta_inspeccion'];
           const numServicio = full['num_servicio'] || 'Sin asignar';
-
           const escapeHtml = (text) => $('<div>').text(text).html();
-          const numServicioHtml = `<span class="me-2 col-id-empresa">${escapeHtml(numServicio)}</span>`;
 
           let actaIcon = '';
           if (tieneActa) {
@@ -184,19 +182,19 @@ $(function () {
           } else {
             actaIcon = `<i class="ri-file-pdf-2-fill ri-32px text-muted" title="Sin acta"></i>`;
           }
-
-          if (estatusValido && tieneGeo) {
-            return `
-              <a class="text-primary text-danger pdf2 cursor-pointer me-2"
-                data-id="${full['id_predio']}"
-                data-registro="${full['id_empresa']}"
-                data-url="${tieneGeo}"
-                data-tipo="geo">
-                ${numServicioHtml}
-              </a>${actaIcon}`;
-          } else {
-            return `<span class="text-muted col-id-empresa">Sin asignar</span>`;
-          }
+        if (tieneGeo) {
+          return `
+            <a class="text-primary text-danger col-id-empresa pdf2 cursor-pointer me-2"
+              data-id="${full['id_predio']}"
+              data-registro="${full['id_empresa']}"
+              data-url="${tieneGeo}"
+              data-tipo="geo">
+              ${escapeHtml(numServicio)}
+            </a>${actaIcon}`;
+        } else {
+          const clase = numServicio === 'Sin asignar' ? 'text-muted' : '';
+          return `<span class="${clase} col-id-empresa me-2">${escapeHtml(numServicio)}</span>`;
+        }
         }
 
         },
