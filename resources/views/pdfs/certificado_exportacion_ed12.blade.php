@@ -244,7 +244,47 @@
         </tr>
     </table>
 
+    
+{{-- @php
+    //asignar Hologramas
+    $decoded = json_decode($data->hologramas ?? '{}', true);//Decodificar el JSON y reindexar los valores
+    $hologramas = is_array($decoded) ? array_values($decoded) : [];
+    $contador = 0;
+@endphp --}}
+@php
+    $idHologramas = json_decode($data->id_hologramas, true);
+    $oldHologramas = json_decode($data->old_hologramas, true);
+    $contador = 0;
 
+    $foliosPorLote = [];
+
+    foreach ($lotes as $lote) {
+        $clave = 'folio' . ($contador + 1);
+        $contenido = '';
+
+        if (!empty($idHologramas[$clave])) {
+            $grupo = $idHologramas[$clave];
+            $rangoTexto = [];
+
+            foreach ($grupo['rangos'] ?? [] as $rango) {
+                $rangoTexto[] = ($rango['inicial'] ?? '?') . ' - ' . ($rango['final'] ?? '?');
+            }
+
+            $contenido .= implode('<br>', $rangoTexto);
+        }
+
+        if (!empty($oldHologramas[$clave])) {
+            $contenido .= ($contenido ? '<br>' : '') . $oldHologramas[$clave];
+        }
+
+        if (empty($contenido)) {
+            $contenido = '------';
+        }
+
+        $foliosPorLote[] = $contenido;
+        $contador++;
+    }
+@endphp
 <!--INICIO DE TABLAS LOTES-->
 @if ($lotes->count() <= 1)<!--si es 1 lote-->
 
@@ -349,8 +389,10 @@
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
                 Folio Hologramas:</td>
-            <td style="text-align: left; padding-left: 4px;">
-                
+            <td style="text-align: center; padding-left: 4px;">
+                {{-- {{ isset($hologramas[$contador]) ? $hologramas[$contador] : '--------' }}
+                @php $contador++; @endphp --}}
+                {!! $foliosPorLote[$loop->index] ?? '------' !!}
             </td>
         </tr>
         <tr>
@@ -453,7 +495,11 @@
 
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Folio Hologramas:
                 </td>
-                <td style="text-align: left; font-size: 9px; padding-left: 4px;"></td>
+                <td style="text-align: center; font-size: 9px; padding-left: 4px;">
+                    {{-- {{ isset($hologramas[$contador]) ? $hologramas[$contador] : '--------' }}
+                    @php $contador++; @endphp --}}
+                    {!! $foliosPorLote[$loop->index] ?? '------' !!}
+                </td>
             </tr>
         </table>
 

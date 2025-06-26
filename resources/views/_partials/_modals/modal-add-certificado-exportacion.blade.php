@@ -65,54 +65,27 @@
                     </div>
 
 
-
-                    {{-- <div class="row">
-                        <div class="col-md-12">
+                    <div class="row" id="contenedor-lotes-dinamicos">
+                        <!-- Aquí se generarán los inputs -->
+                        {{-- <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="form-select select2" multiple name="hologramas" data-placeholder="Selecciona un holograma">
-                                    @foreach ($hologramas as $hol)
-                                        <option value="{{ $hol->id }}">{{ $hol->folio_activacion }} </option>
-                                    @endforeach
+                                <select class="form-select select2" id="holograma1" name="holograma1"
+                                    data-placeholder="Selecciona una opcion" multiple>
+                                    <option value="1">primero</option>
+                                    <option value="2">segundo</option>
                                 </select>
-                                <label for="">Hologramas</label>
+                                <label for="">Holograma1</label>
                             </div>
                         </div>
-                    </div> --}}
-                    <div class="row">
                         <div class="col-md-12">
-                            <select class="form-select select2" multiple name="id_activacion[]"
-                                data-placeholder="Selecciona un holograma">
-                                @foreach ($hologramas as $hol)
-                                    @php
-                                        // Decodificar el campo JSON
-                                        $folios = is_string($hol->folios)
-                                            ? json_decode($hol->folios, true)
-                                            : $hol->folios;
-
-                                        $iniciales = $folios['folio_inicial'] ?? [];
-                                        $finales = $folios['folio_final'] ?? [];
-                                    @endphp
-
-                                    @for ($i = 0; $i < count($iniciales); $i++)
-                                        @php
-                                            $inicio = $iniciales[$i] ?? null;
-                                            $fin = $finales[$i] ?? null;
-                                        @endphp
-
-                                        @if ($inicio && $fin)
-                                            <option value="{{ $hol->id }}">
-                                                {{ $hol->folio_activacion }} ({{ $inicio }} a {{ $fin }})
-                                            </option>
-                                        @endif
-                                    @endfor
-                                @endforeach
-
-                            </select>
-                        </div>
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="text" class="form-control" id="holograma2" name="holograma2"
+                                    placeholder="No. de certificado">
+                                <label for="">Holograma2</label>
+                            </div>
+                        </div> --}}
                     </div>
-
-
-
+                    
 
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
@@ -194,6 +167,10 @@
                     </div>
 
 
+                    <!-- Aquí se generarán los inputs -->
+                    <div class="row" id="contenedor-lotes-dinamicos-editar"></div>
+
+
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i>
                             Editar</button>
@@ -205,3 +182,156 @@
         </div>
     </div>
 </div>
+
+
+
+
+<!--SCRIPT PARA CAMPOS DE HOLOGRAMAS DINAMICOS-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"> </script>
+
+
+@php
+    $opcionesHologramas = [];
+    foreach ($hologramas as $holo) {
+        $folios = json_decode($holo->folios, true);
+        $iniciales = $folios['folio_inicial'] ?? [];
+        $finales = $folios['folio_final'] ?? [];
+
+        foreach ($iniciales as $idx => $inicio) {
+            $final = $finales[$idx] ?? '';
+            $valor = "{$holo->id}|{$inicio}|{$final}";
+            $texto = "Activación {$holo->folio_activacion}: {$inicio} - {$final}";
+            $opcionesHologramas[] = ['valor' => $valor, 'texto' => $texto];
+        }
+    }
+@endphp
+
+
+<script>
+    const hologramasDisponibles = @json($hologramas);
+    const opcionesHologramas = @json($opcionesHologramas);
+
+$(document).ready(function () {
+
+//PARA FORMULARIO DE AGREGAR
+    $('#id_dictamen').on('change', function () {
+        const id = $(this).val();
+        const contenedor = $('#contenedor-lotes-dinamicos');
+        contenedor.empty();
+        if (!id) return;
+
+        $.ajax({
+            url: `/certificados/contar-lotes/${id}`,
+            method: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                const total = response.count || 0;
+
+                if (total === 0) {
+                    contenedor.append('<div class="alert alert-warning">No se encontraron lotes envasados.</div>');
+                    return;
+                }
+
+                for (let i = 0; i < total; i++) {
+
+                    let options = `
+                        @foreach ($opcionesHologramas as $op)
+                            <option value="{{ $op['valor'] }}">{{ $op['texto'] }}</option>
+                        @endforeach
+                    `;
+
+                    contenedor.append(`
+                    <div class="col-md-12">
+                        <div class="form-floating form-floating-outline mb-6 select2-primary">
+                            <select class="form-select select2" name="hologramas[${i}][tipo][]" multiple>
+                                ${options}
+                            </select>
+                            <label for="">Holograma ${i + 1} - tipo</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-floating form-floating-outline mb-6">
+                            <input type="text" class="form-control" name="hologramas[${i}][descripcion]" placeholder="Descripción del holograma ${i + 1}">
+                            <label for="">Holograma ${i + 1} - descripción</label>
+                        </div>
+                    </div>
+                    `);
+                }
+
+                contenedor.find('.select2').select2({//inicializar select multiple
+                    dropdownParent: $('#ModalAgregar') // o tu modal
+                });
+            },
+            error: function (xhr) {
+                console.error('Error al obtener los lotes:', xhr.responseText);
+            }
+        });
+    });
+
+
+
+// PARA EL FORMULARIO DE EDICIÓN
+$('#edit_id_dictamen').on('change', function () {
+    if (window.esEdicion) {
+        window.esEdicion = false; // Lo desactivas y no haces nada más
+        return;
+    }
+
+    const id = $(this).val();
+    const contenedor = $('#contenedor-lotes-dinamicos-editar');
+    contenedor.empty();
+    if (!id) return;
+
+    $.ajax({
+        url: `/certificados/contar-lotes/${id}`,
+        method: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            const total = response.count || 0;
+
+            if (total === 0) {
+                contenedor.append('<div class="alert alert-warning">No se encontraron lotes envasados.</div>');
+                return;
+            }
+
+            for (let i = 0; i < total; i++) {
+                let options = '';
+                opcionesHologramas.forEach(op => {
+                    options += `<option value="${op.valor}">${op.texto}</option>`;
+                });
+
+                contenedor.append(`
+                    <div class="col-md-12">
+                        <div class="form-floating form-floating-outline mb-6 select2-primary">
+                            <select class="form-select select2" name="hologramas[${i}][tipo][]" multiple>
+                                ${options}
+                            </select>
+                            <label for="">Holograma ${i + 1} - tipo</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-floating form-floating-outline mb-6">
+                            <input type="text" class="form-control" name="hologramas[${i}][descripcion]" placeholder="Descripción del holograma ${i + 1}">
+                            <label for="">Holograma ${i + 1} - descripción</label>
+                        </div>
+                    </div>
+                `);
+            }
+
+            // Inicializar Select2
+            contenedor.find('.select2').select2({
+                dropdownParent: $('#ModalEditar') // IMPORTANTE: que apunte al modal de edición
+            });
+        },
+        error: function (xhr) {
+            console.error('Error al obtener los lotes:', xhr.responseText);
+        }
+    });
+});
+
+
+
+
+});//fin de document-function
+
+</script>

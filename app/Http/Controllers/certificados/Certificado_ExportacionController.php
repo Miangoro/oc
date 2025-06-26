@@ -36,19 +36,51 @@ class Certificado_ExportacionController extends Controller
 
     public function UserManagement()
     {
-        $certificado = Certificado_Exportacion::all(); // Obtener todos los datos
-        //$dictamen = Dictamen_Exportacion::where('estatus','!=',1)->get();
+        //$certificado = Certificado_Exportacion::all(); // Obtener todos los datos
+        // Obtener los dictamenes que ya están en certificados
+        /*$dictamenesConCertificado = Certificado_Exportacion::pluck('id_dictamen');
+        // Obtener solo los dictámenes que NO tienen certificado
         $dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')
+            ->whereNotIn('id_dictamen', $dictamenesConCertificado)
+            ->where('estatus', '!=', 1)
+            ->orderBy('id_dictamen', 'desc')
+            ->get();*/
+        /*$dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')
+            ->where('estatus', '!=', 1)
+            ->whereDoesntHave('certificado') // Solo los dictámenes sin certificado
+            ->orderBy('id_dictamen', 'desc')
+            ->get();*/
+        $dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')
+            ->where('estatus', '!=', 1)
             ->orderBy('id_dictamen', 'desc')
             ->get();
+
         $users = User::where('tipo',1)->get(); //Solo Prrsonal OC
         $empresa = empresa::where('tipo', 2)->get();
         $revisores = Revisor::all();
         $hologramas = activarHologramasModelo::all();
 
-        return view('certificados.find_certificados_exportacion', compact('certificado', 'dictamen', 'users', 'empresa', 'revisores', 'hologramas'))
-        ;//->with('dictamenes', $dictamen); // Pasamos el dictamen como un JSON;
+        return view('certificados.find_certificados_exportacion', compact('dictamen', 'users', 'empresa', 'revisores', 'hologramas'));
     }
+///FUNCION PARA OBTENER N° DE LOTES PARA HOLOGRAMAS
+public function contarLotes($id)
+{
+    $dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')->findOrFail($id);
+
+    $solicitud = $dictamen->inspeccione->solicitud ?? null;
+    if (!$solicitud || !$solicitud->caracteristicas) {
+        return response()->json(['count' => 0]);
+    }
+
+    $caracteristicas = json_decode($solicitud->caracteristicas, true);
+
+    $count = collect($caracteristicas['detalles'] ?? [])->pluck('id_lote_envasado')->filter()->count();
+
+    return response()->json(['count' => $count]);
+}
+
+
+
 
 public function index(Request $request)
 {
@@ -272,6 +304,7 @@ public function exportar(Request $request)
 }
 
 
+
 ///FUNCION REGISTRAR
 public function store(Request $request)
 {
@@ -282,31 +315,37 @@ public function store(Request $request)
         'fecha_emision' => 'nullable|date',
         'fecha_vigencia' => 'nullable|date',
         'id_firmante' => 'required|exists:users,id',
+
+        'hologramas.*.tipo' => 'array', // select multiple
+        'hologramas' => 'array', // input dinámico
+        'hologramas.*.descripcion' => 'nullable|string',
     ]);
 
-      $hologramas = [];
+        $idHologramas = [];
+        $oldHologramas = [];
 
-    /*foreach ($request->id_activacion as $id) {
-        $activacion = activarHologramasModelo::find($id);
-        $folios = json_decode($activacion->folios, true);
-
-        if (!empty($folios['folio_inicial']) && !empty($folios['folio_final'])) {
-            $totalRangos = count($folios['folio_inicial']);
-
-            for ($i = 0; $i < $totalRangos; $i++) {
-                $inicio = $folios['folio_inicial'][$i] ?? null;
-                $fin = $folios['folio_final'][$i] ?? null;
-
-                if ($inicio && $fin) {
-                    $hologramas[] = [
-                        'id_activacion' => $id,
-                        'folio_inicial' => $inicio,
-                        'folio_final' => $fin,
-                    ];
+        foreach ($request->hologramas ?? [] as $index => $holo) {
+            // Para el select múltiple
+            $rangoAgrupado = [];
+            if (!empty($holo['tipo'])) {
+                foreach ($holo['tipo'] as $valor) {
+                    // Separa ID y folios
+                    [$id, $inicio, $final] = explode('|', $valor);
+                    $rangoAgrupado[] = ['inicial' => $inicio, 'final' => $final];
                 }
+
+                // Guarda el ID del primer elemento del grupo (puedes ajustar si quieres múltiples)
+                $idHologramas['folio' . ($index + 1)] = [
+                    'id' => $id,
+                    'rangos' => $rangoAgrupado
+                ];
             }
+
+            // Para el input
+            $oldHologramas["folio" . ($index + 1)] = $holo['descripcion'] ?? '';
         }
-    }*/
+
+
         // Crear un registro
         $new = new Certificado_Exportacion();
         $new->id_dictamen = $validated['id_dictamen'];
@@ -314,7 +353,9 @@ public function store(Request $request)
         $new->fecha_emision = $validated['fecha_emision'];
         $new->fecha_vigencia = $validated['fecha_vigencia'];
         $new->id_firmante = $validated['id_firmante'];
-        //$new->hologramas = $hologramas;
+        
+        $new->id_hologramas = json_encode($idHologramas);
+        $new->old_hologramas = json_encode($oldHologramas);
         $new->save();
 
         return response()->json(['message' => 'Registrado correctamente.']);
@@ -356,6 +397,9 @@ public function edit($id_certificado)
             'fecha_emision' => $editar->fecha_emision,
             'fecha_vigencia' => $editar->fecha_vigencia,
             'id_firmante' => $editar->id_firmante,
+
+            'id_hologramas' => $editar->id_hologramas ?? '{}',
+            'old_hologramas' => $editar->old_hologramas ?? '{}',
         ]);
     } catch (\Exception $e) {
         Log::error('Error al obtener', [
@@ -375,7 +419,32 @@ public function update(Request $request, $id_certificado)
         'fecha_emision' => 'nullable|date',
         'fecha_vigencia' => 'nullable|date',
         'id_firmante' => 'required|integer',
+
+        'hologramas.*.tipo' => 'array',
+        'hologramas' => 'array',
+        'hologramas.*.descripcion' => 'nullable|string',
     ]);
+
+    $idHologramas = [];
+    $oldHologramas = [];
+
+    foreach ($request->hologramas ?? [] as $index => $holo) {
+        $rangoAgrupado = [];
+        if (!empty($holo['tipo'])) {
+            foreach ($holo['tipo'] as $valor) {
+                [$id, $inicio, $final] = explode('|', $valor);
+                $rangoAgrupado[] = ['inicial' => $inicio, 'final' => $final];
+            }
+
+            $idHologramas['folio' . ($index + 1)] = [
+                'id' => $id,
+                'rangos' => $rangoAgrupado
+            ];
+        }
+
+        $oldHologramas['folio' . ($index + 1)] = $holo['descripcion'] ?? '';
+    }
+
 
     try {
         $actualizar = Certificado_Exportacion::findOrFail($id_certificado);
@@ -385,6 +454,9 @@ public function update(Request $request, $id_certificado)
         $actualizar->fecha_emision = $request->fecha_emision;
         $actualizar->fecha_vigencia = $request->fecha_vigencia;
         $actualizar->id_firmante = $request->id_firmante;
+
+        $actualizar->id_hologramas = json_encode($idHologramas);
+        $actualizar->old_hologramas = json_encode($oldHologramas);
         $actualizar->save();
 
         return response()->json(['message' => 'Actualizado correctamente.']);

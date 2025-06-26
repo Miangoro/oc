@@ -879,13 +879,67 @@ $(document).ready(function () {
         url: '/editCerExp/' + id_certificado + '/edit',
         method: 'GET',
         success: function (datos) {
+          
           // Asignar valores a los campos del formulario
           //$('#edit_id_certificado').val(datos.id_certificado).trigger('change');
           $('#edit_num_certificado').val(datos.num_certificado);
+        window.esEdicion = true;// Activar bandera de edición antes de cambiar el dictamen
           $('#edit_id_dictamen').val(datos.id_dictamen).trigger('change');
           $('#edit_fecha_emision').val(datos.fecha_emision);
           $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
           $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();
+
+//HOLOGRAMAS DINAMICOS (sólo si hay datos)
+  const idHologramas = JSON.parse(datos.id_hologramas || '{}');
+  const oldHologramas = JSON.parse(datos.old_hologramas || '{}');
+  const claves = Object.keys(idHologramas).length > 0 ? Object.keys(idHologramas) : Object.keys(oldHologramas);
+
+  const contenedor = $('#contenedor-lotes-dinamicos-editar');
+  contenedor.empty();
+
+  if (claves.length > 0) {
+    claves.forEach((clave, i) => {
+      let opciones = '';
+      opcionesHologramas.forEach(op => {
+        opciones += `<option value="${op.valor}">${op.texto}</option>`;
+      });
+
+      contenedor.append(`
+        <div class="col-md-12">
+            <div class="form-floating form-floating-outline mb-6 select2-primary">
+                <select class="form-select select2" name="hologramas[${i}][tipo][]" multiple id="edit_holograma_tipo_${i}">
+                    ${opciones}
+                </select>
+                <label for="">Holograma ${i + 1} - tipo</label>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-floating form-floating-outline mb-6">
+                <input type="text" class="form-control" name="hologramas[${i}][descripcion]" value="${oldHologramas[clave] || ''}" placeholder="Descripción del holograma ${i + 1}">
+                <label for="">Holograma ${i + 1} - descripción</label>
+            </div>
+        </div>
+      `);
+
+      const select = $(`#edit_holograma_tipo_${i}`);
+      select.select2({
+        dropdownParent: $('#ModalEditar')
+      });
+
+      if (idHologramas[clave]?.rangos) {
+        const valores = idHologramas[clave].rangos.map(r => `${idHologramas[clave].id}|${r.inicial}|${r.final}`);
+        setTimeout(() => {
+          select.val(valores).trigger('change');
+        }, 100);
+      }
+    });
+  } else {
+    // Si no hay datos almacenados, forzamos manualmente la generación de campos
+    setTimeout(() => {
+      $('#edit_id_dictamen').trigger('change');
+    }, 300); // da un pequeño tiempo para que el select2 se estabilice
+  }
+//FIN HOLOGRAMAS DINAMICOS
 
 
           flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
@@ -894,6 +948,7 @@ $(document).ready(function () {
             allowInput: true,
             locale: "es"
           });
+
           // Mostrar el modal
           $('#ModalEditar').modal('show');
         },
