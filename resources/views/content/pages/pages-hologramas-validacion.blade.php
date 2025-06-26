@@ -94,10 +94,10 @@
                                     <td class="td">{{ $datosHolograma->edad }}</td>
                                 </tr>
                             @endif
-                            <tr>
+                            <!--<tr>
                                 <td class="td"><b>MARCA</b></td>
                                 <td class="td">{{ $marca->marca }}</td>
-                            </tr>
+                            </tr>-->
                             <tr>
                                 <td class="td"><b>LOTE A GRANEL</b></td>
                                 <td class="td">{{ $datosHolograma->no_lote_agranel }}</td>
