@@ -58,31 +58,36 @@
                         <label for="observaciones">Indicaciones u observaciones para la inspección</label>
                     </div>
 
-                        <div class="col-md-12">
-                            <div class="form-floating form-floating-outline">
-                                <select multiple id="solInspecciones" name="solInspecciones[]"
-                                    class="select2 form-select">
-                                    @foreach ($todasSolicitudes as $solicitud)
-                                        <option value="{{ $solicitud->id_solicitud }}">{{ $solicitud->folio }}
-                                            {{ $solicitud->inspeccion->num_servicio ?? '' }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="solInspecciones">Elegir a que otra solicitud aplica el mismo
-                                    inspector</label>
-                            </div>
+                    <div class="col-md-12">
+                        <div class="form-floating form-floating-outline">
+                            <select multiple id="solInspecciones" name="solInspecciones[]" class="select2 form-select">
+{{--                                 @foreach ($todasSolicitudes as $solicitud)
+                                    <option value="{{ $solicitud->id_solicitud }}">{{ $solicitud->folio }}
+                                        {{ $solicitud->inspeccion->num_servicio ?? '' }}</option>
+                                @endforeach --}}
+                                @foreach ($solcitudesSinInspeccion as $solicitud)
+                                    <option value="{{ $solicitud->id_solicitud }}">
+                                        {{ $solicitud->folio }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+                            <label for="solInspecciones">Elegir a que otra solicitud aplica el mismo
+                                inspector</label>
                         </div>
+                    </div>
 
 
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button disabled class="btn btn-primary me-1 d-none" type="button"
-                            id="btnSpinnerAsigInspec">
+                        <button disabled class="btn btn-primary me-1 d-none" type="button" id="btnSpinnerAsigInspec">
                             <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
                             Asignando...
                         </button>
-                        <button type="submit" class="btn btn-primary" id="btnAsignarInspec"><i class="ri-user-add-line me-1"></i> Asignar</button>
-                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
-                            aria-label="Close"><i class="ri-close-line me-1"></i>Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="btnAsignarInspec"><i
+                                class="ri-user-add-line me-1"></i> Asignar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-line me-1"></i>Cancelar</button>
                     </div>
                 </form>
             </div>

@@ -55,9 +55,14 @@ class inspeccionesController extends Controller
     ->orderBy('id_solicitud', 'desc')
     ->get();
 
+      $solcitudesSinInspeccion = solicitudesModel::whereDoesntHave('inspeccion')
+          ->whereYear('fecha_solicitud', '>=', 2025)
+          ->orderBy('id_solicitud', 'desc')
+          ->get();
+
 
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
-        return view('inspecciones.find_inspecciones_view', compact('solicitudesTipos','instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos', 'equipos','todasSolicitudes'));
+        return view('inspecciones.find_inspecciones_view', compact('solicitudesTipos','instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos', 'equipos','todasSolicitudes', 'solcitudesSinInspeccion'));
     }
 
     public function index(Request $request)
