@@ -71,7 +71,7 @@
 
                                 
                             </tr>
-                            <tr>
+                           <!-- <tr>
                                 <td class="td"><b>TIPO DE AGAVE</b></td>
                                 <td class="td">
                                   
@@ -79,7 +79,7 @@
                                         (<i>{{ optional($datosHolograma->tipos)->pluck('cientifico')->implode(', ') }}</i>)
                                       
                                 </td>
-                            </tr>
+                            </tr>-->
                             <tr>
                                 <td class="td"><b>CATEGORÍA</b></td>
                                 <td class="td">{{ $datosHolograma->categorias->categoria }}</td>
@@ -90,18 +90,14 @@
                             </tr>
                             @if($datosHolograma->edad)
                                 <tr>
-                                    <td class="td"><b>Edad</b></td>
+                                    <td class="td"><b>EDAD</b></td>
                                     <td class="td">{{ $datosHolograma->edad }}</td>
                                 </tr>
                             @endif
-                            <tr>
-                                <td class="td"><b>EDAD</b></td>
-                                <td class="td">Pendiente</td>
-                            </tr>
-                            <tr>
+                            <!--<tr>
                                 <td class="td"><b>MARCA</b></td>
                                 <td class="td">{{ $marca->marca }}</td>
-                            </tr>
+                            </tr>-->
                             <tr>
                                 <td class="td"><b>LOTE A GRANEL</b></td>
                                 <td class="td">{{ $datosHolograma->no_lote_agranel }}</td>
