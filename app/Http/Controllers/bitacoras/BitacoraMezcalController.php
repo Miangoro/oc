@@ -110,6 +110,8 @@ class BitacoraMezcalController extends Controller
             'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
             'id_instalacion' => 'required|integer',
             'operacion_adicional' => 'nullable|string',
+            'tipo_operacion' => 'required|string',
+            'tipo_operacion' => 'required|string',
             'volumen_inicial' => 'nullable|numeric|min:0',
             'alcohol_inicial' => 'nullable|numeric|min:0',
             'procedencia_entrada' => 'nullable|string',
@@ -130,6 +132,7 @@ class BitacoraMezcalController extends Controller
             $bitacora->id_empresa = $request->id_empresa;
             $bitacora->id_instalacion = $request->id_instalacion;
             $bitacora->id_lote_granel = $request->id_lote_granel;
+            $bitacora->tipo_operacion = $request->tipo_operacion;
             $bitacora->operacion_adicional = $request->operacion_adicional;
             $bitacora->volumen_inicial = $request->volumen_inicial;
             $bitacora->alcohol_inicial = $request->alcohol_inicial;
@@ -170,6 +173,7 @@ class BitacoraMezcalController extends Controller
             'success' => 'Bitácora eliminada correctamente.'
         ]);
     }
+
     public function edit($id_bitacora)
     {
         try {
@@ -186,6 +190,7 @@ class BitacoraMezcalController extends Controller
                     'operacion_adicional' => $bitacora->operacion_adicional,
                     'volumen_inicial'    =>     $bitacora->volumen_inicial,
                     'alcohol_inicial'   =>     $bitacora->alcohol_inicial,
+                    'tipo_operacion' => $bitacora->tipo_operacion,
                     'procedencia_entrada'  =>     $bitacora->procedencia_entrada,
                     'volumen_entrada'   =>    $bitacora->volumen_entrada,
                     'alcohol_entrada'  =>     $bitacora->alcohol_entrada,
@@ -215,6 +220,7 @@ class BitacoraMezcalController extends Controller
               'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
               'id_instalacion' => 'required|integer',
               'operacion_adicional' => 'nullable|string',
+              'tipo_operacion' => 'required|string',
               'volumen_inicial' => 'nullable|numeric|min:0',
               'alcohol_inicial' => 'nullable|numeric|min:0',
               'procedencia_entrada' => 'nullable|string',
@@ -237,6 +243,7 @@ class BitacoraMezcalController extends Controller
               'id_instalacion'   => $request->id_instalacion,
               'fecha'            => $request->fecha,
               'operacion_adicional' => $request->operacion_adicional,
+              'tipo_operacion' => $request->tipo_operacion,
               'volumen_inicial' => $request->volumen_inicial,
               'alcohol_inicial' => $request->alcohol_inicial ,
               'procedencia_entrada' => $request->procedencia_entrada ?? 0,

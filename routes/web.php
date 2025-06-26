@@ -911,6 +911,7 @@ Route::get('/bitacora_hologramas', [CartaAsignacionController::class, 'BitacoraH
 Route::get('/bitacoraMezcal', [BitacoraMezcalController::class, 'UserManagement'])->name('bitacora-mezcal');
 Route::resource('/bitacoraMezcal-list', BitacoraMezcalController::class);
 Route::get('/bitacora_mezcal', [BitacoraMezcalController::class, 'PDFBitacoraMezcal']);
+Route::get('bitacoraMezcal-list/{id_bitacora}', [BitacoraMezcalController::class, 'destroy'])->name('bitacora.delete');
 Route::post('/bitacoraMezcalStore', [BitacoraMezcalController::class, 'store'])->name('bitacora.store');
 Route::get('/bitacora_mezcal/{id_bitacora}/edit', [BitacoraMezcalController::class, 'edit'])->name('bitacora_mezcal.edit');
 Route::post('/bitacorasUpdate/{id_bitacora}', [BitacoraMezcalController::class, 'update'])->name('bitacoras.update');

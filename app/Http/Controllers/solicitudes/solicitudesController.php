@@ -26,6 +26,7 @@ use App\Models\marcas;
 use App\Models\guias;
 use App\Models\Destinos;
 use App\Models\BitacoraMezcal;
+use App\Models\catalogo_aduanas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -69,10 +70,11 @@ class solicitudesController extends Controller
         $clases = clases::all();
         $tipos = tipos::all();
         $marcas = marcas::all();
+        $aduanas = catalogo_aduanas::all();
 
 
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
-        return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas'));
+        return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas', 'aduanas'));
     }
     public function findCertificadosExportacion()
     {

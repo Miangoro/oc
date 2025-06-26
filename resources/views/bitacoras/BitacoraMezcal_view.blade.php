@@ -38,8 +38,27 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- Users List Table -->
+
+
 <div class="card">
-    <div class="card-header pb-0">
+  <!-- Filtros externos al DataTable -->
+  <div class="d-flex gap-2 flex-wrap mb-2 px-3 pt-3" id="accionesDataTable">
+    <select id="filtroEmpresa" class="form-select select2" style="width: 500px;">
+      <option value="">-- Todas las Empresas --</option>
+      @foreach($empresas as $empresa)
+        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
+      @endforeach
+    </select>
+
+    <select id="filtroInstalacion" class="form-select select2" style="width: 500px;">
+      <option value="">-- Todas las Instalaciones --</option>
+{{--       @foreach($instalaciones as $instalacion)
+        <option value="{{ $instalacion->id_instalacion }}">{{ $instalacion->nombre }}</option>
+      @endforeach --}}
+    </select>
+  </div>
+
+    <div class="card-header pb-0 mb-1">
         <h3 class="card-title mb-0">Mezcal a Granel</h3>
     </div>
     <div class="card-datatable table-responsive">

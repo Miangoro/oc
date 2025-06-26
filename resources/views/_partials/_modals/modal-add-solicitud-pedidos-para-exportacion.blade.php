@@ -76,8 +76,11 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <input type="text" class="form-control" name="aduana_salida"
-                                            placeholder="Ej. Aduana de salida" autocomplete="off">
+                                        <select class="form-select select2" name="aduana_salida" id="aduana_salida">
+                                            @foreach ($aduanas as $aduana)
+                                                <option value="{{ $aduana->aduana }}">{{ $aduana->aduana }}</option>
+                                            @endforeach
+                                        </select>
                                         <label for="aduana_salida">Aduana de salida</label>
                                     </div>
                                 </div>

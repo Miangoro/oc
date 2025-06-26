@@ -61,10 +61,10 @@ $(function () {
               '<span class="small">' + $fecha + '</span>' +
               '<br><span class="fw-bold text-dark small">Lote a Granel: </span>' +
               '<span class="small">' + $id_lote_granel + '</span>';
-              // + '<br><span class="fw-bold text-dark small">Volumen Inicial: </span>' +
-              // '<span class="small">' + $volumen_inicial + '</span>' +
-              // '<br><span class="fw-bold text-dark small">Alcohol Inicial: </span>' +
-              // '<span class="small">' + $alcohol_inicial + '</span>';
+            // + '<br><span class="fw-bold text-dark small">Volumen Inicial: </span>' +
+            // '<span class="small">' + $volumen_inicial + '</span>' +
+            // '<br><span class="fw-bold text-dark small">Alcohol Inicial: </span>' +
+            // '<span class="small">' + $alcohol_inicial + '</span>';
           }
         },
         {
@@ -179,9 +179,18 @@ $(function () {
 
       // Opciones Exportar Documentos
       buttons: [
+/*         {
+          text: '<i class="ri-file-excel-2-fill ri-16px me-0 me-md-2 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">seleccione la empresa</span>',
+          className: 'btn btn-info waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4 mt-md-0',
+          attr: {
+            'data-bs-toggle': 'modal',
+            'data-bs-dismiss': 'modal',
+            'data-bs-target': '#'
+          }
+        }, */
         {
           text: '<i class="ri-eye-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Ver Bitácora</span>',
-          className: 'btn btn-info waves-effect waves-light me-2',
+          className: 'btn btn-info waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4 mt-md-0',
           attr: {
             id: 'verBitacoraBtn'
           }
@@ -325,6 +334,15 @@ $(function () {
             }
           ]
         },
+/*         {
+          text: '<i class="ri-file-excel-2-fill ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
+          className: 'btn btn-info waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4  mt-md-0',
+          attr: {
+            'data-bs-toggle': 'modal',
+            'data-bs-dismiss': 'modal',
+            'data-bs-target': '#'
+          }
+        }, */
         {
           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Bitácora</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
@@ -334,6 +352,7 @@ $(function () {
           }
         }
       ],
+
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({
@@ -367,6 +386,7 @@ $(function () {
         }
       }
     });
+
   }
 
 
@@ -384,7 +404,16 @@ $(function () {
     });
   }
 
+
   initializeSelect2(select2Elements);
+
+$('#selectEmpresa').on('change', function () {
+  const id = $(this).val();
+  if (id) {
+    $('#modalEmpresa').modal('show'); // o cualquier lógica que tú quieras
+  }
+});
+
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   $(document).on('click', '#verBitacoraBtn', function () {
@@ -449,7 +478,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}bitacoras-list/${id_bitacora}`,
+          url: `${baseUrl}bitacoraMezcal-list/${id_bitacora}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -641,6 +670,9 @@ $(function () {
           $('#edit_operacion_adicional').val(bitacora.operacion_adicional);
           $('#edit_volumen_inicial').val(bitacora.volumen_inicial);
           $('#edit_alcohol_inicial').val(bitacora.alcohol_inicial);
+          /*  */
+          $('#edit_tipo_op').val(bitacora.tipo_operacion).trigger('change');
+
           $('#edit_procedencia_entrada').val(bitacora.procedencia_entrada);
           $('#edit_volumen_entrada').val(bitacora.volumen_entrada);
           $('#edit_alcohol_entrada').val(bitacora.alcohol_entrada);
@@ -834,12 +866,12 @@ $(function () {
     $('#tipo_op').on('change', function () {
       const tipo = $(this).val();
 
-      if (tipo == '1') {
+      if (tipo == 'Entrada') {
         $('#displaySalidas').fadeOut(100, function () {
           $(this).css('display', 'none');
           $('#displayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
-      } else if (tipo == '2') {
+      } else if (tipo == 'Salida') {
         $('#displayEntradas').fadeOut(100, function () {
           $(this).css('display', 'none');
           $('#displaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
@@ -856,12 +888,12 @@ $(function () {
     $('#edit_tipo_op').on('change', function () {
       const tipo = $(this).val();
 
-      if (tipo == '1') {
+      if (tipo == 'Entrada') {
         $('#editDisplaySalidas').fadeOut(100, function () {
           $(this).css('display', 'none');
           $('#editDisplayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
-      } else if (tipo == '2') {
+      } else if (tipo == 'Salida') {
         $('#editDisplayEntradas').fadeOut(100, function () {
           $(this).css('display', 'none');
           $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
