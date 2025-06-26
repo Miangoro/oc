@@ -53,12 +53,11 @@
                         </div>
                     </div>
 
-                    <div class="form-floating form-floating-outline mb-6">
+                    <div class="form-floating form-floating-outline mb-4">
                         <textarea name="observaciones" class="form-control h-px-100" id="observaciones" placeholder="Indicaciones..."></textarea>
                         <label for="observaciones">Indicaciones u observaciones para la inspección</label>
                     </div>
 
-                    <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline">
                                 <select multiple id="solInspecciones" name="solInspecciones[]"
@@ -72,7 +71,7 @@
                                     inspector</label>
                             </div>
                         </div>
-                    </div>
+
 
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
