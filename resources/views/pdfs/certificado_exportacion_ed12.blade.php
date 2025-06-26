@@ -389,7 +389,7 @@
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; width: 12%;">
                 Folio Hologramas:</td>
-            <td style="text-align: center; padding-left: 4px;">
+            <td style="text-align: center; font-size: 9px;">
                 {{-- {{ isset($hologramas[$contador]) ? $hologramas[$contador] : '--------' }}
                 @php $contador++; @endphp --}}
                 {!! $foliosPorLote[$loop->index] ?? '------' !!}
@@ -495,7 +495,7 @@
 
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Folio Hologramas:
                 </td>
-                <td style="text-align: center; font-size: 9px; padding-left: 4px;">
+                <td style="text-align: center; font-size: 9px;">
                     {{-- {{ isset($hologramas[$contador]) ? $hologramas[$contador] : '--------' }}
                     @php $contador++; @endphp --}}
                     {!! $foliosPorLote[$loop->index] ?? '------' !!}
