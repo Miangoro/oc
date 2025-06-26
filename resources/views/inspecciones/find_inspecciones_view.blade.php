@@ -186,89 +186,89 @@
         $('.inspectorName').html(inspectorName);
 
 
-   const links = [
-        {
-            id: '#link_solicitud_servicio',
-            href: '{{ url('solicitud_de_servicio') }}/' + id_solicitud
-        },
-        {
-            id: '#link_oficio_comision',
-            href: '{{ url('oficio_de_comision') }}/' + id_inspeccion
-        },
-        {
-            id: '#link_orden_servicio',
-            href: '{{ url('orden_de_servicio') }}/' + id_inspeccion
-        },
-        {
-            id: '#links_etiquetas',
-            href: ''
-        }
-    ];
-
-            // Restaurar enlaces e íconos
-            links.forEach(link => {
-                if (link.id !== '#links_etiquetas') { // se maneja aparte por id_tipo
-                    $(link.id)
-                        .attr('href', link.href)
-                        .removeClass('text-secondary opacity-50')
-                        .find('i')
-                        .removeClass('text-secondary opacity-50')
-                        .addClass('text-danger');
-                } else {
-                    $(link.id)
-                        .removeClass('text-secondary opacity-50')
-                        .find('i')
-                        .removeClass('text-secondary opacity-50')
-                        .addClass('text-danger');
-                }
-            });
-
-            // Etiquetas específicas según tipo
-            let etiquetaHref = '';
-            let etiquetaTexto = 'Etiquetas';
-
-            switch (parseInt(id_tipo)) {
-                case 1:
-                    etiquetaHref = '{{ url('etiqueta_agave_art') }}/' + id_solicitud;
-                    etiquetaTexto = 'Etiqueta para agave (%ART)';
-                    break;
-                case 3:
-                    etiquetaHref = '{{ url('etiquetas_tapas_sellado') }}/' + id_solicitud;
-                    etiquetaTexto = 'Etiqueta para tapa de la muestra';
-                    break;
-                case 4:
-                case 5:
-                    etiquetaHref = '{{ url('etiqueta_lotes_mezcal_granel') }}/' + id_solicitud;
-                    etiquetaTexto = 'Etiqueta para lotes de mezcal a granel';
-                    break;
-                case 7:
-                    etiquetaHref = '{{ url('etiqueta-barrica') }}/' + id_solicitud;
-                    etiquetaTexto = 'Etiqueta de ingreso a barricas';
-                    break;
+        const links = [{
+                id: '#link_solicitud_servicio',
+                href: '{{ url('solicitud_de_servicio') }}/' + id_solicitud
+            },
+            {
+                id: '#link_oficio_comision',
+                href: '{{ url('oficio_de_comision') }}/' + id_inspeccion
+            },
+            {
+                id: '#link_orden_servicio',
+                href: '{{ url('orden_de_servicio') }}/' + id_inspeccion
+            },
+            {
+                id: '#links_etiquetas',
+                href: ''
             }
+        ];
 
-  if (etiquetaHref !== '') {
-        $('#links_etiquetas').attr('href', etiquetaHref);
-        $('.etiqueta_name').text(etiquetaTexto);
-        $('.etiquetasNA').show(); // mostrar el tr
-    } else {
-        $('.etiquetasNA').hide(); // ocultar el tr
-    }
+        // Restaurar enlaces e íconos
+        links.forEach(link => {
+            if (link.id !== '#links_etiquetas') { // se maneja aparte por id_tipo
+                $(link.id)
+                    .attr('href', link.href)
+                    .removeClass('text-secondary opacity-50')
+                    .find('i')
+                    .removeClass('text-secondary opacity-50')
+                    .addClass('text-danger');
+            } else {
+                $(link.id)
+                    .removeClass('text-secondary opacity-50')
+                    .find('i')
+                    .removeClass('text-secondary opacity-50')
+                    .addClass('text-danger');
+            }
+        });
 
-          $.ajax({
-            url: '/getDocumentosSolicitud/'+id_solicitud, // URL del servidor (puede ser .php, .json, .html, etc.)
-            type: 'GET',                // O puede ser 'GET'
-            dataType: 'json',            // Puede ser 'html', 'text', 'json', etc.
-           success: function(response) {
-            if (response.success) {
+        // Etiquetas específicas según tipo
+        let etiquetaHref = '';
+        let etiquetaTexto = 'Etiquetas';
 
-                const documentos = response.data;
-                const fqs = response.fqs;
-                const url_etiqueta = response.url_etiqueta;
-                const urls_certificados = response.url_certificado;
-                const url_corrugado = response.url_corrugado;
-                const url_evidencias = response.url_evidencias;
-                let html = `
+        switch (parseInt(id_tipo)) {
+            case 1:
+                etiquetaHref = '{{ url('etiqueta_agave_art') }}/' + id_solicitud;
+                etiquetaTexto = 'Etiqueta para agave (%ART)';
+                break;
+            case 3:
+                etiquetaHref = '{{ url('etiquetas_tapas_sellado') }}/' + id_solicitud;
+                etiquetaTexto = 'Etiqueta para tapa de la muestra';
+                break;
+            case 4:
+            case 5:
+                etiquetaHref = '{{ url('etiqueta_lotes_mezcal_granel') }}/' + id_solicitud;
+                etiquetaTexto = 'Etiqueta para lotes de mezcal a granel';
+                break;
+            case 7:
+                etiquetaHref = '{{ url('etiqueta-barrica') }}/' + id_solicitud;
+                etiquetaTexto = 'Etiqueta de ingreso a barricas';
+                break;
+        }
+
+        if (etiquetaHref !== '') {
+            $('#links_etiquetas').attr('href', etiquetaHref);
+            $('.etiqueta_name').text(etiquetaTexto);
+            $('.etiquetasNA').show(); // mostrar el tr
+        } else {
+            $('.etiquetasNA').hide(); // ocultar el tr
+        }
+
+        $.ajax({
+            url: '/getDocumentosSolicitud/' +
+            id_solicitud, // URL del servidor (puede ser .php, .json, .html, etc.)
+            type: 'GET', // O puede ser 'GET'
+            dataType: 'json', // Puede ser 'html', 'text', 'json', etc.
+            success: function(response) {
+                if (response.success) {
+
+                    const documentos = response.data;
+                    const fqs = response.fqs;
+                    const url_etiqueta = response.url_etiqueta;
+                    const urls_certificados = response.url_certificado;
+                    const url_corrugado = response.url_corrugado;
+                    const url_evidencias = response.url_evidencias;
+                    let html = `
                     <table class="table table-bordered table-striped">
                         <thead class="table-dark">
                             <tr>
@@ -277,13 +277,13 @@
                         </thead>
                         <tbody>`;
 
-                if (documentos.length > 0) {
-                    documentos.forEach(function(doc) {
-                        let carpeta = '';
-                        if(doc.id_documento == 69 || doc.id_documento == 70){
-                            carpeta = 'actas/';
-                        }
-                        html += `
+                    if (documentos.length > 0) {
+                        documentos.forEach(function(doc) {
+                            let carpeta = '';
+                            if (doc.id_documento == 69 || doc.id_documento == 70) {
+                                carpeta = 'actas/';
+                            }
+                            html += `
                             <tr>
                                 <td>${doc.nombre}</td>
                                 <td>
@@ -292,14 +292,14 @@
                                     </a>
                                 </td>
                             </tr>`;
-                    });
-                } else {
-                    html += `<tr><td colspan="2">No se encontraron documentos.</td></tr>`;
-                }
+                        });
+                    } else {
+                        html += `<tr><td colspan="2">No se encontraron documentos.</td></tr>`;
+                    }
 
                     if (urls_certificados && urls_certificados.length > 0) {
-                            urls_certificados.forEach(function(url) {
-                                html += `
+                        urls_certificados.forEach(function(url) {
+                            html += `
                                     <tr>
                                         <td>Certificado de granel</td>
                                         <td>
@@ -308,13 +308,13 @@
                                             </a>
                                         </td>
                                     </tr>`;
-                            });
-                        }
+                        });
+                    }
 
 
-                 if (fqs) {
-                    fqs.forEach(function(fq) {
-                        html += `
+                    if (fqs) {
+                        fqs.forEach(function(fq) {
+                            html += `
                             <tr>
                                 <td>${fq.nombre_documento}</td>
                                 <td>
@@ -323,10 +323,10 @@
                                     </a>
                                 </td>
                             </tr>`;
-                    });
-                }
+                        });
+                    }
 
-                 if (url_etiqueta) {
+                    if (url_etiqueta) {
 
                         html += `
                             <tr>
@@ -338,9 +338,9 @@
                                 </td>
                             </tr>`;
 
-                }
+                    }
 
-                 if (url_corrugado) {
+                    if (url_corrugado) {
 
                         html += `
                             <tr>
@@ -352,13 +352,13 @@
                                 </td>
                             </tr>`;
 
+                    }
+
+
+                    html += `</tbody></table>`;
+                    $('#contenedor-documentos').html(html);
                 }
-
-
-                html += `</tbody></table>`;
-                $('#contenedor-documentos').html(html);
-            }
-        },
+            },
 
 
             error: function(xhr, status, error) {
@@ -368,7 +368,7 @@
             }
         });
 
-    $('#expedienteServicio').modal('show');
+        $('#expedienteServicio').modal('show');
 
 
     }
@@ -413,7 +413,6 @@
                                         <td><b>Fecha sugerida</b></td>
                                         <td>${solicitud.fecha_visita}</td>
                                     </tr>
-
                             </table>
                         </div>`;
 
@@ -422,7 +421,6 @@
                         $("#datosSolicitud").html(
                             '<div class="alert alert-warning">No hay datos de la solicitud.</div>');
                     }
-
                     if (data.inspeccion) {
                         $("#id_inspector").val(data.inspeccion.id_inspector).change();
                         $("#num_servicio").val(data.inspeccion.num_servicio || '');
@@ -737,7 +735,7 @@
 
 
     //modal resulatdos
-    function abrirModalSubirResultados(id_solicitud, nombre_empresa, folio, inspectorName, num_servicio  ) {
+    function abrirModalSubirResultados(id_solicitud, nombre_empresa, folio, inspectorName, num_servicio) {
 
         $(".id_solicitud").val(id_solicitud);
         $("#nombre_documento").val('Acta de inspección ' + num_servicio);

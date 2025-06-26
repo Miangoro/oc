@@ -489,7 +489,7 @@ $(function () {
     });
   });
 
-    $(document).ready(function () {
+  $(document).ready(function () {
     $('#reporteForm').on('submit', function (e) {
       e.preventDefault(); // Prevenir el envío tradicional del formulario
       const exportUrl = $(this).attr('action'); // Obtener la URL del formulario
@@ -625,8 +625,9 @@ $(function () {
 
     }).on('core.form.valid', function (e) {
       // Validar el formulario
+      $('#btnAsignarInspec').addClass('d-none');
+      $('#btnSpinnerAsigInspec').removeClass('d-none');
       var formData = new FormData(form);
-
       $.ajax({
         url: '/asignar-inspector',
         type: 'POST',
@@ -634,6 +635,8 @@ $(function () {
         processData: false,
         contentType: false,
         success: function (response) {
+          $('#btnSpinnerAsigInspec').addClass('d-none');
+          $('#btnAsignarInspec').removeClass('d-none');
           $('#asignarInspector').modal('hide');
           $('#addAsignarInspector')[0].reset();
           $('.select2').val(null).trigger('change');
@@ -650,16 +653,27 @@ $(function () {
           });
         },
         error: function (xhr) {
-          console.log('Error:', xhr.responseText);
+          let mensaje = 'Ocurrió un error inesperado.';
+          // Si Laravel devuelve errores de validación
+          if (xhr.responseJSON?.errors) {
+            const errores = xhr.responseJSON.errors;
+            mensaje = Object.values(errores).flat().join('\n');
+          }
+          // Si es un mensaje directo desde el catch
+          else if (xhr.responseJSON?.message) {
+            mensaje = xhr.responseJSON.message;
+          }
 
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al asignar la inspección',
+            text: mensaje,
             customClass: {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#btnSpinnerAsigInspec').addClass('d-none');
+          $('#btnAsignarInspec').removeClass('d-none');
         }
       });
     });

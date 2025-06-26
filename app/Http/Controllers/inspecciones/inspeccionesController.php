@@ -285,40 +285,80 @@ class inspeccionesController extends Controller
         }
     }
 
-    public function asignarInspector(Request $request)
-    {
+public function asignarInspector(Request $request)
+{
+    try {
+        // Validar datos
+        $request->validate([
+            'id_solicitud' => 'required|integer',
+            'id_inspector' => 'required|integer|exists:users,id',
+            'num_servicio' => 'required|string',
+            'fecha_servicio' => 'required|date',
+            'observaciones' => 'nullable|string',
+            'solInspecciones' => 'nullable|array'
+        ]);
 
-        // Asignar o actualizar la inspección
-        $asignar = inspecciones::updateOrCreate(
-            [
-                'id_solicitud' => $request->id_solicitud,
-            ],
+        // Inspección principal
+        inspecciones::updateOrCreate(
+            ['id_solicitud' => $request->id_solicitud],
             [
                 'id_inspector' => $request->id_inspector,
                 'num_servicio' => $request->num_servicio,
                 'fecha_servicio' => $request->fecha_servicio,
-                'estatus_inspeccion' => 1, // Es pendiente
+                'estatus_inspeccion' => 1,
                 'observaciones' => $request->observaciones ?? '',
             ]
         );
 
-                // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
-        $users = User::whereIn('id', [$request->id_inspector])->get(); // IDs de los usuarios
+        // Aplicar la misma inspección a solicitudes adicionales
+        $solicitudesAdicionales = $request->solInspecciones ?? [];
 
-        // Notificación 1
+        foreach ($solicitudesAdicionales as $idAdicional) {
+            inspecciones::updateOrCreate(
+                ['id_solicitud' => $idAdicional],
+                [
+                    'id_inspector' => $request->id_inspector,
+                    'num_servicio' => $request->num_servicio,
+                    'fecha_servicio' => $request->fecha_servicio,
+                    'estatus_inspeccion' => 1,
+                    'observaciones' => $request->observaciones ?? '',
+                ]
+            );
+        }
+
+        // Notificar al inspector
+        $users = User::whereIn('id', [$request->id_inspector])->get();
+
         $data1 = [
             'title' => 'Nueva inspección',
-            'message' => 'Se te asignó la inspección '.$request->num_servicio,
+            'message' => 'Se te asignó la inspección ' . $request->num_servicio,
             'url' => 'inspecciones',
         ];
 
-        // Iterar sobre cada usuario y enviar la notificación
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
 
+        return response()->json([
+            'success' => true,
+            'message' => 'Inspector asignado correctamente.'
+        ]);
 
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Errores de validación.',
+            'errors' => $e->errors()
+        ], 422);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 500);
     }
+}
+
 
 
 
