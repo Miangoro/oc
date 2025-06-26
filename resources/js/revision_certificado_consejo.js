@@ -198,7 +198,7 @@ $(function () {
               `>` +
               '<i class="ri-pencil-fill ri-20px text-primary"></i> Editar Revisión' +
               '</a>' +
-             
+
               // Botón para Historial
               `<a data-id='${full['id_revision']}' class="dropdown-item waves-effect text-warning abrir-historial" ` +
               `data-bs-toggle="modal" data-bs-target="#historialModal">` +
@@ -533,16 +533,16 @@ $(function () {
     console.log('Número de Certificado:', num_certificado);
 
     // Definir URL según el tipo de revisión
-     if (tipoRevision === 'Instalaciones de productor' || tipoRevision === 'Instalaciones de envasador' || tipoRevision === 'Instalaciones de comercializador' || tipoRevision === 'Instalaciones de almacén o bodega' || tipoRevision === 'Instalaciones de área de maduración') {
-        var url_pdf = '../pdf_bitacora_revision_certificado_instalaciones/' + id_revisor;
-     }
+    if (tipoRevision === 'Instalaciones de productor' || tipoRevision === 'Instalaciones de envasador' || tipoRevision === 'Instalaciones de comercializador' || tipoRevision === 'Instalaciones de almacén o bodega' || tipoRevision === 'Instalaciones de área de maduración') {
+      var url_pdf = '../pdf_bitacora_revision_certificado_instalaciones/' + id_revisor;
+    }
 
     if (tipoRevision === 'Granel') {
-          var url_pdf = '../pdf_bitacora_revision_certificado_granel/' + id_revisor;
-        }
-        if (tipoRevision === 'Exportación') {
-          var url_pdf = '../pdf_bitacora_revision_certificado_exportacion/' + id_revisor;
-        }
+      var url_pdf = '../pdf_bitacora_revision_certificado_granel/' + id_revisor;
+    }
+    if (tipoRevision === 'Exportación') {
+      var url_pdf = '../pdf_bitacora_revision_certificado_exportacion/' + id_revisor;
+    }
 
 
     console.log('URL del PDF:', url_pdf);
@@ -562,7 +562,7 @@ $(function () {
     $('#pdfViewer').hide();
 
     // Cargar PDF en iframe
-    
+
     $('#pdfViewer').attr('src', url_pdf);
   });
 
@@ -833,89 +833,93 @@ $(function () {
     $(this).removeClass('is-invalid');
   });
 
-/*   // Limpiar Validación al cerrar Modal
-  $(document).on('hidden.bs.modal', '#fullscreenModal', function () {
-    const respuestas = document.querySelectorAll('select[name^="respuesta"]');
-    respuestas.forEach((respuesta) => {
-      respuesta.classList.remove('is-invalid');
-      respuesta.value = '';
-    });
-  }); */
+  /*   // Limpiar Validación al cerrar Modal
+    $(document).on('hidden.bs.modal', '#fullscreenModal', function () {
+      const respuestas = document.querySelectorAll('select[name^="respuesta"]');
+      respuestas.forEach((respuesta) => {
+        respuesta.classList.remove('is-invalid');
+        respuesta.value = '';
+      });
+    }); */
 
 
-$(function () {
+  /* $(function () {
     // Configuración de AJAX para enviar el token CSRF
     $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
     });
 
     // Inicializar FormValidation en el formulario
     const form = document.getElementById('formularioConsejo');
     const fv = FormValidation.formValidation(form, {
-        fields: {
-            'respuesta[]': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona una respuesta.'
-                    }
-                }
-            },
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: '.resp'
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-    }).on('core.form.valid', function () {
-        // Este evento se dispara cuando el formulario es válido
-
-        // Crear un objeto FormData con todos los datos del formulario
-        const formData = new FormData(form);
-
-        // Enviar la solicitud AJAX con todos los datos del formulario
-        $.ajax({
-            url: '/registrar_revision_consejo',
-            type: 'POST',
-            data: formData,
-            contentType: false,  // Importante para enviar los datos correctamente
-            processData: false,  // Importante para evitar la transformación de los datos en cadena de consulta
-            success: function(response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: 'Revisión registrada exitosamente.',
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                }).then(() => {
-                    // Redirigir a la ruta después de mostrar el mensaje de éxito
-                    window.location.href = '/revision/consejo';
-                });
-            },
-            error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: xhr.responseJSON.message,
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
+      fields: {
+        'respuesta[]': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una respuesta.'
             }
-        });
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.resp'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      $('#btnAddRevConse').addClass('d-none');
+      $('#btnSpinnerRevConse').removeClass('d-none');
+      // Crear un objeto FormData con todos los datos del formulario
+      const formData = new FormData(form);
+
+      // Enviar la solicitud AJAX con todos los datos del formulario
+      $.ajax({
+        url: '/registrar_revision_consejo',
+        type: 'POST',
+        data: formData,
+        contentType: false,  // Importante para enviar los datos correctamente
+        processData: false,  // Importante para evitar la transformación de los datos en cadena de consulta
+        success: function (response) {
+          $('#btnSpinnerRevConse').addClass('d-none');
+          $('#btnAddRevConse').removeClass('d-none');
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Revisión registrada exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          }).then(() => {
+            // Redirigir a la ruta después de mostrar el mensaje de éxito
+            window.location.href = '/revision/consejo';
+          });
+        },
+        error: function (xhr) {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: xhr.responseJSON.message,
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+          $('#btnSpinnerRevConse').addClass('d-none');
+          $('#btnAddRevConse').removeClass('d-none');
+        }
+      });
 
     });
 
 
 
-});
+  }); */
 
 
   //end
@@ -924,74 +928,79 @@ $(function () {
 'use strict';
 
 $(function () {
-    // Configuración de AJAX para enviar el token CSRF
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  // Configuración de AJAX para enviar el token CSRF
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
+  // Inicializar FormValidation en el formulario
+  const form = document.getElementById('formularioConsejo');
+  const fv = FormValidation.formValidation(form, {
+    fields: {
+      'respuesta[]': {
+        validators: {
+          notEmpty: {
+            message: 'Selecciona una respuesta.'
+          }
         }
-    });
+      },
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        eleInvalidClass: 'is-invalid',
+        rowSelector: '.resp'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    // Este evento se dispara cuando el formulario es válido
+    $('#btnAddRevConse').addClass('d-none');
+    $('#btnSpinnerRevConse').removeClass('d-none');
+    // Crear un objeto FormData con todos los datos del formulario
+    const formData = new FormData(form);
 
-    // Inicializar FormValidation en el formulario
-    const form = document.getElementById('formularioConsejo');
-    const fv = FormValidation.formValidation(form, {
-        fields: {
-            'respuesta[]': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona una respuesta.'
-                    }
-                }
-            },
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: '.resp'
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-    }).on('core.form.valid', function () {
-        // Este evento se dispara cuando el formulario es válido
-
-        // Crear un objeto FormData con todos los datos del formulario
-        const formData = new FormData(form);
-
-        // Enviar la solicitud AJAX con todos los datos del formulario
-        $.ajax({
-            url: '/registrar_revision_consejo',
-            type: 'POST',
-            data: formData,
-            contentType: false,  // Importante para enviar los datos correctamente
-            processData: false,  // Importante para evitar la transformación de los datos en cadena de consulta
-            success: function(response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: 'Revisión registrada exitosamente.',
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                }).then(() => {
-                    // Redirigir a la ruta después de mostrar el mensaje de éxito
-                    window.location.href = '/revision/consejo';
-                });
-            },
-            error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: xhr.responseJSON.message,
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
-            }
+    // Enviar la solicitud AJAX con todos los datos del formulario
+    $.ajax({
+      url: '/registrar_revision_consejo',
+      type: 'POST',
+      data: formData,
+      contentType: false,  // Importante para enviar los datos correctamente
+      processData: false,  // Importante para evitar la transformación de los datos en cadena de consulta
+      success: function (response) {
+        $('#btnSpinnerRevConse').addClass('d-none');
+        $('#btnAddRevConse').removeClass('d-none');
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Revisión registrada exitosamente.',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        }).then(() => {
+          // Redirigir a la ruta después de mostrar el mensaje de éxito
+          window.location.href = '/revision/consejo';
         });
-
+      },
+      error: function (xhr) {
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: xhr.responseJSON.message,
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+        $('#btnSpinnerRevConse').addClass('d-none');
+        $('#btnAddRevConse').removeClass('d-none');
+      }
     });
+
+  });
 
 
 
@@ -1002,76 +1011,81 @@ $(function () {
 'use strict';
 
 $(function () {
-    // Configuración de AJAX para enviar el token CSRF
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    // Inicializar FormValidation en el formulario de edición
-    const formEditar = document.getElementById('formularioEditarConsejo');
-    if (formEditar) {
-        const fvEditar = FormValidation.formValidation(formEditar, {
-            fields: {
-                'respuesta[]': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Selecciona una respuesta.'
-                        }
-                    }
-                },
-            },
-            plugins: {
-                trigger: new FormValidation.plugins.Trigger(),
-                bootstrap5: new FormValidation.plugins.Bootstrap5({
-                    eleValidClass: '',
-                    eleInvalidClass: 'is-invalid',
-                    rowSelector: '.resp'
-                }),
-                submitButton: new FormValidation.plugins.SubmitButton(),
-                autoFocus: new FormValidation.plugins.AutoFocus()
-            }
-        }).on('core.form.valid', function () {
-            // Este evento se dispara cuando el formulario es válido
-
-            // Crear un objeto FormData con todos los datos del formulario
-            const formData = new FormData(formEditar);
-
-            // Enviar la solicitud AJAX con todos los datos del formulario
-            $.ajax({
-                url: '/editar_revision_consejo',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Éxito!',
-                        text: 'Revisión editada exitosamente.',
-                        customClass: {
-                            confirmButton: 'btn btn-success'
-                        }
-                    }).then(() => {
-                        // Redirigir a la ruta después de mostrar el mensaje de éxito
-                        window.location.href = '/revision/consejo';
-                    });
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: '¡Error!',
-                        text: xhr.responseJSON?.message || 'Ocurrió un error al editar la revisión.',
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                }
-            });
-
-        });
+  // Configuración de AJAX para enviar el token CSRF
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
+  });
+
+  // Inicializar FormValidation en el formulario de edición
+  const formEditar = document.getElementById('formularioEditarConsejo');
+  if (formEditar) {
+    const fvEditar = FormValidation.formValidation(formEditar, {
+      fields: {
+        'respuesta[]': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una respuesta.'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.resp'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      // Este evento se dispara cuando el formulario es válido
+      $('#btnEditRevConse').addClass('d-none');
+      $('#btnSpinnerRevConseEdit').removeClass('d-none');
+      // Crear un objeto FormData con todos los datos del formulario
+      const formData = new FormData(formEditar);
+
+      // Enviar la solicitud AJAX con todos los datos del formulario
+      $.ajax({
+        url: '/editar_revision_consejo',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Revisión editada exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          }).then(() => {
+            // Redirigir a la ruta después de mostrar el mensaje de éxito
+            window.location.href = '/revision/consejo';
+          });
+          $('#btnSpinnerRevConseEdit').addClass('d-none');
+          $('#btnEditRevConse').removeClass('d-none');
+        },
+        error: function (xhr) {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: xhr.responseJSON?.message || 'Ocurrió un error al editar la revisión.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+          $('#btnSpinnerRevConseEdit').addClass('d-none');
+          $('#btnEditRevConse').removeClass('d-none');
+        }
+      });
+
+    });
+  }
 });
 
 

@@ -173,7 +173,8 @@
                                                 );
                                             @endphp
                                             <td>
-                                              Carta de asignación:
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                                                <br>
                                                 @if ($cliente && $documento)
                                                     <a target="_blank"
                                                         href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
@@ -182,9 +183,8 @@
                                                     </a>
                                                 @else
                                                     <span class="text-muted">Sin carta de asignación</span>
-                                                @endif
+                                                @endif Carta de asignación
                                                 <br>
-                                                Contrato:
                                                 @if ($cliente && $documento2)
                                                     <a target="_blank"
                                                         href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento2 }}">
@@ -193,18 +193,17 @@
                                                     </a>
                                                 @else
                                                     <span class="text-muted">Sin contrato subido</span>
-                                                @endif
+                                                @endif Contrato
                                                 <br>
-                                              {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }} <br>
-                                               Solicitud:
-                                              @if ($datos->certificado->dictamen->inspeccione->solicitud?->id_solicitud)
-                                                  <a target="_blank"
-                                                      href="/solicitud_de_servicio/{{ $datos->certificado->dictamen->inspeccione->solicitud->id_solicitud }}">
-                                                      <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                  </a>
-                                              @else
-                                                  <span class="text-muted">Sin solicitud</span>
-                                              @endif
+                                                @if ($datos->certificado->dictamen->inspeccione->solicitud?->id_solicitud)
+                                                    <a target="_blank"
+                                                        href="/solicitud_de_servicio/{{ $datos->certificado->dictamen->inspeccione->solicitud->id_solicitud }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">Sin solicitud</span>
+                                                @endif Solicitud
                                             </td>
                                         @elseif($pregunta->filtro == 'representante_legal')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'N/A' }}
@@ -213,32 +212,39 @@
                                             <td><b
                                                     class="text-danger">{{ $datos->certificado->num_certificado ?? 'N/A' }}</b>
                                             </td>
-
-
                                         @elseif($pregunta->filtro == 'direccion_fiscal')
                                             @php
-                                                $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa;
-                                                $cliente = $empresa?->empresaNumClientes->firstWhere('numero_cliente', '!=', null);
-                                                $documento = $datos->obtenerDocumentosClientes(77, $empresa->id_empresa);
+                                                $empresa =
+                                                    $datos->certificado->dictamen->inspeccione->solicitud->empresa;
+                                                $idConstanciaFiscal = 76;
+                                                $cliente = $empresa?->empresaNumClientes->firstWhere(
+                                                    'numero_cliente',
+                                                    '!=',
+                                                    null,
+                                                );
+                                                $documento = $datos->obtenerDocumentosClientes(
+                                                    $idConstanciaFiscal,
+                                                    $empresa->id_empresa,
+                                                );
                                             @endphp
+
                                             <td>
-                                                {{-- Documento adjunto (PDF) --}}
+                                                {{-- Mostrar documento solo si es la constancia fiscal --}}
+
                                                 @if ($cliente && $documento)
-                                                    <a target="_blank" href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
-                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    <a target="_blank"
+                                                        href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
                                                 @else
-                                                    <span class="text-muted">Sin comprobante de domicilio</span><br>
+                                                    <span class="text-muted">Sin documento</span>
                                                 @endif
-
-                                                {{-- Datos del domicilio fiscal --}}
-
-                                                    {{ $empresa->domicilio_fiscal ?? 'N/A' }}<br>
-                                                    País: México<br>
-                                                    C.P: {{ $empresa->cp ?? 'N/A' }}
-
+                                                {{-- Mostrar dirección fiscal siempre --}}
+                                                {{ $empresa->domicilio_fiscal ?? 'N/A' }}
+                                                <br>País: México
+                                                <br>C.P: {{ $empresa->cp ?? 'N/A' }}
                                             </td>
-
                                         @elseif($pregunta->filtro == 'solicitud_certificado_exportac')
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
@@ -263,26 +269,26 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'pais')
                                             <td>C.P.:
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}
-                                                    País: México</td>
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}
+                                                País: México</td>
                                             {{--                                          @elseif($pregunta->filtro == 'pais_origen')
                                             <td><b>México</b></td>
                                         @elseif($pregunta->filtro == 'cp')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}</b></td> --}}
                                         @elseif($pregunta->filtro == 'destinatario')
                                             <td>
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'N/A' }}
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'N/A' }}
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'N/A' }}
-                                               </td>
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'N/A' }}
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'N/A' }}
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'N/A' }}
+                                            </td>
                                         @elseif($pregunta->filtro == 'direccion_destinatario')
                                             <td>
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'N/A' }}
-                                                </td>
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'N/A' }}
+                                            </td>
                                         @elseif($pregunta->filtro == 'pais_destinatario')
                                             <td>
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'N/A' }}
-                                                </td>
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'N/A' }}
+                                            </td>
                                         @elseif($pregunta->filtro == 'solicitud')
                                             <td>
                                                 <a target="_blank"
@@ -294,27 +300,27 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria_clase')
                                             <td>
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'N/A' }}<br>
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->clase->clase ?? 'N/A' }}
-                                                    @foreach ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
-                                                        <br>
-                                                        {{ $tipo->nombre }} <i>({{ $tipo->cientifico }})</i>
-                                                    @endforeach
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'N/A' }}<br>
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->clase->clase ?? 'N/A' }}
+                                                @foreach ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
                                                     <br>
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->marca->marca ?? 'N/A' }}
-                                                </td>
+                                                    {{ $tipo->nombre }} <i>({{ $tipo->cientifico }})</i>
+                                                @endforeach
+                                                <br>
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->marca->marca ?? 'N/A' }}
+                                            </td>
                                         @elseif($pregunta->filtro == 'volumen')
                                             <td>
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->presentacion ?? 'N/A' }}
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->unidad ?? '' }}
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->presentacion ?? 'N/A' }}
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->unidad ?? '' }}
 
-                                                </td>
+                                            </td>
                                         @elseif($pregunta->filtro == 'volumen_granel')
                                             <td>
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->volumen ?? 'N/A' }}
-                                                    L
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->volumen ?? 'N/A' }}
+                                                L
 
-                                                </td>
+                                            </td>
                                         @elseif($pregunta->filtro == 'cont_alc')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc ?? 'N/A' }}
                                             </td>
@@ -330,15 +336,15 @@
 
                                             <td>
 
-                                                    {{ $detalle['cantidad_botellas'] ?? 'N/A' }} Botellas<br>
-                                                    {{ $detalle['cantidad_cajas'] ?? 'N/A' }} Cajas
+                                                {{ $detalle['cantidad_botellas'] ?? 'N/A' }} Botellas<br>
+                                                {{ $detalle['cantidad_cajas'] ?? 'N/A' }} Cajas
 
                                             </td>
                                         @elseif($pregunta->filtro == 'lotes')
                                             <td>GRANEL:
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}<br>
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}<br>
                                                 ENVASADO:
-                                                    {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }}
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }}
                                             </td>
                                         @elseif($pregunta->filtro == 'lote_granel')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}
@@ -375,28 +381,28 @@
                                             @endphp
                                             <td>
 
-                                                    {{-- Aduana --}}
-                                                    {{ $caracteristicas['aduana_salida'] ?? 'N/A' }}<br>
+                                                {{-- Aduana --}}
+                                                {{ $caracteristicas['aduana_salida'] ?? 'N/A' }}<br>
 
-                                                    {{-- Fracción arancelaria --}}
-                                                    2208.90.05.00<br>
-                                                    {{-- Documentos adjuntos --}}
-                                                    @foreach ($documentos as $documento)
-                                                        <a target="_blank"
-                                                            href="/files/{{ $cliente_folder }}/{{ $documento->url }}">
-                                                            <i
-                                                                class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                        </a>
-                                                    @endforeach
-                                                    {{-- Número de factura proforma --}}
-                                                    {{ $caracteristicas['no_pedido'] ?? 'N/A' }}
+                                                {{-- Fracción arancelaria --}}
+                                                2208.90.05.00<br>
+                                                {{-- Documentos adjuntos --}}
+                                                @foreach ($documentos as $documento)
+                                                    <a target="_blank"
+                                                        href="/files/{{ $cliente_folder }}/{{ $documento->url }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                    </a>
+                                                @endforeach
+                                                {{-- Número de factura proforma --}}
+                                                {{ $caracteristicas['no_pedido'] ?? 'N/A' }}
 
                                             </td>
                                         @elseif($pregunta->filtro == 'domicilio_insta')
                                             <td>
 
-                                                    {{ $datos->certificado->dictamen->instalaciones->direccion_completa ??
-                                                        ($datos->certificado->dictamen->inspeccione->solicitud->instalaciones->direccion_completa ?? 'NA') }}
+                                                {{ $datos->certificado->dictamen->instalaciones->direccion_completa ??
+                                                    ($datos->certificado->dictamen->inspeccione->solicitud->instalaciones->direccion_completa ?? 'NA') }}
 
                                             </td>
                                         @elseif($pregunta->filtro == 'correo')
@@ -538,10 +544,10 @@
                                             @endphp
                                             <td>
 
-                                                    {{ $lote_granel->categoria->categoria ?? 'N/A' }}<br>
-                                                    {{ $lote_envasado->marca->marca ?? 'N/A' }}<br>
-                                                    {{ $lote_granel->clase->clase ?? 'N/A' }}<br>
-                                                    {{ $lote_granel->edad ?? 'N/A' }}
+                                                {{ $lote_granel->categoria->categoria ?? 'N/A' }}<br>
+                                                {{ $lote_envasado->marca->marca ?? 'N/A' }}<br>
+                                                {{ $lote_granel->clase->clase ?? 'N/A' }}<br>
+                                                {{ $lote_granel->edad ?? 'N/A' }}
 
                                             </td>
                                         @elseif($pregunta->filtro == 'ingredientes')
@@ -559,25 +565,25 @@
                                         @elseif($pregunta->filtro == 'tipo_maguey')
                                             <td>
 
-                                                    @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
-                                                        {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
-                                                    @empty
-                                                        N/A
-                                                    @endforelse
+                                                @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
+                                                    {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
+                                                @empty
+                                                    N/A
+                                                @endforelse
 
                                             </td>
                                         @elseif($pregunta->filtro == 'responsable')
                                             <td>{{ $datos->certificado->firmante->name ?? 'N/A' }}</td>
                                         @elseif($pregunta->filtro == 'direccion_cidam')
                                             <td>Kilómetro 8. Antigua carretera a Pátzcuaro, S/N.
-                                                    Col. Otra no especificada en el catálogo.
-                                                    C.P. 58341. Morelia, Michoacán. México.</td>
+                                                Col. Otra no especificada en el catálogo.
+                                                C.P. 58341. Morelia, Michoacán. México.</td>
                                         @elseif($pregunta->filtro == 'alcance')
                                             <td> NOM070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones.</td>
                                         @elseif($pregunta->filtro == 'cliente')
                                             <td>
-                                                    {{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->filter(fn($cliente) => !empty($cliente->numero_cliente))->first()?->numero_cliente ?? 'Sin asignar' }}
-                                                </td>
+                                                {{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->filter(fn($cliente) => !empty($cliente->numero_cliente))->first()?->numero_cliente ?? 'Sin asignar' }}
+                                            </td>
                                         @elseif($pregunta->filtro == 'acta')
                                             <td>
                                                 @if ($datos->obtenerDocumentoActa($pregunta->id_documento, $datos->certificado->dictamen->inspeccione->id_solicitud))
@@ -675,15 +681,21 @@
                 </div>
             </div>
             <!-- <div class="col-md-4">
-                                                                <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" src="{{ $url }}" frameborder="0"
-                                                                    style="border-radius: 10px; overflow: hidden;">
-                                                                </iframe>
-                                                            </div>-->
+                                                                    <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" src="{{ $url }}" frameborder="0"
+                                                                        style="border-radius: 10px; overflow: hidden;">
+                                                                    </iframe>
+                                                                </div>-->
 
             <div class="d-flex justify-content-center mt-3">
-                <button type="submit" class="btn btn-primary me-2 waves-effect waves-light"><i class="ri-add-line me-1"></i>
+                <button disabled class="btn btn-primary me-1 d-none" type="button" id="btnSpinnerRevConse">
+                    <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                    Registrando...
+                </button>
+                <button type="submit" class="btn btn-primary me-2 waves-effect waves-light" id="btnAddRevConse"><i
+                        class="ri-add-line me-1"></i>
                     Registrar {{ $datos->numero_revision }}ª revisión</button>
-                <a href="/revision/consejo" class="btn btn-danger waves-effect"><i class="ri-close-line me-1"></i>Cancelar</a>
+                <a href="/revision/consejo" class="btn btn-danger waves-effect"><i
+                        class="ri-close-line me-1"></i>Cancelar</a>
             </div>
 
         </div>
