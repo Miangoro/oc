@@ -135,6 +135,12 @@ class PrediosController extends Controller
                     ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
                         $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
                     })
+                    ->orWhereHas('solicitudes', function ($q) use ($search) {
+                        $q->where('folio', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('solicitudes.inspeccion', function ($q) use ($search) {
+                        $q->where('num_servicio', 'LIKE', "%{$search}%");
+                    })
                     ->orWhere('num_predio', 'LIKE', "%{$search}%")
                     ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
                     ->orWhere('ubicacion_predio', 'LIKE', "%{$search}%")
@@ -158,6 +164,12 @@ class PrediosController extends Controller
                     })
                     ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
                         $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('solicitudes', function ($q) use ($search) {
+                        $q->where('folio', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('solicitudes.inspeccion', function ($q) use ($search) {
+                        $q->where('num_servicio', 'LIKE', "%{$search}%");
                     })
                     ->orWhere('num_predio', 'LIKE', "%{$search}%")
                     ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
