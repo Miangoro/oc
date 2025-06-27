@@ -31,7 +31,9 @@
                                     <div class="form-floating form-floating-outline mb-6">
                                         <select id="id_empresa_solicitud_exportacion" onchange="cargarDatosCliente();"
                                             name="id_empresa" class="select2 form-select">
-                                            <option value="" disabled selected>Selecciona cliente</option>
+                                              @if ($tipo_usuario != 3)
+                                                    <option value="" disabled selected>Selecciona cliente</option>
+                                             @endif
                                             @foreach ($empresas as $empresa)
                                                 <option value="{{ $empresa->id_empresa }}">
                                                     {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}

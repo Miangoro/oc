@@ -51,18 +51,17 @@ class solicitudesController extends Controller
        // FILTRO DE EMPRESAS SEGÚN EL USUARIO
         //if (auth()->user()->tipo == 3) {
         if (Auth::check() && Auth::user()->tipo == 3) {
-            // Solo la empresa del usuario
             $empresas = empresa::with('empresaNumClientes')
                 ->where('tipo', 2)
-                //->where('id_empresa', auth()->user()->empresa?->id_empresa)
                 ->where('id_empresa', Auth::user()->empresa?->id_empresa)
                 ->get();
         } else {
-            // Todas las empresas tipo 2
             $empresas = empresa::with('empresaNumClientes')
                 ->where('tipo', 2)
                 ->get();
         }
+
+        $tipo_usuario =  Auth::user()->tipo;
 
         $organismos = organismos::all(); // Obtener todos los estados
         $LotesGranel = lotesGranel::all();
@@ -74,7 +73,7 @@ class solicitudesController extends Controller
 
 
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
-        return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas', 'aduanas'));
+        return view('solicitudes.find_solicitudes_view', compact('tipo_usuario','instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas', 'aduanas'));
     }
     public function findCertificadosExportacion()
     {
