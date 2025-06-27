@@ -31,7 +31,9 @@ class Certificado_GranelController extends Controller
     public function UserManagement()
     {
         $certificados = CertificadosGranel::all();
-        $dictamenes = Dictamen_Granel::where('estatus','!=',1)
+        $dictamenes = Dictamen_Granel::with('inspeccione.solicitud')
+            ->where('tipo','!=',2)
+            ->where('estatus','!=',1)
             ->orderBy('id_dictamen', 'desc')
             ->get();
         $users = User::where('tipo',1)->get();

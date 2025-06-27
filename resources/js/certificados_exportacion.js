@@ -879,12 +879,26 @@ $(document).ready(function () {
         url: '/editCerExp/' + id_certificado + '/edit',
         method: 'GET',
         success: function (datos) {
+
+
           
+const $select = $('#edit_id_dictamen');
+// Eliminar opciones anteriores agregadas dinámicamente, pero dejar los disponibles
+$select.find('option[data-dinamico="true"]').remove();
+
+// Si el dictamen guardado no está en los disponibles, agregarlo temporalmente
+if (!$select.find(`option[value="${datos.id_dictamen}"]`).length) {
+    const texto = `${datos.num_dictamen} | ${datos.folio ?? 'Sin folio'}`;
+    $select.append(`<option value="${datos.id_dictamen}" selected data-dinamico="true">${texto}</option>`);
+} else {
+    $select.val(datos.id_dictamen).trigger('change');
+}
+
+
           // Asignar valores a los campos del formulario
-          //$('#edit_id_certificado').val(datos.id_certificado).trigger('change');
-          $('#edit_num_certificado').val(datos.num_certificado);
-        window.esEdicion = true;// Activar bandera de edición antes de cambiar el dictamen
+          window.esEdicion = true;// Activar bandera de edición antes de cambiar el dictamen
           $('#edit_id_dictamen').val(datos.id_dictamen).trigger('change');
+          $('#edit_num_certificado').val(datos.num_certificado);
           $('#edit_fecha_emision').val(datos.fecha_emision);
           $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
           $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();

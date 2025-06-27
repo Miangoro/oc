@@ -15,9 +15,7 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class="form-select select2" name="id_dictamen" data-placeholder="Selecciona un dictamen">
                                     <option value="" disabled selected>NULL</option>
-                                    @foreach ($dictamenes as $dic)
-                                        <option value="{{ $dic->id_dictamen }}">{{ $dic->num_dictamen }} | {{ $dic->inspeccione->solicitud->folio }}</option>
-                                    @endforeach
+                                    
                                 </select>
                                 <label for="">No. de dictamen</label>
                             </div>
