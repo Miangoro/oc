@@ -5301,5 +5301,10 @@ $(function () {
 });
 
 
+  document.getElementById('addPedidoExportacion').addEventListener('shown.bs.modal', function () {
+    cargarDatosCliente();
+});
+
+
 
 
