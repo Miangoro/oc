@@ -1086,7 +1086,7 @@ $(function () {
               if (response.caracteristicas) {
                 modal.find('#tipo_solicitud_edit').val(response.caracteristicas.tipo_solicitud).trigger('change');
                 modal.find('.direccion_id').val(response.caracteristicas.direccion_destinatario);
-                modal.find('.aduana_salida').val(response.caracteristicas.aduana_salida);
+                modal.find('.aduana_salida').val(response.caracteristicas.aduana_salida).trigger('change');
                 modal.find('.no_pedido').val(response.caracteristicas.no_pedido);
                 modal.find('.instalacion_envasado_id').val(response.caracteristicas.id_instalacion_envasado);
                 modal.find('#direccion_destinatario_ex_edit').val(response.caracteristicas.id_instalacion_envasado).trigger('change');

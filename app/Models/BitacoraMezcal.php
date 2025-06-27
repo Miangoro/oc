@@ -18,7 +18,7 @@ class BitacoraMezcal extends Model
         'id_lote_granel',
         'id_instalacion',
         'operacion_adicional',
-
+        'tipo_operacion',
         //INVENTARIO INICIAL
         'volumen_inicial',
         'alcohol_inicial',
