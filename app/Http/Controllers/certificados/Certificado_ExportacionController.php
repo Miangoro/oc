@@ -37,24 +37,13 @@ class Certificado_ExportacionController extends Controller
     public function UserManagement()
     {
         //$certificado = Certificado_Exportacion::all(); // Obtener todos los datos
-        // Obtener los dictamenes que ya están en certificados
-        /*$dictamenesConCertificado = Certificado_Exportacion::pluck('id_dictamen');
         // Obtener solo los dictámenes que NO tienen certificado
         $dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')
-            ->whereNotIn('id_dictamen', $dictamenesConCertificado)
-            ->where('estatus', '!=', 1)
-            ->orderBy('id_dictamen', 'desc')
-            ->get();*/
-        /*$dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')
             ->where('estatus', '!=', 1)
             ->whereDoesntHave('certificado') // Solo los dictámenes sin certificado
             ->orderBy('id_dictamen', 'desc')
-            ->get();*/
-        $dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')
-            ->where('estatus', '!=', 1)
-            ->orderBy('id_dictamen', 'desc')
             ->get();
-
+ 
         $users = User::where('tipo',1)->get(); //Solo Prrsonal OC
         $empresa = empresa::where('tipo', 2)->get();
         $revisores = Revisor::all();
@@ -388,7 +377,8 @@ public function destroy($id_certificado)
 public function edit($id_certificado)
 {
     try {
-        $editar = Certificado_Exportacion::findOrFail($id_certificado);
+        //$editar = Certificado_Exportacion::findOrFail($id_certificado);
+        $editar = Certificado_Exportacion::with('dictamen.inspeccione.solicitud')->findOrFail($id_certificado);
 
         return response()->json([
             'id_certificado' => $editar->id_certificado,
@@ -400,6 +390,10 @@ public function edit($id_certificado)
 
             'id_hologramas' => $editar->id_hologramas ?? '{}',
             'old_hologramas' => $editar->old_hologramas ?? '{}',
+
+            // SIN tener que guardarlo en base de datos
+            'folio' => $editar->dictamen->inspeccione->solicitud->folio ?? '',
+            'num_dictamen' => $editar->dictamen->num_dictamen ?? ''
         ]);
     } catch (\Exception $e) {
         Log::error('Error al obtener', [
