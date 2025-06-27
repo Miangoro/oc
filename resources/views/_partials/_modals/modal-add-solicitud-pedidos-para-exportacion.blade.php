@@ -31,9 +31,9 @@
                                     <div class="form-floating form-floating-outline mb-6">
                                         <select id="id_empresa_solicitud_exportacion" onchange="cargarDatosCliente();"
                                             name="id_empresa" class="select2 form-select">
-                                              @if ($tipo_usuario != 3)
-                                                    <option value="" disabled selected>Selecciona cliente</option>
-                                             @endif
+                                            @if ($tipo_usuario != 3)
+                                                <option value="" disabled selected>Selecciona cliente</option>
+                                            @endif
                                             @foreach ($empresas as $empresa)
                                                 <option value="{{ $empresa->id_empresa }}">
                                                     {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
@@ -243,15 +243,14 @@
                                 <div class="col-md-4">
                                     <div class="form-floating form-floating-outline mb-2">
                                         <input id="cant_cajas_exportac2" type="number" class="form-control"
-                                             placeholder="Cantidad de cajas">
+                                            placeholder="Cantidad de cajas">
                                         <label for="cantidad_cajas">Cantidad de cajas</label>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-floating form-floating-outline mb-2">
                                         <input id="presentacion_exportac2" type="text"
-                                            class="form-control presentacion"
-                                            placeholder="Ej. 750ml">
+                                            class="form-control presentacion" placeholder="Ej. 750ml">
                                         <label for="presentacion">Presentación</label>
                                     </div>
                                 </div>
@@ -298,6 +297,11 @@
                                 </div>
                             </div>
                             <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+                                <button disabled class="btn btn-primary me-1 d-none" type="button"
+                                    id="btnSpinnerPedidosExportacion">
+                                    <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                                    Registrando...
+                                </button>
                                 <button type="submit" class="btn btn-primary" id="btnAddExport"><i
                                         class="ri-add-line me-1"></i>
                                     Registrar</button>

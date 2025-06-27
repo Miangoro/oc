@@ -2497,20 +2497,6 @@ $(function () {
     const formDictaminacion = document.getElementById('editPedidoExportacionForm');
     const fvDictaminacion = FormValidation.formValidation(formDictaminacion, {
       fields: {
-        'cantidad_botellas[0]': {
-          validators: {
-            notEmpty: {
-              message: 'Por favor introduzca el número de botellas'
-            }
-          }
-        },
-        'cantidad_cajas[0]': {
-          validators: {
-            notEmpty: {
-              message: 'Por favor introduzca el número de cajas'
-            }
-          }
-        },
         fecha_visita: {
           validators: {
             notEmpty: {
@@ -4413,22 +4399,22 @@ $(function () {
             }
           }
         },
+        /*
 
-
-        'cantidad_botellas[0]': {
-          validators: {
-            notEmpty: {
-              message: 'Por favor introduzca el número de botellas'
-            }
-          }
-        },
-        'cantidad_cajas[0]': {
-          validators: {
-            notEmpty: {
-              message: 'Por favor introduzca el número de cajas'
-            }
-          }
-        },
+                'cantidad_botellas[0]': {
+                  validators: {
+                    notEmpty: {
+                      message: 'Por favor introduzca el número de botellas'
+                    }
+                  }
+                },
+                'cantidad_cajas[0]': {
+                  validators: {
+                    notEmpty: {
+                      message: 'Por favor introduzca el número de cajas'
+                    }
+                  }
+                }, */
         fecha_visita: {
           validators: {
             notEmpty: {
@@ -4486,15 +4472,11 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
+
       // Recolectar el resto de los datos del formulario
       const formData = new FormData(addPedidoExportacionForm);
-      $('#btnAddExport').prop('disabled', true);
-      $('#btnAddExport').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
-      setTimeout(function () {
-        $('#btnAddExport').prop('disabled', false);
-        $('#btnAddExport').html('<i class="ri-add-line"></i> Registrar');
-      }, 3000);
-      // Construir las características como un JSON completo
+      $('#btnAddExport').addClass('d-none');
+      $('#btnSpinnerPedidosExportacion').removeClass('d-none');
       const caracteristicas = {
         tipo_solicitud: $('#tipo_solicitud').val(),
         direccion_destinatario: $('#direccion_destinatario_ex').val(),
@@ -4528,6 +4510,8 @@ $(function () {
         contentType: false,
         success: function (response) {
           // Reiniciar el formulario
+          $('#btnSpinnerPedidosExportacion').addClass('d-none');
+          $('#btnAddExport').removeClass('d-none');
           $('#addPedidoExportacionForm')[0].reset();
           $('.select2').val(null).trigger('change');
           $('#sections-container .card').not(':first').remove();
@@ -4545,16 +4529,40 @@ $(function () {
             }
           });
         },
-        error: function () {
-          // Mostrar alerta de error
+        error: function (xhr, status, error) {
+          let mensaje = 'Hubo un error al registrar el pedido de exportación.';
+
+          if (xhr.responseJSON) {
+            // Si hay errores de validación
+            if (xhr.responseJSON.errors) {
+              // Construir mensaje concatenando todos los errores
+              const errores = xhr.responseJSON.errors;
+              mensaje = Object.values(errores)
+                .flat() // en caso que haya arrays de mensajes
+                .join('\n'); // separa por salto de línea
+            } else if (xhr.responseJSON.message) {
+              mensaje = xhr.responseJSON.message;
+            }
+          } else if (xhr.responseText) {
+            try {
+              const json = JSON.parse(xhr.responseText);
+              if (json.message) mensaje = json.message;
+            } catch (e) {
+              mensaje = xhr.responseText;
+            }
+          }
+
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Hubo un error al registrar el pedido de exportación.',
+            html: mensaje.replace(/\n/g, '<br>'), // reemplaza saltos de línea por <br>
             customClass: {
               confirmButton: 'btn btn-danger'
             }
           });
+
+          $('#btnSpinnerPedidosExportacion').addClass('d-none');
+          $('#btnAddExport').removeClass('d-none');
         }
       });
     });
@@ -5301,8 +5309,8 @@ $(function () {
 });
 
 
-  document.getElementById('addPedidoExportacion').addEventListener('shown.bs.modal', function () {
-    cargarDatosCliente();
+document.getElementById('addPedidoExportacion').addEventListener('shown.bs.modal', function () {
+  cargarDatosCliente();
 });
 
 

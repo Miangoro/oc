@@ -38,7 +38,7 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <div class="form-floating form-floating-outline mb-4">
+                            <div class="form-floating form-floating-outline">
                                 <select id="tipo_op" name="tipo_op" class=" form-select"
                                     data-error-message="Por favor selecciona el tipo de operación">
                                     <option value="" disabled selected>Selecciona el tipo de operación</option>

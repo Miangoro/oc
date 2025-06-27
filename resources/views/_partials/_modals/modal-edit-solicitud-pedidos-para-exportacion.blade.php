@@ -175,7 +175,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-floating form-floating-outline mb-4">
-                                                <input type="number" class="form-control" id="cantidad_cajas_edit0"
+                                                <input type="number" class="form-control cantidad_cajas_edit0" id="cantidad_cajas_edit0"
                                                     name="cantidad_cajas[0]" placeholder="Cantidad de cajas">
                                                 <label for="cantidad_cajas">Cantidad de cajas</label>
                                             </div>

@@ -1566,11 +1566,11 @@ class solicitudesController extends Controller
                     'factura_proforma' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
                     'factura_proforma_cont' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
                     /*  */
-                    'lote_envasado' => 'array',  // Asegurarse de que los lotes sean arrays
-                    'cantidad_botellas' => 'nullable|array',  // Asegurarse de que las cantidades sean arrays
-                    'cantidad_cajas' => 'nullable|array',  // Asegurarse de que las cantidades sean arrays
-                    'presentacion' => 'nullable|array',  // Asegurarse de que las presentaciones sean arrays
-                    'id_etiqueta' => 'nullable|integer',
+                    'lote_envasado' => 'required|array',  // Asegurarse de que los lotes sean arrays
+                    'cantidad_botellas' => 'required|array',  // Asegurarse de que las cantidades sean arrays
+                    'cantidad_cajas' => 'required|array',  // Asegurarse de que las cantidades sean arrays
+                    'presentacion' => 'required|array',  // Asegurarse de que las presentaciones sean arrays
+                    'id_etiqueta' => 'required|integer',
                 ]);
 
                 // Procesar características
@@ -1816,11 +1816,22 @@ class solicitudesController extends Controller
             'factura_proforma' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
             'factura_proforma_cont' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
             /*  */
-            'lote_envasado' => 'array',  // Asegurarse de que los lotes sean arrays
-            'cantidad_botellas' => 'nullable|array',
-            'cantidad_cajas' => 'nullable|array',
-            'presentacion' => 'nullable|array',
-            'id_etiqueta' => 'nullable|integer',
+            'lote_envasado' => 'required|array',
+
+            'cantidad_botellas' => 'required|array|min:1',
+            'cantidad_botellas.*' => 'required|integer|min:1',
+
+            'cantidad_cajas' => 'required|array|min:1',
+            'cantidad_cajas.*' => 'required|integer|min:1',
+
+            'presentacion' => 'required|array|min:1',
+            'presentacion.*' => 'required|string|',
+
+/*             'lote_envasado' => 'array',  */ // Asegurarse de que los lotes sean arrays
+/*             'cantidad_botellas' => 'required|array',
+            'cantidad_cajas' => 'required|array',
+            'presentacion' => 'required|array', */
+            'id_etiqueta' => 'required|integer',
             'cont_alc' => 'array',
             'cont_alc.*' => 'nullable|numeric',
         ]);

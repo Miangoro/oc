@@ -157,7 +157,10 @@ $(function () {
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' +
-        '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
+        '<"d-flex flex-wrap justify-content-between align-items-center w-100 px-3 pt-2"' +
+        '<"filtrosBitacora d-flex gap-2 align-items-center" >' +  // ← Aquí irán los selects
+        '<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-3"lB>' +
+        '>' +
         '>t' +
         '<"row mx-1"' +
         '<"col-sm-12 col-md-6"i>' +
@@ -179,15 +182,27 @@ $(function () {
 
       // Opciones Exportar Documentos
       buttons: [
-/*         {
-          text: '<i class="ri-file-excel-2-fill ri-16px me-0 me-md-2 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">seleccione la empresa</span>',
-          className: 'btn btn-info waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4 mt-md-0',
-          attr: {
-            'data-bs-toggle': 'modal',
-            'data-bs-dismiss': 'modal',
-            'data-bs-target': '#'
+        {
+          text:
+            '<select id="filtroEmpresa" class="form-select select2" style="min-width: 280px;">' +
+            '<option value="">-- Todas las Empresas --</option>' +
+            opcionesEmpresas +
+            '</select>',
+          className: 'btn p-0 me-2 btn-outline-primary',
+          init: function (api, node, config) {
+            $(node).find('select').select2();
           }
-        }, */
+        },
+        {
+          text:
+            '<select id="filtroInstalacion" class="form-select select2" style="min-width: 280px;">' +
+            '<option value="">-- Todas las Instalaciones --</option>' +
+            '</select>',
+          className: 'btn p-0 me-2 btn-outline-primary',
+          init: function (api, node, config) {
+            $(node).find('select').select2();
+          }
+        },
         {
           text: '<i class="ri-eye-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Ver Bitácora</span>',
           className: 'btn btn-info waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4 mt-md-0',
@@ -196,154 +211,6 @@ $(function () {
           }
         },
         {
-          extend: 'collection',
-          className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-          text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-          buttons: [
-            {
-              extend: 'print',
-              title: 'Certificados Instalaciones',
-              text: '<i class="ri-printer-line me-1" ></i>Print',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7],
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              },
-              customize: function (win) {
-                $(win.document.body)
-                  .css('color', config.colors.headingColor)
-                  .css('border-color', config.colors.borderColor)
-                  .css('background-color', config.colors.body);
-                $(win.document.body)
-                  .find('table')
-                  .addClass('compact')
-                  .css('color', 'inherit')
-                  .css('border-color', 'inherit')
-                  .css('background-color', 'inherit');
-              }
-            },
-            {
-              extend: 'csv',
-              title: 'Certificados Instalaciones',
-              text: '<i class="ri-file-text-line me-1" ></i>Csv',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7],
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'excel',
-              title: 'Certificados Instalaciones',
-              text: '<i class="ri-file-excel-line me-1"></i>Excel',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7],
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'pdf',
-              title: 'Certificados Instalaciones',
-              text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7],
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'copy',
-              title: 'Certificados Instalaciones',
-              text: '<i class="ri-file-copy-line me-1"></i>Copy',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7],
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            }
-          ]
-        },
-/*         {
-          text: '<i class="ri-file-excel-2-fill ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
-          className: 'btn btn-info waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4  mt-md-0',
-          attr: {
-            'data-bs-toggle': 'modal',
-            'data-bs-dismiss': 'modal',
-            'data-bs-target': '#'
-          }
-        }, */
-        {
           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Bitácora</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
@@ -351,6 +218,7 @@ $(function () {
             'data-bs-target': '#RegistrarBitacoraMezcal'
           }
         }
+
       ],
 
       responsive: {
@@ -358,7 +226,7 @@ $(function () {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de Certificado de Instalaciones: ' + data['num_certificado'];
+              return 'Detalles de Certificado de Instalaciones: ' + data['nombre_lote'];
             }
           }),
           type: 'column',
@@ -407,12 +275,50 @@ $(function () {
 
   initializeSelect2(select2Elements);
 
-$('#selectEmpresa').on('change', function () {
-  const id = $(this).val();
-  if (id) {
-    $('#modalEmpresa').modal('show'); // o cualquier lógica que tú quieras
-  }
+  $('#selectEmpresa').on('change', function () {
+    const id = $(this).val();
+    if (id) {
+      $('#modalEmpresa').modal('show'); // o cualquier lógica que tú quieras
+    }
+  });
+
+$(document).on('select2:select', '#filtroEmpresa', function (e) {
+  const selectedText = $(this).find("option:selected").text();
+  $('#filtroEmpresa').next('.select2-container').find('.select2-selection__rendered').attr('title', selectedText);
 });
+
+
+  $(document).ready(function () {
+    $('#filtroEmpresa').on('change', function () {
+      let empresaId = $(this).val();
+
+      if (empresaId) {
+        $.ajax({
+          url: '/getDatos/' + empresaId,
+          method: 'GET',
+          success: function (response) {
+            let opciones = '<option value="">-- Todas las Instalaciones --</option>';
+
+            if (response.instalaciones.length > 0) {
+              response.instalaciones.forEach(function (inst) {
+                let tipoLimpio = limpiarTipo(inst.tipo); // función tuya, asumo que limpia el texto
+                opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
+              });
+            } else {
+              opciones += '<option value="">Sin instalaciones registradas</option>';
+            }
+
+            $('#filtroInstalacion').html(opciones).trigger('change'); // actualiza Select2 también
+          },
+          error: function () {
+            $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+          }
+        });
+      } else {
+        $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
+      }
+    });
+  });
 
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
@@ -907,39 +813,6 @@ $('#selectEmpresa').on('change', function () {
   });
 
 
-
-
-  $(document).ready(function () {
-  $('#filtroEmpresa').on('change', function () {
-    let empresaId = $(this).val();
-
-    if (empresaId) {
-      $.ajax({
-        url: '/getDatos/' + empresaId,
-        method: 'GET',
-        success: function (response) {
-          let opciones = '<option value="">-- Todas las Instalaciones --</option>';
-
-          if (response.instalaciones.length > 0) {
-            response.instalaciones.forEach(function (inst) {
-              let tipoLimpio = limpiarTipo(inst.tipo); // función tuya, asumo que limpia el texto
-              opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
-            });
-          } else {
-            opciones += '<option value="">Sin instalaciones registradas</option>';
-          }
-
-          $('#filtroInstalacion').html(opciones).trigger('change'); // actualiza Select2 también
-        },
-        error: function () {
-          $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
-        }
-      });
-    } else {
-      $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
-    }
-  });
-});
 
   //end
 });
