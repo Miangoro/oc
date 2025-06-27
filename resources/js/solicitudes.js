@@ -2549,7 +2549,7 @@ $(function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       $('#btnEditExport').addClass('d-none');
-      $('#editPedidoExportacionForm').removeClass('d-none');
+      $('#btnSpinnerPedidosExportacionEdit').removeClass('d-none');
       var formData = new FormData(formDictaminacion);
 
       // Construir las características como un JSON completo
@@ -2584,7 +2584,7 @@ $(function () {
         processData: false,
         contentType: false,
         success: function (response) {
-          $('#editPedidoExportacionForm').addClass('d-none');
+          $('#btnSpinnerPedidosExportacionEdit').addClass('d-none');
           $('#btnEditExport').removeClass('d-none');
           $('#editPedidoExportacion').modal('hide');
           $('#editPedidoExportacionForm')[0].reset();
@@ -2612,7 +2612,7 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
-          $('#editPedidoExportacionForm').addClass('d-none');
+          $('#btnSpinnerPedidosExportacionEdit').addClass('d-none');
           $('#btnEditExport').removeClass('d-none');
         }
       });
