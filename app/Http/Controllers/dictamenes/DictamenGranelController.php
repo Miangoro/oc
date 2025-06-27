@@ -186,7 +186,9 @@ public function index(Request $request)
             $nestedData['folio_fq'] = $dictamen->lote_granel->folio_fq ?? 'N/A';
 
 
-            $caracteristicas = json_decode($dictamen->inspeccione->solicitud->caracteristicas, true);
+            $caracteristicasJson = $dictamen->inspeccione?->solicitud?->caracteristicas;
+            $caracteristicas = $caracteristicasJson ? json_decode($caracteristicasJson, true) : [];
+
             $idLoteGranel = $caracteristicas['id_lote_granel'] ?? null;
     $loteGranel = null;
     $nombreLote = 'No encontrado';
