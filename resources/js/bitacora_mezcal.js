@@ -907,6 +907,40 @@ $('#selectEmpresa').on('change', function () {
   });
 
 
+
+
+  $(document).ready(function () {
+  $('#filtroEmpresa').on('change', function () {
+    let empresaId = $(this).val();
+
+    if (empresaId) {
+      $.ajax({
+        url: '/getDatos/' + empresaId,
+        method: 'GET',
+        success: function (response) {
+          let opciones = '<option value="">-- Todas las Instalaciones --</option>';
+
+          if (response.instalaciones.length > 0) {
+            response.instalaciones.forEach(function (inst) {
+              let tipoLimpio = limpiarTipo(inst.tipo); // función tuya, asumo que limpia el texto
+              opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
+            });
+          } else {
+            opciones += '<option value="">Sin instalaciones registradas</option>';
+          }
+
+          $('#filtroInstalacion').html(opciones).trigger('change'); // actualiza Select2 también
+        },
+        error: function () {
+          $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+        }
+      });
+    } else {
+      $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
+    }
+  });
+});
+
   //end
 });
 
