@@ -33,8 +33,8 @@ class Certificado_GranelController extends Controller
         $certificados = CertificadosGranel::all();
         $dictamenes = Dictamen_Granel::with('inspeccione.solicitud')
             ->whereHas('inspeccione.solicitud', function ($query) {
-        $query->where('tipo', '!=', 2);
-    })
+            $query->where('id_tipo', '!=', 2);
+            })
             ->where('estatus','!=',1)
             ->orderBy('id_dictamen', 'desc')
             ->get();
