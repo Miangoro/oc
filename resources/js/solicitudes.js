@@ -2548,14 +2548,10 @@ $(function () {
       }
     }).on('core.form.valid', function (e) {
       // Validar el formulario
+      $('#btnEditExport').addClass('d-none');
+      $('editPedidoExportacionForm').removeClass('d-none');
       var formData = new FormData(formDictaminacion);
-      $('#btnEditExport').prop('disabled', true);
 
-      $('#btnEditExport').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
-      setTimeout(function () {
-        $('#btnEditExport').prop('disabled', false);
-        $('#btnEditExport').html('<i class="ri-add-line"></i> Editar');
-      }, 3000);
       // Construir las características como un JSON completo
       const caracteristicas = {
         tipo_solicitud: $('#tipo_solicitud_edit').val(),
@@ -2588,6 +2584,8 @@ $(function () {
         processData: false,
         contentType: false,
         success: function (response) {
+          $('editPedidoExportacionForm').addClass('d-none');
+          $('#btnEditExport').removeClass('d-none');
           $('#editPedidoExportacion').modal('hide');
           $('#editPedidoExportacionForm')[0].reset();
           $('.select2').val(null).trigger('change');
@@ -2614,6 +2612,8 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('editPedidoExportacionForm').addClass('d-none');
+          $('#btnEditExport').removeClass('d-none');
         }
       });
     });

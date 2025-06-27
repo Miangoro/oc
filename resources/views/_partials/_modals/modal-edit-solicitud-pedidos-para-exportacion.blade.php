@@ -175,8 +175,9 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-floating form-floating-outline mb-4">
-                                                <input type="number" class="form-control cantidad_cajas_edit0" id="cantidad_cajas_edit0"
-                                                    name="cantidad_cajas[0]" placeholder="Cantidad de cajas">
+                                                <input type="number" class="form-control cantidad_cajas_edit0"
+                                                    id="cantidad_cajas_edit0" name="cantidad_cajas[0]"
+                                                    placeholder="Cantidad de cajas">
                                                 <label for="cantidad_cajas">Cantidad de cajas</label>
                                             </div>
                                         </div>
@@ -242,8 +243,8 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-floating form-floating-outline mb-2">
-                                        <input type="number" class="form-control cantidad_cajas_edit0" id="2cantidad_cajas_edit0"
-                                            placeholder="Cantidad de cajas">
+                                        <input type="number" class="form-control cantidad_cajas_edit0"
+                                            id="2cantidad_cajas_edit0" placeholder="Cantidad de cajas">
                                         <label for="cantidad_cajas">Cantidad de cajas</label>
                                     </div>
                                 </div>
@@ -303,6 +304,11 @@
                             <input type="hidden" class="lote_envasado_id">
                             <input type="hidden" class="etiqueta_id">
                             <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+                                <button disabled class="btn btn-primary me-1 d-none" type="button"
+                                    id="btnSpinnerPedidosExportacionEdit">
+                                    <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                                    Actualizando...
+                                </button>
                                 <button type="submit" class="btn btn-primary" id="btnEditExport"><i
                                         class="ri-pencil-fill me-1"></i> Editar</button>
                                 <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
