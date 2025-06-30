@@ -153,14 +153,21 @@ public function index(Request $request)
     if ($orderColumn === 'num_certificado') {
         $query->orderByRaw("
             CASE
-                WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
+                WHEN num_certificado LIKE 'CIDAM C-EXP%' THEN 0
                 ELSE 1
             END ASC,
             CAST(
                 SUBSTRING_INDEX(
-                    SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14),
+                    SUBSTRING(
+                        num_certificado,
+                        LOCATE('CIDAM C-EXP', num_certificado) + 11,
+                        LOCATE('-', SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP', num_certificado) + 11)) - 1
+                    ),
                     '-', 1
                 ) AS UNSIGNED
+            ) DESC,
+            CAST(
+                SUBSTRING_INDEX(num_certificado, '-', -1) AS UNSIGNED
             ) $orderDirection
         ");
     } elseif (!empty($orderColumn)) {
