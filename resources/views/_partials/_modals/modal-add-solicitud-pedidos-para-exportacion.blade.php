@@ -506,10 +506,11 @@
                                 ${lote.certificado_granel ? lote.certificado_granel.num_certificado : 'Sin definir'}
                                 </td>
                                 <td>
-                                  <input type="text" class="form-control form-control-sm" name="folio_fq[]" autocomplete="off" value="${lote.folio_fq || ''}" />
+                                  <input type="text" class="form-control d-none form-control-sm" name="lotes_granel[0][id_lote_granel]" autocomplete="off" value="${lote.id_lote_granel || ''}" />
+                                  <input type="text" class="form-control form-control-sm" name="lotes_granel[0][folio_fq]" autocomplete="off" value="${lote.folio_fq || ''}" />
                                 </td>
                                 <td>
-                                  <input type="text" class="form-control form-control-sm" name="cont_alc[]" autocomplete="off" value="${lote.cont_alc || ''}" />
+                                  <input type="text" class="form-control form-control-sm" name="lotes_granel[0][cont_alc]" autocomplete="off" value="${lote.cont_alc || ''}" />
                                 </td>
                                <td>
                                 ${lote.categoria.categoria || 'N/A'}<br>
@@ -711,8 +712,13 @@
                                 <b>Certificado: </b>
                                 ${lote.certificado_granel ? lote.certificado_granel.num_certificado : 'Sin definir'}
                                 </td>
-                                  <td>${lote.folio_fq || ''}</td>
-                                  <td>${lote.cont_alc || ''}</td>
+                                <td>
+                                  <input type="text" class="form-control d-none form-control-sm" name="lotes_granel[${sectionCount}][id_lote_granel]" autocomplete="off" value="${lote.id_lote_granel || ''}" />
+                                  <input type="text" class="form-control form-control-sm" name="lotes_granel[${sectionCount}][folio_fq]" autocomplete="off" value="${lote.folio_fq || ''}" />
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control form-control-sm" name="lotes_granel[${sectionCount}][cont_alc]" autocomplete="off" value="${lote.cont_alc || ''}" />
+                                </td>
                                   <td>
                                       ${lote.categoria?.categoria || 'N/A'}<br>
                                       ${lote.clase?.clase || 'N/A'}<br>
