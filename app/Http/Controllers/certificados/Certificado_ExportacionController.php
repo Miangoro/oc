@@ -41,6 +41,7 @@ class Certificado_ExportacionController extends Controller
         $dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')
             ->where('estatus', '!=', 1)
             ->whereDoesntHave('certificado') // Solo los dictámenes sin certificado
+            ->where('fecha_emision','>','2024-12-31')
             ->orderBy('id_dictamen', 'desc')
             ->get();
  
