@@ -151,7 +151,19 @@ public function index(Request $request)
 
     // Ordenamiento especial para num_certificado con formato 'CIDAM C-EXP25-###'
     if ($orderColumn === 'num_certificado') {
-        $query->orderByRaw("
+        /*$query->orderByRaw(" ANTERIOR FUNCIONAL
+            CASE
+                WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(
+                SUBSTRING_INDEX(
+                    SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14),
+                    '-', 1
+                ) AS UNSIGNED
+            ) $orderDirection
+        ");*/
+         $query->orderByRaw("
             CASE
                 WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
                 WHEN num_certificado LIKE 'CIDAM C-EXP24-%' THEN 1
@@ -177,7 +189,6 @@ public function index(Request $request)
                 ELSE 999999
             END $orderDirection
         ");
-
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
     }
@@ -776,7 +787,7 @@ public function MostrarCertificadoExportacion($id_certificado)
     if ( $data->fecha_emision >= '2025-07-01' ) {
         $edicion = 'pdfs.certificado_exportacion_ed13';
     }else{
-        $edicion = 'pdfs.certificado_exportacion_ed12';
+        $edicion = 'pdfs.certificado_exportacion_ed13';
     }
     //nombre al descargar
     //return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
@@ -952,7 +963,8 @@ public function CertificadoFirmado($id)
 
         if (Storage::exists("public/uploads/{$rutaArchivo}")) {
             return response()->json([
-                'documento_url' => Storage::url($rutaArchivo), // genera URL pública
+                //'documento_url' => Storage::url($rutaArchivo), // genera URL pública
+                'documento_url' => asset("files/".$rutaArchivo),
                 'nombre_archivo' => basename($documentacion->url),
             ]);
         }else {
