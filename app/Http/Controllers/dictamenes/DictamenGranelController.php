@@ -201,7 +201,7 @@ public function index(Request $request)
             $folioFq = $loteGranel->folio_fq;
         }
     }
-    $nestedData['nombre_lote'] = $nombreLote;
+    $nestedData['nombre_lote'] = $nombreLote ?? 'No encontrado';
 
             /*$loteGranel = LotesGranel::find($idLoteGranel); // Busca el lote a granel
             $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'No encontrado';
@@ -224,7 +224,7 @@ public function index(Request $request)
             }
 
             // Ejemplo de asignación
-            $nestedData['analisis'] = $formatoFolios;
+            $nestedData['analisis'] = $formatoFolios ?? 'No encontrado';
             // o solo segundo si quieres:
             // $nestedData['analisis'] = $segundoFolio;
 

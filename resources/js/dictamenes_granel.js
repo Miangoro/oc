@@ -155,13 +155,12 @@ if (dt_user_table.length) {
           orderable: false, 
           responsivePriority: 4, 
           render: function (data, type, full, meta) {
-            /*return `<div class="small">
+            return `<div class="small">
                 <b>Lote granel:</b> ${full['nombre_lote']} <br>
                 <b>FQs: </b> ${full['analisis']}
                 
                 ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
-              </div>`;*/
-              return '';
+              </div>`;
           }     
         },
         {

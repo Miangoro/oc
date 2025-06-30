@@ -364,23 +364,48 @@
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis')
-                                            <td>
-                                                @foreach ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs as $documento)
-                                                    <a target="_blank"
-                                                        href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->empresa->empresaNumClientes->firstWhere(
-                                                            'numero_cliente',
-                                                            '!=',
-                                                            null,
-                                                        )->numero_cliente }}/fqs/{{ $documento->url }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                    </a>
-                                                @endforeach
-                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}
-                                            </td>
-                                        @elseif($pregunta->filtro == 'nanalisis_ajuste')
-                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'N/A' }}
-                                            </td>
+                                        @php
+                                            $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel ?? null;
+                                            $folioFq = $loteGranel->folio_fq ?? '';
+
+                                            // Separar folios
+                                            $folios = collect(explode(',', $folioFq))
+                                                ->map(fn($f) => trim($f))
+                                                ->filter()
+                                                ->values();
+
+                                            $primerFolio = $folios->get(0, 'N/A');
+                                            $segundoFolio = $folios->get(1, 'N/A');
+
+                                            // Obtener documentos
+                                            $documentos = $loteGranel->fqs ?? collect();
+                                            $doc1 = $documentos->get(0); // Primer análisis
+                                            $doc2 = $documentos->get(1); // Ajuste
+                                            $numeroCliente = $loteGranel->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente ?? null;
+                                        @endphp
+
+                                          <td>
+                                              @if ($doc1)
+                                                  <a target="_blank"
+                                                      href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
+                                                      <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                  </a>
+                                              @endif
+                                              {{ $primerFolio }}
+                                          </td>
+
+                                      @elseif($pregunta->filtro == 'nanalisis_ajuste')
+                                          <td>
+                                              @if ($doc2)
+                                                  <a target="_blank"
+                                                      href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
+                                                      <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                  </a>
+                                              @else
+                                                  <i class="text-muted">Sin archivo</i>
+                                              @endif
+                                              {{ $segundoFolio }}
+                                          </td>
                                         @elseif($pregunta->filtro == 'aduana')
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;

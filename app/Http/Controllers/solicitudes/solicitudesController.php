@@ -1571,6 +1571,11 @@ class solicitudesController extends Controller
                     'cantidad_cajas' => 'required|array',  // Asegurarse de que las cantidades sean arrays
                     'presentacion' => 'required|array',  // Asegurarse de que las presentaciones sean arrays
                     'id_etiqueta' => 'required|integer',
+
+                    'lotes_granel' => 'nullable|array',
+                    'lotes_granel.*.id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
+                    'lotes_granel.*.folio_fq' => 'nullable|string',
+                    'lotes_granel.*.cont_alc' => 'nullable|numeric',
                 ]);
 
                 // Procesar características
@@ -1613,14 +1618,24 @@ class solicitudesController extends Controller
 
 
                 // Guardar la solicitud
-
-
                 $solicitud->id_empresa = $validated['id_empresa'];
                 $solicitud->fecha_visita = $validated['fecha_visita'];
                 $solicitud->id_instalacion = $validated['id_instalacion'];
                 $solicitud->info_adicional = $validated['info_adicional'];
                 $solicitud->caracteristicas = json_encode($data);  // Guardar el JSON completo con las características (incluyendo facturas)
                 $solicitud->save();
+
+                  // Actualizar lotes a granel si los hay
+                  if ($request->has('lotes_granel')) {
+                      foreach ($request->input('lotes_granel') as $granel) {
+                          if (!empty($granel['id_lote_granel'])) {lotesGranel::where('id_lote_granel', $granel['id_lote_granel'])
+                                  ->update([
+                                      'folio_fq' => $granel['folio_fq'] ?? null,
+                                      'cont_alc' => $granel['cont_alc'] ?? null,
+                                  ]);
+                          }
+                      }
+                  }
 
                 // Almacenar archivos si se enviaron
                     if ($request->hasFile('factura_proforma')) {
@@ -1832,8 +1847,13 @@ class solicitudesController extends Controller
             'cantidad_cajas' => 'required|array',
             'presentacion' => 'required|array', */
             'id_etiqueta' => 'required|integer',
-            'cont_alc' => 'array',
-            'cont_alc.*' => 'nullable|numeric',
+/*             'cont_alc' => 'array',
+            'cont_alc.*' => 'nullable|numeric', */
+
+            'lotes_granel' => 'nullable|array',
+            'lotes_granel.*.id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
+            'lotes_granel.*.folio_fq' => 'nullable|string',
+            'lotes_granel.*.cont_alc' => 'nullable|numeric',
         ]);
 
         // Procesar características
@@ -1846,7 +1866,7 @@ class solicitudesController extends Controller
         $data['direccion_destinatario'] = $validated['direccion_destinatario'];  // Solo si es enviado
         $data['id_etiqueta'] = $validated['id_etiqueta'];  // Solo si es enviado
         $data['id_instalacion_envasado'] = $validated['id_instalacion_envasado_2'];  // Solo si es enviado
-        $data['cont_alc'] = $validated['cont_alc'];
+        /* $data['cont_alc'] = $validated['cont_alc']; */
 
         // Preparar los detalles
             $detalles = [];
@@ -1892,6 +1912,17 @@ class solicitudesController extends Controller
         $pedido->info_adicional = $validated['info_adicional'];
         $pedido->caracteristicas = json_encode($data);  // Guardar el JSON completo con las características (incluyendo facturas)
         $pedido->save();
+
+        if ($request->has('lotes_granel')) {
+         foreach ($request->input('lotes_granel') as $granel) {
+              if (!empty($granel['id_lote_granel'])) {lotesGranel::where('id_lote_granel', $granel['id_lote_granel'])
+                  ->update([
+                    'folio_fq' => $granel['folio_fq'] ?? null,
+                    'cont_alc' => $granel['cont_alc'] ?? null,
+                ]);
+                  }
+              }
+          }
 
         // Almacenar archivos si se enviaron
         if ($request->hasFile('factura_proforma')) {

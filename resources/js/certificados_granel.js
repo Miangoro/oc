@@ -154,6 +154,13 @@ var dataTable = $('.datatables-users').DataTable({
         }
 
         return `
+        <span class="fw-bold">Solicitud:</span> ${full['folio_solicitud_emision']}
+          <i data-id="${full['id_solicitud_emision']}" data-folio="${full['folio_solicitud_emision']}"
+            class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
+            data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+          </i> 
+        `;
+        /*SOLICITUD DEL SERVICIO
         <span class="fw-bold">Servicio:</span> ${$num_servicio}
           <span>${$acta}</span>
         <br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud}
@@ -161,7 +168,7 @@ var dataTable = $('.datatables-users').DataTable({
             class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
             data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
           </i> 
-        `;
+        */
       }
     }, 
     {
