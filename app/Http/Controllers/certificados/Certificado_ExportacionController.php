@@ -784,7 +784,7 @@ public function MostrarCertificadoExportacion($id_certificado)
         //'presentacion' => $presentacion ?? 'No encontrado',
     ];
 
-    if ( $data->fecha_emision >= '2025-08-01' ) {
+    if ( $data->fecha_emision >= '2025-07-01' ) {
         $edicion = 'pdfs.certificado_exportacion_ed13';
     }else{
         $edicion = 'pdfs.certificado_exportacion_ed12';
