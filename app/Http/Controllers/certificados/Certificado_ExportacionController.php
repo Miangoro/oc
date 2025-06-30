@@ -168,6 +168,7 @@ public function index(Request $request)
                     '-', 1
                 ) AS UNSIGNED
             ) $orderDirection,
+            LENGTH(SUBSTRING_INDEX(num_certificado, '-', -1)) ASC,
             SUBSTRING_INDEX(num_certificado, '-', -1) $orderDirection
         ");
     } elseif (!empty($orderColumn)) {
