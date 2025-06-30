@@ -232,6 +232,12 @@
           "name": "Equipos",
           "slug": "catalogo-equipos",
           "can" : "Visualizar catálogo de equipos"
+        },
+        {
+          "url": "/catalogo/aduana",
+          "name": "Aduana",
+          "slug": "catalogo-aduana"
+          
         }
       ]
     },

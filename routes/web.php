@@ -164,6 +164,7 @@ use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
 use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\catalogo\categoriasController;
+use App\Http\Controllers\Catalogo\AduanaController;
 use App\Http\Controllers\catalogo\marcasCatalogoController;
 use App\Http\Controllers\catalogo\claseController;
 use App\Http\Controllers\catalogo\lotesEnvasadoController;
@@ -596,6 +597,11 @@ Route::post('/lotes-envasado/update/', [lotesEnvasadoController::class, 'update'
 Route::get('/lotes-envasado/editSKU/{id}', [lotesEnvasadoController::class, 'editSKU'])->middleware(['auth']);
 Route::post('/lotes-envasado/updateSKU/', [lotesEnvasadoController::class, 'updateSKU'])->middleware(['auth']);
 Route::get('/obtenerDocumentos/{id_marca}', [LotesEnvasadoController::class, 'obtenerDocumentosPorMarca']);
+
+//Aduanas
+Route::get('/catalogo/aduana', [AduanaController::class, 'index'])->name('catalogo.aduana');
+Route::get('/catalogo/aduana/data', [AduanaController::class, 'getData'])->name('catalogo.aduana.data');
+
 
 //Domicilios fiscal
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal')->middleware(['auth']);
