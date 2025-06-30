@@ -1122,7 +1122,7 @@ public function index(Request $request)
 
             if (Storage::exists("public/uploads/{$rutaArchivo}")) {
                 return response()->json([
-                    'documento_url' => Storage::url($rutaArchivo), // genera URL pública
+                    'documento_url' => asset("files/".$rutaArchivo), // genera URL pública
                     'nombre_archivo' => basename($documentacion->url),
                 ]);
             }else {

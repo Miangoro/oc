@@ -766,11 +766,25 @@ $(document).on('click', '.editar', function () {
       url: `/edit-certificados/granel/${id_certificado}`,
       type: 'GET',
       success: function (response) {
-          $('#edit_id_dictamen').val(response.id_dictamen).trigger('change');
-          $('#edit_id_firmante').val(response.id_firmante).trigger('change');
-          $('#edit_num_certificado').val(response.num_certificado);
-          $('#edit_fecha_emision').val(response.fecha_emision);
-          $('#edit_fecha_vigencia').val(response.fecha_vigencia);
+const certificado = response.certificado;
+
+const $select = $('#edit_id_dictamen');
+// Eliminar opciones anteriores agregadas dinámicamente, pero dejar los disponibles
+$select.find('option[data-dinamico="true"]').remove();
+
+// Si el dictamen guardado no está en los disponibles, agregarlo temporalmente
+if (!$select.find(`option[value="${certificado.id_dictamen}"]`).length) {
+    const texto = `${response.num_dictamen} | ${response.folio ?? 'Sin folio'}`;
+    $select.append(`<option value="${certificado.id_dictamen}" selected data-dinamico="true">${texto}</option>`);
+} else {
+    $select.val(certificado.id_dictamen).trigger('change');
+}
+
+          //$('#edit_id_dictamen').val(response.id_dictamen).trigger('change');
+          $('#edit_id_firmante').val(certificado.id_firmante).trigger('change');
+          $('#edit_num_certificado').val(certificado.num_certificado);
+          $('#edit_fecha_emision').val(certificado.fecha_emision);
+          $('#edit_fecha_vigencia').val(certificado.fecha_vigencia);
 
           flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
             dateFormat: "Y-m-d",
