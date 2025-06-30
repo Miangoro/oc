@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\CertificadosGranel;
 use App\Models\Dictamen_Granel;
 use App\Models\User;
-use App\Models\tipos;
+use App\Models\solicitudesModel;
 use App\Models\Revisor;
 use App\Models\LotesGranel;
 //Notificacion
@@ -147,6 +147,13 @@ public function index(Request $request)
             $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
             $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
             $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
+            //obtener solicitud de emision
+            $solicitud_emision = $certificado
+                ->hasOne(solicitudesModel::class, 'id_predio', 'id_certificado')
+                ->where('id_tipo', 12)
+                ->first();
+            $nestedData['id_solicitud_emision'] = $solicitud_emision->id_solicitud ?? 'No encontrado';
+            $nestedData['folio_solicitud_emision'] = $solicitud_emision->folio ?? 'No encontrado';
             $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
             $id_sustituye = json_decode($certificado->observaciones, true) ['id_sustituye'] ?? null;
             $nestedData['sustituye'] = $id_sustituye ? CertificadosGranel::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
@@ -236,7 +243,6 @@ public function store(Request $request)
     $dictamen = Dictamen_Granel::with('inspeccione.solicitud')->find($validated['id_dictamen']);
     $idLoteGranel = $dictamen->inspeccione->solicitud->id_lote_granel ?? null;
 
-
     $new = CertificadosGranel::create([
         'id_dictamen' => $validated['id_dictamen'],
         'num_certificado' => $validated['num_certificado'],
@@ -246,11 +252,29 @@ public function store(Request $request)
         'id_lote_granel' => $idLoteGranel
     ]);
 
+        //Actualizar lote granel
         $lote = LotesGranel::find($idLoteGranel);
         $lote->folio_certificado = $validated['num_certificado'];
         $lote->fecha_emision = $validated['fecha_emision'];
         $lote->fecha_vigencia = $validated['fecha_vigencia'];
         $lote->update();
+
+        // Crear solicitud de emision de certificado
+        $newSoli = new solicitudesModel();
+        $newSoli->id_tipo = 12;
+        $newSoli->id_empresa = $dictamen->inspeccione->solicitud->id_empresa ?? '0';
+        $newSoli->folio = Helpers::generarFolioSolicitud();
+        $newSoli->estatus = 'Emitido';
+        $newSoli->fecha_solicitud = $validated['fecha_emision'];
+        $newSoli->fecha_visita = $validated['fecha_emision'];
+        $newSoli->id_instalacion =  $dictamen->inspeccione->solicitud->id_instalacion ?? '0';
+        $newSoli->id_predio = $new->id_certificado;
+        // Guardar datos como JSON
+        $newSoli->caracteristicas = json_encode([
+            'id_lote_granel' => $idLoteGranel ?? '0',
+            'id_dictamen' => $dictamen->id_dictamen ?? '0'
+            ]);
+        $newSoli->save();
 
         return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
