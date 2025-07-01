@@ -563,6 +563,9 @@ $(function () {
           $('.id_instalacion').html(Direcontenido);
           //fv.revalidateField('lugar_envasado');
 
+          var contenidoEtiqueta = "";
+
+
 
         },
         error: function () { }
@@ -670,7 +673,37 @@ $(function () {
       cargarMarcas();  // Cargar las direcciones
       /* obtenerDirecciones();  */ // Cargar las direcciones
       //fv.revalidateField('id_empresa');  // Revalidar el campo de empresa
+      obtenerEtiquetas();
     });
+
+function obtenerEtiquetas() {
+    var empresa = $('#id_empresa').val();
+    if (!empresa) return;
+
+    $.ajax({
+        url: '/etiquetas/' + empresa,
+        method: 'GET',
+        success: function (response) {
+            var contenido = '<option value="" disabled selected>Seleccione una etiqueta</option>';
+
+            response.forEach(function (etiqueta) {
+                contenido += `
+                    <option value="${etiqueta.id_etiqueta}"
+                        data-id_marca="${etiqueta.id_marca}"
+                        data-sku="${etiqueta.sku}"
+                        data-id_categoria="${etiqueta.id_categoria}"
+                        data-id_clase="${etiqueta.id_clase}"
+                        data-id_tipo="${etiqueta.id_tipo}">
+                        ${etiqueta.marca_nombre} | ${etiqueta.clase_nombre} | ${etiqueta.categoria_nombre} | ${etiqueta.tipo_nombre}
+                    </option>`;
+            });
+
+            $('#id_etiqueta').html(contenido).trigger('change');
+        }
+    });
+}
+
+
 
 
 
@@ -916,7 +949,10 @@ $(function () {
       $('#edit_presentacion').val(data.presentacion);
       $('#edit_unidad').val(data.unidad);
       $('#edit_volumen_total').val(data.volumen_total);
+      $('#edit_tipo').val(data.tipo).trigger('change');
       $('#edit_Instalaciones').data('selected', data.lugar_envasado).trigger('change');
+      $('#edit_cont_alc_envasado').val(data.cont_alc_envasado);
+      $('#edit_id_etiqueta').data('selected', data.id_etiqueta).trigger('change');
       $('#edit_marca').data('selected', data.id_marca).trigger('change');
 
       // Limpiar contenido previo de lotes de envasado de granel

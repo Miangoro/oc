@@ -19,6 +19,10 @@
                 <div id="documentoActual" class="mt-2">
                   <!-- Aquí se mostrará el documento -->
                 </div>
+
+                <div id="botonEliminarDocumento" class="mt-2">
+                  <!-- Aquí se mostrará el botón de eliminar si hay documento -->
+                </div>
             </div>
 
             

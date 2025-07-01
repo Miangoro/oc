@@ -113,21 +113,28 @@
                         </tbody>
                     </table>
                     <div class="row">
-                        <div class="col-md-12 mb-4">
+                        <div class="col-md-9 mb-4">
                             <label class="form-label" for="basic-default-password42">Instalación de envasado
                                 certificada</label>
-                            <div class="form-floating form-floating-outline mb-6">
+                            <div class="form-floating form-floating-outline">
                                 <select placeholder="Selecciona el cliente" class="form-select select2 id_instalacion"
                                     id="lugar_envasado" name="lugar_envasado" aria-label="Default select example">
                                     <option value="" disabled selected>Seleccione un cliente</option>
                                 </select>
 
-                                <!--<a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect"
-                                    type="button"><i class="ri-add-circle-fill"></i> Registrar instalación de
-                                    envasado</a>-->
                             </div>
 
                         </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="Contenido alcohólico">Contenido alcohólico</label>
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input class="form-control" type="number" step="0.01"
+                                    placeholder="Contenido alcohólico" id="cont_alc_envasado"
+                                    name="cont_alc_envasado" />
+                                <label for="Contenido alcohólico">Contenido alcohólico</label>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="row">
                         <div class="col-md-4">
@@ -144,6 +151,17 @@
                                     <option value="Sin etiqueta">Sin etiqueta</option>
                                 </select>
                                 <label for="tipo">Etiqueta</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline">
+                                <select placeholder="Selecciona una etiqueta" class="form-select select2 id_etiqueta"
+                                    id="id_etiqueta" name="id_etiqueta" aria-label="Default select example">
+                                    <option value="" disabled selected>Seleccione una etiqueta</option>
+                                </select>
+                                <label for="etiqueta">Seleccione una etiqueta</label>
                             </div>
                         </div>
                     </div>

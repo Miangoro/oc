@@ -942,6 +942,29 @@ $(function () {
           url: `/certificados-list/${id_certificado}/edit`,
           method: 'GET',
           success: function (datos) {
+
+const $select = $('#edit_id_dictamen');
+// Eliminar opciones anteriores agregadas dinámicamente, pero dejar los disponibles
+$select.find('option[data-dinamico="true"]').remove();
+function obtenerTextoTipoDictamen(tipo) {
+    switch (String(tipo)) {
+        case '1': return 'Productor';
+        case '2': return 'Envasador';
+        case '3': return 'Comercializador';
+        case '4': return 'Almacén y bodega';
+        case '5': return 'Área de maduración';
+        default: return tipo ?? 'Desconocido';
+    }
+}
+const tipoTexto = obtenerTextoTipoDictamen(datos.tipo_dictamen);
+// Si el dictamen guardado no está en los disponibles, agregarlo temporalmente
+if (!$select.find(`option[value="${datos.id_dictamen}"]`).length) {
+    const texto = `${datos.num_dictamen} | ${tipoTexto} | ${datos.folio ?? 'Sin folio'}`;
+    $select.append(`<option value="${datos.id_dictamen}" selected data-dinamico="true">${texto}</option>`);
+} else {
+    $select.val(datos.id_dictamen).trigger('change');
+}
+
               // Asignar valores a los campos del formulario
               $('#edit_id_certificado').val(datos.id_certificado);
               $('#edit_id_dictamen').val(datos.id_dictamen).trigger('change');

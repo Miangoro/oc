@@ -25,7 +25,9 @@ class lotes_envasado extends Model
         'vol_restante',
         'lugar_envasado',
         'estatus',
-
+        'tipo',
+        'id_etiqueta',
+        'cont_alc_envasado'
     ];
 
     public function empresa()
@@ -37,7 +39,7 @@ class lotes_envasado extends Model
     {
         return $this->belongsTo(instalaciones::class, 'lugar_envasado', 'id_instalacion');
     }
-    
+
     public function marca(){
         return $this->belongsTo(marcas::class, 'id_marca', 'id_marca');
     }
@@ -45,7 +47,7 @@ class lotes_envasado extends Model
     {
         return $this->belongsToMany(LotesGranel::class, 'lotes_envasado_granel', 'id_lote_envasado', 'id_lote_granel');
     }
-    
+
 
     public function lotes_envasado_granel()
     {
@@ -53,11 +55,15 @@ class lotes_envasado extends Model
     }
 
     public function dictamenEnvasado()
-{
-    return $this->belongsTo(Dictamen_Envasado::class, 'id_lote_envasado', 'id_lote_envasado');
-}
-    
+  {
+      return $this->belongsTo(Dictamen_Envasado::class, 'id_lote_envasado', 'id_lote_envasado');
+  }
 
-    
+  public function etiquetas(){
+    return $this->belongsTo(etiquetas::class, 'id_etiqueta', 'id_etiqueta');
+  }
+
+
+
 
 }

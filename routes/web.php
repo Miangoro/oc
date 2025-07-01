@@ -597,6 +597,8 @@ Route::post('/lotes-envasado/update/', [lotesEnvasadoController::class, 'update'
 Route::get('/lotes-envasado/editSKU/{id}', [lotesEnvasadoController::class, 'editSKU'])->middleware(['auth']);
 Route::post('/lotes-envasado/updateSKU/', [lotesEnvasadoController::class, 'updateSKU'])->middleware(['auth']);
 Route::get('/obtenerDocumentos/{id_marca}', [LotesEnvasadoController::class, 'obtenerDocumentosPorMarca']);
+Route::get('/etiquetas/{id_empresa}', [LotesEnvasadoController::class, 'obtenerEtiquetasPorEmpresa']);
+
 
 //Aduanas
 Route::get('/catalogo/aduana', [AduanaController::class, 'index'])->name('catalogo.aduana');
@@ -1114,10 +1116,11 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     //subir certificado firmado
     Route::post('/certificados/exportacion/documento', [Certificado_ExportacionController::class, 'subirCertificado']);
     Route::get('/certificados/exportacion/documento/{id}', [Certificado_ExportacionController::class, 'CertificadoFirmado']);
+    Route::delete('/certificados/exportacion/documento/{id}', [Certificado_ExportacionController::class, 'borrarCertificadofirmado']);
+
 
     //Obtener N° de lotes para hologramas en certificado
     Route::get('/certificados/contar-lotes/{id}', [Certificado_ExportacionController::class, 'contarLotes']);
-
 });
 
 //-------------------CERTIFICADO VENTA NACIONAL-------------------

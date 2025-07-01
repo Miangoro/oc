@@ -303,7 +303,7 @@
                                     <tr>
                                         <td>Certificado de granel</td>
                                         <td>
-                                            <a href="/files/${response.numero_cliente}/certificados_granel/${url}" target="_blank">
+                                            <a href="/files/${response.numero_cliente_lote}/certificados_granel/${url}" target="_blank">
                                                 <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
                                             </a>
                                         </td>
