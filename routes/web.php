@@ -596,6 +596,8 @@ Route::post('/lotes-envasado/update/', [lotesEnvasadoController::class, 'update'
 Route::get('/lotes-envasado/editSKU/{id}', [lotesEnvasadoController::class, 'editSKU'])->middleware(['auth']);
 Route::post('/lotes-envasado/updateSKU/', [lotesEnvasadoController::class, 'updateSKU'])->middleware(['auth']);
 Route::get('/obtenerDocumentos/{id_marca}', [LotesEnvasadoController::class, 'obtenerDocumentosPorMarca']);
+Route::get('/etiquetas/{id_empresa}', [LotesEnvasadoController::class, 'obtenerEtiquetasPorEmpresa']);
+
 
 //Domicilios fiscal
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal')->middleware(['auth']);

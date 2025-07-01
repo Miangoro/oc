@@ -5,6 +5,7 @@ namespace App\Http\Controllers\catalogo;
 use App\Models\lotes_envasado;
 use App\Models\empresa;
 use App\Models\marcas;
+use App\Models\etiquetas;
 use App\Models\LotesGranel;
 use App\Models\instalaciones;
 use App\Http\Controllers\Controller;
@@ -210,6 +211,9 @@ public function store(Request $request)
         $lotes->vol_restante = $request->volumen_total;
         $lotes->lugar_envasado = $request->lugar_envasado;
         $lotes->tipo = $request->tipo;
+        $lotes->id_etiqueta = $request->id_etiqueta;
+        $lotes->cont_alc_envasado = $request->cont_alc_envasado;
+
         $lotes->save();
 
         // Guardar relaciones con lotes a granel (si las hay)
@@ -310,6 +314,8 @@ public function store(Request $request)
             $lotes->volumen_total = $request->edit_volumen_total;
             $lotes->lugar_envasado = $request->edit_Instalaciones;
             $lotes->tipo = $request->tipo;
+            $lotes->id_etiqueta = $request->id_etiqueta;
+            $lotes->cont_alc_envasado = $request->cont_alc_envasado;
             $lotes->save();
 
             // Eliminar los registros de `lotes_envasado_granel` relacionados con este lote
@@ -434,6 +440,33 @@ public function store(Request $request)
 
         return response()->json($marcas);
     }
+
+    public function obtenerEtiquetasPorEmpresa($id_empresa)
+    {
+        $etiquetas = etiquetas::with(['tipo', 'clase', 'categoria', 'marca'])
+            ->where('id_empresa', $id_empresa)
+            ->get();
+
+        foreach ($etiquetas as $etiqueta) {
+            $etiqueta->marca_nombre = $etiqueta->marca->marca ?? 'N/A';
+            $etiqueta->clase_nombre = $etiqueta->clase->clase ?? 'N/A';
+            $etiqueta->categoria_nombre = $etiqueta->categoria->categoria ?? 'N/A';
+
+            // Si id_tipo es un JSON (array), decodifica y busca nombres
+            $tipoIds = is_string($etiqueta->id_tipo) ? json_decode($etiqueta->id_tipo, true) : $etiqueta->id_tipo;
+            if (is_array($tipoIds)) {
+                $etiqueta->tipo_nombre = tipos::whereIn('id_tipo', $tipoIds)->pluck('nombre')->implode(', ');
+            } else {
+                $etiqueta->tipo_nombre = $etiqueta->tipo->nombre ?? 'N/A';
+            }
+        }
+
+        return response()->json($etiquetas);
+    }
+
+
+
+
 
 
 }
