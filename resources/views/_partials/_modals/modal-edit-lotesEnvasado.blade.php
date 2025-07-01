@@ -11,7 +11,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange=" edit_obtenerGraneles();" id="edit_cliente" name="edit_cliente"
+                                <select onchange=" edit_obtenerGraneles(); obtenerEtiquetas2();" id="edit_cliente" name="edit_cliente"
                                     class="select2 form-select" required>
                                     <option value="" disabled>Selecciona cliente</option>
                                     @foreach ($clientes as $cliente)
@@ -119,7 +119,7 @@
                         </table>
                     </div>
                     <div class="row">
-                        <div class="col-md-12 mb-4">
+                        <div class="col-md-9 mb-4">
                             <label class="form-label" for="basic-default-password42">Instalación de envasado
                                 certificada</label>
                             <div class="form-floating form-floating-outline mb-6">
@@ -128,9 +128,16 @@
                                     name="edit_Instalaciones" aria-label="Default select example">
                                     <option value="" disabled selected>Seleccione un cliente</option>
                                 </select>
-                                <!-- <a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect"
-                                        type="button"><i class="ri-add-circle-fill"></i> Registrar instalación de
-                                        envasado</a>-->
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label" for="Contenido alcohólico">Contenido alcohólico</label>
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input class="form-control" type="number" step="0.01"
+                                    placeholder="Contenido alcohólico" id="edit_cont_alc_envasado"
+                                    name="cont_alc_envasado" />
+                                <label for="Contenido alcohólico">Contenido alcohólico</label>
                             </div>
                         </div>
                     </div>
@@ -144,7 +151,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select" name="tipo" aria-label="tipo">
+                                <select id="edit_tipo" class=" form-select" name="tipo" aria-label="tipo">
                                     <option value="Con etiqueta">Con etiqueta</option>
                                     <option value="Sin etiqueta">Sin etiqueta</option>
                                 </select>
@@ -152,6 +159,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline">
+                                <select placeholder="Selecciona una etiqueta" class="form-select select2 id_etiqueta"
+                                    id="edit_id_etiqueta" name="id_etiqueta" aria-label="Default select example">
+                                    <option value="" disabled selected>Seleccione una etiqueta</option>
+                                </select>
+                                <label for="etiqueta">Seleccione una etiqueta</label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button disabled class="btn btn-primary d-none" type="button" id="btnSpinnerEdit">
                             <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
@@ -230,7 +249,38 @@
         });
     }
 
+      function obtenerEtiquetas2() {
+          var empresa = $('#edit_cliente').val();
+          if (!empresa) return;
 
+          $.ajax({
+              url: '/etiquetas/' + empresa,
+              method: 'GET',
+              success: function (response) {
+                  var contenido2 = '<option value="" disabled selected>Seleccione una etiqueta</option>';
+
+                  response.forEach(function (etiqueta) {
+                      contenido2 += `
+                          <option value="${etiqueta.id_etiqueta}"
+                              data-id_marca="${etiqueta.id_marca}"
+                              data-sku="${etiqueta.sku}"
+                              data-id_categoria="${etiqueta.id_categoria}"
+                              data-id_clase="${etiqueta.id_clase}"
+                              data-id_tipo="${etiqueta.id_tipo}">
+                              ${etiqueta.marca_nombre} | ${etiqueta.clase_nombre} | ${etiqueta.categoria_nombre} | ${etiqueta.tipo_nombre}
+                          </option>`;
+                  });
+
+                  $('#edit_id_etiqueta').html(contenido2).trigger('change');
+
+                     const edit_etiqueta = $('#edit_id_etiqueta').data('selected');
+                    if (edit_etiqueta) {
+                        $('#edit_id_etiqueta').val(edit_etiqueta);
+                    }
+
+              }
+          });
+      }
 
 
 
