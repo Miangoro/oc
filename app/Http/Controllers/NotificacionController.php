@@ -21,4 +21,16 @@ class NotificacionController extends Controller
 
         }
 
+        public function marcarTodasComoLeidas()
+        {
+            $user = Auth::user();
+
+            if ($user) {
+                $user->unreadNotifications->markAsRead();
+                return response()->json(['success' => true]);
+            }
+
+            return response()->json(['success' => false, 'message' => 'Usuario no autenticado.'], 401);
+        }
+
 }
