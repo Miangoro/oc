@@ -536,6 +536,9 @@
                                                             "files/{$numero_cliente}/certificados_granel/{$docFirmado->url}",
                                                         )
                                                         : null;
+
+                                              
+
                                             @endphp
 
                                             <td>
@@ -560,6 +563,29 @@
                                                 </a>
                                                 Envasado:
                                                 {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }}
+                                            </td>
+                                            @elseif($pregunta->filtro == 'dom')
+                                            <td>
+                                                 @php
+
+                                                    $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa  ?? null;
+                                                    $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel ?? null;
+                                                    $numeroCliente = $loteGranel->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente ?? null;
+                                                    $url = optional(
+                                                        \App\Models\documentacion_url::where('id_empresa', optional($solicitud->empresa)->id_empresa)
+                                                            ->where('id_documento', 83)
+                                                            ->first())->url;
+
+                                                    $urlDom = $numeroCliente."/".$url;
+                                                @endphp
+                                             
+                                                @if ($urlDom)
+                                                    <a target="_blank" href="{{ $urlDom }}">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">Sin documento</span>
+                                                @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria')
                                             @php
