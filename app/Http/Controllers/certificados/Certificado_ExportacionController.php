@@ -757,13 +757,13 @@ public function MostrarCertificadoExportacion($id_certificado)
                 $lotes->push($lote);//Agregar el lote a la colección
             }
         }*/
-        $convenio = $lotes[0]->lotesGranel[0]->empresa == 5 ?
+        /*$convenio = $lotes[0]->lotesGranel[0]->empresa == 5 ?
             $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA' :
             $lotes[0]->lotesGranel[0]->empresa->convenio_corresp ?? 'NA';
 
         $DOM = $lotes[0]->lotesGranel[0]->empresa == 5 ? 
             $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA':
-            $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? 'NA';
+            $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? 'NA';*/
 
     //return response()->json(['message' => 'No se encontraron características.', $data], 404)
 
@@ -779,10 +779,10 @@ public function MostrarCertificadoExportacion($id_certificado)
         'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? 'No encontrado',
         'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? 'No encontrado',
-        //'convenio' =>  $lotes[0]->lotesGranel[0]->empresa->convenio_corresp ?? 'NA',
-        //'DOM' => $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? 'NA',
-        'convenio' =>  $convenio,
-        'DOM' => $DOM,
+        'convenio' =>  $lotes[0]->lotesGranel[0]->empresa->convenio_corresp ?? 'NA',
+        'DOM' => $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? 'NA',
+        /*'convenio' =>  $convenio,
+        'DOM' => $DOM,*/
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
         'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'No encontrado',
