@@ -186,14 +186,18 @@ $navbarDetached = ($navbarDetached ?? '');
 
           <!-- Notification -->
           <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-4 me-xl-1">
-            <a class="nav-link btn btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-              <i class="ri-notification-2-line ri-22px"></i>
-                 @if (auth()->check())
-                    @if(Auth::user()->unreadNotifications->count() > 0)
-                      <span class="position-absolute top-0 start-50 translate-middle-y badge badge-dot bg-danger mt-2 border"></span>
-                    @endif
+                <a class="nav-link btn btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow position-relative"
+                  href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+
+                  <i class="ri-notification-2-line ri-22px"></i>
+
+                  @if (auth()->check() && Auth::user()->unreadNotifications->count() > 0)
+                    <span class="badge rounded-pill text-bg-danger badge-notifications position-absolute" style="top: 2px; left: 26px;">
+                      {{ Auth::user()->unreadNotifications->count() }}
+                    </span>
                   @endif
-            </a>
+
+                </a>
             <ul class="dropdown-menu dropdown-menu-end py-0">
               <li class="dropdown-menu-header border-bottom py-50">
                 <div class="dropdown-header d-flex align-items-center py-2">
