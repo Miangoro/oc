@@ -211,12 +211,20 @@ $navbarDetached = ($navbarDetached ?? '');
                       @endif
 
                     </span>
-                    <a href="javascript:void(0)" class="btn btn-text-secondary rounded-pill btn-icon dropdown-notifications-all" data-bs-toggle="tooltip" data-bs-placement="top" title="Marcar todas como leidas"><i class="ri-mail-open-line text-heading ri-20px"></i></a>
+                    {{-- <a href="javascript:void(0)" class="btn btn-text-secondary rounded-pill btn-icon dropdown-notifications-all" data-bs-toggle="tooltip" data-bs-placement="top" title="Marcar todas como leidas"><i class="ri-mail-open-line text-heading ri-20px"></i></a> --}}
+                      <a href="javascript:void(0)"
+                        class="btn btn-text-secondary rounded-pill btn-icon dropdown-notifications-all"
+                        onclick="marcarTodasComoLeidas()"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        title="Marcar todas como leídas">
+                        <i class="ri-mail-open-line text-heading ri-20px"></i>
+                      </a>
                   </div>
                 </div>
               </li>
               <li class="dropdown-notifications-list scrollable-container">
-                <ul class="list-group list-group-flush">
+                <ul class="list-group list-group-flush" id="lista-notificaciones">
 
                   @if (auth()->check())
                     @if(Auth::user()->unreadNotifications->count() > 0)
@@ -434,6 +442,29 @@ function marcarComoLeida(notificationId) {
     });
 }
 
+function marcarTodasComoLeidas() {
+    $.ajax({
+        url: '/notificaciones/marcar-todas-leidas',
+        type: 'POST',
+        data: {
+            '_token': '{{ csrf_token() }}'
+        },
+        success: function(response) {
+            // Elimina badge numérico
+            $('.badge-notifications').remove();
+
+            // Limpia solo las notificaciones, no todo el dropdown
+            $('#lista-notificaciones').html('<li class="list-group-item">No hay notificaciones nuevas.</li>');
+
+            // Actualiza contador superior
+            $('.dropdown-menu-header .badge').text('0 notificación');
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al marcar todas como leídas:', error);
+            console.log(xhr.responseText);
+        }
+    });
+}
 
 
 

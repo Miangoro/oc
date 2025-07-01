@@ -779,8 +779,9 @@ Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitud
 
 //Notificaciones
 Route::post('/notificacion-leida/{id}', [NotificacionController::class, 'marcarNotificacionLeida'])->name('notificacion.leida')->middleware(['auth']);
-
-
+Route::post('/notificaciones/marcar-todas-leidas', [NotificacionController::class, 'marcarTodasComoLeidas'])
+    ->name('notificaciones.marcarTodasLeidas')
+    ->middleware('auth');
 //-------------------TRAZABILIDAD-------------------
 Route::middleware(['auth'])->controller(TrazabilidadController::class)->group(function () {
     Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])->name('mostrarLogs');
