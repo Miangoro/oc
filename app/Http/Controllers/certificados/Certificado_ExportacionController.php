@@ -793,9 +793,9 @@ public function MostrarCertificadoExportacion($id_certificado)
     }else{
         $edicion = 'pdfs.certificado_exportacion_ed12';
     }*/
-    if ( $data->fecha_emision <= '2025-06-30' ) {
+    if (isset($data->fecha_emision) && $data->fecha_emision < '2025-07-01') {
         $edicion = 'pdfs.certificado_exportacion_ed12';
-    }else{
+    } else {
         $edicion = 'pdfs.certificado_exportacion_ed13';
     }
     //nombre al descargar
