@@ -300,11 +300,11 @@ public function getDocumentosSolicitud($id_solicitud)
 
         $ids = $solicitud->id_lote_envasado; // array de IDs
 
-                  $numero_cliente = 'N/A';
+                  $numero_cliente_lote = 'N/A';
         $empresa = empresa::find($solicitud->lote_granel->id_empresa);
         $cliente = $empresa->empresaNumClientes
             ->first(fn($item) => !empty($item->numero_cliente));
-        $numero_cliente = $cliente?->numero_cliente ?? 'No encontrado';
+        $numero_cliente_lote = $cliente?->numero_cliente ?? 'No encontrado';
 
   $certificados = collect();
 
@@ -360,9 +360,7 @@ foreach ($certificados as $certificado) {
         'data' => $documentos,
         'numero_cliente' => $numero_cliente,
         'fqs' => $fqs,
-        'numero_cliente_lote' => $solicitud->lote_granel?->empresa?->empresaNumClientes
-            ->first(fn($item) => !empty($item->numero_cliente))
-            ?->numero_cliente ?? 'N/A',
+        'numero_cliente_lote' => $numero_cliente_lote,
         'url_etiqueta' => $url_etiqueta ?? '',
         'url_corrugado' => $url_corrugado ?? '',
         'url_certificado' => $urls_certificados ?? '',
