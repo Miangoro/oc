@@ -471,13 +471,10 @@ public function MostrarDictamenExportacion($id_dictamen)
         $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
             : collect(); // Si no hay IDs, devolvemos una colección vacía
 
-    $lote_grupoSones = $lotes[0]->lotesGranel[0]->id_empresa == 5;
-        $es_Crista = $lote_grupoSones ? 
-            $data->inspeccione->solicitud->empresa :
-            $lotes[0]->lotesGranel[0]->empresa;
+        
+        $DOM = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA';
+        $convenio = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA';
 
-        $convenio = $es_Crista->convenio_corresp ?? 'NA';
-        $DOM = $es_Crista->registro_productor ?? 'NA';
 
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
 

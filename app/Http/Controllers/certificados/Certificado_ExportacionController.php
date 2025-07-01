@@ -762,13 +762,6 @@ public function MostrarCertificadoExportacion($id_certificado)
         $DOM = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA';
         $convenio = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA';
 
-        /*$es_Crista = $lote_grupoSones ? 
-            $data->dictamen->inspeccione->solicitud->empresa :
-            $lotes[0]->lotesGranel[0]->empresa;
-
-        $convenio = $es_Crista->convenio_corresp ?? 'NA';
-        $DOM = $es_Crista->registro_productor ?? 'NA';*/
-
     //return response()->json(['message' => 'No se encontraron características.', $data], 404)
 
     //$pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
@@ -801,11 +794,7 @@ public function MostrarCertificadoExportacion($id_certificado)
         //'presentacion' => $presentacion ?? 'No encontrado',
     ];
 
-    /*if ( $data->fecha_emision >= '2025-07-01' ) {
-        $edicion = 'pdfs.certificado_exportacion_ed13';
-    }else{
-        $edicion = 'pdfs.certificado_exportacion_ed12';
-    }*/
+    
     if (isset($data->fecha_emision) && $data->fecha_emision < '2025-07-01') {
         $edicion = 'pdfs.certificado_exportacion_ed12';
     } else {
@@ -847,8 +836,8 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         $no_pedido = $caracteristicas['no_pedido'] ?? '';
         $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
         foreach ($detalles as $detalle) {// Acceder a los detalles
-            $botellas = $detalle['cantidad_botellas'] ?? '';
-            $cajas = $detalle['cantidad_cajas'] ?? '';
+            $botellas = $detalles[0]['cantidad_botellas'] ?? '';
+            $cajas = $detalles[0]['cantidad_cajas'] ?? '';
             $presentacion = $detalle['presentacion'] ?? '';
         }
         $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
@@ -894,11 +883,7 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         //'presentacion' => $presentacion ?? 'No encontrado', se tomara directod el lote
     ];
 
-    /*if ( $data->fecha_emision >= '2025-06-01' ) {
-        $edicion = 'pdfs.solicitud_certificado_exportacion_ed11';
-    }else{
-        $edicion = 'pdfs.solicitud_certificado_exportacion_ed10';
-    }*/
+
     if (isset($data->fecha_emision) && $data->fecha_emision < '2025-07-01') {
         $edicion = 'pdfs.solicitud_certificado_exportacion_ed10';
     } else {
