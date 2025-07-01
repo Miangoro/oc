@@ -1105,10 +1105,11 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     //subir certificado firmado
     Route::post('/certificados/exportacion/documento', [Certificado_ExportacionController::class, 'subirCertificado']);
     Route::get('/certificados/exportacion/documento/{id}', [Certificado_ExportacionController::class, 'CertificadoFirmado']);
+    Route::delete('/certificados/exportacion/documento/{id}', [Certificado_ExportacionController::class, 'borrarCertificadofirmado']);
+
 
     //Obtener N° de lotes para hologramas en certificado
     Route::get('/certificados/contar-lotes/{id}', [Certificado_ExportacionController::class, 'contarLotes']);
-
 });
 
 //-------------------CERTIFICADO VENTA NACIONAL-------------------

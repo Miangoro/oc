@@ -85,13 +85,14 @@ public function index(Request $request)
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
         0 => '',
-        1 => 'num_certificado',
-        2 => 'dictamenes_exportacion.num_dictamen', //nombre de mi tabla y atributo
-        3 => 'razon_social',
-        4 => '', //caracteristicas
-        5 => 'certificados_exportacion.fecha_emision',
-        6 => 'estatus',
-        7 => '',// acciones
+        1 => '',
+        2 => 'num_certificado',
+        3 => 'dictamenes_exportacion.num_dictamen', //nombre de mi tabla y atributo
+        4 => 'razon_social',
+        5 => '', //caracteristicas
+        6 => 'certificados_exportacion.fecha_emision',
+        7 => 'estatus',
+        8 => '',// acciones
     ];
       
     /*$totalData = Certificado_Exportacion::count();
@@ -215,8 +216,10 @@ public function index(Request $request)
 
     //MANDA LOS DATOS AL JS
     $data = [];
+    $ids = $start;
     if (!empty($certificados)) {
         foreach ($certificados as $certificado) {
+            $nestedData['fake_id'] = ++$ids;
             $nestedData['id_certificado'] = $certificado->id_certificado ?? 'No encontrado';
             $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
             $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
@@ -981,6 +984,39 @@ public function CertificadoFirmado($id)
         'nombre_archivo' => null,
         //'message' => 'Documento no encontrado.',
     ]);
+}
+///BORRAR CERTIFICADO FIRMADO
+public function borrarCertificadofirmado($id)
+{
+    $certificado = Certificado_Exportacion::findOrFail($id);
+
+    $documentacion = Documentacion_url::where('id_documento', 135)
+        ->where('id_relacion', $certificado->id_certificado)
+        ->first();
+
+    if (!$documentacion) {
+        return response()->json(['message' => 'Documento no encontrado.'], 404);
+    }
+
+    $empresa = empresa::with("empresaNumClientes")
+        ->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)
+        ->first();
+
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+
+    $rutaArchivo = "public/uploads/{$numeroCliente}/certificados_exportacion/{$documentacion->url}";
+
+    // Eliminar archivo físico
+    if (Storage::exists($rutaArchivo)) {
+        Storage::delete($rutaArchivo);
+    }
+
+    // Eliminar registro en la base de datos
+    $documentacion->delete();
+
+    return response()->json(['message' => 'Documento eliminado correctamente.']);
 }
 
 

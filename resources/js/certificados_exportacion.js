@@ -97,6 +97,7 @@ if (dt_user_table.length) {
       },
       columns: [
         { data: '' }, // (0)
+        { data: '' },//(1)
         { data: 'num_certificado' },//(1)
         {
           data: '',/*null, //soli y serv.
@@ -131,8 +132,17 @@ if (dt_user_table.length) {
             return '';
           }
         },
+        //numeracion
         {
+          searchable: false,
+          orderable: false,
           targets: 1,
+          render: function (data, type, full, meta) {
+            return `<span>${full.fake_id}</span>`;
+          }
+        },
+        {
+          targets: 2,
           orderable: true,
           searchable: true,
           render: function (data, type, full, meta) {
@@ -164,7 +174,7 @@ if (dt_user_table.length) {
         },
         {
           //Tabla 2
-          targets: 2,
+          targets: 3,
           searchable: true,
           orderable: false,
           render: function (data, type, full, meta) {
@@ -193,7 +203,7 @@ if (dt_user_table.length) {
         },
         {
           //caracteristicas
-          targets: 4,
+          targets: 5,
           searchable: true,
           orderable: false,
           responsivePriority: 4,
@@ -213,7 +223,7 @@ if (dt_user_table.length) {
           }
         },
         {//fechas
-          targets: 5,
+          targets: 6,
           searchable: true,
           orderable: true,
           className: 'text-center',
@@ -229,7 +239,7 @@ if (dt_user_table.length) {
           }
         },
         {//estatus
-          targets: 6,
+          targets: 7,
           searchable: false,
           orderable: true,
           className: 'text-center',
@@ -380,7 +390,7 @@ if (dt_user_table.length) {
         }
       ],
 
-      order: [[1, 'desc']],//por defecto ordene por num_certificado (index 1)
+      order: [[2, 'desc']],//por defecto ordene por num_certificado (index 1)
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' +
@@ -1779,6 +1789,7 @@ $(document).on('click', '.subirPDF', function () {
   var num_certificado = $(this).data('folio');
   $('#doc_id_certificado').val(id);
   $('#documentoActual').html('Cargando documento...');
+  $('#botonEliminarDocumento').empty(); // <-- Limpia el botón eliminar al cambiar
   $('#modalTitulo').html('Certificado exportación firmado <span class="badge bg-info">' +num_certificado+ '</span>');
 
   $.ajax({
@@ -1790,6 +1801,9 @@ $(document).on('click', '.subirPDF', function () {
           `<p>Documento actual: 
             <a href="${response.documento_url}" target="_blank">${response.nombre_archivo}</a>
           </p>`);
+        $('#botonEliminarDocumento').html(
+          `<button type="button" class="btn btn-outline-danger btn-sm" id="btnEliminarDocumento"><i class="ri-delete-bin-line"></i> Eliminar</button>`
+        );
       } else {
         $('#documentoActual').html('<p>No hay documento cargado.</p>');
       }
@@ -1800,6 +1814,74 @@ $(document).on('click', '.subirPDF', function () {
   });
 
 });
+///BORRAR CERTIFICADO FIRMADO
+$(document).on('click', '#btnEliminarDocumento', function () {
+  const id_certificado = $('#doc_id_certificado').val();
+
+  // SweetAlert para confirmar la eliminación
+  Swal.fire({
+    title: '¿Está seguro?',
+    text: 'No podrá revertir este evento',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+    cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+    customClass: {
+      confirmButton: 'btn btn-primary me-2',
+      cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+  }).then(function (result) {
+    if (result.isConfirmed) {
+      // Enviar solicitud DELETE al servidor
+      $.ajax({
+        type: 'DELETE',
+        url: `/certificados/exportacion/documento/${id_certificado}`, // ← Ruta ajustada
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+          dataTable.draw(false); //Actualizar la tabla sin reiniciar
+          $('#documentoActual').html('<p>No hay documento cargado.</p>');
+          $('#botonEliminarDocumento').empty();
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Exito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+          });
+        },
+        error: function (error) {
+          console.log('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al eliminar.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      Swal.fire({
+        title: '¡Cancelado!',
+        text: 'La eliminación ha sido cancelada.',
+        icon: 'info',
+        customClass: {
+          confirmButton: 'btn btn-primary'
+        }
+      });
+    }
+  });
+});
+
+
+
 
 
 
