@@ -758,6 +758,10 @@ public function MostrarCertificadoExportacion($id_certificado)
             }
         }*/
 
+        //dd($lotes[0]->lotesGranel[0]);para ver que imprime
+        $DOM = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA';
+        $convenio = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA';
+
     //return response()->json(['message' => 'No se encontraron características.', $data], 404)
 
     //$pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
@@ -772,8 +776,10 @@ public function MostrarCertificadoExportacion($id_certificado)
         'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? 'No encontrado',
         'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? 'No encontrado',
-        'convenio' =>  $lotes[0]->lotesGranel[0]->empresa->convenio_corresp ?? 'NA',
-        'DOM' => $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? 'NA',
+        /*'convenio' =>  $lotes[0]->lotesGranel[0]->empresa->convenio_corresp ?? 'NA',
+        'DOM' => $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? 'NA',*/
+        'convenio' =>  $convenio,
+        'DOM' => $DOM,
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
         'nombre_destinatario' => $data->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'No encontrado',
@@ -788,10 +794,11 @@ public function MostrarCertificadoExportacion($id_certificado)
         //'presentacion' => $presentacion ?? 'No encontrado',
     ];
 
-    if ( $data->fecha_emision >= '2025-07-01' ) {
-        $edicion = 'pdfs.certificado_exportacion_ed13';
-    }else{
+    
+    if (isset($data->fecha_emision) && $data->fecha_emision < '2025-07-01') {
         $edicion = 'pdfs.certificado_exportacion_ed12';
+    } else {
+        $edicion = 'pdfs.certificado_exportacion_ed13';
     }
     //nombre al descargar
     //return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
@@ -829,8 +836,8 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         $no_pedido = $caracteristicas['no_pedido'] ?? '';
         $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
         foreach ($detalles as $detalle) {// Acceder a los detalles
-            $botellas = $detalle['cantidad_botellas'] ?? '';
-            $cajas = $detalle['cantidad_cajas'] ?? '';
+            $botellas = $detalles[0]['cantidad_botellas'] ?? '';
+            $cajas = $detalles[0]['cantidad_cajas'] ?? '';
             $presentacion = $detalle['presentacion'] ?? '';
         }
         $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
@@ -876,10 +883,11 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         //'presentacion' => $presentacion ?? 'No encontrado', se tomara directod el lote
     ];
 
-    if ( $data->fecha_emision >= '2025-06-01' ) {
-        $edicion = 'pdfs.solicitud_certificado_exportacion_ed11';
-    }else{
+
+    if (isset($data->fecha_emision) && $data->fecha_emision < '2025-07-01') {
         $edicion = 'pdfs.solicitud_certificado_exportacion_ed10';
+    } else {
+        $edicion = 'pdfs.solicitud_certificado_exportacion_ed11';
     }
     //nombre al descargar
     //return $pdf->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');

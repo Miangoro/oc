@@ -31,20 +31,28 @@
                             </div>
                         </div>
                     </div>
+
+
+
+                    
                     <div class="form-floating form-floating-outline mb-6">
-                        <select class="select2 form-select " id="nombre_predio" name="predios" aria-label="Marca"
+                        <select class="select2 form-select " id="nombre_predio" name="predios"
                             required>
-                            <option value="" selected>Lista de predios</option>
+                            {{--data-placeholder="selecciona un predio" <option value="" disabled selected>Seleccione un predio</option> --}}
                         </select>
-                        <label for="nombre_predio">Lista de predios</label>
+                        <label>Lista de predios</label>
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
-                        <select class="select2 form-select " id="id_plantacion" name="plantacion" aria-label="Marca"
+                        <select class="select2 form-select " id="id_plantacion" name="plantacion"
                             required>
-                            <option value="" selected>Plantación del predio</option>
+                            {{--data-placeholder="selecciona una caracteristica" <option value="" disabled selected>>Plantación del predio</option> --}}
                         </select>
-                        <label for="id_plantacion">Características del predio</label>
+                        <label>Características del predio</label>
                     </div>
+
+
+
+
                     <div class="text-center mb-6">
                         <h4 class="address-title mb-2">Datos para Guía de traslado</h4>
                         <p class="address-subtitle"> <b style="color: red"> (DATOS NO OBLIGATORIOS SI NO CUENTA CON

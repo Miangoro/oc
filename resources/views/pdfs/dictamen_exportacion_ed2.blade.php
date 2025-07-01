@@ -225,15 +225,15 @@
     <table>
         <tr>
             <td style="font-size: 15px;padding-bottom: 15px; padding-top: 15px"><b>Fecha de emisión</b></td>
-            <td style="width: 130px">{{ $fecha_emision }}</td>
+            <td style="width: 130px; font-size: 9px">{{ mb_strtoupper ($fecha_emision) }}</td>
             <td style="font-size: 15px; width: 170px"><b>Número de dictamen:</b></td>
             <td style="width: 130px">{{ $no_dictamen }}</td>
         </tr>
         <tr>
             <td style="font-size: 15px;padding-bottom: 25px; padding-top: 25px"><b>Razón social</b></td>
-            <td>{{ $empresa }}</td>
+            <td>{{ mb_strtoupper ($empresa) }}</td>
             <td style="font-size: 15px"><b>Domicilio fiscal</b></td>
-            <td>{{$domicilio}}</td>
+            <td style="font-size: 9px">{{ mb_strtoupper ($domicilio) }}</td>
         </tr>
         <tr>
             <td style="font-size: 15px; padding-bottom: 15px; padding-top: 15px"><b>RFC</b></td>

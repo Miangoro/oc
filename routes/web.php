@@ -164,6 +164,7 @@ use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
 use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\catalogo\categoriasController;
+use App\Http\Controllers\catalogo\AduanaController;
 use App\Http\Controllers\catalogo\marcasCatalogoController;
 use App\Http\Controllers\catalogo\claseController;
 use App\Http\Controllers\catalogo\lotesEnvasadoController;
@@ -599,6 +600,15 @@ Route::get('/obtenerDocumentos/{id_marca}', [LotesEnvasadoController::class, 'ob
 Route::get('/etiquetas/{id_empresa}', [LotesEnvasadoController::class, 'obtenerEtiquetasPorEmpresa']);
 
 
+//Aduanas
+Route::get('/catalogo/aduana', [AduanaController::class, 'index'])->name('catalogo.aduana');
+Route::get('/catalogo/aduana/data', [AduanaController::class, 'getData'])->name('catalogo.aduana.data');
+Route::delete('/catalogo/aduana/{id}', [AduanaController::class, 'destroy']);
+Route::get('/catalogo/aduana/{id}/edit', [AduanaController::class, 'edit']);
+Route::match(['put', 'post'], '/catalogo/aduana/{id}', [AduanaController::class, 'update']);
+Route::post('/catalogo/aduana', [AduanaController::class, 'store']);
+
+
 //Domicilios fiscal
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal')->middleware(['auth']);
 
@@ -779,8 +789,9 @@ Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitud
 
 //Notificaciones
 Route::post('/notificacion-leida/{id}', [NotificacionController::class, 'marcarNotificacionLeida'])->name('notificacion.leida')->middleware(['auth']);
-
-
+Route::post('/notificaciones/marcar-todas-leidas', [NotificacionController::class, 'marcarTodasComoLeidas'])
+    ->name('notificaciones.marcarTodasLeidas')
+    ->middleware('auth');
 //-------------------TRAZABILIDAD-------------------
 Route::middleware(['auth'])->controller(TrazabilidadController::class)->group(function () {
     Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])->name('mostrarLogs');

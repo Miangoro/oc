@@ -130,25 +130,51 @@
 
                                         @if ($pregunta->documentacion?->documentacionUrls && $pregunta->id_documento != 69)
                                             @php
-                                                $cliente = $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
+                                                $empresa =
+                                                    $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa;
+                                                $cliente = $empresa?->empresaNumClientes?->firstWhere(
                                                     'numero_cliente',
                                                     '!=',
                                                     null,
                                                 );
+
                                                 $documento = $datos->obtenerDocumentosClientes(
                                                     $pregunta->id_documento,
-                                                    $datos->certificado->dictamen->inspeccione->solicitud->empresa
-                                                        ->id_empresa,
+                                                    $empresa?->id_empresa,
                                                 );
+
+                                                // Validación especial SOLO para el documento de convenio
+                                                $mostrarMensajeConvenio = false;
+
+                                                if ($pregunta->id_documento == 82) {
+                                                    // ← ID del convenio
+                                                    $convenioCorresp = strtolower(
+                                                        trim($empresa?->convenio_corresp ?? ''),
+                                                    );
+                                                    $convenioValido = !in_array($convenioCorresp, [
+                                                        'na',
+                                                        'n/a',
+                                                        'n.a.',
+                                                        'no aplica',
+                                                        '',
+                                                    ]);
+
+                                                    if (!$convenioValido) {
+                                                        $documento = null;
+                                                        $mostrarMensajeConvenio = true;
+                                                    }
+                                                }
                                             @endphp
 
                                             <td>
-                                                @if ($pregunta->documentacion?->documentacionUrls && $pregunta->id_documento != 69 && $cliente && $documento)
+                                                @if ($cliente && $documento)
                                                     <a target="_blank"
                                                         href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
                                                         <i
                                                             class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
+                                                @elseif ($mostrarMensajeConvenio)
+                                                    <span class="text-muted">Convenio no aplica</span>
                                                 @else
                                                     <span class="text-muted">Sin documento</span>
                                                 @endif
@@ -350,48 +376,56 @@
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis')
-                                        @php
-                                            $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel ?? null;
-                                            $folioFq = $loteGranel->folio_fq ?? '';
+                                            @php
+                                                $loteGranel =
+                                                    $datos->certificado->dictamen->inspeccione->solicitud
+                                                        ->lote_granel ?? null;
+                                                $folioFq = $loteGranel->folio_fq ?? '';
 
-                                            // Separar folios
-                                            $folios = collect(explode(',', $folioFq))
-                                                ->map(fn($f) => trim($f))
-                                                ->filter()
-                                                ->values();
+                                                // Separar folios
+                                                $folios = collect(explode(',', $folioFq))
+                                                    ->map(fn($f) => trim($f))
+                                                    ->filter()
+                                                    ->values();
 
-                                            $primerFolio = $folios->get(0, 'N/A');
-                                            $segundoFolio = $folios->get(1, 'N/A');
+                                                $primerFolio = $folios->get(0, 'N/A');
+                                                $segundoFolio = $folios->get(1, 'N/A');
 
-                                            // Obtener documentos
-                                            $documentos = $loteGranel->fqs ?? collect();
-                                            $doc1 = $documentos->get(0); // Primer análisis
-                                            $doc2 = $documentos->get(1); // Ajuste
-                                            $numeroCliente = $loteGranel->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente ?? null;
-                                        @endphp
+                                                // Obtener documentos
+                                                $documentos = $loteGranel->fqs ?? collect();
+                                                $doc1 = $documentos->get(0); // Primer análisis
+                                                $doc2 = $documentos->get(1); // Ajuste
+                                                $numeroCliente =
+                                                    $loteGranel->empresa->empresaNumClientes->firstWhere(
+                                                        'numero_cliente',
+                                                        '!=',
+                                                        null,
+                                                    )->numero_cliente ?? null;
+                                            @endphp
 
-                                          <td>
-                                              @if ($doc1)
-                                                  <a target="_blank"
-                                                      href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
-                                                      <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                  </a>
-                                              @endif
-                                              {{ $primerFolio }}
-                                          </td>
-
-                                      @elseif($pregunta->filtro == 'nanalisis_ajuste')
-                                          <td>
-                                              @if ($doc2)
-                                                  <a target="_blank"
-                                                      href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
-                                                      <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                  </a>
-                                              @else
-                                                  <i class="text-muted">Sin archivo</i>
-                                              @endif
-                                              {{ $segundoFolio }}
-                                          </td>
+                                            <td>
+                                                @if ($doc1)
+                                                    <a target="_blank"
+                                                        href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                    </a>
+                                                @endif
+                                                {{ $primerFolio }}
+                                            </td>
+                                        @elseif($pregunta->filtro == 'nanalisis_ajuste')
+                                            <td>
+                                                @if ($doc2)
+                                                    <a target="_blank"
+                                                        href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                    </a>
+                                                @else
+                                                    <i class="text-muted">Sin archivo</i>
+                                                @endif
+                                                {{ $segundoFolio }}
+                                            </td>
                                         @elseif($pregunta->filtro == 'aduana')
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
@@ -508,7 +542,7 @@
                                                     $datos->certificado->dictamen->inspeccione->solicitud ?? null;
                                                 $loteGranel = $solicitud->lote_granel ?? null;
                                                 $loteEnvasado = $solicitud->lote_envasado ?? null;
-                                                $empresa = $solicitud->empresa ?? null;
+                                                $empresa = $loteGranel->empresa ?? null;
 
                                                 $numero_cliente =
                                                     $empresa && $empresa->empresaNumClientes->isNotEmpty()
@@ -732,10 +766,10 @@
                 </div>
             </div>
             <!-- <div class="col-md-4">
-                                                                    <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" src="{{ $url }}" frameborder="0"
-                                                                        style="border-radius: 10px; overflow: hidden;">
-                                                                    </iframe>
-                                                                </div>-->
+                                                                        <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" src="{{ $url }}" frameborder="0"
+                                                                            style="border-radius: 10px; overflow: hidden;">
+                                                                        </iframe>
+                                                                    </div>-->
 
             <div class="d-flex justify-content-center mt-3">
                 <button disabled class="btn btn-primary me-1 d-none" type="button" id="btnSpinnerRevConse">

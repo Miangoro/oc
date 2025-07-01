@@ -144,6 +144,8 @@ class GuiasController  extends Controller
         ]);
     }
 
+
+
     //Metodo para eliminar
     public function destroy($id_guia)
     {
@@ -157,6 +159,8 @@ class GuiasController  extends Controller
     }
     
 
+
+    ///REGISTRAR
     public function store(Request $request)
     {
         // Validación de los datos recibidos
@@ -222,7 +226,10 @@ class GuiasController  extends Controller
         return response()->json(['success' => 'Guía registrada correctamente']);
     }
 
-    // Método para obtener una guía por ID
+
+
+
+    // Método para OBTENER GUIA por ID
     public function edit($id_guia)
     {
         try {
@@ -232,7 +239,7 @@ class GuiasController  extends Controller
             return response()->json(['error' => 'Error al obtener la guía'], 500);
         }
     }
-    //Metodo par aeditar guias
+    //Metodo EDITAR GUIAS
     public function editGuias($run_folio)
     {
         $guias = Guias::where('run_folio', $run_folio)
@@ -241,7 +248,7 @@ class GuiasController  extends Controller
         return response()->json($guias);
     }
 
-    // Método para actualizar una guía existente
+    // Método para ACTUALIZAR una guía existente
     public function update(Request $request)
     {
         try {
@@ -291,7 +298,11 @@ class GuiasController  extends Controller
         }
     }
 
-    //Metodo para llenar el pdf
+
+
+
+
+    //Metodo para LLENAR PDF
     public function guiasTranslado($id_guia)
     {
         $res = DB::select('SELECT f.numero_cliente, p.nombre_productor, a.razon_social, p.nombre_predio, p.num_predio, a.razon_social, t.nombre, t.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas,
@@ -306,4 +317,9 @@ class GuiasController  extends Controller
         $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', ['datos' => $res]);
         return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
     }
+
+
+
+
+
 }
