@@ -601,6 +601,11 @@ Route::get('/obtenerDocumentos/{id_marca}', [LotesEnvasadoController::class, 'ob
 //Aduanas
 Route::get('/catalogo/aduana', [AduanaController::class, 'index'])->name('catalogo.aduana');
 Route::get('/catalogo/aduana/data', [AduanaController::class, 'getData'])->name('catalogo.aduana.data');
+Route::delete('/catalogo/aduana/{id}', [AduanaController::class, 'destroy']);
+Route::get('/catalogo/aduana/{id}/edit', [AduanaController::class, 'edit']);
+Route::put('/catalogo/aduana/{id}', [AduanaController::class, 'update']);
+
+
 
 
 //Domicilios fiscal
