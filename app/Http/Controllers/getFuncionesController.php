@@ -360,7 +360,9 @@ foreach ($certificados as $certificado) {
         'data' => $documentos,
         'numero_cliente' => $numero_cliente,
         'fqs' => $fqs,
-        'numero_cliente_lote' => $numero_cliente_lote,
+        'numero_cliente_lote' => $solicitud->lote_granel?->empresa?->empresaNumClientes
+            ->first(fn($item) => !empty($item->numero_cliente))
+            ?->numero_cliente ?? 'N/A',
         'url_etiqueta' => $url_etiqueta ?? '',
         'url_corrugado' => $url_corrugado ?? '',
         'url_certificado' => $urls_certificados ?? '',
