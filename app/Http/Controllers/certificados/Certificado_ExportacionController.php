@@ -757,14 +757,15 @@ public function MostrarCertificadoExportacion($id_certificado)
                 $lotes->push($lote);//Agregar el lote a la colección
             }
         }*/
-        //dd($lotes[0]->lotesGranel[0]);
-        $convenio = $lotes[0]->lotesGranel[0]->id_empresa == 5 ?
-            $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA' :
-            $lotes[0]->lotesGranel[0]->empresa->convenio_corresp ?? 'NA';
 
-        $DOM = $lotes[0]->lotesGranel[0]->id_empresa == 5 ? 
-            $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA':
-            $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? 'NA';
+        //dd($lotes[0]->lotesGranel[0]);para ver que imprime
+        $lote_grupoSones = $lotes[0]->lotesGranel[0]->id_empresa == 5;
+        $es_Crista = $lote_grupoSones ? 
+            $data->dictamen->inspeccione->solicitud->empresa :
+            $lotes[0]->lotesGranel[0]->empresa;
+
+        $convenio = $es_Crista->convenio_corresp ?? 'NA';
+        $DOM = $es_Crista->registro_productor ?? 'NA';
 
     //return response()->json(['message' => 'No se encontraron características.', $data], 404)
 
