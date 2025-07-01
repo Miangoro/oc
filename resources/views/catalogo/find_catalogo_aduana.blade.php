@@ -81,10 +81,11 @@
     <div class="offcanvas-body">
       <form id="editAduanaForm" method="POST">
       @csrf
+      @method('PUT')
       <input type="hidden" name="id_aduana" id="edit_aduana_id">
       <div class="form-floating form-floating-outline mb-4">
-        <input type="text" class="form-control" id="aduana_nombre" name="aduana" required>
-        <label for="aduana_nombre">Nombre de la Aduana</label>
+        <input type="text" class="form-control" id="edit_aduana_nombre" name="aduana" required>
+        <label for="edit_aduana_nombre">Nombre de la Aduana</label>
       </div>
       <button type="submit" class="btn btn-primary">Confirmar</button>
       <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
