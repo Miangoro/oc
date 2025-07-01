@@ -471,6 +471,14 @@ public function MostrarDictamenExportacion($id_dictamen)
         $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
             : collect(); // Si no hay IDs, devolvemos una colección vacía
 
+    $lote_grupoSones = $lotes[0]->lotesGranel[0]->id_empresa == 5;
+        $es_Crista = $lote_grupoSones ? 
+            $data->dictamen->inspeccione->solicitud->empresa :
+            $lotes[0]->lotesGranel[0]->empresa;
+
+        $convenio = $es_Crista->convenio_corresp ?? 'NA';
+        $DOM = $es_Crista->registro_productor ?? 'NA';
+
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
 
 
@@ -483,7 +491,8 @@ public function MostrarDictamenExportacion($id_dictamen)
         'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'domicilio' => $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
         'rfc' => $data->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
-        'productor_autorizado' => $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? '',
+        //'productor_autorizado' => $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? '',
+        'productor_autorizado' => $DOM,
         'importador' => $data->inspeccione->solicitud->direccion_destino->destinatario ?? "No encontrado",
         //'direccion' => $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrado',
         'direccion' => $data->inspeccione->solicitud->direccion_destino->direccion ?? "No encontrado",
