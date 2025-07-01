@@ -164,7 +164,7 @@ use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
 use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\catalogo\categoriasController;
-use App\Http\Controllers\Catalogo\AduanaController;
+use App\Http\Controllers\catalogo\AduanaController;
 use App\Http\Controllers\catalogo\marcasCatalogoController;
 use App\Http\Controllers\catalogo\claseController;
 use App\Http\Controllers\catalogo\lotesEnvasadoController;
