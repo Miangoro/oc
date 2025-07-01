@@ -188,7 +188,7 @@
             Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
         @endif
         <br>Certificado de Exportación NOM-070-SCFI-2016 F7.1-01-23 Ed 13
-        <br>Entrada en vigor: 2025
+        <br>Entrada en vigor: 01-07-2025
     </p>
     
     <img class="img-footer" src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina">
@@ -243,7 +243,7 @@
     </tr>
     <tr>
         <td class="td-margins" style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;">
-            Registro de Productor<br>Autorizado (Uso de la <br> DOM):</td>
+            Registro de Productor<br>Autorizado (DOM):</td>
         <td class="td-margins" style="text-align: left">
             {{ $DOM }}
         </td>
@@ -289,7 +289,7 @@
                 {{ $lote->lotesGranel->first()->folio_certificado ?? 'No encontrado' }}&nbsp;
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
-                Volumen:</td>
+                Contenido Neto:</td>
             <td style="text-align: left; padding-left: 4px;">
                 {{ $lote->presentacion ?? 'No encontrado' }} {{ $lote->unidad ?? 'No encontrado' }}
             </td>

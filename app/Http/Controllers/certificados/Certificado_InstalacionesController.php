@@ -31,6 +31,8 @@ class Certificado_InstalacionesController extends Controller
     public function UserManagement()
     {
         $dictamenes = Dictamen_instalaciones::where('estatus', '!=', 1)
+            ->whereDoesntHave('certificado') // Solo los dictámenes sin certificado
+            ->where('fecha_emision','>','2024-12-31')
             ->orderBy('id_dictamen', 'desc')
             ->get();
         $users = User::where('tipo', 1)->get();
@@ -419,7 +421,9 @@ public function index(Request $request)
     public function edit($id)
     {
         try {
-            $certificado = Certificados::find($id);
+            //$certificado = Certificados::find($id);
+            $certificado = Certificados::with('dictamen.inspeccione.solicitud')->findOrFail($id);
+
 
             if ($certificado) {
                 //return response()->json($certificado);
@@ -433,6 +437,9 @@ public function index(Request $request)
                     'id_firmante' => $certificado->id_firmante,
                     'maestro_mezcalero' => $certificado->maestro_mezcalero,
                     //'num_autorizacion' => $certificado->num_autorizacion,
+
+                    'folio' => $certificado->dictamen->inspeccione->solicitud->folio ?? '',
+                    'num_dictamen' => $certificado->dictamen->num_dictamen ?? ''
                 ]);
             }
         } catch (\Exception $e) {
@@ -1122,7 +1129,7 @@ public function index(Request $request)
 
             if (Storage::exists("public/uploads/{$rutaArchivo}")) {
                 return response()->json([
-                    'documento_url' => Storage::url($rutaArchivo), // genera URL pública
+                    'documento_url' => asset("files/".$rutaArchivo), // genera URL pública
                     'nombre_archivo' => basename($documentacion->url),
                 ]);
             }else {

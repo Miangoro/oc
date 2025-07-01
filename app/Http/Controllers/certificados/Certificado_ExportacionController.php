@@ -41,6 +41,7 @@ class Certificado_ExportacionController extends Controller
         $dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')
             ->where('estatus', '!=', 1)
             ->whereDoesntHave('certificado') // Solo los dictámenes sin certificado
+            ->where('fecha_emision','>','2024-12-31')
             ->orderBy('id_dictamen', 'desc')
             ->get();
  
@@ -151,7 +152,19 @@ public function index(Request $request)
 
     // Ordenamiento especial para num_certificado con formato 'CIDAM C-EXP25-###'
     if ($orderColumn === 'num_certificado') {
-        $query->orderByRaw("
+        /*$query->orderByRaw(" ANTERIOR FUNCIONAL
+            CASE
+                WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
+                ELSE 1
+            END ASC,
+            CAST(
+                SUBSTRING_INDEX(
+                    SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14),
+                    '-', 1
+                ) AS UNSIGNED
+            ) $orderDirection
+        ");*/
+         $query->orderByRaw("
             CASE
                 WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
                 WHEN num_certificado LIKE 'CIDAM C-EXP24-%' THEN 1
@@ -177,7 +190,6 @@ public function index(Request $request)
                 ELSE 999999
             END $orderDirection
         ");
-
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
     }
@@ -952,7 +964,8 @@ public function CertificadoFirmado($id)
 
         if (Storage::exists("public/uploads/{$rutaArchivo}")) {
             return response()->json([
-                'documento_url' => Storage::url($rutaArchivo), // genera URL pública
+                //'documento_url' => Storage::url($rutaArchivo), // genera URL pública
+                'documento_url' => asset("files/".$rutaArchivo),
                 'nombre_archivo' => basename($documentacion->url),
             ]);
         }else {

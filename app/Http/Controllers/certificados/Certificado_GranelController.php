@@ -31,11 +31,20 @@ class Certificado_GranelController extends Controller
     public function UserManagement()
     {
         $certificados = CertificadosGranel::all();
+        /*$dictamenes = Dictamen_Granel::with('inspeccione.solicitud')
+            ->whereHas('inspeccione.solicitud', function ($query) {
+            $query->where('id_tipo', '!=', 2);
+            })
+            ->where('estatus','!=',1)
+            ->orderBy('id_dictamen', 'desc')
+            ->get();*/
         $dictamenes = Dictamen_Granel::with('inspeccione.solicitud')
             ->whereHas('inspeccione.solicitud', function ($query) {
             $query->where('id_tipo', '!=', 2);
             })
             ->where('estatus','!=',1)
+            ->whereDoesntHave('certificado') // Solo los dictámenes sin certificado
+            ->where('fecha_emision','>','2024-12-31')
             ->orderBy('id_dictamen', 'desc')
             ->get();
         $users = User::where('tipo',1)->get();
@@ -316,10 +325,16 @@ public function destroy($id_certificado)
 ///FUNCION PARA OBTENER LOS REGISTROS
 public function edit($id)
 {
-    $certificado = CertificadosGranel::find($id);
+    //$certificado = CertificadosGranel::find($id);
+    $certificado = CertificadosGranel::with('dictamen.inspeccione.solicitud')->findOrFail($id);
+
 
     if ($certificado) {
-        return response()->json($certificado);
+        return response()->json([
+            'certificado' => $certificado,
+            'folio' => $certificado->dictamen->inspeccione->solicitud->folio ?? '',
+            'num_dictamen' => $certificado->dictamen->num_dictamen ?? ''
+        ]);
     }
 
     return response()->json(['error' => 'Error al obtener los datos.'], 500);
@@ -760,7 +775,8 @@ public function CertificadoFirmado($id)
 
         if (Storage::exists("public/uploads/{$rutaArchivo}")) {
             return response()->json([
-                'documento_url' => Storage::url($rutaArchivo), // genera URL pública
+                //'documento_url' => Storage::url($rutaArchivo), // genera URL pública
+                'documento_url' => asset("files/".$rutaArchivo),
                 'nombre_archivo' => basename($documentacion->url),
             ]);
         }else {
