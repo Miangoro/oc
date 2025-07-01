@@ -869,6 +869,7 @@ function obtenerEtiquetas() {
       $('#cantidad_botellas').val('');
       $('#volumen_total').val('');
       $('#volumen_parcial').val('');
+      $('#id_etiqueta').html('');
 
       // Restablecer la validación del formulario
       fv.resetForm(true);
