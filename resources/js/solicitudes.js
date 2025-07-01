@@ -447,7 +447,7 @@ $(function () {
     buttons: [
       {
         extend: 'collection',
-        className: 'btn btn-outline-primary dropdown-toggle me-4 waves-effect waves-light',
+        className: 'btn btn-outline-primary btn-lg dropdown-toggle me-4 waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4 mt-md-0',
         text: '<i class="ri-filter-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Filtrar</span>',
         buttons: filtroButtons
       },

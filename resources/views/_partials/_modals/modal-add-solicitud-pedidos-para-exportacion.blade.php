@@ -478,6 +478,7 @@
                             <td>1</td>
                             <td>${response.lote_envasado.nombre}</td>
                             <td>${limpiarSku(response.lote_envasado.sku) == '{"inicial":""}' ? "SKU no definido" : limpiarSku(response.lote_envasado.sku)}</td>
+                            <td>${response.lote_envasado.cont_alc_envasado || 'N/A'}</td>
                             <td>${response.lote_envasado.presentacion || 'N/A'} ${response.lote_envasado.unidad || ''}</td>
 
                             <td>Botellas: ${response.lote_envasado.cant_botellas}

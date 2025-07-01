@@ -11,8 +11,8 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange=" edit_obtenerGraneles(); obtenerEtiquetas2();" id="edit_cliente" name="edit_cliente"
-                                    class="select2 form-select" required>
+                                <select onchange=" edit_obtenerGraneles(); obtenerEtiquetas2();" id="edit_cliente"
+                                    name="edit_cliente" class="select2 form-select" required>
                                     <option value="" disabled>Selecciona cliente</option>
                                     @foreach ($clientes as $cliente)
                                         <option value="{{ $cliente->id_empresa }}">
@@ -119,7 +119,7 @@
                         </table>
                     </div>
                     <div class="row">
-                        <div class="col-md-9 mb-4">
+                        <div class="col-md-12 mb-4">
                             <label class="form-label" for="basic-default-password42">Instalación de envasado
                                 certificada</label>
                             <div class="form-floating form-floating-outline mb-6">
@@ -128,16 +128,6 @@
                                     name="edit_Instalaciones" aria-label="Default select example">
                                     <option value="" disabled selected>Seleccione un cliente</option>
                                 </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label class="form-label" for="Contenido alcohólico">Contenido alcohólico</label>
-                            <div class="form-floating form-floating-outline mb-4">
-                                <input class="form-control" type="number" step="0.01"
-                                    placeholder="Contenido alcohólico" id="edit_cont_alc_envasado"
-                                    name="cont_alc_envasado" />
-                                <label for="Contenido alcohólico">Contenido alcohólico</label>
                             </div>
                         </div>
                     </div>
@@ -156,6 +146,14 @@
                                     <option value="Sin etiqueta">Sin etiqueta</option>
                                 </select>
                                 <label for="tipo">Etiqueta</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input class="form-control" type="number" step="0.01"
+                                    placeholder="Contenido alcohólico" id="edit_cont_alc_envasado"
+                                    name="cont_alc_envasado" />
+                                <label for="Contenido alcohólico">Contenido alcohólico</label>
                             </div>
                         </div>
                     </div>
@@ -249,18 +247,18 @@
         });
     }
 
-      function obtenerEtiquetas2() {
-          var empresa = $('#edit_cliente').val();
-          if (!empresa) return;
+    function obtenerEtiquetas2() {
+        var empresa = $('#edit_cliente').val();
+        if (!empresa) return;
 
-          $.ajax({
-              url: '/etiquetas/' + empresa,
-              method: 'GET',
-              success: function (response) {
-                  var contenido2 = '<option value="" disabled selected>Seleccione una etiqueta</option>';
+        $.ajax({
+            url: '/etiquetas/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var contenido2 = '<option value="" disabled selected>Seleccione una etiqueta</option>';
 
-                  response.forEach(function (etiqueta) {
-                      contenido2 += `
+                response.forEach(function(etiqueta) {
+                    contenido2 += `
                           <option value="${etiqueta.id_etiqueta}"
                               data-id_marca="${etiqueta.id_marca}"
                               data-sku="${etiqueta.sku}"
@@ -269,18 +267,18 @@
                               data-id_tipo="${etiqueta.id_tipo}">
                             ${etiqueta.marca_nombre} | ${etiqueta.presentacion}${etiqueta.unidad} | ${etiqueta.alc_vol}% Alc. Vol. | ${etiqueta.clase_nombre} | ${etiqueta.categoria_nombre} | ${etiqueta.tipo_nombre}
                           </option>`;
-                  });
+                });
 
-                  $('#edit_id_etiqueta').html(contenido2).trigger('change');
+                $('#edit_id_etiqueta').html(contenido2).trigger('change');
 
-                     const edit_etiqueta = $('#edit_id_etiqueta').data('selected');
-                    if (edit_etiqueta) {
-                        $('#edit_id_etiqueta').val(edit_etiqueta);
-                    }
+                const edit_etiqueta = $('#edit_id_etiqueta').data('selected');
+                if (edit_etiqueta) {
+                    $('#edit_id_etiqueta').val(edit_etiqueta);
+                }
 
-              }
-          });
-      }
+            }
+        });
+    }
 
 
 
