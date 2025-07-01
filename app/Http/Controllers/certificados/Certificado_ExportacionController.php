@@ -793,11 +793,11 @@ public function MostrarCertificadoExportacion($id_certificado)
     }else{
         $edicion = 'pdfs.certificado_exportacion_ed12';
     }*/
-    /*if (isset($data->fecha_emision) && $data->fecha_emision < '2025-07-01') {
+    if (isset($data->fecha_emision) && $data->fecha_emision < '2025-07-01') {
         $edicion = 'pdfs.certificado_exportacion_ed12';
-    } else {*/
+    } else {
         $edicion = 'pdfs.certificado_exportacion_ed13';
-    //}
+    }
     //nombre al descargar
     //return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
     return Pdf::loadView($edicion, $pdf)->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
