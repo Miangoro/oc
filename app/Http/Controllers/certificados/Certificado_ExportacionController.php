@@ -982,6 +982,40 @@ public function CertificadoFirmado($id)
         //'message' => 'Documento no encontrado.',
     ]);
 }
+///BORRAR CERTIFICADO FIRMADO
+public function borrarCertificadofirmado($id)
+{
+    $certificado = Certificado_Exportacion::findOrFail($id);
+
+    $documentacion = Documentacion_url::where('id_documento', 135)
+        ->where('id_relacion', $certificado->id_certificado)
+        ->first();
+
+    if (!$documentacion) {
+        return response()->json(['message' => 'Documento no encontrado.'], 404);
+    }
+
+    $empresa = empresa::with("empresaNumClientes")
+        ->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)
+        ->first();
+
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+
+    $rutaArchivo = "public/uploads/{$numeroCliente}/certificados_exportacion/{$documentacion->url}";
+
+    // Eliminar archivo físico
+    if (Storage::exists($rutaArchivo)) {
+        Storage::delete($rutaArchivo);
+    }
+
+    // Eliminar registro en la base de datos
+    $documentacion->delete();
+
+    return response()->json(['message' => 'Documento eliminado correctamente.']);
+}
+
 
 
 
