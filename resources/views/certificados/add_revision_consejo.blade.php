@@ -508,7 +508,7 @@
                                                     $datos->certificado->dictamen->inspeccione->solicitud ?? null;
                                                 $loteGranel = $solicitud->lote_granel ?? null;
                                                 $loteEnvasado = $solicitud->lote_envasado ?? null;
-                                                $empresa = $solicitud->empresa ?? null;
+                                                $empresa = $loteGranel->empresa ?? null;
 
                                                 $numero_cliente =
                                                     $empresa && $empresa->empresaNumClientes->isNotEmpty()
