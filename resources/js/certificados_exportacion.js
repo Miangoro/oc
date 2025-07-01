@@ -97,6 +97,7 @@ if (dt_user_table.length) {
       },
       columns: [
         { data: '' }, // (0)
+        { data: '' },//(1)
         { data: 'num_certificado' },//(1)
         {
           data: '',/*null, //soli y serv.
@@ -131,8 +132,17 @@ if (dt_user_table.length) {
             return '';
           }
         },
+        //numeracion
         {
+          searchable: false,
+          orderable: false,
           targets: 1,
+          render: function (data, type, full, meta) {
+            return `<span>${full.fake_id}</span>`;
+          }
+        },
+        {
+          targets: 2,
           orderable: true,
           searchable: true,
           render: function (data, type, full, meta) {
@@ -164,7 +174,7 @@ if (dt_user_table.length) {
         },
         {
           //Tabla 2
-          targets: 2,
+          targets: 3,
           searchable: true,
           orderable: false,
           render: function (data, type, full, meta) {
@@ -193,7 +203,7 @@ if (dt_user_table.length) {
         },
         {
           //caracteristicas
-          targets: 4,
+          targets: 5,
           searchable: true,
           orderable: false,
           responsivePriority: 4,
@@ -213,7 +223,7 @@ if (dt_user_table.length) {
           }
         },
         {//fechas
-          targets: 5,
+          targets: 6,
           searchable: true,
           orderable: true,
           className: 'text-center',
@@ -229,7 +239,7 @@ if (dt_user_table.length) {
           }
         },
         {//estatus
-          targets: 6,
+          targets: 7,
           searchable: false,
           orderable: true,
           className: 'text-center',
@@ -380,7 +390,7 @@ if (dt_user_table.length) {
         }
       ],
 
-      order: [[1, 'desc']],//por defecto ordene por num_certificado (index 1)
+      order: [[2, 'desc']],//por defecto ordene por num_certificado (index 1)
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' +

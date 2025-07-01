@@ -63,6 +63,7 @@
             <thead class="table-dark">
                 <tr>
                     <th></th>
+                    <th>#</th>
                     <th>No. certificado / Solicitud</th>
                     <th>Solicitud /<br>no. servicio</th>
                     <th>Cliente</th>
