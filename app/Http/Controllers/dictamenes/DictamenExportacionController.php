@@ -473,7 +473,7 @@ public function MostrarDictamenExportacion($id_dictamen)
 
     $lote_grupoSones = $lotes[0]->lotesGranel[0]->id_empresa == 5;
         $es_Crista = $lote_grupoSones ? 
-            $data->dictamen->inspeccione->solicitud->empresa :
+            $data->inspeccione->solicitud->empresa :
             $lotes[0]->lotesGranel[0]->empresa;
 
         $convenio = $es_Crista->convenio_corresp ?? 'NA';
