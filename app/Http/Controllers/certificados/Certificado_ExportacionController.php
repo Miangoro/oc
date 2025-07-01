@@ -885,9 +885,9 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
 
 
     if (isset($data->fecha_emision) && $data->fecha_emision < '2025-07-01') {
-        $edicion = 'pdfs.solicitud_certificado_exportacion_ed11';
-    } else {
         $edicion = 'pdfs.solicitud_certificado_exportacion_ed10';
+    } else {
+        $edicion = 'pdfs.solicitud_certificado_exportacion_ed11';
     }
     //nombre al descargar
     //return $pdf->stream('Solicitud de emisión de Certificado Combinado para Exportación NOM-070-SCFI-2016 F7.1-01-55.pdf');
