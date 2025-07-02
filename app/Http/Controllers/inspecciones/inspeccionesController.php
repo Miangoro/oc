@@ -81,6 +81,7 @@ class inspeccionesController extends Controller
             11 => 'name',
             12 => 'id_inspeccion',
             13 => 'id_empresa',
+            14 => 'ubicacion_predio'
         ];
 
         $limit = $request->input('length');
