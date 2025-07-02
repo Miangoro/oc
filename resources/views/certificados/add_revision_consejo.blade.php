@@ -636,8 +636,8 @@
                                                     $urlDom = '/files/'.$numeroCliente."/".$url;
                                                 @endphp
                                              
-                                                @if ($urlDom)
-                                                    <a target="_blank" href="{{ $url }}">
+                                                @if ($url)
+                                                    <a target="_blank" href="{{ $urlDom }}">
                                                         <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
                                                 @else
