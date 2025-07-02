@@ -605,13 +605,14 @@
                                                     $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa  ?? null;
                                                     $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel ?? null;
                                                     $numeroCliente = $loteGranel->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente ?? null;
-                                                   $urlDom = optional($solicitud->empresa)->id_empresa
-    ? optional(
-        \App\Models\documentacion_url::where('id_empresa', $solicitud->empresa->id_empresa)
-            ->where('id_documento', 83)
-            ->first()
-      )->url
-    : null;
+                                                    $urlDom = optional($solicitud->empresa)->id_empresa
+                                                                ? optional(
+                                                                    \App\Models\documentacion_url::where('id_empresa', $solicitud->empresa->id_empresa)
+                                                                        ->where('id_documento', 83)
+                                                                        ->first()
+                                                                )->url
+                                                                : null;
+
 
                                                     $urlDom = '/files/'.$numeroCliente."/".$url;
                                                 @endphp
