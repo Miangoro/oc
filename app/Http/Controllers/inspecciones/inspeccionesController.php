@@ -102,6 +102,12 @@ class inspeccionesController extends Controller
                     ->orWhereHas('inspeccion', function ($q) use ($search) {
                         $q->where('num_servicio', 'LIKE', "%{$search}%");
                     })
+                    ->orWhereHas('instalacion', function ($q) use ($search) {
+                        $q->where('direccion_completa', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('predios', function ($q) use ($search) {
+                        $q->where('ubicacion_predio', 'LIKE', "%{$search}%");
+                    })
                     ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
                         $q->where('tipo', 'LIKE', "%{$search}%");
                     })
