@@ -604,7 +604,7 @@
 
                                                    
                                                     $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->dictamen->inspeccione->solicitud->empresa ?? null;
-                                                    $numeroCliente = $mpresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente ?? null;
+                                                    $numeroCliente = $empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente ?? null;
                                                     $url = \App\Models\documentacion_url::where('id_empresa', $empresa->id_empresa)
                                                     ->where('id_documento', 83)
                                                     ->value('url');
