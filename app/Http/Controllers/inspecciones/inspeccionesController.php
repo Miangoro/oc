@@ -187,12 +187,12 @@ class inspeccionesController extends Controller
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
                 $nestedData['tipo'] = $solicitud->tipo_solicitud->tipo  ?? 'N/A';
                 $nestedData['direccion_completa'] = !empty($solicitud->instalacion->direccion_completa)
-    ? $solicitud->instalacion->direccion_completa
-    : (
-        isset($solicitud->predios)
-            ? trim("{$solicitud->predios->ubicacion_predio} {$solicitud->predios->nombre_predio}")
-            : 'N/A'
-    );
+                            ? $solicitud->instalacion->direccion_completa
+                            : (
+                                isset($solicitud->predios)
+                                    ? trim("{$solicitud->predios->ubicacion_predio} {$solicitud->predios->nombre_predio}")
+                                    : 'N/A'
+                            );
 
                 $nestedData['tipo_instalacion'] = $solicitud->instalacion->tipo  ?? '';
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</span>';
