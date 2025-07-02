@@ -298,7 +298,7 @@
     @if($loop->last)
         <table>
             <tr>
-                <td style="padding-top:12px; padding-bottom:12px; width: 20%;">Cantidad total del<br>producto combinado: </td>
+                <td style="padding-top:12px; padding-bottom:12px; width: 20%;">Cantidad total<br>del producto : </td>
                 <td>
                     <b>{{ $cajas }} Cajas y {{ $botellas }} Botellas</b>
                 </td>
