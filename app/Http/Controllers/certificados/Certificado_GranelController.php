@@ -307,6 +307,11 @@ public function destroy($id_certificado)
         // Eliminar todos los revisores asociados al certificado en la tabla certificados_revision
         Revisor::where('id_certificado', $id_certificado)->delete();
 
+        // Eliminar la solicitud asociada (id_predio = id_certificado, id_tipo = 12)
+        solicitudesModel::where('id_predio', $id_certificado)
+            ->where('id_tipo', 12)
+            ->delete();
+            
         // Luego, eliminar el certificado
         $eliminar->delete();
 
@@ -370,6 +375,21 @@ public function update(Request $request, $id_certificado)
         $lote = LotesGranel::find($idLoteGranel);
         $lote->folio_certificado = $validated['num_certificado'];
         $lote->update();
+
+
+        $soli = solicitudesModel::where('id_predio', $id_certificado)
+            ->where('id_tipo', 12)
+            ->first();
+        $soli->id_empresa = $dictamen->inspeccione->solicitud->id_empresa ?? '0';
+        $soli->fecha_solicitud = $validated['fecha_emision'];
+        $soli->fecha_visita = $validated['fecha_emision'];
+        $soli->id_instalacion =  $dictamen->inspeccione->solicitud->id_instalacion ?? '0';
+        $soli->caracteristicas = json_encode([
+            'id_lote_granel' => $idLoteGranel ?? '0',
+            'id_dictamen' => $dictamen->id_dictamen ?? '0'
+            ]);
+        $soli->update();
+        
 
         return response()->json(['message' => 'Actualizado correctamente.']);
     } catch (\Exception $e) {
