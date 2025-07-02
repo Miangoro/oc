@@ -640,7 +640,7 @@
                                                     $urlDom = '/files/'.$numeroCliente."/".$url;
                                                 @endphp
                                              
-                                                @if ($url)
+                                                @if ($url && !in_array($datos->certificado->dictamen->inspeccione->solicitud->empresa->convenio_corresp, ['NA', 'N/A', ''])) 
                                                     <a target="_blank" href="{{ $urlDom }}">
                                                         <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
