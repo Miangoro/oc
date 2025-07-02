@@ -100,15 +100,16 @@ class inspeccionesController extends Controller
                     ->orWhereHas('empresa', function ($q) use ($search) {
                         $q->where('razon_social', 'LIKE', "%{$search}%");
                     })
-                    ->orWhereHas('inspeccion', function ($q) use ($search) {
-                        $q->where('num_servicio', 'LIKE', "%{$search}%");
-                    })
                     ->orWhereHas('instalacion', function ($q) use ($search) {
                         $q->where('direccion_completa', 'LIKE', "%{$search}%");
                     })
                     ->orWhereHas('predios', function ($q) use ($search) {
                         $q->where('ubicacion_predio', 'LIKE', "%{$search}%");
                     })
+                    ->orWhereHas('inspeccion', function ($q) use ($search) {
+                        $q->where('num_servicio', 'LIKE', "%{$search}%");
+                    })
+                    
                     ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
                         $q->where('tipo', 'LIKE', "%{$search}%");
                     })
@@ -118,7 +119,7 @@ class inspeccionesController extends Controller
             });
         }
 
-        $totalData = solicitudesModel::count();
+       $totalData = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion', 'predios')->count();
         $totalFiltered = $query->count();
 
         // Obtener datos paginados sin orden
