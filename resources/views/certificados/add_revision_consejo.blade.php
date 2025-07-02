@@ -610,7 +610,7 @@
                                                             ->where('id_documento', 83)
                                                             ->first())->url;
 
-                                                    $urlDom = $numeroCliente."/".$url;
+                                                    $urlDom = '/files/'.$numeroCliente."/".$url;
                                                 @endphp
                                              
                                                 @if ($urlDom)
