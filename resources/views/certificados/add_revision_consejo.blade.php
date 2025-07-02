@@ -613,7 +613,7 @@
                                                     $urlDom = '/files/'.$numeroCliente."/".$url;
                                                 @endphp
                                              
-                                                @if ($urlDom)
+                                                @if ($url)
                                                     <a target="_blank" href="{{ $urlDom }}">
                                                         <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
@@ -637,7 +637,7 @@
                                                 @endphp
                                              
                                                 @if ($urlDom)
-                                                    <a target="_blank" href="{{ $urlDom }}">
+                                                    <a target="_blank" href="{{ $url }}">
                                                         <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
                                                 @else
