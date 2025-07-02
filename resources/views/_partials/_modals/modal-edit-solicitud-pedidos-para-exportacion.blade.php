@@ -147,7 +147,7 @@
                                     <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select onchange="cargarDetallesLoteEnvasadoEdit2(this.value)"
-                                                name="lote_envasado[0]" id="lote_envasado_edit_0"
+                                                 id="lote_envasado_edit_0"
                                                 class="select2 form-select evasado_export_edit lote-envasado-edit">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
@@ -191,13 +191,14 @@
                                         </div>
                                     </span>
                                     <div class="p-2">
-                                        <table id="tablaLotes" class="table table-bordered mb-2 table-sm"
+                                        <table id="tablaLotesEdit" class="table table-bordered mb-2 table-sm"
                                             style="width: 100%; border-collapse: collapse;">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Nombre del Lote</th>
                                                     <th>SKU</th>
+                                                    <th>Contenido alcohólico</th>
                                                     <th>Presentación</th>
                                                     <th>Cantidad de botellas</th>
                                                 </tr>
@@ -537,7 +538,7 @@
                     console.log(response); // Verifica la respuesta en la consola
                     console.log("Entro en el de modal edit");
 
-                    let tbody = $('#tablaLotes tbody');
+                    let tbody = $('#tablaLotesEdit tbody');
                     tbody.empty(); // Limpia los datos anteriores
 
                     // Verifica si existe lote_envasado y lo muestra en la tabla
@@ -548,8 +549,13 @@
                         let filaEnvasado = `
                         <tr>
                             <td>1</td>
-                            <td>${response.lote_envasado.nombre}</td>
+                            <td>${response.lote_envasado.nombre}
+                              <input type="text" class="d-none form-control form-control-sm" name="lote_envasado[0][id_lote_envasado]" autocomplete="off" value="${response.lote_envasado.id_lote_envasado || 'N/A'}" />
+                            </td>
                             <td>${limpiarSku(response.lote_envasado.sku) == '{"inicial":""}' ? "SKU no definido" : limpiarSku(response.lote_envasado.sku)}</td>
+                            <td>
+                            <input type="text" class="form-control form-control-sm" name="lote_envasado[0][cont_alc]" autocomplete="off" value="${response.lote_envasado.cont_alc_envasado || 'N/A'}" />
+                            </td>
                             <td>${response.lote_envasado.presentacion || 'N/A'} ${response.lote_envasado.unidad || ''}</td>
 
                             <td>Botellas: ${response.lote_envasado.cant_botellas}
@@ -583,7 +589,7 @@
                                   </td>
 
                                   <td>
-                                    <input type="text" class="form-control form-control-sm" name="lotes_granel[0][cont_alc]" value="${lote.cont_alc || ''}" />
+                                    ${lote.cont_alc || ''}
                                   </td>
                                <td>
                                 ${lote.categoria.categoria || 'N/A'}<br>
@@ -750,6 +756,52 @@
                 url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
                 method: 'GET',
                 success: function(response) {
+
+                const contenedor = $(`#caracteristicas_Ex_edit_${sectionCountEdit} .card-body`);
+                let tablaEnvasadoEdit = `tablaLoteEnvasado_edit_${sectionCountEdit}`;
+                if ($(`#${tablaEnvasadoEdit}`).length === 0) {
+                    contenedor.append(`
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <table id="${tablaEnvasadoEdit}" class="table table-bordered table-sm mb-2">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nombre del Lote</th>
+                                            <th>SKU</th>
+                                            <th>Contenido alcohólico</th>
+                                            <th>Presentación</th>
+                                            <th>Cantidad de botellas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `);
+                }
+
+                let $tbodyEnvasado = $(`#${tablaEnvasadoEdit} tbody`);
+                $tbodyEnvasado.empty();
+
+                if (response.lote_envasado) {
+                    $tbodyEnvasado.append(`
+                        <tr>
+                            <td>1</td>
+                            <td>${response.lote_envasado.nombre}
+                              <input type="text" class="d-none form-control form-control-sm" name="lote_envasado[${sectionCountEdit}][id_lote_envasado]" autocomplete="off" value="${response.lote_envasado.id_lote_envasado || 'N/A'}" />
+                            </td>
+                            <td>${limpiarSku(response.lote_envasado.sku) == '{"inicial":""}' ? "SKU no definido" : limpiarSku(response.lote_envasado.sku)}</td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="lote_envasado[${sectionCountEdit}][cont_alc]" autocomplete="off" value="${response.lote_envasado.cont_alc_envasado || 'N/A'}" />
+                            </td>
+                            <td>${response.lote_envasado.presentacion || 'N/A'} ${response.lote_envasado.unidad || ''}</td>
+                            <td>Botellas: ${response.lote_envasado.cant_botellas}</td>
+                        </tr>
+                    `);
+                }
+
+
                     $(`#lote_granel_edit_${sectionCountEdit}`).val(
                         response.detalle && response.detalle.length > 0 ?
                         response.detalle.map(lote => lote.nombre_lote).join(', ') :
@@ -767,7 +819,7 @@
                                     <th>Certificado</th>
                                     <th>Folio FQ</th>
                                     <th>Cont. Alc.</th>
-                                    <th>Categoría / Clase / Tipos de Maguey</th>
+                                    <th colspan="2">Categoría / Clase / Tipos de Maguey</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -793,9 +845,9 @@
                                   <input type="text" class="form-control form-control-sm" name="lotes_granel[${sectionCountEdit}][folio_fq]" autocomplete="off" value="${lote.folio_fq || ''}" />
                                 </td>
                                 <td>
-                                  <input type="text" class="form-control form-control-sm" name="lotes_granel[${sectionCountEdit}][cont_alc]" autocomplete="off" value="${lote.cont_alc || ''}" />
+                                  ${lote.cont_alc || ''}
                                 </td>
-                                <td>
+                                <td colspan="2">
                                     ${lote.categoria?.categoria || 'N/A'}<br>
                                     ${lote.clase?.clase || 'N/A'}<br>
                                     ${

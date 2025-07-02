@@ -1553,6 +1553,7 @@ class solicitudesController extends Controller
                 break;
 
             case 'pedidosExportacion':
+             /* dd($request->all()); */
                 // Validación de datos del formulario
                 $validated = $request->validate([
                     'id_empresa' => 'required|integer',
@@ -1571,11 +1572,18 @@ class solicitudesController extends Controller
                     'cantidad_cajas' => 'required|array',  // Asegurarse de que las cantidades sean arrays
                     'presentacion' => 'required|array',  // Asegurarse de que las presentaciones sean arrays
                     'id_etiqueta' => 'required|integer',
+                    'lote_envasado.*.id_lote_envasado' => 'required|integer',
+
+                    'lote_envasado.*.cont_alc' => [
+                        'required',            // Ya no nullable si siempre se guarda
+                        'numeric',
+                        'between:0,99.99',
+                        'regex:/^\d{1,2}(\.\d{1,2})?$/',
+                    ],
 
                     'lotes_granel' => 'nullable|array',
                     'lotes_granel.*.id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
                     'lotes_granel.*.folio_fq' => 'nullable|string',
-                    'lotes_granel.*.cont_alc' => 'nullable|numeric',
                 ]);
 
                 // Procesar características
@@ -1589,25 +1597,37 @@ class solicitudesController extends Controller
                 $data['id_etiqueta'] = $validated['id_etiqueta'];  // Solo si es enviado
                 $data['id_instalacion_envasado'] = $validated['id_nstalaciones_envasado_2_edit'];  // Solo si es enviado
                 // Preparar los detalles
-                $detalles = [];
-                $totalLotes = count($validated['lote_envasado']);  // Suponiendo que todos los arrays tienen el mismo tamaño
 
-                for ($i = 0; $i < $totalLotes; $i++) {
-                    if ($i === 0) {
-                        $detalles[] = [
-                            'id_lote_envasado' => (int)$validated['lote_envasado'][$i],
-                            'cantidad_botellas' => isset($validated['cantidad_botellas'][$i]) ? (int)$validated['cantidad_botellas'][$i] : null,
-                            'cantidad_cajas' => isset($validated['cantidad_cajas'][$i]) ? (int)$validated['cantidad_cajas'][$i] : null,
-                            'presentacion' => isset($validated['presentacion'][$i]) ? $validated['presentacion'][$i] : null,
-                        ];
-                    } else {
-                        $detalles[] = [
-                            'id_lote_envasado' => (int)$validated['lote_envasado'][$i],
-                        ];
-                    }
-                }
-                // Incluir los detalles dentro de las características
-                $data['detalles'] = $detalles;
+
+                  $detalles = [];
+
+                  foreach ($validated['lote_envasado'] as $i => $lote) {
+                    /* dd($i, $lote); */
+                      $idLote = $lote['id_lote_envasado'] ?? null;
+                      if (!$idLote) continue;
+
+                      if ($i === 0) {
+                          $detalles[] = [
+                              'id_lote_envasado' => (int) $idLote,
+                              'cantidad_botellas' => (int) ($validated['cantidad_botellas'][0] ?? 0),
+                              'cantidad_cajas' => (int) ($validated['cantidad_cajas'][0] ?? 0),
+                              'presentacion' => [ $validated['presentacion'][0] ?? '' ],
+                          ];
+                      } else {
+                          $detalles[] = [
+                              'id_lote_envasado' => (int) $idLote,
+                          ];
+                      }
+
+                      // Actualizar contenido alcohólico
+                      if (!is_null($lote['cont_alc'] ?? null)) {
+                          lotes_envasado::where('id_lote_envasado', $idLote)
+                              ->update(['cont_alc_envasado' => $lote['cont_alc']]);
+                      }
+                  }
+
+                  $data['detalles'] = $detalles;
+
 
 
                 // Obtener el número del cliente desde la tabla empresa_num_cliente
@@ -1631,7 +1651,7 @@ class solicitudesController extends Controller
                           if (!empty($granel['id_lote_granel'])) {lotesGranel::where('id_lote_granel', $granel['id_lote_granel'])
                                   ->update([
                                       'folio_fq' => $granel['folio_fq'] ?? null,
-                                      'cont_alc' => $granel['cont_alc'] ?? null,
+
                                   ]);
                           }
                       }
@@ -1832,7 +1852,13 @@ class solicitudesController extends Controller
             'factura_proforma_cont' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
             /*  */
             'lote_envasado' => 'required|array',
-
+            'lote_envasado.*.id_lote_envasado' => 'required|integer',
+            'lote_envasado.*.cont_alc' => [
+                'required',            // Ya no nullable si siempre se guarda
+                'numeric',
+                'between:0,99.99',
+                'regex:/^\d{1,2}(\.\d{1,2})?$/',
+            ],
             'cantidad_botellas' => 'required|array|min:1',
             'cantidad_botellas.*' => 'required|integer|min:1',
 
@@ -1842,18 +1868,10 @@ class solicitudesController extends Controller
             'presentacion' => 'required|array|min:1',
             'presentacion.*' => 'required|string|',
 
-/*             'lote_envasado' => 'array',  */ // Asegurarse de que los lotes sean arrays
-/*             'cantidad_botellas' => 'required|array',
-            'cantidad_cajas' => 'required|array',
-            'presentacion' => 'required|array', */
             'id_etiqueta' => 'required|integer',
-/*             'cont_alc' => 'array',
-            'cont_alc.*' => 'nullable|numeric', */
-
             'lotes_granel' => 'nullable|array',
             'lotes_granel.*.id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
             'lotes_granel.*.folio_fq' => 'nullable|string',
-            'lotes_granel.*.cont_alc' => 'nullable|numeric',
         ]);
 
         // Procesar características
@@ -1869,30 +1887,63 @@ class solicitudesController extends Controller
         /* $data['cont_alc'] = $validated['cont_alc']; */
 
         // Preparar los detalles
-            $detalles = [];
+/*             $detalles = [];
             $totalLotes = count($validated['lote_envasado']);
 
-            for ($i = 0; $i < $totalLotes; $i++) {
+          foreach ($validated['lote_envasado'] as $index => $idLoteEnvasado) {
                 $detalle = [
-                    'id_lote_envasado' => (int) $validated['lote_envasado'][$i],
+                    'id_lote_envasado' => (int) $idLoteEnvasado,
                 ];
 
-                if (isset($validated['cantidad_botellas'][$i])) {
-                    $detalle['cantidad_botellas'] = (int) $validated['cantidad_botellas'][$i];
+                if (isset($validated['cantidad_botellas'][$index])) {
+                    $detalle['cantidad_botellas'] = (int) $validated['cantidad_botellas'][$index];
                 }
 
-                if (isset($validated['cantidad_cajas'][$i])) {
-                    $detalle['cantidad_cajas'] = (int) $validated['cantidad_cajas'][$i];
+                if (isset($validated['cantidad_cajas'][$index])) {
+                    $detalle['cantidad_cajas'] = (int) $validated['cantidad_cajas'][$index];
                 }
 
-                if (isset($validated['presentacion'][$i])) {
-                    $detalle['presentacion'] = [$validated['presentacion'][$i]]; // Mantener formato array
+                if (isset($validated['presentacion'][$index])) {
+                    $detalle['presentacion'] = [$validated['presentacion'][$index]];
                 }
 
                 $detalles[] = $detalle;
             }
-        // Incluir los detalles dentro de las características
         $data['detalles'] = $detalles;
+ */
+          $detalles = [];
+
+          foreach ($validated['lote_envasado'] as $index => $lote) {
+              $idLoteEnvasado = $lote['id_lote_envasado'] ?? null;
+              $contenidoAlc = $lote['cont_alc'] ?? null;
+
+              if (!$idLoteEnvasado) {
+                  continue;
+              }
+
+              if ($index === 0) {
+                  $detalle = [
+                      'id_lote_envasado' => (int) $idLoteEnvasado,
+                      'cantidad_botellas' => (int) ($validated['cantidad_botellas'][$index] ?? 0),
+                      'cantidad_cajas' => (int) ($validated['cantidad_cajas'][$index] ?? 0),
+                      'presentacion' => [$validated['presentacion'][$index] ?? ''],
+                  ];
+              } else {
+                  $detalle = [
+                      'id_lote_envasado' => (int) $idLoteEnvasado,
+                  ];
+              }
+
+              $detalles[] = $detalle;
+
+              // Actualizar contenido alcohólico
+              if (!is_null($contenidoAlc)) {
+                  lotes_envasado::where('id_lote_envasado', $idLoteEnvasado)
+                      ->update(['cont_alc_envasado' => $contenidoAlc]);
+              }
+          }
+
+          $data['detalles'] = $detalles;
 
 
         // Obtener el número del cliente desde la tabla empresa_num_cliente
@@ -1918,7 +1969,6 @@ class solicitudesController extends Controller
               if (!empty($granel['id_lote_granel'])) {lotesGranel::where('id_lote_granel', $granel['id_lote_granel'])
                   ->update([
                     'folio_fq' => $granel['folio_fq'] ?? null,
-                    'cont_alc' => $granel['cont_alc'] ?? null,
                 ]);
                   }
               }
