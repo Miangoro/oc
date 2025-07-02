@@ -537,7 +537,7 @@
                                                         <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
                                                 @else
-                                                    <span class="text-muted">Sin documento</span>
+                                                    <span class="text-muted">Sin documento {{ $empresa->convenio_corresp }}</span>
                                                 @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria')
