@@ -87,8 +87,8 @@ class inspeccionesController extends Controller
         $limit = $request->input('length');
         $start = $request->input('start');
         $orderIndex = $request->input('order.0.column');
-        $orderColumn = $columns[$orderIndex] ?? 'num_predio';
-        $dir = $request->input('order.0.dir', 'desc');
+        $orderColumn = $columns[$orderIndex] ?? 'id_solicitud';
+        $dir = $request->input('order.0.dir', 'asc');
         $search = $request->input('search.value');
 
         $query = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion','predios');
