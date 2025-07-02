@@ -354,14 +354,15 @@
             </td>
             <td class="column2">Contenido Alcohólico</td>
             <td>
-                @if ($lotesGranel->isNotEmpty())
+                {{-- @if ($lotesGranel->isNotEmpty())
                     @foreach ($lotesGranel as $loteGranel)
                         {{ $loteGranel->cont_alc ?? 'N/A' }}% Alc. Vol.
                         @if (!$loop->last), @endif
                     @endforeach
                 @else
                     N/A
-                @endif
+                @endif --}}
+                {{ $data->lote_envasado->cont_alc_envasado ?? 'No encontrado' }} % Alc. Vol.
             </td>
         </tr>
       <tr>

@@ -54,8 +54,8 @@
       <thead class="table-dark">
         <tr>
           <th></th>
-          <th>Id</th>
-          <th>Datos del cliente</th>
+          <th>#</th>
+          <th>Cliente</th>
           <th>Folio</th>
           <th>Run Folio</th>
           <th>Predio</th>

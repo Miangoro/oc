@@ -209,8 +209,8 @@
             <b class="tituloLetter">Folio de Guía No. : <b class="colorRed"> {{ $datos[0]->folio }}</b> No. de predio:
                 {{ $datos[0]->num_predio }} <br>
                 Nombre del predio: {{ $datos[0]->nombre_predio }} <br>
-                Nombre de la empresa/productor: {{ $datos[0]->razon_social }} <br>
-                No. del cliente: {{ $datos[0]->numero_cliente }}
+                Nombre de la empresa/productor: {{ $razon_social }} <br>
+                No. del cliente: {{ $numero_cliente }}
                 <div style="margin-top: 3%">
                     <b class="bigLetter">Guía de traslado de maguey o agave</b>
                 </div>

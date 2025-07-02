@@ -26,32 +26,12 @@ $(function () {
         { data: '' },
         { data: 'id_guia' },
         {
-          data: null,
-          searchable: true,
-          orderable: false,
+          data: null, // Se usará null porque combinaremos varios valores
           render: function (data, type, row) {
-            var id_empresa = '';
-            var razon_social = '';
-
-            if (row.id_empresa != 'N/A') {
-              id_empresa =
-                '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' +
-                row.id_empresa +
-                '</span>';
-            }
-            if (row.razon_social != 'N/A') {
-              razon_social =
-                '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
-                row.razon_social +
-                '</span>';
-            }
-
-            return (
-              '<span class="fw-bold text-dark small">Número del cliente:</span> <span class="small"> ' +
-              row.id_empresa +
-              '</span><br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
-              row.razon_social
-            );
+            return `
+              <strong>${data.numero_cliente}</strong><br>
+                  <span style="font-size:12px">${data.razon_social}<span>
+              `;
           }
         },
         { data: 'folio' },
@@ -84,44 +64,14 @@ $(function () {
             return `<span>${full.fake_id}</span>`;
           }
         },
-        {
-          // User full name
-          targets: 2,
-          responsivePriority: 4,
-          render: function (data, type, full, meta) {
-            var $name = full['id_empresa'];
-
-            // For Avatar badge
-            var stateNum = Math.floor(Math.random() * 6);
-            var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
-            var $state = states[stateNum];
-
-            // Creates full output for row
-            var $row_output =
-              '<div class="d-flex justify-content-start align-items-center user-name">' +
-              '<div class="avatar-wrapper">' +
-              '<div class="avatar avatar-sm me-3">' +
-              '</div>' +
-              '</div>' +
-              '<div class="d-flex flex-column">' +
-              '<a href="' +
-              userView +
-              '" class="text-truncate text-heading"><span class="fw-medium">' +
-              $name +
-              '</span></a>' +
-              '</div>' +
-              '</div>';
-            return $row_output;
-          }
-        },
-        {
+        /*{
           // User email
           targets: 2,
           render: function (data, type, full, meta) {
             var $email = full['razon_social'];
             return '<span class="user-email">' + $email + '</span>';
           }
-        },
+        },*/
         {
           // Actions
           targets: -1,
@@ -485,16 +435,16 @@ $(function () {
 
         let contenido = '';
         if (response.predios.length > 0) {
-          contenido += '<option value="">Selecciona un predio</option>';
+          contenido += '<option value="" disabled>Selecciona un predio</option>';
           response.predios.forEach(predio => {
             contenido += `<option value="${predio.id_predio}">${predio.nombre_predio}</option>`;
           });
         } else {
-          contenido = '<option value="" disabled selected>Sin predios registrados</option>';
+          contenido = '<option value="" disabled>Sin predios registrados</option>';
         }
 
         $('#nombre_predio').html(contenido).val('').trigger('change.select2');
-        $('#id_plantacion').html('<option value="" disabled selected>Selecciona un predio primero</option>').val('').trigger('change.select2');
+        $('#id_plantacion').html('<option value="" disabled>Selecciona un predio primero</option>').val('').trigger('change.select2');
         $('#num_anterior').val('');
         formValidator.revalidateField('predios');
       },
@@ -511,7 +461,7 @@ $(function () {
 
     const plantaciones = datosEmpresa.predio_plantacion.filter(p => p.id_predio == id_predio);
 
-    let contenido = '<option value="">Selecciona una plantación</option>';
+    let contenido = '<option value="" disabled>Selecciona una plantación</option>';
     plantaciones.forEach(item => {
       contenido += `<option value="${item.id_plantacion}" data-num-plantas="${item.num_plantas}">
         Número de plantas: ${item.num_plantas} | Tipo de agave: ${item.nombre} ${item.cientifico} | Año de plantación: ${item.anio_plantacion}
@@ -519,7 +469,7 @@ $(function () {
     });
 
     if (plantaciones.length === 0) {
-      contenido = '<option value="" disabled selected>Sin características registradas</option>';
+      contenido = '<option value="" disabled>Sin características registradas</option>';
     }
 
     $('#id_plantacion').html(contenido).val('').trigger('change.select2');
@@ -544,7 +494,7 @@ $(function () {
     formValidator.revalidateField('empresa');
   });
 
-  // Validación
+  // Validaciónes
   const addGuiaForm = document.getElementById('addGuiaForm');
   const formValidator = FormValidation.formValidation(addGuiaForm, {
     fields: {
@@ -663,10 +613,11 @@ $(function () {
       text: 'No podrá revertir este evento',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si, eliminar',
+      confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+      cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
       customClass: {
-        confirmButton: 'btn btn-primary me-3',
-        cancelButton: 'btn btn-label-secondary'
+        confirmButton: 'btn btn-primary me-2',
+        cancelButton: 'btn btn-danger'
       },
       buttonsStyling: false
     }).then(function (result) {
@@ -683,56 +634,24 @@ $(function () {
         });
         Swal.fire({
           icon: 'success',
-          title: '¡Eliminado!',
-          text: '¡La guia ha sido eliminada correctamente!',
+          title: '¡Exito!',
+          text: 'Eliminado correctamente.',
           customClass: {
-            confirmButton: 'btn btn-success'
+            confirmButton: 'btn btn-primary'
           }
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
-          title: 'Cancelado',
-          text: 'La guia no ha sido eliminada',
-          icon: 'error',
+          title: '¡Cancelado!',
+          text: 'La eliminación ha sido cancelada.',
+          icon: 'info',
           customClass: {
-            confirmButton: 'btn btn-success'
+            confirmButton: 'btn btn-primary'
           }
         });
       }
     });
   });
-
-
-
-
-
-  // Reciben los datos del pdf
-  $(document).on('click', '.pdf', function () {
-    var id = $(this).data('id');
-    var registro = $(this).data('registro');
-    var pdfUrl = '../guia_de_translado/' + id; // Ruta del PDF
-
-    var iframe = $('#pdfViewerGuias');
-    $('#loading-spinner-chelo').show(); //se el agrega esto
-    iframe.hide(); //se el agrega esto
-    iframe.attr('src', '../guia_de_translado/' + id);
-
-    $('#titulo_modal_GUIAS').text('Guía de traslado');
-    $('#subtitulo_modal_GUIAS').text(registro);
-    $('#mostrarPdfGUias').modal('show');
-    var descargarBtn = $('#descargarPdfBtn');
-    // Actualizar el enlace de descarga
-    descargarBtn.off('click').on('click', function (e) {
-      e.preventDefault();
-      downloadPdfAsZip(pdfUrl, 'Guia_de_traslado_' + registro + '.pdf');
-    });
-  });
-  // Ocultar el spinner cuando el PDF esté completamente cargado
-  $('#pdfViewerGuias').on('load', function () {
-    $('#loading-spinner-chelo').hide(); // Ocultar el spinner
-    $(this).show(); // Mostrar el iframe con el PDF
-  });
-
 
 
 
@@ -781,7 +700,7 @@ $(function () {
 
 
 
-// Ver guías y descargar
+//VER Y DESCARGAR GUIAS
 $(document).on('click', '.ver-registros', function () {
   var run_folio = $(this).data('id');
 
@@ -801,20 +720,17 @@ $(document).on('click', '.ver-registros', function () {
           var fila = `
               <tr>
                   <td>${item.folio}</td>
+
                   <td>
-                      <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" 
-                          data-bs-target="#mostrarPdfGUias" 
+                      <i class="ri-file-pdf-2-fill text-danger ri-40px pdfGuia cursor-pointer" 
+                          data-bs-target="#mostrarPdf" 
                           data-bs-toggle="modal" 
                           data-bs-dismiss="modal" 
                           data-id="${item.id_guia}" 
                           data-registro="${razon_social}">
                       </i>
                   </td>
-                  <td>
-                      <a href="${pdfUrl}" target="_blank" class="open-pdf" rel="noopener noreferrer">
-                          <i class="ri-file-pdf-2-line text-danger ri-40px cursor-pointer"></i>
-                      </a>
-                  </td>
+
                   <td>
                       <button type="button" class="btn btn-info">
                           <a href="javascript:;" class="edit-record" style="color:#FFF" 
@@ -852,51 +768,89 @@ $(document).on('click', '.ver-registros', function () {
   });
 });
 
-  // Función para descargar múltiples PDFs en un archivo ZIP
-  function downloadPdfsAsZip(pdfFiles, zipFileName) {
-    Swal.fire({
-      title: '🔄 Procesando...',
-      text: 'Por favor espera mientras se comprimen los archivos.',
-      allowOutsideClick: false,
-      customClass: {},
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
-    var zip = new JSZip();
-    // Crear una lista de promesas para descargar cada PDF
-    var pdfPromises = pdfFiles.map(file =>
-      fetch(file.url)
-        .then(response => response.blob())
-        .then(blob => {
-          zip.file(file.filename, blob); // Añadir el archivo al ZIP
-        })
-        .catch(error => console.error('Error al descargar el PDF:', error))
-    );
 
-    // Esperar a que todas las descargas terminen y crear el ZIP
-    Promise.all(pdfPromises).then(() => {
-      zip
-        .generateAsync({ type: 'blob' })
-        .then(function (zipBlob) {
-          // Descargar el archivo ZIP
-          saveAs(zipBlob, zipFileName);
-          // Cerrar la alerta de "Procesando..." después de que el ZIP esté listo
-          Swal.close();
-        })
-        .catch(error => {
-          console.error('Error al generar el archivo ZIP:', error);
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Hubo un problema al generar el archivo ZIP.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
+// Función para descargar múltiples PDFs en un archivo ZIP
+function downloadPdfsAsZip(pdfFiles, zipFileName) {
+  Swal.fire({
+    title: '🔄 Procesando...',
+    text: 'Por favor espera mientras se comprimen los archivos.',
+    allowOutsideClick: false,
+    customClass: {},
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+  var zip = new JSZip();
+  // Crear una lista de promesas para descargar cada PDF
+  var pdfPromises = pdfFiles.map(file =>
+    fetch(file.url)
+      .then(response => response.blob())
+      .then(blob => {
+        zip.file(file.filename, blob); // Añadir el archivo al ZIP
+      })
+      .catch(error => console.error('Error al descargar el PDF:', error))
+  );
+
+  // Esperar a que todas las descargas terminen y crear el ZIP
+  Promise.all(pdfPromises).then(() => {
+    zip
+      .generateAsync({ type: 'blob' })
+      .then(function (zipBlob) {
+        // Descargar el archivo ZIP
+        saveAs(zipBlob, zipFileName);
+        // Cerrar la alerta de "Procesando..." después de que el ZIP esté listo
+        Swal.close();
+      })
+      .catch(error => {
+        console.error('Error al generar el archivo ZIP:', error);
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Hubo un problema al generar el archivo ZIP.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
         });
-    });
-  }
+      });
+  });
+}
+
+
+
+
+//FORMATO PDF GUIAS
+$(document).on('click', '.pdfGuia', function () {
+  var id = $(this).data('id');
+  var registro = $(this).data('registro');
+  var pdfUrl = '/guia_de_translado/' + id;
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+  var descargarBtn = $('#descargarPdfBtn');
+
+  // Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+  spinner.show();
+  iframe.hide();
+  // Cargar el PDF en el iframe
+  iframe.attr('src', pdfUrl);
+
+  //Configurar el botón para abrir el PDF en una nueva pestaña
+  $("#NewPestana").attr('href', pdfUrl).show();
+  $("#titulo_modal").text("Guía de traslado");
+  $("#subtitulo_modal").text(registro);
+
+  // Configurar el botón para abrir o descargar el PDF
+  descargarBtn.off('click').on('click', function (e) {
+    e.preventDefault();
+    downloadPdfAsZip(pdfUrl, 'Guia_de_traslado_' + registro + '.pdf');
+  });
+
+  // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+  iframe.on('load', function () {
+    spinner.hide();
+    iframe.show();
+  });
+});
+
 
 
 
@@ -981,6 +935,7 @@ $(document).on('click', '.ver-registros', function () {
       }
     });
   });
+
 
 
 

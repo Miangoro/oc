@@ -858,12 +858,9 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         'resp_instalacion' => $data->dictamen->inspeccione->solicitud->instalacion->responsable ?? 'No encontrado',
         'info_adicional' => $data->dictamen->inspeccione->solicitud->info_adicional ?? ' ',
 
-
         'estado' => $data->dictamen->inspeccione->solicitud->empresa->estados->nombre ?? 'No encontrado',
         'rfc' => $data->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'cp' => $data->dictamen->inspeccione->solicitud->empresa->cp ?? 'No encontrado',
-        'convenio' => $data->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA',
-        'DOM' => $data->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA',
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
 
@@ -871,10 +868,11 @@ public function MostrarSolicitudCertificadoExportacion($id_certificado)
         'dom_destino' => $data->dictamen->inspeccione->solicitud->direccion_destino->direccion ?? 'No encontrado',
         'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado',
 
-        'folio' => isset($data->dictamen->inspeccione->solicitud->folio) &&
+        /*'folio' => isset($data->dictamen->inspeccione->solicitud->folio) &&
            preg_match('/^([A-Z\-]+)(\d+)$/', $data->dictamen->inspeccione->solicitud->folio, $m)
            ? $m[1] . str_pad(((int)$m[2]) + 1, strlen($m[2]), '0', STR_PAD_LEFT)
-           : 'No encontrado',
+           : 'No encontrado',*/
+        'folio' => $data->dictamen->inspeccione->solicitud->folio ?? 'No encontrado',
         ///caracteristicas
         'aduana' => $aduana_salida ?? 'No encontrado',
         'n_pedido' => $no_pedido ?? 'No encontrado',

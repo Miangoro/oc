@@ -329,7 +329,7 @@
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">%Alc. Vol.:</td>
             <td style="text-align: left; padding-left: 4px;">
-                {{ round($lote->lotesGranel->first()->cont_alc) ?? 'No encontrado' }}%
+                {{ $lote->cont_alc_envasado ?? 'No encontrado' }}%
             </td>
         </tr>
         @php
@@ -455,7 +455,7 @@
                 </td>
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">%Alc. Vol.:</td>
                 <td style="text-align: left; padding-left: 4px;">
-                    {{ round($lote->lotesGranel->first()->cont_alc) ?? 'No encontrado' }}%
+                    {{ $lote->cont_alc_envasado ?? 'No encontrado' }}%
                 </td>
             </tr>
             @php

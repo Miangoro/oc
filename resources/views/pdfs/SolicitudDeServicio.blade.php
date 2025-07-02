@@ -588,7 +588,13 @@
                 laboratorio:</td>
             <td colspan="3">@if($muestreo_granel != 'X') {{ $datos->lote_granel->folio_fq ?? '---------------' }} @else --------------- @endif</td>
             <td class="con-negra" colspan="4" style="text-align: left">8) Contenido Alcohólico:</td>
-            <td colspan="4">@if($muestreo_granel != 'X') {{ $datos->lote_granel->cont_alc ?? '---------------' }} @else --------------- @endif</td>
+            <td colspan="4">
+                @if ($inspeccion_envasado == 'X')
+                    {{ $datos->lote_envasado->cont_alc_envasado ?? '---------------' }} 
+                @elseif ($muestreo_granel != 'X') 
+                    {{ $datos->lote_granel->cont_alc ?? '---------------' }} 
+                @else --------------- @endif
+            </td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">4) Marca:</td>
@@ -675,7 +681,7 @@
                 laboratorio:</td>
             <td colspan="3">@if($muestreo_granel != 'X') {{ $lote->lotesGranel->first()->folio_fq ?? '---------------' }} @else --------------- @endif</td>
             <td class="con-negra" colspan="4" style="text-align: left">8) Contenido Alcohólico:</td>
-            <td colspan="4">@if($muestreo_granel != 'X') {{ $lote->lotesGranel->first()->cont_alc ?? '---------------' }} @else --------------- @endif</td>
+            <td colspan="4">@if($muestreo_granel != 'X') {{ $lote->cont_alc_envasado ?? '---------------' }} @else --------------- @endif</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">4) Marca:</td>

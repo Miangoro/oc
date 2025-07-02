@@ -41,7 +41,7 @@ class GuiasController  extends Controller
             1 => 'id_guia',
             2 => 'id_plantacion',
             3 => 'folio',
-            4 => 'id_empresa',
+            4 => 'razon_social',
             5 => 'nombre_predio',
             6 => 'numero_plantas',
             7 => 'numero_guias',
@@ -94,27 +94,34 @@ class GuiasController  extends Controller
         $totalData = $query->get()->count();
         $totalFiltered = $query->count();
 
-        $users = $query->offset($start)
+        $guias = $query->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
             ->get();
 
         $data = [];
 
-        if ($users->isNotEmpty()) {
+        if ($guias->isNotEmpty()) {
             $ids = $start;
 
-            foreach ($users as $user) {
-                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
+            foreach ($guias as $user) {
+                //$numero_cliente = empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
+                // Nombre y Número de empresa
+                $empresa = $user->empresa ?? null;
 
+                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                    ? $empresa->empresaNumClientes->first(fn($item) =>
+                        $item->empresa_id === $empresa->id && !empty($item->numero_cliente)
+                    )?->numero_cliente ?? 'No encontrado' : 'N/A';
+                    
                 $nestedData = [
                     'id_guia' => $user->id_guia,
                     'id_plantacion' => $user->id_plantacion,
                     'fake_id' => ++$ids,
                     'folio' => $user->folio,
                     'run_folio' => $user->run_folio,
-                    'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
-                    'id_empresa' => $numero_cliente, // Asignar numero_cliente a id_empresa
+                    'razon_social' => $empresa->razon_social ?? 'No encontrado',
+                    'numero_cliente' => $numero_cliente, // Asignar numero_cliente
                     'id_predio' => $user->predios ? $user->predios->nombre_predio : '',
                     'numero_plantas' => $user->numero_plantas,
                     'num_anterior' => $user->num_anterior,
@@ -314,7 +321,20 @@ class GuiasController  extends Controller
             JOIN empresa a ON (a.id_empresa = e.id_empresa) 
             JOIN empresa_num_cliente f ON (f.id_empresa = e.id_empresa) 
             WHERE e.id_guia=' . $id_guia);
-        $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', ['datos' => $res]);
+
+        
+        $id_empresa = $res[0]->id_empresa ?? null;
+        $data = empresa::find($id_empresa);//Obtener datos
+        $numero_cliente = $data && $data->empresaNumClientes->isNotEmpty()
+        ? $data->empresaNumClientes->first(fn($item) => $item->empresa_id === $data
+        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
+
+
+        $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', [
+            'datos' => $res,
+            'razon_social' => $data->razon_social ?? '',
+            'numero_cliente' => $numero_cliente ?? '',
+        ]);
         return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
     }
 

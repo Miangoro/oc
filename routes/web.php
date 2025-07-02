@@ -695,6 +695,7 @@ Route::middleware(['auth'])->controller(tiposController::class)->group(function 
 });
 
 
+//------------------- FUNCIONES -------------------
 Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
 Route::get('/getDatosLoteEnvasado/{idLoteEnvasado}', [getFuncionesController::class, 'getDatosLoteEnvasado']);
 
@@ -703,7 +704,7 @@ Route::get('/getDatosSolicitud/{id_solicitud}', [getFuncionesController::class, 
 Route::get('/obtenerDocumentosClientes/{id_documento}/{id_cliente}', [getFuncionesController::class, 'obtenerDocumentosClientes'])->name('obtenerDocumentosClientes');
 
 
-//Guias de agave o maguey
+//------------------- GUIAS DE TRASLADO-------------------
 Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('traslado-guias')->middleware(['auth']);
 Route::resource('/guias-list', GuiasController::class)->middleware(['auth']);
 Route::post('/guias/store', [GuiasController::class, 'store'])->middleware(['auth']);

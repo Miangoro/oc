@@ -298,7 +298,7 @@
             <td style="font-size: 15px;padding-bottom: 0; padding-top: 0;"><b>Clase</b></td>
             <td>{{ $lote->lotesGranel->first()->clase->clase ?? "N"}}</td>
             <td style="font-size: 15px;padding-bottom: 0; padding-top: 0;"><b>% Alc. Vol.<br>(etiqueta)</b></td>
-            <td> {{ $lote->lotesGranel->first()->cont_alc ?? "No encontrada" }}% </td>
+            <td> {{ $lote->cont_alc_envasado ?? "No encontrada" }}% </td>
         </tr>
         <tr>
             <td style="font-size: 15px;"><b>Cont. Net. <br>(mL)</b></td>
