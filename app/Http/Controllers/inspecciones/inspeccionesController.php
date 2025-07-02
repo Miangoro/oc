@@ -101,7 +101,7 @@ class inspeccionesController extends Controller
                         $q->where('razon_social', 'LIKE', "%{$search}%");
                     })
                     ->orWhereHas('inspeccion', function ($q) use ($search) {
-                        $q->where('num_servicio2', 'LIKE', "%{$search}%");
+                        $q->where('num_servicio', 'LIKE', "%{$search}%");
                     })
                     ->orWhereHas('instalacion', function ($q) use ($search) {
                         $q->where('direccion_completa', 'LIKE', "%{$search}%");
