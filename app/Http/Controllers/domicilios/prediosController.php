@@ -150,7 +150,7 @@ class PrediosController extends Controller
                 })
                 ->offset($start)
                 ->limit($limit)
-                ->orderByDesc('id_predio')
+                ->orderByDesc('num_predio')
 
                 ->get();
 
