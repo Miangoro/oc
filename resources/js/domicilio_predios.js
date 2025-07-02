@@ -986,7 +986,7 @@ $(function () {
           $('#btnSpinnerPredio').addClass('d-none');
           $('#btnAddNewPredio').removeClass('d-none');
           $('#modalAddPredio').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
+          $('.datatables-users').DataTable().ajax.reload(null, false);
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -1083,7 +1083,7 @@ $(function () {
           $('#btnRegistrarGeo').removeClass('d-none');
           $('#addSolicitudGeoreferenciacion').modal('hide');
           addRegistrarSolicitudGeoreferenciacion.reset(); // Resetea el formulario
-          $('.datatables-users').DataTable().ajax.reload();
+          $('.datatables-users').DataTable().ajax.reload(null, false);
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -1775,7 +1775,7 @@ $(function () {
           $('#btnAddPredioInspeccion').removeClass('d-none');
           $('#btnSpinnerPredioInspeccion').addClass('d-none');
           $('#modalAddPredioInspeccion').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
+          $('.datatables-users').DataTable().ajax.reload(null, false);
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -1926,7 +1926,7 @@ $(function () {
           $('#btnRegistroPredio').removeClass('d-none');
           $('#btnSpinnerRegistroPredio').addClass('d-none');
           $('#modalAddRegistroPredio').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload(); // Recargar la tabla de usuarios
+          $('.datatables-users').DataTable().ajax.reload(null, false); // Recargar la tabla de usuarios
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',

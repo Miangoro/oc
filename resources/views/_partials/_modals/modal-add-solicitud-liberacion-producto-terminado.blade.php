@@ -253,7 +253,7 @@
                     for (let index = 0; index < response.lotes_envasado.length; index++) {
                         contenidoLotesEnvasados = '<option value="' + response.lotes_envasado[index]
                             .id_lote_envasado + '">' +
-                            response.lotes_envasado[index].nombre + '</option>' +
+                            response.lotes_envasado[index].nombre + ' Botellas: ' + response.lotes_envasado[index].cant_botellas + '</option>' +
                             contenidoLotesEnvasados;
                     }
                     if (response.lotes_envasado.length == 0) {

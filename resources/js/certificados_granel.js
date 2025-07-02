@@ -709,7 +709,7 @@ $(document).on('click', '.eliminar', function () {//clase del boton "eliminar"
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
-          success: function () {
+          success: function (response) {
             dataTable.draw(false);//Actualizar la tabla, "null,false" evita que vuelva al inicio
               // Mostrar SweetAlert de éxito
               Swal.fire({
