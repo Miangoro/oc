@@ -43,6 +43,12 @@
                     <div>
                         <p class="text-muted mb-1">Tipo de certificado</p>
                         <h5 class="fw-semibold mb-2">{{ $tipo }}</h5>
+                         @php
+                            $caracteristicas = json_decode( $datos->certificado->dictamen->inspeccione->solicitud->caracteristicas);
+                        @endphp
+                        @if (isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
+                            <span class="badge bg-info">Combinado</span>
+                        @endif
                         @if ($datos->es_correccion === 'si')
                             <span class="badge bg-danger">Es corrección</span>
                         @endif
@@ -640,7 +646,7 @@
                                                     $urlDom = '/files/'.$numeroCliente."/".$url;
                                                 @endphp
                                              
-                                                @if ($url && !in_array($datos->certificado->dictamen->inspeccione->solicitud->empresa->convenio_corresp, ['NA', 'N/A', ''])) 
+                                                  @if ($url && !in_array($empresa->convenio_corresp, ['NA', 'N/A', ''])) 
                                                     <a target="_blank" href="{{ $urlDom }}">
                                                         <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>

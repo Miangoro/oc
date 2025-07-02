@@ -36,13 +36,20 @@
     <div class="container mt-3 mb-3">
         <div class="card shadow-sm border-0 rounded-3" style="max-width: 100%; margin: auto;">
             <div class="card-header bg-menu-theme  text-center py-2">
-                <h5 class="mb-0 text-white">Revisión de certificado consejo</h5>
+                <h5 class="mb-0 text-white">Revisión de certificado consejo <br><span class="badge bg-warning text-dark text-dark">{{ $datos->certificado->num_certificado ?? 'N/A' }}</span></h5>
             </div>
             <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <p class="text-muted mb-1">Tipo de certificado</p>
                         <h5 class="fw-semibold mb-2">{{ $tipo }}</h5>
+                        @php
+                            $caracteristicas = json_decode( $datos->certificado->dictamen->inspeccione->solicitud->caracteristicas);
+                        @endphp
+                        @if (isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
+                            <span class="badge bg-info">Combinado</span>
+                        @endif
+
                         @if ($datos->es_correccion === 'si')
                             <span class="badge bg-danger">Es corrección</span>
                         @endif
@@ -635,7 +642,7 @@
                                                     $urlDom = '/files/'.$numeroCliente."/".$url;
                                                 @endphp
                                              
-                                                @if ($url && !in_array($datos->certificado->dictamen->inspeccione->solicitud->empresa->convenio_corresp, ['NA', 'N/A', ''])) 
+                                                @if ($url && !in_array($empresa->convenio_corresp, ['NA', 'N/A', ''])) 
                                                     <a target="_blank" href="{{ $urlDom }}">
                                                         <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
