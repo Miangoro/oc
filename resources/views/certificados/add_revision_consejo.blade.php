@@ -621,6 +621,29 @@
                                                     <span class="text-muted">Sin documento</span>
                                                 @endif
                                             </td>
+                                             @elseif($pregunta->filtro == 'convenio_corresponsabilidad')
+                                            <td>
+                                                 @php
+
+                                                    $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa  ?? null;
+                                                    $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel ?? null;
+                                                    $numeroCliente = $loteGranel->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente ?? null;
+                                                    $url = \App\Models\documentacion_url::where('id_empresa', $loteGranel->empresa->id_empresa)
+                                                    ->where('id_documento', 82)
+                                                    ->value('url');
+
+
+                                                    $urlDom = '/files/'.$numeroCliente."/".$url;
+                                                @endphp
+                                             
+                                                @if ($urlDom)
+                                                    <a target="_blank" href="{{ $urlDom }}">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">Sin documento</span>
+                                                @endif
+                                            </td>
                                         @elseif($pregunta->filtro == 'categoria')
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
