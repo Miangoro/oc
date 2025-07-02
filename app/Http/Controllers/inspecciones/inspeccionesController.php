@@ -90,7 +90,7 @@ class inspeccionesController extends Controller
         $dir = $request->input('order.0.dir', 'asc');
         $search = $request->input('search.value');
 
-        $query = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion');
+        $query = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion','predios');
 
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
