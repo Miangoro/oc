@@ -51,9 +51,9 @@ class inspeccionesController extends Controller
         $tipos = tipos::all(); // Obtener todos los estados
         $equipos = equipos::all(); // Obtener todos los estados
         $todasSolicitudes = solicitudesModel::select('id_solicitud', 'folio')
-    ->whereYear('fecha_solicitud', '>=', 2025)
-    ->orderBy('id_solicitud', 'desc')
-    ->get();
+        ->whereYear('fecha_solicitud', '>=', 2025)
+        ->orderBy('id_solicitud', 'desc')
+        ->get();
 
       $solcitudesSinInspeccion = solicitudesModel::whereDoesntHave('inspeccion')
           ->whereYear('fecha_solicitud', '>=', 2025)
@@ -91,7 +91,7 @@ class inspeccionesController extends Controller
         $dir = $request->input('order.0.dir', 'asc');
         $search = $request->input('search.value');
 
-        $query = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion','predios');
+        $query = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion','predios')->where('habilitado', 1);
 
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
@@ -112,7 +112,7 @@ class inspeccionesController extends Controller
                     ->orWhereHas('inspeccion', function ($q) use ($search) {
                         $q->where('num_servicio', 'LIKE', "%{$search}%");
                     })
-                    
+
                     ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
                         $q->where('tipo', 'LIKE', "%{$search}%");
                     })
@@ -122,7 +122,7 @@ class inspeccionesController extends Controller
             });
         }
 
-       $totalData = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion', 'predios')->count();
+       $totalData = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion', 'predios')->where('habilitado', 1)->count();
         $totalFiltered = $query->count();
 
         // Obtener datos paginados sin orden

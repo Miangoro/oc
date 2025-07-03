@@ -4,7 +4,6 @@ $(function () {
 
   // Inicializar DataTable
   var dt_instalaciones_table = $('.datatables-users').DataTable({
-
     processing: true,
     serverSide: true,
     ajax: {
@@ -20,11 +19,13 @@ $(function () {
           icon: 'error',
           title: 'Error',
           text: 'Hubo un problema al cargar los datos.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
         });
       }
     },
     columns: [
-
       { data: '' },
       { data: 'folio' },
       {
@@ -93,10 +94,6 @@ $(function () {
       { data: 'fecha_servicio' },
       { data: '' },
       { data: 'action' }
-
-
-
-
     ],
     columnDefs: [
       {
@@ -175,7 +172,6 @@ $(function () {
         }
       },
 
-
       {
         // Acciones
         targets: -1,
@@ -183,14 +179,10 @@ $(function () {
         searchable: false,
         orderable: false,
         render: function (data, type, full, meta) {
-
-
           return (
             '<div class="d-flex align-items-center gap-50">' +
-
             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
             '<div class="dropdown-menu dropdown-menu-end m-0">' +
-
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Trazabilidad</a>` +
             // Botón de Validar Solicitud
             `<a
@@ -203,14 +195,11 @@ $(function () {
               class="dropdown-item text-dark waves-effect validar-solicitudes">
                 <i class="text-success ri-search-eye-line"></i> Validar solicitud
             </a>` +
-
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalAsignarInspector(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${full['razon_social']}', '${full['folio_info']}','${full['inspectorName']}','${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['id_inspeccion']}', '${full['tipo']}', '${full['razon_social']}', '${full['id_tipo']}','${full['folio_info']}', '${full['num_servicio_info']}','${full['inspectorName']}')" href="javascript:;" class="dropdown-item"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
-
             //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['tipo_instalacion']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
             //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="editModalActaProduccion('${full['id_acta']}')" href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px textStatus"></i>Editar Acta</a>` +
-
 
             '</div>' +
             '</div>'
@@ -219,7 +208,8 @@ $(function () {
       }
     ],
     order: [[2, 'desc']],
-    dom: '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
+    dom:
+      '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
       '<"me-5 ms-n2"f>' +
       '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
       '>t' +
@@ -297,7 +287,8 @@ $(function () {
                   if (columnIndex === 8 || columnIndex === 11) {
                     return 'ViewSuspend';
                   }
-                  if (columnIndex === 1) { // Asegúrate de que el índice de columna es el correcto para el ID
+                  if (columnIndex === 1) {
+                    // Asegúrate de que el índice de columna es el correcto para el ID
                     return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
                   }
                   return inner;
@@ -317,7 +308,8 @@ $(function () {
                   if (columnIndex === 8 || columnIndex === 11) {
                     return 'ViewSuspend';
                   }
-                  if (columnIndex === 1) { // Asegúrate de que el índice de columna es el correcto para el ID
+                  if (columnIndex === 1) {
+                    // Asegúrate de que el índice de columna es el correcto para el ID
                     return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
                   }
                   return inner;
@@ -334,7 +326,8 @@ $(function () {
               columns: [0, 1, 2, 3, 4, 5, 6, 7],
               format: {
                 body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 1) { // Asegúrate de que el índice de columna es el correcto para el ID
+                  if (columnIndex === 1) {
+                    // Asegúrate de que el índice de columna es el correcto para el ID
                     return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
                   }
                   return inner;
@@ -354,7 +347,8 @@ $(function () {
                   if (columnIndex === 8 || columnIndex === 11) {
                     return 'ViewSuspend';
                   }
-                  if (columnIndex === 1) { // Asegúrate de que el índice de columna es el correcto para el ID
+                  if (columnIndex === 1) {
+                    // Asegúrate de que el índice de columna es el correcto para el ID
                     return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
                   }
                   return inner;
@@ -389,18 +383,18 @@ $(function () {
           var data = $.map(columns, function (col, i) {
             return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
               ? '<tr data-dt-row="' +
-              col.rowIndex +
-              '" data-dt-column="' +
-              col.columnIndex +
-              '">' +
-              '<td>' +
-              col.title +
-              ':' +
-              '</td> ' +
-              '<td>' +
-              col.data +
-              '</td>' +
-              '</tr>'
+                  col.rowIndex +
+                  '" data-dt-column="' +
+                  col.columnIndex +
+                  '">' +
+                  '<td>' +
+                  col.title +
+                  ':' +
+                  '</td> ' +
+                  '<td>' +
+                  col.data +
+                  '</td>' +
+                  '</tr>'
               : '';
           }).join('');
 
@@ -412,7 +406,7 @@ $(function () {
 
   var dt_user_table = $('.datatables-users'),
     select2Elements = $('.select2'),
-    userView = baseUrl + 'app/user/view/account'
+    userView = baseUrl + 'app/user/view/account';
   // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
     $elements.each(function () {
@@ -439,7 +433,7 @@ $(function () {
     // Confirmación con SweetAlert
     Swal.fire({
       title: '¿Está seguro?',
-      text: "No podrá revertir este evento",
+      text: 'No podrá revertir este evento',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
@@ -472,7 +466,7 @@ $(function () {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: 'Hubo un problema al eliminar el registro.',
+              text: 'Hubo un problema al eliminar el registro.'
             });
           }
         });
@@ -583,8 +577,6 @@ $(function () {
     });
   });
 
-
-
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -597,20 +589,20 @@ $(function () {
     const form = document.getElementById('addAsignarInspector');
     const fv = FormValidation.formValidation(form, {
       fields: {
-        'num_servicio': {
+        num_servicio: {
           validators: {
             notEmpty: {
               message: 'Introduce el número de servicio.'
             }
           }
         },
-        'fecha_servicio': {
+        fecha_servicio: {
           validators: {
             notEmpty: {
               message: 'Introduce la fecha del servicio.'
             }
           }
-        },
+        }
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -622,7 +614,6 @@ $(function () {
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
-
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       $('#btnAsignarInspec').addClass('d-none');
@@ -692,13 +683,13 @@ $(function () {
       const form = document.getElementById('addResultadosInspeccion');
       const fv = FormValidation.formValidation(form, {
         fields: {
-          'num_servicio': {
+          num_servicio: {
             validators: {
               notEmpty: {
                 message: 'Introduce el número de servicio.'
               }
             }
-          },
+          }
         },
         plugins: {
           trigger: new FormValidation.plugins.Trigger(),
@@ -710,9 +701,10 @@ $(function () {
           submitButton: new FormValidation.plugins.SubmitButton(),
           autoFocus: new FormValidation.plugins.AutoFocus()
         }
-
       }).on('core.form.valid', function (e) {
-        $('#btnSubirInsp').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Subiendo...');
+        $('#btnSubirInsp')
+          .prop('disabled', true)
+          .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Subiendo...');
         // Validar el formulario
         var formData = new FormData(form);
 
@@ -753,7 +745,6 @@ $(function () {
           }
         });
       });
-
     });
 
     // Mostrar u ocultar campos adicionales según el tipo de certificación
@@ -815,7 +806,6 @@ $(function () {
             }
           }
         });
-
       } else {
         $('#certificado-otros').addClass('d-none');
 
@@ -842,35 +832,35 @@ $(function () {
     const form = document.getElementById('editInstalacionForm');
     const fv = FormValidation.formValidation(form, {
       fields: {
-        'id_empresa': {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Selecciona una empresa.'
             }
           }
         },
-        'tipo': {
+        tipo: {
           validators: {
             notEmpty: {
               message: 'Selecciona un tipo de instalación.'
             }
           }
         },
-        'estado': {
+        estado: {
           validators: {
             notEmpty: {
               message: 'Selecciona un estado.'
             }
           }
         },
-        'direccion_completa': {
+        direccion_completa: {
           validators: {
             notEmpty: {
               message: 'Ingrese la dirección completa.'
             }
           }
         },
-        'certificacion': {
+        certificacion: {
           validators: {
             notEmpty: {
               message: 'Selecciona el tipo de certificación.'
@@ -990,7 +980,6 @@ $(function () {
             }
           }
         });
-
       } else {
         $('#edit_certificado_otros').addClass('d-none');
 
@@ -1021,7 +1010,9 @@ $(function () {
         $('#edit_direccion').val(instalacion.direccion_completa);
 
         // Verificar si hay valores en los campos adicionales
-        var tieneCertificadoOtroOrganismo = instalacion.folio || instalacion.id_organismo ||
+        var tieneCertificadoOtroOrganismo =
+          instalacion.folio ||
+          instalacion.id_organismo ||
           (instalacion.fecha_emision && instalacion.fecha_emision !== 'N/A') ||
           (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A') ||
           data.archivo_url;
@@ -1031,7 +1022,9 @@ $(function () {
           $('#edit_certificado_otros').removeClass('d-none');
 
           $('#edit_folio').val(instalacion.folio || '');
-          $('#edit_id_organismo').val(instalacion.id_organismo || '').trigger('change');
+          $('#edit_id_organismo')
+            .val(instalacion.id_organismo || '')
+            .trigger('change');
           $('#edit_fecha_emision').val(instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '');
           $('#edit_fecha_vigencia').val(instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '');
 
@@ -1096,7 +1089,6 @@ $(function () {
     $('#edit_fecha_emision').val('');
     $('#edit_fecha_vigencia').val('');
   });
-
 
   // Manejar el cambio en el tipo de instalación
   $(document).on('change', '#edit_tipo', function () {
@@ -1174,13 +1166,12 @@ $(function () {
             icon: 'error',
             title: 'Error',
             text: 'Hubo un problema al actualizar los datos.',
-            footer: `<pre>${JSON.stringify(xhr.responseJSON, null, 2)}</pre>`,
+            footer: `<pre>${JSON.stringify(xhr.responseJSON, null, 2)}</pre>`
           });
         }
       });
     });
   });
-
 
   /*   $(document).on('click', '.pdf', function () {
       var url = $(this).data('url');
@@ -1195,8 +1186,6 @@ $(function () {
     var id_inspeccion = $(this).data('id');
     var registro = $(this).data('registro');
 
-
-
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
@@ -1206,10 +1195,10 @@ $(function () {
     //Cargar el PDF con el ID
     iframe.attr('src', id_inspeccion);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', id_inspeccion).show();
+    $('#NewPestana').attr('href', id_inspeccion).show();
 
-    $("#titulo_modal").text("Acta de inspección");
-    $("#subtitulo_modal").text(registro);
+    $('#titulo_modal').text('Acta de inspección');
+    $('#subtitulo_modal').text(registro);
 
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
@@ -1221,7 +1210,7 @@ $(function () {
 
   $('.add-row').click(function () {
     // Verificar si se ha seleccionado un cliente
-    if ($("#id_empresa").val() === "") {
+    if ($('#id_empresa').val() === '') {
       // Mostrar la alerta de SweetAlert2
       Swal.fire({
         icon: 'error',
@@ -1253,11 +1242,13 @@ $(function () {
     $('#contenidoGraneles').append(newRow);
 
     // Re-inicializar select2 en la nueva fila
-    $('#contenidoGraneles').find('.select2-nuevo').select2({
-      dropdownParent: $('#addlostesEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
-      width: '100%',
-      dropdownCssClass: 'select2-dropdown'
-    });
+    $('#contenidoGraneles')
+      .find('.select2-nuevo')
+      .select2({
+        dropdownParent: $('#addlostesEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
+        width: '100%',
+        dropdownCssClass: 'select2-dropdown'
+      });
 
     $('.select2-dropdown').css('z-index', 9999);
 
@@ -1273,15 +1264,12 @@ $(function () {
 
   function escapeHtml(html) {
     return html
-      .replace(/&/g, '&amp;')  // Escapa el símbolo &
-      .replace(/</g, '&lt;')   // Escapa el símbolo <
-      .replace(/>/g, '&gt;')   // Escapa el símbolo >
+      .replace(/&/g, '&amp;') // Escapa el símbolo &
+      .replace(/</g, '&lt;') // Escapa el símbolo <
+      .replace(/>/g, '&gt;') // Escapa el símbolo >
       .replace(/"/g, '&quot;') // Escapa las comillas dobles
       .replace(/'/g, '&#039;'); // Escapa las comillas simples
   }
-
-
-
 
   //Agregar o eliminar tablas +
   $(document).ready(function () {
@@ -1362,7 +1350,6 @@ $(function () {
     });
   });
 
-
   $(document).ready(function () {
     // Añadir fila a la tabla con id "unidadProduccion"
     $('.add-row-produccion').click(function () {
@@ -1389,11 +1376,13 @@ $(function () {
       $(targetTable).append(newRow);
 
       // Re-inicializar select2 en el nuevo select
-      $(targetTable).find('.select2-nuevo').select2({
-        dropdownParent: $('#ActaUnidades'), // Asegúrate de que este es el id correcto de tu modal
-        width: '100%',
-        dropdownCssClass: 'select2-dropdown'
-      });
+      $(targetTable)
+        .find('.select2-nuevo')
+        .select2({
+          dropdownParent: $('#ActaUnidades'), // Asegúrate de que este es el id correcto de tu modal
+          width: '100%',
+          dropdownCssClass: 'select2-dropdown'
+        });
 
       // Asegurar que el z-index esté configurado correctamente para el dropdown de select2
       $('.select2-dropdown').css('z-index', 9999);
@@ -1412,10 +1401,6 @@ $(function () {
     });
   });
 
-
-
-
-
   /* PRODUCCION DE MEZCAL */
 
   $(document).ready(function () {
@@ -1423,56 +1408,73 @@ $(function () {
 
     // Añadir fila a la tabla
     $('.add-rowMezcal').click(function () {
-      var newRow = `
+      var newRow =
+        `
       <tr>
           <th>
               <button type="button" class="btn btn-danger remove-row">
                   <i class="ri-delete-bin-5-fill"></i>
               </button>
           </th>
-          <td><select class="form-control select" name="respuesta[` + rowCount + `][0]">
+          <td><select class="form-control select" name="respuesta[` +
+        rowCount +
+        `][0]">
 <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select" name="respuesta[` + rowCount + `][1]">
+          <td><select class="form-control select" name="respuesta[` +
+        rowCount +
+        `][1]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select" name="respuesta[` + rowCount + `][2]">
+          <td><select class="form-control select" name="respuesta[` +
+        rowCount +
+        `][2]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select" name="respuesta[` + rowCount + `][3]">
+          <td><select class="form-control select" name="respuesta[` +
+        rowCount +
+        `][3]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select" name="respuesta[` + rowCount + `][4]">
+          <td><select class="form-control select" name="respuesta[` +
+        rowCount +
+        `][4]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select" name="respuesta[` + rowCount + `][5]">
+          <td><select class="form-control select" name="respuesta[` +
+        rowCount +
+        `][5]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select" name="respuesta[` + rowCount + `][6]">
+          <td><select class="form-control select" name="respuesta[` +
+        rowCount +
+        `][6]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select" name="respuesta[` + rowCount + `][7]">
+          <td><select class="form-control select" name="respuesta[` +
+        rowCount +
+        `][7]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
@@ -1484,15 +1486,16 @@ $(function () {
       rowCount++; // Incrementa el contador de filas
 
       // Re-inicializar select2 en los nuevos selects
-      $('#unidadMezcal').find('.select').select({
-        dropdownParent: $('#ActaUnidades'),
-        width: '100%',
-        dropdownCssClass: 'select-dropdown'
-      });
+      $('#unidadMezcal')
+        .find('.select')
+        .select({
+          dropdownParent: $('#ActaUnidades'),
+          width: '100%',
+          dropdownCssClass: 'select-dropdown'
+        });
 
       var selectElements = $('.select');
       initializeSelect(selectElements);
-
     });
 
     // Eliminar fila
@@ -1501,11 +1504,6 @@ $(function () {
       rowCount--; // Disminuir el contador de filas
     });
   });
-
-
-
-
-
 
   $(document).ready(function () {
     // Añadir fila a la tabla con id "equipoMezcal"
@@ -1540,11 +1538,13 @@ $(function () {
       $(targetTable).append(newRow);
 
       // Re-inicializar select2 en el nuevo select
-      $(targetTable).find('.select2-nuevo2').select2({
-        dropdownParent: $('#ActaUnidades'), // Asegúrate de que este es el id correcto de tu modal
-        width: '100%',
-        dropdownCssClass: 'select2-dropdown'
-      });
+      $(targetTable)
+        .find('.select2-nuevo2')
+        .select2({
+          dropdownParent: $('#ActaUnidades'), // Asegúrate de que este es el id correcto de tu modal
+          width: '100%',
+          dropdownCssClass: 'select2-dropdown'
+        });
 
       // Asegurar que el z-index esté configurado correctamente para el dropdown de select2
       $('.select2-dropdown').css('z-index', 9999);
@@ -1557,18 +1557,11 @@ $(function () {
       initializeSelect2(select2Elements);
     });
 
-
     // Función para eliminar una fila
     $(document).on('click', '.remove-row', function () {
       $(this).closest('tr').remove();
     });
   });
-
-
-
-
-
-
 
   /* PRODUCCION ENVASADO */
 
@@ -1577,50 +1570,65 @@ $(function () {
 
     // Añadir fila a la tabla
     $('.add-rowEnvasado').click(function () {
-      var newRow = `
+      var newRow =
+        `
       <tr>
           <th>
               <button type="button" class="btn btn-danger remove-row">
                   <i class="ri-delete-bin-5-fill"></i>
               </button>
           </th>
-          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][0]">
+          <td><select class="form-control select-unidad" name="respuestas[` +
+        rowCount +
+        `][0]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][1]">
+          <td><select class="form-control select-unidad" name="respuestas[` +
+        rowCount +
+        `][1]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][2]">
+          <td><select class="form-control select-unidad" name="respuestas[` +
+        rowCount +
+        `][2]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][3]">
+          <td><select class="form-control select-unidad" name="respuestas[` +
+        rowCount +
+        `][3]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][4]">
+          <td><select class="form-control select-unidad" name="respuestas[` +
+        rowCount +
+        `][4]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][5]">
+          <td><select class="form-control select-unidad" name="respuestas[` +
+        rowCount +
+        `][5]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][6]">
+          <td><select class="form-control select-unidad" name="respuestas[` +
+        rowCount +
+        `][6]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
@@ -1632,15 +1640,16 @@ $(function () {
       rowCount++; // Incrementa el contador de filas
 
       // Re-inicializar select2 en los nuevos selects
-      $('#unidadEnvasado').find('.select-unidad').select({
-        dropdownParent: $('#ActaUnidades'),
-        width: '100%',
-        dropdownCssClass: 'select-dropdown'
-      });
+      $('#unidadEnvasado')
+        .find('.select-unidad')
+        .select({
+          dropdownParent: $('#ActaUnidades'),
+          width: '100%',
+          dropdownCssClass: 'select-dropdown'
+        });
 
       var selectElements = $('.select-unidad');
       initializeSelect(selectElements);
-
     });
 
     // Eliminar fila
@@ -1649,8 +1658,6 @@ $(function () {
       rowCount--; // Disminuir el contador de filas
     });
   });
-
-
 
   /* EQUIPO ENVASADO */
 
@@ -1687,11 +1694,13 @@ $(function () {
       $(targetTable).append(newRow);
 
       // Re-inicializar select2 en el nuevo select
-      $(targetTable).find('.select2-nuevo3').select2({
-        dropdownParent: $('#ActaUnidades'), // Asegúrate de que este es el id correcto de tu modal
-        width: '100%',
-        dropdownCssClass: 'select2-dropdown'
-      });
+      $(targetTable)
+        .find('.select2-nuevo3')
+        .select2({
+          dropdownParent: $('#ActaUnidades'), // Asegúrate de que este es el id correcto de tu modal
+          width: '100%',
+          dropdownCssClass: 'select2-dropdown'
+        });
 
       // Asegurar que el z-index esté configurado correctamente para el dropdown de select2
       $('.select2-dropdown').css('z-index', 9999);
@@ -1704,13 +1713,11 @@ $(function () {
       initializeSelect2(select2Elements);
     });
 
-
     // Función para eliminar una fila
     $(document).on('click', '.remove-row', function () {
       $(this).closest('tr').remove();
     });
   });
-
 
   /* COMERCIALIZACION */
   $(document).ready(function () {
@@ -1718,38 +1725,49 @@ $(function () {
 
     // Añadir fila a la tabla
     $('.add-rowComercializadora').click(function () {
-      var newRow = `
+      var newRow =
+        `
       <tr>
           <th>
               <button type="button" class="btn btn-danger remove-row">
                   <i class="ri-delete-bin-5-fill"></i>
               </button>
           </th>
-          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][0]">
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` +
+        rowCount +
+        `][0]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][1]">
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` +
+        rowCount +
+        `][1]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][2]">
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` +
+        rowCount +
+        `][2]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][3]">
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` +
+        rowCount +
+        `][3]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][4]">
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` +
+        rowCount +
+        `][4]">
               <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
@@ -1762,15 +1780,16 @@ $(function () {
       rowCount++; // Incrementa el contador de filas
 
       // Re-inicializar select2 en los nuevos selects
-      $('#unidadComercializadora').find('.select-comercio').select({
-        dropdownParent: $('#ActaUnidades'),
-        width: '100%',
-        dropdownCssClass: 'select-dropdown'
-      });
+      $('#unidadComercializadora')
+        .find('.select-comercio')
+        .select({
+          dropdownParent: $('#ActaUnidades'),
+          width: '100%',
+          dropdownCssClass: 'select-dropdown'
+        });
 
       var selectElements = $('.select-comercio');
       initializeSelect(selectElements);
-
     });
 
     // Eliminar fila
@@ -1779,8 +1798,6 @@ $(function () {
       rowCount--; // Disminuir el contador de filas
     });
   });
-
-
 
   /* // Añadir método para agregar acta
   $('#ActaUnidadesForm').on('submit', function (e) {
@@ -1819,8 +1836,6 @@ $(function () {
     }
     });
   }); */
-
-
 
   // Añadir método para agregar acta con validación
   const actaUnidadesForm = document.getElementById('ActaUnidadesForm');
@@ -1891,8 +1906,7 @@ $(function () {
             message: 'Por favor ingrese no conformidades identificadas en la inspección'
           }
         }
-      },
-
+      }
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -1954,7 +1968,6 @@ $(function () {
     // Manejar la visibilidad de divs si aplica
     manejarVisibilidadDivs(idTipo);
 
-
     $.ajax({
       url: `/getDatosSolicitud/${id_solicitud}`,
       type: 'GET',
@@ -1965,52 +1978,53 @@ $(function () {
           $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
           // Validar si `direccion_completa` no está vacío
           if (response.data.instalacion) {
-            $('.domicilioInstalacion').html(response.data.instalacion.direccion_completa + " <b>Vigencia: </b>" + response.data.instalacion.fecha_vigencia);
+            $('.domicilioInstalacion').html(
+              response.data.instalacion.direccion_completa +
+                ' <b>Vigencia: </b>' +
+                response.data.instalacion.fecha_vigencia
+            );
           } else {
             // Si está vacío, usar `ubicacion_predio`
             $('.domicilioInstalacion').text(response.data?.predios?.ubicacion_predio);
             $('.nombrePredio').text(response.data?.predios?.nombre_predio);
             $('.preregistro').html(
               "<a target='_Blank' href='/pre-registro_predios/" +
-              response.data?.predios?.id_predio +
-              "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
+                response.data?.predios?.id_predio +
+                "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
             );
           }
-
-
 
           $('.razonSocial').text(response?.data?.empresa?.razon_social || 'No disponible');
           $('.fechaHora').text(response?.fecha_visita_formateada || 'No disponible');
 
           $('.nombreLote').text(response?.data?.lote_granel?.nombre_lote || 'No disponible');
 
-
           $('.guiasTraslado').text(response?.data?.caracteristicas?.guias || 'No disponible');
 
           // Validar categoría
           $('.categoria').text(
             response?.data?.lote_granel?.categoria?.categoria ||
-            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
-            'No disponible'
+              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
+              'No disponible'
           );
 
           // Validar clase
           $('.clase').text(
             response?.data?.lote_granel?.clase?.clase ||
-            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
-            'No disponible'
+              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
+              'No disponible'
           );
 
           $('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
           $('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
-          $('.certificadoGranel').text(response?.data?.lote_granel?.certificado_granel?.num_certificado ||
-            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.certificado_granel?.num_certificado ||
-            'No disponible');
-
-
+          $('.certificadoGranel').text(
+            response?.data?.lote_granel?.certificado_granel?.num_certificado ||
+              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.certificado_granel
+                ?.num_certificado ||
+              'No disponible'
+          );
 
           $('.tipos').text(response?.tipos_agave || 'No disponible');
-
 
           // Validar nombre del lote envasado
           $('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
@@ -2035,8 +2049,18 @@ $(function () {
           $('.volumenTrasladado').text(caracteristicas.id_vol_traslado);
           $('.volumenSobrante').text(caracteristicas.id_vol_res);
           $('.volumenIngresado').text(caracteristicas.volumen_ingresado);
-          $('.etiqueta').html('<a href="files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + response?.url_etiqueta + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
-          $('.dictamenEnvasado').html('<a href="/dictamen_envasado/' + response?.data?.lote_envasado?.dictamen_envasado?.id_dictamen_envasado + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>');
+          $('.etiqueta').html(
+            '<a href="files/' +
+              response.data.empresa.empresa_num_clientes[0].numero_cliente +
+              '/' +
+              response?.url_etiqueta +
+              '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
+          );
+          $('.dictamenEnvasado').html(
+            '<a href="/dictamen_envasado/' +
+              response?.data?.lote_envasado?.dictamen_envasado?.id_dictamen_envasado +
+              '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
+          );
 
           // Verificar si 'detalles' existe y es un arreglo
           if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
@@ -2090,7 +2114,7 @@ $(function () {
               targetClass: '.proforma',
               noDocMessage: 'No hay factura proforma',
               condition: (documento, response) => documento.id_empresa == response.data.id_empresa
-            },
+            }
             /*/  {
                 ids: [128],
                 targetClass: '.domicilioInstalacion',
@@ -2144,10 +2168,6 @@ $(function () {
         console.error('Error al obtener los datos:', error);
       }
     });
-
-
   });
   //end
 });
-
-
