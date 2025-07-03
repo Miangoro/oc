@@ -27,6 +27,7 @@ use App\Models\guias;
 use App\Models\Destinos;
 use App\Models\BitacoraMezcal;
 use App\Models\catalogo_aduanas;
+use App\Models\solicitudes_eliminadas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -43,6 +44,7 @@ class solicitudesController extends Controller
 {
     public function UserManagement()
     {
+        $solicitudes = solicitudesModel::where('habilitado', 1)->get();
         $solicitudesTipos = solicitudTipo::all();
         $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
         $estados = estados::all(); // Obtener todos los estados
@@ -73,7 +75,7 @@ class solicitudesController extends Controller
 
 
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
-        return view('solicitudes.find_solicitudes_view', compact('tipo_usuario','instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas', 'aduanas'));
+        return view('solicitudes.find_solicitudes_view', compact('tipo_usuario','instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas', 'aduanas', 'solicitudes'));
     }
     public function findCertificadosExportacion()
     {
@@ -107,13 +109,7 @@ class solicitudesController extends Controller
 
         $search = [];
 
-        /*if (auth()->user()->tipo == 3) {
-            $empresaId = auth()->user()->empresa?->id_empresa;
-        } else {
-            $empresaId = null;
-        }*/
-
-        $query = solicitudesModel::query();
+        $query = solicitudesModel::query()->where('habilitado', 1);
 
         if ($empresaId) {
             $query->where('id_empresa', $empresaId);
@@ -122,9 +118,6 @@ class solicitudesController extends Controller
         if ($userId == 49) {
             $query->where('id_tipo', 11);
         }
-
-
-
         // Filtros específicos por columna
       $columnsInput = $request->input('columns');
 
@@ -137,7 +130,6 @@ class solicitudesController extends Controller
       }
 
         $totalData = $query->count();
-
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -156,7 +148,7 @@ class solicitudesController extends Controller
                 'inspeccion.inspector',
                 'ultima_validacion_oc',
                 'ultima_validacion_ui'
-            ]);
+            ])->where('habilitado', 1);
 
             // Si se necesita ordenar por nombre del inspector
             if ($order === 'inspector') {
@@ -191,7 +183,7 @@ class solicitudesController extends Controller
                         'inspeccion.inspector',
                         'ultima_validacion_oc',
                         'ultima_validacion_ui'
-                    ])
+                    ])->where('habilitado', 1)
                     ->where(function ($query) use ($search) {
                         $query->where(function ($q) use ($search) {
                             $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
@@ -234,12 +226,12 @@ class solicitudesController extends Controller
                     ->get();
 
 
-                            $totalFiltered = solicitudesModel::with('tipo_solicitud',
+                            $totalFilteredQuery = solicitudesModel::with('tipo_solicitud',
                         'empresa',
                         'instalacion',
                         'inspeccion.inspector',
                         'ultima_validacion_oc',
-                        'ultima_validacion_ui')
+                        'ultima_validacion_ui')->where('habilitado', 1)
                     ->where(function ($query) use ($search) {
                         $query->where(function ($q) use ($search) {
                             $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
@@ -264,14 +256,14 @@ class solicitudesController extends Controller
                     });
 
                 if ($empresaId) {
-                    $totalFiltered->where('id_empresa', $empresaId);
+                    $totalFilteredQuery->where('id_empresa', $empresaId);
                 }
 
                 if ($userId == 49) {
-                     $totalFiltered->where('id_tipo', 11);
+                     $totalFilteredQuery->where('id_tipo', 11);
                 }
 
-                $totalFiltered = $totalFiltered->count();
+                $totalFiltered = $totalFilteredQuery->count();
 
         }
 
@@ -417,14 +409,12 @@ class solicitudesController extends Controller
                 $data[] = $nestedData;
             }
         }
-
-
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
             'recordsFiltered' => intval($totalFiltered),
             'code' => 200,
-            'data' => $data,
+            'data' => $data ?? [],
         ]);
     }
 
@@ -2168,16 +2158,25 @@ class solicitudesController extends Controller
         return Excel::download(new SolicitudesExport($filtros), 'reporte_solicitudes.xlsx');
     }
 
-    public function destroy($id_solicitud)
+    public function destroy(Request $request, $id_solicitud)
     {
-        /*       try {
+    try {
         $solicitud = solicitudesModel::findOrFail($id_solicitud);
-        $solicitud->delete();
-
-        return response()->json(['success' => 'Solcitud eliminada correctamente']);
+        // Guardar motivo recibido del request
+        $motivo = $request->input('reason', 'Sin motivo especificado');
+        // Registrar en tabla solicitudes_eliminadas
+        solicitudes_eliminadas::create([
+            'id_solicitud' => $id_solicitud,
+            'motivo' => $motivo,
+        ]);
+        // Deshabilitar la solicitud
+        $solicitud->habilitado = 0;
+        $solicitud->save();
+        return response()->json(['success' => 'Solicitud eliminada correctamente']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al eliminar la solicitud: ' . $e->getMessage()], 500);
-    } */
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+
     }
 
     public function Etiqueta_240($id_solicitud)
