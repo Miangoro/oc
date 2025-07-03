@@ -142,18 +142,18 @@
                     </div>
 
                     <div class="alert">
-                        <strong>FOLIO DE GUÍA: {{$guia->folio}}</strong>
+                        <strong>FOLIO DE GUÍA: {{$guia->folio ?? ''}}</strong>
                     </div>
 
                     <table class="table">
                         <tbody>
                             <tr>
                                 <td><b>Nombre del predio</b></td>
-                                <td>{{$guia->predios->nombre_predio}}</td>
+                                <td>{{$guia->predios->nombre_predio ?? ''}}</td>
                             </tr>
                             <tr>
                                 <td><b>Nombre de la empresa/productor:</b></td>
-                                <td>{{$guia->empresa->razon_social}}</td>
+                                <td>{{$guia->empresa->razon_social ?? ''}}</td>
                             </tr>
                             <tr>
                                 <td><b>Fecha de corte</b></td>
@@ -161,11 +161,11 @@
                             </tr>
                             <tr>
                                 <td><b>Tipo de maguey (Tipo de agave)</b></td>
-                                <td>{{$guia->predio_plantacion->num_plantas}}</td>
+                                <td>{{$guia->predio_plantacion->num_plantas ?? ''}}</td>
                             </tr>
                             <tr>
                                 <td><b>Edad</b></td>
-                                <td>{{$guia->predio_plantacion->anio_plantacion}}</td>
+                                <td>{{$guia->predio_plantacion->anio_plantacion ?? ''}}</td>
                             </tr>
                             <tr>
                                 <td><b>No. de lote o No. de tapada</b></td>
@@ -181,7 +181,7 @@
                             </tr>
                             <tr>
                                 <td><b>No. de piñas actual</b></td>
-                                <td>{{$guia->numero_plantas}}</td>
+                                <td>{{$guia->numero_plantas ?? ''}}</td>
                             </tr>
                         </tbody>
                     </table>
