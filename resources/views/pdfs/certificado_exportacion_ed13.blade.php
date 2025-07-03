@@ -256,41 +256,6 @@
     </table>
 
 
-<!--PARA HOLOGRAMAS-->
-@php
-    $idHologramas = json_decode($data->id_hologramas, true);
-    $oldHologramas = json_decode($data->old_hologramas, true);
-    $contador = 0;
-
-    $foliosPorLote = [];
-
-    foreach ($lotes as $lote) {
-        $clave = 'folio' . ($contador + 1);
-        $contenido = '';
-
-        if (!empty($idHologramas[$clave])) {
-            $grupo = $idHologramas[$clave];
-            $rangoTexto = [];
-
-            foreach ($grupo['rangos'] ?? [] as $rango) {
-                $rangoTexto[] = ($rango['inicial'] ?? '?') . ' - ' . ($rango['final'] ?? '?');
-            }
-
-            $contenido .= implode('<br>', $rangoTexto);
-        }
-
-        if (!empty($oldHologramas[$clave])) {
-            $contenido .= ($contenido ? '<br>' : '') . $oldHologramas[$clave];
-        }
-
-        if (empty($contenido)) {
-            $contenido = '------';
-        }
-
-        $foliosPorLote[] = $contenido;
-        $contador++;
-    }
-@endphp
 <!--INICIO DE TABLAS LOTES-->
     @foreach ($lotes as $lote)
         <div class="titulos">DESCRIPCIÓN DEL EMBARQUE QUE AMPARA EL CERTIFICADO</div>
@@ -372,7 +337,7 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 Folio Hologramas:</td>
             <td style="text-align: left; font-size: 9px; padding-left: 4px;">
-                {!! $foliosPorLote[$loop->index] ?? '------' !!}
+
             </td>
         </tr>
         </table>
