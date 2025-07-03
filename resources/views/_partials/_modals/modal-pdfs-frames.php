@@ -73,17 +73,17 @@
       </div>
     </div>
   </div>
-</div> -->
+</div> 
 
 
-<!--Modal para domicilios predios (PRE-REGISTROS)-->
+//Modal para domicilios predios (PRE-REGISTROS)
 <div class="modal fade" id="mostrarPdfDictamen1" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-simple">
     <div class="modal-content">
     <a id="openPdfBtnDictamen1" href="#" target="_blank" class="btn btn-primary btn-sm ms-auto" style="display: none;">Abrir PDF en nueva pestaña</a>
       <div class="modal-header d-flex justify-content-center">
         <h4 id="titulo_modal_Dictamen1" style="text-align: center; flex-grow: 1;"></h4>
-        <!--Botón de cierre más pequeño y alineado a la derecha-->
+        //Botón de cierre más pequeño y alineado a la derecha
       </div><button type="button" class="btn-close btn-sm ml-auto" data-bs-dismiss="modal" aria-label="Close"></button>
       <div class="modal-body p-0 d-flex flex-column justify-content-center align-items-center">
         <div class="text-center mb-6">
@@ -110,7 +110,7 @@
       </div>
     </div>
   </div>
-</div>
+</div>  -->
 
 
 
