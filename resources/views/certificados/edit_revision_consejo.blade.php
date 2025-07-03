@@ -86,8 +86,8 @@
                         @endphp
 
                         @if (!empty($observaciones))
-                            <p><strong>Observaciones:</strong> {!! $observacionesConEnlaces !!}</p>
-                        @endif
+                            <p><strong>Observaciones:</strong> {!! $observacionesConEnlaces !!}</p> entro
+                        @endif 
 
 
                         @if (!empty($datos->evidencias) && count($datos->evidencias) > 0)
