@@ -229,7 +229,7 @@
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> Tipo de maguey (Tipo de agave):</td>
-            <td class="leftLetter" colspan="2"> {{ $datos[0]->nombre }} {{ $datos[0]->cientifico }}</td>
+            <td class="leftLetter" colspan="2"> {{ $datos[0]->nombre }} ({{ $datos[0]->cientifico }})</td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> Edad:</td>
@@ -295,8 +295,8 @@
 
 
     <div style="margin-top: 5%; text-align: center">
-        <img style="position: absolute; margin-top: -5%; left: 45%;" height="60px" 
-            src="{{ public_path('storage/firmas/firma_Erik_Antonio_Mejía_Vaca_1744914578.png') }}">
+        {{-- <img style="position: absolute; margin-top: -5%; left: 45%;" height="60px" 
+            src="{{ public_path('storage/firmas/firma_Erik_Antonio_Mejía_Vaca_1744914578.png') }}"> --}}
         <p style="font-size: 15px">B.T.G. Erick antonio Mejía Vaca <br>
             Gerente Técnico de la Unidad de Inspección</p>
     </div>
