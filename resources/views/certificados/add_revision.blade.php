@@ -552,6 +552,9 @@
                                         @elseif($pregunta->filtro == 'ingredientes')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->ingredientes ?? 'N/A' }}
                                             </td>
+                                        @elseif($pregunta->filtro == 'rango_hologramas')
+                                            <td>{{ $datos->certificado->old_hologramas ?? 'N/A' }}
+                                            </td>
                                         @elseif($pregunta->filtro == 'edad')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? 'N/A' }}
                                             </td>
