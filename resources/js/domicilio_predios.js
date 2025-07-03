@@ -170,7 +170,7 @@ $(function () {
           let actaIcon = '';
           if (tieneActa) {
             actaIcon = `
-              <a class="text-danger pdfActa-inspeccion cursor-pointer"
+              <a class="text-danger pdfActa-inspeccion cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"
                 data-id="${full['id_predio']}"
                 data-registro="${full['id_empresa']}"
                 data-url="${tieneActa}"
@@ -183,7 +183,7 @@ $(function () {
           }
         if (tieneGeo) {
           return `
-            <a class="text-primary text-danger col-id-empresa pdfActa-inspeccion cursor-pointer me-2"
+            <a class="text-primary text-danger col-id-empresa pdfActa-inspeccion cursor-pointer me-2" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"
               data-id="${full['id_predio']}"
               data-registro="${full['id_empresa']}"
               data-url="${tieneGeo}"

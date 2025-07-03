@@ -68,7 +68,7 @@ class HologramasValidacion extends Controller
 
   public function qr_guias($id)
   {
-    $guias = Guias::with('Predios','empresa', 'predio_plantacion')
+    $guias = Guias::with('Predios','empresa')
       ->where('id_guia', $id)
       ->get();
 
