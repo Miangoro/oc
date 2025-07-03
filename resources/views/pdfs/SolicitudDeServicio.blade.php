@@ -591,6 +591,8 @@
             <td colspan="4">
                 @if ($inspeccion_envasado == 'X')
                     {{ $datos->lote_envasado->cont_alc_envasado ?? '---------------' }} 
+                @elseif ($exportacion == 'X') 
+                    {{ $datos->lote_envasado->cont_alc_envasado ?? '---------------' }} 
                 @elseif ($muestreo_granel != 'X') 
                     {{ $datos->lote_granel->cont_alc ?? '---------------' }} 
                 @else --------------- @endif
