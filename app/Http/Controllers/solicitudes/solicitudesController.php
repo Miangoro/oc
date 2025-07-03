@@ -496,6 +496,7 @@ class solicitudesController extends Controller
   {
       $validated = $request->validate([
           'id_empresa' => 'required|integer',
+          'fecha_solicitud' => 'nullable|date',
           'fecha_visita' => 'required|date',
           'id_instalacion' => 'required|integer',
           'nombre_produccion' => 'required|string|max:255',
@@ -526,6 +527,7 @@ class solicitudesController extends Controller
           $VigilanciaProdu->id_empresa = $validated['id_empresa'];
           $VigilanciaProdu->id_tipo = 2;
           $VigilanciaProdu->id_predio = 0;
+          $VigilanciaProdu->fecha_solicitud = $validated['fecha_solicitud'];
           $VigilanciaProdu->fecha_visita = $validated['fecha_visita'];
           $VigilanciaProdu->id_instalacion = $validated['id_instalacion'];
           $VigilanciaProdu->info_adicional = $validated['info_adicional'] ?? null;
@@ -609,6 +611,7 @@ class solicitudesController extends Controller
         $emisionCertificado->id_empresa = $request->id_empresa;
         $emisionCertificado->id_tipo = 13;
         $emisionCertificado->id_predio = 0;
+        $emisionCertificado->fecha_solicitud = $request->fecha_solicitud;
         $emisionCertificado->fecha_visita = $request->fecha_visita;
         $emisionCertificado->id_instalacion = $request->id_instalacion;
         $emisionCertificado->info_adicional = $request->info_adicional;
@@ -647,6 +650,7 @@ class solicitudesController extends Controller
         $MuestreoLote->id_empresa = $request->id_empresa;
         $MuestreoLote->id_tipo = 3;
         $MuestreoLote->id_predio = 0;
+        $MuestreoLote->fecha_solicitud = $request->fecha_solicitud;
         $MuestreoLote->fecha_visita = $request->fecha_visita;
         $MuestreoLote->id_instalacion = $request->id_instalacion;
         $MuestreoLote->info_adicional = $request->info_adicional;
@@ -696,6 +700,7 @@ class solicitudesController extends Controller
         $VigilanciaTras->id_empresa = $request->id_empresa;
         $VigilanciaTras->id_tipo = 4;
         $VigilanciaTras->id_predio = 0;
+        $VigilanciaTras->fecha_solicitud = $request->fecha_solicitud;
         $VigilanciaTras->fecha_visita = $request->fecha_visita;
         $VigilanciaTras->id_instalacion = $request->id_instalacion;
         $VigilanciaTras->info_adicional = $request->info_adicional;
@@ -786,6 +791,7 @@ class solicitudesController extends Controller
         $InspeccionEnva->id_empresa = $request->id_empresa;
         $InspeccionEnva->id_tipo = 5;
         $InspeccionEnva->id_predio = 0;
+        $InspeccionEnva->fecha_solicitud = $request->fecha_solicitud;
         $InspeccionEnva->fecha_visita = $request->fecha_visita;
         $InspeccionEnva->id_instalacion = $request->id_instalacion;
         $InspeccionEnva->info_adicional = $request->info_adicional;
@@ -822,6 +828,7 @@ class solicitudesController extends Controller
         $InspeccionBarri->id_empresa = $request->id_empresa;
         $InspeccionBarri->id_tipo = 7;
         $InspeccionBarri->id_predio = 0;
+        $InspeccionBarri->fecha_solicitud = $request->fecha_solicitud;
         $InspeccionBarri->fecha_visita = $request->fecha_visita;
         $InspeccionBarri->id_instalacion = $request->id_instalacion;
         $InspeccionBarri->info_adicional = $request->info_adicional;
@@ -870,6 +877,7 @@ class solicitudesController extends Controller
         $BarricadaLib->id_empresa = $request->id_empresa;
         $BarricadaLib->id_tipo = 9;
         $BarricadaLib->id_predio = 0;
+        $BarricadaLib->fecha_solicitud = $request->fecha_solicitud;
         $BarricadaLib->fecha_visita = $request->fecha_visita;
         $BarricadaLib->id_instalacion = $request->id_instalacion;
         $BarricadaLib->info_adicional = $request->info_adicional;
@@ -918,6 +926,7 @@ class solicitudesController extends Controller
         $solicitud->folio = Helpers::generarFolioSolicitud();
         $solicitud->id_empresa = $request->id_empresa;
         $solicitud->id_tipo = 10;
+        $solicitud->fecha_solicitud = $request->fecha_solicitud;
         $solicitud->fecha_visita = $request->fecha_visita;
         $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
         $solicitud->id_predio = $request->id_predio;
@@ -951,6 +960,7 @@ class solicitudesController extends Controller
         $solicitud->folio = Helpers::generarFolioSolicitud();
         $solicitud->id_empresa = $request->id_empresa;
         $solicitud->id_tipo = 1;
+        $solicitud->fecha_solicitud = $request->fecha_solicitud;
         $solicitud->fecha_visita = $request->fecha_visita;
         $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
         $solicitud->info_adicional = $request->info_adicional;
@@ -991,6 +1001,7 @@ class solicitudesController extends Controller
         $solicitud->folio = Helpers::generarFolioSolicitud();
         $solicitud->id_empresa = $request->id_empresa;
         $solicitud->id_tipo = 14;
+        $solicitud->fecha_solicitud = $request->fecha_solicitud;
         $solicitud->fecha_visita = $request->fecha_visita;
         //Auth::user()->id;
         $solicitud->id_instalacion = $request->id_instalacion;
@@ -1200,6 +1211,7 @@ class solicitudesController extends Controller
                 // Validar solo los campos que sí estás enviando
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'nombre_produccion' => 'required|string|max:255',
@@ -1212,6 +1224,7 @@ class solicitudesController extends Controller
                 // Actualizar la solicitud con solo los datos actuales
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1282,6 +1295,7 @@ class solicitudesController extends Controller
                 // Validar datos para georreferenciación
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1304,6 +1318,7 @@ class solicitudesController extends Controller
                 // Actualizar datos específicos para georreferenciación
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1315,6 +1330,7 @@ class solicitudesController extends Controller
             case 'vigilanciatraslado':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1339,6 +1355,7 @@ class solicitudesController extends Controller
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1349,6 +1366,7 @@ class solicitudesController extends Controller
             case 'LiberacionProductoTerminado':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1367,6 +1385,7 @@ class solicitudesController extends Controller
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1377,6 +1396,7 @@ class solicitudesController extends Controller
             case 'inspeccionenvasado':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1391,6 +1411,7 @@ class solicitudesController extends Controller
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1401,6 +1422,7 @@ class solicitudesController extends Controller
             case 'muestreobarricada':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1428,6 +1450,7 @@ class solicitudesController extends Controller
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1438,6 +1461,7 @@ class solicitudesController extends Controller
             case 'muestreobarricadaliberacion':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1462,6 +1486,7 @@ class solicitudesController extends Controller
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1474,6 +1499,7 @@ class solicitudesController extends Controller
                 // Validar datos para georreferenciación
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_predio' => 'required|integer|exists:predios,id_predio',
                     'punto_reunion' => 'required|string|max:255',
@@ -1490,6 +1516,7 @@ class solicitudesController extends Controller
                 // Actualizar datos específicos para georreferenciación
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_predio' => $request->id_predio,
                     'punto_reunion' => $request->punto_reunion,
@@ -1504,6 +1531,7 @@ class solicitudesController extends Controller
                 // Validar datos para dictaminación
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string|max:5000',
@@ -1520,6 +1548,7 @@ class solicitudesController extends Controller
                 // Actualizar datos específicos para dictaminación
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1530,6 +1559,7 @@ class solicitudesController extends Controller
             case 'muestreoagave':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string',
@@ -1545,6 +1575,7 @@ class solicitudesController extends Controller
                 // Actualizar los datos de la solicitud
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1557,6 +1588,7 @@ class solicitudesController extends Controller
                 // Validación de datos del formulario
                 $validated = $request->validate([
                     'id_empresa' => 'required|integer',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer',
                     'id_nstalaciones_envasado_2_edit' => 'required|integer',
@@ -1639,6 +1671,7 @@ class solicitudesController extends Controller
 
                 // Guardar la solicitud
                 $solicitud->id_empresa = $validated['id_empresa'];
+                $solicitud->fecha_solicitud = $validated['fecha_solicitud'];
                 $solicitud->fecha_visita = $validated['fecha_visita'];
                 $solicitud->id_instalacion = $validated['id_instalacion'];
                 $solicitud->info_adicional = $validated['info_adicional'];
@@ -1721,6 +1754,7 @@ class solicitudesController extends Controller
             case 'emisionCertificadoVentaNacional':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'nullable|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1734,6 +1768,7 @@ class solicitudesController extends Controller
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1841,6 +1876,7 @@ class solicitudesController extends Controller
         // Validación de datos del formulario
         $validated = $request->validate([
             'id_empresa' => 'required|integer',
+            'fecha_solicitud' => 'nullable|date',
             'fecha_visita' => 'required|date',
             'id_instalacion' => 'required|integer',
             'id_instalacion_envasado_2' => 'required|integer',
@@ -1957,6 +1993,7 @@ class solicitudesController extends Controller
         $pedido = new solicitudesModel();
         $pedido->folio = Helpers::generarFolioSolicitud();
         $pedido->id_empresa = $validated['id_empresa'];
+        $pedido->fecha_solicitud = $validated['fecha_solicitud'];
         $pedido->fecha_visita = $validated['fecha_visita'];
         $pedido->id_tipo = 11;
         $pedido->id_instalacion = $validated['id_instalacion'];
@@ -2046,6 +2083,7 @@ class solicitudesController extends Controller
         $solicitud->folio = Helpers::generarFolioSolicitud();
         $solicitud->id_empresa = $request->id_empresa;
         $solicitud->id_tipo = 8;
+        $solicitud->fecha_solicitud = $request->fecha_solicitud;
         $solicitud->fecha_visita = $request->fecha_visita;
         //Auth::user()->id;
         $solicitud->id_instalacion = $request->id_instalacion;

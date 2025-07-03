@@ -25,7 +25,16 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" id="fecha_sol_geo" value="@php
+                                      echo date('Y-m-d H:m');
+                                    @endphp">
+                                <label for="fecha_solicitud">fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     name="fecha_visita" id="fecha_visita_geo" />
@@ -59,7 +68,8 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button disabled class="btn btn-primary me-1 d-none" type="button" id="btnSpinnerGeoreferenciacion">
+                        <button disabled class="btn btn-primary me-1 d-none" type="button"
+                            id="btnSpinnerGeoreferenciacion">
                             <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
                             Registrando...
                         </button>

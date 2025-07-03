@@ -14,7 +14,7 @@
                         <div class="card-body">
 
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-floating form-floating-outline mb-6">
                                         <select id="tipo_solicitud" class="form-select" name="tipo_solicitud">
                                             <option value="1">Inspección y certificado de exportación</option>
@@ -27,7 +27,7 @@
                                         <label for="tipo_solicitud">Tipo de solicitud</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-floating form-floating-outline mb-6">
                                         <select id="id_empresa_solicitud_exportacion" onchange="cargarDatosCliente();"
                                             name="id_empresa" class="select2 form-select">
@@ -41,6 +41,15 @@
                                             @endforeach
                                         </select>
                                         <label for="id_empresa">Cliente</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating form-floating-outline mb-5">
+                                        <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
+                                            type="text" name="fecha_solicitud" autocomplete="off"
+                                            value="@php
+echo date('Y-m-d H:m'); @endphp">
+                                        <label for="fecha_solicitud">fecha y hora de la solicitud</label>
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +107,8 @@
                                         <input type="file" class="form-control" id="factura_proforma"
                                             name="factura_proforma">
                                         <input type="hidden" name="id_documento_factura" value="55">
-                                        <input type="hidden" name="nombre_documento_factura" value="Factura proforma">
+                                        <input type="hidden" name="nombre_documento_factura"
+                                            value="Factura proforma">
                                         <label for="factura_proforma">Adjuntar Factura/Proforma</label>
                                     </div>
                                 </div>
@@ -143,8 +153,7 @@
                                     <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select onchange="cargarDetallesLoteEnvasadoex(this.value)"
-                                                id="lote_envasadoExportPe"
-                                                class="select2 form-select evasado_export">
+                                                id="lote_envasadoExportPe" class="select2 form-select evasado_export">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
                                                 <!-- Opciones dinámicas -->
@@ -675,10 +684,10 @@
                 success: function(response) {
 
 
-                const contenedor = $(`#caracteristicas_Ex${sectionCount} .card-body`);
-                let tablaEnvasadoID = `tablaLoteEnvasado_${sectionCount}`;
-                if ($(`#${tablaEnvasadoID}`).length === 0) {
-                    contenedor.append(`
+                    const contenedor = $(`#caracteristicas_Ex${sectionCount} .card-body`);
+                    let tablaEnvasadoID = `tablaLoteEnvasado_${sectionCount}`;
+                    if ($(`#${tablaEnvasadoID}`).length === 0) {
+                        contenedor.append(`
                         <div class="row mt-2">
                             <div class="col-12">
                                 <table id="${tablaEnvasadoID}" class="table table-bordered table-sm mb-2">
@@ -697,13 +706,13 @@
                             </div>
                         </div>
                     `);
-                }
+                    }
 
-                let $tbodyEnvasado = $(`#${tablaEnvasadoID} tbody`);
-                $tbodyEnvasado.empty();
+                    let $tbodyEnvasado = $(`#${tablaEnvasadoID} tbody`);
+                    $tbodyEnvasado.empty();
 
-                if (response.lote_envasado) {
-                    $tbodyEnvasado.append(`
+                    if (response.lote_envasado) {
+                        $tbodyEnvasado.append(`
                         <tr>
                             <td>1</td>
                             <td>${response.lote_envasado.nombre}
@@ -717,7 +726,7 @@
                             <td>Botellas: ${response.lote_envasado.cant_botellas}</td>
                         </tr>
                     `);
-                }
+                    }
 
                     // Rellena el input de lote a granel
                     $(`#lote_granel_${sectionCount}`).val(

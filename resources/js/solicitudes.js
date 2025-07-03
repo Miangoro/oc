@@ -732,6 +732,7 @@ $(function () {
             if (id_tipo === 1) {
               modal.find('#edit_id_solicitud_muestr').val(id_solicitud);
               modal.find('#id_empresa_muestr').val(response.data.id_empresa).trigger('change');
+              modal.find('#fecha_sol_muestr_agave_edit').val(response.data.fecha_solicitud);
               modal.find('#fecha_visita_muestr').val(response.data.fecha_visita);
               modal.find('#id_instalacion_dic23').data('selected', response.data.id_instalacion);
 
@@ -746,6 +747,7 @@ $(function () {
             if (id_tipo === 2) {
               modal.find('#edit_id_solicitud_vig').val(id_solicitud);
               modal.find('#edit_id_empresa_vig').val(response.data.id_empresa).trigger('change');
+              modal.find('#fecha_sol_vigi_prod').val(response.data.fecha_solicitud);
               modal.find('#edit_fecha_visita_vig').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_vig').data('selected', response.data.id_instalacion);
               modal.find('.linksGuias').html('');
@@ -788,6 +790,7 @@ $(function () {
             } else if (id_tipo === 3) {
               modal.find('#edit_id_solicitud_muestreo').val(id_solicitud);
               modal.find('#edit_id_empresa_muestreo').val(response.data.id_empresa).trigger('change');
+              modal.find('#fecha_sol_edit_muestreo_lote').val(response.data.fecha_solicitud);
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_muestreo').data('selected', response.data.id_instalacion);
 
@@ -848,6 +851,7 @@ $(function () {
             } else if (id_tipo === 4) {
               modal.find('#edit_id_solicitud_traslado').val(id_solicitud);
               modal.find('#edit_id_empresa_traslado').val(response.data.id_empresa).trigger('change');
+              modal.find('#fecha_sol_vigi_tras').val(response.data.fecha_solicitud);
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_traslado').data('selected', response.data.id_instalacion);
               modal.find('#instalacion_id_traslado').val(response.data.id_instalacion);
@@ -882,6 +886,7 @@ $(function () {
             } else if (id_tipo === 5) {
               modal.find('#edit_id_solicitud_inspeccion').val(id_solicitud);
               modal.find('#edit_id_empresa_inspeccion').val(response.data.id_empresa).trigger('change');
+              modal.find('#fecha_sol_inspec_envasado').val(response.data.fecha_solicitud);
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_inspeccion').data('selected', response.data.id_instalacion);
 
@@ -957,6 +962,7 @@ $(function () {
             } else if (id_tipo === 7) {
               modal.find('#edit_id_solicitud_barricada').val(id_solicitud);
               modal.find('#edit_id_empresa_barricada').val(response.data.id_empresa).trigger('change');
+              modal.find('#fecha_sol_ingreso_barrica').val(response.data.fecha_solicitud);
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_barricada').data('selected', response.data.id_instalacion);
               modal.find('#instalacion_ingreso').val(response.data.id_instalacion);
@@ -989,6 +995,7 @@ $(function () {
             } else if (id_tipo === 8) {
               modal.find('#edit_id_solicitud_liberacion_terminado').val(id_solicitud);
               modal.find('#edit_id_empresa_solicitud_lib_ter').val(response.data.id_empresa).trigger('change');
+              modal.find('#sol_LPTN').val(response.data.fecha_solicitud);
               modal.find('#edit_fecha_liberacion_terminado').val(response.data.fecha_visita);
               modal
                 .find('#edit_id_instalacion_lib_ter')
@@ -1023,6 +1030,7 @@ $(function () {
             } else if (id_tipo === 9) {
               modal.find('#edit_id_solicitud_liberacion').val(id_solicitud);
               modal.find('#edit_id_empresa_liberacion').val(response.data.id_empresa).trigger('change');
+              modal.find('#sol_fecha_inspecc_lib_barrica').val(response.data.fecha_solicitud);
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_liberacion').data('selected', response.data.id_instalacion);
 
@@ -1058,6 +1066,7 @@ $(function () {
             } else if (id_tipo === 10) {
               modal.find('#id_solicitud_geo').val(id_solicitud);
               modal.find('#edit_id_empresa_geo').val(response.data.id_empresa).trigger('change');
+              modal.find('#edit_fecha_sol_geo').val(response.data.fecha_solicitud);
               modal.find('#edit_fecha_visita_geo').val(response.data.fecha_visita);
               modal.find('#edit_id_predio_geo').data('selected', response.data.id_predio);
               // Acceder al campo `punto_reunion` desde `caracteristicas`
@@ -1071,6 +1080,7 @@ $(function () {
             } else if (id_tipo === 11) {
               modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
               modal.find('.id_solicitud').val(id_solicitud);
+              modal.find('#sol_PEX').val(response.data.fecha_solicitud);
               modal.find('#fecha_visita_edit_exportacion').val(response.data.fecha_visita);
               modal.find('.instalacion_id').val(response.data.id_instalacion);
 
@@ -1210,6 +1220,7 @@ $(function () {
               // Llenar los campos del modal con los datos de la solicitud
               modal.find('#edit_id_solicitud').val(id_solicitud);
               modal.find('#edit_id_empresa').val(response.data.id_empresa).trigger('change');
+              modal.find('#edit_fecha_sol_dic_ins').val(response.data.fecha_solicitud);
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion').val(response.data.id_instalacion).trigger('change');
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
@@ -1418,13 +1429,8 @@ $(function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(formDictaminacion);
-      $('#btnEditDicIns').prop('disabled', true);
-
-      $('#btnEditDicIns').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
-      setTimeout(function () {
-        $('#btnEditDicIns').prop('disabled', false);
-        $('#btnEditDicIns').html('<i class="ri-add-line"></i> Editar');
-      }, 3000);
+      $('#btnEditDicIns').addClass('d-none');
+      $('#loading_dictamen_edit').removeClass('d-none');
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud').val(),
         type: 'POST',
@@ -1433,6 +1439,8 @@ $(function () {
         contentType: false,
         success: function (response) {
           $('#editSolicitudDictamen').modal('hide');
+          $('#loading_dictamen_edit').addClass('d-none');
+          $('#btnEditDicIns').removeClass('d-none');
           $('#addEditSolicitud')[0].reset();
           $('.select2').val(null).trigger('change');
 
@@ -1448,16 +1456,30 @@ $(function () {
           });
         },
         error: function (xhr) {
-          console.log('Error:', xhr.responseText);
+          let mensaje = 'Ocurrió un error inesperado.';
+
+          if (xhr.responseJSON?.message) {
+            mensaje = xhr.responseJSON.message;
+          }
+
+          // Si Laravel devuelve errores de validación
+          if (xhr.responseJSON?.errors) {
+            const errores = xhr.responseJSON.errors;
+            mensaje = Object.values(errores)
+              .map(arr => `• ${arr.join(', ')}`)
+              .join('\n');
+          }
 
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al actualizar la solicitud',
+            text: mensaje,
             customClass: {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#loading_dictamen_edit').addClass('d-none');
+          $('#btnEditDicIns').removeClass('d-none');
         }
       });
     });
@@ -2449,14 +2471,8 @@ $(function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(formDictaminacion);
-      $('#btnEditMA').prop('disabled', true);
-
-      $('#btnEditMA').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
-      setTimeout(function () {
-        $('#btnEditMA').prop('disabled', false);
-        $('#btnEditMA').html('<i class="ri-add-line"></i> Editar');
-      }, 3000);
-
+      $('#btnEditMA').addClass('d-none');
+      $('#loading_mu_agv_edit').removeClass('d-none');
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_muestr').val(),
         type: 'POST',
@@ -2465,6 +2481,8 @@ $(function () {
         contentType: false,
         success: function (response) {
           $('#editSolicitudMuestreoAgave').modal('hide');
+          $('#loading_mu_agv_edit').addClass('d-none');
+          $('#btnEditMA').removeClass('d-none');
           $('#editRegistrarSolicitudMuestreoAgave')[0].reset();
           $('.select2').val(null).trigger('change');
           $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
@@ -2480,16 +2498,30 @@ $(function () {
           });
         },
         error: function (xhr) {
-          console.log('Error:', xhr.responseText);
+          let mensaje = 'Ocurrió un error inesperado.';
+
+          if (xhr.responseJSON?.message) {
+            mensaje = xhr.responseJSON.message;
+          }
+
+          // Si Laravel devuelve errores de validación
+          if (xhr.responseJSON?.errors) {
+            const errores = xhr.responseJSON.errors;
+            mensaje = Object.values(errores)
+              .map(arr => `• ${arr.join(', ')}`)
+              .join('\n');
+          }
 
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al actualizar la solicitud',
+            text: mensaje,
             customClass: {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#loading_mu_agv_edit').addClass('d-none');
+          $('#btnEditMA').removeClass('d-none');
         }
       });
     });
@@ -2798,14 +2830,8 @@ $(function () {
       }
     }).on('core.form.valid', function (e) {
       var formData = new FormData(form);
-      $('#btnRegistrarDicIns').prop('disabled', true);
-
-      $('#btnRegistrarDicIns').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
-      setTimeout(function () {
-        $('#btnRegistrarDicIns').prop('disabled', false);
-        $('#btnRegistrarDicIns').html('<i class="ri-add-line"></i> Registrar');
-      }, 3000);
-
+      $('#btnRegistrarDicIns').addClass('d-none');
+      $('#loading_dictamen').removeClass('d-none');
       $.ajax({
         url: '/solicitudes-list',
         type: 'POST',
@@ -2813,6 +2839,8 @@ $(function () {
         processData: false,
         contentType: false,
         success: function (response) {
+          $('#loading_dictamen').addClass('d-none');
+          $('#btnRegistrarDicIns').removeClass('d-none');
           $('#addSolicitudDictamen').modal('hide');
           $('#addRegistrarSolicitud')[0].reset();
           $('.select2').val(null).trigger('change');
@@ -2829,16 +2857,30 @@ $(function () {
           });
         },
         error: function (xhr) {
-          console.log('Error:', xhr.responseText);
+          let mensaje = 'Ocurrió un error inesperado.';
+
+          if (xhr.responseJSON?.message) {
+            mensaje = xhr.responseJSON.message;
+          }
+
+          // Si Laravel devuelve errores de validación
+          if (xhr.responseJSON?.errors) {
+            const errores = xhr.responseJSON.errors;
+            mensaje = Object.values(errores)
+              .map(arr => `• ${arr.join(', ')}`)
+              .join('\n');
+          }
 
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al registrar la solicitud',
+            text: mensaje,
             customClass: {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#loading_dictamen').addClass('d-none');
+          $('#btnRegistrarDicIns').removeClass('d-none');
         }
       });
     });
@@ -5133,13 +5175,9 @@ $(function () {
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(form3);
-      $('#btnRegistrarMA').prop('disabled', true);
-
-      $('#btnRegistrarMA').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
-      setTimeout(function () {
-        $('#btnRegistrarMA').prop('disabled', false);
-        $('#btnRegistrarMA').html('<i class="ri-add-line"></i> Registrar');
-      }, 3000);
+      $('#btnRegistrarMA').addClass('d-none');
+      $('#loading_mu_agv').removeClass('d-none');
+      $;
       $.ajax({
         url: '/registrar-solicitud-muestreo-agave',
         type: 'POST',
@@ -5148,6 +5186,8 @@ $(function () {
         contentType: false,
         success: function (response) {
           $('#addSolicitudMuestreoAgave').modal('hide');
+          $('#loading_mu_agv').addClass('d-none');
+          $('#btnRegistrarMA').removeClass('d-none');
           $('#addRegistrarSolicitudMuestreoAgave')[0].reset();
           $('.select2').val(null).trigger('change');
           $('.datatables-solicitudes').DataTable().ajax.reload();
@@ -5163,16 +5203,30 @@ $(function () {
           });
         },
         error: function (xhr) {
-          console.log('Error:', xhr.responseText);
+          let mensaje = 'Ocurrió un error inesperado.';
+
+          if (xhr.responseJSON?.message) {
+            mensaje = xhr.responseJSON.message;
+          }
+
+          // Si Laravel devuelve errores de validación
+          if (xhr.responseJSON?.errors) {
+            const errores = xhr.responseJSON.errors;
+            mensaje = Object.values(errores)
+              .map(arr => `• ${arr.join(', ')}`)
+              .join('\n');
+          }
 
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al registrar la solicitud',
+            text: mensaje,
             customClass: {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#loading_mu_agv').addClass('d-none');
+          $('#btnRegistrarMA').removeClass('d-none');
         }
       });
     });

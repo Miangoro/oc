@@ -9,7 +9,7 @@
                 <form id="editLiberacionProductoForm">
                     <p class="solicitud badge bg-primary"></p>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <input type="hidden" name="id_solicitud" id="edit_id_solicitud_liberacion_terminado">
                             <input type="hidden" name="form_type" value="LiberacionProductoTerminado">
                             <div class="form-floating form-floating-outline mb-6">
@@ -25,7 +25,14 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" autocomplete="off" id="sol_LPTN">
+                                <label for="fecha_solicitud">fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input id="edit_fecha_liberacion_terminado" placeholder="YYYY-MM-DD"
                                     class="form-control flatpickr-datetime" type="text" name="fecha_visita" />
@@ -92,7 +99,7 @@
                         <!-- Marca -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
-                                <input type="text" id="edit_marca_lib_ter"  disabled readonly
+                                <input type="text" id="edit_marca_lib_ter" disabled readonly
                                     class="bg-light text-muted  form-control" placeholder="Marca" />
                                 <label for="marca" class="text-muted">Marca</label>
                             </div>
@@ -100,16 +107,18 @@
                         <!-- % Alc. Vol. -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
-                                <input type="number" id="edit_porcentaje_alcohol_lib_ter" disabled name="porcentaje_alcohol"
-                                    step="0.1" class="form-control bg-light text-muted" placeholder="% Alc. Vol." />
+                                <input type="number" id="edit_porcentaje_alcohol_lib_ter" disabled
+                                    name="porcentaje_alcohol" step="0.1" class="form-control bg-light text-muted"
+                                    placeholder="% Alc. Vol." />
                                 <label for="porcentaje_alcohol">% Alc. Vol.</label>
                             </div>
                         </div>
                         <!-- Análisis Fisicoquímicos -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
-                                <input type="text" id="edit_analisis_fisiq_lib_ter" disabled name="analisis_fisicoquimicos"
-                                    class="form-control bg-light text-muted" placeholder="Análisis fisicoquímicos" readonly/>
+                                <input type="text" id="edit_analisis_fisiq_lib_ter" disabled
+                                    name="analisis_fisicoquimicos" class="form-control bg-light text-muted"
+                                    placeholder="Análisis fisicoquímicos" readonly />
                                 <label for="analisis_fisicoquimicos">Análisis Fisicoquímicos</label>
                             </div>
                         </div>
@@ -121,7 +130,7 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <input type="text" id="edit_certificado_nom_granel_lib_ter"
                                     name="certificado_nom_granel" disabled class="form-control bg-light tex-muted"
-                                    placeholder="Certificado de NOM a Granel" readonly/>
+                                    placeholder="Certificado de NOM a Granel" readonly />
                                 <label for="certificado_nom_granel">Certificado de NOM a Granel</label>
                             </div>
                         </div>
@@ -261,7 +270,8 @@
                     for (let index = 0; index < response.lotes_envasado.length; index++) {
                         contenidoLotesEnvasado = '<option value="' + response.lotes_envasado[index]
                             .id_lote_envasado + '">' +
-                            response.lotes_envasado[index].nombre + ' Botellas: ' + response.lotes_envasado[index].cant_botellas + '</option>' +
+                            response.lotes_envasado[index].nombre + ' Botellas: ' + response.lotes_envasado[
+                                index].cant_botellas + '</option>' +
                             contenidoLotesEnvasado;
                     }
                     if (response.lotes_envasado.length == 0) {
@@ -286,7 +296,7 @@
         }
     }
 
-        function editObtenerDatosLoteEnvPrimero() {
+    function editObtenerDatosLoteEnvPrimero() {
         var idLoteEnvasado = $("#edit_id_lote_envasado_lib_ter").val();
         if (idLoteEnvasado !== "" && idLoteEnvasado !== null && idLoteEnvasado !== undefined) {
             $.ajax({

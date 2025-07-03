@@ -9,7 +9,7 @@
             </div>
 
             <div class="modal-body p-8">
-                  <p class="solicitud badge bg-primary"></p>
+                <p class="solicitud badge bg-primary"></p>
                 <form id="editFormTipo10">
                     <div class="row">
                         <div class="col-md-6">
@@ -29,7 +29,14 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" id="edit_fecha_sol_geo">
+                                <label for="fecha_solicitud">fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
                                     id="edit_fecha_visita_geo" type="text" name="fecha_visita" />
@@ -39,8 +46,8 @@
                     </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <select onchange="obtenerDatosPredios(this.value);" class="select2 form-select id_predio" id="edit_id_predio_geo" name="id_predio"
-                                aria-label="id_predio" required>
+                            <select onchange="obtenerDatosPredios(this.value);" class="select2 form-select id_predio"
+                                id="edit_id_predio_geo" name="id_predio" aria-label="id_predio" required>
                                 <option value="" disable selected>Lista de predios</option>
                             </select>
                             <label for="id_predio">Domicilio del predio a inspeccionar</label>
@@ -63,9 +70,10 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnEditGeo"><i class="ri-pencil-fill"></i> Editar</button>
-                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
-                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="btnEditGeo"><i class="ri-pencil-fill"></i>
+                            Editar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-line"></i> Cancelar</button>
                     </div>
                 </form>
             </div>

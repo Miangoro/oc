@@ -16,7 +16,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-floating form-floating-outline mb-6">
                                         <select id="tipo_solicitud_edit" class="form-select" name="tipo_solicitud">
                                             <option value="1">Inspección y certificado de exportación</option>
@@ -29,7 +29,7 @@
                                         <label for="tipo_solicitud">Tipo de solicitud</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-floating form-floating-outline mb-6">
                                         <select id="id_empresa_solicitud_exportacion_edit" name="id_empresa"
                                             class="select2 form-select" onchange="cargarDatosClienteEdit()">
@@ -41,6 +41,13 @@
                                             @endforeach
                                         </select>
                                         <label for="id_empresa">Cliente</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating form-floating-outline mb-5">
+                                        <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
+                                            type="text" name="fecha_solicitud" autocomplete="off" id="sol_PEX">
+                                        <label for="fecha_solicitud">fecha y hora de la solicitud</label>
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +106,8 @@
                                         <input type="file" class="form-control" id="factura_proforma_edit"
                                             name="factura_proforma">
                                         <input type="hidden" name="id_documento_factura" value="55">
-                                        <input type="hidden" name="nombre_documento_factura" value="Factura proforma">
+                                        <input type="hidden" name="nombre_documento_factura"
+                                            value="Factura proforma">
                                         <label for="factura_proforma">Adjuntar Factura/Proforma</label>
                                         <div id="factura_proforma_display"></div>
                                     </div>
@@ -147,7 +155,7 @@
                                     <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select onchange="cargarDetallesLoteEnvasadoEdit2(this.value)"
-                                                 id="lote_envasado_edit_0"
+                                                id="lote_envasado_edit_0"
                                                 class="select2 form-select evasado_export_edit lote-envasado-edit">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
@@ -757,10 +765,10 @@
                 method: 'GET',
                 success: function(response) {
 
-                const contenedor = $(`#caracteristicas_Ex_edit_${sectionCountEdit} .card-body`);
-                let tablaEnvasadoEdit = `tablaLoteEnvasado_edit_${sectionCountEdit}`;
-                if ($(`#${tablaEnvasadoEdit}`).length === 0) {
-                    contenedor.append(`
+                    const contenedor = $(`#caracteristicas_Ex_edit_${sectionCountEdit} .card-body`);
+                    let tablaEnvasadoEdit = `tablaLoteEnvasado_edit_${sectionCountEdit}`;
+                    if ($(`#${tablaEnvasadoEdit}`).length === 0) {
+                        contenedor.append(`
                         <div class="row mt-2">
                             <div class="col-12">
                                 <table id="${tablaEnvasadoEdit}" class="table table-bordered table-sm mb-2">
@@ -779,13 +787,13 @@
                             </div>
                         </div>
                     `);
-                }
+                    }
 
-                let $tbodyEnvasado = $(`#${tablaEnvasadoEdit} tbody`);
-                $tbodyEnvasado.empty();
+                    let $tbodyEnvasado = $(`#${tablaEnvasadoEdit} tbody`);
+                    $tbodyEnvasado.empty();
 
-                if (response.lote_envasado) {
-                    $tbodyEnvasado.append(`
+                    if (response.lote_envasado) {
+                        $tbodyEnvasado.append(`
                         <tr>
                             <td>1</td>
                             <td>${response.lote_envasado.nombre}
@@ -799,7 +807,7 @@
                             <td>Botellas: ${response.lote_envasado.cant_botellas}</td>
                         </tr>
                     `);
-                }
+                    }
 
 
                     $(`#lote_granel_edit_${sectionCountEdit}`).val(

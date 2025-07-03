@@ -9,7 +9,7 @@
             <div class="modal-body p-8">
                 <form id="addInspeccionLiberacionForm">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="id_empresa_liberacion"
                                     onchange="obtenerInstalacionesLiberacion(); obtenerGranelesLiberacion(this.value);"
@@ -24,7 +24,16 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                                           <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" autocomplete="off"
+                                    value="@php
+echo date('Y-m-d H:m'); @endphp">
+                                <label for="fecha_solicitud">fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     id="fecha_visita_liberacion" name="fecha_visita" autocomplete="off"/>

@@ -9,10 +9,9 @@
             <div class="modal-body p-8">
                 <form id="addMuestreoLoteAgranelForm">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_muestreo"
-                                    onchange="obtenerInstalacionesMuestreo();"
+                                <select id="id_empresa_muestreo" onchange="obtenerInstalacionesMuestreo();"
                                     name="id_empresa" class="id_empresa_muestreo select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -24,7 +23,16 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" autocomplete="off"
+                                    value="@php
+echo date('Y-m-d H:m'); @endphp">
+                                <label for="fecha_solicitud">fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     id="fecha_visita_muestreoLo" name="fecha_visita" autocomplete="off" />
@@ -35,8 +43,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select select2" id="id_instalacion_muestreoLo" name="id_instalacion"
-                                    aria-label="id_instalacion">
+                                <select class=" form-select select2" id="id_instalacion_muestreoLo"
+                                    name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
                             </div>
@@ -98,7 +106,8 @@
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="analisis_muestreo"
-                                    name="analisis_muestreo" placeholder="Ingresa Análisis fisicoquímico" autocomplete="off"/>
+                                    name="analisis_muestreo" placeholder="Ingresa Análisis fisicoquímico"
+                                    autocomplete="off" />
                                 <label for="analisis_muestreo">Ingresa Análisis fisicoquímico</label>
                             </div>
                         </div>
@@ -113,20 +122,22 @@
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="id_certificado_muestreo"
                                     name="id_certificado_muestreo"
-                                    placeholder="Ingresa el Certificado de NOM a granel" autocomplete="off"/>
+                                    placeholder="Ingresa el Certificado de NOM a granel" autocomplete="off" />
                                 <label for="id_certificado_muestreo">Ingresa Certificado de NOM a granel</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..." autocomplete="off"></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."
+                                autocomplete="off"></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
                                 CONTENEDORES):</label>
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnRegistrMLote"><i class="ri-add-line"></i> Registrar</button>
+                        <button type="submit" class="btn btn-primary" id="btnRegistrMLote"><i
+                                class="ri-add-line"></i> Registrar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>

@@ -13,7 +13,7 @@
                     <div class="row">
                         <input type="hidden" id="instalacion_id_traslado">
                         <input type="hidden" id="lote_id_traslado">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="edit_id_empresa_traslado"
                                     onchange="editobtenerInstalacionesTraslado(); editobtenerGranelesTraslado(this.value);"
@@ -28,10 +28,17 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    id="edit_fecha_visita" name="fecha_visita" autocomplete="off"/>
+                                    name="fecha_solicitud" autocomplete="off" id="fecha_sol_vigi_tras">
+                                <label for="fecha_solicitud">fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    id="edit_fecha_visita" name="fecha_visita" autocomplete="off" />
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -183,7 +190,8 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnEditVigiLote"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="submit" class="btn btn-primary" id="btnEditVigiLote"><i
+                                class="ri-pencil-fill"></i> Editar</button>
                         <button type="reset" class="btn btn-danger " data-bs-dismiss="modal" aria-label="Close"><i
                                 class="ri-close-fill"></i> Cancelar</button>
                     </div>

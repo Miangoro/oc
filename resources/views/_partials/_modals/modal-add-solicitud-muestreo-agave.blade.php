@@ -12,7 +12,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange="obtenerInstalacionesMuestreoAgave(); obtenerlasguias();"
-                                    name="id_empresa" id="id_empresa_dic2mues" class="select2 form-select" >
+                                    name="id_empresa" id="id_empresa_dic2mues" class="select2 form-select">
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">
@@ -23,7 +23,16 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" id="fecha_sol_muestr_agave"
+                                    value="@php
+echo date('Y-m-d H:m'); @endphp">
+                                <label for="fecha_solicitud">fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     name="fecha_visita" id="fecha_visita_dic2" autocomplete="off" />
@@ -44,7 +53,7 @@
                         <div class="form-floating form-floating-outline mb-5">
                             <select multiple class="select2 form-select guiass" id="guiasmuestreo" name="id_guia[]"
                                 aria-label="id_instalacion">
-{{--                                 <option value="" disabled selected>Lista de guías de agave</option> --}}
+                                {{--                                 <option value="" disabled selected>Lista de guías de agave</option> --}}
                             </select>
                             <label for="guias">Guías de agave expedidas por OC CIDAM</label>
                         </div>
@@ -57,10 +66,14 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnRegistrarMA"><i class="ri-add-line"></i>
+                        <button disabled class="btn btn-primary me-1 d-none" type="button" id="loading_mu_agv">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Registrando...
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnRegistrarMA"><i class="ri-add-line me-1"></i>
                             Registrar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
-                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                            aria-label="Close"><i class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
                 </form>
             </div>
