@@ -7,6 +7,7 @@ use App\Models\activarHologramasModelo;
 use App\Models\empresa;
 use App\Models\empresaNumCliente;
 use App\Models\marcas;
+use App\Models\Guias;
 use Illuminate\Http\Request;
 
 class HologramasValidacion extends Controller
@@ -63,4 +64,18 @@ class HologramasValidacion extends Controller
 
     return view('content.pages.visualizador_dictamen_qr');
   }
+
+
+  public function qr_guias($id)
+  {
+    $guias = Guias::with('Predios','empresa', 'predio_plantacion')
+      ->where('id_guia', $id)
+      ->get();
+
+    return view('content.pages.visualizar_guias_qr', [
+      'guia' => $guias[0],
+    ]);
+  }
+
+
 }

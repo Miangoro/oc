@@ -340,6 +340,9 @@ Route::get('/pages/pricing', [PagesPricing::class, 'index'])->name('pages-pricin
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
 Route::get('/holograma/{folio}', [HologramasValidacion::class, 'index2'])->name('pages-hologramas-validacion');
 Route::get('/validar_dictamen', [HologramasValidacion::class, 'validar_dictamen'])->name('validar_dictamen');
+//ruta QR guias
+Route::get('/autenticidad_guia/{id}', [HologramasValidacion::class, 'qr_guias'])->name('QR-guias');
+
 
 Route::get('/pages/misc-under-maintenance', [MiscUnderMaintenance::class, 'index'])->name('pages-misc-under-maintenance');
 Route::get('/pages/misc-comingsoon', [MiscComingSoon::class, 'index'])->name('pages-misc-comingsoon');

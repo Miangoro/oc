@@ -194,13 +194,19 @@
             transform: translate(-50%, -50%);
             /* Desplaza el elemento hacia arriba e izquierda para centrarlo completamente */
         }
+        .img-qr{
+            position: absolute;
+            right: 10%;
+            margin-top: -12%;
+        }   
+
     </style>
 </head>
 
 <body>
     <div class="marca-agua"></div>
     <div class="header" style="margin-top: 8%">
-        <p class="text_al left">F-UV-21-04 Versión 4</p>
+        <p class="text_al left">F-UV-21-04 Versión 5</p>
 
     </div>
 
@@ -239,7 +245,7 @@
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas anterior:</td>
-            <td class="leftLetter" colspan="2">{{ $datos[0]->num_anterior }}</td>
+            <td class="leftLetter" colspan="2"> </td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas actual:</td>
@@ -259,10 +265,10 @@
     <table style="margin-bottom: 30px">
         <br>
         <tr>
-            <td class="leftLetter">Nombre del cliente:</td>
-            <td class="leftLetter">{{ $datos[0]->nombre_cliente }}</td>
-            <td class="leftLetter">No. de cliente:</td>
-            <td class="leftLetter">{{ $datos[0]->no_cliente }}</td>
+            <td class="leftLetter" style="width: 26%;">Nombre del cliente:</td>
+            <td class="leftLetter"></td>
+            <td class="leftLetter" style="width: 20%;">No. de cliente:</td>
+            <td class="leftLetter"></td>
         </tr>
         <tr>
             <td class="leftLetter">Fecha de ingreso a
@@ -277,8 +283,7 @@
         </tr>
     </table>
 
-    <table style="margin-bottom: 25px">
-        <br>
+    <table style="margin-top: 7%">
         <tr style="font-size: 15px;">
             <td colspan="2" style="text-align: left" class="td-no-margins"> &nbsp; &nbsp; &nbsp; &nbsp;Firma del
                 vendedor</td>
@@ -286,27 +291,34 @@
                 &nbsp;</td>
         </tr>
     </table>
-    <div style="margin-bottom: 1px; text-align: center">
-        <div class="text-with-background">
-        </div>
+
+
+
+    <div style="margin-top: 5%; text-align: center">
+        <img style="position: absolute; margin-top: -5%; left: 45%;" height="60px" 
+            src="{{ public_path('storage/firmas/firma_Erik_Antonio_Mejía_Vaca_1744914578.png') }}">
         <p style="font-size: 15px">B.T.G. Erick antonio Mejía Vaca <br>
-            Gerente Técnico Sustituto de la Unidad de Inspección</p>
+            Gerente Técnico de la Unidad de Inspección</p>
     </div>
 
+<!--CODIGO QR-->
+    <div class="img-qr">
+        <img src="{{ $qrCodeBase64 }}">
     </div>
+
+    
     <table>
+        <br>
         <tr>
-            <td colspan="2" class="td-no-margins leftLetter" style="font-size: 11px">C.c.p Expediente de la Unidad de
+            {{-- <td colspan="2" class="td-no-margins leftLetter" style="font-size: 11px">C.c.p Expediente de la Unidad de
                 Verificación del UMSNH<br>
                 <div style="margin-left: 20%">___________________________</div>
-            </td>
-            <td colspan="2" class="td-no-margins rightLetter" style="font-size: 11px">Entrada en vigor: 28-05-2022
+            </td> --}}
+            <td colspan="2" class="td-no-margins rightLetter" style="font-size: 11px">Entrada en vigor: 15-07-2024
             </td>
         </tr>
     </table>
 
 
-
 </body>
-
 </html>

@@ -11,6 +11,14 @@ use App\Models\Documentacion_url;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+//codigo QR
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
+
 
 class GuiasController  extends Controller
 {
@@ -329,13 +337,32 @@ class GuiasController  extends Controller
         ? $data->empresaNumClientes->first(fn($item) => $item->empresa_id === $data
         ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
 
+        //CODIGO QR
+        $url = route('QR-guias', ['id' => $id_guia]);
+        $qrCode = new QrCode(
+            data: $url,
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::Low,
+            size: 100,
+            margin: 10,
+            roundBlockSizeMode: RoundBlockSizeMode::Margin,
+            foregroundColor: new Color(0, 0, 0),
+            backgroundColor: new Color(255, 255, 255)
+        );
+        // Escribir el QR en formato PNG
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+        // Convertirlo a Base64
+        $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+
 
         $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', [
             'datos' => $res,
             'razon_social' => $data->razon_social ?? '',
             'numero_cliente' => $numero_cliente ?? '',
+            'qrCodeBase64' => $qrCodeBase64,
         ]);
-        return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
+        return $pdf->stream('Guia_de_traslado_de_maguey_o_agave.pdf');
     }
 
 
