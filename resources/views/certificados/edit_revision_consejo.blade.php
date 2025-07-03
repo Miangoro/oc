@@ -75,14 +75,19 @@
                             </p>
                         @endif
                         @if ($datos->observaciones)
-                        @php
-                                $observaciones = $datos->observaciones ?? '';
-                            @endphp
+    @php
+        $observaciones = $datos->observaciones;
+        $esUrl = filter_var($observaciones, FILTER_VALIDATE_URL);
+    @endphp
 
-                            {!! filter_var($valor, FILTER_VALIDATE_URL) ? '<a href="'.$valor.'" target="_blank">'.$valor.'</a>' : e($valor) !!}
+    <p><strong>Observaciones:</strong>
+        {!! $esUrl
+            ? '<a href="'.$observaciones.'" target="_blank">'.$observaciones.'</a>'
+            : e($observaciones)
+        !!}
+    </p>
+@endif
 
-                            <p><strong>Observaciones:</strong> {{ $observaciones }}</p>
-                        @endif
                         @if (!empty($datos->evidencias) && count($datos->evidencias) > 0)
                             @foreach ($datos->evidencias as $evidencia)
                                 @if (!empty($evidencia))
