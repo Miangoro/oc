@@ -527,10 +527,10 @@ $(function () {
 
   // Configuración CSRF para Laravel
   $.ajaxSetup({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-  });
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
 
   // Eliminar registro
   $(document).on('click', '.delete-recordes', function () {
@@ -585,15 +585,30 @@ $(function () {
           },
           error: function (xhr, textStatus, errorThrown) {
             console.error('Error al eliminar:', textStatus, errorThrown);
+            let errorMsg = 'Hubo un problema al eliminar el registro.';
+
+            // Intentar extraer un mensaje de error del JSON que devuelve el servidor
+            try {
+              const response = JSON.parse(xhr.responseText);
+              if (response.error) {
+                errorMsg = response.error;
+              } else if (response.message) {
+                errorMsg = response.message;
+              }
+            } catch (e) {
+              // Si no es JSON válido, usar el mensaje genérico
+            }
+
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: 'Hubo un problema al eliminar el registro.',
+              text: errorMsg,
               customClass: {
                 confirmButton: 'btn btn-danger'
               }
             });
           }
+
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
@@ -606,6 +621,7 @@ $(function () {
         });
       }
     });
+
   });
 
   $(document).on('click', '.open-modal', function () {

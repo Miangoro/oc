@@ -22,7 +22,8 @@ class solicitudesModel extends Model
         'id_instalacion',
         'id_predio',
         'info_adicional',
-        'caracteristicas'
+        'caracteristicas',
+        'habilitado'
     ];
 
     // Método para obtener el nombre del registro que sirve para la trazabilidad
