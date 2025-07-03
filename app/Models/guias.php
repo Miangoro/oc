@@ -54,6 +54,6 @@ class Guias extends Model
 
     public function predio_plantacion()//se creo para no eliminar "predio" si se usa en otro lado
     {
-        return $this->belongsTo(predio_plantacion::class, 'id_predio', 'id_predio');
+        return $this->belongsTo(predio_plantacion::class, 'id_plantacion', 'id_plantacion');
     }
 }
