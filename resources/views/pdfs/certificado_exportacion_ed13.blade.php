@@ -356,7 +356,7 @@
             <td style="text-align: left; padding-left: 2px; font-size: 10.6px;">
                 {!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
                     return $tipo->nombre . ' (<i>' . $tipo->cientifico . '</i>)';
-                })->implode(', ') !!}
+                })->implode('<br>') !!}
             </td>
         </tr>
         <tr>
