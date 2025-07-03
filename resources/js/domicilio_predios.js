@@ -1566,38 +1566,7 @@ $(document).on('click', '.pdfPreregistro', function () {
 
 
 ///FORMATO PDF INSPECCION DE PREDIO Y ACTA
-/* $(document).on('click', '.pdfActa-Inspeccion', function () {
-      const pdfUrl = $(this).data('url');
-      const tipo = $(this).data('tipo');
-      const registro = $(this).data('registro');
-
-      if (!pdfUrl) {
-        alert('No hay documento para mostrar');
-        return;
-      }
-
-      $('#loading-spinner1').show();
-      $('#pdfViewerDictamen1').hide().attr('src', pdfUrl);
-
-      let titulo = '';
-      if (tipo === 'geo') {
-        titulo = 'Inspección para la geo-referenciación de los predios de maguey o agave';
-      } else if (tipo === 'acta') {
-        titulo = 'Acta de inspección';
-      }
-
-      $('#titulo_modal_Dictamen1').text(titulo);
-      $('#subtitulo_modal_Dictamen1').html(registro);
-      $('#openPdfBtnDictamen1').attr('href', pdfUrl).show();
-
-      $('#mostrarPdfDictamen1').modal('show');
-});
-
-$('#pdfViewerDictamen1').on('load', function () {
-  $('#loading-spinner1').hide();
-  $(this).show();
-}); */
-$(document).on('click', '.pdfActa-Inspeccion', function () {
+$(document).on('click', '.pdfActa-inspeccion', function () {
     var pdfUrl = $(this).data('url');
     var tipo = $(this).data('tipo');
     var registro = $(this).data('registro');
@@ -1634,37 +1603,7 @@ $(document).on('click', '.pdfActa-Inspeccion', function () {
 
 
 
-  //FORMATO PDF REGISTRO DE PREDIO
-/*$(document).on('click', '.pdfRegistroPredio', function () {
-        var id = $(this).data('id');
-        var registro = $(this).data('registro');
-        var pdfUrl = $(this).data('url'); // <- Aquí tomas la URL directamente
-        var iframe = $('#pdfViewerDictamen1');
-        var openPdfBtn = $('#openPdfBtnDictamen1');
-
-        // Mostrar el spinner y ocultar el iframe
-        $('#loading-spinner1').show();
-        iframe.hide();
-
-        // Cargar el PDF
-        iframe.attr('src', pdfUrl);
-        $("#titulo_modal_Dictamen1").text("F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.");
-        $("#subtitulo_modal_Dictamen1").html(registro);
-
-        // Botón para abrir en nueva pestaña
-        openPdfBtn.attr('href', pdfUrl);
-        openPdfBtn.show();
-
-        // Abrir el modal
-        $('#mostrarPdfDictamen1').modal('show');
-      });
-
-
-  // Ocultar el spinner cuando el PDF esté completamente cargado
-  $('#pdfViewerDictamen1').on('load', function () {
-    $('#loading-spinner1').hide(); // Ocultar el spinner
-    $(this).show(); // Mostrar el iframe con el PDF
-  }); */
+//FORMATO PDF REGISTRO DE PREDIO
 $(document).on('click', '.pdfRegistroPredio', function () {
     var registro = $(this).data('registro');
     var pdfUrl = $(this).data('url'); // <- Aquí tomas la URL directamente
