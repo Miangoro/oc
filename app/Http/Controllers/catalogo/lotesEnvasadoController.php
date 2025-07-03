@@ -211,7 +211,7 @@ public function store(Request $request)
         $lotes->vol_restante = $request->volumen_total;
         $lotes->lugar_envasado = $request->lugar_envasado;
         $lotes->tipo = $request->tipo;
-        $lotes->id_etiqueta = $request->id_etiqueta;
+        $lotes->id_etiqueta = $request->id_etiqueta ?? null;
         $lotes->cont_alc_envasado = $request->cont_alc_envasado;
 
         $lotes->save();
@@ -314,7 +314,7 @@ public function store(Request $request)
             $lotes->volumen_total = $request->edit_volumen_total;
             $lotes->lugar_envasado = $request->edit_Instalaciones;
             $lotes->tipo = $request->tipo;
-            $lotes->id_etiqueta = $request->id_etiqueta;
+            $lotes->id_etiqueta = $request->id_etiqueta ?? null;
             $lotes->cont_alc_envasado = $request->cont_alc_envasado;
             $lotes->save();
 
