@@ -74,19 +74,21 @@
 
                             </p>
                         @endif
-                        @if ($datos->observaciones)
-    @php
-        $observaciones = $datos->observaciones;
-        $esUrl = filter_var($observaciones, FILTER_VALIDATE_URL);
-    @endphp
+                       @php
+                            $observaciones = $datos->observaciones ?? '';
 
-    <p><strong>Observaciones:</strong>
-        {!! $esUrl
-            ? '<a href="'.$observaciones.'" target="_blank">'.$observaciones.'</a>'
-            : e($observaciones)
-        !!}
-    </p>
-@endif
+                            // Buscar y convertir todas las URLs en enlaces <a>
+                            $observacionesConEnlaces = preg_replace(
+                                '~(https?://[^\s]+)~',
+                                '<a href="$1" target="_blank">$1</a>',
+                                e($observaciones) // escapamos antes de aplicar HTML
+                            );
+                        @endphp
+
+                        @if (!empty($observaciones))
+                            <p><strong>Observaciones:</strong> {!! $observacionesConEnlaces !!}</p>
+                        @endif
+
 
                         @if (!empty($datos->evidencias) && count($datos->evidencias) > 0)
                             @foreach ($datos->evidencias as $evidencia)
