@@ -75,7 +75,13 @@
                             </p>
                         @endif
                         @if ($datos->observaciones)
-                            <p><strong>Observaciones:</strong> {{ $datos->observaciones }}</p>
+                        @php
+                                $observaciones = $datos->observaciones ?? '';
+                            @endphp
+
+                            {!! filter_var($valor, FILTER_VALIDATE_URL) ? '<a href="'.$valor.'" target="_blank">'.$valor.'</a>' : e($valor) !!}
+
+                            <p><strong>Observaciones:</strong> {{ $observaciones }}</p>
                         @endif
                         @if (!empty($datos->evidencias) && count($datos->evidencias) > 0)
                             @foreach ($datos->evidencias as $evidencia)
@@ -672,7 +678,16 @@
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->ingredientes ?? 'N/A' }}
                                             </td>
                                         @elseif($pregunta->filtro == 'rango_hologramas')
-                                            <td>{{ $datos->certificado->old_hologramas ?? 'N/A' }}
+                                        @php
+                                            $old = json_decode($datos->certificado->old_hologramas);
+                                        @endphp
+                                            <td>@if ($old)
+                                                @foreach ($old as $key => $folio)
+                                                    <div><strong>{{ ucfirst($key) }}:</strong> {{ $folio }}</div>
+                                                @endforeach
+                                            @else
+                                                <div>N/A</div>
+                                            @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'edad')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? 'N/A' }}
