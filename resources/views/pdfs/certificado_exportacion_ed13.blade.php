@@ -280,7 +280,8 @@
         }
 
         if (!empty($oldHologramas[$clave])) {
-            $contenido .= ($contenido ? '<br>' : '') . $oldHologramas[$clave];
+            $lineaConSaltos = str_replace(',', '<br>', $oldHologramas[$clave]);
+            $contenido .= ($contenido ? '<br>' : '') . $lineaConSaltos;
         }
 
         if (empty($contenido)) {
