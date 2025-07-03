@@ -75,9 +75,21 @@
 
                             </p>
                         @endif
-                        @if ($datos->observaciones)
-                            <p><strong>Observaciones:</strong> {{ $datos->observaciones }}</p>
+                        @php
+                            $observaciones = $datos->observaciones ?? '';
+
+                            // Buscar y convertir todas las URLs en enlaces <a>
+                            $observacionesConEnlaces = preg_replace(
+                                '~(https?://[^\s]+)~',
+                                '<a href="$1" target="_blank">$1</a>',
+                                e($observaciones) // escapamos antes de aplicar HTML
+                            );
+                        @endphp
+
+                        @if (!empty($observaciones))
+                            <p><strong>Observaciones:</strong> {!! $observacionesConEnlaces !!}</p>
                         @endif
+
                         @if (!empty($datos->evidencias) && count($datos->evidencias) > 0)
                             @foreach ($datos->evidencias as $evidencia)
                                 @if (!empty($evidencia))

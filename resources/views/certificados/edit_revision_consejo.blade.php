@@ -74,9 +74,23 @@
 
                             </p>
                         @endif
-                        @if ($datos->observaciones)
-                            <p><strong>Observaciones:</strong> {{ $datos->observaciones }}</p>
-                        @endif
+                       @php
+    $observaciones = $datos->observaciones ?? '';
+
+    // Buscar y convertir todas las URLs en enlaces <a>
+    $observacionesConEnlaces = preg_replace(
+        '~(https?://[^\s]+)~',
+        '<a href="$1" target="_blank">$1</a>',
+        e($observaciones) // escapamos antes de aplicar HTML
+    );
+@endphp
+
+@if (!empty($observaciones))
+    <p><strong>Observaciones:</strong> {!! $observacionesConEnlaces !!}</p>
+@endif
+
+
+
                         @if (!empty($datos->evidencias) && count($datos->evidencias) > 0)
                             @foreach ($datos->evidencias as $evidencia)
                                 @if (!empty($evidencia))
@@ -672,7 +686,16 @@
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->ingredientes ?? 'N/A' }}
                                             </td>
                                         @elseif($pregunta->filtro == 'rango_hologramas')
-                                            <td>{{ $datos->certificado->old_hologramas ?? 'N/A' }}
+                                        @php
+                                            $old = json_decode($datos->certificado->old_hologramas);
+                                        @endphp
+                                            <td>@if ($old)
+                                                @foreach ($old as $key => $folio)
+                                                    <div><strong>{{ ucfirst($key) }}:</strong> {{ $folio }}</div>
+                                                @endforeach
+                                            @else
+                                                <div>N/A</div>
+                                            @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'edad')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? 'N/A' }}
