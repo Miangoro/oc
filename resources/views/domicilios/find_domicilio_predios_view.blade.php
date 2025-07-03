@@ -56,7 +56,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th></th>
-                        <th>ID</th>
+                        <th>#</th>
                         <th>Cliente</th>
                         <th>Número de predio</th>
                         <th>Nombre Predio</th>
@@ -76,7 +76,9 @@
             </table>
         </div>
     </div>
-    <!-- Modal -->
+
+
+<!-- Modal -->
 
     @include('_partials/_modals/modal-edit-registro-predio')
 
@@ -90,8 +92,6 @@
 
     @include('_partials/_modals/modal-add-predio-inspeccion')
     @include('_partials/_modals/modal-pdfs-frames')
-
-
 
 
     @include('_partials/_modals/modal-edit-predio-inspeccion')

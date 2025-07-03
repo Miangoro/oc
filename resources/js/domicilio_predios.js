@@ -116,8 +116,7 @@ $(function () {
             return `<span>${full.fake_id}</span>`;
           }
         },
-        // Pdf de solicitud
-        // Pdf de solicitud
+        ///PDF'S SOLICITUD
         {
           targets: 9,
           className: 'text-center',
@@ -127,9 +126,9 @@ $(function () {
             if (full['hasSolicitud']) {
               return `<a href="#" class="text-primary pdfSolicitud col-id-empresa"
                         data-bs-toggle="modal"
-                        data-bs-target="#mostrarPdfDictamen1"
+                        data-bs-target="#mostrarPdf"
                         data-id="${full['id_solicitud']}"
-                        data-registro="${full['id_empresa']}">
+                        data-folio="${full['folio_solicitud']}">
                         ${full['folio_solicitud']}
                       </a>`;
             } else {
@@ -139,7 +138,7 @@ $(function () {
           }
         },
 
-        // Pdf de pre-registro
+        // Pdf pre-registro
         {
           targets: 10,
           className: 'text-center',
@@ -147,16 +146,16 @@ $(function () {
           render: function (data, type, full, meta) {
             var $id = full['id_guia'];
             if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
-              return `<i class="ri-file-pdf-2-fill text-danger ri-32px pdf cursor-pointer"
-                      data-bs-target="#mostrarPdfDcitamen1" data-bs-toggle="modal"
+              return `<i class="ri-file-pdf-2-fill text-danger ri-32px pdfPreregistro cursor-pointer"
+                      data-bs-target="#mostrarPdf" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
-                      data-registro="${full['id_empresa']}"></i>`;
+                      data-empresa="${full['id_empresa']}"></i>`;
             } else {
-              return '<i class="ri-file-pdf-2-fill ri-32px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
+              return '<i class="ri-file-pdf-2-fill ri-32px icon-no-pdf"></i>'; //Mostrar ícono inhabilitado
             }
           }
         },
-        //inspeccion y acta
+        //PDF inspeccion y acta
         {
           targets: 11, // o el índice que te corresponda
           className: 'text-center',
@@ -171,7 +170,7 @@ $(function () {
           let actaIcon = '';
           if (tieneActa) {
             actaIcon = `
-              <a class="text-danger pdf2 cursor-pointer"
+              <a class="text-danger pdfActa-inspeccion cursor-pointer"
                 data-id="${full['id_predio']}"
                 data-registro="${full['id_empresa']}"
                 data-url="${tieneActa}"
@@ -184,13 +183,14 @@ $(function () {
           }
         if (tieneGeo) {
           return `
-            <a class="text-primary text-danger col-id-empresa pdf2 cursor-pointer me-2"
+            <a class="text-primary text-danger col-id-empresa pdfActa-inspeccion cursor-pointer me-2"
               data-id="${full['id_predio']}"
               data-registro="${full['id_empresa']}"
               data-url="${tieneGeo}"
               data-tipo="geo">
               ${escapeHtml(numServicio)}
-            </a>${actaIcon}`;
+            </a>
+            ${actaIcon}`;
         } else {
           const clase = numServicio === 'Sin asignar' ? 'text-muted' : '';
           return `<span class="${clase} col-id-empresa me-2">${escapeHtml(numServicio)}</span>`;
@@ -199,18 +199,17 @@ $(function () {
 
         },
 
-        // Pdf de registro (Dictamen final)
+        // Pdf de registro
         {
           targets: 12,
           className: 'text-center',
           searchable: false, orderable: false,
             render: function (data, type, full, meta) {
               if (full['estatus'] === 'Vigente' && full['url_documento_registro_predio']) {
-                return `<i class="ri-file-pdf-2-fill text-danger ri-32px pdf3 cursor-pointer"
-                            data-bs-target="#mostrarPdfDictamen1" data-bs-toggle="modal"
-                            data-bs-dismiss="modal" data-id="${full['id_predio']}"
-                            data-registro="${full['id_empresa']}"
-                            data-url="${full['url_documento_registro_predio']}"></i>`;
+                return `<i class="ri-file-pdf-2-fill text-danger ri-32px pdfRegistroPredio cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" 
+                      data-id="${full['id_predio']}"
+                      data-registro="${full['id_empresa']}"
+                      data-url="${full['url_documento_registro_predio']}"></i>`;
               } else {
                 return '<i class="ri-file-pdf-2-fill ri-32px icon-no-pdf"></i>';
               }
@@ -1132,7 +1131,8 @@ $(function () {
   }
 
 
-  $(function () {
+
+$(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
       headers: {
@@ -1531,46 +1531,42 @@ $(function () {
         }
       });
     });
-  });
+});
 
 
-  // Reciben los datos del PDF
-  $(document).on('click', '.pdf', function () {
+
+//FORMATO PFD PRE-REGISTRO DE PREDIOS
+$(document).on('click', '.pdfPreregistro', function () {
     var id = $(this).data('id');
-    var registro = $(this).data('registro');
-    var iframe = $('#pdfViewerDictamen1');
-    var openPdfBtn = $('#openPdfBtnDictamen1'); // Botón para abrir en nueva pestaña
+    var empresa = $(this).data('empresa');
+    var pdfUrl = '/pre-registro_predios/' + id; //Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
 
-    // Mostrar el spinner y ocultar el iframe
-    $('#loading-spinner1').show();
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
     iframe.hide();
 
-    // Generar la URL del PDF
-    var pdfUrl = '../pre-registro_predios/' + id;
-
-    // Cargar el PDF en el iframe
+    //Cargar el PDF con el ID
     iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
 
-    // Actualizar el texto y subtítulo del modal
-    $("#titulo_modal_Dictamen1").text("Pre-registro de predios de maguey o agave");
-    $("#subtitulo_modal_Dictamen1").html(registro);
-
-    // Actualizar el botón para abrir en nueva pestaña
-    openPdfBtn.attr('href', pdfUrl);
-    openPdfBtn.show(); // Mostrar el botón
-
-    // Abrir el modal
-    $('#mostrarPdfDictamen1').modal('show');
-  });
-
-  // Ocultar el spinner cuando el PDF esté completamente cargado
-  $('#pdfViewerDictamen1').on('load', function () {
-    $('#loading-spinner1').hide(); // Ocultar el spinner
-    $(this).show(); // Mostrar el iframe con el PDF
-  });
+    $("#titulo_modal").text("Pre-registro de predios de maguey o agave");
+    $("#subtitulo_modal").html(empresa);
+    //$("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + empresa + '</p>');
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
 
 
-    $(document).on('click', '.pdf2', function () {
+
+
+///FORMATO PDF INSPECCION DE PREDIO Y ACTA
+/* $(document).on('click', '.pdfActa-Inspeccion', function () {
       const pdfUrl = $(this).data('url');
       const tipo = $(this).data('tipo');
       const registro = $(this).data('registro');
@@ -1595,18 +1591,51 @@ $(function () {
       $('#openPdfBtnDictamen1').attr('href', pdfUrl).show();
 
       $('#mostrarPdfDictamen1').modal('show');
+});
+
+$('#pdfViewerDictamen1').on('load', function () {
+  $('#loading-spinner1').hide();
+  $(this).show();
+}); */
+$(document).on('click', '.pdfActa-Inspeccion', function () {
+    var pdfUrl = $(this).data('url');
+    var tipo = $(this).data('tipo');
+    var registro = $(this).data('registro');
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+
+    if (!pdfUrl) {
+      alert('No hay documento para mostrar');
+      return;
+    }
+
+    if (tipo === 'geo') {
+      var titulo = 'Inspección para la geo-referenciación de los predios de maguey o agave';
+    } else if (tipo === 'acta') {
+      var titulo = 'Acta de inspección';
+    }
+
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    //Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
+    $("#titulo_modal").text(titulo);
+    $("#subtitulo_modal").html(registro);
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
     });
-
-
-  $('#pdfViewerDictamen1').on('load', function () {
-    $('#loading-spinner1').hide();
-    $(this).show();
-  });
+});
 
 
 
-  // Reciben los datos del PDF
-      $(document).on('click', '.pdf3', function () {
+
+  //FORMATO PDF REGISTRO DE PREDIO
+/*$(document).on('click', '.pdfRegistroPredio', function () {
         var id = $(this).data('id');
         var registro = $(this).data('registro');
         var pdfUrl = $(this).data('url'); // <- Aquí tomas la URL directamente
@@ -1635,43 +1664,61 @@ $(function () {
   $('#pdfViewerDictamen1').on('load', function () {
     $('#loading-spinner1').hide(); // Ocultar el spinner
     $(this).show(); // Mostrar el iframe con el PDF
-  });
-
-
-  // Reciben los datos del PDF
-  $(document).on('click', '.pdfSolicitud', function () {
-    var id = $(this).data('id');
+  }); */
+$(document).on('click', '.pdfRegistroPredio', function () {
     var registro = $(this).data('registro');
-    var iframe = $('#pdfViewerDictamen1'); // Cambiado a pdfViewerDictamen1
-    var openPdfBtn = $('#openPdfBtnDictamen1'); // Botón para abrir en nueva pestaña
+    var pdfUrl = $(this).data('url'); // <- Aquí tomas la URL directamente
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
 
-    // Mostrar el spinner y ocultar el iframe
-    $('#loading-spinner1').show();
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
     iframe.hide();
 
-    // Generar la URL del PDF
-    var pdfUrl = '../solicitud_de_servicio/' + id;
-
-    // Cargar el PDF en el iframe
+    //Cargar el PDF con el ID
     iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
+    $("#titulo_modal").text("Registro de predios de maguey o agave");
+    $("#subtitulo_modal").html(registro);
 
-    // Actualizar el texto y subtítulo del modal
-    $("#titulo_modal_Dictamen1").text("Inspección para la geo-referenciación de los predios de maguey o agave");
-    $("#subtitulo_modal_Dictamen1").html(registro);
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
 
-    // Actualizar el botón para abrir en nueva pestaña
-    openPdfBtn.attr('href', pdfUrl);
-    openPdfBtn.show(); // Mostrar el botón
 
-    // Abrir el modal
-    $('#mostrarPdfDictamen1').modal('show'); // Cambiado a mostrarPdfDictamen1
+
+// FORMATO PDF SOLICITUD SERVICIOS
+$(document).on('click', '.pdfSolicitud', function () {
+  var id = $(this).data('id');
+  var folio = $(this).data('folio');
+  var pdfUrl = '/solicitud_de_servicio/' + id;
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+
+  // Mostrar el spinner y ocultar el iframe
+  spinner.show();
+  iframe.hide();
+
+  // Cargar el PDF en el iframe
+  iframe.attr('src', pdfUrl);
+  //Configurar el botón para abrir el PDF en una nueva pestaña
+  $("#NewPestana").attr('href', pdfUrl).show();
+
+  // Actualizar título y subtítulo del modal
+  $("#titulo_modal").text("Solicitud de servicios");
+  $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
+
+  // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+  iframe.on('load', function () {
+    spinner.hide();
+    iframe.show();
   });
+});
 
-  // Ocultar el spinner cuando el PDF esté completamente cargado
-  $('#pdfViewerDictamen1').on('load', function () {
-    $('#loading-spinner1').hide(); // Ocultar el spinner
-    $(this).show(); // Mostrar el iframe con el PDF
-  });
 
 
 

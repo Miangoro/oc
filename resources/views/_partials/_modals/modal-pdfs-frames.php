@@ -73,11 +73,11 @@
       </div>
     </div>
   </div>
-</div> -->
+</div> 
 
 
-<!--/  Modal para ???-->
-<!-- <div class="modal fade" id="mostrarPdfDictamen1" tabindex="-1" aria-hidden="true">
+//Modal para domicilios predios (PRE-REGISTROS)
+<div class="modal fade" id="mostrarPdfDictamen1" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-simple">
     <div class="modal-content">
     <a id="openPdfBtnDictamen1" href="#" target="_blank" class="btn btn-primary btn-sm ms-auto" style="display: none;">Abrir PDF en nueva pestaña</a>
@@ -110,7 +110,7 @@
       </div>
     </div>
   </div>
-</div> -->
+</div>  -->
 
 
 
