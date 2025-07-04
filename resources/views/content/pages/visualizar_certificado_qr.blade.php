@@ -142,14 +142,14 @@
                     </div>
 
                     <div class="alert">
-                        <strong>FOLIO DE GUÍA: {{$datos->folio ?? ''}}</strong>
+                        <strong>FOLIO DE GUÍA: </strong>
                     </div>
 
                     <table class="table">
                         <tbody>
                             <tr>
-                                <td><b>Nombre del predio</b></td>
-                                <td>{{$guia->predios->nombre_predio ?? ''}}</td>
+                                <td><b>CATEGORÍA</b></td>
+                                <td>{{$datos->num_certificado}}</td>
                             </tr>
                             <tr>
                                 <td><b>Nombre de la empresa/productor:</b></td>
