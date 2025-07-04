@@ -1,69 +1,56 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
+    <title>Verificar Autenticidad de CERTIFICADO</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autenticidad de Certificados</title>
 
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@500&family=Roboto:wght@400&display=swap" rel="stylesheet">
 
     <style>
-        /* Estilos generales */
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f2f2f2;
         }
 
-        /* Barra de navegación */
-        .nav_bar {
-            background-color: #062e61;
-            color: white;
-            padding: 15px;
-            text-align: center;
+        .header-banner img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
         }
 
-        #texto1 {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        #texto2 {
-            font-size: 16px;
-        }
-
-        /* Estilos para el panel */
-        .panel {
-            border-radius: 15px;
-            background-color: #fff;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
             padding: 20px;
         }
 
-        .panel-heading {
-            background-color: #062e61;
-            color: white;
-            font-size: 22px;
-            text-align: center;
-            padding: 10px 0;
-            margin-bottom: 20px;
-            border-radius: 10px;
+        .panel {
+            border-radius: 40px;
+            background-color: #062e6163;
+            padding: 0 0 20px 0;
+            overflow: hidden;
+            margin-bottom: 30px; /* Espacio entre panel y footer */
         }
 
         .alert {
             background-color: #062e61;
             color: white;
             font-size: 18px;
-            margin: 10px 0;
+            margin: 0;
             padding: 15px;
+            text-align: center;
+            border-top-left-radius: 40px;
+            border-top-right-radius: 40px;
         }
 
         .table {
+            color: #FFF;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 0;
             border-collapse: collapse;
         }
 
@@ -71,29 +58,26 @@
         .table td {
             padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border: 1px solid #fff;
         }
 
         .table th {
-            background-color: #243868;
-            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #062e61;
+            text-align: center;
         }
 
         .table td {
-            background-color: #f9f9f9;
+            background-color: transparent;
         }
 
-
-
         #footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+            font-size: 15px;
             text-align: center;
-            background-color: #062e61;
+            background-color: #2E2E2E;
             color: white;
-            padding: 15px;
-            font-size: 14px;
+            padding: 15px 10px;
         }
 
         #footer a {
@@ -101,122 +85,84 @@
             text-decoration: none;
         }
 
-
-        @media only screen and (max-width: 600px) {
+        @media only screen and (max-width: 768px) {
             .panel {
-                padding: 15px;
+                border-radius: 20px;
             }
 
-            .panel-heading {
-                font-size: 20px;
-            }
-
-            .table th,
-            .table td {
-                font-size: 14px;
-                padding: 8px;
+            .alert {
+                border-radius: 20px 20px 0 0;
             }
         }
     </style>
 </head>
-
 <body>
-    <!--LOGO DE LA UNIDAD-->
-    <div class="header-banner" style="text-align: center; padding: 15px 0; background-color: white;">
-        <img src="{{ asset('assets/img/illustrations/banner_oc_cidam.png') }}" style="max-width: 100%; height: auto;">
-    </div>
-    
-    <div class="nav_bar">
-        <div id="texto1">Autenticidad de guía de traslado de agave</div>
-        <div id="texto2">UNIDAD DE INSPECCIÓN CIDAM</div>
+
+    <!-- Banner -->
+    <div class="header-banner">
+        <img src="{{ asset('assets/img/illustrations/banner_oc_cidam.png') }}" alt="Banner OC CIDAM">
     </div>
 
-
+    <!-- Panel principal -->
     <div class="container">
-        <div class="row">
-            <div class="col-lg-8" style="float:none;margin:auto; margin-bottom:80px">
-                <div class="panel panel-default">
+        <div class="panel">
 
-                    <div class="alert" style="text-align: center">
-                        <strong>GUÍA DE TRASLADO ORIGINAL</strong>
-                    </div>
+            {{-- <div class="alert">
+                <h4><strong>CERTIFICADO DE EXPORTACIÓN</strong></h4>
+            </div> --}}
 
-                    <div class="alert">
-                        <strong>FOLIO DE GUÍA: </strong>
-                    </div>
-
-                    <table class="table">
-                        <tbody>
-                            <tr>
-                                <td><b>CATEGORÍA</b></td>
-                                <td>{{$datos->num_certificado}}</td>
-                            </tr>
-                            <tr>
-                                <td><b>Nombre de la empresa/productor:</b></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><b>Fecha de corte</b></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><b>Tipo de maguey (Tipo de agave)</b></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><b>Edad</b></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><b>No. de lote o No. de tapada</b></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><b>No. de piñas comercializadas</b></td>
-                                <td> </td>
-                            </tr>
-                            <tr>
-                                <td><b>No. de piñas anterior</b></td>
-                                <td> </td>
-                            </tr>
-                            <tr>
-                                <td><b>No. de piñas actual</b></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th colspan="2" style="font-size: 23px; text-align: center;">Comercializador o
-                                    Licenciatario de Marca</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><b>NOMBRE / EMPRESA</b></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><b>RFC</b></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+            <!-- Tabla producto -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan="2">Verificar autenticidad de certificado expedido por el Organismo Certificador de CIDAM</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">CERTIFICADO DE EXPORTACIÓN</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Producto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><b>CATEGORÍA</b></td><td>{{ $datos->categoria ?? 'N/D' }}</td></tr>
+                    <tr><td><b>CLASE</b></td><td>{{ $datos->clase ?? 'N/D' }}</td></tr>
+                    <tr><td><b>MARCA</b></td><td>{{ $datos->marca ?? 'N/D' }}</td></tr>
+                    <tr><td><b>LOTE A GRANEL</b></td><td>{{ $datos->lote_granel ?? 'N/D' }}</td></tr>
+                    <tr><td><b>LOTE ENVASADO</b></td><td>{{ $datos->lote_envasado ?? 'N/D' }}</td></tr>
+                    <tr><td><b>TIPO DE AGAVE</b></td><td>{{ $datos->tipo_agave ?? 'N/D' }}</td></tr>
+                    <tr><td><b>CONTENIDO ALCOHÓLICO</b></td><td>{{ $datos->vol_alc ?? $datos->cont_alc ?? 'N/D' }}%</td></tr>
+                    <tr><td><b>FISICOQUÍMICOS</b></td><td>{{ $datos->fisicoquimicos ?? 'N/D' }}</td></tr>
+                    <tr><td><b>ENVASADO EN</b></td><td>{{ $datos->envasado_En ?? $datos->lugar_envasado ?? 'N/D' }}</td></tr>
+                    <tr><td><b>PAÍS DE DESTINO</b></td><td>{{ $datos->pais_destino ?? 'N/D' }}</td></tr>
+                    <tr>
+                        <td><b>ESTADO DEL CERTIFICADO</b></td>
+                        <td style="color: green"><b>Activo</b></td>
+                    </tr>
+                </tbody>
+            </table>
 
 
+            <!-- Tabla empresa -->
+            <table class="table">
+                
+                    <tr>
+                        <th colspan="2">Comercializador o Licenciatario de Marca</th>
+                    </tr>
+                
+                    <tr><td><b>Nombre / Empresa</b></td><td>{{ $datos->empresa ?? 'N/D' }}</td></tr>
+                    <tr><td><b>RFC</b></td><td>{{ $datos->rfc ?? 'N/D' }}</td></tr>
+                
+            </table>
+
+        </div> <!-- Fin del panel -->
+
+        <!-- Footer separado -->
         <div id="footer">
-            <div>2025 © Todos los derechos reservados a <a href="https://cidam.org/sitio/">
-            Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C.
-            </a></div>
+            {{ date('Y') }} © Todos los derechos reservados a 
+            <a href="https://cidam.org">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C.</a>
         </div>
 
     </div>
-
-
 </body>
 </html>
