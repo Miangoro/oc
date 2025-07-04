@@ -119,7 +119,7 @@
                         <th colspan="2">Verificar autenticidad de certificado expedido por el Organismo Certificador de CIDAM</th>
                     </tr>
                     <tr>
-                        <th colspan="2">CERTIFICADO DE EXPORTACIÓN</th>
+                        <th colspan="2">CERTIFICADO DE EXPORTACIÓN: {{ $datos->num_certificado }}</th>
                     </tr>
                     <tr>
                         <th colspan="2">Producto</th>
