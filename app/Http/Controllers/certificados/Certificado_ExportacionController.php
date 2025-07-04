@@ -578,7 +578,7 @@ public function storeRevisor(Request $request)
             'nombreRevisor' => 'required|integer|exists:users,id',
             'numeroRevision' => 'required|string|max:50',
             'esCorreccion' => 'nullable|in:si,no',
-            'observaciones' => 'nullable|string|max:255',
+            'observaciones' => 'nullable|string|max:5000',
             'id_certificado' => 'required|integer|exists:certificados_exportacion,id_certificado',
         ]);
 
@@ -738,7 +738,7 @@ public function MostrarCertificadoExportacion($id_certificado)
     //Busca el registro del certificado que tiene el id igual a $id_sustituye
     Certificado_Exportacion::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
-    $url = route('QR-certificado', ['id_certificado' => $id_certificado]);
+    $url = route('QR-certificado', ['id' => $data->id_certificado]);
     $qrCode = new QrCode(
         data: $url,
         encoding: new Encoding('UTF-8'),
@@ -756,7 +756,7 @@ public function MostrarCertificadoExportacion($id_certificado)
     $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
 
     if($data->id_firmante == 4){ //Karen
-        $pass = 'Mejia2307';
+        $pass = 'Vladisperez11';
     }
 
     $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccion?->num_servicio, $pass, $data->id_firmante);
