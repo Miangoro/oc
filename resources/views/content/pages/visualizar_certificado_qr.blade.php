@@ -18,6 +18,7 @@
         .header-banner img {
             max-width: 100%;
             height: auto;
+           /
             display: block;
             margin: 0 auto;
         }
@@ -100,18 +101,17 @@
 
     <!-- Banner -->
     <div class="header-banner">
-        <img src="{{ asset('assets/img/illustrations/banner_oc_cidam.png') }}" alt="Banner OC CIDAM">
+        <img src="{{ asset('img_pdf/logo_oc_3d.png') }}" alt="LOGO OC">
     </div>
 
 
+<!-- Contenedor principal -->
+<div class="container">
+
 <!--INICIO DE LOTES-->
 @foreach ($lotes as $lote)
-    <!-- Panel principal -->
-    <div class="container">
-        <div class="panel">
-            {{-- <div class="alert">
-                <h4><strong>CERTIFICADO DE EXPORTACIÓN</strong></h4>
-            </div> --}}
+    <div class="panel">
+            
             <!-- Tabla producto -->
             <table class="table">
                 <thead>
@@ -150,22 +150,18 @@
                 </tbody>
             </table>
 
-
             <!-- Tabla empresa -->
             <table class="table">
-                
-                    <tr>
-                        <th colspan="2">Comercializador o Licenciatario de Marca</th>
-                    </tr>
-                
-                    <tr><td><b>Nombre / Empresa</b></td><td>{{ $empresa }}</td></tr>
-                    <tr><td><b>RFC</b></td><td>{{ $rfc}}</td></tr>
-                
+                <tr>
+                    <th colspan="2">Comercializador o Licenciatario de Marca</th>
+                </tr>
+            
+                <tr><td><b>Nombre / Empresa</b></td><td>{{ $empresa }}</td></tr>
+                <tr><td><b>RFC</b></td><td>{{ $rfc}}</td></tr>
             </table>
 
     </div> <!-- Fin del panel -->
 @endforeach<!-- FIN DE LOTES -->
-
 
 
         <!-- Footer separado -->
@@ -174,6 +170,7 @@
             <a href="https://cidam.org">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C.</a>
         </div>
 
-    </div>
+
+</div>
 </body>
 </html>

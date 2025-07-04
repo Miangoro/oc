@@ -65,8 +65,6 @@ class HologramasValidacion extends Controller
 
   public function qr_certificado($id)
   {
-    /*$certificado = Certificado_Exportacion::where('id_certificado', $id)
-      ->get();*/
     $data = Certificado_Exportacion::find($id);
 
     if (!$data) {
@@ -75,21 +73,14 @@ class HologramasValidacion extends Controller
     }
 
     $empresa = $data->dictamen->inspeccione->solicitud->empresa ?? null;
-    
     $datos = $data->dictamen->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
         $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
-        $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
-        $no_pedido = $caracteristicas['no_pedido'] ?? '';
         $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
-        // Acceder a los detalles
-            $botellas = $detalles[0]['cantidad_botellas'] ?? '';
-            $cajas = $detalles[0]['cantidad_cajas'] ?? '';
         // Obtener todos los IDs de los lotes
         $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
         // Buscar los lotes envasados
-        $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
+    $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
             : collect(); // Si no hay IDs, devolvemos una colección vacía
-
 
     return view('content.pages.visualizar_certificado_qr', [
       'datos' => $data,
