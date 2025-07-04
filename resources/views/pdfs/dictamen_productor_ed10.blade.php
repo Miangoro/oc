@@ -139,7 +139,7 @@
     .sello {
         position: absolute;
         right: 5%;
-        margin-top: -13px;
+        margin-top: -18px;
         font-size: 11px;
         font-family: 'Arial Negrita' !important;
     }
@@ -407,10 +407,12 @@
             src="{{ public_path('storage/' . $firmaPath) }}">
         @endif
 
-    <p class="textx" style="margin-top: -5px">
+    
+    <p class="textx">
         <strong>AUTORIZÓ</strong>
         <span style="margin-left: 54px; display: inline-block; text-align: center; position: relative;">
-            <strong>{{ $datos->firmante->puesto ?? '' }} | {{ $datos->firmante->name ?? '' }}</strong>
+            {{-- <strong>{{ $datos->firmante->puesto ?? '' }} | {{ $datos->firmante->name ?? '' }}</strong> --}}
+            <strong>Gerente Técnico Sustituto de la Unidad de Inspección | Juana Karen Velázquez Sánchez</strong>
         </span>
     </p>
     <p class="textx">
