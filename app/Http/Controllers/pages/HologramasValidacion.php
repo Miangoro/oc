@@ -66,7 +66,7 @@ class HologramasValidacion extends Controller
       ->get();
 
     return view('content.pages.visualizar_certificado_qr', [
-      'datos' => $certificado,
+      'datos' => $certificado[0],
     ]);
   }
 
