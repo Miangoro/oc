@@ -850,10 +850,7 @@ public function MostrarCertificadoExportacion($id_certificado)
 
     $dompdf = new Pdf($options);
 
-    $html = View::make($edicion, [
-        'pdf' => $pdf,
-        // ...
-    ])->render();
+    $html = View::make($edicion, $pdf)->render();
 
     $dompdf->loadHtml($html);
     $dompdf->setPaper('A4', 'portrait');
