@@ -23,7 +23,7 @@
 
                     <!-- Selecciona el nombre del revisor -->
                     <div class="form-floating form-floating-outline mb-3">
-                        <select class="select2 form-select" id="nombreRevisor" name="nombreRevisor"
+                        <select class="form-select select2" id="nombreRevisor" name="nombreRevisor"
                             aria-label="Selecciona el nombre del revisor" required>
                             <option value="" disabled selected>Seleccione un revisor</option>
                         </select>

@@ -1418,7 +1418,7 @@ if (!$select.find(`option[value="${datos.id_dictamen}"]`).length) {
     $('#tipoRevisor').on('change', function () {
       var tipoRevisor = $(this).val();
       
-      $('#nombreRevisor').empty().append('<option value="">Seleccione un revisor</option>');
+      $('#nombreRevisor').empty().append('<option value="" disabled>Seleccione un revisor</option>');
 
       if (tipoRevisor) {
         var tipo = (tipoRevisor === '1') ? 1 : 4;
@@ -1553,7 +1553,19 @@ if (!$select.find(`option[value="${datos.id_dictamen}"]`).length) {
   });
 
   $('#nombreRevisor').on('change', function () {
-    fv.revalidateField($(this).attr('name'));
+    const $this = $(this);
+    const fieldName = $this.attr('name');
+    const value = $this.val();
+
+    fv2.revalidateField(fieldName);
+
+    if (value) {
+      $this.removeClass('is-invalid').addClass('is-valid');
+      fv2.updateFieldStatus(fieldName, 'Valid', 'notEmpty'); 
+    } else {
+      $this.removeClass('is-valid').addClass('is-invalid');
+      fv2.updateFieldStatus(fieldName, 'Invalid', 'notEmpty');
+    }
   });
 
   $('#asignarRevisorModal').on('show.bs.modal', function (event) {
@@ -1567,7 +1579,23 @@ if (!$select.find(`option[value="${datos.id_dictamen}"]`).length) {
     fv.resetForm();
     form.reset();
 
+    // Resetear select2 manualmente
+    $('#nombreRevisor').val(null).trigger('change');
+    $('#nombreRevisor').removeClass('is-valid is-invalid');
+    fv2.updateFieldStatus('nombreRevisor', 'NotValidated');
+
     $('#asignarRevisorForm').show();
+
+
+    // FORZAR VALIDACIÓN VISUAL AL ABRIR EL MODAL
+    ['tipoRevisor', 'nombreRevisor', 'numeroRevision'].forEach(function (field) {
+      const el = document.getElementById(field);
+      if (!el.value) {
+        el.classList.add('is-invalid');
+      } else {
+        el.classList.remove('is-invalid');
+      }
+    });
   });
 
 
