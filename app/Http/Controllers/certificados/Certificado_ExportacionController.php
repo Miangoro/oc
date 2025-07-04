@@ -37,6 +37,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;//Permiso empresa
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Dompdf\Options;
+use Illuminate\Support\Facades\View;
+
 
 use function PHPUnit\Framework\isNull;
 
