@@ -840,7 +840,7 @@ public function MostrarCertificadoExportacion($id_certificado)
     }
     //nombre al descargar
     //return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
-    return Pdf::loadView($edicion, $pdf)->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
+    return Pdf::loadView($edicion, $pdf)->stream($data->num_certificado.'.pdf');
 }
 
 ///PDF SOLICITUD CERTIFICADO
