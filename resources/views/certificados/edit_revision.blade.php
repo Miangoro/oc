@@ -36,13 +36,13 @@
     <div class="container mt-3 mb-3">
         <div class="card shadow-sm border-0 rounded-3" style="max-width: 100%; margin: auto;">
             <div class="card-header bg-primary text-white text-center py-2">
-                <h5 class="mb-0 text-white">Editar revisión de certificado personal</h5>
+               <h5 class="mb-0 text-white">Editar revisión de certificado personal <br><span class="badge bg-warning text-dark text-dark">{{ $datos->certificado->num_certificado ?? 'N/A' }}</span></h5>
             </div>
             <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <p class="text-muted mb-1">Tipo de certificado</p>
-                        <h5 class="fw-semibold mb-2">{{ $tipo }}</h5>
+                        <h5 class="fw-semibold mb-2">{{ $tipo }}</h5> 
                          @php
                             $caracteristicas = json_decode( $datos->certificado->dictamen->inspeccione->solicitud->caracteristicas);
                         @endphp
