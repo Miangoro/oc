@@ -500,9 +500,9 @@
 <div>
     <div class="images-container">
         <img src="{{ $qrCodeBase64 }}" alt="QR" width="75px">
-        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Sello UI" class="image-right">
+        <img src="{{ public_path('img_pdf/Sello oc.png') }}" alt="Sello UI" class="image-right">
     </div>
-    <p class="sello">Sello de Unidad de Inspección</p>
+  
     
 
         @php
@@ -515,7 +515,7 @@
 
     <p class="textx" style="margin-top: -5px">
         <strong>AUTORIZÓ</strong>
-        <span style="margin-left: 54px; display: inline-block; text-align: left; position: relative;">
+        <span style="margin-left: 54px; display: inline-block; text-align: left; position: relative; margin-top: 10px;">
             <strong>{{ $data->firmante->puesto ?? '' }}<br><br>{{ $data->firmante->name ?? '' }}</strong>
         </span>
     </p>
