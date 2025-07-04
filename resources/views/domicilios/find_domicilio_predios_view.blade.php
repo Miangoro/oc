@@ -28,6 +28,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarUsuario = @json(auth()->user()->can('Registrar predios'));
+  window.puedeEditarUsuario = @json(auth()->user()->can('Editar predios'));
+  window.puedeEliminarUsuario = @json(auth()->user()->can('Eliminar predios'));
+</script>
     @vite(['resources/js/domicilio_predios.js'])
 @endsection
 

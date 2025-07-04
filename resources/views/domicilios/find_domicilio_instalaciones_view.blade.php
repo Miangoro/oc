@@ -37,6 +37,11 @@
 @endsection
 
 @section('page-script')
+<script>
+  window.puedeAgregarUsuario = @json(auth()->user()->can('Registrar instalaciones'));
+  window.puedeEditarUsuario = @json(auth()->user()->can('Editar instalaciones'));
+  window.puedeEliminarUsuario = @json(auth()->user()->can('Eliminar instalaciones'));
+</script>
 @vite(['resources/js/instalaciones.js'])
 
 @endsection
@@ -45,7 +50,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!-- Users List Table -->
-<div class="card"> 
+<div class="card">
     <div class="card-header pb-0">
         <h3 class="card-title mb-0">Instalaciones</h3>
     </div>
@@ -53,7 +58,7 @@
         <table class="datatables-users table">
             <thead class="table-dark">
                 <tr>
-                    <th>#</th>                                
+                    <th>#</th>
                     <th>ID</th>
                     <th>Cliente</th>
                     <th>Tipo</th>

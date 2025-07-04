@@ -7,6 +7,20 @@
 // Datatable (jquery)
 $(function () {
   // Selecciona los elementos para el formulario de edición
+    // Declaras el arreglo de botones
+  let buttons = [];
+
+  // Si tiene permiso, agregas el botón
+  if (puedeAgregarUsuario) {
+    buttons.push({
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar pre-registro de predios</span>',
+          className: 'add-new btn btn-primary waves-effect waves-light',
+          attr: {
+            'data-bs-toggle': 'modal',
+            'data-bs-target': '#modalAddPredio'
+          }
+    });
+  }
 
 
   $(document).on('change', '#edit_tiene_coordenadas', function () {
@@ -206,7 +220,7 @@ $(function () {
           searchable: false, orderable: false,
             render: function (data, type, full, meta) {
               if (full['estatus'] === 'Vigente' && full['url_documento_registro_predio']) {
-                return `<i class="ri-file-pdf-2-fill text-danger ri-32px pdfRegistroPredio cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" 
+                return `<i class="ri-file-pdf-2-fill text-danger ri-32px pdfRegistroPredio cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"
                       data-id="${full['id_predio']}"
                       data-registro="${full['id_empresa']}"
                       data-url="${full['url_documento_registro_predio']}"></i>`;
@@ -249,41 +263,84 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             const estatus = full['estatus']; // "Pendiente", "Inspeccionado", "Vigente"
+            const puedeAgregar = window.puedeAgregarUsuario;
+            const puedeEditar = window.puedeEditarUsuario;
+            const puedeEliminar = window.puedeEliminarUsuario;
 
-            let opciones = `
+            let acciones = '';
+
+            // Permisos según estatus
+            if (estatus === 'Pendiente' && puedeAgregar) {
+              acciones += `
+                <a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddPredioInspeccion" class="dropdown-item inspeccion-record waves-effect text-primary">
+                  <i class="ri-add-circle-line ri-20px text-primary"></i> Registrar inspección
+                </a>`;
+            }
+
+            if (estatus === 'Inspeccionado') {
+              if (puedeEditar) {
+                acciones += `
+                  <a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredioInspeccion" class="dropdown-item edit-inspeccion-record waves-effect text-warning">
+                    <i class="ri-edit-2-line ri-20px text-warning"></i> Editar inspección
+                  </a>`;
+              }
+
+              if (puedeAgregar) {
+                acciones += `
+                  <a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddRegistroPredio" class="dropdown-item registro-record waves-effect text-primary">
+                    <i class="ri-add-circle-line ri-20px text-primary"></i> Registrar predio
+                  </a>`;
+              }
+            }
+
+            if (estatus === 'Vigente' && puedeEditar) {
+              acciones += `
+                <a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredioInspeccion" class="dropdown-item edit-inspeccion-record waves-effect text-warning">
+                  <i class="ri-edit-2-line ri-20px text-warning"></i> Editar inspección
+                </a>
+                <a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditRegistroPredio" class="dropdown-item waves-effect edit_registro-record text-warning">
+                  <i class="ri-edit-2-line ri-20px text-warning"></i> Editar registro
+                </a>`;
+            }
+
+            // Todos pueden editar pre-registro si tiene permiso de edición
+            if (puedeEditar) {
+              acciones += `
+                <a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio" class="dropdown-item edit-record waves-effect text-info">
+                  <i class="ri-edit-box-line ri-20px text-info"></i> Editar pre-registro
+                </a>`;
+            }
+
+            // Eliminar solo si tiene permiso
+            if (puedeEliminar) {
+              acciones += `
+                <a data-id="${full['id_predio']}" class="dropdown-item delete-record waves-effect text-danger">
+                  <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
+                </a>`;
+            }
+
+            // Si no hay acciones visibles → botón gris deshabilitado
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+
+            // Si hay acciones, construir el dropdown
+            return `
               <div class="d-flex align-items-center gap-50">
                 <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                   <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end m-0">
+                  ${acciones}
+                </div>
+              </div>
             `;
-
-            // Pendiente → solo registrar inspección
-            if (estatus === 'Pendiente') {
-              opciones += `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddPredioInspeccion" class="dropdown-item inspeccion-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar inspección</a>`;
-            }
-
-            // Inspeccionado → editar inspección y registrar predio
-            if (estatus === 'Inspeccionado') {
-              opciones += `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredioInspeccion" class="dropdown-item edit-inspeccion-record waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar inspección</a>`;
-              opciones += `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddRegistroPredio" class="dropdown-item registro-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar predio</a>`;
-            }
-
-            // Vigente → editar inspección y editar registro
-            if (estatus === 'Vigente') {
-              opciones += `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredioInspeccion" class="dropdown-item edit-inspeccion-record waves-effect text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar inspección</a>`;
-              opciones += `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditRegistroPredio" class="dropdown-item waves-effect edit_registro-record text-warning"><i class="ri-edit-2-line ri-20px text-warning"></i> Editar registro</a>`;
-            }
-
-            // Todos pueden editar el pre-registro
-            opciones += `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar pre-registro</a>`;
-
-            // Todos pueden eliminar
-            opciones += `<a data-id="${full['id_predio']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>`;
-
-            opciones += '</div></div>';
-            return opciones;
           }
+
         }
 
       ],
@@ -312,185 +369,7 @@ $(function () {
         }
       },
       // Buttons with Dropdown
-      buttons: [
-        {
-          extend: 'collection',
-          className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-          text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-          buttons: [
-            {
-              extend: 'print',
-              title: 'Predios',
-              text: '<i class="ri-printer-line me-1" ></i>Print',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                // prevent avatar to be print
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        if (item.lastChild && item.lastChild.firstChild) {
-                          result = result + item.lastChild.firstChild.textContent;
-                        }
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else {
-                        result = result + item.innerText;
-                      }
-                    });
-
-                    return result;
-                  }
-                }
-              },
-              customize: function (win) {
-                //customize print view for dark
-                $(win.document.body)
-                  .css('color', config.colors.headingColor)
-                  .css('border-color', config.colors.borderColor)
-                  .css('background-color', config.colors.body);
-                $(win.document.body)
-                  .find('table')
-                  .addClass('compact')
-                  .css('color', 'inherit')
-                  .css('border-color', 'inherit')
-                  .css('background-color', 'inherit');
-              }
-            },
-            {
-              extend: 'csv',
-              title: 'Users',
-              text: '<i class="ri-file-text-line me-1" ></i>Csv',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                // prevent avatar to be print
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        if (item.lastChild && item.lastChild.firstChild) {
-                          result = result + item.lastChild.firstChild.textContent;
-                        }
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else {
-                        result = result + item.innerText;
-                      }
-
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'excel',
-              title: 'Predios',
-              text: '<i class="ri-file-excel-line me-1"></i>Excel',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                // prevent avatar to be display
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        if (item.lastChild && item.lastChild.firstChild) {
-                          result = result + item.lastChild.firstChild.textContent;
-                        }
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else {
-                        result = result + item.innerText;
-                      }
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'pdf',
-              title: 'Predios',
-              text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                // prevent avatar to be display
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        if (item.lastChild && item.lastChild.firstChild) {
-                          result = result + item.lastChild.firstChild.textContent;
-                        }
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else {
-                        result = result + item.innerText;
-                      }
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'copy',
-              title: 'Predios',
-              text: '<i class="ri-file-copy-line me-1"></i>Copy',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                // prevent avatar to be copy
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        if (item.lastChild && item.lastChild.firstChild) {
-                          result = result + item.lastChild.firstChild.textContent;
-                        }
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else {
-                        result = result + item.innerText;
-                      }
-                    });
-                    return result;
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar pre-registro de predios</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'modal',
-            'data-bs-target': '#modalAddPredio'
-          }
-        }
-      ],
+      buttons: buttons,
       // For responsive popup
       responsive: {
         details: {
