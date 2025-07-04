@@ -1,4 +1,18 @@
 $(function () {
+    let buttons = [];
+
+  // Si tiene permiso, agregas el botón
+  if (puedeAgregarElUsuario) {
+    buttons.push({
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar Aduana</span>',
+          className: 'add-new btn btn-primary waves-effect waves-light',
+          attr: {
+            'data-bs-toggle': 'offcanvas',
+            'data-bs-target': '#offcanvasAddUser'
+          }
+    });
+  }
+
   const tabla = $('.datatables-aduanas');
 
   if (tabla.length) {
@@ -32,26 +46,53 @@ $(function () {
           orderable: false,
           responsivePriority: 3,
           render: function (data, type, full) {
+            let acciones = '';
+
+            // Acción: Editar aduana
+            if (window.puedeEditarElUsuario) {
+              acciones += `
+                <li>
+                  <a data-id="${full.id}" class="dropdown-item edit-record text-info fw-medium" style="cursor: pointer;">
+                    <i class="ri-edit-box-line ri-20px text-info"></i> Editar aduana
+                  </a>
+                </li>`;
+            }
+
+            // Acción: Eliminar aduana
+            if (window.puedeEliminarElUsuario) {
+              acciones += `
+                <li>
+                  <a data-id="${full.id}" class="dropdown-item delete-record text-danger fw-medium" style="cursor: pointer;">
+                    <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar aduana
+                  </a>
+                </li>`;
+            }
+
+            // Si no hay acciones → mostrar botón deshabilitado
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+
+            // Si hay acciones → mostrar dropdown
             return `
               <div class="dropdown">
                 <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                   <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end m-0">
-                  <li>
-                    <a data-id="${full.id}" class="dropdown-item edit-record text-info fw-medium" style="cursor: pointer;">
-  <i class="ri-edit-box-line ri-20px text-info"></i> Editar aduana
-</a>
-                  </li>
-                  <li>
-                    <a data-id="${full.id}" class="dropdown-item delete-record text-danger fw-medium" style="cursor: pointer;">
-  <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar aduana
-</a>
-                  </li>
+                  ${acciones}
                 </ul>
               </div>
             `;
           }
+
+
+
+
         }
       ],
       responsive: {
@@ -96,28 +137,7 @@ $(function () {
           sPrevious: 'Anterior'
         }
       },
-      buttons: [
-        {
-          extend: 'collection',
-          className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-          text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar</span>',
-          buttons: ['print', 'csv', 'excel', 'pdf', 'copy'].map(type => ({
-            extend: type,
-            title: 'catalogo aduanas',
-            text: `<i class="ri-file-${type}-line me-1"></i>${type.charAt(0).toUpperCase() + type.slice(1)}`,
-            className: 'dropdown-item',
-            exportOptions: { columns: [0, 1, 2] }
-          }))
-        },
-        {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar Aduana</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'offcanvas',
-            'data-bs-target': '#offcanvasAddUser'
-          }
-        }
-      ]
+      buttons: buttons,
     });
   }
 

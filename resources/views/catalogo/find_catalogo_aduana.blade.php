@@ -32,6 +32,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar aduanas'));
+  window.puedeEditarElUsuario = @json(auth()->user()->can('Editar aduanas'));
+  window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar aduanas'));
+</script>
   @vite(['resources/js/catalogo_aduanas.js'])
 @endsection
 

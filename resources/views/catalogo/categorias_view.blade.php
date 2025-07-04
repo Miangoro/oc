@@ -29,6 +29,11 @@
 @endsection
 
 @section('page-script')
+<script>
+  window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar categorías de mezcal'));
+  window.puedeEditarElUsuario = @json(auth()->user()->can('Editar categorías de mezcal'));
+  window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar categorías de mezcal'));
+</script>
 @vite(['resources/js/categorias.js'])
 @endsection
 

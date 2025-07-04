@@ -5,7 +5,19 @@
 
 // Datatable (jquery)
 $(function () {
+  let buttons = [];
 
+  // Si tiene permiso, agregas el botón
+  if (puedeAgregarElUsuario) {
+    buttons.push({
+      text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo tipo de maguey/agave</span>',
+      className: 'add-new btn btn-primary waves-effect waves-light',
+      attr: {
+        'data-bs-toggle': 'offcanvas',
+        'data-bs-target': '#offcanvasAddUser'
+      }
+    });
+  }
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
@@ -20,14 +32,12 @@ $(function () {
     });
   }
 
-
   // ajax setup
   $.ajaxSetup({
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
   });
-
 
   //FUNCIONALIDAD DE LA VISTA datatable
   if (dt_user_table.length) {
@@ -44,7 +54,6 @@ $(function () {
         { data: 'nombre' },
         { data: 'cientifico' },
         { data: 'action' }
-
       ],
       columnDefs: [
         {
@@ -57,7 +66,8 @@ $(function () {
             return '';
           }
         },
-        {//Tabla 1
+        {
+          //Tabla 1
           searchable: false,
           orderable: false,
           targets: 1,
@@ -74,14 +84,14 @@ $(function () {
             return $name;
           }
         },
-         {
+        {
           // Tabla 3 Cientifico
           targets: 3,
           render: function (data, type, full, meta) {
             var $email = full['cientifico'];
             return '<span class="user-email">' + $email + '</span>';
           }
-        }, 
+        },
 
         {
           // Actions
@@ -90,19 +100,30 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +                  
-                  `<a data-id="${full['id_tipo']}" data-bs-toggle="offcanvas" data-bs-target="#editTipo" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar tipo maguey</a>` +
-                  `<a data-id="${full['id_tipo']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar tipo maguey</a>` +
-                  //'<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
-                '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                '<a href="' + userView + '" class="dropdown-item">View</a>' +
-                '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-                '</div>' +
-              '</div>'
-            );
+            let acciones = '';
+            if (window.puedeEditarElUsuario) {
+              acciones += `<a data-id="${full['id_tipo']}" data-bs-toggle="offcanvas" data-bs-target="#editTipo" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar tipo maguey</a>`;
+            }
+            if (window.puedeEliminarElUsuario) {
+              acciones += `<a data-id="${full['id_tipo']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar tipo maguey</a>`;
+            }
+            // Si no hay acciones, no retornar el dropdown
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+            // Si hay acciones, construir el dropdown
+            const dropdown = `<div class="d-flex align-items-center gap-50">
+              <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>
+              <div class="dropdown-menu dropdown-menu-end m-0">
+                  ${acciones}
+                </div>
+              </div>
+            `;
+            return dropdown;
           }
         }
       ],
@@ -124,171 +145,16 @@ $(function () {
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
         paginate: {
-                "sFirst":    "Primero",
-                "sLast":     "Último",
-                "sNext":     "Siguiente",
-                "sPrevious": "Anterior"
-              }
+          sFirst: 'Primero',
+          sLast: 'Último',
+          sNext: 'Siguiente',
+          sPrevious: 'Anterior'
+        }
       },
 
       // Opciones Exportar Documentos
-      buttons: [
-        {
-          extend: 'collection',
-          className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-          text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-          buttons: [
-            {
-              extend: 'print',
-              title: 'Categorías de Agave',
-              text: '<i class="ri-printer-line me-1" ></i>Print',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3],
-                // prevent avatar to be print
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              },
-              customize: function (win) {
-                //customize print view for dark
-                $(win.document.body)
-                  .css('color', config.colors.headingColor)
-                  .css('border-color', config.colors.borderColor)
-                  .css('background-color', config.colors.body);
-                $(win.document.body)
-                  .find('table')
-                  .addClass('compact')
-                  .css('color', 'inherit')
-                  .css('border-color', 'inherit')
-                  .css('background-color', 'inherit');
-              }
-            },
-            {
-              extend: 'csv',
-              title: 'Users',
-              text: '<i class="ri-file-text-line me-1" ></i>Csv',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3],
-                // prevent avatar to be print
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'excel',
-              title: 'Categorías de Agave',
-              text: '<i class="ri-file-excel-line me-1"></i>Excel',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3],
-                // prevent avatar to be display
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'pdf',
-              title: 'Categorías de Agave',
-              text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3],
-                // prevent avatar to be display
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'copy',
-              title: 'Categorías de Agave',
-              text: '<i class="ri-file-copy-line me-1"></i>Copy',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3],
-                // prevent avatar to be copy
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo tipo de maguey/agave</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'offcanvas',
-            'data-bs-target': '#offcanvasAddUser'
-          }
-        }
-      ],
-
-///PAGINA RESPONSIVA
+      buttons: buttons,
+      ///PAGINA RESPONSIVA
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({
@@ -321,13 +187,8 @@ $(function () {
           }
         }
       }
-
     });
-
-  } 
-
-
-
+  }
 
   // Eliminar registro
   $(document).on('click', '.delete-record', function () {
@@ -336,195 +197,185 @@ $(function () {
 
     // Ocultar modal responsivo en pantalla pequeña si está abierto
     if (dtrModal.length) {
-        dtrModal.modal('hide');
+      dtrModal.modal('hide');
     }
 
     // SweetAlert para confirmar la eliminación
     Swal.fire({
-        title: '¿Está seguro?',
-        text: 'No podrá revertir este evento',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
-        customClass: {
-            confirmButton: 'btn btn-primary me-3',
-            cancelButton: 'btn btn-label-secondary'
-        },
-        buttonsStyling: false
+      title: '¿Está seguro?',
+      text: 'No podrá revertir este evento',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-primary me-3',
+        cancelButton: 'btn btn-label-secondary'
+      },
+      buttonsStyling: false
     }).then(function (result) {
-        if (result.isConfirmed) {
-            // Enviar solicitud DELETE al servidor
-            $.ajax({
-                type: 'DELETE',
-                url: `${baseUrl}tipos-list/${id_tipo}`,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function () {
-                    // Actualizar la tabla después de eliminar el registro
-                    dt_user.draw();
+      if (result.isConfirmed) {
+        // Enviar solicitud DELETE al servidor
+        $.ajax({
+          type: 'DELETE',
+          url: `${baseUrl}tipos-list/${id_tipo}`,
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function () {
+            // Actualizar la tabla después de eliminar el registro
+            dt_user.draw();
 
-                    // Mostrar SweetAlert de éxito
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Eliminado!',
-                        text: '¡La clase ha sido eliminada correctamente!',
-                        customClass: {
-                            confirmButton: 'btn btn-success'
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.log(error);
-
-                    // Mostrar SweetAlert de error
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo eliminar la clase. Inténtalo de nuevo más tarde.',
-                        footer: `<pre>${error.responseText}</pre>`,
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                }
-
-            });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            // Acción cancelada, mostrar mensaje informativo
+            // Mostrar SweetAlert de éxito
             Swal.fire({
-                title: 'Cancelado',
-                text: 'La eliminación de la clase ha sido cancelada',
-                icon: 'info',
-                customClass: {
-                    confirmButton: 'btn btn-primary'
-                }
+              icon: 'success',
+              title: '¡Eliminado!',
+              text: '¡La clase ha sido eliminada correctamente!',
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
             });
-        }
+          },
+          error: function (error) {
+            console.log(error);
+
+            // Mostrar SweetAlert de error
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo eliminar la clase. Inténtalo de nuevo más tarde.',
+              footer: `<pre>${error.responseText}</pre>`,
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Acción cancelada, mostrar mensaje informativo
+        Swal.fire({
+          title: 'Cancelado',
+          text: 'La eliminación de la clase ha sido cancelada',
+          icon: 'info',
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      }
     });
-});
+  });
 
+  // Función para agregar registro
+  $('#addNewCategoryForm').on('submit', function (e) {
+    //id del formulario #addNewCategory
+    e.preventDefault();
 
+    var formData = $(this).serialize();
 
-
-// Función para agregar registro
-$('#addNewCategoryForm').on('submit', function (e) {//id del formulario #addNewCategory
-  e.preventDefault();
-
-  var formData = $(this).serialize();
-
-  $.ajax({
+    $.ajax({
       url: '/tipos-list',
       type: 'POST',
       data: formData,
       success: function (response) {
-          $('#offcanvasAddUser').offcanvas('hide');//id del div que encierra al formulario #offcanvaadduser
-          $('#addNewCategoryForm')[0].reset();
+        $('#offcanvasAddUser').offcanvas('hide'); //id del div que encierra al formulario #offcanvaadduser
+        $('#addNewCategoryForm')[0].reset();
 
-          // Actualizar la tabla sin reinicializar DataTables
-    //es lo mismo que abajo$('.datatables-users').DataTable().ajax.reload();
-          dt_user.ajax.reload();
-          // Mostrar alerta de éxito
-          Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.success,
-              customClass: {
-                  confirmButton: 'btn btn-success'
-              }
-          });
+        // Actualizar la tabla sin reinicializar DataTables
+        //es lo mismo que abajo$('.datatables-users').DataTable().ajax.reload();
+        dt_user.ajax.reload();
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.success,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
       },
       error: function (xhr) {
         console.log('Error:', xhr.responseText);
-          // Mostrar alerta de error
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al agregar la clase',
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al agregar la clase',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
       }
+    });
   });
-});
 
-
-
-
-// FUNCION PARA EDITAR un registro
-$(document).ready(function() {
-  // Abrir el modal y cargar datos para editar
-  $('.datatables-users').on('click', '.edit-record', function() {
+  // FUNCION PARA EDITAR un registro
+  $(document).ready(function () {
+    // Abrir el modal y cargar datos para editar
+    $('.datatables-users').on('click', '.edit-record', function () {
       var id_tipo = $(this).data('id');
 
       // Realizar la solicitud AJAX para obtener los datos de la clase
-      $.get('/edit-list/' + id_tipo + '/edit', function(data) {
-          // Rellenar el formulario con los datos obtenidos
-          $('#edit_id_tipo').val(data.id_tipo);
-          $('#edit_nombre').val(data.nombre);
-          $('#edit_cientifico').val(data.cientifico);
+      $.get('/edit-list/' + id_tipo + '/edit', function (data) {
+        // Rellenar el formulario con los datos obtenidos
+        $('#edit_id_tipo').val(data.id_tipo);
+        $('#edit_nombre').val(data.nombre);
+        $('#edit_cientifico').val(data.cientifico);
 
-          // Mostrar el modal de edición
-          $('#editTipo').offcanvas('show');
-      }).fail(function() {
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al obtener los datos',
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
+        // Mostrar el modal de edición
+        $('#editTipo').offcanvas('show');
+      }).fail(function () {
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al obtener los datos',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
       });
-  });
+    });
 
-  // Manejar el envío del formulario de edición
-  $('#editTipoForm').on('submit', function(e) {
+    // Manejar el envío del formulario de edición
+    $('#editTipoForm').on('submit', function (e) {
       e.preventDefault();
 
       var formData = $(this).serialize();
       var id_tipo = $('#edit_id_tipo').val(); // Obtener el ID de la clase desde el campo oculto
 
       $.ajax({
-          url: '/edit-list/' + id_tipo,
-          type: 'PUT',
-          data: formData,
-          success: function(response) {
-              $('#editTipo').offcanvas('hide'); // Ocultar el modal de edición "DIV"
-              $('#editTipoForm')[0].reset(); // Limpiar el formulario "FORM"
+        url: '/edit-list/' + id_tipo,
+        type: 'PUT',
+        data: formData,
+        success: function (response) {
+          $('#editTipo').offcanvas('hide'); // Ocultar el modal de edición "DIV"
+          $('#editTipoForm')[0].reset(); // Limpiar el formulario "FORM"
 
-              // Mostrar alerta de éxito
-              Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: response.success,
-                  customClass: {
-                      confirmButton: 'btn btn-success'
-                  }
-              });
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.success,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
 
-              // Recargar los datos en la tabla sin reinicializar DataTables
-              $('.datatables-users').DataTable().ajax.reload();
-          },
-          error: function(xhr) {
-            console.log('Error:', xhr.responseText);
-              // Mostrar alerta de error
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'Error al actualizar la clase',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
-          }
+          // Recargar los datos en la tabla sin reinicializar DataTables
+          $('.datatables-users').DataTable().ajax.reload();
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la clase',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
       });
+    });
   });
-});
-
-
-
-
 });

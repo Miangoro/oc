@@ -32,6 +32,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar tipos de agave'));
+  window.puedeEditarElUsuario = @json(auth()->user()->can('Editar tipos de agave'));
+  window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar tipos de agave'));
+</script>
 @vite(['resources/js/tipos.js'])
 @endsection
 
