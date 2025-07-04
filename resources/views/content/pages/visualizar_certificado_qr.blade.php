@@ -103,14 +103,15 @@
         <img src="{{ asset('assets/img/illustrations/banner_oc_cidam.png') }}" alt="Banner OC CIDAM">
     </div>
 
+
+<!--INICIO DE LOTES-->
+@foreach ($lotes as $lote)
     <!-- Panel principal -->
     <div class="container">
         <div class="panel">
-
             {{-- <div class="alert">
                 <h4><strong>CERTIFICADO DE EXPORTACIÓN</strong></h4>
             </div> --}}
-
             <!-- Tabla producto -->
             <table class="table">
                 <thead>
@@ -125,16 +126,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td><b>CATEGORÍA</b></td><td>{{ $datos->categoria ?? 'N/D' }}</td></tr>
-                    <tr><td><b>CLASE</b></td><td>{{ $datos->clase ?? 'N/D' }}</td></tr>
-                    <tr><td><b>MARCA</b></td><td>{{ $datos->marca ?? 'N/D' }}</td></tr>
-                    <tr><td><b>LOTE A GRANEL</b></td><td>{{ $datos->lote_granel ?? 'N/D' }}</td></tr>
-                    <tr><td><b>LOTE ENVASADO</b></td><td>{{ $datos->lote_envasado ?? 'N/D' }}</td></tr>
-                    <tr><td><b>TIPO DE AGAVE</b></td><td>{{ $datos->tipo_agave ?? 'N/D' }}</td></tr>
-                    <tr><td><b>CONTENIDO ALCOHÓLICO</b></td><td>{{ $datos->vol_alc ?? $datos->cont_alc ?? 'N/D' }}%</td></tr>
-                    <tr><td><b>FISICOQUÍMICOS</b></td><td>{{ $datos->fisicoquimicos ?? 'N/D' }}</td></tr>
-                    <tr><td><b>ENVASADO EN</b></td><td>{{ $datos->envasado_En ?? $datos->lugar_envasado ?? 'N/D' }}</td></tr>
-                    <tr><td><b>PAÍS DE DESTINO</b></td><td>{{ $datos->pais_destino ?? 'N/D' }}</td></tr>
+                    <tr><td><b>CATEGORÍA</b></td><td>{{ mb_strtoupper($lote->lotesGranel->first()->categoria->categoria) ?? 'No encontrado' }},</td></tr>
+                    <tr><td><b>CLASE</b></td><td>{{ mb_strtoupper($lote->lotesGranel->first()->clase->clase) ?? 'No encontrado' }}</td></tr>
+                    <tr><td><b>MARCA</b></td><td>{{ mb_strtoupper($lote->marca->marca) ?? 'N' }}</td></tr>
+                    <tr><td><b>LOTE A GRANEL</b></td><td>{{ $lote->lotesGranel->first()->nombre_lote ?? 'No encontrado' }}</td></tr>
+                    <tr><td><b>LOTE ENVASADO</b></td><td> {{ $lote->nombre ?? 'No encontrado' }}</td></tr>
+                    <tr><td><b>TIPO DE AGAVE</b></td><td>{!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
+                    return $tipo->nombre . ' (' . $tipo->cientifico . ')';
+                })->implode('<br>') !!}</td></tr>
+                    <tr><td><b>CONTENIDO ALCOHÓLICO</b></td><td>{{ $lote->cont_alc_envasado ?? 'No encontrado' }}%</td></tr>
+                @php
+                    $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
+                    $folio1 = trim($folios[0] ?? '');
+                    $folio2 = isset($folios[1]) && trim($folios[1]) !== '' ? trim($folios[1]) : ' ';
+                @endphp
+                    <tr><td><b>FISICOQUÍMICOS</b></td><td>{{ $folio1 }}&nbsp; {{ $folio2 }} </td></tr>
+                    <tr><td><b>ENVASADO EN</b></td><td>{{ mb_strtoupper($envasadoEN) }}&nbsp;</td></tr>
+                    <tr><td><b>PAÍS DE DESTINO</b></td><td>{{ $pais }}</td></tr>
                     <tr>
                         <td><b>ESTADO DEL CERTIFICADO</b></td>
                         <td style="color: green"><b>Activo</b></td>
@@ -150,12 +158,15 @@
                         <th colspan="2">Comercializador o Licenciatario de Marca</th>
                     </tr>
                 
-                    <tr><td><b>Nombre / Empresa</b></td><td>{{ $datos->empresa ?? 'N/D' }}</td></tr>
-                    <tr><td><b>RFC</b></td><td>{{ $datos->rfc ?? 'N/D' }}</td></tr>
+                    <tr><td><b>Nombre / Empresa</b></td><td>{{ $empresa }}</td></tr>
+                    <tr><td><b>RFC</b></td><td>{{ $rfc}}</td></tr>
                 
             </table>
 
-        </div> <!-- Fin del panel -->
+    </div> <!-- Fin del panel -->
+@endforeach<!-- FIN DE LOTES -->
+
+
 
         <!-- Footer separado -->
         <div id="footer">
