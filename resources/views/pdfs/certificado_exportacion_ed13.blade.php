@@ -147,6 +147,13 @@
         margin-top: -5px;
         margin-right: 100px;
     }
+
+     .image-right2 {
+        position: absolute;
+        right: 10px;
+        margin-top: -5px;
+
+    }
     .sello {
         position: absolute;
         right: 5%;
@@ -500,7 +507,7 @@
     <!--FIRMA DIGITAL-->
 <div>
     <div class="images-container">
-        <img src="{{ $qrCodeBase64 }}" alt="QR" width="75px" class="image-right">
+        <img src="{{ $qrCodeBase64 }}" alt="QR" width="75px" class="image-right2">
         <img src="{{ public_path('img_pdf/Sello oc.png') }}" alt="Sello UI" class="image-right">
     </div>
   
