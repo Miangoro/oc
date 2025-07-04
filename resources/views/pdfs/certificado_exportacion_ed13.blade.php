@@ -144,7 +144,7 @@
         position: absolute;
         width: 200px;
         right: 10px;
-        margin-top: -25px;
+        margin-top: -30px;
         margin-right: 100px;
     }
 
