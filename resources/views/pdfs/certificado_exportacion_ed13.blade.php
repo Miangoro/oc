@@ -155,7 +155,7 @@
      .image-right2 {
         position: absolute;
         right: 10px;
-        margin-top: 40px;
+        margin-top: 35px;
 
     }
     .sello {
