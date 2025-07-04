@@ -111,7 +111,7 @@
         }
 
         .pagenum:before {
-            content: "Página " counter(page) " de 2" ;
+            content: "Página " counter(page) " de 1" ;
         }
 
         .img-footer {
@@ -155,7 +155,7 @@
      .image-right2 {
         position: absolute;
         right: 10px;
-        margin-top: 35px;
+        margin-top: 30px;
 
     }
     .sello {
