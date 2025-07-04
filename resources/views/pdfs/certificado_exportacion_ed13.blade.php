@@ -521,7 +521,7 @@
 
       
 
-    <p class="textx" style="margin-top: -5px">
+    <p class="textx" style="margin-top: 5px">
         <strong>AUTORIZÓ</strong>
         <span style="margin-left: 54px; display: inline-block; text-align: left; position: relative; margin-top: 10px;">
             <strong>{{ $data->firmante->puesto ?? '' }}<br><br>{{ $data->firmante->name ?? '' }}</strong>
