@@ -216,7 +216,8 @@ if (dt_user_table.length) {
                 <b>Marca:</b> ${full['marca']} <br>
                 <b>Cajas:</b> ${full['cajas']} <br>
                 <b>Botellas:</b> ${full['botellas']} <br>
-                <b>Pedido:</b> ${full['n_pedido']}
+                <b>Pedido:</b> ${full['n_pedido']} <br>
+                <b>Pais destino:</b> ${full['pais']}
                 
                 ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
               </div>`;
