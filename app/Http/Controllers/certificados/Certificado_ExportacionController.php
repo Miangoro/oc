@@ -743,7 +743,7 @@ public function MostrarCertificadoExportacion($id_certificado)
         data: $url,
         encoding: new Encoding('UTF-8'),
         errorCorrectionLevel: ErrorCorrectionLevel::Low,
-        size: 300,
+        size: 320,
         margin: 10,
         roundBlockSizeMode: RoundBlockSizeMode::Margin,
         foregroundColor: new Color(0, 0, 0),
