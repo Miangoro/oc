@@ -16,6 +16,8 @@ use App\Models\solicitudesModel;
 use App\Models\solicitudTipo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Analytics extends Controller
 {
@@ -66,6 +68,21 @@ class Analytics extends Controller
     $lotesSinFq = LotesGranel::whereDoesntHave('fqs')->get();
 
     $certificadoGranelSinEscaneado = CertificadosGranel::whereDoesntHave('certificadoEscaneado')->get();
+
+    $empresaId = Auth::user()?->empresa?->id_empresa;
+
+$TotalCertificadosExportacionPorMes = Certificado_Exportacion::select(
+        DB::raw("DATE_FORMAT(fecha_emision, '%Y-%m') as mes"),
+        DB::raw("COUNT(*) as total")
+    )
+    ->whereHas('dictamen.inspeccione.solicitud.empresa', function ($query) use ($empresaId) {
+        $query->where('id_empresa', $empresaId);
+    })
+    ->where('fecha_emision','>','2024-12-31')
+    ->groupBy('mes')
+    ->orderBy('mes')
+    ->get();
+    
     
 
 
@@ -90,7 +107,7 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
 })->sortByDesc('total_inspecciones'); 
 
 
-    return view('content.dashboard.dashboards-analytics', compact('certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+    return view('content.dashboard.dashboards-analytics', compact('TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)
