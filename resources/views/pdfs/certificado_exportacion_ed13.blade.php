@@ -145,6 +145,7 @@
         width: 200px;
         right: 10px;
         margin-top: -5px;
+        margin-right: 150px;
     }
     .sello {
         position: absolute;
