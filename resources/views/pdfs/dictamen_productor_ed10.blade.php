@@ -123,24 +123,41 @@
             width: 50%;
         }
 
-        .images-container {
-            position: relative;
-            display: flex;
-            margin-top: -40px;
-            width: 100%;
-        }
+        /*inicia firma digital DIV*/
+    .images-container {
+        position: relative;
+        width: 100%;
+        /*vertical-align: bottom;*/
+        margin-top: 1%;
+    }
+    .image-right {
+        position: absolute;
+        width: 200px;
+        right: 10px;
+        margin-top: -5px;
+    }
+    .sello {
+        position: absolute;
+        right: 5%;
+        margin-top: -13px;
+        font-size: 11px;
+        font-family: 'Arial Negrita' !important;
+    }
+    .textx {
+        line-height: 0.5;
+        font-size: 9px;
+        font-family: Arial, Helvetica, Verdana;
+    }
+    .textsello {
+        width: 85%; 
+        text-align: left;
+        word-wrap: break-word;
+        margin-top: -5px;
+        line-height: 1.2;
+        font-size: 8px;
+        font-family: Arial, Helvetica, Verdana;
+    }
 
-        .image-left {
-            margin-right: 60%;
-            width: 12%;
-        }
-
-        .textsello {
-            text-align: left;
-            font-size: 8px;
-            margin: 0;
-            padding: 0;
-        }
 
         .numpag {
             font-size: 10px;
@@ -151,36 +168,13 @@
             padding: 0;
         }
 
-        .sello {
-            text-align: right;
-            font-size: 11px;
-            margin: 0;
-            padding: 0;
-            position: absolute;
-            right: 50px;
-            top: 835px;
-            font-family: 'Arial Negrita' !important;
-        }
 
         .container {
             margin-top: 0px;
             position: relative;
         }
 
-        .textx,
-        .textsello {
-            line-height: 1.2;
-            font-family: Arial, Helvetica, Verdana;
-        }
-
-        .image-right {
-            position: absolute;
-            right: 10px;
-            top: -20px;
-            width: 240px;
-        }
-
-
+        
         .footer-bar {
             position: fixed;
             bottom: -55px;
@@ -352,7 +346,7 @@
     de 1994, así como sus modificaciones subsecuentes.</p>
 
 
-    <br><br>
+{{--     <br><br>
     <p class="sello">Sello de Unidad de Inspección</p>
     <div class="images-container">
         <img src="{{ $qrCodeBase64 }}" alt="Logo UVEM" width="90px">
@@ -391,7 +385,48 @@
 
     <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
         {{ $firmaDigital['firma'] }}
+    </p> --}}
+
+<!--FIRMA DIGITAL-->
+<div>
+    <div class="images-container">
+        <img src="{{ $qrCodeBase64 }}" alt="QR" width="75px">
+        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Sello UI" class="image-right">
+    </div>
+    <p class="sello">Sello de Unidad de Inspección</p>
+    
+
+        @php
+            use Illuminate\Support\Facades\Storage;
+            $firma = $datos->firmante->firma ?? null;
+            $firmaPath = $firma ? 'firmas/' . $firma : null;
+        @endphp
+
+        @if ($firma && Storage::disk('public')->exists($firmaPath))
+            <img style="position: absolute; margin-top: -10%; left: 45%;" height="60px"
+            src="{{ public_path('storage/' . $firmaPath) }}">
+        @endif
+
+    <p class="textx" style="margin-top: -5px">
+        <strong>AUTORIZÓ</strong>
+        <span style="margin-left: 54px; display: inline-block; text-align: center; position: relative;">
+            <strong>{{ $datos->firmante->puesto ?? '' }} | {{ $datos->firmante->name ?? '' }}</strong>
+        </span>
     </p>
+    <p class="textx">
+        <strong>CADENA ORIGINAL</strong>
+        <span style="margin-left: 14px;">
+            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+        </span>
+    </p>
+    <p class="textx">
+        <strong>SELLO DIGITAL</strong>
+    </p>
+    <p class="textsello">
+        {{ $firmaDigital['firma'] }}
+    </p>
+</div>
+
     
 
     <p class="pie">
