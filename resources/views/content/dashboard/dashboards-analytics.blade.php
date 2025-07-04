@@ -422,9 +422,9 @@
                         <span class="text-heading fw-medium">{{ $item->total }}</span>
                     </td>
                     <td class="pe-0 py-4">
-                        <div class="d-flex align-items-center justify-content-end">
+                        <!--<div class="d-flex align-items-center justify-content-end">
                             <span class="badge bg-success me-2">Pagado</span>
-                        </div>
+                        </div>-->
                     </td>
                 </tr>
             @endforeach
