@@ -1118,6 +1118,7 @@ if (!$select.find(`option[value="${datos.id_dictamen}"]`).length) {
           return;
         }
 
+
 const $select = $('#rex_id_dictamen');
 // Eliminar opciones anteriores agregadas dinámicamente, pero dejar los disponibles
 $select.find('option[data-dinamico="true"]').remove();
