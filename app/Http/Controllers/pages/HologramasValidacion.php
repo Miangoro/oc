@@ -62,9 +62,8 @@ class HologramasValidacion extends Controller
 
   public function qr_certificado($id)
   {
-    $certificado = Certificado_Exportacion::all();
-      /*->where('estatus', '!=', 1)
-      ->get();*/
+    $certificado = Certificado_Exportacion::where('id_certificado', $id)
+      ->get();
 
     return view('content.pages.visualizar_certificado_qr', [
       'datos' => $certificado,
