@@ -44,13 +44,19 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar dictamen de exportación'));
+  window.puedeEditarElUsuario = @json(auth()->user()->can('Editar dictamen de exportación'));
+  window.puedeReexpedirElUsuario = @json(auth()->user()->can('Reexpedir dictamen de exportación'));
+  window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar dictamen de exportación'));
+</script>
     @vite(['resources/js/dictamenes_exportacion.js'])
 @endsection
 
 @section('content')
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
- 
+
 <!-- Users List Table -->
 <div class="card">
     <div class="card-header pb-0">

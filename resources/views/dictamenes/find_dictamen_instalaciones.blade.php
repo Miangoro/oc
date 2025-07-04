@@ -40,6 +40,13 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar dictamen de instalaciones'));
+  window.puedeEditarElUsuario = @json(auth()->user()->can('Editar dictamen de instalaciones'));
+  window.puedeReexpedirElUsuario = @json(auth()->user()->can('Reexpedir dictamen de instalaciones'));
+  window.puedeEliminarElUsuario = @json(auth()->user()->can('Reexpedir dictamen de instalaciones'));
+</script>
+
 @vite(['resources/js/dictamenes_instalaciones.js'])
 @endsection
 
