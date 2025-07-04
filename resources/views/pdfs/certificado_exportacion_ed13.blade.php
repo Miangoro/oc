@@ -159,7 +159,7 @@
         font-family: Arial, Helvetica, Verdana;
     }
     .textsello {
-        width: 85%; 
+        width: 50%; 
         text-align: left;
         word-wrap: break-word;
         margin-top: -5px;
@@ -511,10 +511,7 @@
             $firmaPath = $firma ? 'firmas/' . $firma : null;
         @endphp
 
-        @if ($firma && Storage::disk('public')->exists($firmaPath))
-            <img style="position: absolute; margin-top: -10%; left: 45%;" height="60px"
-            src="{{ public_path('storage/' . $firmaPath) }}">
-        @endif
+      
 
     <p class="textx" style="margin-top: -5px">
         <strong>AUTORIZÓ</strong>
