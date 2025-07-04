@@ -1,11 +1,24 @@
 // resources/js/catalogo_lotes.js
 
 $(function () {
+  // Declaras el arreglo de botones
+  let buttons = [];
+
+  // Si tiene permiso, agregas el botón
+  if (puedeAgregarElUsuario) {
+    buttons.push({
+      text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Lote</span>',
+      className: 'add-new btn btn-primary waves-effect waves-light',
+      attr: {
+        'data-bs-toggle': 'modal',
+        'data-bs-target': '#offcanvasAddLote'
+      }
+    });
+  }
 
   const tipoLoteSelect = document.getElementById('tipo_lote');
   const ocCidamFields = document.getElementById('oc_cidam_fields');
   const otroOrganismoFields = document.getElementById('otro_organismo_fields');
-
 
   tipoLoteSelect.addEventListener('change', function () {
     const selectedValue = tipoLoteSelect.value;
@@ -13,19 +26,14 @@ $(function () {
     if (selectedValue === '1') {
       ocCidamFields.classList.remove('d-none');
       otroOrganismoFields.classList.add('d-none');
-
     } else if (selectedValue === '2') {
       ocCidamFields.classList.add('d-none');
       otroOrganismoFields.classList.remove('d-none');
-
-
     } else {
       ocCidamFields.classList.add('d-none');
       otroOrganismoFields.classList.add('d-none');
     }
   });
-
-
 
   $('.select2').select2(); // Inicializa select2 en el documento
 
@@ -39,7 +47,6 @@ $(function () {
       language: 'es'
     });
   });
-
 
   // Inicializar DataTable
   var dt_user = $('.datatables-users').DataTable({
@@ -55,9 +62,9 @@ $(function () {
       { data: 'id_empresa' },
       {
         data: null,
-        searchable: true, orderable: false,
+        searchable: true,
+        orderable: false,
         render: function (data, type, row) {
-
           if (row.tipo_lote == 1) {
             return '<span class="fw-bold text-dark">Certificado por OC CIDAM</span>';
           } else {
@@ -76,7 +83,10 @@ $(function () {
           var procedencia = '';
 
           if (row.ingredientes != 'N/A') {
-            ingredientes = '<br><span class="fw-bold text-dark small">Ingrediente:</span><span class="small"> ' + row.ingredientes + '</span>';
+            ingredientes =
+              '<br><span class="fw-bold text-dark small">Ingrediente:</span><span class="small"> ' +
+              row.ingredientes +
+              '</span>';
           }
 
           if (row.edad != 'N/A') {
@@ -85,16 +95,27 @@ $(function () {
 
           // Mostrar los nombres de los lotes de procedencia
           if (row.lote_procedencia != 'No tiene procedencia de otros lotes.') {
-            procedencia = '<br><span class="fw-bold text-dark small">Lote de procedencia: <br></span><span class="small text-primary"> ' + row.lote_procedencia + '</span>';
+            procedencia =
+              '<br><span class="fw-bold text-dark small">Lote de procedencia: <br></span><span class="small text-primary"> ' +
+              row.lote_procedencia +
+              '</span>';
           }
 
-          return '<span class="fw-bold text-dark small">Volumen inicial:</span> <span class="small"> ' + row.volumen +
-            ' L</span><br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ' + row.id_categoria +
-            '</span><br><span class="fw-bold text-dark small">Clase:</span><span class="small"> ' + row.id_clase +
-            '</span><br><span class="fw-bold text-dark small">Tipo:</span><span class="small"> ' + row.id_tipo + '</span>' +
-            ingredientes + edad + procedencia;
+          return (
+            '<span class="fw-bold text-dark small">Volumen inicial:</span> <span class="small"> ' +
+            row.volumen +
+            ' L</span><br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ' +
+            row.id_categoria +
+            '</span><br><span class="fw-bold text-dark small">Clase:</span><span class="small"> ' +
+            row.id_clase +
+            '</span><br><span class="fw-bold text-dark small">Tipo:</span><span class="small"> ' +
+            row.id_tipo +
+            '</span>' +
+            ingredientes +
+            edad +
+            procedencia
+          );
         }
-
       },
 
       {
@@ -125,7 +146,6 @@ $(function () {
         }
       },
 
-
       { data: 'cont_alc' },
       {
         data: 'volumen_restante',
@@ -139,19 +159,24 @@ $(function () {
         orderable: false,
         render: function (data, type, row) {
           if (row.folio_certificado !== 'N/A') {
-            return '<span class="fw-bold text-dark small">Organismo:</span> <span class="small">' + (row.id_organismo || 'CIDAM') +
+            return (
+              '<span class="fw-bold text-dark small">Organismo:</span> <span class="small">' +
+              (row.id_organismo || 'CIDAM') +
               '</span><br><span class="fw-bold text-dark small">Certificado:</span><span class="small"> ' +
               // Verifica si hay URL del certificado
-              (row.url_certificado ?
-                `<a class="text-decoration-underline waves-effect text-primary pdf3" data-bs-target="#mostrarPdfDictamen1"
+              (row.url_certificado
+                ? `<a class="text-decoration-underline waves-effect text-primary pdf3" data-bs-target="#mostrarPdfDictamen1"
                   data-bs-toggle="modal" data-bs-dismiss="modal"
                   data-id="${row.id_lote_granel}" data-registro="${row.id_empresa}"
                   data-url="${row.url_certificado}">${row.folio_certificado}</a>`
                 : row.folio_certificado) +
               '</span>' +
-              '<br><span class="fw-bold text-dark small">Emisión:</span><span class="small"> ' + row.fecha_emision +
-              '</span><br><span class="fw-bold text-dark small">Vigencia:</span><span class="small"> ' + row.fecha_vigencia +
-              '</span>';
+              '<br><span class="fw-bold text-dark small">Emisión:</span><span class="small"> ' +
+              row.fecha_emision +
+              '</span><br><span class="fw-bold text-dark small">Vigencia:</span><span class="small"> ' +
+              row.fecha_vigencia +
+              '</span>'
+            );
           } else {
             return '<span class="badge rounded-pill bg-danger">Sin certificado</span>';
           }
@@ -160,7 +185,8 @@ $(function () {
 
       {
         data: 'estatus',
-        searchable: false, orderable: false,
+        searchable: false,
+        orderable: false,
         render: function (data, type, row) {
           return '<span class="badge rounded-pill bg-success">' + data + '</span>';
         }
@@ -194,18 +220,31 @@ $(function () {
         searchable: false,
         orderable: false,
         render: function (data, type, full, meta) {
-          return (
-            '<div class="d-flex align-items-center gap-50">' +
-            '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-            '<div class="dropdown-menu dropdown-menu-end m-0">' +
-            `<a data-id="${full['id_lote_granel']}" data-bs-toggle="modal" data-bs-target="#offcanvasEditLote" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes agranel</a>` +
-            `<a data-id="${full['id_lote_granel']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes agranel</a>` +
-            '</div>' +
-            '</div>'
-          );
+          let acciones = '';
+            if (window.puedeEditarElUsuario) {
+              acciones += `<a data-id="${full['id_lote_granel']}" data-bs-toggle="modal" data-bs-target="#offcanvasEditLote" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes agranel</a>`;
+            }
+            if (window.puedeEliminarElUsuario) {
+              acciones += `<a data-id="${full['id_lote_granel']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes agranel</a>`;
+            }
+            // Si no hay acciones, no retornar el dropdown
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+            // Si hay acciones, construir el dropdown
+            const dropdown = `<div class="d-flex align-items-center gap-50">
+            <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>
+            <div class="dropdown-menu dropdown-menu-end m-0">
+                  ${acciones}
+                </div>
+              </div>
+            `;
+            return dropdown;
         }
-
-
       }
     ],
     order: [[1, 'desc']],
@@ -231,120 +270,7 @@ $(function () {
         sPrevious: 'Anterior'
       }
     },
-    buttons: [
-      {
-        extend: 'collection',
-        className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-        text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar</span>',
-        buttons: [
-          {
-            extend: 'print',
-            title: 'Lotes a granel',
-            text: '<i class="ri-printer-line me-1"></i>Print',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 5) {
-                    return 'ViewSuspend';
-                  }
-                  return inner;
-                }
-              }
-            },
-            customize: function (win) {
-              $(win.document.body)
-                .css('color', config.colors.headingColor)
-                .css('border-color', config.colors.borderColor)
-                .css('background-color', config.colors.body);
-              $(win.document.body)
-                .find('table')
-                .addClass('compact')
-                .css('color', 'inherit')
-                .css('border-color', 'inherit')
-                .css('background-color', 'inherit');
-            }
-          },
-          {
-            extend: 'csv',
-            title: 'Lotes a granel',
-            text: '<i class="ri-file-text-line me-1"></i>CSV',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 5) {
-                    return 'ViewSuspend';
-                  }
-                  return inner;
-                }
-              }
-            }
-          },
-          {
-            extend: 'excel',
-            title: 'Lotes a granel',
-            text: '<i class="ri-file-excel-line me-1"></i>Excel',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 5) {
-                    return 'ViewSuspend';
-                  }
-                  return inner;
-                }
-              }
-            }
-          },
-          {
-            extend: 'pdf',
-            title: 'Lotes a granel',
-            text: '<i class="ri-file-pdf-line me-1"></i>PDF',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 5) {
-                    return 'ViewSuspend';
-                  }
-                  return inner;
-                }
-              }
-            }
-          },
-          {
-            extend: 'copy',
-            text: '<i class="ri-file-copy-line me-1"></i>Copy',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 5) {
-                    return 'ViewSuspend';
-                  }
-                  return inner;
-                }
-              }
-            }
-          }
-        ]
-      },
-      {
-        text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Lote</span>',
-        className: 'add-new btn btn-primary waves-effect waves-light',
-        attr: {
-          'data-bs-toggle': 'modal',
-          'data-bs-target': '#offcanvasAddLote'
-        }
-      }
-    ],
-
+    buttons: buttons,
     // For responsive popup
     responsive: {
       details: {
@@ -359,18 +285,18 @@ $(function () {
           var data = $.map(columns, function (col, i) {
             return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
               ? '<tr data-dt-row="' +
-              col.rowIndex +
-              '" data-dt-column="' +
-              col.columnIndex +
-              '">' +
-              '<td>' +
-              col.title +
-              ':' +
-              '</td> ' +
-              '<td>' +
-              col.data +
-              '</td>' +
-              '</tr>'
+                  col.rowIndex +
+                  '" data-dt-column="' +
+                  col.columnIndex +
+                  '">' +
+                  '<td>' +
+                  col.title +
+                  ':' +
+                  '</td> ' +
+                  '<td>' +
+                  col.data +
+                  '</td>' +
+                  '</tr>'
               : '';
           }).join('');
 
@@ -378,13 +304,11 @@ $(function () {
         }
       }
     }
-
   });
-
 
   var dt_user_table = $('.datatables-users'),
     select2Elements = $('.select2'),
-    userView = baseUrl + 'app/user/view/account'
+    userView = baseUrl + 'app/user/view/account';
   // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
     $elements.each(function () {
@@ -412,8 +336,8 @@ $(function () {
     iframe.attr('src', url);
     openPdfBtn.attr('href', url);
     openPdfBtn.show();
-    $("#titulo_modal_Dictamen1").text("Certificado de lote a granel");
-    $("#subtitulo_modal_Dictamen1").html(registro);
+    $('#titulo_modal_Dictamen1').text('Certificado de lote a granel');
+    $('#subtitulo_modal_Dictamen1').html(registro);
     $('#mostrarPdfDictamen1').modal('show');
   });
   // Ocultar el spinner cuando el PDF esté completamente cargado
@@ -424,8 +348,8 @@ $(function () {
 
   // Reciben los datos del PDF
   $(document).on('click', '.pdf', function () {
-    var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
-    var pdfUrl = $(this).data('url');//Ruta del PDF
+    var id = $(this).data('id'); //Obtén el ID desde el atributo "data-id" en PDF
+    var pdfUrl = $(this).data('url'); //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
 
@@ -433,9 +357,9 @@ $(function () {
     iframe.hide();
 
     iframe.attr('src', pdfUrl);
-    $("#NewPestana").attr('href', pdfUrl).show();
+    $('#NewPestana').attr('href', pdfUrl).show();
 
-    $("#titulo_modal").text("Análisis fisicoquímico");
+    $('#titulo_modal').text('Análisis fisicoquímico');
     // $("#subtitulo_modal").text("PDF del Dictamen");
 
     iframe.on('load', function () {
@@ -502,7 +426,6 @@ $(function () {
               }
             });
           }
-
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         // Acción cancelada, mostrar mensaje informativo
@@ -520,11 +443,9 @@ $(function () {
 
   /* registro de un lote */
   $(document).ready(function () {
-
     var lotesDisponibles = []; // Variable para almacenar los lotes disponibles
 
     let rowIndex = 0; // Contador global para el índice de las filas
-
 
     $('#es_creado_a_partir').change(function () {
       var valor = $(this).val();
@@ -532,7 +453,6 @@ $(function () {
         $('#addLotes').removeClass('d-none');
         if ($('#contenidoGraneles').children('tr').length === 0) {
           agregarFilaLotes(); // Llamar a la función para agregar la fila
-
         }
       } else {
         $('#addLotes').addClass('d-none');
@@ -544,8 +464,6 @@ $(function () {
         }
       }
     });
-
-
 
     $('.add-row-lotes').click(function () {
       agregarFilaLotes(); // Usar la función para agregar fila
@@ -586,8 +504,7 @@ $(function () {
           },
           numeric: {
             message: 'El volumen debe ser un número válido'
-          },
-
+          }
         }
       });
 
@@ -615,8 +532,6 @@ $(function () {
       calcularVolumenTotal();
     });
 
-
-
     $(document).on('input', '.volumen-parcial', function () {
       calcularVolumenTotal(); // Recalcular total en cada cambio
     });
@@ -625,9 +540,6 @@ $(function () {
       lotesDisponibles = lotesGranel;
       cargarLotesEnSelect();
     });
-
-
-
 
     // Función para cargar lotes en los select dentro de las filas
     function cargarLotesEnSelect() {
@@ -663,9 +575,7 @@ $(function () {
 
       // Actualizar el campo de volumen total
       $('#volumen').val(totalVolumen.toFixed(2)); // Mostrar el total con dos decimales
-
     }
-
 
     $(document).on('change', '.id_lote_granel', function () {
       var loteSeleccionado = $(this).val();
@@ -696,7 +606,6 @@ $(function () {
       });
     });
 
-
     // Al cambiar el valor del tipo de lote
     $('#tipo_lote').change(function () {
       var tipoLote = $(this).val();
@@ -716,7 +625,6 @@ $(function () {
         $('#volmen_in').removeClass('col-md-6').addClass('col-md-12').attr('id', 'volmen_in');
       }
     });
-
 
     const addNewLote = document.getElementById('loteForm');
     const fv = FormValidation.formValidation(addNewLote, {
@@ -783,7 +691,7 @@ $(function () {
               message: 'Por favor seleccione un tipo de agave'
             }
           }
-        },
+        }
       },
 
       plugins: {
@@ -813,7 +721,7 @@ $(function () {
         contentType: false, // Evita que se establezca el tipo de contenido
         success: function (response) {
           $('input[type="file"][name="url[]"]').val('');
-          $('#loteForm').trigger("reset");
+          $('#loteForm').trigger('reset');
           $('#id_empresa').val('').trigger('change');
           $('#id_guia').val('').trigger('change');
           $('#id_organismo').val('').trigger('change');
@@ -848,22 +756,9 @@ $(function () {
     $('#id_empresa, #id_guia, #tipo_agave').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
-
   });
 
-
-
-
-
-
-
-
-
-
-
   $(document).ready(function () {
-
-
     const edit_tipoLoteSelect = document.getElementById('edit_tipo_lote');
     const edit_ocCidamFields = document.getElementById('edit_oc_cidam_fields');
     const edit_otroOrganismoFields = document.getElementById('edit_otro_organismo_fields');
@@ -917,7 +812,6 @@ $(function () {
       // Contamos las filas actuales para inicializar el índice
       rowIndex = $('#contenidoGranelesEdit').children('tr').length;
     }
-
 
     $(document).on('click', '.edit-record', function () {
       var loteId = $(this).data('id');
@@ -985,7 +879,9 @@ $(function () {
             $('#edit_tipo_lote').val(lote.tipo_lote);
             $('#edit_id_tanque').val(lote.id_tanque);
             // Asigna los valores seleccionados (solo IDs)
-            var guiasIds = guias.map(function (guia) { return guia.id; });
+            var guiasIds = guias.map(function (guia) {
+              return guia.id;
+            });
             $('#edit_id_guia').val(guiasIds).trigger('change');
             $('#edit_volumen').val(lote.volumen);
             $('#edit_cont_alc').val(lote.cont_alc);
@@ -995,7 +891,6 @@ $(function () {
             var fqs = data.lote.folio_fq.split(',');
             $('#folio_fq_completo_58').val(fqs[0]);
             $('#folio_fq_ajuste_134').val(fqs[1]);
-
 
             var id_tipo = Array.isArray(data.id_tipo) ? data.id_tipo.map(String) : [];
 
@@ -1052,7 +947,8 @@ $(function () {
               documentos.forEach(function (documento) {
                 const id = documento.id_documento;
 
-                if (id == 59 && documento.url) { // Solo si id_documento es 59 y tiene URL
+                if (id == 59 && documento.url) {
+                  // Solo si id_documento es 59 y tiene URL
                   archivoDisponible = true;
                   var fileName = documento.url.split('/').pop();
 
@@ -1064,15 +960,24 @@ $(function () {
                     </button>
                   `;
 
-                  $('#archivo_url_display_otro_organismo').html('Documento disponible: <a href="../files/' + data.numeroCliente + '/certificados_granel/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>' + '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + botonEliminar + '</span>');
+                  $('#archivo_url_display_otro_organismo').html(
+                    'Documento disponible: <a href="../files/' +
+                      data.numeroCliente +
+                      '/certificados_granel/' +
+                      documento.url +
+                      '" target="_blank" class="text-primary">' +
+                      fileName +
+                      '</a>' +
+                      '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
+                      botonEliminar +
+                      '</span>'
+                  );
                 }
               });
 
               if (!archivoDisponible) {
                 $('#archivo_url_display_otro_organismo').html('No hay archivo disponible.');
               }
-
-
             } else {
               $('#edit_oc_cidam_fields').addClass('d-none');
               $('#edit_otro_organismo_fields').addClass('d-none');
@@ -1100,7 +1005,6 @@ $(function () {
               $('#archivo_url_display_ajuste_134').html('');
               $('#deleteArchivo58').html('');
               $('#deleteArchivo134').html('');
-
 
               documentos.forEach(function (documento) {
                 const id = documento.id_documento;
@@ -1137,23 +1041,19 @@ $(function () {
               if (!documentoCompletoUrlAsignado) {
                 $('#archivo_url_display_completo_58').html('No hay archivo completo disponible.');
                 $('#deleteArchivo58').html('');
-
               }
               if (!documentoAjusteUrlAsignado) {
                 $('#archivo_url_display_ajuste_134').html('No hay archivo de ajuste disponible.');
                 $('#deleteArchivo134').html('');
               }
-
-
             } else {
               console.log('No hay documentos disponibles.');
               $('td[id^="archivo_url_display_"]').html('No hay documentos disponibles.');
-               $('#deleteArchivo58').html('');
+              $('#deleteArchivo58').html('');
               $('#deleteArchivo134').html('');
             }
 
             /* aqui termina lo de mostar rutas */
-
 
             // Mostrar el modal
             $('#offcanvasEditLote').modal('show');
@@ -1182,7 +1082,6 @@ $(function () {
       });
     });
 
-
     var lotesDisponiblesEdit = [];
 
     $('#edit_es_creado_a_partir').change(function () {
@@ -1206,11 +1105,10 @@ $(function () {
       obtenerLotesEdit();
     });
 
-
     // Función para agregar una nueva fila en la tabla de lotes de edición
     function agregarFilaLotesEdit() {
       // Inicializa el índice solo si es necesario
-      inicializarRowIndex();  // Asegúrate de que el índice se calcule bien
+      inicializarRowIndex(); // Asegúrate de que el índice se calcule bien
 
       var newRow = `
         <tr>
@@ -1236,32 +1134,36 @@ $(function () {
       initializeSelect2($(`#edit_id_lote_granel_${rowIndex}`));
 
       // Incrementar rowIndex después de agregar la fila
-      rowIndex++;  // Incrementar el índice después de agregar la fila
+      rowIndex++; // Incrementar el índice después de agregar la fila
     }
-
 
     // Recalcula todos los índices de las filas para evitar duplicados
     function recalcularIndices() {
-      rowIndex = 0;  // Reasignamos el índice global
-      $('#contenidoGranelesEdit').find('tr').each(function () {
-        // Actualizamos el índice en cada fila
-        $(this).find('select').attr('name', `edit_lotes[${rowIndex}][id]`).attr('id', `edit_id_lote_granel_${rowIndex}`);
-        $(this).find('input').attr('name', `edit_volumenes[${rowIndex}][volumen_parcial]`).attr('id', `edit_volumen_parcial_${rowIndex}`);
-        rowIndex++;  // Incrementamos el índice
-      });
+      rowIndex = 0; // Reasignamos el índice global
+      $('#contenidoGranelesEdit')
+        .find('tr')
+        .each(function () {
+          // Actualizamos el índice en cada fila
+          $(this)
+            .find('select')
+            .attr('name', `edit_lotes[${rowIndex}][id]`)
+            .attr('id', `edit_id_lote_granel_${rowIndex}`);
+          $(this)
+            .find('input')
+            .attr('name', `edit_volumenes[${rowIndex}][volumen_parcial]`)
+            .attr('id', `edit_volumen_parcial_${rowIndex}`);
+          rowIndex++; // Incrementamos el índice
+        });
     }
-
-
 
     // Eliminar una fila de lotes en modo edición y actualizar los índices
     $(document).on('click', '.remove-row-lotes-edit', function () {
       $(this).closest('tr').remove();
-      recalcularIndices();  // Llamada para recalcular los índices
+      recalcularIndices(); // Llamada para recalcular los índices
       if ($('#contenidoGranelesEdit').children('tr').length <= 1) {
         $('.remove-row-lotes-edit').attr('disabled', true);
       }
     });
-
 
     // Cargar lotes en los selects dentro de filas en modo edición
     // Cargar lotes en los selects dentro de filas en modo edición
@@ -1282,7 +1184,6 @@ $(function () {
         }
       });
     }
-
 
     const editLoteForm = document.getElementById('loteFormEdit');
 
@@ -1351,7 +1252,7 @@ $(function () {
               message: 'Por favor seleccione un tipo'
             }
           }
-        },
+        }
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -1392,9 +1293,11 @@ $(function () {
         error: function (xhr) {
           if (xhr.status === 422) {
             var errors = xhr.responseJSON.errors;
-            var errorMessages = Object.keys(errors).map(function (key) {
-              return errors[key].join('<br>');
-            }).join('<br>');
+            var errorMessages = Object.keys(errors)
+              .map(function (key) {
+                return errors[key].join('<br>');
+              })
+              .join('<br>');
 
             Swal.fire({
               icon: 'error',
@@ -1418,7 +1321,6 @@ $(function () {
       });
     });
 
-
     // Inicializar select2 y revalidar el campo cuando cambie
     $('#id_empresa, #id_guia, #tipo_agave').on('change', function () {
       fv.revalidateField($(this).attr('name'));
@@ -1429,7 +1331,6 @@ $(function () {
 
     // Añadir el listener para el cambio en el tipo de lote
     edit_tipoLoteSelect.addEventListener('change', updateFieldsAndValidation);
-
   });
 
   // Mover el último seleccionado al final visualmente
@@ -1444,8 +1345,6 @@ $(function () {
     selectedElement.detach();
     $(this).append(selectedElement).trigger('change.select2');
   });
-
-
 
   $(document).on('click', '.btn-eliminar-doc', function () {
     var idDocumento = $(this).data('id');
@@ -1489,7 +1388,7 @@ $(function () {
                 customClass: {
                   confirmButton: 'btn btn-success'
                 }
-              })
+              });
             } else {
               Swal.fire({
                 icon: 'error',
@@ -1525,8 +1424,4 @@ $(function () {
       }
     });
   });
-
-
-
-
 });
