@@ -161,19 +161,38 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
+            let acciones = '';
 
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-
-              `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-search-eye-line"></i> Validar solicitud</a>` +
-              `<a data-id="${full['id_empresa']}"  data-bs-toggle="modal" data-bs-dismiss="modal" onclick="abrirModal(${full['id_empresa']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-success ri-checkbox-circle-fill"></i> Aceptar cliente</a>` +
-              `<a data-id="${full['id_empresa']}" data-bs-toggle="modal" data-bs-target="#editCLientesProspectos" class="dropdown-item edit-record waves-effect text-warning"><i class="text-warning ri-edit-fill"></i> Editar</a>` +
-              '</div>' +
-              '</div>'
-            );
+            // Acciones que SIEMPRE se deben mostrar
+            acciones += `
+              <a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud">
+                <i class="text-info ri-search-eye-line"></i> Validar solicitud
+              </a>
+              <a data-id="${full['id_empresa']}" data-bs-toggle="modal" data-bs-dismiss="modal" onclick="abrirModal(${full['id_empresa']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2">
+                <i class="text-success ri-checkbox-circle-fill"></i> Aceptar cliente
+              </a>
+            `;
+            // Acción condicional: Editar
+            if (window.puedeEditarUsuario) {
+              acciones += `
+                <a data-id="${full['id_empresa']}" data-bs-toggle="modal" data-bs-target="#editCLientesProspectos" class="dropdown-item edit-record waves-effect text-warning">
+                  <i class="text-warning ri-edit-fill"></i> Editar
+                </a>
+              `;
+            }
+            // Siempre mostrar el dropdown, porque hay acciones obligatorias
+            return `
+              <div class="d-flex align-items-center gap-50">
+                <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end m-0">
+                  ${acciones}
+                </div>
+              </div>
+            `;
           }
+
         }
       ],
       order: [[2, 'desc']],
@@ -844,6 +863,6 @@ $(function () {
     });
   }
 
-  
+
 
 });

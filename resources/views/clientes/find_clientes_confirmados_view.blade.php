@@ -34,6 +34,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarUsuario = @json(auth()->user()->can('Registrar clientes'));
+  window.puedeEditarUsuario = @json(auth()->user()->can('Editar clientes'));
+  window.puedeEliminarUsuario = @json(auth()->user()->can('Eliminar clientes'));
+</script>
 @vite(['resources/js/clientes_confirmados.js'])
 @endsection
 
@@ -70,7 +75,7 @@
                 <h4 class="mb-1 me-1">{{$fisicas}}</h4>
                 <p class="text-success mb-1"></p>
               </div>
-              
+
             </div>
             <div class="avatar">
               <div class="avatar-initial bg-label-success rounded-3">
@@ -91,7 +96,7 @@
                 <h4 class="mb-1 me-1">{{$morales}}</h4>
                 <p class="text-danger mb-1"></p>
               </div>
-             
+
             </div>
             <div class="avatar">
               <div class="avatar-initial bg-label-danger rounded-3">
@@ -112,7 +117,7 @@
                 <h4 class="mb-1 me-1">{{$empresas_inactivas}}</h4>
                 <p class="text-danger mb-1">({{ $porcentaje_inactivas }}%)</p>
               </div>
-            
+
             </div>
             <div class="avatar">
               <div class="avatar-initial bg-label-warning rounded-3">
