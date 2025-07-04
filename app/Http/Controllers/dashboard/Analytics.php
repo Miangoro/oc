@@ -78,6 +78,7 @@ $TotalCertificadosExportacionPorMes = Certificado_Exportacion::select(
     ->whereHas('dictamen.inspeccione.solicitud.empresa', function ($query) use ($empresaId) {
         $query->where('id_empresa', $empresaId);
     })
+    ->where('fecha_emision','>','2024-12-31')
     ->groupBy('mes')
     ->orderBy('mes')
     ->get();
