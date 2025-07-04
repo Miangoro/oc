@@ -569,7 +569,7 @@ public function storeRevisor(Request $request)
             'nombreRevisor' => 'required|integer|exists:users,id',
             'numeroRevision' => 'required|string|max:50',
             'esCorreccion' => 'nullable|in:si,no',
-            'observaciones' => 'nullable|string|max:5000',
+            'observaciones' => 'nullable|string|max:255',
             'id_certificado' => 'required|integer|exists:certificados_exportacion,id_certificado',
         ]);
 

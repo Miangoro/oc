@@ -4,6 +4,7 @@ namespace App\Http\Controllers\pages;
 
 use App\Http\Controllers\Controller;
 use App\Models\activarHologramasModelo;
+use App\Models\Certificado_Exportacion;
 use App\Models\empresa;
 use App\Models\empresaNumCliente;
 use App\Models\marcas;
@@ -56,6 +57,18 @@ class HologramasValidacion extends Controller
 
 
     return view('content.pages.pages-hologramas-validacion', compact('pageConfigs', 'folio', 'cliente', 'marca', 'ya_activado', 'datosHolograma'));
+  }
+
+
+  public function qr_certificado($id)
+  {
+    $certificado = Certificado_Exportacion::all();
+      /*->where('estatus', '!=', 1)
+      ->get();*/
+
+    return view('content.pages.visualizar_certificado_qr', [
+      'datos' => $certificado,
+    ]);
   }
 
 
