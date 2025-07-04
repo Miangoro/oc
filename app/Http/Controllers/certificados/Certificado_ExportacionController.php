@@ -849,8 +849,7 @@ public function MostrarCertificadoExportacion($id_certificado)
 
     $dompdf = new Pdf($options);
 
-    $html = View::make('ruta.a.mi.vista', [
-        'edicion' => $edicion,
+    $html = View::make($ruta, [
         'pdf' => $pdf,
         // ...
     ])->render();
