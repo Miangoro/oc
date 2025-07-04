@@ -110,6 +110,10 @@
             /*padding-bottom: 2px; /*espacio al fondo si es necesario */
         }
 
+        .pagenum:before {
+            content: "Página " counter(page) " de " counter(pages);
+        }
+
         .img-footer {
             /*background-image: url("{{ public_path('img_pdf/pie_certificado.png') }}");*/
             background-size: cover;
@@ -231,6 +235,7 @@
         @endif
         <br>Certificado de Exportación NOM-070-SCFI-2016 F7.1-01-23 Ed 13
         <br>Entrada en vigor: 01-07-2025
+        <span class="pagenum"></span>
     </p>
     
     <img class="img-footer" src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina">
