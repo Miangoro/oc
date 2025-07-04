@@ -849,7 +849,7 @@ public function MostrarCertificadoExportacion($id_certificado)
 
     $dompdf = new Pdf($options);
 
-    $html = View::make($ruta, [
+    $html = View::make($edicion, [
         'pdf' => $pdf,
         // ...
     ])->render();
