@@ -34,6 +34,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarUsuario = @json(auth()->user()->can('Registrar usuarios'));
+  window.puedeEditarUsuario = @json(auth()->user()->can('Editar usuarios'));
+  window.puedeEliminarUsuario = @json(auth()->user()->can('Eliminar usuarios'));
+</script>
 @vite(['resources/js/usuarios-clientes.js'])
 @endsection
 
@@ -169,7 +174,7 @@
           <input id="add-user-tel" type="tel" class="form-control" placeholder="Teléfono" aria-label="" name="telefono" />
           <label for="">Teléfono</label>
         </div>
-       
+
         <div class="form-floating form-floating-outline mb-5">
           <select name="id_empresa" id="id_empresa" class="select2 form-select" data-placeholder="Seleccione el cliente">
             <option value="" disabled selected>NULL</option>
@@ -182,7 +187,7 @@
               @else
                   N/A
               @endif
-              
+
 
                 | {{ $empresa->razon_social }}</option>
               @endforeach
@@ -204,8 +209,8 @@
           <button type="submit" id="registrar-editar" class="btn btn-primary me-sm-3 me-1 data-submit"><i class="ri-add-line"></i> Registrar</button>
           <button type="reset" class="btn btn-danger" data-bs-dismiss="offcanvas"><i class="ri-close-line"></i> Cancelar</button>
       </div>
-        
-       
+
+
       </form>
     </div>
   </div>

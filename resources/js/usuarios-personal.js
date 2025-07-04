@@ -6,21 +6,20 @@
 
 // Datatable (jquery)
 $(function () {
-
   // Declaras el arreglo de botones
-let buttons = [];
+  let buttons = [];
 
-// Si tiene permiso, agregas el botón
-if (puedeAgregarUsuario) {
-  buttons.push({
-    text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo usuario</span>',
-    className: 'add-new btn btn-primary waves-effect waves-light',
-    attr: {
-      'data-bs-toggle': 'offcanvas',
-      'data-bs-target': '#offcanvasAddUser'
-    }
-  });
-}
+  // Si tiene permiso, agregas el botón
+  if (puedeAgregarUsuario) {
+    buttons.push({
+      text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo usuario</span>',
+      className: 'add-new btn btn-primary waves-effect waves-light',
+      attr: {
+        'data-bs-toggle': 'offcanvas',
+        'data-bs-target': '#offcanvasAddUser'
+      }
+    });
+  }
 
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
@@ -65,21 +64,20 @@ if (puedeAgregarUsuario) {
           searchable: false,
           orderable: false,
           render: function (data, type, row) {
-              if (data === 'N/A' || !data) {
-                  return `<span class="badge rounded-pill badge text-bg-danger">Sin firma</span>`;
-              }
-              return `<img src="/storage/firmas/${data}" alt="Firma" style="width: 100px; height: auto;" class="img-thumbnail">`;
+            if (data === 'N/A' || !data) {
+              return `<span class="badge rounded-pill badge text-bg-danger">Sin firma</span>`;
+            }
+            return `<img src="/storage/firmas/${data}" alt="Firma" style="width: 100px; height: auto;" class="img-thumbnail">`;
           }
         },
         {
           data: 'estatus',
           render: function (data, type, row) {
-              if (data === 'Inactivo' || !data) {
-                  return `<span class="badge rounded-pill badge text-bg-danger">${data}</span>`;
-              }else{
-                return `<span class="badge rounded-pill badge text-bg-success">${data}</span>`;
-              }
-             
+            if (data === 'Inactivo' || !data) {
+              return `<span class="badge rounded-pill badge text-bg-danger">${data}</span>`;
+            } else {
+              return `<span class="badge rounded-pill badge text-bg-success">${data}</span>`;
+            }
           }
         },
         { data: 'action' }
@@ -121,9 +119,10 @@ if (puedeAgregarUsuario) {
               $output;
             $initials = (($initials.shift() || '') + ($initials.pop() || '')).toUpperCase();
 
-            if(foto_usuario !=''){
-              $output = '<div class="avatar "><img src="/storage/'+foto_usuario+'" alt class="rounded-circle"></div>';
-            }else{
+            if (foto_usuario != '') {
+              $output =
+                '<div class="avatar "><img src="/storage/' + foto_usuario + '" alt class="rounded-circle"></div>';
+            } else {
               $output = '<span class="avatar-initial rounded-circle bg-label-' + $state + '">' + $initials + '</span>';
             }
 
@@ -171,29 +170,36 @@ if (puedeAgregarUsuario) {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            var dropdown = '<div class="d-flex align-items-center gap-50">' +
-                           '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">' +
-                           '<i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-                           '<div class="dropdown-menu dropdown-menu-end m-0">';
-            
+            let acciones = '';
+
             if (window.puedeEditarUsuario) {
-              dropdown += `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record">
+              acciones += `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar personal OC </a>`;
+            }
+            if (window.puedeEliminarUsuario) {
+              acciones += `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record">
                             <i class="ri-edit-box-line ri-20px text-info"></i> Editar personal OC
                            </a>`;
             }
-            
-            if (window.puedeEliminarUsuario) {
-            dropdown += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger">
-                           <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar personal OC
-                         </a>`;
-            }     
-                         
-               dropdown +='</div></div>';
-            
+            // Si no hay acciones, no retornar el dropdown
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+            // Si hay acciones, construir el dropdown
+            const dropdown = `<div class="d-flex align-items-center gap-50">
+                           <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                           <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>
+                           <div class="dropdown-menu dropdown-menu-end m-0">
+                  ${acciones}
+                </div>
+              </div>
+            `;
             return dropdown;
           }
         }
-        
       ],
       order: [[2, 'desc']],
       dom:
@@ -205,7 +211,7 @@ if (puedeAgregarUsuario) {
         '<"col-sm-12 col-md-6"i>' +
         '<"col-sm-12 col-md-6"p>' +
         '>',
-      lengthMenu: [ 10, 20, 50, 70, 100], //for length of menu
+      lengthMenu: [10, 20, 50, 70, 100], //for length of menu
       language: {
         sLengthMenu: '_MENU_',
         search: '',
@@ -213,7 +219,7 @@ if (puedeAgregarUsuario) {
         info: 'Displaying _START_ to _END_ of _TOTAL_ entries'
       },
       // Buttons with Dropdown
-      
+
       buttons: buttons,
       // For responsive popup
       responsive: {
@@ -264,7 +270,7 @@ if (puedeAgregarUsuario) {
     // sweetalert for confirmation of delete
     Swal.fire({
       title: '¿Está seguro de eliminar este usuario?',
-      text: "¡No podrá revertirlo!",
+      text: '¡No podrá revertirlo!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: '¡Si, eliminarlo!',
@@ -312,14 +318,12 @@ if (puedeAgregarUsuario) {
   $(document).on('click', '.pdf', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
-        var iframe = $('#pdfViewer');
-        iframe.attr('src', '../pdf_asignacion_usuario/'+id);
+    var iframe = $('#pdfViewer');
+    iframe.attr('src', '../pdf_asignacion_usuario/' + id);
 
-        $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
-        $("#subtitulo_modal").text(registro);
-
-
-});
+    $('#titulo_modal').text('Carta de asignación de usuario y contraseña para plataforma del OC');
+    $('#subtitulo_modal').text(registro);
+  });
 
   // edit record
   $(document).on('click', '.edit-record', function () {
@@ -411,8 +415,8 @@ if (puedeAgregarUsuario) {
       data: formData,
       url: `${baseUrl}personal-list`,
       type: 'POST',
-      processData: false,  // Evita que jQuery procese los datos del formulario
-      contentType: false,  // Evita que jQuery defina el tipo de contenido (esto permite enviar el archivo)
+      processData: false, // Evita que jQuery procese los datos del formulario
+      contentType: false, // Evita que jQuery defina el tipo de contenido (esto permite enviar el archivo)
       success: function (status) {
         dt_user.draw();
         offCanvasForm.offcanvas('hide');
@@ -457,5 +461,4 @@ if (puedeAgregarUsuario) {
       });
     });
   }
-
 });

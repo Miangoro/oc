@@ -27,12 +27,17 @@
   'resources/assets/vendor/libs/@form-validation/auto-focus.js',
   'resources/assets/vendor/libs/cleavejs/cleave.js',
   'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
-  'resources/assets/vendor/libs/sweetalert2/sweetalert2.js' 
+  'resources/assets/vendor/libs/sweetalert2/sweetalert2.js'
 ])
 @endsection
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarUsuario = @json(auth()->user()->can('Registrar clientes'));
+  window.puedeEditarUsuario = @json(auth()->user()->can('Editar clientes'));
+  window.puedeEliminarUsuario = @json(auth()->user()->can('Eliminar clientes'));
+</script>
 @vite(['resources/js/clientes_prospecto.js'])
 @endsection
 
@@ -156,8 +161,8 @@
 
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
-@include('_partials/_modals/modal-add-aceptar-cliente') 
-@include('_partials/_modals/modal-edit-cliente-prospecto') 
+@include('_partials/_modals/modal-add-aceptar-cliente')
+@include('_partials/_modals/modal-edit-cliente-prospecto')
 <!-- /Modal -->
 @endsection
 

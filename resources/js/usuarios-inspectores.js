@@ -6,6 +6,21 @@
 
 // Datatable (jquery)
 $(function () {
+  // Declaras el arreglo de botones
+  let buttons = [];
+
+  // Si tiene permiso, agregas el botón
+  if (puedeAgregarUsuario) {
+    buttons.push({
+      text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo usuario</span>',
+      className: 'add-new btn btn-primary waves-effect waves-light',
+      attr: {
+        'data-bs-toggle': 'offcanvas',
+        'data-bs-target': '#offcanvasAddUser'
+      }
+    });
+  }
+
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
@@ -49,26 +64,25 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, row) {
-              // Si no hay firma (N/A o vacío), muestra un mensaje de "Sin firma"
-              if (data === 'N/A' || !data) {
-                  return `<span class="badge rounded-pill badge text-bg-danger">Sin firma</span>`;
-              }
+            // Si no hay firma (N/A o vacío), muestra un mensaje de "Sin firma"
+            if (data === 'N/A' || !data) {
+              return `<span class="badge rounded-pill badge text-bg-danger">Sin firma</span>`;
+            }
 
-              // Si hay firma, muestra la imagen con la ruta corregida
-              return `<img src="/storage/firmas/${data}" alt="Firma" style="width: 100px; height: auto;" class="img-thumbnail">`;
+            // Si hay firma, muestra la imagen con la ruta corregida
+            return `<img src="/storage/firmas/${data}" alt="Firma" style="width: 100px; height: auto;" class="img-thumbnail">`;
           }
-      },
-      {
-        data: 'estatus',
-        render: function (data, type, row) {
+        },
+        {
+          data: 'estatus',
+          render: function (data, type, row) {
             if (data === 'Inactivo' || !data) {
-                return `<span class="badge rounded-pill badge text-bg-danger">${data}</span>`;
-            }else{
+              return `<span class="badge rounded-pill badge text-bg-danger">${data}</span>`;
+            } else {
               return `<span class="badge rounded-pill badge text-bg-success">${data}</span>`;
             }
-           
-        }
-      },
+          }
+        },
         { data: 'action' }
       ],
       columnDefs: [
@@ -107,9 +121,10 @@ $(function () {
               $initials = $name.match(/\b\w/g) || [],
               $output;
             $initials = (($initials.shift() || '') + ($initials.pop() || '')).toUpperCase();
-            if(foto_usuario !=''){
-              $output = '<div class="avatar "><img src="/storage/'+foto_usuario+'" alt class="rounded-circle"></div>';
-            }else{
+            if (foto_usuario != '') {
+              $output =
+                '<div class="avatar "><img src="/storage/' + foto_usuario + '" alt class="rounded-circle"></div>';
+            } else {
               $output = '<span class="avatar-initial rounded-circle bg-label-' + $state + '">' + $initials + '</span>';
             }
 
@@ -149,7 +164,6 @@ $(function () {
             return '<span class="text-heading fw-medium">' + $pass + '</span>';
           }
         },
-
         {
           // Actions
           targets: -1,
@@ -157,15 +171,43 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar inspector</a>` +
-              `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar inspector</a>` +
-              '</div>'
-            );
+            // Crear las acciones primero
+            let acciones = '';
+            if (window.puedeEditarUsuario) {
+              acciones += `
+                <a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record">
+                  <i class="ri-edit-box-line ri-20px text-info"></i> Editar inspector
+                </a>`;
+            }
+            if (window.puedeEliminarUsuario) {
+              acciones += `
+                <a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger">
+                  <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar inspector
+                </a>`;
+            }
+            // Si no hay acciones, no retornar el dropdown
+            if (!acciones.trim()) {
+               return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+            // Si hay acciones, construir el dropdown
+            const dropdown = `
+              <div class="d-flex align-items-center gap-50">
+                <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end m-0">
+                  ${acciones}
+                </div>
+              </div>
+            `;
+
+            return dropdown;
           }
+
         }
       ],
       order: [[2, 'desc']],
@@ -178,7 +220,7 @@ $(function () {
         '<"col-sm-12 col-md-6"i>' +
         '<"col-sm-12 col-md-6"p>' +
         '>',
-      lengthMenu: [ 10, 20, 50, 70, 100], //for length of menu
+      lengthMenu: [10, 20, 50, 70, 100], //for length of menu
       language: {
         sLengthMenu: '_MENU_',
         search: '',
@@ -186,161 +228,8 @@ $(function () {
         info: 'Displaying _START_ to _END_ of _TOTAL_ entries'
       },
       // Buttons with Dropdown
-      buttons: [
-        {
-          extend: 'collection',
-          className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-          text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Export </span>',
-          buttons: [
-            {
-              extend: 'print',
-              title: 'Users',
-              text: '<i class="ri-printer-line me-1" ></i>Print',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be print
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              },
-              customize: function (win) {
-                //customize print view for dark
-                $(win.document.body)
-                  .css('color', config.colors.headingColor)
-                  .css('border-color', config.colors.borderColor)
-                  .css('background-color', config.colors.body);
-                $(win.document.body)
-                  .find('table')
-                  .addClass('compact')
-                  .css('color', 'inherit')
-                  .css('border-color', 'inherit')
-                  .css('background-color', 'inherit');
-              }
-            },
-            {
-              extend: 'csv',
-              title: 'Users',
-              text: '<i class="ri-file-text-line me-1" ></i>Csv',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be print
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'excel',
-              title: 'Users',
-              text: '<i class="ri-file-excel-line me-1"></i>Excel',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'pdf',
-              title: 'Users',
-              text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'copy',
-              title: 'Users',
-              text: '<i class="ri-file-copy-line me-1"></i>Copy',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be copy
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo usuario</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'offcanvas',
-            'data-bs-target': '#offcanvasAddUser'
-          }
-        }
-      ],
+      /*  buttons: , */
+      buttons: buttons,
       // For responsive popup
       responsive: {
         details: {
@@ -390,7 +279,7 @@ $(function () {
     // sweetalert for confirmation of delete
     Swal.fire({
       title: '¿Está seguro de eliminar este usuario?',
-      text: "¡No podrá revertirlo!",
+      text: '¡No podrá revertirlo!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: '¡Si, eliminarlo!',
@@ -438,14 +327,12 @@ $(function () {
   $(document).on('click', '.pdf', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
-        var iframe = $('#pdfViewer');
-        iframe.attr('src', '../pdf_asignacion_usuario/'+id);
+    var iframe = $('#pdfViewer');
+    iframe.attr('src', '../pdf_asignacion_usuario/' + id);
 
-        $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
-        $("#subtitulo_modal").text(registro);
-
-
-});
+    $('#titulo_modal').text('Carta de asignación de usuario y contraseña para plataforma del OC');
+    $('#subtitulo_modal').text(registro);
+  });
 
   // edit record
   $(document).on('click', '.edit-record', function () {
@@ -536,8 +423,8 @@ $(function () {
       data: formData,
       url: `${baseUrl}inspectores-list`,
       type: 'POST',
-      processData: false,  // Evita que jQuery procese los datos del formulario
-      contentType: false,  // Evita que jQuery defina el tipo de contenido (esto permite enviar el archivo)
+      processData: false, // Evita que jQuery procese los datos del formulario
+      contentType: false, // Evita que jQuery defina el tipo de contenido (esto permite enviar el archivo)
       success: function (status) {
         dt_user.draw();
         offCanvasForm.offcanvas('hide');
