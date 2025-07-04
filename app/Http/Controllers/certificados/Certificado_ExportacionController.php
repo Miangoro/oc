@@ -20,6 +20,15 @@ use App\Exports\CertificadosExport;
 use App\Mail\CorreoCertificado;
 use App\Models\CertificadosGranel;
 use App\Notifications\GeneralNotification;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\ValidationException;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -729,6 +738,29 @@ public function MostrarCertificadoExportacion($id_certificado)
     //Busca el registro del certificado que tiene el id igual a $id_sustituye
     Certificado_Exportacion::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
+    $url = route('QR-certificado', ['id_certificado' => $id_certificado]);
+    $qrCode = new QrCode(
+        data: $url,
+        encoding: new Encoding('UTF-8'),
+        errorCorrectionLevel: ErrorCorrectionLevel::Low,
+        size: 300,
+        margin: 10,
+        roundBlockSizeMode: RoundBlockSizeMode::Margin,
+        foregroundColor: new Color(0, 0, 0),
+        backgroundColor: new Color(255, 255, 255)
+    );
+    // Escribir el QR en formato PNG
+    $writer = new PngWriter();
+    $result = $writer->write($qrCode);
+    // Convertirlo a Base64
+    $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+
+    if($data->id_firmante == 4){ //Karen
+        $pass = 'Mejia2307';
+    }
+
+    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccion?->num_servicio, $pass, $data->id_firmante);
+
     $datos = $data->dictamen->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
         $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
         $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
@@ -792,6 +824,9 @@ public function MostrarCertificadoExportacion($id_certificado)
         'botellas' => $botellas ?? 'No encontrado',
         'cajas' => $cajas ?? 'No encontrado',
         //'presentacion' => $presentacion ?? 'No encontrado',
+        
+        'firmaDigital' => $firmaDigital,
+        'qrCodeBase64' => $qrCodeBase64
     ];
 
     
