@@ -36,7 +36,7 @@
     <div class="container mt-3 mb-3">
         <div class="card shadow-sm border-0 rounded-3" style="max-width: 100%; margin: auto;">
             <div class="card-header bg-primary  text-center py-2">
-                <h5 class="mb-0 text-white">Revisión de certificado personal</h5>
+                <h5 class="mb-0 text-white">Revisión de certificado personal <br><span class="badge bg-warning text-dark text-dark">{{ $datos->certificado->num_certificado ?? 'N/A' }}</span></h5>
             </div>
             <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-start">
@@ -689,7 +689,7 @@
                                         @elseif($pregunta->filtro == 'dictamen_exportacion')
                                             <td>
                                                 <a target="_blank"
-                                                    href="/dictamen_exportacion/{{ $datos->certificado->id_certificado ?? 'N/A' }}">
+                                                    href="/dictamen_exportacion/{{ $datos->certificado->dictamen->id_dictamen ?? 'N/A' }}">
                                                     <i
                                                         class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                 </a>

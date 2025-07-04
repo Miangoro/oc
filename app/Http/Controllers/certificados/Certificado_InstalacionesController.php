@@ -912,7 +912,7 @@ public function index(Request $request)
             return $rutaGuardado;
         }*/
          if ($datos->fecha_emision >= "2025-04-01") {
-              $edicion = $conMarca ? 'pdfs.certificado_envasador_ed5' : 'pdfs.certificado_envasador_ed5_sin_marca';
+              $edicion = $conMarca ? 'pdfs.certificado_envasador_ed5' : 'pdfs.Certificado_envasador_ed5_sin_marca';
         } else {
               $edicion = $conMarca ? 'pdfs.certificado_envasador_ed4' : 'pdfs.certificado_envasador_ed4_sin_marca';
         }
@@ -976,7 +976,7 @@ public function index(Request $request)
         }*/
 
     if ($datos->fecha_emision >= "2025-04-01") {
-        $edicion = $conMarca ? 'pdfs.certificado_comercializador_ed6' : 'pdfs.certificado_comercializador_ed6_sin_marca';
+        $edicion = $conMarca ? 'pdfs.certificado_comercializador_ed6' : 'pdfs.Certificado_comercializador_ed6_sin_marca';
     } else {
         $edicion = $conMarca ? 'pdfs.certificado_comercializador_ed5' : 'pdfs.certificado_comercializador_ed5_sin_marca';
     }

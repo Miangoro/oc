@@ -342,6 +342,8 @@ Route::get('/holograma/{folio}', [HologramasValidacion::class, 'index2'])->name(
 Route::get('/validar_dictamen', [HologramasValidacion::class, 'validar_dictamen'])->name('validar_dictamen');
 //ruta QR guias
 Route::get('/autenticidad_guia/{id}', [HologramasValidacion::class, 'qr_guias'])->name('QR-guias');
+//ruta QR certificado exportacion
+Route::get('/autenticidad_certificado/{id}', [HologramasValidacion::class, 'qr_certificado'])->name('QR-certificado');
 
 
 Route::get('/pages/misc-under-maintenance', [MiscUnderMaintenance::class, 'index'])->name('pages-misc-under-maintenance');

@@ -20,6 +20,15 @@ use App\Exports\CertificadosExport;
 use App\Mail\CorreoCertificado;
 use App\Models\CertificadosGranel;
 use App\Notifications\GeneralNotification;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\ValidationException;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -284,6 +293,7 @@ public function index(Request $request)
             $nestedData['marca'] = $lotes_env?->first()?->marca->marca ?? 'No encontrado';
             $caracteristicas = $certificado->dictamen?->inspeccione?->solicitud?->caracteristicasDecodificadas() ?? [];
             $nestedData['n_pedido'] = $caracteristicas['no_pedido'] ?? 'No encontrado';
+            $nestedData['pais'] = $certificado->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado';
             $nestedData['cajas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_cajas'] ?? 'No encontrado';
             $nestedData['botellas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado';
             //visto bueno
@@ -729,6 +739,31 @@ public function MostrarCertificadoExportacion($id_certificado)
     //Busca el registro del certificado que tiene el id igual a $id_sustituye
     Certificado_Exportacion::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
+    
+
+    $url = route('QR-certificado', ['id' => $data->id_certificado]);
+    $qrCode = new QrCode(
+        data: $url,
+        encoding: new Encoding('UTF-8'),
+        errorCorrectionLevel: ErrorCorrectionLevel::Low,
+        size: 320,
+        margin: 10,
+        roundBlockSizeMode: RoundBlockSizeMode::Margin,
+        foregroundColor: new Color(0, 0, 0),
+        backgroundColor: new Color(255, 255, 255)
+    );
+    // Escribir el QR en formato PNG
+    $writer = new PngWriter();
+    $result = $writer->write($qrCode);
+    // Convertirlo a Base64
+    $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+
+    if($data->id_firmante == 4){ //Karen
+        $pass = 'Vladisperez11';
+    }
+
+    $firmaDigital = Helpers::firmarCadena($data->num_certificado . '|' . $data->fecha_emision . '|' . $numero_cliente, $pass, $data->id_firmante);
+
     $datos = $data->dictamen->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
         $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
         $aduana_salida = $caracteristicas['aduana_salida'] ?? '';
@@ -792,6 +827,9 @@ public function MostrarCertificadoExportacion($id_certificado)
         'botellas' => $botellas ?? 'No encontrado',
         'cajas' => $cajas ?? 'No encontrado',
         //'presentacion' => $presentacion ?? 'No encontrado',
+        
+        'firmaDigital' => $firmaDigital,
+        'qrCodeBase64' => $qrCodeBase64
     ];
 
     
@@ -802,7 +840,7 @@ public function MostrarCertificadoExportacion($id_certificado)
     }
     //nombre al descargar
     //return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
-    return Pdf::loadView($edicion, $pdf)->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
+    return Pdf::loadView($edicion, $pdf)->stream($data->num_certificado.'.pdf');
 }
 
 ///PDF SOLICITUD CERTIFICADO

@@ -110,6 +110,10 @@
             /*padding-bottom: 2px; /*espacio al fondo si es necesario */
         }
 
+        .pagenum:before {
+            content: "Página " counter(page) " de 1" ;
+        }
+
         .img-footer {
             /*background-image: url("{{ public_path('img_pdf/pie_certificado.png') }}");*/
             background-size: cover;
@@ -133,6 +137,48 @@
             white-space: nowrap;
             z-index: -1;
         }
+
+         /*inicia firma digital DIV*/
+    .images-container {
+        position: relative;
+        width: 100%;
+        /*vertical-align: bottom;*/
+    }
+    .image-right {
+        position: absolute;
+        width: 200px;
+        right: 10px;
+        margin-top: -30px;
+        margin-right: 100px;
+    }
+
+     .image-right2 {
+        position: absolute;
+        right: 10px;
+        margin-top: 25px;
+
+    }
+    .sello {
+        position: absolute;
+        right: 5%;
+        margin-top: -13px;
+        font-size: 11px;
+        font-family: 'Arial Negrita' !important;
+    }
+    .textx {
+        line-height: 0.5;
+        font-size: 9px;
+        font-family: Arial, Helvetica, Verdana;
+    }
+    .textsello {
+        width: 60%; 
+        text-align: left;
+        word-wrap: break-word;
+        margin-top: -5px;
+        line-height: 1.2;
+        font-size: 8px;
+        font-family: Arial, Helvetica, Verdana;
+    }
     </style>
 </head>
 
@@ -188,7 +234,8 @@
             Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
         @endif
         <br>Certificado de Exportación NOM-070-SCFI-2016 F7.1-01-23 Ed 13
-        <br>Entrada en vigor: 01-07-2025
+        <br>Entrada en vigor: 01-07-2025<br>  
+        <span class="pagenum"></span>
     </p>
     
     <img class="img-footer" src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina">
@@ -280,7 +327,8 @@
         }
 
         if (!empty($oldHologramas[$clave])) {
-            $contenido .= ($contenido ? '<br>' : '') . $oldHologramas[$clave];
+            $lineaConSaltos = str_replace(',', '<br>', $oldHologramas[$clave]);
+            $contenido .= ($contenido ? '<br>' : '') . $lineaConSaltos;
         }
 
         if (empty($contenido)) {
@@ -355,7 +403,7 @@
             <td style="text-align: left; padding-left: 2px; font-size: 10.6px;">
                 {!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
                     return $tipo->nombre . ' (<i>' . $tipo->cientifico . '</i>)';
-                })->implode(', ') !!}
+                })->implode('<br>') !!}
             </td>
         </tr>
         <tr>
@@ -456,10 +504,47 @@
     </p>
     
 
-    <div class="titulo2"><b>AUTORIZÓ</b></div>
+    <!--<div class="titulo2"><b>AUTORIZÓ</b></div>
     <div class="titulo2" style="margin-top: 0;">
         <b>{{ $data->firmante->name }}<br>{{ $data->firmante->puesto }}</b>
+    </div>-->
+
+    <!--FIRMA DIGITAL-->
+<div>
+    <div class="images-container">
+        <img src="{{ $qrCodeBase64 }}" alt="QR" width="75px" class="image-right2">
+        <img src="{{ public_path('img_pdf/Sello oc.png') }}" alt="Sello UI" class="image-right">
     </div>
+  
+    
+
+        @php
+            use Illuminate\Support\Facades\Storage;
+            $firma = $data->firmante->firma ?? null;
+            $firmaPath = $firma ? 'firmas/' . $firma : null;
+        @endphp
+
+      
+
+    <p class="textx" style="margin-top: 5px">
+        <strong>AUTORIZÓ</strong>
+        <span style="margin-left: 54px; display: inline-block; text-align: left; position: relative; margin-top: 10px;">
+            <strong>{{ $data->firmante->puesto ?? '' }}<br><br>{{ mb_strtoupper($data->firmante->name ?? '', 'UTF-8') }}</strong>
+        </span>
+    </p>
+    <p class="textx">
+        <strong>CADENA ORIGINAL</strong>
+        <span style="margin-left: 14px;">
+            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+        </span>
+    </p>
+    <p class="textx">
+        <strong>SELLO DIGITAL</strong>
+    </p>
+    <p class="textsello">
+        {{ $firmaDigital['firma'] }}
+    </p>
+</div>
 
 
 
