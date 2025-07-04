@@ -689,7 +689,7 @@
                                         @elseif($pregunta->filtro == 'dictamen_exportacion')
                                             <td>
                                                 <a target="_blank"
-                                                    href="/dictamen_exportacion/{{ $datos->certificado->id_certificado ?? 'N/A' }}">
+                                                    href="/dictamen_exportacion/{{ $datos->certificado->dictamen->id_dictamen ?? 'N/A' }}">
                                                     <i
                                                         class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                 </a>
