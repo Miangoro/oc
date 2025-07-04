@@ -293,6 +293,7 @@ public function index(Request $request)
             $nestedData['marca'] = $lotes_env?->first()?->marca->marca ?? 'No encontrado';
             $caracteristicas = $certificado->dictamen?->inspeccione?->solicitud?->caracteristicasDecodificadas() ?? [];
             $nestedData['n_pedido'] = $caracteristicas['no_pedido'] ?? 'No encontrado';
+            $nestedData['pais'] = $certificado->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado';
             $nestedData['cajas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_cajas'] ?? 'No encontrado';
             $nestedData['botellas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado';
             //visto bueno
