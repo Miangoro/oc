@@ -759,7 +759,7 @@ public function MostrarCertificadoExportacion($id_certificado)
         $pass = 'Vladisperez11';
     }
 
-    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccion?->num_servicio, $pass, $data->id_firmante);
+    $firmaDigital = Helpers::firmarCadena($data->num_certificado . '|' . $data->fecha_emision . '|' . $numero_cliente, $pass, $data->id_firmante);
 
     $datos = $data->dictamen->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
         $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON

@@ -519,7 +519,7 @@
     <p class="textx" style="margin-top: -5px">
         <strong>AUTORIZÓ</strong>
         <span style="margin-left: 54px; display: inline-block; text-align: center; position: relative;">
-            <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
+            <strong>{{ $data->firmante->puesto ?? '' }}<br>{{ $data->firmante->name ?? '' }}</strong>
         </span>
     </p>
     <p class="textx">
