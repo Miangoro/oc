@@ -111,7 +111,7 @@
         }
 
         .pagenum:before {
-            content: "Página " counter(page) " de 1" ;
+            content: "Página " counter(page) " de 2" ;
         }
 
         .img-footer {
