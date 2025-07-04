@@ -13,7 +13,7 @@
     'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
     'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss',
     'resources/assets/vendor/libs/spinkit/spinkit.scss'
-    
+
 ])
 @endsection
 
@@ -33,6 +33,13 @@
 @endsection
 
 @section('page-script')
+<script>
+  window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar revisión del personal'));
+  window.puedeEditarElUsuario = @json(auth()->user()->can('Editar revisión del personal'));
+  window.puedeVerHistorialElUsuario = @json(auth()->user()->can('Historial revisión del personal'));
+  window.puedeAprobarElUsuario = @json(auth()->user()->can('Aprobar revisión del personal'));
+  window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar revisión del personal'));
+</script>
 @vite(['resources/js/certificados_personal.js'])
 @endsection
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -42,7 +49,7 @@
 <div class="row g-6 mb-6 justify-content-center">
     <div class="col-sm-6 col-md-6 col-xl-4">
         <div class="card h-100">
-            <div class="card-body d-flex flex-column"> 
+            <div class="card-body d-flex flex-column">
                 <div class="d-flex justify-content-between">
                     <div class="me-1">
                         <p class="text-heading mb-1 fw-bold">Instalaciones</p>
@@ -58,7 +65,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between mt-auto"> 
+                <div class="d-flex justify-content-between mt-auto">
                     <div class="me-1">
                         <div class="d-flex align-items-center">
                             <h4 class="mb-1 me-2">{{ $EstadisticasInstalaciones['certificadosPendientes'] }}</h4>
@@ -76,9 +83,9 @@
                 </div>
 
             </div>
-        </div>        
+        </div>
     </div>
-    
+
     <div class="col-sm-6 col-md-6 col-xl-4">
         <div class="card h-100">
             <div class="card-body d-flex flex-column">
@@ -97,7 +104,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between mt-auto"> 
+                <div class="d-flex justify-content-between mt-auto">
                     <div class="me-1">
                         <div class="d-flex align-items-center">
                             <h4 class="mb-1 me-2">{{ $EstadisticasGranel['certificadosPendientes'] }}</h4>
@@ -135,7 +142,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between mt-auto"> 
+                <div class="d-flex justify-content-between mt-auto">
                     <div class="me-1">
                         <div class="d-flex align-items-center">
                             <h4 class="mb-1 me-2">{{ $EstadisticasExportacion['certificadosPendientes'] }}</h4>
@@ -155,7 +162,7 @@
         </div>
     </div>
 </div>
-    
+
 <div class="card">
     <div class="card-header pb-0">
         <h3 class="card-title mb-0">Revisión de certificados por parte del personal</h3>

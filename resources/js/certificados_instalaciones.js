@@ -46,6 +46,21 @@ $('#edit_fecha_emision').on('change', function() {
 
 
  $(function () {
+    let buttons = [];
+
+  // Si tiene permiso, agregas el botón
+  if (puedeRegistrarCertificado) {
+    buttons.push({
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo certificado</span>',
+          className: 'add-new btn btn-primary waves-effect waves-light',
+          attr: {
+            'data-bs-toggle': 'modal',
+            'data-bs-dismiss': 'modal',
+            'data-bs-target': '#ModalAgregar'
+          }
+    });
+  }
+
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
   select2 = $('.select2'),
@@ -317,42 +332,88 @@ initializeSelect2(select2Elements);
            title: 'Acciones',
            searchable: false,
            orderable: false,
-           render: function (data, type, full, meta) {
-            /*return (
-              '<div class="d-flex align-items-center gap-50">' +
-                `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info') + `" data-bs-toggle="dropdown">` +
-                (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') +
-                '</button>' +
-                '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar" data-bs-toggle="modal" data-bs-target="#ModalEditar">` + '<i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>' +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
-                  `<a data-id="${full['id_certificado']}"  data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-dark" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">` + '<i class="text-warning ri-user-search-fill"></i> Asignar revisor</a>' +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir" data-bs-toggle="modal" data-bs-target="#ModalReexpedir">` + '<i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>' +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar">` + '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>' +
-                '</div>' +
-              '</div>'
-            );*/
-            return (
-                '<div class="d-flex align-items-center gap-50">' +
-                `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger' : 'btn-info') + `" data-bs-toggle="dropdown">` +
-                (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') +
-                '</button>' +
+            render: function (data, type, full, meta) {
+              if (full['estatus'] == 1) {
+                if (window.puedeVerTrazabilidadCertificado) {
+                  return `
+                    <div class="d-flex align-items-center gap-50">
+                      <button class="btn btn-sm btn-danger disabled">
+                        Cancelado
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end m-0">
+                        <a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
+                          data-bs-toggle="modal" data-bs-target="#ModalTracking"
+                          class="dropdown-item waves-effect text-black trazabilidad">
+                          <i class="ri-history-line text-secondary"></i> Trazabilidad
+                        </a>
+                      </div>
+                    </div>
+                  `;
+                } else {
+                  return `
+                    <button class="btn btn-sm btn-danger disabled">Cancelado</button>
+                  `;
+                }
+              }
 
-                '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                ( full['estatus'] == 1 ?  //Mostrar solo trazabilidad si está cancelado
-                  `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>`
-                :// Mostrar todas las opciones
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar" data-bs-toggle="modal" data-bs-target="#ModalEditar">` + '<i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>' +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
-                  `<a data-id="${full['id_certificado']}"  data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-dark" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">` + '<i class="text-warning ri-user-search-fill"></i> Asignar revisor</a>' +
-                  `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>` +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir" data-bs-toggle="modal" data-bs-target="#ModalReexpedir">` + '<i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>' +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar">` + '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>'
-                ) +
-                '</div>' +
-                '</div>'
-            );  
-           }
+              let acciones = '';
+
+              if (window.puedeEditarCertificado) {
+                acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar" data-bs-toggle="modal" data-bs-target="#ModalEditar">
+                              <i class="ri-edit-box-line ri-20px text-info"></i> Editar
+                            </a>`;
+              }
+
+              if (window.puedeSubirCertificado) {
+                acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
+                              <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF
+                            </a>`;
+              }
+
+              if (window.puedeAsignarRevisorCertificado) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-dark" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">
+                              <i class="text-warning ri-user-search-fill"></i> Asignar revisor
+                            </a>`;
+              }
+
+              if (window.puedeVerTrazabilidadCertificado) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad">
+                              <i class="ri-history-line text-secondary"></i> Trazabilidad
+                            </a>`;
+              }
+
+              if (window.puedeReexpedirCertificado) {
+                acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir" data-bs-toggle="modal" data-bs-target="#ModalReexpedir">
+                              <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar
+                            </a>`;
+              }
+
+              if (window.puedeEliminarCertificado) {
+                acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar">
+                              <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
+                            </a>`;
+              }
+
+              if (!acciones.trim()) {
+                return `
+                  <button class="btn btn-sm btn-secondary" disabled>
+                    <i class="ri-lock-line ri-20px me-1"></i> Opciones
+                  </button>
+                `;
+              }
+
+              return `
+                <div class="d-flex align-items-center gap-50">
+                  <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                    <i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end m-0">
+                    ${acciones}
+                  </div>
+                </div>
+              `;
+            }
+
          }
        ],
        order: [[1, 'desc']],
@@ -378,158 +439,8 @@ initializeSelect2(select2Elements);
                  "sPrevious": "Anterior"
                }
        },
-
        // Opciones Exportar Documentos
-       buttons: [
-         {
-           extend: 'collection',
-           className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-           text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-           buttons: [
-             {
-               extend: 'print',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-printer-line me-1" ></i>Print',
-               className: 'dropdown-item',
-               exportOptions: {
-                 columns: [1, 2, 3, 4, 5, 6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               },
-               customize: function (win) {
-                 $(win.document.body)
-                   .css('color', config.colors.headingColor)
-                   .css('border-color', config.colors.borderColor)
-                   .css('background-color', config.colors.body);
-                 $(win.document.body)
-                   .find('table')
-                   .addClass('compact')
-                   .css('color', 'inherit')
-                   .css('border-color', 'inherit')
-                   .css('background-color', 'inherit');
-               }
-             },
-             {
-               extend: 'csv',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-file-text-line me-1" ></i>Csv',
-               className: 'dropdown-item',
-               exportOptions: {
-                 columns: [1, 2, 3, 4, 5 ,6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             },
-             {
-               extend: 'excel',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-file-excel-line me-1"></i>Excel',
-               className: 'dropdown-item',
-               exportOptions: {
-                columns: [1, 2, 3, 4, 5 ,6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             },
-             {
-               extend: 'pdf',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
-               className: 'dropdown-item',
-               exportOptions: {
-                columns: [1, 2, 3, 4, 5 ,6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             },
-             {
-               extend: 'copy',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-file-copy-line me-1"></i>Copy',
-               className: 'dropdown-item',
-               exportOptions: {
-                columns: [1, 2, 3, 4, 5 ,6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             }
-           ]
-         },
-         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo certificado</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'modal',
-            'data-bs-dismiss': 'modal',
-            'data-bs-target': '#ModalAgregar'
-          }
-        }
-       ],
+       buttons: buttons,
         responsive: {
          details: {
            display: $.fn.dataTable.Responsive.display.modal({
@@ -1624,14 +1535,14 @@ $(document).on('click', '.pdf', function () {
       var url_pdf = '../pdf_bitacora_revision_certificado_granel/' + id_revisor;
     }
     //if (tipoRevision === 'Exportación') {
-    if (tipoRevision === 2) {  
+    if (tipoRevision === 2) {
       var url_pdf = '../pdf_bitacora_revision_personal/' + id_revisor;
     }
-    if (tipoRevision === 1) {  
+    if (tipoRevision === 1) {
       var url_pdf = '../pdf_bitacora_revision_personal/' + id_revisor;
     }
 
-    
+
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
     $('#cargando').show();
     $('#pdfViewer').hide();
@@ -1650,7 +1561,7 @@ $(document).on('click', '.pdf', function () {
       $('#pdfViewer').show();
     });
 });
-  
+
 ///VER TRAZABILIDAD
 $(document).on('click', '.trazabilidad', function () {
   var id_certificado = $(this).data('id');
@@ -1673,7 +1584,7 @@ $(document).on('click', '.trazabilidad', function () {
         .border-danger { border: 2px solid #ff0000 !important; }
       `)
       .appendTo('head');
-      
+
 
       // Extraemos y guardamos los Vo.Bo. (solo uno de cada)
       logs.forEach(function (log) {

@@ -162,55 +162,95 @@ $(function () {
           targets: 9,
           title: 'Acciones',
           render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-              // Botón de Opciones
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">' +
-              '<i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>' +
-              '</button>' +
-              // Menú desplegable
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              // Botón para revisar
-              `<a class="dropdown-item waves-effect text-info cuest" ` +
-              `href="/add_revision/${full['id_revision']}" ` +
-              `data-id="${full['id_revision']}" ` +
-              `data-revisor-id="${full['id_revisor']}" ` +
-              `data-dictamen-id="${full['id_certificado']}" ` +
-              `data-num-certificado="${full['num_certificado']}" ` +
-              `data-num-dictamen="${full['num_dictamen']}" ` +
-              `data-tipo-dictamen="${full['tipo_dictamen']}" ` +
-              `data-fecha-vigencia="${full['fecha_vigencia']}" ` +
-              `data-fecha-vencimiento="${full['fecha_vigencia']}" ` +
-              `data-tipo="${full['tipo_dictamen']}" ` +
-              `data-tipo_revision="${full['tipo_revision']}" ` +
+            const puedeRevisar   = window.puedeAgregarElUsuario;
+            const puedeEditar    = window.puedeEditarElUsuario;
+            const puedeHistorial = window.puedeVerHistorialElUsuario;
+            const puedeAprobar   = window.puedeAprobarElUsuario;
+            const puedeEliminar  = window.puedeEliminarElUsuario;
 
-              `data-bs-target="#fullscreenModal">` +
-              '<i class="ri-eye-fill ri-20px text-info"></i> Revisar' +
-              '</a>' +
-              // Botón para editar revisión
-              `<a class="dropdown-item waves-effect text-primary editar-revision" ` +
-              `href="/edit_revision/${full['id_revision']}" ` +
-              `data-id="${full['id_revision']}" ` +
-              `data-tipo="${full['tipo_dictamen']}" ` +
-              `data-tipo_revision="${full['tipo_revision']}" ` +
-              `data-accion="editar" ` +  // Identificador
+            let acciones = '';
 
-              `>` +
-              '<i class="ri-pencil-fill ri-20px text-primary"></i> Editar Revisión' +
-              '</a>' +
-              // Botón para Aprobación
-              `<a data-id='${full['id_revision']}' data-num-certificado="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAprobacion" class="dropdown-item Aprobacion-record waves-effect text-success">` +
-              '<i class="ri-checkbox-circle-line text-success"></i> Aprobación' +
-              '</a>' +
-              // Botón para Historial
-              `<a data-id='${full['id_revision']}' class="dropdown-item waves-effect text-warning abrir-historial" ` +
-              `data-bs-toggle="modal" data-bs-target="#historialModal">` +
-              '<i class="ri-history-line text-warning"></i> Historial' +
-              '</a>' +
-              '</div>' +
-              '</div>'
-            );
-         }
+            // Revisar (Registrar revisión del personal)
+            if (puedeRevisar) {
+              acciones += `
+                <a class="dropdown-item waves-effect text-info cuest"
+                  href="/add_revision/${full['id_revision']}"
+                  data-id="${full['id_revision']}"
+                  data-revisor-id="${full['id_revisor']}"
+                  data-dictamen-id="${full['id_certificado']}"
+                  data-num-certificado="${full['num_certificado']}"
+                  data-num-dictamen="${full['num_dictamen']}"
+                  data-tipo-dictamen="${full['tipo_dictamen']}"
+                  data-fecha-vigencia="${full['fecha_vigencia']}"
+                  data-fecha-vencimiento="${full['fecha_vigencia']}"
+                  data-tipo="${full['tipo_dictamen']}"
+                  data-tipo_revision="${full['tipo_revision']}"
+                  data-bs-target="#fullscreenModal">
+                  <i class="ri-eye-fill ri-20px text-info"></i> Revisar
+                </a>`;
+            }
+
+            // Editar revisión
+            if (puedeEditar) {
+              acciones += `
+                <a class="dropdown-item waves-effect text-primary editar-revision"
+                  href="/edit_revision/${full['id_revision']}"
+                  data-id="${full['id_revision']}"
+                  data-tipo="${full['tipo_dictamen']}"
+                  data-tipo_revision="${full['tipo_revision']}"
+                  data-accion="editar">
+                  <i class="ri-pencil-fill ri-20px text-primary"></i> Editar Revisión
+                </a>`;
+            }
+
+            // Aprobación
+            if (puedeAprobar) {
+              acciones += `
+                <a data-id='${full['id_revision']}' data-num-certificado="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAprobacion"
+                  class="dropdown-item Aprobacion-record waves-effect text-success">
+                  <i class="ri-checkbox-circle-line text-success"></i> Aprobación
+                </a>`;
+            }
+
+            // Historial
+            if (puedeHistorial) {
+              acciones += `
+                <a data-id='${full['id_revision']}' class="dropdown-item waves-effect text-warning abrir-historial"
+                  data-bs-toggle="modal" data-bs-target="#historialModal">
+                  <i class="ri-history-line text-warning"></i> Historial
+                </a>`;
+            }
+
+            // Eliminar (si aplica)
+            if (puedeEliminar) {
+              acciones += `
+                <a data-id='${full['id_revision']}' class="dropdown-item waves-effect text-danger eliminar-revision">
+                  <i class="ri-delete-bin-7-line text-danger ri-20px"></i> Eliminar
+                </a>`;
+            }
+
+            // Si no tiene ningún permiso
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+
+            // Retornar dropdown con acciones válidas
+            return `
+              <div class="d-flex align-items-center gap-50">
+                <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="ri-settings-5-fill"></i> Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end m-0">
+                  ${acciones}
+                </div>
+              </div>
+            `;
+          }
+
         }
       ],
       order: [[1, 'desc']],
