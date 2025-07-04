@@ -133,6 +133,40 @@
             white-space: nowrap;
             z-index: -1;
         }
+
+         /*inicia firma digital DIV*/
+    .images-container {
+        position: relative;
+        width: 100%;
+        /*vertical-align: bottom;*/
+    }
+    .image-right {
+        position: absolute;
+        width: 200px;
+        right: 10px;
+        margin-top: -5px;
+    }
+    .sello {
+        position: absolute;
+        right: 5%;
+        margin-top: -13px;
+        font-size: 11px;
+        font-family: 'Arial Negrita' !important;
+    }
+    .textx {
+        line-height: 0.5;
+        font-size: 9px;
+        font-family: Arial, Helvetica, Verdana;
+    }
+    .textsello {
+        width: 85%; 
+        text-align: left;
+        word-wrap: break-word;
+        margin-top: -5px;
+        line-height: 1.2;
+        font-size: 8px;
+        font-family: Arial, Helvetica, Verdana;
+    }
     </style>
 </head>
 
@@ -457,10 +491,10 @@
     </p>
     
 
-    <div class="titulo2"><b>AUTORIZÓ</b></div>
+    <!--<div class="titulo2"><b>AUTORIZÓ</b></div>
     <div class="titulo2" style="margin-top: 0;">
         <b>{{ $data->firmante->name }}<br>{{ $data->firmante->puesto }}</b>
-    </div>
+    </div>-->
 
     <!--FIRMA DIGITAL-->
 <div>
