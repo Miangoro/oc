@@ -288,7 +288,7 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
             if (!acciones.trim()) {
               return `
                 <button class="btn btn-sm btn-secondary" disabled>
-                  <i class="ri-lock-line ri-20px me-1"></i> Opciones
+                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
                 </button>
               `;
             }

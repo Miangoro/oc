@@ -37,6 +37,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar activación de hologramas'));
+  window.puedeEditarElUsuario = @json(auth()->user()->can('Editar activación de hologramas'));
+  window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar activación de hologramas'));
+</script>
 @vite(['resources/js/activacion_hologramas.js'])
 @endsection
 

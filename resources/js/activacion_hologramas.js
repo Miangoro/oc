@@ -1,6 +1,20 @@
 'use strict';
 
 $(function () {
+  let buttons = [];
+
+  // Si tiene permiso, agregas el botón
+  if (puedeAgregarElUsuario) {
+    buttons.push({
+      text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Activar hologramas</span>',
+      className: 'add-new btn btn-primary waves-effect waves-light',
+      attr: {
+        'data-bs-toggle': 'modal',
+        'data-bs-dismiss': 'modal',
+        'data-bs-target': '#activarHologramas'
+      }
+    });
+  }
   var dt_user_table = $('.datatables-users'),
     select2Elements = $('.select2'),
     userView = baseUrl + 'app/user/view/account',
@@ -30,8 +44,8 @@ $(function () {
         { data: 'marca' },
         { data: 'lote_granel' },
         { data: 'lote_envasado' },
-        { 
-          data: 'folios', 
+        {
+          data: 'folios',
           render: function (data, type, row) {
             return '<span style="font-size:12px">' + data + '</span>';
           }
@@ -65,21 +79,30 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-            
-              `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#edit_activarHologramas" href="javascript:;" class="dropdown-item edit-activos "><i class="ri-edit-box-line ri-20px text-info"></i> Editar activación</a>` +
-              `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar activación</a>` +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="' +
-              userView +
-              '" class="dropdown-item">View</a>' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-              '</div>' +
-              '</div>'
-            );
+                      let acciones = '';
+            if (window.puedeEditarElUsuario) {
+              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#edit_activarHologramas" href="javascript:;" class="dropdown-item edit-activos "><i class="ri-edit-box-line ri-20px text-info"></i> Editar activación</a>`;
+            }
+            if (window.puedeEliminarElUsuario) {
+              acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar activación</a>`;
+            }
+            // Si no hay acciones, no retornar el dropdown
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+            // Si hay acciones, construir el dropdown
+            const dropdown = `<div class="d-flex align-items-center gap-50">
+              <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>
+              <div class="dropdown-menu dropdown-menu-end m-0">
+                  ${acciones}
+                </div>
+              </div>
+            `;
+            return dropdown;
           }
         }
       ],
@@ -106,161 +129,7 @@ $(function () {
           sPrevious: 'Anterior'
         }
       },
-      buttons: [
-        {
-          extend: 'collection',
-          className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-          text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-          buttons: [
-            {
-              extend: 'print',
-              title: 'Categorías de Agave',
-              text: '<i class="ri-printer-line me-1" ></i>Print',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-                // prevent avatar to be print
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              },
-              customize: function (win) {
-                //customize print view for dark
-                $(win.document.body)
-                  .css('color', config.colors.headingColor)
-                  .css('border-color', config.colors.borderColor)
-                  .css('background-color', config.colors.body);
-                $(win.document.body)
-                  .find('table')
-                  .addClass('compact')
-                  .css('color', 'inherit')
-                  .css('border-color', 'inherit')
-                  .css('background-color', 'inherit');
-              }
-            },
-            {
-              extend: 'csv',
-              title: 'Users',
-              text: '<i class="ri-file-text-line me-1" ></i>Csv',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-                // prevent avatar to be print
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'excel',
-              title: 'Categorías de Agave',
-              text: '<i class="ri-file-excel-line me-1"></i>Excel',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-                // prevent avatar to be display
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'pdf',
-              title: 'Categorías de Agave',
-              text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'copy',
-              title: 'Categorías de Agave',
-              text: '<i class="ri-file-copy-line me-1"></i>Copy',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-                // prevent avatar to be copy
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Activar hologramas</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'modal',
-            'data-bs-dismiss': 'modal',
-            'data-bs-target': '#activarHologramas' 
-          }
-        }
-      ],
+      buttons: buttons,
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({
@@ -325,81 +194,94 @@ $(function () {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-  
+
     // Función que obtiene las marcas de la empresa seleccionada
     function obtenerMarcas() {
-      var empresa = $("#id_empresa").val();
+      var empresa = $('#id_empresa').val();
       // Hacer una petición AJAX para obtener los detalles de la empresa
       $.ajax({
         url: '/getDatos/' + empresa,
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
           // Cargar los detalles de las marcas en el select
-          var contenido = "";
+          var contenido = '';
           for (let index = 0; index < response.marcas.length; index++) {
-            contenido = '<option value="' + response.marcas[index].id_marca + '">' + response.marcas[index].marca + '</option>' + contenido;
+            contenido =
+              '<option value="' +
+              response.marcas[index].id_marca +
+              '">' +
+              response.marcas[index].marca +
+              '</option>' +
+              contenido;
           }
-  
+
           if (response.marcas.length == 0) {
             contenido = '<option value="">Sin marcas registradas</option>';
           }
           $('#id_marca').html(contenido);
-  
+
           // Revalidar el campo 'id_marca' para verificar la selección
           formValidator.revalidateField('id_marca');
         },
-        error: function() {
+        error: function () {
           //alert('Error al cargar las marcas.');
         }
       });
     }
-  
+
     // Función que obtiene las direcciones de la empresa seleccionada
     function obtenerDirecciones() {
-      var empresa = $("#id_empresa").val();
+      var empresa = $('#id_empresa').val();
       // Hacer una petición AJAX para obtener los detalles de la empresa
       $.ajax({
         url: '/getDatos/' + empresa,
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
           // Filtrar las direcciones para que solo se incluyan las que tienen tipo_direccion igual a 3
-          var direccionesFiltradas = response.direcciones.filter(function(direccion) {
+          var direccionesFiltradas = response.direcciones.filter(function (direccion) {
             return direccion.tipo_direccion == 3;
           });
-  
+
           // Cargar los detalles de las direcciones en el select
-          var contenido = "";
+          var contenido = '';
           for (let index = 0; index < direccionesFiltradas.length; index++) {
-            contenido += '<option value="' + direccionesFiltradas[index].id_direccion + '">' +
-              'Nombre de destinatario: ' + direccionesFiltradas[index].nombre_recibe +
-              ' - Dirección: ' + direccionesFiltradas[index].direccion +
-              ' - Correo: ' + direccionesFiltradas[index].correo_recibe +
-              ' - Celular: ' + direccionesFiltradas[index].celular_recibe +
+            contenido +=
+              '<option value="' +
+              direccionesFiltradas[index].id_direccion +
+              '">' +
+              'Nombre de destinatario: ' +
+              direccionesFiltradas[index].nombre_recibe +
+              ' - Dirección: ' +
+              direccionesFiltradas[index].direccion +
+              ' - Correo: ' +
+              direccionesFiltradas[index].correo_recibe +
+              ' - Celular: ' +
+              direccionesFiltradas[index].celular_recibe +
               '</option>';
           }
-  
+
           if (direccionesFiltradas.length == 0) {
             contenido = '<option value="">Sin direcciones registradas</option>';
           }
-  
+
           $('.id_direccion').html(contenido);
-  
+
           // Revalidar el campo 'id_direccion' para verificar la selección
           formValidator.revalidateField('id_direccion');
         },
-        error: function() {
+        error: function () {
           //alert('Error al cargar las direcciones.');
         }
       });
     }
-  
+
     // Event listener para cuando cambie la selección de empresa
     $('#id_empresa').on('change', function () {
-      obtenerMarcas();  // Cargar las marcas
-      obtenerDirecciones();  // Cargar las direcciones
-      formValidator.revalidateField('id_empresa');  // Revalidar el campo de empresa
+      obtenerMarcas(); // Cargar las marcas
+      obtenerDirecciones(); // Cargar las direcciones
+      formValidator.revalidateField('id_empresa'); // Revalidar el campo de empresa
     });
-  
+
     // Validación del formulario
     const addHologramasForm = document.getElementById('addHologramasForm');
     const formValidator = FormValidation.formValidation(addHologramasForm, {
@@ -475,7 +357,7 @@ $(function () {
       }
     }).on('core.form.valid', function (e) {
       var formData = new FormData(addHologramasForm);
-  
+
       $.ajax({
         url: '/hologramas/store',
         type: 'POST',
@@ -508,21 +390,20 @@ $(function () {
     });
   });
 
-// Limpiar campos al cerrar el modal
-$('#addHologramas').on('hidden.bs.modal', function () {
-  // Restablecer select de empresa
-  $('#id_empresa').val('');
-  $('#id_marca').html('');
-  $('.id_direccion').html('');
-  $('#folio').val('');
-  $('#comentarios').val(''); 
-  $('#id_solicitante').val('');
-  $('#cantidad_hologramas').val('');
-  
-  // Restablecer la validación del formulario
-  formValidator.resetForm(true);
-});
+  // Limpiar campos al cerrar el modal
+  $('#addHologramas').on('hidden.bs.modal', function () {
+    // Restablecer select de empresa
+    $('#id_empresa').val('');
+    $('#id_marca').html('');
+    $('.id_direccion').html('');
+    $('#folio').val('');
+    $('#comentarios').val('');
+    $('#id_solicitante').val('');
+    $('#cantidad_hologramas').val('');
 
+    // Restablecer la validación del formulario
+    formValidator.resetForm(true);
+  });
 
   initializeSelect2(select2Elements);
 
@@ -993,51 +874,47 @@ $('#addHologramas').on('hidden.bs.modal', function () {
   $(document).ready(function () {
     // Delegación de eventos para escuchar el cambio en los inputs de cada fila
     $(document).on('input', '.folio_inicial, .folio_final', function () {
-        var row = $(this).closest('.folio-row'); // Encuentra la fila más cercana
-        var folioInicial = row.find('.folio_inicial').val();
-        var folioFinal = row.find('.folio_final').val();
-        var id_solicitud = $('#id_solicitudActivacion').val();
-        var subtotal = folioFinal - folioInicial;
-        
-        
-        // Actualizar el subtotal en la fila correspondiente
-        row.find(".subtotal").text(subtotal+1); 
-        
-        // Verificar si ambos campos tienen valores
-        if (folioInicial && folioFinal) {
-            $.ajax({
-                url: '/verificar-folios',
-                type: 'POST',
-                data: {
-                    folio_inicial: folioInicial,
-                    folio_final: folioFinal,
-                    id_solicitud: id_solicitud
-                },
-                success: function (response) {
-                    var mensajeDiv = row.find('.mensaje'); // Obtener el mensaje en la fila actual
-                    mensajeDiv.html(response.success || 'Rango de folios disponible.')
-                              .removeClass('alert-danger alert-warning')
-                              .addClass('alert alert-success')
-                              .show();
-                              $("#btnRegistrar").prop("disabled", false);
-                  
-                },
-                error: function (xhr) {
-                    var mensajeDiv = row.find('.mensaje'); // Obtener el mensaje en la fila actual
-                    mensajeDiv.html(xhr.responseJSON.error || 'Ocurrió un error.')
-                              .removeClass('alert-success alert-warning')
-                              .addClass('alert alert-danger')
-                              .show();
-                              $("#btnRegistrar").prop("disabled", true);
+      var row = $(this).closest('.folio-row'); // Encuentra la fila más cercana
+      var folioInicial = row.find('.folio_inicial').val();
+      var folioFinal = row.find('.folio_final').val();
+      var id_solicitud = $('#id_solicitudActivacion').val();
+      var subtotal = folioFinal - folioInicial;
 
-                }
-            });
-        }
+      // Actualizar el subtotal en la fila correspondiente
+      row.find('.subtotal').text(subtotal + 1);
+
+      // Verificar si ambos campos tienen valores
+      if (folioInicial && folioFinal) {
+        $.ajax({
+          url: '/verificar-folios',
+          type: 'POST',
+          data: {
+            folio_inicial: folioInicial,
+            folio_final: folioFinal,
+            id_solicitud: id_solicitud
+          },
+          success: function (response) {
+            var mensajeDiv = row.find('.mensaje'); // Obtener el mensaje en la fila actual
+            mensajeDiv
+              .html(response.success || 'Rango de folios disponible.')
+              .removeClass('alert-danger alert-warning')
+              .addClass('alert alert-success')
+              .show();
+            $('#btnRegistrar').prop('disabled', false);
+          },
+          error: function (xhr) {
+            var mensajeDiv = row.find('.mensaje'); // Obtener el mensaje en la fila actual
+            mensajeDiv
+              .html(xhr.responseJSON.error || 'Ocurrió un error.')
+              .removeClass('alert-success alert-warning')
+              .addClass('alert alert-danger')
+              .show();
+            $('#btnRegistrar').prop('disabled', true);
+          }
+        });
+      }
     });
-});
-
-
-
+  });
 
   //Activar hologramas
   $(document).on('click', '.activar_holograma', function () {
@@ -1387,16 +1264,16 @@ $('#addHologramas').on('hidden.bs.modal', function () {
                     <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
                       ${folio_final}
                     </a>
-                  </td> 
+                  </td>
                      <td>
                       ${mermas}
                      </td>
-            
+
                   <td>
                 <button type="button" class="btn btn-info">
-                  <a href="javascript:;" class="edit-activos" style="color:#FFF" 
-                    data-id="${item.id}" 
-                    data-bs-toggle="modal" 
+                  <a href="javascript:;" class="edit-activos" style="color:#FFF"
+                    data-id="${item.id}"
+                    data-bs-toggle="modal"
                     data-bs-target="#edit_activarHologramas">
                     <i class="ri-edit-fill"></i> Editar
                   </a>
@@ -1464,9 +1341,6 @@ $('#addHologramas').on('hidden.bs.modal', function () {
         $('#edit_contenidoRango').append(newRow);
       });
 
- 
-    
-
       $('#edit_contenidoMermas').empty();
       /*data.mermas.forEach(function (mermasHolo) {
         var newRow = `
@@ -1484,8 +1358,7 @@ $('#addHologramas').on('hidden.bs.modal', function () {
       $('#edit_activarHologramas').modal('show');
       $('.folio_inicial, .folio_final').each(function () {
         $(this).trigger('input'); // Dispara manualmente el evento para ejecutar la validación
-       
-    });
+      });
     }).fail(function (jqXHR, textStatus, errorThrown) {
       console.error('Error: ' + textStatus + ' - ' + errorThrown);
       Swal.fire({
@@ -1551,7 +1424,7 @@ $('#addHologramas').on('hidden.bs.modal', function () {
     $('.add-row-add').click(function () {
       // Añade una nueva fila
       var newRow = `
-          <tr class="folio-row"> 
+          <tr class="folio-row">
               <th>
                   <button type="button" class="btn btn-danger remove-row" disabled>
                       <i class="ri-delete-bin-5-fill"></i>
@@ -1602,13 +1475,13 @@ $('#addHologramas').on('hidden.bs.modal', function () {
   //recepcion hologramas
   /*   $(document).on('click', '.edit-recepcion', function () {
       var id_solicitud = $(this).data('id');
-  
+
       $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
-  
-  
+
+
         // Rellenar el formulario con los datos obtenidos
         $('#recepcion_id_solicitud').val(data.id_solicitud);
-  
+
         $('#recepcion_empresa').val(data.id_empresa);
         // Mostrar el modal de edición
         $('#addRecepcion').modal('show');
@@ -1656,9 +1529,9 @@ $('#addHologramas').on('hidden.bs.modal', function () {
       }
     }).on('core.form.valid', function (e) {
       // Prevenir el comportamiento predeterminado
-  
+
       var formData = new FormData(addRecepcionForm);
-  
+
       $.ajax({
         url: '/solicitud_holograma/updateRecepcion',
         type: 'POST',
@@ -1692,11 +1565,11 @@ $('#addHologramas').on('hidden.bs.modal', function () {
       });
     }); */
 
-   /* $(document).ready(function () {
-      $('#id_inspeccion').change(function () { 
+  /* $(document).ready(function () {
+      $('#id_inspeccion').change(function () {
           var id_inspeccion = $(this).val(); // Obtener el valor seleccionado
-         
-  
+
+
           if (id_inspeccion) {
               $.ajax({
                   url: '/getDatosSolicitud/' + id_inspeccion, // URL del backend
@@ -1716,10 +1589,10 @@ $('#addHologramas').on('hidden.bs.modal', function () {
                           $('#no_lote_envasado').val(response.data.lote_envasado.nombre);
                           $('#lugar_envasado').val(response.data.instalacion.direccion_completa);
 
-                          
-                          
-                          
-                        
+
+
+
+
                       } else {
                           Swal.fire('Error', 'No se encontraron datos', 'error');
                       }
@@ -1731,6 +1604,4 @@ $('#addHologramas').on('hidden.bs.modal', function () {
           }
       });
   });*/
-
-
 });

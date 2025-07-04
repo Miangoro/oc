@@ -37,6 +37,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar guías de traslado'));
+  window.puedeEditarElUsuario = @json(auth()->user()->can('Editar guías de traslado'));
+  window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar guías de traslado'));
+</script>
 @vite(['resources/js/guias_maguey_agave.js'])
 @endsection
 
