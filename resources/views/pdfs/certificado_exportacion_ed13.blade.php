@@ -234,7 +234,7 @@
             Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
         @endif
         <br>Certificado de Exportación NOM-070-SCFI-2016 F7.1-01-23 Ed 13
-        <br>Entrada en vigor: 01-07-2025
+        <br>Entrada en vigor: 01-07-2025<br>  
         <span class="pagenum"></span>
     </p>
     

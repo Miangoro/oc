@@ -738,6 +738,8 @@ public function MostrarCertificadoExportacion($id_certificado)
     //Busca el registro del certificado que tiene el id igual a $id_sustituye
     Certificado_Exportacion::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
+
+
     $url = route('QR-certificado', ['id' => $data->id_certificado]);
     $qrCode = new QrCode(
         data: $url,
@@ -835,9 +837,39 @@ public function MostrarCertificadoExportacion($id_certificado)
     } else {
         $edicion = 'pdfs.certificado_exportacion_ed13';
     }
+    
+
+    $options = new Options();
+    $options->set('isHtml5ParserEnabled', true);
+    $options->set('isRemoteEnabled', true);
+    $options->set('isPhpEnabled', true); // necesario para page_script
+
+    $dompdf = new Pdf($options);
+
+    $html = View::make('ruta.a.mi.vista', [
+        'edicion' => $edicion,
+        'pdf' => $pdf,
+        // ...
+    ])->render();
+
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+
+    // Agrega numeración: Página X de Y
+    $dompdf->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
+        $text = "Página $pageNumber de $pageCount";
+        $font = $fontMetrics->getFont('Helvetica', 'normal');
+        $size = 10;
+        $width = $fontMetrics->getTextWidth($text, $font, $size);
+        $x = ($canvas->get_width() - $width) / 2;
+        $canvas->text($x, 820, $text, $font, $size);
+    });
+
+    $dompdf->render();
+    return $dompdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
     //nombre al descargar
     //return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
-    return Pdf::loadView($edicion, $pdf)->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
+    //return Pdf::loadView($edicion, $pdf)->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
 }
 
 ///PDF SOLICITUD CERTIFICADO
