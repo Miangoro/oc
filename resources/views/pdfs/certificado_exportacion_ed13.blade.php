@@ -159,7 +159,7 @@
         font-family: Arial, Helvetica, Verdana;
     }
     .textsello {
-        width: 50%; 
+        width: 60%; 
         text-align: left;
         word-wrap: break-word;
         margin-top: -5px;
@@ -515,8 +515,8 @@
 
     <p class="textx" style="margin-top: -5px">
         <strong>AUTORIZÓ</strong>
-        <span style="margin-left: 54px; display: inline-block; text-align: center; position: relative;">
-            <strong>{{ $data->firmante->puesto ?? '' }}<br>{{ $data->firmante->name ?? '' }}</strong>
+        <span style="margin-left: 54px; display: inline-block; text-align: left; position: relative;">
+            <strong>{{ $data->firmante->puesto ?? '' }}<br><br>{{ $data->firmante->name ?? '' }}</strong>
         </span>
     </p>
     <p class="textx">
