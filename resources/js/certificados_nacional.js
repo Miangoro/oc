@@ -417,7 +417,7 @@ if (dt_user_table.length) {
       },
 
       // Opciones NUEVO/FIRMAR/EXPORTAR/exportar default
-      buttons: buttons, buttons2, /* [ */
+      buttons: [buttons2, buttons], /* [ */
 /*         {//FIRMAR DOCUSIGN
           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Firmar Docusign</span>',
           className: 'btn btn-info waves-effect waves-light me-2',
