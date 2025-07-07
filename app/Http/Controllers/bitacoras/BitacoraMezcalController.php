@@ -303,4 +303,21 @@ class BitacoraMezcalController extends Controller
           return response()->json(['success' => 'Bitácora actualizada correctamente.']);
       }
 
+      public function firmarBitacora($id_bitacora)
+      {
+        try {
+          $bitacora = BitacoraMezcal::findOrFail($id_bitacora);
+          // Solo usuarios tipo 2 pueden firmar
+          if (auth()->user()->tipo === 2) {
+              $bitacora->id_firmante = auth()->id();
+              $bitacora->save();
+              return response()->json(['message' => 'Bitácora firmada correctamente.']);
+          }
+          return response()->json(['message' => 'No tienes permiso para firmar esta bitácora.'], 403);
+          }catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['message' => 'Error al firmar la bitácora.'], 500);
+          }
+      }
+
 }

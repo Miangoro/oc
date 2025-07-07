@@ -37,7 +37,7 @@ class BitacoraMezcal extends Model
         //INVENTARIO FINAL
         'volumen_final',
         'alcohol_final',
-
+        'id_firmante',
         'observaciones',
     ];
        public $timestamps = false;

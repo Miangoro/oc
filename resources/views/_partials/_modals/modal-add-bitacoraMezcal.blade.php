@@ -42,7 +42,7 @@
                                 <select id="tipo_op" name="tipo_op" class=" form-select"
                                     data-error-message="Por favor selecciona el tipo de operación">
                                     <option value="" disabled selected>Selecciona el tipo de operación</option>
-                                    <option value="Entrada">Entradas</option>
+                                    <option value="Entradas">Entradas</option>
                                     <option value="Salidas">Salidas</option>
                                 </select>
                                 <label for="tipo_op">Tipo de operación</label>

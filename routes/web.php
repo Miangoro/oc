@@ -942,9 +942,12 @@ Route::controller(CartaAsignacionController::class)->middleware(['auth'])->group
 Route::controller(BitacoraMezcalController::class)->middleware(['auth'])->group(function () {
     Route::get('/bitacoraMezcal', 'UserManagement')->name('bitacora-mezcal');
     Route::get('/bitacora_mezcal', 'PDFBitacoraMezcal');
+    Route::get('bitacora_mezcal/{id_bitacora}/edit', 'edit');
     Route::get('bitacoraMezcal-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
     Route::post('/bitacoraMezcalStore', 'store')->name('bitacora.store');
     Route::post('/bitacorasUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaBitacoraMezcal/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+
 });
 
 Route::resource('/bitacoraMezcal-list', BitacoraMezcalController::class)->middleware(['auth']);
