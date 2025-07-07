@@ -820,6 +820,10 @@
                     <b>Tipo:</b>
                     {{ $caracteristicas['tipo_analisis'] == 1 ? 'Análisis completo' : ($caracteristicas['tipo_analisis'] == 2 ? 'Ajuste de grado alcohólico' : '') }}
                     <br>
+                 @elseif($vigilancia_produccion === 'X')
+                    <b>Tapada:</b>
+                    {{ $caracteristicas['nombre_produccion'] ? ''  }}
+                    <br>
                 @elseif($inspeccion_envasado === 'X')
                     @if (!empty($datos->lote_granel->edad) && $datos->lote_granel->edad != 0)
                         <b>Edad:</b> {{ $datos->lote_granel->edad }}<br>
