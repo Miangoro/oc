@@ -49,7 +49,29 @@ $('#edit_fecha_emision').on('change', function () {
 
 ///Datatable (jquery)
 $(function () {
-
+  let buttons = [];
+  let buttons2 = [];
+  // Si tiene permiso, agregas el botón
+  if (puedeRegistrarCertificadoVentaNacional) {
+    buttons.push({
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Certificado</span>',
+          className: 'add-new btn btn-primary waves-effect waves-light',
+          attr: {
+            'data-bs-toggle': 'modal',
+            'data-bs-dismiss': 'modal',
+            'data-bs-target': '#ModalAgregar'
+          }
+    });
+  }
+    if (puedeFirmarCertificadoVentaNacional) {
+    buttons2.push({
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Firmar Docusign</span>',
+          className: 'btn btn-info waves-effect waves-light me-2',
+          action: function (e, dt, node, config) {
+            window.location.href = '/add_firmar_docusign';
+          }
+    });
+  }
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
@@ -157,7 +179,7 @@ if (dt_user_table.length) {
 
             return `
             <span class="fw-bold">Dictamen:</span> ${full['num_dictamen']}
-              <i data-id="${full['id_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" 
+              <i data-id="${full['id_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"
                 data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
               </i>
             <br><span class="fw-bold">Servicio:</span> ${$num_servicio}
@@ -166,7 +188,7 @@ if (dt_user_table.length) {
               <i data-id="${full['id_solicitud']}" data-folio="${$folio_solicitud}"
                 class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
                 data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
-              </i> 
+              </i>
             `;
           }
         },
@@ -184,7 +206,7 @@ if (dt_user_table.length) {
                 <b>Marca:</b> ${full['marca']} <br>
                 <b>Cajas:</b> ${full['cajas']} <br>
                 <b>Botellas:</b> ${full['botellas']}
-                
+
                 ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
               </div>`;
           }
@@ -225,7 +247,7 @@ if (dt_user_table.length) {
             } else {
               estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
             }
-            
+
             ///revisores PERSONAL
             var $revisor_personal = full['revisor_personal'];
             var $numero_revision_personal = full['numero_revision_personal'];
@@ -285,10 +307,10 @@ if (dt_user_table.length) {
 
             return estatus +
               `<div style="flex-direction: column; margin-top: 2px;">
-              <div class="small"> <b>Personal:</b> 
+              <div class="small"> <b>Personal:</b>
                 <span class="${colorClass}">${revision_oc} ${revisor_oc}</span>${icono_oc}
               </div>
-              <div style="display: inline;" class="small"> <b>Consejo:</b> 
+              <div style="display: inline;" class="small"> <b>Consejo:</b>
                 <span class="${colorClass2}">${revision2} ${revisor2}</span>${icono2}
               </div>
             </div> `;
@@ -302,23 +324,71 @@ if (dt_user_table.length) {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info') + `" data-bs-toggle="dropdown">` +
-              (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') +
-              '</button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-              `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-dark"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
-              `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor" class="dropdown-item waves-effect text-black reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
-              `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="' + userView + '" class="dropdown-item">View</a>' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-              '</div>' +
-              '</div>'
-            );
+            // Si está cancelado
+            if (full['estatus'] == 1) {
+              return `
+                <div class="d-flex align-items-center gap-50">
+                  <button class="btn btn-sm btn-danger disabled">Cancelado</button>
+                </div>
+              `;
+            }
+
+            // Acciones basadas en permisos
+            let acciones = '';
+
+            if (window.puedeEditarCertificadoVentaNacional) {
+              acciones += `
+                <a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar"
+                  href="javascript:;" class="dropdown-item text-dark editar">
+                  <i class="ri-edit-box-line ri-20px text-info"></i> Editar
+                </a>`;
+            }
+
+            if (window.puedeAsignarRevisorCertificadoVentaNacional) {
+              acciones += `
+                <a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal"
+                  class="dropdown-item waves-effect text-dark">
+                  <i class="text-warning ri-user-search-fill"></i> Asignar revisor
+                </a>`;
+            }
+
+            if (window.puedeReexpedirCertificadoVentaNacional) {
+              acciones += `
+                <a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor"
+                  class="dropdown-item waves-effect text-black reexpedir">
+                  <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar
+                </a>`;
+            }
+
+            if (window.puedeEliminarCertificadoVentaNacional) {
+              acciones += `
+                <a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar">
+                  <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
+                </a>`;
+            }
+
+            // Si no hay acciones disponibles
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+
+            // Render final
+            return `
+              <div class="d-flex align-items-center gap-50">
+                <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end m-0">
+                  ${acciones}
+                </div>
+              </div>
+            `;
           }
+
         }
       ],
 
@@ -347,8 +417,8 @@ if (dt_user_table.length) {
       },
 
       // Opciones NUEVO/FIRMAR/EXPORTAR/exportar default
-      buttons: [
-        {//FIRMAR DOCUSIGN
+      buttons: buttons, buttons2, /* [ */
+/*         {//FIRMAR DOCUSIGN
           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Firmar Docusign</span>',
           className: 'btn btn-info waves-effect waves-light me-2',
           action: function (e, dt, node, config) {
@@ -363,8 +433,8 @@ if (dt_user_table.length) {
             'data-bs-dismiss': 'modal',
             'data-bs-target': '#ModalAgregar'
           }
-        }
-      ],
+        } */
+     /*  ], */
 
       ///PAGINA RESPONSIVA
       responsive: {
@@ -656,7 +726,7 @@ $(document).ready(function () {
             var errorMessages = Object.keys(errors).map(function (key) {
               return errors[key].join('<br>');
             }).join('<br>');
-            /*var errorMessages = Object.values(errors).map(msgArray => 
+            /*var errorMessages = Object.values(errors).map(msgArray =>
               msgArray.join('<br>')).join('<br><hr>');*/
 
             Swal.fire({
@@ -1060,7 +1130,7 @@ $('#asignarRevisorModal').on('show.bs.modal', function (event) {
 
   $('#asignarRevisorForm').show();
 });
-  
+
 
 
 ///FORMATO PDF CERTIFICADO
@@ -1120,11 +1190,11 @@ $(document).on('click', '.pdfDictamen', function ()  {
     var pdfUrl = '/dictamen_envasado/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
-    
+
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
     spinner.show();
     iframe.hide();
-    
+
     //Cargar el PDF con el ID
     iframe.attr('src', pdfUrl);
     //Configurar el botón para abrir el PDF en una nueva pestaña
@@ -1147,11 +1217,11 @@ $(document).on('click', '.pdfSolicitud', function ()  {
   var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
-      
+
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
     spinner.show();
     iframe.hide();
-    
+
     //Cargar el PDF con el ID
     iframe.attr('src', pdfUrl);
     //Configurar el botón para abrir el PDF en una nueva pestaña
@@ -1176,7 +1246,7 @@ $(document).on('click', '.pdfActa', function () {
   //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
   spinner.show();
   iframe.hide();
-  
+
     //Cargar el PDF con el ID
     iframe.attr('src', '/files/' + id_acta);
     //Configurar el botón para abrir el PDF en una nueva pestaña
