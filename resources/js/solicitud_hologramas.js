@@ -25,6 +25,7 @@ $(function () {
         { data: '' },
         { data: 'id_solicitud' },
         { data: 'folio' },
+        { data: 'created_at' },
         { data: 'razon_social' },
         { data: 'id_solicitante' },
         { data: 'id_marca' },
@@ -40,13 +41,13 @@ $(function () {
 
             if (row.cantidad_hologramas != 'N/A') {
               cantidad_hologramas =
-                '<br><span class="fw-bold text-dark small">Solicitados:</span><span class="small"> ' +
+                '<br><span class="fw-bold small">Solicitados:</span><span class="small"> ' +
                 row.cantidad_hologramas +
                 '</span>';
             }
             if (row.activados != 'N/A') {
               activados =
-                '<br><span class="fw-bold text-dark small">Activados:</span><span class="small"> ' +
+                '<br><span class="fw-bold small">Activados:</span><span class="small"> ' +
                 row.activados +
                 '</span>';
             }
@@ -135,7 +136,7 @@ $(function () {
         },
         {
           // email verify
-          targets: 9,
+          targets: 10,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $verified = full['estatus'];
@@ -164,7 +165,7 @@ $(function () {
         },
         {
           // email verify
-          targets: 10,
+          targets: 11,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $id = full['id_solicitud'];

@@ -55,7 +55,8 @@
         <tr>
           <th></th>
           <th>Id</th>
-          <th>folio</th>
+          <th>Folio</th>
+          <th>Fecha</th>
           <th>Datos del cliente</th>
           <th>Solicitante</th>
           <th>Marca</th>
