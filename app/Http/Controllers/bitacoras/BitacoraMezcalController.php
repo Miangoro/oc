@@ -24,11 +24,17 @@ class BitacoraMezcalController extends Controller
 
     public function index(Request $request)
     {
+      $empresaId = $request->input('empresa');
+      $instalacionId = $request->input('instalacion');
+
+
         $columns = [
             1 => 'id',
             2 => 'fecha',
             3 => 'id_lote_granel',
         ];
+
+
 
         $search = $request->input('search.value');
         $totalData = BitacoraMezcal::count();
@@ -39,6 +45,17 @@ class BitacoraMezcalController extends Controller
         $order = $columns[$request->input('order.0.column')] ?? 'fecha';
         $dir = $request->input('order.0.dir');
         $query = BitacoraMezcal::query();
+
+        if ($empresaId) {
+            $query->whereHas('loteBitacora', function ($q) use ($empresaId, $instalacionId) {
+                if ($empresaId) {
+                    $q->where('id_empresa', $empresaId);
+                }
+                if ($instalacionId) {
+                    $q->where('id_instalacion', $instalacionId);
+                }
+            });
+        }
 
         if (!empty($search)) {
             $query->where(function ($query) use ($search) {
@@ -94,13 +111,38 @@ class BitacoraMezcalController extends Controller
         ]);
     }
 
-    public function PDFBitacoraMezcal() {
+/*     public function PDFBitacoraMezcal() {
         $bitacoras = BitacoraMezcal::with('loteBitacora')->orderBy('fecha', 'desc')->get();
       $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras'))
           ->setPaper([0, 0, 1190.55, 1681.75 ], 'landscape');
 
           return $pdf->stream('Bitácora Mezcal a Granel.pdf');
+    } */
+     public function PDFBitacoraMezcal(Request $request)
+    {
+        $empresaId = $request->query('empresa');
+        $instalacionId = $request->query('instalacion');
+
+        $bitacoras = BitacoraMezcal::with('loteBitacora')
+            ->when($empresaId, function ($query) use ($empresaId) {
+                $query->whereHas('loteBitacora', function ($q) use ($empresaId) {
+                    $q->where('id_empresa', $empresaId);
+                });
+            })
+            ->when($instalacionId, function ($query) use ($instalacionId) {
+                $query->whereHas('loteBitacora', function ($q) use ($instalacionId) {
+                    $q->where('id_instalacion', $instalacionId);
+                });
+            })
+            ->orderBy('fecha', 'desc')
+            ->get();
+
+        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras'))
+            ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
+
+        return $pdf->stream('Bitácora Mezcal a Granel.pdf');
     }
+
 
     public function store(Request $request)
     {

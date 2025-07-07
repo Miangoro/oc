@@ -47,7 +47,7 @@
     tr.text-title th {
         padding: 2px;
         text-align: center;
-        font-size: 5px;
+        font-size: 10px;
         word-break: break-word;
         height: auto;
         width: auto;
@@ -74,7 +74,7 @@
     }
 
     tr.bitacora-row td, tr.bitacora-row th {
-        font-size: 5px;
+        font-size: 10px;
 /*         border: 1px solid #bbb; */
         padding: 3px 5px;
         text-align: center;

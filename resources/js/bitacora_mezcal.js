@@ -22,12 +22,16 @@ $(function () {
       serverSide: true,
       ajax: {
         url: baseUrl + 'bitacoraMezcal-list',
+      data: function (d) {
+      d.empresa = $('#filtroEmpresa').val();
+      d.instalacion = $('#filtroInstalacion').val();
+    }
       },
       columns: [
-        { data: '#' },                //0
-        { data: 'fake_id' },          //1
-        { data: 'fecha' },             //2
-        { data: 'actions' },           //3
+        { data: '#' }, //0
+        { data: 'fake_id' }, //1
+        { data: 'fecha' }, //2
+        { data: 'actions' } //3
       ],
       columnDefs: [
         {
@@ -57,10 +61,16 @@ $(function () {
             // var $volumen_inicial = full['volumen_inicial'] ?? 'N/A';
             // var $alcohol_inicial = full['alcohol_inicial'] ?? 'N/A';
 
-            return '<span class="fw-bold text-dark small">Fecha: </span>' +
-              '<span class="small">' + $fecha + '</span>' +
+            return (
+              '<span class="fw-bold text-dark small">Fecha: </span>' +
+              '<span class="small">' +
+              $fecha +
+              '</span>' +
               '<br><span class="fw-bold text-dark small">Lote a Granel: </span>' +
-              '<span class="small">' + $id_lote_granel + '</span>';
+              '<span class="small">' +
+              $id_lote_granel +
+              '</span>'
+            );
             // + '<br><span class="fw-bold text-dark small">Volumen Inicial: </span>' +
             // '<span class="small">' + $volumen_inicial + '</span>' +
             // '<br><span class="fw-bold text-dark small">Alcohol Inicial: </span>' +
@@ -76,14 +86,24 @@ $(function () {
             var $alcohol_entrada = full['alcohol_entrada'] ?? 'N/A';
             var $agua_entrada = full['agua_entrada'] ?? 'N/A';
 
-            return '<span class="fw-bold text-dark small">Procedencia: </span>' +
-              '<span class="small">' + $procedencia_entrada + '</span>' +
+            return (
+              '<span class="fw-bold text-dark small">Procedencia: </span>' +
+              '<span class="small">' +
+              $procedencia_entrada +
+              '</span>' +
               '<br><span class="fw-bold text-dark small">Volumen: </span>' +
-              '<span class="small">' + $volumen_entrada + '</span>' +
-              '<br><span class="fw-bold text-dark small">Alcohol: </span>' +
-              '<span class="small">' + $alcohol_entrada + '</span>' +
+              '<span class="small">' +
+              $volumen_entrada +
+              '</span>' +
+              '<br><span class="fw-bold text-dark small">%Alc. Vol.: </span>' +
+              '<span class="small">' +
+              $alcohol_entrada +
+              '</span>' +
               '<br><span class="fw-bold text-dark small">Agua Agregada: </span>' +
-              '<span class="small">' + $agua_entrada + '</span>';
+              '<span class="small">' +
+              $agua_entrada +
+              '</span>'
+            );
           }
         },
         {
@@ -94,12 +114,20 @@ $(function () {
             var $alcohol_salidas = full['alcohol_salidas'] ?? 'N/A';
             var $destino_salidas = full['destino_salidas'] ?? 'N/A';
 
-            return '<span class="fw-bold text-dark small">Volumen de Salidas: </span>' +
-              '<span class="small">' + $volumen_salidas + '</span>' +
-              '<br><span class="fw-bold text-dark small">Alcohol de Salidas: </span>' +
-              '<span class="small">' + $alcohol_salidas + '</span>' +
+            return (
+              '<span class="fw-bold text-dark small">Volumen de Salidas: </span>' +
+              '<span class="small">' +
+              $volumen_salidas +
+              '</span>' +
+              '<br><span class="fw-bold text-dark small">%Alc. Vol. de Salidas: </span>' +
+              '<span class="small">' +
+              $alcohol_salidas +
+              '</span>' +
               '<br><span class="fw-bold text-dark small">Destino de Salidas: </span>' +
-              '<span class="small">' + $destino_salidas + '</span>';
+              '<span class="small">' +
+              $destino_salidas +
+              '</span>'
+            );
           }
         },
         {
@@ -109,21 +137,18 @@ $(function () {
             var $volumen_final = full['volumen_final'] ?? 'N/A';
             var $alcohol_final = full['alcohol_final'] ?? 'N/A';
 
-            return '<span class="fw-bold text-dark small">Volumen Final: </span>' +
-              '<span class="small">' + $volumen_final + '</span>' +
-              '<br><span class="fw-bold text-dark small">Alcohol Final: </span>' +
-              '<span class="small">' + $alcohol_final + '</span>';
+            return (
+              '<span class="fw-bold text-dark small">Volumen Final: </span>' +
+              '<span class="small">' +
+              $volumen_final +
+              '</span>' +
+              '<br><span class="fw-bold text-dark small">%Alc. Vol. Final: </span>' +
+              '<span class="small">' +
+              $alcohol_final +
+              '</span>'
+            );
           }
         },
-        /*         {
-                  // Abre el pdf Bitacora
-                  targets: 5,
-                  className: 'text-center',
-                  render: function (data, type, full, meta) {
-                    return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="${full['id']}" data-bs-target="#mostrarPdfDictamen1" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
-
-                  }
-                }, */
         {
           // Actions
           targets: 6,
@@ -152,13 +177,12 @@ $(function () {
         }
       ],
 
-
       order: [[2, 'desc']],
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' +
         '<"d-flex flex-wrap justify-content-between align-items-center w-100 px-3 pt-2"' +
-        '<"filtrosBitacora d-flex gap-2 align-items-center" >' +  // ← Aquí irán los selects
+        '<"filtrosBitacora d-flex gap-2 align-items-center" >' + // ← Aquí irán los selects
         '<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-3"lB>' +
         '>' +
         '>t' +
@@ -173,33 +197,44 @@ $(function () {
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
         paginate: {
-          "sFirst": "Primero",
-          "sLast": "Último",
-          "sNext": "Siguiente",
-          "sPrevious": "Anterior"
+          sFirst: 'Primero',
+          sLast: 'Último',
+          sNext: 'Siguiente',
+          sPrevious: 'Anterior'
         }
       },
 
       // Opciones Exportar Documentos
       buttons: [
         {
-          text:
-            '<select id="filtroEmpresa" class="form-select select2" style="min-width: 280px;">' +
-            '<option value="">-- Todas las Empresas --</option>' +
-            opcionesEmpresas +
-            '</select>',
-          className: 'btn p-0 me-2 btn-outline-primary',
+          className: 'dt-custom-select p-0 me-2 btn-outline-dark ',
+          text: '', // 👈 importante que esté vacío
           init: function (api, node, config) {
+            // Remover clases no deseadas que DataTables agrega
+            $(node).removeClass('btn btn-secondary');
+
+            // Inyectar el select correctamente
+            $(node).html(`
+              <select id="filtroEmpresa" class="form-select select2" style="min-width: 280px;">
+                <option value="">-- Todas las Empresas --</option>
+                ${opcionesEmpresas}
+              </select>
+            `);
+
+            // Activar Select2
             $(node).find('select').select2();
           }
         },
         {
-          text:
-            '<select id="filtroInstalacion" class="form-select select2" style="min-width: 280px;">' +
-            '<option value="">-- Todas las Instalaciones --</option>' +
-            '</select>',
-          className: 'btn p-0 me-2 btn-outline-primary',
+          text: '',
+          className: 'dt-custom-select p-0 me-2 btn-outline-dark',
           init: function (api, node, config) {
+            $(node).removeClass('btn btn-secondary');
+            $(node).html(`
+              <select id="filtroInstalacion" class="form-select select2" style="min-width: 280px;">
+                <option value="">-- Todas las Instalaciones --</option>
+              </select>
+            `);
             $(node).find('select').select2();
           }
         },
@@ -218,7 +253,6 @@ $(function () {
             'data-bs-target': '#RegistrarBitacoraMezcal'
           }
         }
-
       ],
 
       responsive: {
@@ -234,18 +268,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== ''
                 ? '<tr data-dt-row="' +
-                col.rowIndex +
-                '" data-dt-column="' +
-                col.columnIndex +
-                '">' +
-                '<td>' +
-                col.title +
-                ':' +
-                '</td> ' +
-                '<td>' +
-                col.data +
-                '</td>' +
-                '</tr>'
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
                 : '';
             }).join('');
 
@@ -254,13 +288,11 @@ $(function () {
         }
       }
     });
-
   }
-
 
   var dt_user_table = $('.datatables-users'),
     select2Elements = $('.select2'),
-    userView = baseUrl + 'app/user/view/account'
+    userView = baseUrl + 'app/user/view/account';
   // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
     $elements.each(function () {
@@ -272,20 +304,16 @@ $(function () {
     });
   }
 
-
   initializeSelect2(select2Elements);
 
-  $('#selectEmpresa').on('change', function () {
-    const id = $(this).val();
-    if (id) {
-      $('#modalEmpresa').modal('show'); // o cualquier lógica que tú quieras
-    }
+  $(document).on('select2:select', '#filtroEmpresa', function (e) {
+    const selectedText = $(this).find('option:selected').text();
+    $('#filtroEmpresa').next('.select2-container').find('.select2-selection__rendered').attr('title', selectedText);
   });
 
-$(document).on('select2:select', '#filtroEmpresa', function (e) {
-  const selectedText = $(this).find("option:selected").text();
-  $('#filtroEmpresa').next('.select2-container').find('.select2-selection__rendered').attr('title', selectedText);
-});
+  $('#filtroEmpresa, #filtroInstalacion').on('change', function () {
+    $('.datatables-users').DataTable().ajax.reload();
+  });
 
 
   $(document).ready(function () {
@@ -320,43 +348,49 @@ $(document).on('select2:select', '#filtroEmpresa', function (e) {
     });
   });
 
-
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   $(document).on('click', '#verBitacoraBtn', function () {
+    const empresaId = $('#filtroEmpresa').val();
+    const instalacionId = $('#filtroInstalacion').val();
+
+    if (!empresaId) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Selecciona una empresa',
+        text: 'Debes elegir una empresa para ver su bitácora',
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'btn btn-warning'
+        }
+      });
+      return;
+    }
     const iframe = $('#pdfViewer');
-    const urlPDF = '/bitacora_mezcal'; // Ajusta si necesitas pasar un ID o token
-
-    // Mostrar spinner y ocultar PDF
+    // Construye la URL con filtros
+    let urlPDF = `/bitacora_mezcal?empresa=${empresaId}`;
+    if (instalacionId) {
+      urlPDF += `&instalacion=${instalacionId}`;
+    }
+    urlPDF += `&t=${new Date().getTime()}`;
+    // Spinner y reset
     $('#cargando').show();
-    iframe.hide();
-
-    // Reset iframe y botón
-    iframe.attr('src', '');
+    iframe.hide().attr('src', '');
     iframe.attr('src', urlPDF);
     $('#NewPestana').attr('href', urlPDF).hide();
-
     // Títulos del modal
     $('#titulo_modal').text('Bitácora Mezcal a Granel');
-    $('#subtitulo_modal').text('Versión General');
-
+    $('#subtitulo_modal').text('Versión Filtrada');
     // Mostrar modal
-    $('#mostrarPdf').modal('show');
-  });
-
-  // Mostrar PDF y botón cuando el iframe esté listo
+    // Ocultar el spinner cuando el PDF esté completamente cargado
   $('#pdfViewer').on('load', function () {
     $('#cargando').hide();
     $(this).show();
-    $('#NewPestana').show();
   });
-
-  // En caso de error (opcional)
-  $('#pdfViewer').on('error', function () {
-    console.error('Error al cargar el PDF. Verifica la ruta.');
-    $('#cargando').hide();
+    $('#mostrarPdf').modal('show');
   });
 
 
+/*  */
   $(document).on('click', '.delete-record', function () {
     var id_bitacora = $(this).data('id');
     var dtrModal = $('.dtr-bs-modal.show');
@@ -427,8 +461,6 @@ $(document).on('select2:select', '#filtroEmpresa', function (e) {
     });
   });
 
-
-
   $(function () {
     // Configuración de CSRF para Laravel
     $.ajaxSetup({
@@ -468,7 +500,7 @@ $(document).on('select2:select', '#filtroEmpresa', function (e) {
               message: 'Por favor seleccione la instalación'
             }
           }
-        },  /*
+        } /*
             alc_vol_salida: {
               validators: {
                 notEmpty: {
@@ -482,7 +514,7 @@ $(document).on('select2:select', '#filtroEmpresa', function (e) {
                   message: 'Por favor ingrese el destino'
                 }
               }
-            }, */
+            }, */,
         volumen_final: {
           validators: {
             notEmpty: {
@@ -496,15 +528,14 @@ $(document).on('select2:select', '#filtroEmpresa', function (e) {
               message: 'Por favor ingrese el contenido alcohólico final'
             }
           }
-        },
-
+        }
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
           eleValidClass: '',
           eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating',
+          rowSelector: '.form-floating'
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
@@ -553,10 +584,7 @@ $(document).on('select2:select', '#filtroEmpresa', function (e) {
     $('#id_empresa, #id_lote_granel, #fecha').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
-
   });
-
-
 
   $(document).on('click', '.edit-record', function () {
     var bitacoraID = $(this).data('id');
@@ -614,7 +642,6 @@ $(document).on('select2:select', '#filtroEmpresa', function (e) {
       }
     });
   });
-
 
   $(function () {
     // Configurar CSRF para Laravel
@@ -735,8 +762,6 @@ $(document).on('select2:select', '#filtroEmpresa', function (e) {
     });
   });
 
-
-
   $(document).ready(function () {
     function calcular() {
       let volumenInicial = parseFloat($('#volumen_inicial').val()) || 0;
@@ -754,9 +779,8 @@ $(document).on('select2:select', '#filtroEmpresa', function (e) {
       let alcoholFinal = 0;
 
       if (volumenFinal > 0) {
-        let alcoholTotal = (volumenInicial * alcoholInicial) +
-          (volumenEntrada * alcoholEntrada) -
-          (volumenSalida * alcoholSalida);
+        let alcoholTotal =
+          volumenInicial * alcoholInicial + volumenEntrada * alcoholEntrada - volumenSalida * alcoholSalida;
 
         alcoholFinal = alcoholTotal / volumenFinal;
       }
@@ -765,7 +789,9 @@ $(document).on('select2:select', '#filtroEmpresa', function (e) {
       $('#alc_vol_final').val(alcoholFinal.toFixed(2));
     }
 
-    $('#volumen_inicial, #alcohol_inicial, #volumen_entrada, #alcohol_entrada, #agua_entrada, #volumen_salida, #alc_vol_salida').on('input', calcular);
+    $(
+      '#volumen_inicial, #alcohol_inicial, #volumen_entrada, #alcohol_entrada, #agua_entrada, #volumen_salida, #alc_vol_salida'
+    ).on('input', calcular);
   });
 
   $(document).ready(function () {
@@ -812,10 +838,5 @@ $(document).on('select2:select', '#filtroEmpresa', function (e) {
     $('#editDisplayEntradas, #editDisplaySalidas').hide();
   });
 
-
-
   //end
 });
-
-
-
