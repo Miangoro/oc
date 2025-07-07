@@ -29,7 +29,7 @@
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     name="fecha_solicitud" id="fecha_sol_vigi_prod" autocomplete="off">
-                                <label for="fecha_solicitud">fecha y hora de la solicitud</label>
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
                             </div>
                         </div>
                         <div class="col-md-3">

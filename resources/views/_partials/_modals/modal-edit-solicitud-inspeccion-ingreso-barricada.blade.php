@@ -35,7 +35,7 @@
                                     name="fecha_solicitud" autocomplete="off" id="fecha_sol_ingreso_barrica"
                                     value="@php
 echo date('Y-m-d H:m'); @endphp">
-                                <label for="fecha_solicitud">fecha y hora de la solicitud</label>
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
                             </div>
                         </div>
                         <div class="col-md-4">

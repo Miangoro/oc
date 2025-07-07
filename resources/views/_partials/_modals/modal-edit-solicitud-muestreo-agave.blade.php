@@ -33,7 +33,7 @@
                                     name="fecha_solicitud" id="fecha_sol_muestr_agave_edit"
                                     value="@php
 echo date('Y-m-d H:m'); @endphp">
-                                <label for="fecha_solicitud">fecha y hora de la solicitud</label>
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
                             </div>
                         </div>
                         <div class="col-md-3">
