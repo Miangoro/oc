@@ -822,7 +822,7 @@
                     <br>
                  @elseif($vigilancia_produccion === 'X')
                     <b>Tapada:</b>
-                    {{ $caracteristicas['nombre_produccion'] ? ''  }}
+                    {{ $caracteristicas['nombre_produccion'] ?? ''  }}
                     <br>
                 @elseif($inspeccion_envasado === 'X')
                     @if (!empty($datos->lote_granel->edad) && $datos->lote_granel->edad != 0)
