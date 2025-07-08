@@ -373,7 +373,7 @@ foreach ($certificados as $certificado) {
         'url_certificado' => $urls_certificados ?? '',
         'url_fqs' => $url_fqs ?? '',
         'id_lote_envasado' => $certificados ?? '',
-        'url_etiqueta_envasado' => $url_etiqueta_envasado ?? '',
+        'url_etiqueta_envasado' => $url_etiqueta_envasado->etiquetas->url_etiqueta->url_etiqueta ?? '',
 
             ]);
 }
