@@ -75,7 +75,6 @@ class solicitudesController extends Controller
         $marcas = marcas::all();
         $aduanas = catalogo_aduanas::all();
 
-
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
         return view('solicitudes.find_solicitudes_view', compact('tipo_usuario','instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas', 'aduanas', 'solicitudes'));
     }
