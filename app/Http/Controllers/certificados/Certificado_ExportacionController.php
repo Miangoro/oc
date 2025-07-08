@@ -206,11 +206,11 @@ public function index(Request $request)
 
                 -- CIDAM C-EXP-###/2024
                 WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN CAST(
-            CONCAT('-', SUBSTRING_INDEX(
-                SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP-', num_certificado) + 11),
-                '/', 1
-            )) AS SIGNED
-        )
+                    SUBSTRING_INDEX(
+                        SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP-', num_certificado) + 11),
+                        '/', 1
+                    ) AS UNSIGNED
+                )
 
                 -- CIDAM ###/2022
                 WHEN num_certificado LIKE 'CIDAM %/%' THEN CAST(
