@@ -489,6 +489,13 @@ $(function () {
             }
           }
         },
+        tipo_operacion: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un tipo de operación'
+            }
+          }
+        },
         id_lote_granel: {
           validators: {
             notEmpty: {
@@ -502,21 +509,7 @@ $(function () {
               message: 'Por favor seleccione la instalación'
             }
           }
-        } /*
-            alc_vol_salida: {
-              validators: {
-                notEmpty: {
-                  message: 'Por favor ingrese el contenido alcohólico de salida'
-                }
-              }
-            },
-            destino: {
-              validators: {
-                notEmpty: {
-                  message: 'Por favor ingrese el destino'
-                }
-              }
-            }, */,
+        },
         volumen_final: {
           validators: {
             notEmpty: {
@@ -543,7 +536,8 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
-      // Enviar datos por Ajax si el formulario es válido
+      $('#btnRegistrar').addClass('d-none');
+      $('#loading').removeClass('d-none');
       var formData = $(form).serialize();
 
       $.ajax({
@@ -553,6 +547,8 @@ $(function () {
         success: function (response) {
           // Ocultar el offcanvas
           $('#RegistrarBitacoraMezcal').modal('hide');
+          $('#loading').addClass('d-none');
+          $('#btnRegistrar').removeClass('d-none');
           $('#registroInventarioForm')[0].reset();
           $('#registroInventarioForm select').val(null).trigger('change');
           $('#id_instalacion').empty().trigger('change');
@@ -578,6 +574,8 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#loading').addClass('d-none');
+          $('#btnRegistrar').removeClass('d-none');
         }
       });
     });
@@ -671,26 +669,13 @@ $(function () {
             }
           }
         },
-        /*    volumen_salida: {
-               validators: {
-                   notEmpty: {
-                       message: 'Ingresa el volumen de salida.'
-                   },
-                   numeric: {
-                       message: 'Debe ser un número.'
-                   }
-               }
-           },
-           alc_vol_salida: {
-               validators: {
-                   notEmpty: {
-                       message: 'Ingresa el % Alc. Vol. de salida.'
-                   },
-                   numeric: {
-                       message: 'Debe ser un número decimal.'
-                   }
-               }
-           }, */
+        tipo_operacion: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un tipo de operación'
+            }
+          }
+        },
         destino: {
           validators: {
             notEmpty: {
@@ -730,6 +715,8 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
+      $('#btnEdit').addClass('d-none');
+      $('#loadingEdit').removeClass('d-none');
       const formData = $(form).serialize();
       const id = $('#edit_bitacora_id').val();
 
@@ -738,6 +725,8 @@ $(function () {
         type: 'POST',
         data: formData,
         success: function (response) {
+          $('#loadingEdit').addClass('d-none');
+          $('#btnEdit').removeClass('d-none');
           $('#editarBitacoraMezcal').modal('hide');
           $('#editInventarioForm')[0].reset();
           $('.datatables-users').DataTable().ajax.reload();
@@ -800,12 +789,12 @@ $(function () {
     $('#tipo_op').on('change', function () {
       const tipo = $(this).val();
 
-      if (tipo == 'Entrada') {
+      if (tipo == 'Entradas') {
         $('#displaySalidas').fadeOut(100, function () {
           $(this).css('display', 'none');
           $('#displayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
-      } else if (tipo == 'Salida') {
+      } else if (tipo == 'Salidas') {
         $('#displayEntradas').fadeOut(100, function () {
           $(this).css('display', 'none');
           $('#displaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
@@ -822,12 +811,12 @@ $(function () {
     $('#edit_tipo_op').on('change', function () {
       const tipo = $(this).val();
 
-      if (tipo == 'Entrada') {
+      if (tipo == 'Entradas') {
         $('#editDisplaySalidas').fadeOut(100, function () {
           $(this).css('display', 'none');
           $('#editDisplayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
-      } else if (tipo == 'Salida') {
+      } else if (tipo == 'Salidas') {
         $('#editDisplayEntradas').fadeOut(100, function () {
           $(this).css('display', 'none');
           $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
