@@ -196,7 +196,7 @@
         }
         .img-qr{
             position: absolute;
-            right: 10%;
+            right: 8%;
             margin-top: -12%;
         }   
 
@@ -293,13 +293,30 @@
     </table>
 
 
-
+    <!--FIRMA-->
     <div style="margin-top: 5%; text-align: center">
-        {{-- <img style="position: absolute; margin-top: -5%; left: 45%;" height="60px" 
-            src="{{ public_path('storage/firmas/firma_Erik_Antonio_Mejía_Vaca_1744914578.png') }}"> --}}
-        <p style="font-size: 15px">B.T.G. Erick antonio Mejía Vaca <br>
-            Gerente Técnico de la Unidad de Inspección</p>
+        @php
+            use App\Models\User;
+            use Illuminate\Support\Facades\Storage;
+
+            $firmante = in_array($id_registro, [6, 9]) ? User::find($id_registro) : null;
+            $firma = $firmante?->firma ?? null;
+            $firmaPath = $firma ? 'firmas/' . $firma : null;
+            $nombreFirmante = $firmante?->name ?? '';
+            $puestoFirmante = $firmante?->puesto ?? '';
+        @endphp
+
+        @if ($firma && Storage::disk('public')->exists($firmaPath))
+            <img style="position: absolute; margin-top: -5%; left: 45%;" height="60px"
+                src="{{ public_path('storage/' . $firmaPath) }}">
+        @endif
+
+        <p style="font-size: 15px">
+            {{ $nombreFirmante }}<br>
+            {{ $puestoFirmante }}
+        </p>
     </div>
+
 
 <!--CODIGO QR-->
     <div class="img-qr">

@@ -18,6 +18,7 @@ use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Support\Facades\Auth;//sesion iniciada
 
 
 class GuiasController  extends Controller
@@ -178,6 +179,7 @@ class GuiasController  extends Controller
     ///REGISTRAR
     public function store(Request $request)
     {
+        $userId = Auth::id(); // Obtiene el ID del usuario en sesión
         // Validación de los datos recibidos
         $request->validate([
             'empresa' => 'required|exists:empresa,id_empresa',
@@ -197,7 +199,7 @@ class GuiasController  extends Controller
             'fecha_corte' => 'nullable|date',
             'observaciones' => 'nullable|string|max:2000',
             'nombre_cliente' => 'nullable|string|max:255',
-            'no_cliente' => 'nullable|numeric|min:0',
+            'no_cliente' => 'nullable|string|regex:/^[A-Za-z0-9\-]+$/',
             'fecha_ingreso' => 'nullable|date',
             'domicilio' => 'nullable|string|max:255',
 
@@ -258,6 +260,8 @@ class GuiasController  extends Controller
             $guia->no_cliente = $request->input('no_cliente');
             $guia->fecha_ingreso = $request->input('fecha_ingreso');
             $guia->domicilio = $request->input('domicilio');
+
+            $guia->id_registro = $userId;//guardar quien solicita
             $guia->save();
 
             // Guardar documentos
@@ -290,7 +294,7 @@ class GuiasController  extends Controller
                 $predioPlantacion->save();
             }
         }
-        
+
         // Responder con éxito
         return response()->json(['success' => 'Guía registrada correctamente']);
     }
@@ -373,9 +377,10 @@ class GuiasController  extends Controller
 
     //Metodo para LLENAR PDF
     public function guiasTranslado($id_guia)
-    {
+    {   
+        
         $res = DB::select('SELECT f.numero_cliente, p.nombre_productor, a.razon_social, p.nombre_predio, p.num_predio, a.razon_social, t.nombre, t.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas,
-            e.art,e.kg_maguey,e.no_lote_pedido,e.fecha_corte, e.edad, e.nombre_cliente,e.no_cliente,e.fecha_ingreso,e.domicilio
+            e.art,e.kg_maguey,e.no_lote_pedido,e.fecha_corte, e.edad, e.nombre_cliente,e.no_cliente,e.fecha_ingreso,e.domicilio, e.id_registro
             FROM guias e 
             JOIN predios p ON (e.id_predio = p.id_predio) 
             JOIN predio_plantacion s ON (e.id_plantacion = s.id_plantacion) 
@@ -409,11 +414,14 @@ class GuiasController  extends Controller
         // Convertirlo a Base64
         $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
 
+        //dd($res[0]);
+        $id_registro = $res[0]->id_registro;
 
         $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', [
             'datos' => $res,
             'razon_social' => $data->razon_social ?? '',
             'numero_cliente' => $numero_cliente ?? '',
+            'id_registro' => $id_registro,
             'qrCodeBase64' => $qrCodeBase64,
         ]);
         return $pdf->stream('Guia_de_traslado_de_maguey_o_agave.pdf');

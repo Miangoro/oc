@@ -1089,8 +1089,8 @@ if (!$select.find(`option[value="${datos.id_dictamen}"]`).length) {
                     message: 'El número de certificado es obligatorio.'
                 },
                 stringLength: {
-                  min: 8,
-                  message: 'Debe tener al menos 8 caracteres.'
+                  min: 19,
+                  message: 'Debe tener al menos 19 caracteres.'
                 }
             }
         },

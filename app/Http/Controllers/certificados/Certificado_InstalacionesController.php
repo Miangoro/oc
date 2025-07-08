@@ -579,7 +579,7 @@ public function index(Request $request)
                 $request->validate([
                     'id_certificado' => 'required|exists:certificados,id_certificado',
                     'id_dictamen' => 'required|integer',
-                    'num_certificado' => 'required|string|max:25',
+                    'num_certificado' => 'required|string|min:19',
                     'fecha_emision' => 'required|date',
                     'fecha_vigencia' => 'required|date',
                     'maestro_mezcalero' => 'nullable|string|max:60',
