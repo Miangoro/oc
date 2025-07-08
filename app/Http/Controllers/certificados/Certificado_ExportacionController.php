@@ -188,7 +188,7 @@ public function index(Request $request)
                 ELSE 999999
             END $orderDirection
         ");*/
-        $query->orderByRaw("
+        /*$query->orderByRaw("
         -- Prioridad por tipo de nomenclatura
         CASE
             WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
@@ -219,42 +219,42 @@ public function index(Request $request)
             )
             ELSE 999999
         END $orderDirection
-    ");
-    /*$query->orderByRaw("
-        -- Prioridad de tipos
+    ");*/
+    $query->orderByRaw("
+        -- Prioridad por tipo de nomenclatura
         CASE
-            WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
-            WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN 1
-            WHEN num_certificado LIKE 'CIDAM %/%' THEN 2
+            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
+            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP-%/%' THEN 1
+            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM %/%' THEN 2
             ELSE 3
         END ASC,
 
-        -- Orden numérico descendente según tipo
+        -- Orden numérico descendente por tipo
         CASE
-            -- CIDAM C-EXP25-### (mantener orden descendente real, sin modificar signo)
-            WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN CAST(
-                SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14) AS UNSIGNED
+            -- CIDAM C-EXP25-###
+            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP25-%' THEN CAST(
+                SUBSTRING(certificados_exportacion.num_certificado, 15) AS SIGNED
             )
 
-            -- CIDAM C-EXP-###/YYYY (forzar descendente con -1 *)
-            WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN -1 * CAST(
+            -- CIDAM C-EXP-###/YYYY
+            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP-%/%' THEN -1 * CAST(
                 SUBSTRING_INDEX(
-                    SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP-', num_certificado) + 11),
+                    SUBSTRING(certificados_exportacion.num_certificado, 12),
                     '/', 1
-                ) AS UNSIGNED
+                ) AS SIGNED
             )
 
-            -- CIDAM ###/YYYY (forzar descendente con -1 *)
-            WHEN num_certificado LIKE 'CIDAM %/%' THEN -1 * CAST(
+            -- CIDAM ###/YYYY
+            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM %/%' THEN -1 * CAST(
                 SUBSTRING_INDEX(
-                    SUBSTRING(num_certificado, LOCATE('CIDAM ', num_certificado) + 6),
+                    SUBSTRING(certificados_exportacion.num_certificado, 7),
                     '/', 1
-                ) AS UNSIGNED
+                ) AS SIGNED
             )
 
             ELSE 999999
         END ASC
-    ");*/
+    ");
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
     }
