@@ -221,7 +221,7 @@ public function index(Request $request)
         END $orderDirection
     ");*/
     $query->orderByRaw("
-        -- Prioridad por tipo de nomenclatura
+        -- 1. Prioridad por tipo
         CASE
             WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
             WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP-%/%' THEN 1
@@ -229,28 +229,19 @@ public function index(Request $request)
             ELSE 3
         END ASC,
 
-        -- Orden numérico descendente por tipo
+        -- 2. Orden descendente numérico por tipo
         CASE
             -- CIDAM C-EXP25-###
-            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP25-%' THEN CAST(
-                SUBSTRING(certificados_exportacion.num_certificado, 15) AS SIGNED
-            )
+            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP25-%' THEN
+                CAST(SUBSTRING(certificados_exportacion.num_certificado, 15) AS SIGNED)
 
-            -- CIDAM C-EXP-###/YYYY
-            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP-%/%' THEN -1 * CAST(
-                SUBSTRING_INDEX(
-                    SUBSTRING(certificados_exportacion.num_certificado, 12),
-                    '/', 1
-                ) AS SIGNED
-            )
+            -- CIDAM C-EXP-###/AAAA
+            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP-%/%' THEN
+                -1 * CAST(SUBSTRING_INDEX(SUBSTRING(certificados_exportacion.num_certificado, 12), '/', 1) AS SIGNED)
 
-            -- CIDAM ###/YYYY
-            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM %/%' THEN -1 * CAST(
-                SUBSTRING_INDEX(
-                    SUBSTRING(certificados_exportacion.num_certificado, 7),
-                    '/', 1
-                ) AS SIGNED
-            )
+            -- CIDAM ###/AAAA
+            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM %/%' THEN
+                -1 * CAST(SUBSTRING_INDEX(SUBSTRING(certificados_exportacion.num_certificado, 7), '/', 1) AS SIGNED)
 
             ELSE 999999
         END ASC
