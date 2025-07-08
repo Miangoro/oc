@@ -442,7 +442,7 @@
             @endcan
 
             @foreach($marcasConHologramas AS $marca)
-                <div class="col-lg-3 col-sm-6">
+                <div class="col-sm-2">
                     <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center flex-wrap">
