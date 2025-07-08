@@ -1008,11 +1008,26 @@ $(function () {
             return;
           }
 
-          $('#rex_id_dictamen').val(datos.id_dictamen).trigger('change');
-          $('#rex_numero_certificado').val(datos.num_certificado);
-          $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
-          $('#rex_fecha_emision').val(datos.fecha_emision);
-          $('#rex_fecha_vigencia').val(datos.fecha_vigencia);
+          let cert = datos.certificado;
+
+//obtener el dictamen ya asignado
+const $select = $('#rex_id_dictamen');
+// Eliminar opciones anteriores agregadas dinámicamente, pero dejar los disponibles
+$select.find('option[data-dinamico="true"]').remove();
+
+// Si el dictamen guardado no está en los disponibles, agregarlo temporalmente
+if (!$select.find(`option[value="${cert.id_dictamen}"]`).length) {
+    const texto = `${datos.num_dictamen} | ${datos.folio ?? 'Sin folio'}`;
+    $select.append(`<option value="${cert.id_dictamen}" selected data-dinamico="true">${texto}</option>`);
+} else {
+    $select.val(cert.id_dictamen).trigger('change');
+}
+
+          $('#rex_id_dictamen').val(cert.id_dictamen).trigger('change');
+          $('#rex_numero_certificado').val(cert.num_certificado);
+          $('#rex_id_firmante').val(cert.id_firmante).trigger('change');
+          $('#rex_fecha_emision').val(cert.fecha_emision);
+          $('#rex_fecha_vigencia').val(cert.fecha_vigencia);
 
           $('#accion_reexpedir').trigger('change');
           isLoadingData = false;

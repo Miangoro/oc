@@ -421,6 +421,10 @@ $(function () {
       }
     }).on('core.form.valid', function (e) {
       var formData = new FormData(addGuiaForm);
+      //deshabilita el boton al guardar
+      const $submitBtn = $(addGuiaForm).find('button[type="submit"]');
+      // Cambiar a modo cargando
+      $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');
 
       $.ajax({
         url: '/guias/store',
@@ -440,6 +444,7 @@ $(function () {
               confirmButton: 'btn btn-success'
             }
           });
+          $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');//boton deshabilitado
         },
         error: function (xhr) {
           Swal.fire({
@@ -450,7 +455,9 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+           $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');//boton deshabilitado
         }
+
       });
     });
 
@@ -463,11 +470,24 @@ $(function () {
       $('#num_comercializadas').val('');
       $('#mermas_plantas').val('');
       $('#numero_plantas').val('');
+      //// Nuevos campos
+      $('#edad').val('');
+      $('#art').val('');
+      $('#kg_magey').val('');
+      $('#no_lote_pedido').val('');
+      $('#fecha_corte').val('');
+      $('#observaciones').val('');
+      $('#nombre_cliente').val('');
+      $('#no_cliente').val('');
+      $('#fecha_ingreso').val('');
+      $('#domicilio').val('');
+      $('input[type="file"]').val('');
       formValidator.resetForm(true);
     });
 
     initializeSelect2(select2Elements);
   });
+
 
   // Eliminar registro
   $(document).on('click', '.delete-record', function () {
@@ -521,46 +541,7 @@ $(function () {
     });
   });
 
-  //Editar guias
-  $(document).on('click', '.edit-record', function () {
-    var id_guia = $(this).data('id');
-
-    $.get('/edit/' + id_guia, function (data) {
-      // Rellenar el formulario con los datos obtenidos
-      $('#editt_id_guia').val(data.id_guia);
-      $('#edit_id_empresa').val(data.id_empresa).trigger('change');
-      $('#edit_numero_guias').val(data.numero_guias);
-      $('#edit_nombre_predio').val(data.id_predio).trigger('change'); // Cambiado a 'id_predio'
-      $('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
-      $('#edit_num_anterior').val(data.num_anterior);
-      $('#edit_num_comercializadas').val(data.num_comercializadas);
-      $('#edit_mermas_plantas').val(data.mermas_plantas);
-      $('#edit_numero_plantas').val(data.numero_plantas);
-      $('#edit_edad').val(data.edad);
-      $('#edit_id_art').val(data.art);
-      $('#edit_kg_magey').val(data.kg_maguey);
-      $('#edit_no_lote_pedido').val(data.no_lote_pedido);
-      $('#edit_fecha_corte').val(data.fecha_corte);
-      $('#edit_id_observaciones').val(data.observaciones);
-      $('#edit_nombre_cliente').val(data.nombre_cliente);
-      $('#edit_no_cliente').val(data.no_cliente);
-      $('#edit_fecha_ingreso').val(data.fecha_ingreso);
-      $('#edit_domicilio').val(data.domicilio);
-      // Mostrar el modal de edición
-      $('#editGuias').modal('show');
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-      console.error('Error: ' + textStatus + ' - ' + errorThrown);
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al obtener los datos de la guía de traslado',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    });
-  });
-
+  
   //VER Y DESCARGAR GUIAS
   $(document).on('click', '.ver-registros', function () {
     var run_folio = $(this).data('id');
@@ -628,6 +609,48 @@ $(function () {
       });
     });
   });
+
+
+  //Editar guias
+  $(document).on('click', '.edit-record', function () {
+    var id_guia = $(this).data('id');
+
+    $.get('/edit/' + id_guia, function (data) {
+      // Rellenar el formulario con los datos obtenidos
+      $('#editt_id_guia').val(data.id_guia);
+      $('#edit_id_empresa').val(data.id_empresa).trigger('change');
+      $('#edit_numero_guias').val(data.numero_guias);
+      $('#edit_nombre_predio').val(data.id_predio).trigger('change'); // Cambiado a 'id_predio'
+      $('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
+      $('#edit_num_anterior').val(data.num_anterior);
+      $('#edit_num_comercializadas').val(data.num_comercializadas);
+      $('#edit_mermas_plantas').val(data.mermas_plantas);
+      $('#edit_numero_plantas').val(data.numero_plantas);
+      $('#edit_edad').val(data.edad);
+      $('#edit_id_art').val(data.art);
+      $('#edit_kg_magey').val(data.kg_maguey);
+      $('#edit_no_lote_pedido').val(data.no_lote_pedido);
+      $('#edit_fecha_corte').val(data.fecha_corte);
+      $('#edit_id_observaciones').val(data.observaciones);
+      $('#edit_nombre_cliente').val(data.nombre_cliente);
+      $('#edit_no_cliente').val(data.no_cliente);
+      $('#edit_fecha_ingreso').val(data.fecha_ingreso);
+      $('#edit_domicilio').val(data.domicilio);
+      // Mostrar el modal de edición
+      $('#editGuias').modal('show');
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de la guía de traslado',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    });
+  });
+
 
   // Función para descargar múltiples PDFs en un archivo ZIP
   function downloadPdfsAsZip(pdfFiles, zipFileName) {

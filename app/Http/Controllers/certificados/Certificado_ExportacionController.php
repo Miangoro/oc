@@ -162,19 +162,7 @@ public function index(Request $request)
 
     // Ordenamiento especial para num_certificado con formato 'CIDAM C-EXP25-###'
     if ($orderColumn === 'num_certificado') {
-        /*$query->orderByRaw(" ANTERIOR FUNCIONAL
-            CASE
-                WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
-                ELSE 1
-            END ASC,
-            CAST(
-                SUBSTRING_INDEX(
-                    SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14),
-                    '-', 1
-                ) AS UNSIGNED
-            ) $orderDirection
-        ");*/
-         $query->orderByRaw("
+        /*$query->orderByRaw("
             CASE
                 WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
                 WHEN num_certificado LIKE 'CIDAM C-EXP24-%' THEN 1
@@ -197,6 +185,40 @@ public function index(Request $request)
                         SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP23-', num_certificado) + 14),
                         '-', 1
                     ) AS UNSIGNED)
+                ELSE 999999
+            END $orderDirection
+        ");*/
+        $query->orderByRaw("
+            -- Prioridad por tipo de nomenclatura
+            CASE
+                WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
+                WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN 1
+                WHEN num_certificado LIKE 'CIDAM %/%' THEN 2
+                ELSE 3
+            END ASC,
+
+            -- casos según el formato
+            CASE
+                -- CIDAM C-EXP25-###
+                WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN CAST(
+                    SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14) AS UNSIGNED
+                )
+
+                -- CIDAM C-EXP-###/2024
+                WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN CAST(
+                    SUBSTRING_INDEX(
+                        SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP-', num_certificado) + 11),
+                        '/', 1
+                    ) AS UNSIGNED
+                )
+
+                -- CIDAM ###/2022
+                WHEN num_certificado LIKE 'CIDAM %/%' THEN CAST(
+                    SUBSTRING_INDEX(
+                        SUBSTRING(num_certificado, LOCATE('CIDAM ', num_certificado) + 6),
+                        '/', 1
+                    ) AS UNSIGNED
+                )
                 ELSE 999999
             END $orderDirection
         ");

@@ -188,7 +188,24 @@ class GuiasController  extends Controller
             'comercializadas' => 'nullable|numeric',
             'mermas' => 'nullable|numeric',
             'plantas' => 'nullable|numeric',
+
+            // Nuevos campos opcionales
+            'edad' => 'nullable|string|max:255',
+            'art' => 'nullable|numeric|min:0',
+            'kg_maguey' => 'nullable|numeric|min:0',
+            'no_lote_pedido' => 'nullable|string|max:255',
+            'fecha_corte' => 'nullable|date',
+            'observaciones' => 'nullable|string|max:2000',
+            'nombre_cliente' => 'nullable|string|max:255',
+            'no_cliente' => 'nullable|numeric|min:0',
+            'fecha_ingreso' => 'nullable|date',
+            'domicilio' => 'nullable|string|max:255',
+
+            'url.*' => 'nullable|file|max:10240',
+            'id_documento.*' => 'nullable|integer',
+            'nombre_documento.*' => 'nullable|string|max:255',
         ]);
+
         // Obtener el valor de plantas actuales y num_anterior
         $plantasActuales = $request->input('plantas');
         $numAnterior = $request->input('anterior');
@@ -211,6 +228,10 @@ class GuiasController  extends Controller
         }
         // Formatear el nuevo run_folio
         $nuevoFolio = sprintf('SOL-GUIA-%06d-24', $nuevoNumero);
+
+
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
         // Procesar la creación de las guías
         for ($i = 0; $i < $request->input('numero_guias'); $i++) {
             // Crear una nueva instancia del modelo Guia
@@ -225,8 +246,40 @@ class GuiasController  extends Controller
             $guia->num_comercializadas = $request->input('comercializadas');
             $guia->mermas_plantas = $request->input('mermas');
             $guia->numero_plantas = $plantasActuales;
+
+            // Nuevos campos
+            $guia->edad = $request->input('edad');
+            $guia->art = $request->input('art');
+            $guia->kg_maguey = $request->input('kg_maguey');
+            $guia->no_lote_pedido = $request->input('no_lote_pedido');
+            $guia->fecha_corte = $request->input('fecha_corte');
+            $guia->observaciones = $request->input('observaciones');
+            $guia->nombre_cliente = $request->input('nombre_cliente');
+            $guia->no_cliente = $request->input('no_cliente');
+            $guia->fecha_ingreso = $request->input('fecha_ingreso');
+            $guia->domicilio = $request->input('domicilio');
             $guia->save();
+
+            // Guardar documentos
+            if ($request->hasFile('url')) {
+                foreach ($request->file('url') as $index => $archivo) {
+                    if ($archivo) {
+                        $nombreDoc = $request->nombre_documento[$index] ?? 'Sin nombre';
+                        $filename = $nombreDoc . '_' . time() . '.' . $archivo->getClientOriginalExtension();
+                        $filePath = $archivo->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+
+                        $documento = new \App\Models\Documentacion_url();
+                        $documento->id_relacion = $guia->id_guia;
+                        $documento->id_documento = $request->id_documento[$index] ?? null;
+                        $documento->nombre_documento = $nombreDoc;
+                        $documento->url = $filename;
+                        $documento->id_empresa = $request->input('empresa');
+                        $documento->save();
+                    }
+                }
+            }
         }
+
         // Actualizar la cantidad de plantas en la tabla predio_plantacion si es necesario
         if ($plantasNuevas !== null) {
             $predioPlantacion = \App\Models\predio_plantacion::where('id_predio', $request->input('predios'))
@@ -237,6 +290,7 @@ class GuiasController  extends Controller
                 $predioPlantacion->save();
             }
         }
+        
         // Responder con éxito
         return response()->json(['success' => 'Guía registrada correctamente']);
     }
