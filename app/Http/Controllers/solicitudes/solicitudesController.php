@@ -44,7 +44,9 @@ class solicitudesController extends Controller
 {
     public function UserManagement()
     {
-        $solicitudes = solicitudesModel::where('habilitado', 1)->get();
+        $solicitudes = solicitudesModel::where('habilitado', 1)
+            ->where('id_tipo', '!=', 12)
+            ->get();
         $solicitudesTipos = solicitudTipo::all();
         $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
         $estados = estados::all(); // Obtener todos los estados

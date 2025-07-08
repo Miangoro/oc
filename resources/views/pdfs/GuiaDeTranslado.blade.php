@@ -245,7 +245,7 @@
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas anterior:</td>
-            <td class="leftLetter" colspan="2"> </td>
+            <td class="leftLetter" colspan="2">{{ $datos[0]->num_anterior }} </td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas actual:</td>
@@ -266,9 +266,9 @@
         <br>
         <tr>
             <td class="leftLetter" style="width: 26%;">Nombre del cliente:</td>
-            <td class="leftLetter"></td>
+            <td class="leftLetter">{{ $datos[0]->nombre_cliente }}</td>
             <td class="leftLetter" style="width: 20%;">No. de cliente:</td>
-            <td class="leftLetter"></td>
+            <td class="leftLetter">{{ $datos[0]->no_cliente }}</td>
         </tr>
         <tr>
             <td class="leftLetter">Fecha de ingreso a
