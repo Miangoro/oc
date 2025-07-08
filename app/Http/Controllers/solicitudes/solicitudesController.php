@@ -110,7 +110,8 @@ class solicitudesController extends Controller
 
         $search = [];
 
-        $query = solicitudesModel::query()->where('habilitado', 1);
+        $query = solicitudesModel::query()->where('habilitado', 1)
+            ->where('id_tipo', '!=', 12);
 
         if ($empresaId) {
             $query->where('id_empresa', $empresaId);
@@ -149,7 +150,8 @@ class solicitudesController extends Controller
                 'inspeccion.inspector',
                 'ultima_validacion_oc',
                 'ultima_validacion_ui'
-            ])->where('habilitado', 1);
+            ])->where('habilitado', 1)
+                ->where('id_tipo', '!=', 12);
 
             // Si se necesita ordenar por nombre del inspector
             if ($order === 'inspector') {
@@ -185,6 +187,7 @@ class solicitudesController extends Controller
                         'ultima_validacion_oc',
                         'ultima_validacion_ui'
                     ])->where('habilitado', 1)
+                    ->where('id_tipo', '!=', 12)
                     ->where(function ($query) use ($search) {
                         $query->where(function ($q) use ($search) {
                             $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
@@ -233,6 +236,7 @@ class solicitudesController extends Controller
                         'inspeccion.inspector',
                         'ultima_validacion_oc',
                         'ultima_validacion_ui')->where('habilitado', 1)
+                            ->where('id_tipo', '!=', 12)
                     ->where(function ($query) use ($search) {
                         $query->where(function ($q) use ($search) {
                             $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
