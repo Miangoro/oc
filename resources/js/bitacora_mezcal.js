@@ -149,9 +149,26 @@ $(function () {
             );
           }
         },
+          {
+            targets: 6,
+            responsivePriority: 1,
+            render: function (data, type, full, meta) {
+              var $estatus = full['id_firmante'] ?? null;
+              let $badges = '';
+              let $texto = '';
+              if ($estatus != 0 && $estatus != null) {
+                $texto = 'Firmado';
+                $badges = 'bg-success';
+              } else {
+                $texto = 'Sin firmar';
+                $badges = 'bg-warning';
+              }
+              return `<span class="badge rounded-pill ${$badges} mb-1">${$texto}</span>`;
+            }
+          },
         {
           // Actions
-          targets: 6,
+          targets: 7,
           title: 'Acciones',
           searchable: false,
           orderable: false,

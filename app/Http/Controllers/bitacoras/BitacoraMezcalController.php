@@ -47,14 +47,11 @@ class BitacoraMezcalController extends Controller
         $query = BitacoraMezcal::query();
 
         if ($empresaId) {
-            $query->whereHas('loteBitacora', function ($q) use ($empresaId, $instalacionId) {
-                if ($empresaId) {
-                    $q->where('id_empresa', $empresaId);
-                }
-                if ($instalacionId) {
-                    $q->where('id_instalacion', $instalacionId);
-                }
-            });
+            $query->where('id_empresa', $empresaId);
+
+            if ($instalacionId) {
+                $query->where('id_instalacion', $instalacionId);
+            }
         }
 
         if (!empty($search)) {
@@ -87,6 +84,7 @@ class BitacoraMezcalController extends Controller
                 'volumen_entrada' => $bitacora->volumen_entrada ?? 'N/A',
                 'alcohol_entrada' => $bitacora->alcohol_entrada ?? 'N/A',
                 'agua_entrada' => $bitacora->agua_entrada ?? 'N/A',
+                'id_firmante' => $bitacora->id_firmante ?? 'N/A',
                 // Salidas
                 'volumen_salidas' => $bitacora->volumen_salidas ?? 'N/A',
                 'alcohol_salidas' => $bitacora->alcohol_salidas ?? 'N/A',
@@ -124,15 +122,12 @@ class BitacoraMezcalController extends Controller
         $instalacionId = $request->query('instalacion');
 
         $bitacoras = BitacoraMezcal::with('loteBitacora')
-            ->when($empresaId, function ($query) use ($empresaId) {
-                $query->whereHas('loteBitacora', function ($q) use ($empresaId) {
-                    $q->where('id_empresa', $empresaId);
-                });
-            })
-            ->when($instalacionId, function ($query) use ($instalacionId) {
-                $query->whereHas('loteBitacora', function ($q) use ($instalacionId) {
-                    $q->where('id_instalacion', $instalacionId);
-                });
+            ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
+                $query->where('id_empresa', $empresaId);
+
+                if ($instalacionId) {
+                    $query->where('id_instalacion', $instalacionId);
+                }
             })
             ->orderBy('fecha', 'desc')
             ->get();

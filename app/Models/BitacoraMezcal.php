@@ -42,9 +42,13 @@ class BitacoraMezcal extends Model
     ];
        public $timestamps = false;
        // En BitacoraMezcal.php
-public function loteBitacora()
-{
-    return $this->belongsTo(LotesGranel::class, 'id_lote_granel', 'id_lote_granel');
-}
+    public function loteBitacora()
+    {
+        return $this->belongsTo(LotesGranel::class, 'id_lote_granel', 'id_lote_granel');
+    }
+    public function empresaBitacora()
+    {
+        return $this->belongsTo(empresa::class, 'id_empresa');
+    }
 
 }

@@ -25,6 +25,10 @@
         height: 25px;
         font-family: 'calibri';
     }
+    /* Estilo para filas alternadas tipo table-striped */
+    tr.bitacora-row:nth-child(even) {
+        background-color: #f2f2f2; /* Gris claro */
+    }
 
     img {
         display: flex;
