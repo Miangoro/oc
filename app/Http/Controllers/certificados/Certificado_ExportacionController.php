@@ -188,7 +188,7 @@ public function index(Request $request)
                 ELSE 999999
             END $orderDirection
         ");*/
-        /*$query->orderByRaw("
+        $query->orderByRaw("
         -- Prioridad por tipo de nomenclatura
         CASE
             WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
@@ -219,8 +219,8 @@ public function index(Request $request)
             )
             ELSE 999999
         END $orderDirection
-    ");*/
-    $query->orderByRaw("
+    ");
+    /*$query->orderByRaw("
         -- Prioridad de tipos
         CASE
             WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
@@ -254,7 +254,7 @@ public function index(Request $request)
 
             ELSE 999999
         END ASC
-    ");
+    ");*/
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
     }
