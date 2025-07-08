@@ -126,7 +126,7 @@
             <td class="con-negra" style="padding-top: 0; padding-bottom: 0;" colspan="2">Responsable de las <br>
                 instalaciones</td>
             <td colspan="4">
-                {{ $datos->instalacion ? ($datos->instalacion ? '-----------------' : '-----------------') : '-----------------' }}
+                {{ $datos->instalacion ? ($datos->instalacion->responsable ? 'prim' : 'seg') : 'ter' }}
             </td>
 
             <td class="con-negra" colspan="3">SKU:</td>
