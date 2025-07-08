@@ -96,7 +96,7 @@ $(function () {
           render: function (data, type, full, meta) {
           let acciones = '';
             if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['run_folio']}" data-bs-toggle="modal" data-bs-target="#verGuiasRegistardas" href="javascript:;" class="dropdown-item ver-registros"><i class="ri-id-card-line ri-20px text-primary"></i> Ver/Llenar guías de traslado</a>`;
+              acciones += `<a data-id="${full['run_folio']}" data-bs-toggle="modal" data-bs-target="#verGuiasRegistardas" href="javascript:;" class="dropdown-item ver-registros"><i class="ri-id-card-line ri-20px text-primary"></i> Ver guías de traslado</a>`;
             }
             if (window.puedeEliminarElUsuario) {
               acciones += `<a data-id="${full['id_guia']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar guía de traslado</a>`;
@@ -118,7 +118,7 @@ $(function () {
               </div>
             `;
             return dropdown;
-              /*               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+              /*               `<button class="btn btn-sm btn-icon edit-guia btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
                             `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` + */
           }
         }
@@ -329,14 +329,24 @@ $(function () {
       const id_predio = $(this).val();
       if (!datosEmpresa || !id_predio) return;
 
+      //muestra las plantas en 0 pero no permite seleccionar
       const plantaciones = datosEmpresa.predio_plantacion.filter(p => p.id_predio == id_predio);
-
+      let contenido = '<option value="" disabled>Selecciona una plantación</option>';
+      plantaciones.forEach(item => {
+        const disabled = item.num_plantas == 0 ? 'disabled' : '';
+        contenido += `<option value="${item.id_plantacion}" data-num-plantas="${item.num_plantas}" ${disabled}>
+          Número de plantas: ${item.num_plantas} | Tipo de agave: ${item.nombre} ${item.cientifico} | Año de plantación: ${item.anio_plantacion}
+        </option>`;
+      });
+      //PARA NO MOSTRAR CUANDO SEAN = 0 
+      /*const plantaciones = datosEmpresa.predio_plantacion.filter(p => p.id_predio == id_predio && p.num_plantas > 0);
       let contenido = '<option value="" disabled>Selecciona una plantación</option>';
       plantaciones.forEach(item => {
         contenido += `<option value="${item.id_plantacion}" data-num-plantas="${item.num_plantas}">
         Número de plantas: ${item.num_plantas} | Tipo de agave: ${item.nombre} ${item.cientifico} | Año de plantación: ${item.anio_plantacion}
       </option>`;
-      });
+      });*/
+      
 
       if (plantaciones.length === 0) {
         contenido = '<option value="" disabled>Sin características registradas</option>';
@@ -365,6 +375,11 @@ $(function () {
       obtenerNombrePredio();
       formValidator.revalidateField('empresa');
     });
+
+    
+
+
+
 
     // Validaciónes
     const addGuiaForm = document.getElementById('addGuiaForm');
@@ -542,6 +557,7 @@ $(function () {
   });
 
   
+
   //VER Y DESCARGAR GUIAS
   $(document).on('click', '.ver-registros', function () {
     var run_folio = $(this).data('id');
@@ -573,18 +589,20 @@ $(function () {
                       </i>
                   </td>
 
-                  <td>
-                      <button type="button" class="btn btn-info">
-                          <a href="javascript:;" class="edit-record" style="color:#FFF"
-                              data-id="${item.id_guia}"
-                              data-bs-toggle="modal"
-                              data-bs-target="#editGuias">
-                              <i class="ri-book-marked-line"></i> Llenar guia
-                          </a>
-                      </button>
-                  </td>
               </tr>
           `;
+          /*
+          <td>
+              <button type="button" class="btn btn-info">
+                  <a href="javascript:;" class="edit-guia" style="color:#FFF"
+                      data-id="${item.id_guia}"
+                      data-bs-toggle="modal"
+                      data-bs-target="#editGuias">
+                      <i class="ri-book-marked-line"></i> Llenar guia
+                  </a>
+              </button>
+          </td>
+          */
         $('#tablita').append(fila);
       });
 
@@ -597,47 +615,6 @@ $(function () {
           e.preventDefault();
           downloadPdfsAsZip(pdfFiles, `Guias_de_traslado_${run_folio}.zip`);
         });
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-      console.error('Error: ' + textStatus + ' - ' + errorThrown);
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al obtener los datos de la guía de traslado',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    });
-  });
-
-
-  //Editar guias
-  $(document).on('click', '.edit-record', function () {
-    var id_guia = $(this).data('id');
-
-    $.get('/edit/' + id_guia, function (data) {
-      // Rellenar el formulario con los datos obtenidos
-      $('#editt_id_guia').val(data.id_guia);
-      $('#edit_id_empresa').val(data.id_empresa).trigger('change');
-      $('#edit_numero_guias').val(data.numero_guias);
-      $('#edit_nombre_predio').val(data.id_predio).trigger('change'); // Cambiado a 'id_predio'
-      $('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
-      $('#edit_num_anterior').val(data.num_anterior);
-      $('#edit_num_comercializadas').val(data.num_comercializadas);
-      $('#edit_mermas_plantas').val(data.mermas_plantas);
-      $('#edit_numero_plantas').val(data.numero_plantas);
-      $('#edit_edad').val(data.edad);
-      $('#edit_id_art').val(data.art);
-      $('#edit_kg_magey').val(data.kg_maguey);
-      $('#edit_no_lote_pedido').val(data.no_lote_pedido);
-      $('#edit_fecha_corte').val(data.fecha_corte);
-      $('#edit_id_observaciones').val(data.observaciones);
-      $('#edit_nombre_cliente').val(data.nombre_cliente);
-      $('#edit_no_cliente').val(data.no_cliente);
-      $('#edit_fecha_ingreso').val(data.fecha_ingreso);
-      $('#edit_domicilio').val(data.domicilio);
-      // Mostrar el modal de edición
-      $('#editGuias').modal('show');
     }).fail(function (jqXHR, textStatus, errorThrown) {
       console.error('Error: ' + textStatus + ' - ' + errorThrown);
       Swal.fire({
@@ -731,7 +708,69 @@ $(function () {
     });
   });
 
-  //Editar Guias y validacion
+
+
+
+  /*
+  //Editar guias
+  $(document).on('click', '.edit-guia', function () {
+    var id_guia = $(this).data('id');
+
+    $.get('/edit/' + id_guia, function (data) {
+      // Rellenar el formulario con los datos obtenidos
+      $('#editt_id_guia').val(data.id_guia);
+      $('#edit_id_empresa').val(data.id_empresa).trigger('change');
+      $('#edit_numero_guias').val(data.numero_guias);
+      $('#edit_nombre_predio').val(data.id_predio).trigger('change'); // Cambiado a 'id_predio'
+
+      // Ahora cargas las plantaciones y cuando terminen, seleccionas la correcta
+      $.ajax({
+        url: '/getDatos/' + data.id_empresa,
+        method: 'GET',
+        success: function(response) {
+          let contenido = '';
+          response.predio_plantacion.forEach(p => {
+            contenido += `<option value="${p.id_plantacion}">Número de plantas: ${p.num_plantas} | Tipo de agave: ${p.nombre} ${p.cientifico} | Año de plantación: ${p.anio_plantacion}</option>`;
+          });
+          $('#edit_id_plantacion').html(contenido);
+          
+          // Seleccionar el valor que viene de la base
+          $('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
+        }
+      });
+
+      //$('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
+
+      $('#edit_num_anterior').val(data.num_anterior);
+      $('#edit_num_comercializadas').val(data.num_comercializadas);
+      $('#edit_mermas_plantas').val(data.mermas_plantas);
+      $('#edit_numero_plantas').val(data.numero_plantas);
+      $('#edit_edad').val(data.edad);
+      $('#edit_id_art').val(data.art);
+      $('#edit_kg_magey').val(data.kg_maguey);
+      $('#edit_no_lote_pedido').val(data.no_lote_pedido);
+      $('#edit_fecha_corte').val(data.fecha_corte);
+      $('#edit_id_observaciones').val(data.observaciones);
+      $('#edit_nombre_cliente').val(data.nombre_cliente);
+      $('#edit_no_cliente').val(data.no_cliente);
+      $('#edit_fecha_ingreso').val(data.fecha_ingreso);
+      $('#edit_domicilio').val(data.domicilio);
+      // Mostrar el modal de edición
+      $('#editGuias').modal('show');
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de la guía de traslado',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    });
+  });
+
+  //ACTUALIZAR Guias y validacion
   const editGuiaForm = document.getElementById('editGuiaForm');
   const fv2 = FormValidation.formValidation(editGuiaForm, {
     fields: {
@@ -810,4 +849,8 @@ $(function () {
       }
     });
   });
+*/
+
+
+  
 }); //fin function

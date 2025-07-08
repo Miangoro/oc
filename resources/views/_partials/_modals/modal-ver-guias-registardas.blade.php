@@ -35,7 +35,7 @@
                                     <tr>
                                         <th>folio</th>
                                         <th>Guía</th>
-                                        <th>Acciones</th>
+                                        {{-- <th>Acciones</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody id="tablita">

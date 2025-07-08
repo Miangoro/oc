@@ -167,7 +167,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating form-floating-outline mb-5">
-                            <input class="form-control" type="number"
+                            <input class="form-control" type="text"
                                 placeholder="Ingrese el No. del cliente/comprador" id="no_cliente"
                                 name="no_cliente" />
                             <label>No del cliente/comprador</label>

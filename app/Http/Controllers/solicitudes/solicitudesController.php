@@ -44,7 +44,9 @@ class solicitudesController extends Controller
 {
     public function UserManagement()
     {
-        $solicitudes = solicitudesModel::where('habilitado', 1)->get();
+        $solicitudes = solicitudesModel::where('habilitado', 1)
+            ->where('id_tipo', '!=', 12)
+            ->get();
         $solicitudesTipos = solicitudTipo::all();
         $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
         $estados = estados::all(); // Obtener todos los estados
@@ -72,7 +74,6 @@ class solicitudesController extends Controller
         $tipos = tipos::all();
         $marcas = marcas::all();
         $aduanas = catalogo_aduanas::all();
-
 
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
         return view('solicitudes.find_solicitudes_view', compact('tipo_usuario','instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas', 'aduanas', 'solicitudes'));

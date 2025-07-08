@@ -557,7 +557,7 @@ public function reexpedir(Request $request)
             $request->validate([
             'id_firmante' => 'required|integer',
             'id_dictamen' => 'required|integer',
-            'num_certificado' => 'required|string',
+            'num_certificado' => 'required|string|min:19',
             'fecha_emision' => 'required|date',
             'fecha_vigencia' => 'required|date',
             'observaciones' => 'nullable|string',
