@@ -197,7 +197,7 @@ public function index(Request $request)
                 ELSE 3
             END ASC,
 
-            -- Número interno según formato
+            -- casos según el formato
             CASE
                 -- CIDAM C-EXP25-###
                 WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN CAST(
@@ -206,11 +206,11 @@ public function index(Request $request)
 
                 -- CIDAM C-EXP-###/2024
                 WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN CAST(
-                    SUBSTRING_INDEX(
-                        SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP-', num_certificado) + 11),
-                        '/', 1
-                    ) AS UNSIGNED
-                )
+            CONCAT('-', SUBSTRING_INDEX(
+                SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP-', num_certificado) + 11),
+                '/', 1
+            )) AS SIGNED
+        )
 
                 -- CIDAM ###/2022
                 WHEN num_certificado LIKE 'CIDAM %/%' THEN CAST(
