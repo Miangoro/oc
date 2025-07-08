@@ -188,7 +188,7 @@ public function index(Request $request)
                 ELSE 999999
             END $orderDirection
         ");*/
-        $query->orderByRaw("
+        /*$query->orderByRaw("
             -- Prioridad por tipo de nomenclatura
             CASE
                 WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
@@ -219,6 +219,42 @@ public function index(Request $request)
                 )
                 ELSE 999999
             END $orderDirection
+        ");*/
+        // Orden por tipo (actuales primero, luego anteriores, luego viejos)
+        $query->orderByRaw("
+            CASE
+                WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
+                WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP-%/%' THEN 1
+                WHEN certificados_exportacion.num_certificado LIKE 'CIDAM %/%' THEN 2
+                ELSE 3
+            END ASC
+        ");
+
+        // Orden descendente para C-EXP25
+        $query->orderByRaw("
+            CASE
+                WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP25-%'
+                THEN CAST(SUBSTRING(certificados_exportacion.num_certificado, 15) AS SIGNED)
+                ELSE NULL
+            END DESC
+        ");
+
+        // Orden descendente para C-EXP-###/AAAA
+        $query->orderByRaw("
+            CASE
+                WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP-%/%'
+                THEN CAST(SUBSTRING_INDEX(SUBSTRING(certificados_exportacion.num_certificado, 12), '/', 1) AS SIGNED)
+                ELSE NULL
+            END DESC
+        ");
+
+        // Orden descendente para ###/AAAA
+        $query->orderByRaw("
+            CASE
+                WHEN certificados_exportacion.num_certificado LIKE 'CIDAM %/%'
+                THEN CAST(SUBSTRING_INDEX(SUBSTRING(certificados_exportacion.num_certificado, 7), '/', 1) AS SIGNED)
+                ELSE NULL
+            END DESC
         ");
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
