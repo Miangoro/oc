@@ -772,4 +772,42 @@ $(function () {
       $(selector).hide().find('input, textarea').val('');
     }
   });
+
+    $(document).on('change', '#id_empresa', function () {
+        obtenerEtiquetas2();
+    });
+
+
+     function obtenerEtiquetas2() {
+        var empresa = $('#id_empresa').val();
+        if (!empresa) return;
+        $.ajax({
+            url: '/etiquetas/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var contenido2 = '<option value="" disabled selected>Seleccione una etiqueta</option>';
+
+                response.forEach(function(etiqueta) {
+                    contenido2 += `
+                          <option value="${etiqueta.id_etiqueta}"
+                              data-id_marca="${etiqueta.id_marca}"
+                              data-sku="${etiqueta.sku}"
+                              data-id_categoria="${etiqueta.id_categoria}"
+                              data-id_clase="${etiqueta.id_clase}"
+                              data-id_tipo="${etiqueta.id_tipo}">
+                            ${etiqueta.marca_nombre} | ${etiqueta.presentacion}${etiqueta.unidad} | ${etiqueta.alc_vol}% Alc. Vol. | ${etiqueta.sku} | ${etiqueta.clase_nombre} | ${etiqueta.categoria_nombre} | ${etiqueta.tipo_nombre}
+                          </option>`;
+                });
+
+                $('#id_etiqueta').html(contenido2).trigger('change');
+
+                const etiqueta = $('#id_etiqueta').data('selected');
+                if (etiqueta) {
+                    $('#id_etiqueta').val(etiqueta);
+                }
+
+            }
+        });
+    }
+
 });
