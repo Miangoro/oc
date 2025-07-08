@@ -240,7 +240,7 @@
 </tr>
 <tr >
     <td class="rightLetter negrita" style="height: 60px">Comentarios</td>
-    <td colspan="3">{{$datos->comentarios}} <span class="negrita">Marca:</span> {{ $datos->marcas->marca }}</td>
+    <td colspan="3">{{$datos->comentarios}} <span class="negrita">Marca:</span> {{ $datos->marcas->marca }}<br><span class="negrita">Fecha de solicitud:</span> {{ $datos->created_at }}</td>
 </tr>
 <tr>
     <td colspan="4">NOTA: Se solicita reenviar vía electrónica este acuse firmado para confirmar la llegada de hologramas. <div style="height: 50px"></div>

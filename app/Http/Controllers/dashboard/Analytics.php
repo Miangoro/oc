@@ -12,6 +12,7 @@ use App\Models\Dictamen_Granel;
 use App\Models\Dictamen_instalaciones;
 use App\Models\inspecciones;
 use App\Models\LotesGranel;
+use App\Models\marcas;
 use App\Models\solicitudesModel;
 use App\Models\solicitudTipo;
 use Carbon\Carbon;
@@ -106,8 +107,9 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
     ];
 })->sortByDesc('total_inspecciones'); 
 
+    $marcasConHologramas = marcas::with('solicitudHolograma')->where('id_empresa',$empresaId)->get();
 
-    return view('content.dashboard.dashboards-analytics', compact('TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+    return view('content.dashboard.dashboards-analytics', compact('marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)

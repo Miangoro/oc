@@ -437,7 +437,34 @@
                 </div>
             </div>
 
+             
+
             @endcan
+
+            @foreach($marcasConHologramas AS $marca)
+                <div class="col-sm-2">
+                    <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center flex-wrap">
+                        <div class="avatar me-4">
+                            <div class="avatar-initial bg-label-primary rounded-3">
+                            <i class="ri-user-star-line ri-24px">
+                            </i>
+                            </div>
+                        </div>
+                        <div class="card-info">
+                            <div class="d-flex align-items-center">
+                            <h5 class="mb-0 me-2">0</h5>
+                            <i class="ri-arrow-down-s-line text-danger ri-20px"></i>
+                            <small class="text-danger">Hologramas disponibles</small>
+                            </div>
+                            <p class="mb-0">{{ $marca->marca }}</p>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            @endforeach
             
         </div>
 
