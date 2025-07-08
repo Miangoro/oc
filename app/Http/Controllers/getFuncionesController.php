@@ -278,6 +278,11 @@ public function getDocumentosSolicitud($id_solicitud)
             ? json_decode($solicitud->caracteristicas, true)
             : $solicitud->caracteristicas;
 
+        $id_lote_envasado = is_array($caracteristicas)
+            ? ($caracteristicas['id_lote_envasado'] ?? null)
+            : ($caracteristicas->id_lote_envasado ?? null);
+        $url_etiqueta_envasado = lotes_envasado::with('etiquetas.url_etiqueta')->find($id_lote_envasado);
+
         $idEtiqueta = is_array($caracteristicas)
             ? ($caracteristicas['id_etiqueta'] ?? null)
             : ($caracteristicas->id_etiqueta ?? null);
@@ -368,6 +373,7 @@ foreach ($certificados as $certificado) {
         'url_certificado' => $urls_certificados ?? '',
         'url_fqs' => $url_fqs ?? '',
         'id_lote_envasado' => $certificados ?? '',
+        'url_etiqueta_envasado' => $url_etiqueta_envasado ?? '',
 
             ]);
 }

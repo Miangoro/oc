@@ -88,6 +88,27 @@ class solicitudHolograma extends Model
         return $totalActivados;
     }
 
+        public function cantidadDisponibles($id_solicitud)
+        {
+            // Obtener la cantidad total autorizada para esa solicitud
+            $solicitud = solicitudHolograma::find($id_solicitud);
+
+            if (!$solicitud || !isset($solicitud->cantidad_hologramas)) {
+                return 0; // O lanza excepción si quieres manejar errores
+            }
+
+            $cantidad_hologramas = $solicitud->cantidad_hologramas;
+
+            // Obtener la cantidad ya activada
+            $activados = $this->cantidadActivados($id_solicitud);
+
+            // Calcular disponibles
+            $disponibles = $cantidad_hologramas - $activados;
+
+            return max($disponibles, 0); // Nunca negativos
+        }
+
+
 
     public function cantidadMermas($id_solicitud)
     {
