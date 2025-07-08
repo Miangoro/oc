@@ -221,30 +221,33 @@ public function index(Request $request)
         END $orderDirection
     ");*/
     $query->orderByRaw("
-        -- 1. Prioridad por tipo
+        -- 1. Clasifica por tipo de nomenclatura
         CASE
             WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
             WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP-%/%' THEN 1
             WHEN certificados_exportacion.num_certificado LIKE 'CIDAM %/%' THEN 2
             ELSE 3
-        END ASC,
+        END ASC
+    ");
 
-        -- 2. Orden descendente numérico por tipo
+    // Segundo ordenamiento por número DESC según el tipo
+    $query->orderByRaw("
+        -- Orden descendente por número dentro de cada tipo
         CASE
-            -- CIDAM C-EXP25-###
+            -- Para CIDAM C-EXP25-###
             WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP25-%' THEN
                 CAST(SUBSTRING(certificados_exportacion.num_certificado, 15) AS SIGNED)
 
-            -- CIDAM C-EXP-###/AAAA
+            -- Para CIDAM C-EXP-###/AAAA
             WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP-%/%' THEN
-                -1 * CAST(SUBSTRING_INDEX(SUBSTRING(certificados_exportacion.num_certificado, 12), '/', 1) AS SIGNED)
+                CAST(SUBSTRING_INDEX(SUBSTRING(certificados_exportacion.num_certificado, 12), '/', 1) AS SIGNED)
 
-            -- CIDAM ###/AAAA
+            -- Para CIDAM ###/AAAA
             WHEN certificados_exportacion.num_certificado LIKE 'CIDAM %/%' THEN
-                -1 * CAST(SUBSTRING_INDEX(SUBSTRING(certificados_exportacion.num_certificado, 7), '/', 1) AS SIGNED)
+                CAST(SUBSTRING_INDEX(SUBSTRING(certificados_exportacion.num_certificado, 7), '/', 1) AS SIGNED)
 
-            ELSE 999999
-        END ASC
+            ELSE 0
+        END DESC
     ");
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
