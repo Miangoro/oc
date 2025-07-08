@@ -304,7 +304,7 @@
                                     <tr>
                                         <td>Etiqueta</td>
                                         <td>
-                                            <a href="/files/${response.numero_cliente}/certificados_granel/${url_etiqueta_envasado}" target="_blank">
+                                            <a href="/files/${response.numero_cliente}/${url_etiqueta_envasado}" target="_blank">
                                                 <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
                                             </a>
                                         </td>
