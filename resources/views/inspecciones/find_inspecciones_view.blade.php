@@ -293,20 +293,8 @@
                                 </td>
                             </tr>`;
                         });
-                    } 
-
-                    if (url_etiqueta_envasado) {
-                     
-                            html += `
-                                    <tr>
-                                        <td>Etiqueta</td>
-                                        <td>
-                                            <a href="/files/${response.numero_cliente}/certificados_granel/${url_etiqueta_envasado}" target="_blank">
-                                                <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
-                                            </a>
-                                        </td>
-                                    </tr>`;
-                       
+                    } else {
+                        html += `<tr><td colspan="2">No se encontraron documentos.</td></tr>`;
                     }
 
                     if (urls_certificados && urls_certificados.length > 0) {
