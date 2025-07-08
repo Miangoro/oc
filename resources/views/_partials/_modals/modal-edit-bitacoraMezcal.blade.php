@@ -39,11 +39,11 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select id="edit_tipo_op" name="tipo_op" class=" form-select"
+                                <select id="edit_tipo_op" name="tipo_operacion" class=" form-select"
                                     data-error-message="Por favor selecciona el tipo de operación">
                                     <option value="" disabled selected>Selecciona el tipo de operación</option>
                                     <option value="Entradas">Entradas</option>
-                                    <option value="Salida">Salidas</option>
+                                    <option value="Salidas">Salidas</option>
                                 </select>
                                 <label for="tipo_op">Tipo de operación</label>
                             </div>
@@ -196,7 +196,12 @@
 
                     <!-- Botones -->
                     <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill me-1"></i>
+                      <button disabled class="btn btn-primary me-2 d-none"
+                            type="button" id="loadingEdit">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Actualizando...
+                        </button>
+                        <button type="submit" class="btn btn-primary me-2" id="btnEdit"><i class="ri-pencil-fill me-1"></i>
                             Editar</button>
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i
                                 class="ri-close-line me-1"></i> Cancelar</button>

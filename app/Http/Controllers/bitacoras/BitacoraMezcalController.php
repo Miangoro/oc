@@ -153,7 +153,6 @@ class BitacoraMezcalController extends Controller
             'id_instalacion' => 'required|integer',
             'operacion_adicional' => 'nullable|string',
             'tipo_operacion' => 'required|string',
-            'tipo_operacion' => 'required|string',
             'volumen_inicial' => 'nullable|numeric|min:0',
             'alcohol_inicial' => 'nullable|numeric|min:0',
             'procedencia_entrada' => 'nullable|string',
