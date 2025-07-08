@@ -454,7 +454,7 @@
                         </div>
                         <div class="card-info">
                             <div class="d-flex align-items-center">
-                            <h5 class="mb-0 me-2">0</h5>
+                            <h5 class="mb-0 me-2">{{ $marca->solicitudHolograma->cantidadDisponibles() }}</h5>
                             <i class="ri-arrow-down-s-line text-danger ri-20px"></i>
                             <small class="text-danger">Hologramas disponibles</small>
                             </div>

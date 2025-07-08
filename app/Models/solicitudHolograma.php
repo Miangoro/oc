@@ -88,10 +88,10 @@ class solicitudHolograma extends Model
         return $totalActivados;
     }
 
-        public function cantidadDisponibles($id_solicitud)
+        public function cantidadDisponibles()
         {
             // Obtener la cantidad total autorizada para esa solicitud
-            $solicitud = solicitudHolograma::find($id_solicitud);
+            $solicitud = solicitudHolograma::find($this->id_solicitud);
 
             if (!$solicitud || !isset($solicitud->cantidad_hologramas)) {
                 return 0; // O lanza excepción si quieres manejar errores
@@ -100,7 +100,7 @@ class solicitudHolograma extends Model
             $cantidad_hologramas = $solicitud->cantidad_hologramas;
 
             // Obtener la cantidad ya activada
-            $activados = $this->cantidadActivados($id_solicitud);
+            $activados = $this->cantidadActivados($this->id_solicitud);
 
             // Calcular disponibles
             $disponibles = $cantidad_hologramas - $activados;
