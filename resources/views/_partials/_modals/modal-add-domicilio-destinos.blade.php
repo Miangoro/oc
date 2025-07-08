@@ -79,7 +79,7 @@
                                             <label for="pais_destino">País de Destino</label>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
 
@@ -115,8 +115,16 @@
                                     </div>
                                 </div>
                             </div>
-
-
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-floating form-floating-outline">
+                                        <select placeholder="Selecciona una etiqueta" multiple class="form-select select2 id_etiqueta"
+                                            id="id_etiqueta" name="id_etiqueta[]" aria-label="Default select example">
+                                        </select>
+                                        <label for="etiqueta">Seleccione una etiqueta</label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="d-flex justify-content-end mt-3">
                                 <button type="submit" class="btn btn-primary me-2">Registrar</button>
                                 <button type="reset" class="btn btn-outline-secondary"

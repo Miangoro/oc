@@ -584,7 +584,7 @@ $(function () {
                         data-id_categoria="${etiqueta.id_categoria}"
                         data-id_clase="${etiqueta.id_clase}"
                         data-id_tipo="${etiqueta.id_tipo}">
-                        ${etiqueta.marca_nombre} | ${etiqueta.presentacion}${etiqueta.unidad} | ${etiqueta.alc_vol}% Alc. Vol. | ${etiqueta.clase_nombre} | ${etiqueta.categoria_nombre} | ${etiqueta.tipo_nombre}
+                        ${etiqueta.marca_nombre} | ${etiqueta.presentacion}${etiqueta.unidad} | ${etiqueta.alc_vol}% Alc. Vol. | ${etiqueta.sku} | ${etiqueta.clase_nombre} | ${etiqueta.categoria_nombre} | ${etiqueta.tipo_nombre}
                     </option>`;
           });
 
@@ -1254,4 +1254,5 @@ $(function () {
       $('input[name="volumen_parcial[]"]').val(volumenTotal ? volumenTotal.toFixed(2) : '');
     });
   });
+
 });
