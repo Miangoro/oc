@@ -197,20 +197,22 @@ public function index(Request $request)
             ELSE 3
         END ASC,
 
-        -- Número interno según formato
+        -- Número extraído con orden específico por tipo
         CASE
-            -- CIDAM C-EXP25-###
+            -- CIDAM C-EXP25-302 (mantiene orden dinámico)
             WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN CAST(
                 SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14) AS UNSIGNED
             )
-            -- CIDAM C-EXP-###/2024
-            WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN CAST(
+            
+            -- CIDAM C-EXP-188/2024 (orden fijo DESC)
+            WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN -1 * CAST(
                 SUBSTRING_INDEX(
                     SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP-', num_certificado) + 11),
                     '/', 1
-                ) AS UNSIGNED
+                ) AS SIGNED
             )
-            -- CIDAM ###/2022
+
+            -- CIDAM 001/2022 (orden dinámico)
             WHEN num_certificado LIKE 'CIDAM %/%' THEN CAST(
                 SUBSTRING_INDEX(
                     SUBSTRING(num_certificado, LOCATE('CIDAM ', num_certificado) + 6),
@@ -218,7 +220,7 @@ public function index(Request $request)
                 ) AS UNSIGNED
             )
             ELSE 999999
-        END $orderDirection
+        END ASC
     ");
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
