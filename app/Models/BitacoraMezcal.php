@@ -50,5 +50,11 @@ class BitacoraMezcal extends Model
     {
         return $this->belongsTo(empresa::class, 'id_empresa');
     }
+    // BitacoraMezcal.php
+    public function firmante()
+    {
+        return $this->belongsTo(User::class, 'id_firmante');
+    }
+
 
 }

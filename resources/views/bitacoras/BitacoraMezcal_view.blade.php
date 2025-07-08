@@ -47,6 +47,7 @@
                     <tr>
                         <th>#</th>
                         <th>ID</th>
+                        <th>Cliente</th>
                         <th>Datos Iniciales</th>
                         <th>Entradas</th>
                         <th>Salidas</th>

@@ -71,10 +71,30 @@ class BitacoraMezcalController extends Controller
         $counter = $start + 1;
 
         foreach ($bitacoras as $bitacora) {
+
+          $razonSocial = $bitacora->empresaBitacora->razon_social ?? 'Sin razón social';
+           $numeroCliente = null;
+                if ($bitacora->empresaBitacora && $bitacora->empresaBitacora->empresaNumClientes) {
+                    $clientes = $bitacora->empresaBitacora->empresaNumClientes;
+                    foreach ([0, 1, 2] as $index) {
+                        if (isset($clientes[$index]) && !empty($clientes[$index]->numero_cliente)) {
+                            $numeroCliente = $clientes[$index]->numero_cliente;
+                            break;
+                        }
+                    }
+                }
+                $numeroCliente = $numeroCliente ?? 'Sin número cliente';
+
             $nestedData = [
                 'fake_id' => $counter++,
                 'fecha' => Helpers::formatearFecha($bitacora->fecha),
                 'id' => $bitacora->id,
+                //numero de cliente
+                'razon_social' => $razonSocial,
+                'numero_cliente' => $numeroCliente,
+                'cliente' => '<b>' . $numeroCliente . '</b><br>' . $razonSocial,
+                //
+                'razon_social' => $bitacora->empresaBitacora->razon_social ?? 'Sin razón social',
                 'nombre_lote' => $bitacora->loteBitacora->nombre_lote ?? 'N/A',
 /*                 'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
                 'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A', */
@@ -121,16 +141,19 @@ class BitacoraMezcalController extends Controller
         $empresaId = $request->query('empresa');
         $instalacionId = $request->query('instalacion');
 
-        $bitacoras = BitacoraMezcal::with('loteBitacora')
-            ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
-                $query->where('id_empresa', $empresaId);
+        $bitacoras = BitacoraMezcal::with([
+            'empresaBitacora.empresaNumClientes',
+            'firmante',
+        ])
+        ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
+            $query->where('id_empresa', $empresaId);
+            if ($instalacionId) {
+                $query->where('id_instalacion', $instalacionId);
+            }
+        })
+        ->orderBy('fecha', 'desc')
+        ->get();
 
-                if ($instalacionId) {
-                    $query->where('id_instalacion', $instalacionId);
-                }
-            })
-            ->orderBy('fecha', 'desc')
-            ->get();
 
         $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');

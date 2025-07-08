@@ -28,10 +28,15 @@ $(function () {
         }
       },
       columns: [
-        { data: '#' }, //0
-        { data: 'fake_id' }, //1
-        { data: 'fecha' }, //2
-        { data: 'actions' } //3
+      { data: null }, // 0 -> # (control o vacío)
+      { data: 'fake_id' }, // 1 -> ID
+      { data: 'razon_social' }, // 2 -> Cliente (campo directo)
+      { data: null }, // 3 -> Datos Iniciales (fecha + lote)
+      { data: null }, // 4 -> Entradas
+      { data: null }, // 5 -> Salidas
+      { data: null }, // 6 -> Inventario Final
+      { data: 'id_firmante' }, // 7 -> Estatus (para badge)
+      { data: null } // 8 -> Acciones
       ],
       columnDefs: [
         {
@@ -40,7 +45,7 @@ $(function () {
           orderable: false,
           responsivePriority: 2,
           targets: 0,
-          render: function (data, type, full, meta) {
+          render: function (data, type, row) {
             return '';
           }
         },
@@ -48,19 +53,24 @@ $(function () {
           searchable: false,
           orderable: false,
           targets: 1,
-          render: function (data, type, full, meta) {
+          render: function (data, type, full) {
             return `<span>${full.fake_id}</span>`;
           }
         },
         {
           targets: 2,
           responsivePriority: 1,
+          render: function (data, type, full) {
+            var $empresa = full['cliente'] ?? 'N/A';
+            return `<span>${$empresa}</span>`;
+          }
+        },
+        {
+          targets: 3,
+          responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $fecha = full['fecha'] ?? 'N/A';
             var $id_lote_granel = full['nombre_lote'] ?? 'N/A';
-            // var $volumen_inicial = full['volumen_inicial'] ?? 'N/A';
-            // var $alcohol_inicial = full['alcohol_inicial'] ?? 'N/A';
-
             return (
               '<span class="fw-bold text-dark small">Fecha: </span>' +
               '<span class="small">' +
@@ -71,14 +81,10 @@ $(function () {
               $id_lote_granel +
               '</span>'
             );
-            // + '<br><span class="fw-bold text-dark small">Volumen Inicial: </span>' +
-            // '<span class="small">' + $volumen_inicial + '</span>' +
-            // '<br><span class="fw-bold text-dark small">Alcohol Inicial: </span>' +
-            // '<span class="small">' + $alcohol_inicial + '</span>';
           }
         },
         {
-          targets: 3,
+          targets: 4,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $procedencia_entrada = full['procedencia_entrada'] ?? 'N/A';
@@ -106,8 +112,9 @@ $(function () {
             );
           }
         },
+        ////salidas
         {
-          targets: 4,
+          targets: 5,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $volumen_salidas = full['volumen_salidas'] ?? 'N/A';
@@ -131,7 +138,7 @@ $(function () {
           }
         },
         {
-          targets: 5,
+          targets: 6,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $volumen_final = full['volumen_final'] ?? 'N/A';
@@ -149,26 +156,26 @@ $(function () {
             );
           }
         },
-          {
-            targets: 6,
-            responsivePriority: 1,
-            render: function (data, type, full, meta) {
-              var $estatus = full['id_firmante'] ?? null;
-              let $badges = '';
-              let $texto = '';
-              if ($estatus != 0 && $estatus != null) {
-                $texto = 'Firmado';
-                $badges = 'bg-success';
-              } else {
-                $texto = 'Sin firmar';
-                $badges = 'bg-warning';
-              }
-              return `<span class="badge rounded-pill ${$badges} mb-1">${$texto}</span>`;
+        {
+          targets: 7,
+          responsivePriority: 1,
+          render: function (data, type, full, meta) {
+            var $estatus = full['id_firmante'] ?? null;
+            let $badges = '';
+            let $texto = '';
+            if ($estatus != 0 && $estatus != null) {
+              $texto = 'Firmado';
+              $badges = 'bg-success';
+            } else {
+              $texto = 'Sin firmar';
+              $badges = 'bg-warning';
             }
-          },
+            return `<span class="badge rounded-pill ${$badges} mb-1">${$texto}</span>`;
+          }
+        },
         {
           // Actions
-          targets: 7,
+          targets: 8,
           title: 'Acciones',
           searchable: false,
           orderable: false,
@@ -228,7 +235,7 @@ $(function () {
       // Opciones Exportar Documentos
       buttons: [
         {
-          className: 'dt-custom-select p-0 me-2 btn-outline-dark ',
+          className: 'dt-custom-select p-0 me-2 btn-outline-dark form-select-sm',
           text: '', // 👈 importante que esté vacío
           init: function (api, node, config) {
             // Remover clases no deseadas que DataTables agrega
@@ -248,7 +255,7 @@ $(function () {
         },
         {
           text: '',
-          className: 'dt-custom-select p-0 me-2 btn-outline-dark',
+          className: 'dt-custom-select p-0 me-2 btn-outline-dark form-select-sm',
           init: function (api, node, config) {
             $(node).removeClass('btn btn-secondary');
             $(node).html(`
