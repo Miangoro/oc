@@ -188,7 +188,7 @@ public function index(Request $request)
                 ELSE 999999
             END $orderDirection
         ");*/
-        $query->orderByRaw("
+         $query->orderByRaw("
         -- Prioridad por tipo de nomenclatura
         CASE
             WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
@@ -197,31 +197,28 @@ public function index(Request $request)
             ELSE 3
         END ASC,
 
-        -- Número extraído y multiplicado por -1 para forzar orden descendente (usando ASC)
+        -- Número interno según formato
         CASE
             -- CIDAM C-EXP25-###
-            WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN -1 * CAST(
+            WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN CAST(
                 SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14) AS UNSIGNED
             )
-
-            -- CIDAM C-EXP-###/YYYY
-            WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN -1 * CAST(
+            -- CIDAM C-EXP-###/2024
+            WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN CAST(
                 SUBSTRING_INDEX(
                     SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP-', num_certificado) + 11),
                     '/', 1
                 ) AS UNSIGNED
             )
-
-            -- CIDAM ###/YYYY
-            WHEN num_certificado LIKE 'CIDAM %/%' THEN -1 * CAST(
+            -- CIDAM ###/2022
+            WHEN num_certificado LIKE 'CIDAM %/%' THEN CAST(
                 SUBSTRING_INDEX(
                     SUBSTRING(num_certificado, LOCATE('CIDAM ', num_certificado) + 6),
                     '/', 1
                 ) AS UNSIGNED
             )
-
             ELSE 999999
-        END ASC
+        END $orderDirection
     ");
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
