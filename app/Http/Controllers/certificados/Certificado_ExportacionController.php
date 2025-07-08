@@ -188,67 +188,38 @@ public function index(Request $request)
                 ELSE 999999
             END $orderDirection
         ");*/
-        /*$query->orderByRaw("
-        -- Prioridad por tipo de nomenclatura
-        CASE
-            WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
-            WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN 1
-            WHEN num_certificado LIKE 'CIDAM %/%' THEN 2
-            ELSE 3
-        END ASC,
+        $query->orderByRaw("
+            -- Prioridad por tipo de nomenclatura
+            CASE
+                WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
+                WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN 1
+                WHEN num_certificado LIKE 'CIDAM %/%' THEN 2
+                ELSE 3
+            END ASC,
 
-        -- Número interno según formato
-        CASE
-            -- CIDAM C-EXP25-###
-            WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN CAST(
-                SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14) AS UNSIGNED
-            )
-            -- CIDAM C-EXP-###/2024
-            WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN CAST(
-                SUBSTRING_INDEX(
-                    SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP-', num_certificado) + 11),
-                    '/', 1
-                ) AS UNSIGNED
-            )
-            -- CIDAM ###/2022
-            WHEN num_certificado LIKE 'CIDAM %/%' THEN CAST(
-                SUBSTRING_INDEX(
-                    SUBSTRING(num_certificado, LOCATE('CIDAM ', num_certificado) + 6),
-                    '/', 1
-                ) AS UNSIGNED
-            )
-            ELSE 999999
-        END $orderDirection
-    ");*/
-    $query->orderByRaw("
-        -- 1. Clasifica por tipo de nomenclatura
-        CASE
-            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP25-%' THEN 0
-            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP-%/%' THEN 1
-            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM %/%' THEN 2
-            ELSE 3
-        END ASC
-    ");
-
-    // Segundo ordenamiento por número DESC según el tipo
-    $query->orderByRaw("
-        -- Orden descendente por número dentro de cada tipo
-        CASE
-            -- Para CIDAM C-EXP25-###
-            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP25-%' THEN
-                CAST(SUBSTRING(certificados_exportacion.num_certificado, 15) AS SIGNED)
-
-            -- Para CIDAM C-EXP-###/AAAA
-            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM C-EXP-%/%' THEN
-                CAST(SUBSTRING_INDEX(SUBSTRING(certificados_exportacion.num_certificado, 12), '/', 1) AS SIGNED)
-
-            -- Para CIDAM ###/AAAA
-            WHEN certificados_exportacion.num_certificado LIKE 'CIDAM %/%' THEN
-                CAST(SUBSTRING_INDEX(SUBSTRING(certificados_exportacion.num_certificado, 7), '/', 1) AS SIGNED)
-
-            ELSE 0
-        END DESC
-    ");
+            -- Número interno según formato
+            CASE
+                -- CIDAM C-EXP25-###
+                WHEN num_certificado LIKE 'CIDAM C-EXP25-%' THEN CAST(
+                    SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14) AS UNSIGNED
+                )
+                -- CIDAM C-EXP-###/2024
+                WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN CAST(
+                    SUBSTRING_INDEX(
+                        SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP-', num_certificado) + 11),
+                        '/', 1
+                    ) AS UNSIGNED
+                )
+                -- CIDAM ###/2022
+                WHEN num_certificado LIKE 'CIDAM %/%' THEN CAST(
+                    SUBSTRING_INDEX(
+                        SUBSTRING(num_certificado, LOCATE('CIDAM ', num_certificado) + 6),
+                        '/', 1
+                    ) AS UNSIGNED
+                )
+                ELSE 999999
+            END $orderDirection
+        ");
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
     }
