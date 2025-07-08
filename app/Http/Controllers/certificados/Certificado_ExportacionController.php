@@ -204,13 +204,12 @@ public function index(Request $request)
                     SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP25-', num_certificado) + 14) AS UNSIGNED
                 )
 
+
                 -- CIDAM C-EXP-###/2024
-                WHEN num_certificado LIKE 'CIDAM C-EXP-%/%' THEN CAST(
-                    SUBSTRING_INDEX(
-                        SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP-', num_certificado) + 11),
-                        '/', 1
-                    ) AS UNSIGNED
-                )
+                WHEN num_certificado LIKE 'CIDAM C-EXP-%' THEN CAST(
+            SUBSTRING(num_certificado, LOCATE('CIDAM C-EXP-', num_certificado) + 11) AS UNSIGNED
+        )
+
 
                 -- CIDAM ###/2022
                 WHEN num_certificado LIKE 'CIDAM %/%' THEN CAST(
