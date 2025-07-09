@@ -3,19 +3,18 @@
             aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 id="modalAddDestinoLabel" class="modal-title">Nueva dirección de destino</h5>
+                    <div class="modal-header bg-primary">
+                        <h6 id="modalAddDestinoLabel" class="modal-title text-white mb-4">Nueva dirección de destino</h6>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body my-8">
                         <form id="addNewDestinoForm" method="POST">
                             @csrf
                             <!-- Tipo de Dirección -->
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <select id="tipo_direccion" name="tipo_direccion" class="form-select"
-                                           >
+                                        <select id="tipo_direccion" name="tipo_direccion" class="form-select">
                                             <option value="" disabled selected>Selecciona el tipo de dirección
                                             </option>
                                             <option value="1">Para exportación</option>
@@ -35,7 +34,8 @@
                                             @foreach ($empresas as $empresa)
                                                 @if ($empresa->tipo == 2)
                                                     <option value="{{ $empresa->id_empresa }}">
-                                                        {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                                        {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                                        | {{ $empresa->razon_social }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -45,7 +45,7 @@
                             </div>
                             <!-- Domicilio Completo -->
                             <div class="form-floating form-floating-outline mb-4">
-                                <textarea class="form-control" id="direccion" name="direccion" placeholder="Domicilio completo"  autocomplete="off"></textarea>
+                                <textarea class="form-control" id="direccion" name="direccion" placeholder="Domicilio completo" autocomplete="off"></textarea>
                                 <label for="direccion">Domicilio Completo</label>
                             </div>
                             <!-- Campos adicionales para exportación -->
@@ -54,12 +54,13 @@
                                     <!-- Nombre del Destinatario -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="destinatario"  autocomplete="off"
-                                                name="destinatario" placeholder="Nombre del destinatario">
+                                            <input type="text" class="form-control" id="destinatario"
+                                                autocomplete="off" name="destinatario"
+                                                placeholder="Nombre del destinatario">
                                             <label for="destinatario">Nombre del Destinatario</label>
                                         </div>
                                     </div>
-                                {{-- </div>
+                                    {{-- </div>
 
                                 <div class="row mb-4"> --}}
                                     <!-- Aduana de Despacho -->
@@ -74,8 +75,8 @@
                                     <!-- País de Destino -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="pais_destino"  autocomplete="off"
-                                                name="pais_destino" placeholder="País de destino">
+                                            <input type="text" class="form-control" id="pais_destino"
+                                                autocomplete="off" name="pais_destino" placeholder="País de destino">
                                             <label for="pais_destino">País de Destino</label>
                                         </div>
                                     </div>
@@ -90,8 +91,9 @@
                                     <!-- Correo -->
                                     <div class="col-md-12">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="email" class="form-control" id="correo_recibe"  autocomplete="off"
-                                                name="correo_recibe" placeholder="Correo electrónico">
+                                            <input type="email" class="form-control" id="correo_recibe"
+                                                autocomplete="off" name="correo_recibe"
+                                                placeholder="Correo electrónico">
                                             <label for="correo_recibe">Correo Electrónico</label>
                                         </div>
                                     </div>
@@ -101,15 +103,16 @@
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="nombre_recibe"
-                                                name="nombre_recibe"  autocomplete="off"
+                                                name="nombre_recibe" autocomplete="off"
                                                 placeholder="Nombre completo del receptor de hologramas">
                                             <label for="nombre_recibe">Nombre Completo del Recibe Hologramas</label>
                                         </div>
                                     </div><!-- Celular -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="celular_recibe"  autocomplete="off"
-                                                name="celular_recibe" placeholder="Número de teléfono ">
+                                            <input type="text" class="form-control" id="celular_recibe"
+                                                autocomplete="off" name="celular_recibe"
+                                                placeholder="Número de teléfono ">
                                             <label for="celular_recibe">Celular</label>
                                         </div>
                                     </div>
@@ -118,21 +121,27 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-floating form-floating-outline">
-                                        <select placeholder="Selecciona una etiqueta" multiple class="form-select select2 id_etiqueta"
-                                            id="id_etiqueta" name="id_etiqueta[]" aria-label="Default select example">
+                                        <select placeholder="Selecciona una etiqueta" multiple
+                                            class="form-select select2 id_etiqueta" id="id_etiqueta"
+                                            name="id_etiqueta[]" aria-label="Default select example">
                                         </select>
                                         <label for="etiqueta">Seleccione una etiqueta</label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-end mt-3">
-                                <button type="submit" class="btn btn-primary me-2">Registrar</button>
-                                <button type="reset" class="btn btn-outline-secondary"
-                                    data-bs-dismiss="modal">Cancelar</button>
+                            <div class="d-flex justify-content-center mt-3">
+                                <button disabled class="btn btn-primary me-2 d-none" type="button"
+                                    id="loadingD">
+                                    <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                                    Registrando...
+                                </button>
+                                <button type="submit" class="btn btn-primary me-2" id="btnAdd"><i
+                                class="ri-add-line me-1"></i> Registrar</button>
+                                <button type="reset" class="btn btn-danger"
+                                    data-bs-dismiss="modal"><i class="ri-close-line me-1"></i> Cancelar</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-

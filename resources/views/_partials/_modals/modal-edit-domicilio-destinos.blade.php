@@ -2,11 +2,11 @@
 <div class="modal fade" id="modalEditDestino" tabindex="-1" aria-labelledby="modalEditDestinoLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 id="modalEditDestinoLabel" class="modal-title">Editar dirección de destino</h5>
+            <div class="modal-header bg-primary bg-gradient">
+                <h6 id="modalEditDestinoLabel" class="modal-title text-white mb-4">Editar dirección de destino</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body my-8">
                 <form id="EditDestinoForm">
                     @csrf
                     <input type="hidden" class="mb-4" id="edit_destinos_id" name="id_direccion">
@@ -28,7 +28,8 @@
                         <!-- Select de Empresa Cliente -->
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <select id="edit_id_empresa" onchange="obtenerEtiquetasEdit();" name="id_empresa" class=" form-select">
+                                <select id="edit_id_empresa" onchange="obtenerEtiquetasEdit(this.value);"
+                                    name="id_empresa" class="select2 form-select">
                                     <option value="" disabled selected>Selecciona la empresa cliente
                                     </option>
                                     @foreach ($empresas as $empresa)
@@ -117,18 +118,25 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline">
-                                <select placeholder="Selecciona una etiqueta" multiple class="form-select select2 id_etiqueta"
-                                    id="edit_id_etiqueta" name="id_etiqueta[]" aria-label="Default select example">
+                                <select placeholder="Selecciona una etiqueta" multiple
+                                    class="form-select select2 id_etiqueta" id="edit_id_etiqueta"
+                                    name="id_etiqueta[]" aria-label="Default select example">
                                 </select>
                                 <label for="etiqueta">Seleccione una etiqueta</label>
                             </div>
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-end mt-3">
-                        <button type="submit" class="btn btn-primary me-2">Actualizar</button>
-                        <button type="reset" class="btn btn-outline-secondary"
-                            data-bs-dismiss="modal">Cancelar</button>
+                    <div class="d-flex justify-content-center mt-3">
+                        <button disabled class="btn btn-primary me-2 d-none" type="button"
+                            id="loadingEdit">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Actualizando...
+                        </button>
+                        <button type="submit" class="btn btn-primary me-2" id="btnEdit"><i class="ri-pencil-fill me-1"></i>
+                            Editar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"><i
+                                class="ri-close-line me-1"></i>Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -136,7 +144,7 @@
     </div>
 </div>
 <script>
-     function obtenerEtiquetasEdit() {
+    /*      function obtenerEtiquetasEdit() {
         var empresa = $('#edit_id_empresa').val();
         if (!empresa) return;
 
@@ -144,7 +152,7 @@
             url: '/etiquetas/' + empresa,
             method: 'GET',
             success: function(response) {
-                var contenido2 = '<option value="" disabled selected>Seleccione una etiqueta</option>';
+                var contenido2 = '';
 
                 response.forEach(function(etiqueta) {
                     contenido2 += `
@@ -165,6 +173,40 @@
                     $('#edit_id_etiqueta').val(edit_etiqueta);
                 }
 
+            }
+        });
+    } */
+
+    function obtenerEtiquetasEdit(id_empresa = null, idsSeleccionadas = []) {
+        if (!id_empresa) {
+            id_empresa = $('#edit_id_empresa').val();
+        }
+
+        // Asegúrate de que sea un array
+        if (!Array.isArray(idsSeleccionadas)) {
+            idsSeleccionadas = [];
+        }
+
+        if (!id_empresa) return;
+        $.ajax({
+            url: '/etiquetas/' + id_empresa,
+            method: 'GET',
+            success: function(response) {
+                var $select = $('#edit_id_etiqueta');
+                $select.empty();
+
+                response.forEach(function(etiqueta) {
+                    var selected = idsSeleccionadas.includes(String(etiqueta.id_etiqueta));
+                    var option = new Option(
+                        `${etiqueta.marca_nombre} | ${etiqueta.presentacion}${etiqueta.unidad} | ${etiqueta.alc_vol}% Alc. Vol. | ${etiqueta.sku} | ${etiqueta.clase_nombre} | ${etiqueta.categoria_nombre} | ${etiqueta.tipo_nombre}`,
+                        etiqueta.id_etiqueta,
+                        selected,
+                        selected
+                    );
+                    $select.append(option);
+                });
+
+                $select.trigger('change');
             }
         });
     }

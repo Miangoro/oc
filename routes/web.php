@@ -652,13 +652,14 @@ Route::post('/edit-registro-Predio/{id_predio}', [PrediosController::class, 'edi
 Route::get('/solicitudServicio/{id_predio}', [PrediosController::class, 'pdf_solicitud_servicios_070'])->middleware(['auth']);
 
 //Domicilio Destinos
-Route::get('/domicilios/destinos', [DestinosController::class, 'UserManagement'])->name('domicilio-destinos')->middleware(['auth']);
-Route::resource('/destinos-list', DestinosController::class)->middleware(['auth']);
-Route::delete('/destinos-list/{id_direccion}', [DestinosController::class, 'destroy'])->name('destinos-list.destroy')->middleware(['auth']);
-Route::post('/destinos-register/{id_direccion}', [DestinosController::class, 'store'])->name('destinos-register.store')->middleware(['auth']);
-/* route::get('/destinos-list/{id_direccion}/edit', [DestinoController::class, 'edit'])->name('destinos.edit');
- */route::post('/destinos-update/{id_direccion}', [DestinosController::class, 'update'])->name('destinos.update')->middleware(['auth']);
-
+Route::middleware(['auth'])->controller(DestinosController::class)->group(function () {
+Route::get('/domicilios/destinos', 'UserManagement')->name('domicilio-destinos');
+Route::resource('/destinos-list', DestinosController::class);
+Route::delete('/destinos-list/{id_direccion}', 'destroy')->name('destinos-list.destroy');
+Route::post('/destinos-register/{id_direccion}',  'store')->name('destinos-register.store');
+route::get('/destinos-list/{id_direccion}/edit', 'edit')->name('destinos.edit');
+route::post('/destinos-update/{id_direccion}', 'update')->name('destinos.update');
+});
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes')->middleware(['auth']);
 Route::resource('/user-list', UsuariosController::class)->middleware(['auth']);

@@ -38,6 +38,10 @@ class Destinos extends Model
     {
         return $this->belongsTo(empresa::class, 'id_empresa');
     }
+    public function etiquetasDestino()
+    {
+        return $this->hasMany(etiquetas_destino::class, 'id_direccion', 'id_direccion');
+    }
 
 
 }

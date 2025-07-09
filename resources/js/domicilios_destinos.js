@@ -129,7 +129,7 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-          let acciones = '';
+            let acciones = '';
             if (window.puedeEditarUsuario) {
               acciones += `<a data-id="${full['id_direccion']}" data-bs-toggle="modal" data-bs-target="#modalEditDestino" href="javascrip:;" class="dropdown-item edit-record text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>`;
             }
@@ -455,6 +455,8 @@ $(function () {
 
     // Escuchar el evento de formulario válido
     fv.on('core.form.valid', function () {
+      $('#btnAdd').addClass('d-none');
+      $('#loadingD').removeClass('d-none');
       // Solo enviar el formulario si es válido
       var formData = new FormData(addNewDestino);
 
@@ -466,6 +468,8 @@ $(function () {
         contentType: false,
         success: function (response) {
           addNewDestino.reset();
+          $('#loadingD').addClass('d-none');
+          $('#btnAdd').removeClass('d-none');
           $('#id_empresa').val('').trigger('change');
           $('#modalAddDestino').modal('hide');
           $('.datatables-users').DataTable().ajax.reload();
@@ -479,14 +483,33 @@ $(function () {
           });
         },
         error: function (xhr) {
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al agregar el predio',
-            customClass: {
-              confirmButton: 'btn btn-danger'
+            if (xhr.status === 422) {
+              var errors = xhr.responseJSON.errors;
+              var errorMessages = Object.keys(errors)
+                .map(function (key) {
+                  return errors[key].join('<br>');
+                })
+                .join('<br>');
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                html: errorMessages,
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ha ocurrido un error al actualizar la dirección.',
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
             }
-          });
+          $('#loadingD').addClass('d-none');
+          $('#btnAdd').removeClass('d-none');
         }
       });
     });
@@ -499,7 +522,15 @@ $(function () {
     });
   });
 
+  let editandoDestino = false;
+
+  $('#edit_id_empresa').on('change', function () {
+    if (editandoDestino) return; // evita llamada doble
+    obtenerEtiquetasEdit(); // sin etiquetas seleccionadas
+  });
+
   $(document).on('click', '.edit-record', function () {
+    $('#edit_id_etiqueta').empty();
     var idDireccion = $(this).data('id');
 
     $.ajax({
@@ -517,25 +548,31 @@ $(function () {
           });
           return;
         }
+        const destino = data.destino;
+        const ids_etiquetas_seleccionadas = data.etiquetas.map(String);
 
-        $('#edit_tipo_direccion').val(data.tipo_direccion).trigger('change');
-        $('#edit_id_empresa').val(data.id_empresa).trigger('change');
-        $('#edit_direccion').val(data.direccion);
+        $('#edit_tipo_direccion').val(destino.tipo_direccion).trigger('change');
+        editandoDestino = true;
+        $('#edit_id_empresa').val(destino.id_empresa).trigger('change');
+        $('#edit_direccion').val(destino.direccion);
+        obtenerEtiquetasEdit(destino.id_empresa, ids_etiquetas_seleccionadas);
 
-        if (data.tipo_direccion == '1') {
+        /* setTimeout(() => { editandoDestino = false }, 500); */ // se desactiva poco después
+
+        if (destino.tipo_direccion == '1') {
           // Exportación
           $('#exportacionFieldsEdit').show();
           $('#hologramasFieldsEdit').hide();
-          $('#edit_destinatario').val(data.destinatario);
+          $('#edit_destinatario').val(destino.destinatario);
           //$('#edit_aduana').val(data.aduana);
-          $('#edit_pais_destino').val(data.pais_destino);
-        } else if (data.tipo_direccion == '3') {
+          $('#edit_pais_destino').val(destino.pais_destino);
+        } else if (destino.tipo_direccion == '3') {
           // Envío de Hologramas
           $('#hologramasFieldsEdit').show();
           $('#exportacionFieldsEdit').hide();
-          $('#edit_correo_recibe').val(data.correo_recibe);
-          $('#edit_nombre_recibe').val(data.nombre_recibe);
-          $('#edit_celular_recibe').val(data.celular_recibe);
+          $('#edit_correo_recibe').val(destino.correo_recibe);
+          $('#edit_nombre_recibe').val(destino.nombre_recibe);
+          $('#edit_celular_recibe').val(destino.celular_recibe);
         } else {
           $('#exportacionFieldsEdit').hide();
           $('#hologramasFieldsEdit').hide();
@@ -683,6 +720,8 @@ $(function () {
           autoFocus: new FormValidation.plugins.AutoFocus()
         }
       }).on('core.form.valid', function () {
+        $('#btnEdit').addClass('d-none');
+        $('#loadingEdit').removeClass('d-none');
         var formData = new FormData(editDestinoForm);
         var idDestino = $('#edit_destinos_id').val();
 
@@ -693,6 +732,8 @@ $(function () {
           contentType: false,
           processData: false,
           success: function (response) {
+            $('#loadingEdit').addClass('d-none');
+            $('#btnEdit').removeClass('d-none');
             $('.datatables-users').DataTable().ajax.reload();
             $('#modalEditDestino').modal('hide');
             Swal.fire({
@@ -731,6 +772,8 @@ $(function () {
                 }
               });
             }
+            $('#loadingEdit').addClass('d-none');
+            $('#btnEdit').removeClass('d-none');
           }
         });
       });
@@ -773,22 +816,21 @@ $(function () {
     }
   });
 
-    $(document).on('change', '#id_empresa', function () {
-        obtenerEtiquetas2();
-    });
+  $(document).on('change', '#id_empresa', function () {
+    obtenerEtiquetas2();
+  });
 
+  function obtenerEtiquetas2() {
+    var empresa = $('#id_empresa').val();
+    if (!empresa) return;
+    $.ajax({
+      url: '/etiquetas/' + empresa,
+      method: 'GET',
+      success: function (response) {
+        var contenido2 = '';
 
-     function obtenerEtiquetas2() {
-        var empresa = $('#id_empresa').val();
-        if (!empresa) return;
-        $.ajax({
-            url: '/etiquetas/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                var contenido2 = '<option value="" disabled selected>Seleccione una etiqueta</option>';
-
-                response.forEach(function(etiqueta) {
-                    contenido2 += `
+        response.forEach(function (etiqueta) {
+          contenido2 += `
                           <option value="${etiqueta.id_etiqueta}"
                               data-id_marca="${etiqueta.id_marca}"
                               data-sku="${etiqueta.sku}"
@@ -797,17 +839,15 @@ $(function () {
                               data-id_tipo="${etiqueta.id_tipo}">
                             ${etiqueta.marca_nombre} | ${etiqueta.presentacion}${etiqueta.unidad} | ${etiqueta.alc_vol}% Alc. Vol. | ${etiqueta.sku} | ${etiqueta.clase_nombre} | ${etiqueta.categoria_nombre} | ${etiqueta.tipo_nombre}
                           </option>`;
-                });
-
-                $('#id_etiqueta').html(contenido2).trigger('change');
-
-                const etiqueta = $('#id_etiqueta').data('selected');
-                if (etiqueta) {
-                    $('#id_etiqueta').val(etiqueta);
-                }
-
-            }
         });
-    }
 
+        $('#id_etiqueta').html(contenido2).trigger('change');
+
+        const etiqueta = $('#id_etiqueta').data('selected');
+        if (etiqueta) {
+          $('#id_etiqueta').val(etiqueta);
+        }
+      }
+    });
+  }
 });
