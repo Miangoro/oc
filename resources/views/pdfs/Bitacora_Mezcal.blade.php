@@ -9,7 +9,7 @@
 </head>
 <style>
     table {
-        width: 101%;
+        width: 100%;
         border-collapse: collapse;
         table-layout: fixed;
     }
@@ -42,18 +42,11 @@
 
     } */
 
-    .text {
-        text-align: center;
-        margin-top: -50px;
-        font-family: 'calibri-bold';
-        font-size: 18px;
-    }
-
     tr.text-title td,
     tr.text-title th {
         padding: 2px;
         text-align: center;
-        font-size: 10px;
+        font-size: 14px;
         word-break: break-word;
         height: auto;
         width: auto;
@@ -81,7 +74,7 @@
 
     tr.bitacora-row td,
     tr.bitacora-row th {
-        font-size: 10px;
+        font-size: 14px;
         /*         border: 1px solid #bbb; */
         padding: 3px 5px;
         text-align: center;
@@ -99,7 +92,7 @@
         </td>
         {{-- Título y Cliente --}}
         <td style="width: 50%; text-align: center; border:none;">
-            <p style="font-size: 20px; font-weight: bold; margin: 0; font-family: 'calibri-bold';">
+            <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
                 INVENTARIO DE MEZCAL A GRANEL
             </p>
             @php
@@ -118,8 +111,8 @@
                     }
                 }
             @endphp
-            <p style="font-size: 12px; margin-top: 5px;">
-               <b>Cliente:</b><strong style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </strong>
+            <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
+               <span>Cliente:</span><span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
             </p>
         </td>
         {{-- Logo OC --}}
@@ -168,14 +161,14 @@
             </tr>
             @forelse($bitacoras as $bitacora)
                 <tr class="bitacora-row">
-                    <td>{{ $bitacora->fecha ?? '---' }}</td>
-                    <td>{{ $bitacora->loteBitacora?->id_tanque ?? '---' }}</td>
-                    <td>{{ $bitacora->loteBitacora?->nombre_lote ?? '-' }}</td>
-                    <td>{{ $bitacora->operacion_adicional ?? '---' }}</td>
-                    <td>{{ $bitacora->loteBitacora->categoria->categoria ?? '---' }}</td>
-                    <td>{{ $bitacora->loteBitacora->clase->clase ?? '---' }}</td>
-                    <td>{{ $bitacora->loteBitacora?->ingredientes ?? '---' }}</td>
-                    <td>{{ $bitacora->loteBitacora?->edad ?? '---' }}</td>
+                    <td>{{ $bitacora->fecha ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->id_tanque ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->nombre_lote ?? '----' }}</td>
+                    <td>{{ $bitacora->operacion_adicional ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora->categoria->categoria ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora->clase->clase ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->ingredientes ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->edad ?? '----' }}</td>
                     <td>
                         @if ($bitacora->loteBitacora && $bitacora->loteBitacora->tiposRelacionados->isNotEmpty())
                             {!! $bitacora->loteBitacora->tiposRelacionados->map(function ($tipo) {
@@ -186,20 +179,20 @@
                         @endif
                     </td>
 
-                    <td>{{ $bitacora->loteBitacora?->folio_fq ?? '-' }}</td>
-                    <td>{{ $bitacora->loteBitacora?->folio_certificado ?? '-' }}</td>
-                    <td>{{ $bitacora->volumen_inicial ?? '---' }}</td>
-                    <td>{{ $bitacora->alcohol_inicial ?? '---' }}</td>
-                    <td>{{ $bitacora->procedencia_entrada ?? '---' }}</td>
-                    <td>{{ $bitacora->volumen_entrada ?? '---' }}</td>
-                    <td>{{ $bitacora->alcohol_entrada ?? '-' }}</td>
-                    <td>{{ $bitacora->agua_entrada ?? '---' }}</td>
-                    <td>{{ $bitacora->volumen_salidas ?? '---' }}</td>
-                    <td>{{ $bitacora->alcohol_salidas ?? '---' }}</td>
-                    <td>{{ $bitacora->destino_salidas ?? '---' }}</td>
-                    <td>{{ $bitacora->volumen_final ?? '---' }}</td>
-                    <td>{{ $bitacora->alcohol_final ?? '---' }}</td>
-                    <td>{{ $bitacora->observaciones ?? '---' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->folio_fq ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->folio_certificado ?? '----' }}</td>
+                    <td>{{ $bitacora->volumen_inicial ?? '----' }}</td>
+                    <td>{{ $bitacora->alcohol_inicial ?? '----' }}</td>
+                    <td>{{ $bitacora->procedencia_entrada ?? '----' }}</td>
+                    <td>{{ $bitacora->volumen_entrada ?? '----' }}</td>
+                    <td>{{ $bitacora->alcohol_entrada ?? '----' }}</td>
+                    <td>{{ $bitacora->agua_entrada ?? '----' }}</td>
+                    <td>{{ $bitacora->volumen_salidas ?? '----' }}</td>
+                    <td>{{ $bitacora->alcohol_salidas ?? '----' }}</td>
+                    <td>{{ $bitacora->destino_salidas ?? '----' }}</td>
+                    <td>{{ $bitacora->volumen_final ?? '----' }}</td>
+                    <td>{{ $bitacora->alcohol_final ?? '----' }}</td>
+                    <td>{{ $bitacora->observaciones ?? '----' }}</td>
                     <td>
                         @if ($bitacora->id_firmante != 0 && $bitacora->firmante)
                             @php
