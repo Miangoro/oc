@@ -370,7 +370,9 @@ $(function () {
                   <div class="dropdown-menu dropdown-menu-end m-0">
                     <a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']}, '${full['tipo']}', '${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2">
                       <i class="text-warning ri-user-search-fill"></i> Trazabilidad
-                    </a>`;
+                    </a> <a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['id_inspeccion']}', '${full['tipo']}', '${full['razon_social']}', '${full['id_tipo']}','${full['folio_info']}', '${full['num_servicio_info']}','${full['inspectorName']}')" href="javascript:;" class="dropdown-item"><i class="text-info ri-folder-3-fill"></i>Expediente de la solicitud</a>`;
+
+                    
 
           // Si puede agregar usuario, incluir opción adicional
           if (puedeValidarSolicitud) {
@@ -405,6 +407,8 @@ $(function () {
                       <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
                     </a>`;
           }
+
+          
 
           dropdown += `
                   </div>

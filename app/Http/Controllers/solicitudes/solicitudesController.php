@@ -300,6 +300,9 @@ class solicitudesController extends Controller
                 $nestedData['estatus_validado_oc'] = $solicitud->ultima_validacion_oc->estatus ?? 'Pendiente';
                 $nestedData['estatus_validado_ui'] = $solicitud->ultima_validacion_ui->estatus ?? 'Pendiente';
                 $nestedData['info_adicional'] = $solicitud->info_adicional ?? 'Vacío';
+                $nestedData['folio_info'] = $solicitud->folio;
+                $nestedData['num_servicio_info'] = $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
+                $nestedData['inspectorName'] = $solicitud->inspector->name ?? 'Sin inspector';
                 $empresa = $solicitud->empresa;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
                     ? $empresa->empresaNumClientes
