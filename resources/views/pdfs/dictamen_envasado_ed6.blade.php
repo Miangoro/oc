@@ -9,8 +9,8 @@
     <style>
         body {
             font-family: 'calibri';
-            margin-left: 20px;
-            margin-right: 20px;
+            margin-left: 10px;
+            margin-right: 10px;
         }
 
         .header {
