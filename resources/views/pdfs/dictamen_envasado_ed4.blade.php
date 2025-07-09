@@ -9,7 +9,7 @@
     <style>
     @page {
         size: 227mm 292mm; /*Tamaño carta*/
-        /*margin: 50px 20px 80px 20px;  márgenes (arriba, derecha, abajo, izquierda) */
+        margin: 30px 40px 30px 40px;  /*márgenes (arriba, derecha, abajo, izquierda) */
     }
     /*@font-face {
         font-family: 'fuenteNegrita';
@@ -22,9 +22,9 @@
     }
 
     .contenido {
-        margin-top: 15%;
-        margin-left: 15px;
-        margin-right: 20px;
+        margin-top: 12%;
+        margin-left: 30px;
+        /*margin-right: 20px;*/
     }
     
     .encabezado {
@@ -51,7 +51,7 @@
 
     .footer {
         position: fixed;/*lo fija en pantalla*/
-        bottom: -45px; 
+        bottom: -30px; 
         left: -6%;
         right: -6%;
         padding-bottom: 5px;
@@ -67,7 +67,7 @@
 
     .leyenda {
         position: fixed;
-        bottom: -8px;
+        bottom: 4px;
         right: 7px;
         text-align: right;
         font-family: 'Lucida Sans Unicode';
@@ -120,17 +120,24 @@
     <p>Universidad Michoacana de San <br>Nicolás de Hidalgo</p>
 </div>
 
-
 <div class="footer">
     <p style="font-family: Lucida Sans Seminegrita;">www.cidam.org . unidadverificacion@cidam.org</p>
     <p style="font-family: Lucida Sans Unicode; font-size: 10px;">Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341. Morelia Michoacán</p>
 </div> 
 
 
+<div style="background-color: #a0c5ca; padding: 10px;">
+    <p>Este es el contenido dentro del área útil del documento.</p>
+</div>
+
+
 
 <div class="contenido">
 
-
+    <p style="text-align: center;">La Unidad de Inspección de mezcal de la Universidad Michoacana de San Nicolás de Hidalgo, con
+        domicilio en Francisco J. Múgica s/n, Col. Felícitas del Río, Morelia, Michoacán; acreditada como Unidad
+        de Inspeccióntipo A con acreditación No. UVNOM-129, por la entidad mexicana de acreditación, a.c.
+    </p>
 
     
     <p class="leyenda">
