@@ -352,7 +352,7 @@
                                            Completo: {{ $primerFolio }}
                                             @if($tipo_certificado == 'Granel' AND $doc2)
                                                 <a target="_blank"
-                                                    href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}"><i
+                                                    href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente }}/fqs/{{ $doc2->url }}"><i
                                                         class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                 </a>
                                             Ajuste: {{ $segundoFolio }}
