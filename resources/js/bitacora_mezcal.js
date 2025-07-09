@@ -71,14 +71,24 @@ $(function () {
           render: function (data, type, full, meta) {
             var $fecha = full['fecha'] ?? 'N/A';
             var $id_lote_granel = full['nombre_lote'] ?? 'N/A';
+            var $folio_fq = full['folio_fq'] ?? 'N/A';
+            var $certificado = full['folio_certificado'] ?? 'N/A';
             return (
-              '<span class="fw-bold text-dark small">Fecha: </span>' +
+              '<span class="fw-bold small">Fecha: </span>' +
               '<span class="small">' +
               $fecha +
               '</span>' +
-              '<br><span class="fw-bold text-dark small">Lote a Granel: </span>' +
+              '<br><span class="fw-bold small">Lote a Granel: </span>' +
               '<span class="small">' +
               $id_lote_granel +
+              '</span>' +
+              '<br><span class="fw-bold small">Folio FQ: </span>' +
+              '<span class="small">' +
+              $folio_fq +
+              '</span>' +
+              '<br><span class="fw-bold small">Certificado: </span>' +
+              '<span class="small">' +
+              $certificado +
               '</span>'
             );
           }
@@ -93,19 +103,19 @@ $(function () {
             var $agua_entrada = full['agua_entrada'] ?? 'N/A';
 
             return (
-              '<span class="fw-bold text-dark small">Procedencia: </span>' +
+              '<span class="fw-bold small">Procedencia: </span>' +
               '<span class="small">' +
               $procedencia_entrada +
               '</span>' +
-              '<br><span class="fw-bold text-dark small">Volumen: </span>' +
+              '<br><span class="fw-bold small">Volumen: </span>' +
               '<span class="small">' +
               $volumen_entrada +
               '</span>' +
-              '<br><span class="fw-bold text-dark small">%Alc. Vol.: </span>' +
+              '<br><span class="fw-bold small">%Alc. Vol.: </span>' +
               '<span class="small">' +
               $alcohol_entrada +
               '</span>' +
-              '<br><span class="fw-bold text-dark small">Agua Agregada: </span>' +
+              '<br><span class="fw-bold small">Agua Agregada: </span>' +
               '<span class="small">' +
               $agua_entrada +
               '</span>'
@@ -122,15 +132,15 @@ $(function () {
             var $destino_salidas = full['destino_salidas'] ?? 'N/A';
 
             return (
-              '<span class="fw-bold text-dark small">Volumen de Salidas: </span>' +
+              '<span class="fw-bold small">Volumen de Salidas: </span>' +
               '<span class="small">' +
               $volumen_salidas +
               '</span>' +
-              '<br><span class="fw-bold text-dark small">%Alc. Vol. de Salidas: </span>' +
+              '<br><span class="fw-bold small">%Alc. Vol. de Salidas: </span>' +
               '<span class="small">' +
               $alcohol_salidas +
               '</span>' +
-              '<br><span class="fw-bold text-dark small">Destino de Salidas: </span>' +
+              '<br><span class="fw-bold small">Destino de Salidas: </span>' +
               '<span class="small">' +
               $destino_salidas +
               '</span>'
@@ -145,11 +155,11 @@ $(function () {
             var $alcohol_final = full['alcohol_final'] ?? 'N/A';
 
             return (
-              '<span class="fw-bold text-dark small">Volumen Final: </span>' +
+              '<span class="fw-bold small">Volumen Final: </span>' +
               '<span class="small">' +
               $volumen_final +
               '</span>' +
-              '<br><span class="fw-bold text-dark small">%Alc. Vol. Final: </span>' +
+              '<br><span class="fw-bold small">%Alc. Vol. Final: </span>' +
               '<span class="small">' +
               $alcohol_final +
               '</span>'
