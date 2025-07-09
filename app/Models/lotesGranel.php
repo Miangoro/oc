@@ -121,6 +121,12 @@ class LotesGranel extends Model
             });
     }
 
+
+    public function estados()
+    {
+        return $this->belongsTo(estados::class, 'id_estado', 'id');
+    }
+
  
 
 
