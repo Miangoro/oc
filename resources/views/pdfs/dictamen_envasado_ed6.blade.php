@@ -434,7 +434,7 @@
                 </tr>
                 <tr>
                     <td class="column2">Presentación</td>
-                    <td>{{ $data->lote_envasado->presentacion ?? 'No encontrado' }}</td>
+                    <td>{{ $data->lote_envasado->presentacion ?? 'No encontrado' }} {{ $data->lote_envasado->unidad ?? 'N/A' }}</td>
                     <td class="column2">Volumen del lote</td>
 
                     <td>
