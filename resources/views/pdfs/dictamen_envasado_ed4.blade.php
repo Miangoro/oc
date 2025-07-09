@@ -9,38 +9,34 @@
     <style>
     @page {
         size: 227mm 292mm; /*Tamaño carta*/
-        margin: 30px 40px 30px 40px;  /*márgenes (arriba, derecha, abajo, izquierda) */
+        margin: 30px 60px 30px 60px;  /*márgenes (arriba, derecha, abajo, izquierda) */
     }
     /*@font-face {
         font-family: 'fuenteNegrita';
         src: url('{{ storage_path('fonts/LSANSD.ttf') }}');
     }*/
 
-    body {
+    body {/*ajustes generales*/
         font-family: 'calibri';
-        font-size: 13px;
+        font-size: 14px;
+        line-height: 0.9;/*interlineado*/
     }
 
-    .contenido {
-        margin-top: 12%;
-        margin-left: 30px;
-        /*margin-right: 20px;*/
-    }
     
     .encabezado {
         position: fixed;
-        top: -22px;
-        padding-left: 2%;
+        /* top: -14px;
+        padding-left: 2%; */
     }
     .encabezado img {
         width: 110px; 
         height: 100px;
-        padding-right: 150px;
+        padding-right: 160px;
         vertical-align: top;/*alinear verticalmente el contenido en la parte superior de inline-block*/
     }
     .encabezado p {
         display: inline-block;/*coloca elementos en línea horizontalmente*/
-        margin-top: 7%;
+        margin-top: 6%;
         text-align: right;
         font-family: 'fuenteNegrita';
         font-size: 28px;
@@ -48,12 +44,11 @@
     }
 
 
-
     .footer {
         position: fixed;/*lo fija en pantalla*/
         bottom: -30px; 
-        left: -6%;
-        right: -6%;
+        left: -60px;
+        right: -60px;
         padding-bottom: 5px;
         background-color: #158F60;
         color: white;/*color letra*/
@@ -62,17 +57,24 @@
     }
     .footer p {
         margin: 1;
-        line-height: 1;/*interlineado*/
+        line-height: 1;
     }
 
     .leyenda {
         position: fixed;
-        bottom: 4px;
-        right: 7px;
+        bottom: 6px;
+        right: 0;
         text-align: right;
         font-family: 'Lucida Sans Unicode';
         font-size: 9px;
         line-height: 0.9;
+    }
+
+
+    .contenido {
+        margin-top: 15%;
+        /*margin-left: 30px;
+        margin-right: 20px;*/
     }
 
     
@@ -86,7 +88,6 @@
         width: 100%;
         /*vertical-align: bottom;*/
     }
-
 
 
 
@@ -126,20 +127,20 @@
 </div> 
 
 
-<div style="background-color: #a0c5ca; padding: 10px;">
-    <p>Este es el contenido dentro del área útil del documento.</p>
-</div>
-
-
 
 <div class="contenido">
 
-    <p style="text-align: center;">La Unidad de Inspección de mezcal de la Universidad Michoacana de San Nicolás de Hidalgo, con
+    <p style="text-align: center; padding-left: 40px; padding-right: 40px;">La Unidad de Inspección de mezcal de la Universidad Michoacana de San Nicolás de Hidalgo, con
         domicilio en Francisco J. Múgica s/n, Col. Felícitas del Río, Morelia, Michoacán; acreditada como Unidad
         de Inspeccióntipo A con acreditación No. UVNOM-129, por la entidad mexicana de acreditación, a.c.
     </p>
 
+    <p style="text-align: center; font-size:26px; font-family:Lucida Sans Seminegrita; padding-top:6px;"><b>DICTAMEN DE CUMPLIMIENTO NOM DE<br>MEZCAL ENVASADO</b></p>
     
+
+
+
+
     <p class="leyenda">
         @if ($id_sustituye)
         Este dictamen sustituye al: {{ $id_sustituye }}
