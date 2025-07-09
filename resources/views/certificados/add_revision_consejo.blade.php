@@ -431,6 +431,14 @@
                                                     </a>
                                                 @endif
                                                 {{ $primerFolio }}
+
+                                                @if($tipo == 'Granel' AND $doc2)
+                                                        <a target="_blank"
+                                                            href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}"><i
+                                                                class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                        </a>
+                                                    {{ $segundoFolio }}
+                                                @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis_ajuste')
                                             <td>
