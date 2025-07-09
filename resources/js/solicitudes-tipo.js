@@ -135,20 +135,20 @@ $(".btnCancelar").on('click', function () {
     const modal = $(this).closest('.modal');
 
     // Buscar un formulario dentro de ese modal
-    const form = modal.find('form')[0]; // obtiene el primer <form> dentro del modal
+/*     const form = modal.find('form')[0]; // obtiene el primer <form> dentro del modal
 
     if (form && typeof form.reset === 'function') {
         form.reset(); // Limpia inputs, textareas, etc.
-    }
+    } */
 
     // Limpiar Select2 dentro del modal
-    modal.find('.select2').val(null).trigger('change');
+/*     modal.find('.select2').val(null).trigger('change'); */
 
     // Opcional: limpiar errores de validación visual (Bootstrap)
-    modal.find('.is-invalid').removeClass('is-invalid');
+/*     modal.find('.is-invalid').removeClass('is-invalid');
     // No eliminar, solo limpiar y ocultar los mensajes de error
     modal.find('.invalid-feedback').text('');
-
+ */
     // Ocultar el modal actual
     modal.modal('hide');
 

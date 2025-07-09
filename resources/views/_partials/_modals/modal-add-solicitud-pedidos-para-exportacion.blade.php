@@ -78,7 +78,7 @@
                                 <div class="col-md-12">
                                     <div class="form-floating form-floating-outline mb-4">
                                         <select onchange="cargarMarcas();" class="form-select select2"
-                                            name="direccion_destinatario" id="direccion_destinatario_ex">
+                                            name="direccion_destinatario" id="direccion_destinatario">
                                             <option value="" disabled selected>Seleccione una dirección</option>
                                         </select>
                                         <label for="direccion_destinatario">Domicilio del destinatario</label>
@@ -411,7 +411,7 @@
             contenidoDirecciones =
                 '<option value="" disabled selected>Seleccione un domicililio del destinatario</option>' +
                 contenidoDirecciones;
-            $('#direccion_destinatario_ex').html(contenidoDirecciones);
+            $('#direccion_destinatario').html(contenidoDirecciones);
             //cargarMarcas();
         }
     }
@@ -579,7 +579,7 @@
     function cargarMarcas() {
         var id_empresa = $('#id_empresa_solicitud_exportacion').val();
         var id_marca = $('#lote_envasadoExportPe option:selected').data('id-marca') || 0;
-        var id_direccion = $('#direccion_destinatario_ex').val();
+        var id_direccion = $('#direccion_destinatario').val();
         //alert('/marcas/' + id_marca + '/' + id_direccion)
         if (id_empresa) {
             $.ajax({
