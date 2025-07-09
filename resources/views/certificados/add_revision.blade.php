@@ -334,6 +334,7 @@
 
                                           $documentos = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs ?? collect();
                                           $doc1 = $documentos->get(0);
+                                           $doc2 = $documentos->get(1);
                                       @endphp
                                       <td>
                                           @if ($doc1)
