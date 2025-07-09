@@ -87,16 +87,16 @@ $(function () {
 
             if (full['documento_guia']) {
               documentos += `
-                <a href="${full['documento_guia']}" target="_blank" title="Ver Guía">
+                <small>Guía escaneada:</small> <a href="${full['documento_guia']}" target="_blank" title="Ver Guía">
                   <i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer"></i>
-                </a>, `;
+                </a> <br>`;
             } else {
-              documentos += `<span class="text-muted small">Sin guía escaneada</span>, `;
+              documentos += `<span class="text-muted small">Sin guía escaneada</span>`;
             }
 
             if (full['documento_art']) {
               documentos += `
-                <a href="${full['documento_art']}" target="_blank" title="Ver Resultados Art">
+                <small>Resultados ART:</small> <a href="${full['documento_art']}" target="_blank" title="Ver Resultados Art">
                   <i class="ri-file-pdf-2-fill text-danger ri-28px"></i>
                 </a>`;
             } else {
