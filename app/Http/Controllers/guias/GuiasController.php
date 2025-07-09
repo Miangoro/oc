@@ -87,7 +87,7 @@ class GuiasController  extends Controller
             ->groupBy('run_folio');
 
         if ($empresaId) {
-            $query->where('empresa.id_empresa', $empresaId);
+            $query->where('id_empresa', $empresaId);
         }
         $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
         $totalData = $baseQuery->count();
