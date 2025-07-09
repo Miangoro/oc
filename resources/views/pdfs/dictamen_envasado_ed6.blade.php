@@ -307,8 +307,8 @@
                 <tr>
                     <td class="column">Dirección</td>
                     <td> 
-                          <span style="font-family: fuenteNegrita; font-size: 11px;">Domicilio Fiscal:</span> {{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }}
-                <br><span style="font-family: fuenteNegrita; font-size: 11px;">Domicilio de Instalaciones:</span> {{ $data->inspeccion?->solicitud?->instalacion?->direccion_completa ?? 'No encontrado' }}</td>
+                          <span style="font-family: fuenteNegrita; font-size: 10px;">Domicilio Fiscal:</span> <span style="font-size: 9px">{{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }}</span>
+                <br><span style="font-family: fuenteNegrita; font-size: 10px;">Domicilio de Instalaciones:</span> <span style="font-size: 9px">{{ $data->inspeccion?->solicitud?->instalacion?->direccion_completa ?? 'No encontrado' }}</span></td>
                     
                     <td class="column">Fecha de emisión</td>
                     <td> {{ $fecha_emision ?? ''}}</td>
