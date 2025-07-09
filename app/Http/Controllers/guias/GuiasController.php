@@ -199,7 +199,7 @@ class GuiasController  extends Controller
 
 
 
-    //Metodo para eliminar
+    //ELIMINAR
     public function destroy($id_guia)
     {
         $guia = Guias::findOrFail($id_guia);
