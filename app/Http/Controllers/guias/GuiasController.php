@@ -114,9 +114,6 @@ class GuiasController  extends Controller
             $ids = $start;
 
 
- 
-
-
 
             foreach ($guias as $user) {
                 //$numero_cliente = empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
