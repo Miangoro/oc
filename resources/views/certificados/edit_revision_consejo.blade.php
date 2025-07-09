@@ -45,6 +45,7 @@
                         <h5 class="fw-semibold mb-2">{{ $tipo }}</h5>
                          @php
                             $caracteristicas = json_decode( $datos->certificado->dictamen->inspeccione->solicitud->caracteristicas);
+                            $tipo_certificado = $tipo;
                         @endphp
                         @if (isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
                             <span class="badge bg-info">Combinado</span>
@@ -437,7 +438,14 @@
                                                       <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                   </a>
                                               @endif
-                                              {{ $primerFolio }}
+                                              Completo: {{ $primerFolio }}
+                                              @if($tipo_certificado == 'Granel' AND $doc2)
+                                                        <a target="_blank"
+                                                            href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}"><i
+                                                                class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                        </a>
+                                                    Ajuste: {{ $segundoFolio }}
+                                                @endif
                                           </td>
 
                                       @elseif($pregunta->filtro == 'nanalisis_ajuste')

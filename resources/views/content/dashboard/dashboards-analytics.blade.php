@@ -279,7 +279,7 @@
 
                                 </h5>
                             </div>
-                            <h6 class="mb-0 fw-normal">Certificados por vencer</h6>
+                            <h6 class="mb-0 fw-normal">Certificados de instalaciones por vencer</h6>
                             <hr>
                             <div class="d-flex align-items-center mb-2 cursor-pointer"
                         data-bs-toggle="modal" data-bs-target="#modalSolicitudesSinActa">  
