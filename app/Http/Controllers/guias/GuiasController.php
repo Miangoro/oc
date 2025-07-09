@@ -46,6 +46,12 @@ class GuiasController  extends Controller
 
     public function index(Request $request)
     {
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
+        }
+
         $columns = [
             1 => 'id_guia',
             2 => 'id_plantacion',
@@ -80,6 +86,13 @@ class GuiasController  extends Controller
         $query = Guias::with(['empresa.empresaNumClientes', 'predios'])
             ->groupBy('run_folio');
 
+        if ($empresaId) {
+            $query->where('empresa.id_empresa', $empresaId);
+        }
+        $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
+        $totalData = $baseQuery->count();
+
+
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('run_folio', 'LIKE', "%{$searchValue}%")
@@ -98,10 +111,16 @@ class GuiasController  extends Controller
                     $Predio->where('nombre_predio', 'LIKE', "%{$searchValue}%");
                 });
             });
+
+            $totalData = $query->get()->count();
+            $totalFiltered = $query->count();
+
+        }else{
+            $totalFiltered = $totalData;
         }
 
-        $totalData = $query->get()->count();
-        $totalFiltered = $query->count();
+            
+        
 
         $guias = $query->offset($start)
             ->limit($limit)
