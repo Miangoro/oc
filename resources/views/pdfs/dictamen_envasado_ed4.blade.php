@@ -26,37 +26,56 @@
         margin-left: 15px;
         margin-right: 20px;
     }
+    
+    .encabezado {
+        position: fixed;
+        top: -22px;
+        padding-left: 2%;
+    }
+    .encabezado img {
+        width: 110px; 
+        height: 100px;
+        padding-right: 150px;
+        vertical-align: top;/*alinear verticalmente el contenido en la parte superior de inline-block*/
+    }
+    .encabezado p {
+        display: inline-block;/*coloca elementos en línea horizontalmente*/
+        margin-top: 7%;
+        text-align: right;
+        font-family: 'fuenteNegrita';
+        font-size: 28px;
+        line-height: 1;
+    }
+
+
 
     .footer {
-        background-color: #158F60;
-        color: white;/*color letra*/
         position: fixed;/*lo fija en pantalla*/
-        /*bottom: -5%;*/
         bottom: -45px; 
         left: -6%;
         right: -6%;
-        /*height: 35px;
-        font-size: 10px;
+        padding-bottom: 5px;
+        background-color: #158F60;
+        color: white;/*color letra*/
         text-align: center;
-        padding: 10px 0px;*/
+        font-size: 11px;
     }
     .footer p {
-        margin: 4px;
-        /*line-height: 1;*/
+        margin: 1;
+        line-height: 1;/*interlineado*/
     }
-    /*.footer {
-    position: fixed;
-    bottom: -50px;
-    left: 0;
-    right: 0;
-    height: 50px;
-    background-color: #158F60;
-    color: white;
-    text-align: center;
-    font-size: 10px;
-    padding: 10px 0;
-}*/
 
+    .leyenda {
+        position: fixed;
+        bottom: -8px;
+        right: 7px;
+        text-align: right;
+        font-family: 'Lucida Sans Unicode';
+        font-size: 9px;
+        line-height: 0.9;
+    }
+
+    
 
 
 
@@ -68,55 +87,6 @@
         /*vertical-align: bottom;*/
     }
 
-
-    .pie {
-        position: fixed;
-        right: 12px;
-        bottom: 4px;
-        text-align: right;
-        line-height: 0.9;
-        font-family: 'Lucida Sans Unicode';
-        font-size: 9px;
-    }
-
- 
-
-    
-        
-    /*inicia header DIV*/
-    .header {
-        position: fixed;
-        width: 100%;
-        top: -12px;
-    }
-    .header-text {
-        color: #151442;
-        display: inline-block;
-        text-align: center;
-        margin-left: 16%;
-    }
-    .header-text p {
-        margin: 5px;
-    }
-
-    .large-text {
-        font-size: 16px;
-        font-family: 'Arial Negrita', Gadget, sans-serif;
-        line-height: 0.8;
-    }
-    .small-text {
-        font-size: 11px;
-        font-family: 'Arial Negrita', Gadget, sans-serif;
-        line-height: 0.8;
-    }
-    .normal-text {
-        font-family: sans-serif;
-        font-size: 11px;
-    }
-
-
-    
-    
 
 
 
@@ -144,23 +114,14 @@
     </div>
 @endif
 
-<div class="header">
-    <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="width: 255px; height: 95px; padding-left:6px" alt="Logo CIDAM">
-    <div class="header-text">
-        <p class="large-text">Unidad de Inspección<br>No. UVNOM-129</p>
-        <p class="small-text">Centro de Innovación y Desarrollo Agroalimentario de<br>Michoacán, A.C.</p>
-        <p class="normal-text">Acreditados ante la Entidad Mexicana de Acreditación, A.C.</p>
-    </div>
+
+<div class="encabezado">
+    <img src="{{ public_path('img_pdf/logo_uvem.png') }}" alt="Logo">
+    <p>Universidad Michoacana de San <br>Nicolás de Hidalgo</p>
 </div>
 
+
 <div class="footer">
-    {{-- <p class="pie">
-        @if ($id_sustituye)
-        Este dictamen sustituye al: {{ $id_sustituye }}
-        @endif
-        <br>F-UV-04-17 Dictamen de Cumplimiento NOM de Mezcal Envasado Ed. 7
-        <br>Entrada en vigor: 10-12-2024
-    </p> --}}
     <p style="font-family: Lucida Sans Seminegrita;">www.cidam.org . unidadverificacion@cidam.org</p>
     <p style="font-family: Lucida Sans Unicode; font-size: 10px;">Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341. Morelia Michoacán</p>
 </div> 
@@ -169,6 +130,16 @@
 
 <div class="contenido">
 
+
+
+    
+    <p class="leyenda">
+        @if ($id_sustituye)
+        Este dictamen sustituye al: {{ $id_sustituye }}
+        @endif
+        <br>F-UV-04-17 Versión 4
+        <br>Entrada en vigor: 08-11-2021
+    </p>
 </div>
 
 

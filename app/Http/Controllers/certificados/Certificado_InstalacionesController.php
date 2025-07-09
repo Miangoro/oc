@@ -1147,6 +1147,71 @@ public function index(Request $request)
             'message' => 'Ningun registro en la BD.',
         ]);
     }
+///BORRAR CERTIFICADO FIRMADO
+public function borrarCertificadofirmado($id)
+{
+    $certificado = Certificados::findOrFail($id);
+
+    // Obtener la instalacion
+    $id_instalacion = $certificado->dictamen?->id_instalacion;
+
+    if (is_null($id_instalacion)) {
+        return response()->json([
+            'documento_url' => null,
+            'nombre_archivo' => null,
+            'message' => 'No se encontró el ID de instalacion relacionado.',
+        ], 404);
+    }
+
+    // Determinar tipo_dictamen y su correspondiente id_documento
+    $tipoDictamen = $certificado->dictamen->tipo_dictamen;
+    switch ($tipoDictamen) {
+        case 1:
+            $id_documento = 127; // Productor
+            break;
+        case 2:
+            $id_documento = 128; // Envasador
+            break;
+        case 3:
+            $id_documento = 129; // Comercializador
+            break;
+        default:
+            return response()->json([
+                'documento_url' => null,
+                'nombre_archivo' => null,
+                'message' => 'Tipo de instalacion desconocido.',
+            ], 422);
+    }
+
+    // Buscar documento asociado a instalacion
+    $documentacion = Documentacion_url::where('id_relacion', $id_instalacion)
+        ->where('id_documento', $id_documento)
+        ->where('id_doc', $certificado->id_certificado)
+        ->first();
+
+    if (!$documentacion) {
+        return response()->json(['message' => 'Documento no encontrado.'], 404);
+    }
+
+    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->instalaciones->empresa->id_empresa)->first();
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
+
+
+    $rutaArchivo = "public/uploads/{$numeroCliente}/certificados_instalaciones/{$documentacion->url}";
+
+    // Eliminar archivo físico
+    if (Storage::exists($rutaArchivo)) {
+        Storage::delete($rutaArchivo);
+    }
+
+    // Eliminar registro en la base de datos
+    $documentacion->delete();
+
+    return response()->json(['message' => 'Documento eliminado correctamente.']);
+}
+
 
 
 

@@ -813,6 +813,44 @@ public function CertificadoFirmado($id)
         //'message' => 'Documento no encontrado.',
     ]);
 }
+///BORRAR CERTIFICADO FIRMADO
+public function borrarCertificadofirmado($id)
+{
+    $certificado = CertificadosGranel::findOrFail($id);
+
+    // Obtener id_lote_granel desde las características
+    $caracteristicas = json_decode($certificado->dictamen?->inspeccione?->solicitud?->caracteristicas, true);
+    $idLote = $caracteristicas['id_lote_granel'] ?? null;
+
+    $documentacion = Documentacion_url::where('id_relacion', $idLote)
+        ->where('id_documento', 59)
+        ->where('id_doc', $certificado->id_certificado)
+        ->first();
+
+    if (!$documentacion) {
+        return response()->json(['message' => 'Documento no encontrado.'], 404);
+    }
+
+    $empresa = empresa::with("empresaNumClientes")
+        ->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)
+        ->first();
+
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+
+    $rutaArchivo = "public/uploads/{$numeroCliente}/certificados_granel/{$documentacion->url}";
+
+    // Eliminar archivo físico
+    if (Storage::exists($rutaArchivo)) {
+        Storage::delete($rutaArchivo);
+    }
+
+    // Eliminar registro en la base de datos
+    $documentacion->delete();
+
+    return response()->json(['message' => 'Documento eliminado correctamente.']);
+}
 
 
 

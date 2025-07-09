@@ -1066,6 +1066,7 @@ Route::middleware(['auth'])->controller(Certificado_InstalacionesController::cla
 
     Route::post('/certificados/instalacion/documento', [Certificado_InstalacionesController::class, 'subirCertificado']);
     Route::get('/certificados/instalacion/documento/{id}', [Certificado_InstalacionesController::class, 'CertificadoFirmado']);
+    Route::delete('/certificados/instalacion/documento/{id}', [Certificado_InstalacionesController::class, 'borrarCertificadofirmado']);
 
 /*         Route::get('/certificado-sin-marca-ins/{id}', function($id) {
         return app(Certificado_InstalacionesController::class)->pdf_certificado_productor($id, false);
@@ -1106,6 +1107,7 @@ Route::middleware(['auth'])->controller(Certificado_GranelController::class)->gr
 
     Route::post('/certificados/granel/documento', [Certificado_GranelController::class, 'subirCertificado']);
     Route::get('/certificados/granel/documento/{id}', [Certificado_GranelController::class, 'CertificadoFirmado']);
+    Route::delete('/certificados/granel/documento/{id}', [Certificado_GranelController::class, 'borrarCertificadofirmado']);
 });
 
 //-------------------CERTIFICADO EXPORTACION-------------------

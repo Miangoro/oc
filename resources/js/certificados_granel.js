@@ -353,7 +353,7 @@ $(function () {
             }
 
             if (window.puedeSubirCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF"
+              acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-dark subirPDF"
                               data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
                               <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF
                             </a>`;
@@ -1512,9 +1512,11 @@ if (!$select.find(`option[value="${cert.id_dictamen}"]`).length) {
   ///OBTENER CERTIFICADO FIRMADO
   $(document).on('click', '.subirPDF', function () {
     var id = $(this).data('id');
+    var num_certificado = $(this).data('folio');
     $('#doc_id_certificado').val(id);
     $('#documentoActual').html('Cargando documento...');
-    $('#modalTitulo').text('Certificado granel firmado'); //Titulo
+    $('#botonEliminarDocumento').empty(); // <-- Limpia el botón eliminar al cambiar
+    $('#modalTitulo').html('Certificado granel firmado <span class="badge bg-info">' +num_certificado+ '</span>'); //Titulo
 
     $.ajax({
       url: `/certificados/granel/documento/${id}`,
@@ -1524,7 +1526,9 @@ if (!$select.find(`option[value="${cert.id_dictamen}"]`).length) {
           $('#documentoActual').html(
             `<p>Documento actual:
             <a href="${response.documento_url}" target="_blank">${response.nombre_archivo}</a>
-          </p>`
+          </p>`);
+          $('#botonEliminarDocumento').html(
+            `<button type="button" class="btn btn-outline-danger btn-sm" id="btnEliminarDocumento"><i class="ri-delete-bin-line"></i> Eliminar</button>`
           );
         } else {
           $('#documentoActual').html('<p>No hay documento cargado.</p>');
@@ -1534,5 +1538,80 @@ if (!$select.find(`option[value="${cert.id_dictamen}"]`).length) {
         $('#documentoActual').html('<p class="text-danger">Error al cargar el documento.</p>');
       }
     });
+
   });
+
+///BORRAR CERTIFICADO FIRMADO
+$(document).on('click', '#btnEliminarDocumento', function () {
+  const id_certificado = $('#doc_id_certificado').val();
+
+  // SweetAlert para confirmar la eliminación
+  Swal.fire({
+    title: '¿Está seguro?',
+    text: 'No podrá revertir este evento',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+    cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+    customClass: {
+      confirmButton: 'btn btn-primary me-2',
+      cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+  }).then(function (result) {
+    if (result.isConfirmed) {
+      // Enviar solicitud DELETE al servidor
+      $.ajax({
+        type: 'DELETE',
+        url: `/certificados/granel/documento/${id_certificado}`, // ← Ruta ajustada
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+          dataTable.draw(false); //Actualizar la tabla sin reiniciar
+          $('#documentoActual').html('<p>No hay documento cargado.</p>');
+          $('#botonEliminarDocumento').empty();
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Exito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+          });
+        },
+        error: function (error) {
+          console.log('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al eliminar.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      Swal.fire({
+        title: '¡Cancelado!',
+        text: 'La eliminación ha sido cancelada.',
+        icon: 'info',
+        customClass: {
+          confirmButton: 'btn btn-primary'
+        }
+      });
+    }
+  });
+});
+
+
+
+
+
+
+
+
 }); //end-function(jquery)
