@@ -459,7 +459,7 @@
                     </div>
                     <div class="card-info">
                         <div class="d-flex align-items-center">
-                            <h5 class="mb-0 me-2">{{ $totalDisponibles }}</h5>
+                            <h5 class="mb-0 me-2">{{ number_format($totalDisponibles, 2) }}</h5>
                             <i class="ri-arrow-down-s-line text-danger ri-20px"></i>
                             <small class="text-danger">Hologramas disponibles</small>
                         </div>
