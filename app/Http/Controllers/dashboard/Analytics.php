@@ -57,10 +57,10 @@ class Analytics extends Controller
     $certificadosInstalacion = Certificados::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $certificadosGranel = CertificadosGranel::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $certificadosExportacion = Certificado_Exportacion::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
-    $certificadosPorVencer = $certificadosInstalacion
-      ->merge($certificadosGranel)
-      ->merge($certificadosExportacion);
-
+    //$certificadosPorVencer = $certificadosInstalacion
+    //  ->merge($certificadosGranel)
+    //  ->merge($certificadosExportacion);
+$certificadosPorVencer = $certificadosInstalacion;
 
     $dictamenesInstalacionesSinCertificado = Dictamen_instalaciones::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
     $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
