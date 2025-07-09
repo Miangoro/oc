@@ -113,6 +113,11 @@ class GuiasController  extends Controller
         if ($guias->isNotEmpty()) {
             $ids = $start;
 
+
+ 
+
+
+
             foreach ($guias as $user) {
                 //$numero_cliente = empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
                 // Nombre y Número de empresa
@@ -122,8 +127,24 @@ class GuiasController  extends Controller
                     ? $empresa->empresaNumClientes->first(fn($item) =>
                         $item->empresa_id === $empresa->id && !empty($item->numero_cliente)
                     )?->numero_cliente ?? 'No encontrado' : 'N/A';
-                    
+
+                
+                $documentoGuia = Documentacion_url::where('id_relacion', $user->id_guia)
+                    ->where('id_documento', 71)
+                    ->first();
+
+                $documentoArt = Documentacion_url::where('id_relacion', $user->id_guia)
+                    ->where('id_documento', 132)
+                    ->first();
+
                 $nestedData = [
+
+                    'documento_guia' => $documentoGuia?->url
+                        ? asset("files/{$numero_cliente}/{$documentoGuia->url}") : null,
+
+                    'documento_art' => $documentoArt?->url
+                        ? asset("files/{$numero_cliente}/{$documentoArt->url}") : null,
+
                     'id_guia' => $user->id_guia,
                     'id_plantacion' => $user->id_plantacion,
                     'fake_id' => ++$ids,

@@ -57,6 +57,7 @@ $(function () {
         { data: 'num_anterior' },
         { data: 'num_comercializadas' },
         { data: 'mermas_plantas' },
+        { data: '' },//archivos adjuntos
         { data: 'action' }
       ],
       columnDefs: [
@@ -79,14 +80,32 @@ $(function () {
             return `<span>${full.fake_id}</span>`;
           }
         },
-        /*{
-          // User email
-          targets: 2,
+        {
+          targets: 11,
           render: function (data, type, full, meta) {
-            var $email = full['razon_social'];
-            return '<span class="user-email">' + $email + '</span>';
+            let documentos = '';
+
+            if (full['documento_guia']) {
+              documentos += `
+                <a href="${full['documento_guia']}" target="_blank" title="Ver Guía">
+                  <i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer"></i>
+                </a>, `;
+            } else {
+              documentos += `<span class="text-muted small">Sin guía escaneada</span>, `;
+            }
+
+            if (full['documento_art']) {
+              documentos += `
+                <a href="${full['documento_art']}" target="_blank" title="Ver Resultados Art">
+                  <i class="ri-file-pdf-2-fill text-danger ri-28px"></i>
+                </a>`;
+            } else {
+              documentos += `<br><span class="text-muted small">Sin resultados art</span>`;
+            }
+
+            return documentos;
           }
-        },*/
+        },
         {
           // Actions
           targets: -1,
@@ -123,7 +142,7 @@ $(function () {
           }
         }
       ],
-      order: [[2, 'desc']],
+      order: [[1, 'desc']],
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' +
@@ -421,15 +440,59 @@ $(function () {
               message: 'Por favor seleccione una plantación'
             }
           }
-        }
+        },
+
+
+        anterior: {
+          validators: {
+            notEmpty: {
+              message: 'El campo número de plantas anterior es obligatorio'
+            },
+            numeric: {
+              message: 'Solo se permiten números'
+            },
+            greaterThan: {
+              min: 0,
+              message: 'Debe ser un valor mayor o igual a 0'
+            }
+          }
+        },
+        comercializadas: {
+          validators: {
+            notEmpty: {
+              message: 'El campo número de plantas comercializadas es obligatorio'
+            },
+            numeric: {
+              message: 'Solo se permiten números'
+            },
+            greaterThan: {
+              min: 0,
+              message: 'Debe ser un valor mayor o igual a 0'
+            }
+          }
+        },
+        mermas: {
+          validators: {
+            notEmpty: {
+              message: 'El campo mermas plantas es obligatorio'
+            },
+            numeric: {
+              message: 'Solo se permiten números'
+            },
+            greaterThan: {
+              min: 0,
+              message: 'Debe ser un valor mayor o igual a 0'
+            }
+          }
+        },
+        
+
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
           eleValidClass: '',
-          rowSelector: function (field, ele) {
-            return '.mb-5, .mb-6';
-          }
+          rowSelector: '.form-floating'
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
@@ -502,6 +565,7 @@ $(function () {
 
     initializeSelect2(select2Elements);
   });
+
 
 
   // Eliminar registro
