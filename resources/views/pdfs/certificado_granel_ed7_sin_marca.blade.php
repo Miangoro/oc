@@ -92,7 +92,7 @@
             font-size: 8px;
             line-height: 1;
             position: fixed;
-            bottom: 20px;
+            bottom: 26px;
             left: 0;
             right: 0;
             width: calc(100% - 40px);
@@ -259,7 +259,7 @@
     </div>
 
     
-    <p class="text" style="padding-top: 4%">El Centro de Innovación y Desarrollo Agroalimentario de Michoacán, (CIDAM) acreditado como Organismo de Certificación con acreditación No. 144/18,
+    <p class="text" style="padding-top: 10%">El Centro de Innovación y Desarrollo Agroalimentario de Michoacán, (CIDAM) acreditado como Organismo de Certificación con acreditación No. 144/18,
     acreditado por la entidad mexicana de acreditación, a.c. y aprobado por la DGN con el No. 144/18 otorga el presente:</p>
 
     <p class="titulo">CERTIFICADO</p>
