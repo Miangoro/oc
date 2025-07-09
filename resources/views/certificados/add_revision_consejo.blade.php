@@ -431,14 +431,14 @@
                                                             class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                     </a>
                                                 @endif
-                                                {{ $primerFolio }}
+                                                Completo: {{ $primerFolio }}
 
-                                                @if($tipo_certificado == 'Granel')
+                                                @if($tipo_certificado == 'Granel' AND $doc2)
                                                         <a target="_blank"
                                                             href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}"><i
                                                                 class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                         </a>
-                                                    {{ $segundoFolio }}
+                                                    Ajuste: {{ $segundoFolio }}
                                                 @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis_ajuste')
