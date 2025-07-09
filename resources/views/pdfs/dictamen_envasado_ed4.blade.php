@@ -8,7 +8,8 @@
     <title>Dictamen de Cumplimiento NOM de Mezcal Envasado</title>
     <style>
     @page {
-        size: 227mm 292mm;/*Tamaño carta*/
+        size: 227mm 292mm; /*Tamaño carta*/
+        /*margin: 50px 20px 80px 20px;  márgenes (arriba, derecha, abajo, izquierda) */
     }
     /*@font-face {
         font-family: 'fuenteNegrita';
@@ -16,12 +17,48 @@
     }*/
 
     body {
-        margin-top: 15%;
         font-family: 'calibri';
-        margin-left: 15px;
-        margin-right: 20px;
         font-size: 13px;
     }
+
+    .contenido {
+        margin-top: 15%;
+        margin-left: 15px;
+        margin-right: 20px;
+    }
+
+    .footer {
+        background-color: #158F60;
+        color: white;/*color letra*/
+        position: fixed;/*lo fija en pantalla*/
+        /*bottom: -5%;*/
+        bottom: -45px; 
+        left: -6%;
+        right: -6%;
+        /*height: 35px;
+        font-size: 10px;
+        text-align: center;
+        padding: 10px 0px;*/
+    }
+    .footer p {
+        margin: 4px;
+        /*line-height: 1;*/
+    }
+    /*.footer {
+    position: fixed;
+    bottom: -50px;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: #158F60;
+    color: white;
+    text-align: center;
+    font-size: 10px;
+    padding: 10px 0;
+}*/
+
+
+
 
 
     /*inicia firma digital DIV*/
@@ -78,21 +115,7 @@
     }
 
 
-    .footer {
-        position: fixed;
-        
-        background-color: #158F60;
-        color: white;/*color letra*/
-        /*left: -70px;
-        right: -70px;
-        width: calc(100% - 40px);
-        height: 35px;
-        
-        
-        font-size: 10px;
-        text-align: center;
-        padding: 10px 0px;*/
-    }
+    
     
 
 
@@ -144,7 +167,9 @@
 
 
 
+<div class="contenido">
 
+</div>
 
 
 
@@ -192,8 +217,6 @@
 
     
 
-
-    
 
 
 </body>
