@@ -61,7 +61,7 @@
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-5">
                             <input class="form-control" type="number" placeholder="Número de plantas anterior"
-                                id="num_anterior" name="anterior" oninput="calcularPlantasActualmente()" readonly />
+                                id="num_anterior" name="anterior" oninput="calcularPlantasActualmente()" readonly required/>
                             <label for="num_anterior">Número de plantas anterior</label>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                         <div class="form-floating form-floating-outline mb-5">
                             <input class="form-control" type="number"
                                 placeholder="Número de plantas comercializadas" id="num_comercializadas"
-                                name="comercializadas" oninput="calcularPlantasActualmente()" />
+                                name="comercializadas" oninput="calcularPlantasActualmente()" required/>
                             <label for="num_comercializadas">Número de plantas comercializadas</label>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-5">
                             <input class="form-control" type="number" placeholder="Mermas plantas"
-                                id="mermas_plantas" name="mermas" oninput="calcularPlantasActualmente()" />
+                                id="mermas_plantas" name="mermas" oninput="calcularPlantasActualmente()" required/>
                             <label for="mermas_plantas">Mermas plantas</label>
                         </div>
                     </div>

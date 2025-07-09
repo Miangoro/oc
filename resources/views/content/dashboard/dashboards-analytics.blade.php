@@ -441,30 +441,37 @@
 
             @endcan
 
-            @foreach($marcasConHologramas AS $marca)
-                <div class="col-sm-2">
-                    <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center flex-wrap">
-                        <div class="avatar me-4">
-                            <div class="avatar-initial bg-label-primary rounded-3">
-                            <i class="ri-user-star-line ri-24px">
-                            </i>
-                            </div>
+           @foreach($marcasConHologramas as $marca)
+    @php
+        $totalDisponibles = $marca->solicitudHolograma->sum(function ($solicitud) {
+            return $solicitud->cantidadDisponibles();
+        });
+    @endphp
+
+    <div class="col-sm-2">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center flex-wrap">
+                    <div class="avatar me-4">
+                        <div class="avatar-initial bg-label-primary rounded-3">
+                            <i class="ri-price-tag-3-line ri-24px"></i>
                         </div>
-                        <div class="card-info">
-                            <div class="d-flex align-items-center">
-                            <h5 class="mb-0 me-2">{{ $marca->solicitudHolograma->cantidadDisponibles() }}</h5>
+                    </div>
+                    <div class="card-info">
+                        <div class="d-flex align-items-center">
+                            <h5 class="mb-0 me-2">{{ number_format($totalDisponibles,0) }}</h5>
                             <i class="ri-arrow-down-s-line text-danger ri-20px"></i>
                             <small class="text-danger">Hologramas disponibles</small>
-                            </div>
-                            <p class="mb-0">{{ $marca->marca }}</p>
                         </div>
-                        </div>
-                    </div>
+                        <p class="mb-0">{{ $marca->marca }}</p>
                     </div>
                 </div>
-            @endforeach
+            </div>
+        </div>
+    </div>
+@endforeach
+
+
             
         </div>
 

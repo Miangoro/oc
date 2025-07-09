@@ -19,6 +19,7 @@ use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Support\Facades\Auth;//sesion iniciada
+use Illuminate\Support\Facades\Storage;
 
 
 class GuiasController  extends Controller
@@ -46,6 +47,12 @@ class GuiasController  extends Controller
 
     public function index(Request $request)
     {
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
+        }
+
         $columns = [
             1 => 'id_guia',
             2 => 'id_plantacion',
@@ -79,6 +86,12 @@ class GuiasController  extends Controller
 
         $query = Guias::with(['empresa.empresaNumClientes', 'predios'])
             ->groupBy('run_folio');
+        if ($empresaId) {
+            $query->where('id_empresa', $empresaId);
+        }
+        $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
+        $totalData = $baseQuery->count();
+
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
@@ -98,10 +111,16 @@ class GuiasController  extends Controller
                     $Predio->where('nombre_predio', 'LIKE', "%{$searchValue}%");
                 });
             });
+
+            $totalData = $query->get()->count();
+            $totalFiltered = $query->count();
+
+        }else{
+            $totalFiltered = $totalData;
         }
 
-        $totalData = $query->get()->count();
-        $totalFiltered = $query->count();
+            
+        
 
         $guias = $query->offset($start)
             ->limit($limit)
@@ -113,6 +132,8 @@ class GuiasController  extends Controller
         if ($guias->isNotEmpty()) {
             $ids = $start;
 
+
+
             foreach ($guias as $user) {
                 //$numero_cliente = empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
                 // Nombre y Número de empresa
@@ -122,8 +143,24 @@ class GuiasController  extends Controller
                     ? $empresa->empresaNumClientes->first(fn($item) =>
                         $item->empresa_id === $empresa->id && !empty($item->numero_cliente)
                     )?->numero_cliente ?? 'No encontrado' : 'N/A';
-                    
+
+                
+                $documentoGuia = Documentacion_url::where('id_relacion', $user->id_guia)
+                    ->where('id_documento', 71)
+                    ->first();
+
+                $documentoArt = Documentacion_url::where('id_relacion', $user->id_guia)
+                    ->where('id_documento', 132)
+                    ->first();
+
                 $nestedData = [
+
+                    'documento_guia' => $documentoGuia?->url
+                        ? asset("files/{$numero_cliente}/{$documentoGuia->url}") : null,
+
+                    'documento_art' => $documentoArt?->url
+                        ? asset("files/{$numero_cliente}/{$documentoArt->url}") : null,
+
                     'id_guia' => $user->id_guia,
                     'id_plantacion' => $user->id_plantacion,
                     'fake_id' => ++$ids,
@@ -162,16 +199,39 @@ class GuiasController  extends Controller
 
 
 
-    //Metodo para eliminar
+    //ELIMINAR
     public function destroy($id_guia)
     {
         $guia = Guias::findOrFail($id_guia);
-    
         $run_folio = $guia->run_folio;
-    
-        Guias::where('run_folio', $run_folio)->delete();
-    
-        return response()->json(['success' => 'Todas las guías con el mismo run_folio se eliminaron correctamente']);
+
+        // Obtener todas las guías con ese run_folio
+        $guias = Guias::where('run_folio', $run_folio)->get();
+
+        foreach ($guias as $guia) {
+            // Buscar solo documentos con ID 71 (guía) o 132 (resultados ART)
+            $documentos = Documentacion_url::where('id_relacion', $guia->id_guia)
+                ->whereIn('id_documento', [71, 132])
+                ->get();
+
+            foreach ($documentos as $doc) {
+                //Busca el archivo fisico
+                $numeroCliente = $guia->empresa->empresaNumClientes->first()?->numero_cliente;
+                $rutaArchivo = 'uploads/' . $numeroCliente . '/' . $doc->url;
+                // Eliminar archivo físico si existe
+                if ($numeroCliente && Storage::disk('public')->exists($rutaArchivo)) {
+                    Storage::disk('public')->delete($rutaArchivo);
+                }
+
+                // Eliminar registro en la tabla documentacion_url
+                $doc->delete();
+            }
+
+            // Eliminar la guía
+            $guia->delete();
+        }
+
+        return response()->json(['success' => 'Guías y documentos con mismo run_folio eliminados correctamente.']);
     }
     
 

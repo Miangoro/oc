@@ -69,6 +69,7 @@
           <th>No. anterior</th>
           <th>Comercializadas</th>
           <th>No. mermas</th>
+          <th>Doc. Adjuntos</th>
           <th>Acciones</th>
         </tr>
       </thead>

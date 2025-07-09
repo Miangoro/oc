@@ -51,11 +51,13 @@ class inspeccionesController extends Controller
         $tipos = tipos::all(); // Obtener todos los estados
         $equipos = equipos::all(); // Obtener todos los estados
         $todasSolicitudes = solicitudesModel::select('id_solicitud', 'folio')
-        ->whereYear('fecha_solicitud', '>=', 2025)
-        ->orderBy('id_solicitud', 'desc')
-        ->get();
+            ->where('id_tipo', '!=', 12)
+            ->whereYear('fecha_solicitud', '>=', 2025)
+            ->orderBy('id_solicitud', 'desc')
+            ->get();
 
       $solcitudesSinInspeccion = solicitudesModel::whereDoesntHave('inspeccion')
+          ->where('id_tipo', '!=', 12)
           ->whereYear('fecha_solicitud', '>=', 2025)
           ->orderBy('id_solicitud', 'desc')
           ->get();
@@ -91,7 +93,9 @@ class inspeccionesController extends Controller
         $dir = $request->input('order.0.dir', 'asc');
         $search = $request->input('search.value');
 
-        $query = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion','predios')->where('habilitado', 1);
+        $query = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion','predios')
+            ->where('habilitado', 1)
+            ->where('id_tipo', '!=', 12);
 
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
@@ -122,7 +126,9 @@ class inspeccionesController extends Controller
             });
         }
 
-       $totalData = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion', 'predios')->where('habilitado', 1)->count();
+       $totalData = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion', 'predios')
+            ->where('id_tipo', '!=', 12) 
+            ->where('habilitado', 1)->count();
         $totalFiltered = $query->count();
 
         // Obtener datos paginados sin orden
