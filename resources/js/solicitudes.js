@@ -372,8 +372,6 @@ $(function () {
                       <i class="text-warning ri-user-search-fill"></i> Trazabilidad
                     </a> <a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['id_inspeccion']}', '${full['tipo']}', '${full['razon_social']}', '${full['id_tipo']}','${full['folio_info']}', '${full['num_servicio_info']}','${full['inspectorName']}')" href="javascript:;" class="dropdown-item"><i class="text-info ri-folder-3-fill"></i>Expediente de la solicitud</a>`;
 
-                    
-
           // Si puede agregar usuario, incluir opción adicional
           if (puedeValidarSolicitud) {
             dropdown += `
@@ -407,8 +405,6 @@ $(function () {
                       <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
                     </a>`;
           }
-
-          
 
           dropdown += `
                   </div>
@@ -531,10 +527,10 @@ $(function () {
 
   // Configuración CSRF para Laravel
   $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
 
   // Eliminar registro
   $(document).on('click', '.delete-recordes', function () {
@@ -612,7 +608,6 @@ $(function () {
               }
             });
           }
-
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
@@ -625,7 +620,6 @@ $(function () {
         });
       }
     });
-
   });
 
   $(document).on('click', '.open-modal', function () {
@@ -4453,7 +4447,7 @@ $(function () {
 
     // Validación del formulario Pedido de Exportación
     const addPedidoExportacionForm = document.getElementById('addPedidoExportacionForm');
-    const fv = FormValidation.formValidation(addPedidoExportacionForm, {
+    window.fv_pedido = FormValidation.formValidation(addPedidoExportacionForm, {
       fields: {
         tipo_solicitud: {
           validators: {
@@ -4483,22 +4477,6 @@ $(function () {
             }
           }
         },
-        /*
-
-                'cantidad_botellas[0]': {
-                  validators: {
-                    notEmpty: {
-                      message: 'Por favor introduzca el número de botellas'
-                    }
-                  }
-                },
-                'cantidad_cajas[0]': {
-                  validators: {
-                    notEmpty: {
-                      message: 'Por favor introduzca el número de cajas'
-                    }
-                  }
-                }, */
         fecha_visita: {
           validators: {
             notEmpty: {
@@ -4519,6 +4497,12 @@ $(function () {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese la factura'
+            },
+            file: {
+              extension: 'pdf,jpg,jpeg,png',
+              type: 'application/pdf,image/jpeg,image/png',
+              maxSize: 5 * 1024 * 1024, // 5 MB en bytes
+              message: 'El archivo debe ser PDF o imagen y pesar máximo 5 MB'
             }
           }
         },
@@ -4595,11 +4579,7 @@ $(function () {
           // Reiniciar el formulario
           $('#btnSpinnerPedidosExportacion').addClass('d-none');
           $('#btnAddExport').removeClass('d-none');
-          $('#addPedidoExportacionForm')[0].reset();
-          $('.select2').val(null).trigger('change');
-          $('#sections-container .card').not(':first').remove();
-          $('#encabezado_etiquetas').html('Elegir Etiquetas y Corrugados');
-          $('#tablaLotes tbody').empty();
+          resetearFormularioExportacion();
           $('.datatables-solicitudes').DataTable().ajax.reload();
           $('#addPedidoExportacion').modal('hide');
           // Mostrar alerta de éxito
@@ -4648,13 +4628,57 @@ $(function () {
           $('#btnAddExport').removeClass('d-none');
         }
       });
+
     });
     $(
-      '#id_empresa_solicitud_exportacion, #fecha_visita_exportacion, #id_instalacion_exportacion, #direccion_destinatario_ex, #id_instalacion_envasado_2'
+      '#id_empresa_solicitud_exportacion, #fecha_visita_exportacion, #id_instalacion_exportacion, #direccion_destinatario, #id_instalacion_envasado_2'
     ).on('change', function () {
-      fv.revalidateField($(this).attr('name'));
+          const nombreCampo = $(this).attr('name');
+    if (nombreCampo && window.fv_pedido) {
+      window.fv_pedido.revalidateField(nombreCampo);
+    }
     });
   });
+
+  function resetearFormularioExportacion() {
+    $('#addPedidoExportacionForm')[0].reset();
+    $('.select2').val(null).trigger('change');
+    $('input[type="file"]').val(''); // limpia archivos
+
+    $('#sections-container .card').not(':first').remove();
+    $('#encabezado_etiquetas').html('Elegir Etiquetas y Corrugados');
+
+    $('#id_instalacion_exportacion, #id_instalacion_envasado_2, #lote_envasadoExportPe').empty();
+    $('#tablaLotes tbody').empty();
+
+        const $seccionCombinado = $('#seccionCajasBotellasCombinado');
+        const $seccionExportacion = $('#seccionCajasBotellas');
+        const $botonesCharacteristics = $('#botones_characteristics');
+        $('#cant_botellas_exportac2').removeAttr('name');
+        $('#cant_cajas_exportac2').removeAttr('name');
+        $('#presentacion_exportac2').removeAttr('name');
+        $('#cant_botellas_exportac').attr('name', 'cantidad_botellas[0]');
+        $('#cant_cajas_exportac').attr('name', 'cantidad_cajas[0]');
+        $('#presentacion_exportac').attr('name', 'presentacion[0]');
+        $seccionCombinado.removeClass('d-none');
+        $seccionExportacion.addClass('d-none');
+        // Ocultar botones
+        $botonesCharacteristics.addClass('d-none');
+
+    const $destinatario = $('#direccion_destinatario');
+    $destinatario.val('').trigger('change'); // Asegura que no quede valor residual
+    $destinatario.empty().append('<option value="0" disabled selected>Seleccione una dirección</option>');
+
+
+      if (window.fv_pedido && typeof window.fv_pedido.resetForm === 'function') {
+        // Esperar brevemente para asegurar que el DOM siga presente
+        setTimeout(() => {
+          window.fv_pedido.resetForm(true);
+        }, 100);
+      }
+
+  }
+
 
   // Mapeo entre IDs de tipo de solicitud y IDs de divs
   const divsPorSolicitud = {
