@@ -521,11 +521,11 @@
                             <tr>
                                 <td class="ps-0 pe-12 py-4">
                                     <span class="text-heading">
-                                    {{ ucfirst(\Carbon\Carbon::parse($item->inspeccion->fecha_servicio . '-01')->locale('es')->isoFormat('MMMM YYYY')) }}
+                                  
                                     </span>
                                 </td>
                                 <td class="text-end py-4">
-                                    <span class="text-heading fw-medium">{{ $item->instalacion->direccion_completa }}</span>
+                                 
                                 </td>
                                 <td class="pe-0 py-4">
                                     <!--<div class="d-flex align-items-center justify-content-end">
