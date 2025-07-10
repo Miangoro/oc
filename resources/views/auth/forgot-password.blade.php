@@ -33,7 +33,7 @@ $customizerHidden = 'customizer-hide';
     <!-- Forgot Password -->
     <div class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg p-sm-12 p-6">
       <div class="w-px-400 mx-auto">
-        <h4 class="mb-1">Forgot Password? 🔒</h4>
+        <h4 class="mb-1">Forgot Password? xdxd🔒</h4>
         <p class="mb-5">Enter your email and we'll send you instructions to reset your password</p>
 
         @if (session('status'))

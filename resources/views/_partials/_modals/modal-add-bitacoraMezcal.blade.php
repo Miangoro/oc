@@ -23,7 +23,9 @@
                                             <select onchange="obtenerGraneles(this.value);" id="id_empresa"
                                                 name="id_empresa" class="select2 form-select"
                                                 data-error-message="por favor selecciona la empresa">
+                                                @if ($tipo_usuario != 3)
                                                 <option value="" disabled selected>Selecciona el cliente</option>
+                                                @endif
                                                 @foreach ($empresas as $empresa)
                                                     <option value="{{ $empresa->id_empresa }}">
                                                         {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}

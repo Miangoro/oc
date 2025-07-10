@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class BitacoraMezcalController extends Controller
@@ -18,8 +19,17 @@ class BitacoraMezcalController extends Controller
     public function UserManagement()
     {
         $bitacora = BitacoraMezcal::all();
-        $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get();
-        return view('bitacoras.find_BitacoraMezcal_view', compact('bitacora', 'empresas'));
+/*         $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); */
+            if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaIdA = Auth::user()->empresa?->id_empresa;
+        $empresas = empresa::with('empresaNumClientes')->where('id_empresa', $empresaIdA)->get();
+          } else {
+              $empresas = empresa::with('empresaNumClientes')
+                  ->where('tipo', 2)
+                  ->get();
+          }
+      $tipo_usuario =  Auth::user()->tipo;
+        return view('bitacoras.find_BitacoraMezcal_view', compact('bitacora', 'empresas', 'tipo_usuario'));
 
     }
 
@@ -35,7 +45,10 @@ class BitacoraMezcalController extends Controller
             3 => 'id_lote_granel',
         ];
 
-
+        $empresaIdAut = null;
+          if (Auth::check() && Auth::user()->tipo == 3) {
+              $empresaIdAut = Auth::user()->empresa?->id_empresa;
+          }
 
         $search = $request->input('search.value');
         $totalData = BitacoraMezcal::count();
@@ -45,7 +58,10 @@ class BitacoraMezcalController extends Controller
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')] ?? 'fecha';
         $dir = $request->input('order.0.dir');
-        $query = BitacoraMezcal::query()->where('tipo', 1);
+
+        $query = BitacoraMezcal::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
+                  $query->where('id_empresa', $empresaIdAut);
+              })->where('tipo', 1);
 
         if ($empresaId) {
             $query->where('id_empresa', $empresaId);
@@ -54,14 +70,6 @@ class BitacoraMezcalController extends Controller
                 $query->where('id_instalacion', $instalacionId);
             }
         }
-
-/*         if (!empty($search)) {
-            $query->where(function ($query) use ($search) {
-                $query->where('fecha', 'LIKE', "%{$search}%")
-                    ->orWhere('id_lote_granel', 'LIKE', "%{$search}%");
-            });
-            $totalFiltered = $query->count();
-        } */
           if (!empty($search)) {
               $query->where(function ($q) use ($search) {
                   $lower = strtolower($search);

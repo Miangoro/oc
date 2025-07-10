@@ -268,12 +268,20 @@ $(function () {
           text: '',
           init: function (api, node) {
             $(node).removeClass('btn btn-secondary');
+
+            // Decide si agregar opción 'Todas las Empresas' según tipoUsuario
+            const agregarTodas = window.tipoUsuario !== 3;
+
+            const htmlOpciones = agregarTodas
+              ? `<option value="">-- Todas las Empresas --</option>${opcionesEmpresas}`
+              : opcionesEmpresas;
+
             $(node).html(`
               <select id="filtroEmpresa" class="form-select select2" style="min-width: 280px;">
-                <option value="">-- Todas las Empresas --</option>
-                ${opcionesEmpresas}
+                ${htmlOpciones}
               </select>
             `);
+
             $(node).find('select').select2();
           }
         },
@@ -377,8 +385,8 @@ $(function () {
   });
 
   $(document).ready(function () {
-    $('#filtroEmpresa').on('change', function () {
-      let empresaId = $(this).val();
+    function cargarInstalaciones() {
+      let empresaId = $('#filtroEmpresa').val();
 
       if (empresaId) {
         $.ajax({
@@ -389,14 +397,14 @@ $(function () {
 
             if (response.instalaciones.length > 0) {
               response.instalaciones.forEach(function (inst) {
-                let tipoLimpio = limpiarTipo(inst.tipo); // función tuya, asumo que limpia el texto
+                let tipoLimpio = limpiarTipo(inst.tipo);
                 opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
               });
             } else {
               opciones += '<option value="">Sin instalaciones registradas</option>';
             }
 
-            $('#filtroInstalacion').html(opciones).trigger('change'); // actualiza Select2 también
+            $('#filtroInstalacion').html(opciones).trigger('change');
           },
           error: function () {
             $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
@@ -405,7 +413,13 @@ $(function () {
       } else {
         $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
       }
-    });
+    }
+
+    // Ejecutar al cargar la página
+    cargarInstalaciones();
+
+    // Ejecutar cuando cambie el select
+    $('#filtroEmpresa').on('change', cargarInstalaciones);
   });
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
@@ -1077,6 +1091,24 @@ $(function () {
       }
     });
   });
+
+$(document).ready(function () {
+  // Al abrir modal, disparas la carga inicial para el cliente seleccionado
+  $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
+    var empresaSeleccionada = $('#id_empresa').val();
+    if (empresaSeleccionada) {
+      obtenerGraneles(empresaSeleccionada);
+    } else {
+      obtenerDatosGraneles();
+    }
+  });
+
+  // También cuando cambia el select
+  $('#id_empresa').on('change', function () {
+    var empresa = $(this).val();
+    obtenerGraneles(empresa);
+  });
+});
 
   //end
 });
