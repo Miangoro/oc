@@ -907,7 +907,11 @@ $(function () {
           $(this).css('display', 'none');
           $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
-      } else {
+      }else if (tipo == 'Entradas y salidas') {
+        $('#editDisplayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 300);
+        $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 400);
+      }
+       else {
         $('#editDisplayEntradas, #editDisplaySalidas').fadeOut(200);
       }
     });

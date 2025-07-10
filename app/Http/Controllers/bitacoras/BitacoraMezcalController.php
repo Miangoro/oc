@@ -231,6 +231,7 @@ class BitacoraMezcalController extends Controller
             $bitacora->id_instalacion = $request->id_instalacion;
             $bitacora->id_lote_granel = $request->id_lote_granel;
             $bitacora->tipo_operacion = $request->tipo_operacion;
+            $bitacora->tipo = 1;
             $bitacora->operacion_adicional = $request->operacion_adicional;
             $bitacora->volumen_inicial = $request->volumen_inicial;
             $bitacora->alcohol_inicial = $request->alcohol_inicial;
@@ -341,6 +342,7 @@ class BitacoraMezcalController extends Controller
               'id_instalacion'   => $request->id_instalacion,
               'fecha'            => $request->fecha,
               'operacion_adicional' => $request->operacion_adicional,
+              'tipo' => 1,
               'tipo_operacion' => $request->tipo_operacion,
               'volumen_inicial' => $request->volumen_inicial,
               'alcohol_inicial' => $request->alcohol_inicial ,
