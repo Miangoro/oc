@@ -128,7 +128,14 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
 
     $marcasConHologramas = marcas::with('solicitudHolograma')->where('id_empresa',$empresaId)->get();
 
-    return view('content.dashboard.dashboards-analytics', compact('revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+    $serviciosInstalacion = solicitudesModel::whereHas('instalacion')
+    ->where('id_empresa', $empresaId)
+    ->where('id_tipo', 11)
+    ->where('fecha_solicitud', '>', '2024-12-31');
+
+
+
+    return view('content.dashboard.dashboards-analytics', compact('serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)
