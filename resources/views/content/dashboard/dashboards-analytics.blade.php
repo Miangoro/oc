@@ -492,7 +492,9 @@
                 </div>
             </div>
             @endcan
-
+@php
+    use Carbon\Carbon;
+@endphp
             @can('Estadísticas exportación clientes')
               <div class="col-md-6 col-xxl-4">
                 <div class="card h-100">
