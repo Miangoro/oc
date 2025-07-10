@@ -75,20 +75,21 @@
 
                             </p>
                         @endif
-                       @php
-    $observaciones = $datos->observaciones ?? '';
+                        @php
+                            $observaciones = $datos->observaciones ?? '';
 
-    // Buscar y convertir todas las URLs en enlaces <a>
-    $observacionesConEnlaces = preg_replace(
-        '~(https?://[^\s]+)~',
-        '<a href="$1" target="_blank">$1</a>',
-        e($observaciones) // escapamos antes de aplicar HTML
-    );
-@endphp
+                            // Buscar y convertir todas las URLs en enlaces <a>
+                            $observacionesConEnlaces = preg_replace(
+                                '~(https?://[^\s]+)~',
+                                '<a href="$1" target="_blank">$1</a>',
+                                e($observaciones) // escapamos antes de aplicar HTML
+                            );
+                                $contieneEnlace = preg_match('~https?://[^\s]+~', $observaciones);
+                        @endphp
 
-@if (!empty($observaciones))
-    <p><strong>Observaciones:</strong> {!! $observacionesConEnlaces !!}</p>
-@endif
+                       @if (!empty($observaciones) && !$contieneEnlace)
+                            <p><strong>Observaciones:</strong> {{ $observaciones }}</p>
+                        @endif
 
 
 

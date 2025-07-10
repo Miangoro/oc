@@ -84,10 +84,11 @@
                                 '<a href="$1" target="_blank">$1</a>',
                                 e($observaciones) // escapamos antes de aplicar HTML
                             );
+                                $contieneEnlace = preg_match('~https?://[^\s]+~', $observaciones);
                         @endphp
 
-                        @if (!empty($observaciones))
-                            <p><strong>Observaciones:</strong> {!! $observacionesConEnlaces !!}</p>
+                       @if (!empty($observaciones) && !$contieneEnlace)
+                            <p><strong>Observaciones:</strong> {{ $observaciones }}</p>
                         @endif
 
                         @if (!empty($datos->evidencias) && count($datos->evidencias) > 0)
