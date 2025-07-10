@@ -700,6 +700,9 @@
                                                 <div>N/A</div>
                                             @endif
                                             </td>
+
+                                        @elseif($pregunta->filtro == 'datos_holograma')
+                                            <td>{!! $observacionesConEnlaces !!}</td>
                                         @elseif($pregunta->filtro == 'edad')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? 'N/A' }}
                                             </td>
