@@ -128,11 +128,20 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
 
     $marcasConHologramas = marcas::with('solicitudHolograma')->where('id_empresa',$empresaId)->get();
 
-    $serviciosInstalacion = solicitudesModel::whereHas('instalacion')
+$serviciosInstalacion = SolicitudesModel::with(['inspeccion', 'instalacion'])
+    ->whereHas('instalacion')
     ->where('id_empresa', $empresaId)
     ->where('id_tipo', 11)
-    ->where('fecha_solicitud', '>', '2024-12-31');
-
+    ->where('fecha_solicitud', '>', '2024-12-31')
+    ->get()
+    ->groupBy(function ($item) {
+        return Carbon::parse($item->inspeccion->fecha_servicio)->format('Y-m'); // Agrupa por año-mes
+    })
+    ->map(function ($items) {
+        return $items->groupBy(function ($item) {
+            return $item->instalacion->direccion_completa ?? 'Sin dirección';
+        });
+    });
 
 
     return view('content.dashboard.dashboards-analytics', compact('serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
