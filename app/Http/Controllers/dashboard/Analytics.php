@@ -135,14 +135,22 @@ $serviciosInstalacion = SolicitudesModel::with(['inspeccion', 'instalacion'])
     ->where('fecha_solicitud', '>', '2024-12-31')
     ->get()
     ->groupBy(function ($item) {
-        return Carbon::parse($item->inspeccion->fecha_servicio)->format('Y-m'); // Agrupa por año-mes
+        // Agrupar por año-mes
+        return Carbon::parse($item->inspeccion->fecha_servicio)->format('Y-m');
     })
     ->map(function ($items) {
+        // Agrupar por instalación
         return $items->groupBy(function ($item) {
             return $item->instalacion->direccion_completa ?? 'Sin dirección';
+        })->map(function ($grupoPorInstalacion) {
+            // Contar num_servicio únicos por instalación
+            return $grupoPorInstalacion
+                ->pluck('inspeccion.num_servicio')
+                ->filter() // quitar nulls
+                ->unique()
+                ->count();
         });
     });
-
 
     return view('content.dashboard.dashboards-analytics', compact('serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
