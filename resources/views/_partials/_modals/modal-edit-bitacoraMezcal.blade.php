@@ -41,9 +41,10 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <select id="edit_tipo_op" name="tipo_operacion" class=" form-select"
                                     data-error-message="Por favor selecciona el tipo de operación">
-                                    <option value="" disabled selected>Selecciona el tipo de operación</option>
+                                    <option value=""  disabled selected>Selecciona el tipo de operación</option>
                                     <option value="Entradas">Entradas</option>
                                     <option value="Salidas">Salidas</option>
+                                    <option value="Entradas y salidas">Entradas y salidas</option>
                                 </select>
                                 <label for="tipo_op">Tipo de operación</label>
                             </div>

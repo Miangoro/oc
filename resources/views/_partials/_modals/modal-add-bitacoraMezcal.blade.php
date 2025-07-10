@@ -41,9 +41,11 @@
                             <div class="form-floating form-floating-outline">
                                 <select id="tipo_op" name="tipo_operacion" class=" form-select"
                                     data-error-message="Por favor selecciona el tipo de operación">
-                                    <option value="" disabled selected>Selecciona el tipo de operación</option>
+                                    <option class="bg-light" value="" disabled selected>Selecciona el tipo de
+                                        operación</option>
                                     <option value="Entradas">Entradas</option>
                                     <option value="Salidas">Salidas</option>
+                                    <option value="Entradas y salidas">Entradas y salidas</option>
                                 </select>
                                 <label for="tipo_op">Tipo de operación</label>
                             </div>
@@ -98,7 +100,7 @@
 
                     </div>
                     <!-- Entradas / Operaciones Adicionales -->
-                    <div id="displayEntradas" class="form-section mb-5 p-3 border rounded">
+                    <div id="displayEntradas" class="form-section mb-5 p-3 border rounded Small shadow">
                         <h6>ENTRADAS</h6>
                         <div class="row">
                             <div class="col-md-12 mb-3">
@@ -169,7 +171,7 @@
                     </div>
 
                     <!-- Inventario Final -->
-                    <div class="form-section mb-5 p-3 border rounded">
+                    <div class="form-section mb-5 p-3 border rounded Small shadow">
                         <h6>INVENTARIO FINAL</h6>
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -198,14 +200,14 @@
 
                     <!-- Botones -->
                     <div class="d-flex justify-content-center">
-                        <button disabled class="btn btn-primary me-2 d-none" type="button"
-                            id="loading">
+                        <button disabled class="btn btn-primary me-2 d-none" type="button" id="loading">
                             <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
                             Registrando...
                         </button>
-                        <button type="submit" class="btn btn-primary me-2" id="btnRegistrar"><i class="ri-add-line me-1"></i>
+                        <button type="submit" class="btn btn-primary me-2" id="btnRegistrar"><i
+                                class="ri-add-line me-1"></i>
                             Registrar</button>
-                        <button type="button" class="btn btn-danger"  data-bs-dismiss="modal"><i
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i
                                 class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
                 </form>
@@ -246,7 +248,7 @@
                         contenidoI = '<option value="">Sin instalaciones registradas</option>';
                     }
                     $('#id_instalacion').html(contenidoI);
-
+                    obtenerDatosGraneles();
                 },
                 error: function() {}
             });
@@ -277,6 +279,9 @@
                     console.error('Error al obtener datos de graneles');
                 }
             });
+        } else {
+            $('#volumen_inicial').val('');
+            $('#alcohol_inicial').val('');
         }
     }
 </script>

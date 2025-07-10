@@ -301,7 +301,7 @@
               "slug": "bitacoraProcesoElaboracion"
             },
             {
-              "url": "/bitacoraMezcal",
+              "url": "/bitacoraMezcalProductor",
               "name": "Graneles (Inventario)",
               "slug": "bitacora-mezcal",
               "can": "Visualizar bitácoras"
@@ -319,7 +319,7 @@
           "icon": "menu-icon ri-flask-fill",
           "submenu": [
             {
-              "url": "/bitacoraMezcal",
+              "url": "/bitacoraMezcalEnvasador",
               "name": "Mezcla a granel (Inventario)",
               "slug": "bitacora-mezcal",
               "can": "Visualizar bitácoras"

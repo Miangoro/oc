@@ -10,6 +10,7 @@ use App\Models\empresa;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class BitacoraMezcalController extends Controller
@@ -18,7 +19,7 @@ class BitacoraMezcalController extends Controller
     {
         $bitacora = BitacoraMezcal::all();
         $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get();
-        return view('bitacoras.BitacoraMezcal_view', compact('bitacora', 'empresas'));
+        return view('bitacoras.find_BitacoraMezcal_view', compact('bitacora', 'empresas'));
 
     }
 
@@ -26,7 +27,7 @@ class BitacoraMezcalController extends Controller
     {
       $empresaId = $request->input('empresa');
       $instalacionId = $request->input('instalacion');
-
+      DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
 
         $columns = [
             1 => 'id',
@@ -54,13 +55,55 @@ class BitacoraMezcalController extends Controller
             }
         }
 
-        if (!empty($search)) {
+/*         if (!empty($search)) {
             $query->where(function ($query) use ($search) {
                 $query->where('fecha', 'LIKE', "%{$search}%")
                     ->orWhere('id_lote_granel', 'LIKE', "%{$search}%");
             });
             $totalFiltered = $query->count();
-        }
+        } */
+          if (!empty($search)) {
+              $query->where(function ($q) use ($search) {
+                  $lower = strtolower($search);
+
+                  if ($lower === 'firmado') {
+                      $q->whereNotNull('id_firmante')->where('id_firmante', '<>', 0);
+                  } elseif ($lower === 'sin firmar') {
+                      $q->where(function ($sub) {
+                          $sub->whereNull('id_firmante')->orWhere('id_firmante', 0);
+                      });
+                  } else {
+
+                    $q->where('fecha', 'LIKE', "%{$search}%")
+                      ->orWhere('id_lote_granel', 'LIKE', "%{$search}%")
+                      ->orWhere('procedencia_entrada', 'LIKE', "%{$search}%")
+                      ->orWhere('destino_salidas', 'LIKE', "%{$search}%")
+                      ->orWhere('operacion_adicional', 'LIKE', "%{$search}%")
+                      ->orWhere('volumen_inicial', 'LIKE', "%{$search}%")
+                      ->orWhere('alcohol_inicial', 'LIKE', "%{$search}%")
+                      ->orWhere('volumen_entrada', 'LIKE', "%{$search}%")
+                      ->orWhere('alcohol_entrada', 'LIKE', "%{$search}%")
+                      ->orWhere('volumen_salidas', 'LIKE', "%{$search}%")
+                      ->orWhere('alcohol_salidas', 'LIKE', "%{$search}%")
+                      ->orWhere('destino_salidas', 'LIKE', "%{$search}%")
+                      ->orWhere('volumen_final', 'LIKE', "%{$search}%")
+                      ->orWhere('alcohol_final', 'LIKE', "%{$search}%")
+                      ->orWhere('observaciones', 'LIKE', "%{$search}%")
+                      ->orWhere(function ($date) use ($search) {
+                       $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
+                      ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
+                          $sub->where('razon_social', 'LIKE', "%{$search}%");
+                      })
+                      ->orWhereHas('loteBitacora', function ($sub) use ($search) {
+                          $sub->where('nombre_lote', 'LIKE', "%{$search}%")
+                              ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+                              ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
+                      });
+                  }
+              });
+
+              $totalFiltered = $query->count();
+          }
 
         $bitacoras = $query->offset($start)
             ->limit($limit)
@@ -69,9 +112,7 @@ class BitacoraMezcalController extends Controller
 
         $data = [];
         $counter = $start + 1;
-
         foreach ($bitacoras as $bitacora) {
-
           $razonSocial = $bitacora->empresaBitacora->razon_social ?? 'Sin razón social';
            $numeroCliente = null;
                 if ($bitacora->empresaBitacora && $bitacora->empresaBitacora->empresaNumClientes) {
@@ -94,7 +135,6 @@ class BitacoraMezcalController extends Controller
                 'numero_cliente' => $numeroCliente,
                 'cliente' => '<b>' . $numeroCliente . '</b><br>' . $razonSocial,
                 //
-                'razon_social' => $bitacora->empresaBitacora->razon_social ?? 'Sin razón social',
                 'nombre_lote' => $bitacora->loteBitacora->nombre_lote ?? 'N/A',
                 'folio_fq' => $bitacora->loteBitacora->folio_fq ?? 'N/A',
                 'folio_certificado' => $bitacora->loteBitacora->folio_certificado ?? 'N/A',
@@ -131,13 +171,6 @@ class BitacoraMezcalController extends Controller
         ]);
     }
 
-/*     public function PDFBitacoraMezcal() {
-        $bitacoras = BitacoraMezcal::with('loteBitacora')->orderBy('fecha', 'desc')->get();
-      $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras'))
-          ->setPaper([0, 0, 1190.55, 1681.75 ], 'landscape');
-
-          return $pdf->stream('Bitácora Mezcal a Granel.pdf');
-    } */
      public function PDFBitacoraMezcal(Request $request)
     {
         $empresaId = $request->query('empresa');
@@ -156,7 +189,11 @@ class BitacoraMezcalController extends Controller
         ->orderBy('fecha', 'desc')
         ->get();
 
-
+          if ($bitacoras->isEmpty()) {
+              return response()->json([
+                  'message' => 'No hay registros de bitácora para los filtros seleccionados.'
+              ], 404);
+          }
         $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
 
