@@ -128,6 +128,8 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
 
     $marcasConHologramas = marcas::with('solicitudHolograma')->where('id_empresa',$empresaId)->get();
 
+
+
 $serviciosInstalacion = SolicitudesModel::with(['inspeccion', 'instalacion'])
     ->whereHas('instalacion')
     ->where('id_empresa', $empresaId)
@@ -135,22 +137,26 @@ $serviciosInstalacion = SolicitudesModel::with(['inspeccion', 'instalacion'])
     ->where('fecha_solicitud', '>', '2024-12-31')
     ->get()
     ->groupBy(function ($item) {
-        // Agrupar por año-mes
+        // Agrupar por año-mes (ej. '2025-01')
         return Carbon::parse($item->inspeccion->fecha_servicio)->format('Y-m');
     })
     ->map(function ($items) {
-        // Agrupar por instalación
         return $items->groupBy(function ($item) {
-            return $item->instalacion->direccion_completa ?? 'Sin dirección';
-        })->map(function ($grupoPorInstalacion) {
-            // Contar num_servicio únicos por instalación
-            return $grupoPorInstalacion
-                ->pluck('inspeccion.num_servicio')
-                ->filter() // quitar nulls
-                ->unique()
-                ->count();
+            // Agrupar por fecha exacta del servicio (ej. '2025-01-05')
+            return Carbon::parse($item->inspeccion->fecha_servicio)->format('Y-m-d');
+        })->map(function ($porFecha) {
+            return $porFecha->groupBy(function ($item) {
+                return $item->instalacion->direccion_completa ?? 'Sin dirección';
+            })->map(function ($porInstalacion) {
+                return $porInstalacion
+                    ->pluck('inspeccion.num_servicio')
+                    ->filter()
+                    ->unique()
+                    ->count();
+            });
         });
     });
+
 
     return view('content.dashboard.dashboards-analytics', compact('serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
