@@ -38,39 +38,23 @@ class Analytics extends Controller
     })
     ->get();
 
-    $revisiones = collect();
-
-// Revisor Personal
-$revisiones_personal = Revisor::select(
+   $revisiones = Revisor::select(
         'id_revisor as user_id',
+        DB::raw("CASE 
+                    WHEN tipo_revision = 1 THEN 'Personal' 
+                    WHEN tipo_revision = 2 THEN 'Consejo' 
+                    ELSE 'Desconocido' 
+                END as rol"),
         'tipo_certificado',
-        DB::raw("'Personal' as rol"),
         DB::raw('COUNT(*) as total')
     )
     ->whereNotNull('id_revisor')
-    ->where('tipo_revision',1)
-    ->groupBy('id_revisor', 'tipo_certificado')
+    ->groupBy('id_revisor', 'tipo_revision', 'tipo_certificado')
     ->get();
 
-// Revisor Consejo
-$revisiones_consejo = Revisor::select(
-        'id_revisor as user_id',
-        'tipo_certificado',
-        DB::raw("'Consejo' as rol"),
-        DB::raw('COUNT(*) as total')
-    )
-    ->whereNotNull('id_revisor')
-    ->where('tipo_revision',2)
-    ->groupBy('id_revisor', 'tipo_certificado')
-    ->get();
-
-// Unir ambas colecciones
-$revisiones = $revisiones_personal->merge($revisiones_consejo);
-
-// Cargar nombres de usuarios (asociar)
-$user_ids = $revisiones->pluck('user_id')->unique();
-$usuarios = User::whereIn('id', $user_ids)->get()->keyBy('id');
-
+// 2. Obtener usuarios
+$userIds = $revisiones->pluck('user_id')->unique();
+$usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
 
 
 

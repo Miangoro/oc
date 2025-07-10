@@ -389,44 +389,31 @@
             @endcan
 
            @can('Estadísticas consejo')
-<div class="card-body pb-1 pt-0">
-    <div class="mb-4 mt-2">
-        <p class="text-muted">Cantidad de revisiones realizadas por miembros del personal y del consejo, agrupadas por tipo de certificado.</p>
-    </div>
+@php
+    $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
+@endphp
 
-    <div class="table-responsive text-nowrap border-top">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Rol</th>
-                    <th>Tipo de Certificado</th>
-                    <th class="text-end">Total Revisiones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                    $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
-                @endphp
+<table class="table">
+    <thead>
+        <tr>
+            <th>Revisor</th>
+            <th>Rol</th>
+            <th>Tipo de Certificado</th>
+            <th>Total de Revisiones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($revisiones as $rev)
+            <tr>
+                <td>{{ $usuarios[$rev->user_id]->name ?? '—' }}</td>
+                <td>{{ $rev->rol }}</td>
+                <td>{{ $tipos[$rev->tipo_certificado] ?? 'Desconocido' }}</td>
+                <td>{{ number_format($rev->total) }}</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
 
-                @foreach ($revisiones as $item)
-                    <tr>
-                        <td>{{ $usuarios[$item->user_id]->name ?? 'Desconocido' }}</td>
-                        <td>
-                            <span class="badge bg-{{ $item->rol === 'Consejo' ? 'warning' : 'info' }}">{{ $item->rol }}</span>
-                        </td>
-                        <td>
-                            <span class="badge bg-primary">{{ $tipos[$item->tipo_certificado] ?? 'Desconocido' }}</span>
-                        </td>
-                        <td class="text-end">
-                            <strong>{{ number_format($item->total) }}</strong>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
 @endcan
 
 

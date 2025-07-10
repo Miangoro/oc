@@ -17,7 +17,6 @@ class Revisor extends Model
     protected $fillable = [
         'tipo_revision',
         'id_revisor',
-        'id_revisor2',
         'id_certificado',
         'numero_revision',
         'es_correccion',
