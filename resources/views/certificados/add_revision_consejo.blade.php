@@ -701,8 +701,7 @@
                                             @endif
                                             </td>
 
-                                        @elseif($pregunta->filtro == 'datos_holograma')
-                                            <td>{!! $observacionesConEnlaces !!}</td>
+                                       
                                         @elseif($pregunta->filtro == 'edad')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? 'N/A' }}
                                             </td>
@@ -789,6 +788,8 @@
                                                     <span class="text-muted">Ver arriba</span>
                                                 @endif
                                             </td>
+                                             @elseif($pregunta->filtro == 'datos_holograma')
+                                            <td>{!! $observacionesConEnlaces !!}</td>
                                         @elseif($pregunta->filtro == 'etiqueta')
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
