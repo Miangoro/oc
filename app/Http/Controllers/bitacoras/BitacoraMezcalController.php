@@ -45,7 +45,7 @@ class BitacoraMezcalController extends Controller
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')] ?? 'fecha';
         $dir = $request->input('order.0.dir');
-        $query = BitacoraMezcal::query();
+        $query = BitacoraMezcal::query()->where('tipo', 1);
 
         if ($empresaId) {
             $query->where('id_empresa', $empresaId);

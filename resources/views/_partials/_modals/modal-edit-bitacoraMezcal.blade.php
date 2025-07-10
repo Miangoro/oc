@@ -11,198 +11,232 @@
                     @csrf
                     <input type="hidden" id="edit_bitacora_id" name="edit_bitacora_id">
                     <!-- Datos Iniciales -->
-                    <div class="row">
-                        <div class="col-md-7 mb-3">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerGranelesEdit(this.value);" id="edit_id_empresa"
-                                    name="id_empresa" class="select2 form-select"
-                                    data-error-message="por favor selecciona la empresa">
-                                    <option value="" disabled selected>Selecciona el cliente</option>
-                                    @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">
-                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
-                                            | {{ $empresa->razon_social }}</option>
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <label for="id_empresa" class="form-label">Cliente</label>
+                    <div>
+                        <div class="card mb-4 border rounded">
+                            <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
+                                DATOS INICIALES
                             </div>
-                        </div>
-                        <div class="col-md-5 b-3">
-                            <div class="form-floating form-floating-outline">
-                                <input type="date" class="form-control datepicker" id="edit_fecha" name="fecha"
-                                    aria-label="Fecha" readonly>
-                                <label for="fecha">Fecha</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <select id="edit_tipo_op" name="tipo_operacion" class=" form-select"
-                                    data-error-message="Por favor selecciona el tipo de operación">
-                                    <option value=""  disabled selected>Selecciona el tipo de operación</option>
-                                    <option value="Entradas">Entradas</option>
-                                    <option value="Salidas">Salidas</option>
-                                    <option value="Entradas y salidas">Entradas y salidas</option>
-                                </select>
-                                <label for="tipo_op">Tipo de operación</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" id="edit_operacion_adicional"
-                                    name="operacion_adicional" placeholder="Operación adicional"
-                                    aria-label="Operación adicional">
-                                <label for="operacion_adicional">Operación adicional</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <select id="edit_id_lote_granel" name="id_lote_granel" class="select2 form-select">
-                                    <option value="">Selecciona un lote</option>
-                                </select>
-                                <label for="id_lote_granel">Lote a granel</label>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select select2" id="edit_id_instalacion" name="id_instalacion"
-                                    aria-label="id_instalacion">
-                                    <option value="" disabled selected>Lista de instalaciones</option>
-                                    <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
-                                </select>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-7 mb-3">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <select onchange="obtenerGranelesEdit(this.value);" id="edit_id_empresa"
+                                                name="id_empresa" class="select2 form-select"
+                                                data-error-message="por favor selecciona la empresa">
+                                                <option value="" disabled selected>Selecciona el cliente</option>
+                                                @foreach ($empresas as $empresa)
+                                                    <option value="{{ $empresa->id_empresa }}">
+                                                        {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                                        | {{ $empresa->razon_social }}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="id_empresa" class="form-label">Cliente</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="date" class="form-control datepicker" id="edit_fecha"
+                                                name="fecha" aria-label="Fecha" readonly>
+                                            <label for="fecha">Fecha</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <select id="edit_tipo_op" name="tipo_operacion" class=" form-select"
+                                                data-error-message="Por favor selecciona el tipo de operación">
+                                                <option value="" disabled selected>Selecciona el tipo de operación
+                                                </option>
+                                                <option value="Entradas">Entradas</option>
+                                                <option value="Salidas">Salidas</option>
+                                                <option value="Entradas y salidas">Entradas y salidas</option>
+                                            </select>
+                                            <label for="tipo_op">Tipo de operación</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control" id="edit_operacion_adicional"
+                                                name="operacion_adicional" placeholder="Operación adicional"
+                                                aria-label="Operación adicional">
+                                            <label for="operacion_adicional">Operación adicional</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <select id="edit_id_lote_granel" name="id_lote_granel"
+                                                class="select2 form-select">
+                                                <option value="">Selecciona un lote</option>
+                                            </select>
+                                            <label for="id_lote_granel">Lote a granel</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-floating form-floating-outline mb-6">
+                                            <select class=" form-select select2" id="edit_id_instalacion"
+                                                name="id_instalacion" aria-label="id_instalacion">
+                                                <option value="" disabled selected>Lista de instalaciones</option>
+                                                <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" class="form-control" id="edit_volumen_inicial"
+                                                name="volumen_inicial" placeholder="Volumen inicial"
+                                                aria-label="Volumen inicial">
+                                            <label for="volumen_inicial">Volumen inicial</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" step="0.01" class="form-control"
+                                                id="edit_alcohol_inicial" name="alcohol_inicial"
+                                                placeholder="% Alc. inicial" aria-label="% Alc. inicial">
+                                            <label for="alcohol_inicial">% Alc. inicial</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="form-floating form-floating-outline">
-                                <input type="number" class="form-control" id="edit_volumen_inicial"
-                                    name="volumen_inicial" placeholder="Volumen inicial" aria-label="Volumen inicial">
-                                <label for="volumen_inicial">Volumen inicial</label>
-                            </div>
-                        </div>
 
-                        <div class="col-md-6 mb-3">
-                            <div class="form-floating form-floating-outline">
-                                <input type="number" step="0.01" class="form-control" id="edit_alcohol_inicial"
-                                    name="alcohol_inicial" placeholder="% Alc. inicial" aria-label="% Alc. inicial">
-                                <label for="alcohol_inicial">% Alc. inicial</label>
-                            </div>
-                        </div>
-                    </div>
                     {{-- Entradas --}}
-                    <div id="editDisplayEntradas" class="form-section mb-5 p-3 border rounded">
-                        <h6>ENTRADAS</h6>
-
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" id="edit_procedencia_entrada"
-                                        name="procedencia_entrada" placeholder="Procedencia entrada"
-                                        aria-label="Procedencia entrada">
-                                    <label for="procedencia_entrada">Procedencia de la entrada</label>
-                                </div>
+                    <div id="editDisplayEntradas">
+                        <div class="card mt-4 mb-4 border rounded">
+                            <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
+                                ENTRADAS
                             </div>
+                            {{-- <h6></h6> --}}
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control" id="edit_procedencia_entrada"
+                                                name="procedencia_entrada" placeholder="Procedencia entrada"
+                                                aria-label="Procedencia entrada">
+                                            <label for="procedencia_entrada">Procedencia de la entrada</label>
+                                        </div>
+                                    </div>
 
-                            <div class="col-md-4 mb-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="number" class="form-control" id="edit_volumen_entrada"
-                                        name="volumen_entrada" placeholder="Volumen entrada"
-                                        aria-label="Volumen entrada">
-                                    <label for="volumen_entrada">Volumen entrada</label>
-                                </div>
-                            </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" class="form-control" id="edit_volumen_entrada"
+                                                name="volumen_entrada" placeholder="Volumen entrada"
+                                                aria-label="Volumen entrada">
+                                            <label for="volumen_entrada">Volumen entrada</label>
+                                        </div>
+                                    </div>
 
-                            <div class="col-md-4 mb-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="number" step="0.01" class="form-control"
-                                        id="edit_alcohol_entrada" name="alcohol_entrada" placeholder="% Alc. entrada"
-                                        aria-label="% Alc. entrada">
-                                    <label for="alcohol_entrada">% Alc. Vol. entrada</label>
-                                </div>
-                            </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" step="0.01" class="form-control"
+                                                id="edit_alcohol_entrada" name="alcohol_entrada"
+                                                placeholder="% Alc. entrada" aria-label="% Alc. entrada">
+                                            <label for="alcohol_entrada">% Alc. Vol. entrada</label>
+                                        </div>
+                                    </div>
 
-                            <div class="col-md-4 mb-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="number" step="0.01" class="form-control" id="edit_agua_entrada"
-                                        name="agua_entrada" placeholder="Agua agregada (L)"
-                                        aria-label="Agua entrada">
-                                    <label for="agua_entrada">Agua agregada (L)</label>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" step="0.01" class="form-control"
+                                                id="edit_agua_entrada" name="agua_entrada"
+                                                placeholder="Agua agregada (L)" aria-label="Agua entrada">
+                                            <label for="agua_entrada">Agua agregada (L)</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Salidas -->
-                    <div id="editDisplaySalidas" class="form-section mb-5 p-3 border rounded">
-                        <h6>SALIDAS</h6>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="number" class="form-control" id="edit_volumen_salida"
-                                        name="volumen_salida" placeholder="Volumen" aria-label="Volumen" required>
-                                    <label for="volumen_salida">Volumen</label>
-                                </div>
+                    <div id="editDisplaySalidas">
+                        <div class="card mt-4 mb-4 border rounded">
+                            <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
+                                SALIDAS
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="number" step="0.01" class="form-control"
-                                        id="edit_alc_vol_salida" name="alc_vol_salida" placeholder="% Alc. Vol."
-                                        aria-label="% Alc. Vol." required>
-                                    <label for="alc_vol_salida">% Alc. Vol.</label>
-                                </div>
-                            </div>
-                            <div class="col-md-12 mb-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" id="edit_destino" name="destino"
-                                        placeholder="Destino" aria-label="Destino" required>
-                                    <label for="destino">Destino</label>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" class="form-control" id="edit_volumen_salida"
+                                                name="volumen_salida" placeholder="Volumen" aria-label="Volumen"
+                                                required>
+                                            <label for="volumen_salida">Volumen</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" step="0.01" class="form-control"
+                                                id="edit_alc_vol_salida" name="alc_vol_salida"
+                                                placeholder="% Alc. Vol." aria-label="% Alc. Vol." required>
+                                            <label for="alc_vol_salida">% Alc. Vol.</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control" id="edit_destino"
+                                                name="destino" placeholder="Destino" aria-label="Destino" required>
+                                            <label for="destino">Destino</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Inventario Final -->
-                    <div class="form-section mb-5 p-3 border rounded">
-                        <h6>INVENTARIO FINAL</h6>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="number" class="form-control" id="edit_volumen_final"
-                                        name="volumen_final" placeholder="Volumen" aria-label="Volumen" required>
-                                    <label for="volumen_final">Volumen</label>
-                                </div>
+                    <div>
+                        <div class="card mt-4 mb-4 border rounded">
+                            <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
+                                INVENTARIO FINAL
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="number" step="0.01" class="form-control"
-                                        id="edit_alc_vol_final" name="alc_vol_final" placeholder="% Alc. Vol."
-                                        aria-label="% Alc. Vol." required>
-                                    <label for="alc_vol_final">% Alc. Vol.</label>
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" class="form-control" id="edit_volumen_final"
+                                                name="volumen_final" placeholder="Volumen" aria-label="Volumen"
+                                                required>
+                                            <label for="volumen_final">Volumen</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" step="0.01" class="form-control"
+                                                id="edit_alc_vol_final" name="alc_vol_final"
+                                                placeholder="% Alc. Vol." aria-label="% Alc. Vol." required>
+                                            <label for="alc_vol_final">% Alc. Vol.</label>
+                                        </div>
+                                    </div>
+                                    <!-- Observaciones -->
+                                    <div class="mb-3">
+                                        <textarea class="form-control" id="edit_observaciones" name="observaciones" rows="3"
+                                            placeholder="Escribe observaciones"></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Observaciones -->
-                    <div class="mb-3">
-                        <textarea class="form-control" id="edit_observaciones" name="observaciones" rows="3"
-                            placeholder="Escribe observaciones"></textarea>
-                    </div>
-
                     <!-- Botones -->
                     <div class="d-flex justify-content-center">
-                      <button disabled class="btn btn-primary me-2 d-none"
-                            type="button" id="loadingEdit">
+                        <button disabled class="btn btn-primary me-2 d-none" type="button" id="loadingEdit">
                             <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
                             Actualizando...
                         </button>
-                        <button type="submit" class="btn btn-primary me-2" id="btnEdit"><i class="ri-pencil-fill me-1"></i>
+                        <button type="submit" class="btn btn-primary me-2" id="btnEdit"><i
+                                class="ri-pencil-fill me-1"></i>
                             Editar</button>
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i
                                 class="ri-close-line me-1"></i> Cancelar</button>

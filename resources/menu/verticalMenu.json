@@ -292,8 +292,8 @@
       "submenu": [
         {
           "name": "Productor",
-          "slug": "bitacora-productor",
           "icon": "menu-icon ri-user-settings-fill",
+          "slug": "bitacora-productor",
           "submenu": [
             {
               "url": "/bitacoraProcesoElaboracion",
@@ -315,8 +315,8 @@
         },
         {
           "name": "Envasador",
-          "slug": "bitacora-envasador",
           "icon": "menu-icon ri-flask-fill",
+          "slug": "bitacora-envasador",
           "submenu": [
             {
               "url": "/bitacoraMezcalEnvasador",
@@ -348,8 +348,8 @@
         },
         {
           "name": "Comercializador",
-          "slug": "bitacora-comercializador",
           "icon": "menu-icon ri-store-3-fill",
+          "slug": "bitacora-comercializador",
           "submenu": [
             {
               "url": "/bitacoraProductoTerminado",
