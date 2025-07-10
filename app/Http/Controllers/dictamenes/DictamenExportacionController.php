@@ -474,8 +474,7 @@ public function MostrarDictamenExportacion($id_dictamen)
         
         $DOM = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA';
         $convenio = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA';
-
-
+        $estado_productor = $lotes[0]->lotesGranel[0]->estados->nombre ?? 'No encontrado';
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
 
 
@@ -502,7 +501,7 @@ public function MostrarDictamenExportacion($id_dictamen)
         'aduana' => $aduana_salida ?? "No encontrado",
         'n_pedido' => $no_pedido ?? "No encontrado",
         //'envasado_en' => $envasado_en ?? "No encontrado",
-        'envasado_en' => $E_productor,
+        'envasado_en' => $estado_productor,
         'botellas' => $botellas ?? "No encontrado",
         'cajas' => $cajas ?? "No encontrado",
         'presentacion' => $presentacion ?? "No encontrado",

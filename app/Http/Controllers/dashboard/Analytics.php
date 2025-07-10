@@ -13,8 +13,10 @@ use App\Models\Dictamen_instalaciones;
 use App\Models\inspecciones;
 use App\Models\LotesGranel;
 use App\Models\marcas;
+use App\Models\Revisor;
 use App\Models\solicitudesModel;
 use App\Models\solicitudTipo;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +38,23 @@ class Analytics extends Controller
     })
     ->get();
 
+   $revisiones = Revisor::select(
+        'id_revisor as user_id',
+        DB::raw("CASE 
+                    WHEN tipo_revision = 1 THEN 'Personal' 
+                    WHEN tipo_revision = 2 THEN 'Consejo' 
+                    ELSE 'Desconocido' 
+                END as rol"),
+        'tipo_certificado',
+        DB::raw('COUNT(*) as total')
+    )
+    ->whereNotNull('id_revisor')
+    ->groupBy('id_revisor', 'tipo_revision', 'tipo_certificado')
+    ->get();
+
+// 2. Obtener usuarios
+$userIds = $revisiones->pluck('user_id')->unique();
+$usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
 
 
 
@@ -109,7 +128,7 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
 
     $marcasConHologramas = marcas::with('solicitudHolograma')->where('id_empresa',$empresaId)->get();
 
-    return view('content.dashboard.dashboards-analytics', compact('marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+    return view('content.dashboard.dashboards-analytics', compact('revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)

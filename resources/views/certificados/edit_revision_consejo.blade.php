@@ -75,20 +75,21 @@
 
                             </p>
                         @endif
-                       @php
-    $observaciones = $datos->observaciones ?? '';
+                        @php
+                            $observaciones = $datos->observaciones ?? '';
 
-    // Buscar y convertir todas las URLs en enlaces <a>
-    $observacionesConEnlaces = preg_replace(
-        '~(https?://[^\s]+)~',
-        '<a href="$1" target="_blank">$1</a>',
-        e($observaciones) // escapamos antes de aplicar HTML
-    );
-@endphp
+                            // Buscar y convertir todas las URLs en enlaces <a>
+                            $observacionesConEnlaces = preg_replace(
+                                '~(https?://[^\s]+)~',
+                                '<a href="$1" target="_blank">$1</a>',
+                                e($observaciones) // escapamos antes de aplicar HTML
+                            );
+                                $contieneEnlace = preg_match('~https?://[^\s]+~', $observaciones);
+                        @endphp
 
-@if (!empty($observaciones))
-    <p><strong>Observaciones:</strong> {!! $observacionesConEnlaces !!}</p>
-@endif
+                       @if (!empty($observaciones) && !$contieneEnlace)
+                            <p><strong>Observaciones:</strong> {{ $observaciones }}</p>
+                        @endif
 
 
 
@@ -762,6 +763,35 @@
                                                     <span class="text-muted">Sin acta</span>
                                                 @endif
                                             </td>
+                                        @elseif($pregunta->filtro == 'acta_exportacion')
+                                            <td>
+                                                @if ($datos->obtenerDocumentoActa($pregunta->id_documento, $datos->certificado->dictamen->inspeccione->id_solicitud))
+                                                    {{--  <b>{{ $datos->certificado->dictamen->inspeccione->num_servicio }}</b> --}}
+                                                    <a target="_blank"
+                                                        href="{{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
+                                                            'numero_cliente',
+                                                            '!=',
+                                                            null,
+                                                        )?->numero_cliente
+                                                            ? '../files/' .
+                                                                $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
+                                                                    'numero_cliente',
+                                                                    '!=',
+                                                                    null,
+                                                                )->numero_cliente .
+                                                                '/actas/' .
+                                                                $datos->obtenerDocumentoActa($pregunta->id_documento, $datos->certificado->dictamen->inspeccione->id_solicitud)
+                                                            : 'NA' }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                    {{ $datos->certificado->dictamen->inspeccione->num_servicio }}
+                                                @else
+                                                    <span class="text-muted">Ver arriba</span>
+                                                @endif
+                                            </td>
+                                             @elseif($pregunta->filtro == 'datos_holograma')
+                                            <td>{!! $observacionesConEnlaces !!}</td>
                                         @elseif($pregunta->filtro == 'etiqueta')
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;

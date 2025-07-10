@@ -84,10 +84,11 @@
                                 '<a href="$1" target="_blank">$1</a>',
                                 e($observaciones) // escapamos antes de aplicar HTML
                             );
+                                $contieneEnlace = preg_match('~https?://[^\s]+~', $observaciones);
                         @endphp
 
-                        @if (!empty($observaciones))
-                            <p><strong>Observaciones:</strong> {!! $observacionesConEnlaces !!}</p>
+                       @if (!empty($observaciones) && !$contieneEnlace)
+                            <p><strong>Observaciones:</strong> {{ $observaciones }}</p>
                         @endif
 
                         @if (!empty($datos->evidencias) && count($datos->evidencias) > 0)
@@ -344,13 +345,13 @@
                                               </a>
                                           @endif
                                         Completo: {{ $primerFolio }}
-                                            @if($tipo_certificado == 'Granel' AND $doc2)
+                                         <!--   @if($tipo_certificado == 'Granel' AND $doc2)
                                                     <a target="_blank"
                                                         href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente }}/fqs/{{ $doc2->url }}"><i
                                                             class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                     </a>
                                                 Ajuste: {{ $segundoFolio }}
-                                            @endif
+                                            @endif-->
                                       </td>
 
                                   @elseif($pregunta->filtro == 'nanalisis_ajuste')
@@ -642,6 +643,35 @@
                                                     <span class="text-muted">Sin acta</span>
                                                 @endif
                                             </td>
+                                        @elseif($pregunta->filtro == 'acta_exportacion')
+                                            <td>
+                                                @if ($datos->obtenerDocumentoActa($pregunta->id_documento, $datos->certificado->dictamen->inspeccione->id_solicitud))
+                                                    {{--  <b>{{ $datos->certificado->dictamen->inspeccione->num_servicio }}</b> --}}
+                                                    <a target="_blank"
+                                                        href="{{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere(
+                                                            'numero_cliente',
+                                                            '!=',
+                                                            null,
+                                                        )?->numero_cliente
+                                                            ? '../files/' .
+                                                                $datos->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere(
+                                                                    'numero_cliente',
+                                                                    '!=',
+                                                                    null,
+                                                                )->numero_cliente .
+                                                                '/actas/' .
+                                                                $datos->obtenerDocumentoActa($pregunta->id_documento, $datos->certificado->dictamen->inspeccione->id_solicitud)
+                                                            : 'NA' }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                    {{ $datos->certificado->dictamen->inspeccione->num_servicio }}
+                                                @else
+                                                    <span class="text-muted">Ver arriba</span>
+                                                @endif
+                                            </td>
+                                             @elseif($pregunta->filtro == 'datos_holograma')
+                                            <td>{!! $observacionesConEnlaces !!}</td>
                                         @elseif($pregunta->filtro == 'etiqueta')
                                             <td>
                                                 @if ($datos->certificado->dictamen->inspeccione->solicitud->etiqueta())

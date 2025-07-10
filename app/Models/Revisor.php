@@ -17,7 +17,6 @@ class Revisor extends Model
     protected $fillable = [
         'tipo_revision',
         'id_revisor',
-        'id_revisor2',
         'id_certificado',
         'numero_revision',
         'es_correccion',
@@ -69,6 +68,7 @@ class Revisor extends Model
     {
         return $this->belongsTo(User::class, 'id_revisor', 'id'); // id_revisor es la clave foránea en la tabla revisores
     }
+
 
     public function aprobador()
     {
