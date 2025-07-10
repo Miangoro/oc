@@ -388,56 +388,56 @@
                 </div>
             @endcan
 
-@can('Estadísticas consejo')
-@php
-    $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
+            @canany(['Estadísticas consejo', 'Estadísticas oc'])
+            @php
+                $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
 
-    // Agrupar por user_id + rol
-    $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
-@endphp
+                // Agrupar por user_id + rol
+                $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
+            @endphp
 
-<div class="card mb-4">
-    <div class="card-header">
-        <h5 class="mb-0">Resumen de revisiones por revisor y tipo de certificado</h5>
-        <small class="text-muted">Muestra la cantidad de revisiones realizadas por cada persona según su rol.</small>
-    </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Resumen de revisiones por revisor y tipo de certificado</h5>
+                    <small class="text-muted">Muestra la cantidad de revisiones realizadas por cada persona según su rol.</small>
+                </div>
 
-    <div class="card-body pt-2">
-        <div class="table-responsive text-nowrap border-top">
-            <table class="table table-bordered table-hover">
-                <thead class="table-light">
-                    <tr>
-                        <th>Revisor</th>
-                        <th>Rol</th>
-                        <th>Instalaciones</th>
-                        <th>Granel</th>
-                        <th>Exportación</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($agrupado as $key => $grupo)
-                        @php
-                            $revisor = $usuarios[$grupo->first()->user_id] ?? null;
-                            $rol = $grupo->first()->rol;
+                <div class="card-body pt-2">
+                    <div class="table-responsive text-nowrap border-top">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Revisor</th>
+                                    <th>Rol</th>
+                                    <th>Instalaciones</th>
+                                    <th>Granel</th>
+                                    <th>Exportación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($agrupado as $key => $grupo)
+                                    @php
+                                        $revisor = $usuarios[$grupo->first()->user_id] ?? null;
+                                        $rol = $grupo->first()->rol;
 
-                            $inst = $grupo->firstWhere('tipo_certificado', 1)?->total ?? 0;
-                            $gran = $grupo->firstWhere('tipo_certificado', 2)?->total ?? 0;
-                            $expo = $grupo->firstWhere('tipo_certificado', 3)?->total ?? 0;
-                        @endphp
-                        <tr>
-                            <td>{{ $revisor?->name ?? '—' }}</td>
-                            <td>{{ $rol }}</td>
-                            <td class="text-end">{{ number_format($inst) }}</td>
-                            <td class="text-end">{{ number_format($gran) }}</td>
-                            <td class="text-end">{{ number_format($expo) }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-@endcan
+                                        $inst = $grupo->firstWhere('tipo_certificado', 1)?->total ?? 0;
+                                        $gran = $grupo->firstWhere('tipo_certificado', 2)?->total ?? 0;
+                                        $expo = $grupo->firstWhere('tipo_certificado', 3)?->total ?? 0;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $revisor?->name ?? '—' }}</td>
+                                        <td>{{ $rol }}</td>
+                                        <td class="text-end">{{ number_format($inst) }}</td>
+                                        <td class="text-end">{{ number_format($gran) }}</td>
+                                        <td class="text-end">{{ number_format($expo) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @endcanany
 
 
 
