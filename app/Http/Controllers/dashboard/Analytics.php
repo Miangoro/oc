@@ -48,18 +48,20 @@ $revisiones_personal = Revisor::select(
         DB::raw('COUNT(*) as total')
     )
     ->whereNotNull('id_revisor')
+    ->where('tipo_revision',1)
     ->groupBy('id_revisor', 'tipo_certificado')
     ->get();
 
 // Revisor Consejo
 $revisiones_consejo = Revisor::select(
-        'id_revisor2 as user_id',
+        'id_revisor as user_id',
         'tipo_certificado',
         DB::raw("'Consejo' as rol"),
         DB::raw('COUNT(*) as total')
     )
-    ->whereNotNull('id_revisor2')
-    ->groupBy('id_revisor2', 'tipo_certificado')
+    ->whereNotNull('id_revisor')
+    ->where('tipo_revision',2)
+    ->groupBy('id_revisor', 'tipo_certificado')
     ->get();
 
 // Unir ambas colecciones
