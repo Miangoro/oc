@@ -442,7 +442,7 @@
                     </td> {{-- no se de donde se jala --}}
                     <td class="column2">Contenido alcohólico</td>
                     <td>
-                        {{-- @if ($lotesGranel->isNotEmpty())
+                        @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
                                 {{ $loteGranel->cont_alc ?? '' }} % Alc. Vol.
                                 <!-- Añade una separación si deseas entre los nombres de lotes -->
@@ -452,8 +452,8 @@
                             @endforeach
                         @else
                             N/A
-                        @endif --}} 
-                        {{ $data->lote_envasado->cont_alc_envasado ?? 'No encontrado' }} % Alc. Vol.
+                        @endif
+                        {{-- {{ $data->lote_envasado->cont_alc_envasado ?? 'No encontrado' }} % Alc. Vol. --}}
                     </td>
                 </tr>
                 <tr>

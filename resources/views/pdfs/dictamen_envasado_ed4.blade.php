@@ -80,17 +80,6 @@
     
 
 
-
-
-    /*inicia firma digital DIV*/
-    .images-container {
-        position: relative;
-        width: 100%;
-        /*vertical-align: bottom;*/
-    }
-
-
-
     .watermark {
         color: red;
         position: fixed;
@@ -104,6 +93,58 @@
         white-space: nowrap;
         z-index: -1;
     }
+
+
+    .fondo {
+        position: fixed;
+        top: 30%;
+        left: 130px;
+        width: 500px;
+        height: 440px;
+        opacity: 0.2;
+    }
+
+
+     /*inicia firma digital DIV*/
+    .firma {
+        position: relative;
+        width: 100%;
+        /*vertical-align: bottom;*/
+    }
+    
+
+
+    /*tabla*/
+    table {
+        border: 1px solid #003300;
+        width: 100%;
+        color: #000000;
+    }
+
+    td, th {
+        border: 1px solid #003300;
+        /* padding: 5px 8px; 
+        line-height: 1.2;*/
+        vertical-align: top;
+    }
+
+    th {
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    .subtitulos {
+        font-size: 16px;
+        margin-top: 1em;
+        margin-bottom: 0.3em;
+        padding-left: 1em;
+        font-weight: bold;
+    }
+
     </style>
 </head>
 
@@ -114,6 +155,8 @@
         Cancelado
     </div>
 @endif
+
+<img class="fondo" src="{{ public_path('img_pdf/fondo_dictamen.png') }}"  alt="Fondo agave">
 
 
 <div class="encabezado">
@@ -137,6 +180,112 @@
 
     <p style="text-align: center; font-size:26px; font-family:Lucida Sans Seminegrita; padding-top:6px;"><b>DICTAMEN DE CUMPLIMIENTO NOM DE<br>MEZCAL ENVASADO</b></p>
     
+ 
+<div class="subtitulos" style="color: #003300;">I. Datos de la empresa</div>
+<table cellpadding="5" cellspacing="3">
+    <tr>
+        <td class="bold" width="100">Nombre de la Empresa</td>
+        <td colspan="3">AMANTES DEL MEZCAL S.A. DE C.V.</td>
+    </tr>
+    <tr>
+        <td class="bold">Representante legal</td>
+        <td>Francisco Arrañaga Patrón</td>
+        <td class="bold">Número de dictamen</td>
+        <td>UME-134/2025</td>
+    </tr>
+    <tr>
+        <td class="bold">Dirección</td>
+        <td>
+            <strong>Domicilio Fiscal:</strong> Av. Ferrocarril Número exterior 69, Número interior Bis. San Sebastián Tutla, Oaxaca De Juárez, Oaxaca. C.P. 71320.<br>
+            <strong>Domicilio de Instalaciones:</strong> Lib. 5 Señores No. 915, Carretera Internacional, Tlalixtac De Cabrera, C.P. 68270, Tlalixtac De Cabrera, Oaxaca.
+        </td>
+        <td class="bold">Fecha de emisión</td>
+        <td>02/Julio/2025</td>
+    </tr>
+    <tr>
+        <td class="bold">RFC</td>
+        <td>AME1906138K7</td>
+        <td class="bold">Fecha de vencimiento</td>
+        <td>Indefinido</td>
+    </tr>
+    <tr>
+        <td class="bold">No. de servicio</td>
+        <td>UMS-0785/2025</td>
+        <td class="bold">Fecha de servicio</td>
+        <td>26/Junio/2025</td>
+    </tr>
+</table>
+
+<div class="subtitulos" style="color: #003300;">II. Descripción del producto</div>
+<table cellpadding="5" cellspacing="3">
+    <tr>
+        <td colspan="6" class="subtitulos" style="text-align: center">
+            PRODUCTO --<br>ORIGEN --
+        </td>
+    </tr>
+    <tr>
+        <td class="bold">Categoría y clase</td>
+        <td>Mezcal Artesanal Reposado</td>
+        <td class="bold" rowspan="2">No. de lote de envasado</td>
+        <td rowspan="2">001-25AM</td>
+        <td class="bold" rowspan="2">No. de botellas</td>
+        <td rowspan="2">10740</td>
+    </tr>
+    <tr>
+        <td class="bold">Ingredientes</td>
+        <td>----</td>
+    </tr>
+    <tr>
+        <td class="bold">Edad<br>(Exclusivo clase añejo)</td>
+        <td>5 Meses</td>
+        <td class="bold">No. de lote a granel</td>
+        <td>AM-11CR</td>
+        <td class="bold">No. de análisis</td>
+        <td>NNMZ-46384, NNMZ-50938</td>
+    </tr>
+    <tr>
+        <td class="bold">Presentación</td>
+        <td>375 mL</td>
+        <td class="bold">Volumen del lote</td>
+        <td>4027.5</td>
+        <td class="bold">Contenido alcohólico</td>
+        <td>35.09% Alc. Vol.</td>
+    </tr>
+    <tr>
+        <td class="bold">Tipo de maguey</td>
+        <td colspan="2">Maguey Espadín (A. angustifolia)</td>
+        <td class="bold">Marca</td>
+        <td colspan="2">CREYENTE</td>
+    </tr>
+</table>
+
+<p style="margin: 0 30px;"><!--orden: top right bottom left; equivale top:0; bottom:0; left:30; right:30; -->
+Este dictamen de cumplimiento de lote de mezcal envasado se expide de acuerdo a la Norma Oficial Mexicana
+NOM-070-SCFI-2016. Bebidas alcohólicas –mezcal-especificaciones
+</p>
+
+
+
+
+
+<!--FIRMA DIGITAL-->
+<div class="firma" style="width: 75%; border: 1px solid red; border-bottom: 2px solid #23b850" >
+    @php
+        use Illuminate\Support\Facades\Storage;
+        /* $firma = $data->firmante->firma ?? null;
+        $firmaPath = $firma ? 'firmas/' . $firma : null; */
+    @endphp
+    <img  style="vertical-align: top;" src="{{ public_path('img_pdf/sello_uvem.png') }}" alt="Sello Uvem" width="110px" height="100px">
+
+    <p style="display: inline-block; text-align:center; margin-left:30px">
+        QFB. Mario Villanueva Flores<br>
+        Gerente Técnico Sustituto de la Unidad de Inspección
+    </p>
+
+</div>
+
+
+
 
 
 
@@ -154,45 +303,6 @@
 
 
 
-<!--FIRMA DIGITAL-->
-{{-- <div>
-    <div class="images-container">
-        <img src="{{ $qrCodeBase64 }}" alt="QR" width="75px">
-        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Sello UI" class="image-right">
-    </div>
-    <p class="sello">Sello de Unidad de Inspección</p>
-    
-
-        @php
-            use Illuminate\Support\Facades\Storage;
-            $firma = $data->firmante->firma ?? null;
-            $firmaPath = $firma ? 'firmas/' . $firma : null;
-        @endphp
-
-        @if ($firma && Storage::disk('public')->exists($firmaPath))
-            <img style="position: absolute; margin-top: -10%; left: 45%;" height="60px"
-            src="{{ public_path('storage/' . $firmaPath) }}">
-        @endif
-
-    <p class="textx" style="margin-top: -5px">
-        <strong>AUTORIZÓ</strong>
-        <span style="margin-left: 54px; display: inline-block; text-align: center; position: relative;">
-            <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
-        </span>
-    </p>
-    <p class="textx">
-        <strong>CADENA ORIGINAL</strong>
-        <span style="margin-left: 14px;">
-            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
-        </span>
-    </p>
-    <p class="textx">
-        <strong>SELLO DIGITAL</strong>
-    </p>
-    <p class="textsello">
-        {{ $firmaDigital['firma'] }}
-    </p>
-</div> --}}
 
     
 
