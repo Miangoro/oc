@@ -241,7 +241,10 @@ if (dt_user_table.length) {
                 <b>Cajas:</b> ${full['cajas']} <br>
                 <b>Botellas:</b> ${full['botellas']} <br>
                 <b>Pedido:</b> ${full['n_pedido']} <br>
-                <b>Pais destino:</b> ${full['pais']}
+                <b>Pais destino:</b> ${full['pais']} <br>
+                ${ (full['id_hologramas'] || full['old_hologramas']) 
+                  ? `<span style="color:green">Hologramas activados</span>`
+                  : `<span style="color:red">Hologramas no activados</span>` }
 
                 ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
               </div>`;

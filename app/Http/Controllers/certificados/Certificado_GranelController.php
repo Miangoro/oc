@@ -676,6 +676,7 @@ public function CertificadoGranel($id_certificado, $conMarca = true)
         'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'representante' => $certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'No encontrado',
         'domicilio_fiscal' => $certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'No encontrado',
+        'cp' => $certificado->dictamen->inspeccione->solicitud->empresa->cp ?? ' ',
         'rfc' => $certificado->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'direccion_completa' => $certificado->dictamen->inspeccione->solicitud->instalaciones->direccion_completa ?? 'No encontrado',
         'nombre_firmante' => $certificado->user->name ?? 'No encontrado',

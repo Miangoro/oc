@@ -200,7 +200,7 @@ $(function () {
             var $ = full[''];
             return `<div class="small">
             <b>Lote granel:</b> ${full['nombre_lote']} <br>
-            <b>Análisis FQ:</b> ${full['n_analisis']}
+            <b>FQs:</b> ${full['n_analisis']}
 
             ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
           </div>`;

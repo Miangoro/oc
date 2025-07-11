@@ -151,7 +151,7 @@
         .margen_mezcal_granel {
             position: absolute;
             top: 90px; 
-            left: -80px; 
+            left: -67px; 
             width: 144px;
             height: 850px; 
             max-height: 100vh; 
@@ -284,7 +284,7 @@
         <td class="columna">Dirección</td>
 
         <td class="columna-text">
-            <span class="negrita">Domicilio Fiscal:</span> {{ $domicilio_fiscal }}
+            <span class="negrita">Domicilio Fiscal:</span> {{ $domicilio_fiscal }} C.P.{{ $cp }}
             <br>
             <span class="negrita">Domicilio de Instalaciones:</span> {{ $direccion_completa }}
         </td>
@@ -320,7 +320,7 @@
 			<td class="columna">Ingredientes</td>
 			<td class="columna-norm">{{ $ingredientes }}</td>
 			<td class="columna" style="white-space: nowrap;">Volumen de lote</td>
-			<td class="columna-norm">{{ $volumen }} L</td>
+			<td class="columna-norm">{{ number_format($volumen) }} L</td>
 			<td class="columna">Contenido Alcohólico</td>
 			<td class="columna-norm" style="white-space: nowrap;">{{ $cont_alc }}% Alc. Vol.</td>
 		</tr>
