@@ -38,6 +38,7 @@
                         <th>Marca</th>
                         <th>Numero de botellas</th>
                         <th>Presentación</th>
+                        <th>%Alc. Vol</th>
                         <th>Volumen</th>
                         <th>Destino lote</th>
                         <th>Lugar de envasado</th>

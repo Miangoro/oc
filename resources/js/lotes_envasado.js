@@ -129,7 +129,7 @@ $(function () {
             return row.presentacion + ' ' + row.unidad;
           }
         },
-
+        { data: 'cont_alc_envasado' },
         {
           data: null,
           searchable: true,

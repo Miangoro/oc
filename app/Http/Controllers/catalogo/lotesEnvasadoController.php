@@ -159,6 +159,7 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                     'nombre' => $user->nombre,
                     'cant_botellas' => $user->cant_botellas,
                     'presentacion' => $user->presentacion,
+                    'cont_alc_envasado' => $user->cont_alc_envasado,
                     'unidad' => $user->unidad,
                     'destino_lote' => $user->destino_lote,
                     'volumen_total' => $user->volumen_total,
