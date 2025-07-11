@@ -486,6 +486,7 @@ public function MostrarDictamenExportacion($id_dictamen)
         'fecha_emision' => $fecha_emision2,
         'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'domicilio' => $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
+        'cp' => $data->inspeccione->solicitud->empresa->cp ?? " ",
         'rfc' => $data->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         //'productor_autorizado' => $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? '',
         'productor_autorizado' => $DOM,
