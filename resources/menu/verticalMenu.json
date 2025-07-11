@@ -292,8 +292,8 @@
       "submenu": [
         {
           "name": "Productor",
-          "slug": "bitacora-productor",
           "icon": "menu-icon ri-user-settings-fill",
+          "slug": "bitacora-productor",
           "submenu": [
             {
               "url": "/bitacoraProcesoElaboracion",
@@ -301,7 +301,7 @@
               "slug": "bitacoraProcesoElaboracion"
             },
             {
-              "url": "/bitacoraMezcal",
+              "url": "/bitacoraMezcalProductor",
               "name": "Graneles (Inventario)",
               "slug": "bitacora-mezcal",
               "can": "Visualizar bitácoras"
@@ -315,11 +315,11 @@
         },
         {
           "name": "Envasador",
-          "slug": "bitacora-envasador",
           "icon": "menu-icon ri-flask-fill",
+          "slug": "bitacora-envasador",
           "submenu": [
             {
-              "url": "/bitacoraMezcal",
+              "url": "/bitacoraMezcalEnvasador",
               "name": "Mezcla a granel (Inventario)",
               "slug": "bitacora-mezcal",
               "can": "Visualizar bitácoras"
@@ -348,8 +348,8 @@
         },
         {
           "name": "Comercializador",
-          "slug": "bitacora-comercializador",
           "icon": "menu-icon ri-store-3-fill",
+          "slug": "bitacora-comercializador",
           "submenu": [
             {
               "url": "/bitacoraProductoTerminado",

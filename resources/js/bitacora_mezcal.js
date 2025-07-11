@@ -1,6 +1,19 @@
 'use strict';
 
 $(function () {
+  let buttonss = [];
+  // Si tiene permiso, agregas el botón
+  if (puedeAgregarElUsuario) {
+    buttonss.push({
+      text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Bitácora</span>',
+      className: 'add-new btn btn-primary me-2 mb-2 mb-sm-2 mt-4 mt-md-0 waves-effect waves-light',
+      attr: {
+        'data-bs-toggle': 'modal',
+        'data-bs-target': '#RegistrarBitacoraMezcal'
+      }
+    });
+  }
+
   var dt_user_table = $('.datatables-users');
 
   $('.datepicker').datepicker({
@@ -28,15 +41,15 @@ $(function () {
         }
       },
       columns: [
-      { data: null }, // 0 -> # (control o vacío)
-      { data: 'fake_id' }, // 1 -> ID
-      { data: 'razon_social' }, // 2 -> Cliente (campo directo)
-      { data: null }, // 3 -> Datos Iniciales (fecha + lote)
-      { data: null }, // 4 -> Entradas
-      { data: null }, // 5 -> Salidas
-      { data: null }, // 6 -> Inventario Final
-      { data: 'id_firmante' }, // 7 -> Estatus (para badge)
-      { data: null } // 8 -> Acciones
+        { data: null }, // 0 -> # (control o vacío)
+        { data: 'fake_id' }, // 1 -> ID
+        { data: 'razon_social' }, // 2 -> Cliente (campo directo)
+        { data: null }, // 3 -> Datos Iniciales (fecha + lote)
+        { data: null }, // 4 -> Entradas
+        { data: null }, // 5 -> Salidas
+        { data: null }, // 6 -> Inventario Final
+        { data: 'id_firmante' }, // 7 -> Estatus (para badge)
+        { data: null } // 8 -> Acciones
       ],
       columnDefs: [
         {
@@ -190,27 +203,33 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">' +
-              '<i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>' +
-              '</button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              //firmar
-              `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning">` +
-              '<i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>' +
-              /* data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddFirma" */
-              // Botón para editar
-              `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info">` +
-              '<i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora ' +
-              '</a>' +
-              // Botón para eliminar
-              `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger">` +
-              '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora ' +
-              '</a>' +
-              '</div>' +
-              '</div>'
-            );
+            let acciones = '';
+            if (window.puedeFirmarElUsuario) {
+              acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
+            }
+            if (window.puedeEditarElUsuario) {
+              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
+            }
+            if (window.puedeEliminarElUsuario) {
+              acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
+            }
+            // Si no hay acciones, no retornar el dropdown
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+            // Si hay acciones, construir el dropdown
+            const dropdown = `<div class="d-flex align-items-center gap-50">
+              <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button><div class="dropdown-menu dropdown-menu-end m-0">
+
+                  ${acciones}
+                </div>
+              </div>
+            `;
+            return dropdown;
           }
         }
       ],
@@ -219,7 +238,7 @@ $(function () {
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' +
-        '<"d-flex flex-wrap justify-content-between align-items-center w-100 px-3 pt-2"' +
+        '<"d-flex flex-wrap justify-content-end align-items-center w-100 px-3 pt-2"' +
         '<"filtrosBitacora d-flex gap-2 align-items-center" >' + // ← Aquí irán los selects
         '<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-3"lB>' +
         '>' +
@@ -246,27 +265,30 @@ $(function () {
       buttons: [
         {
           className: 'dt-custom-select p-0 me-2 btn-outline-dark form-select-sm',
-          text: '', // 👈 importante que esté vacío
-          init: function (api, node, config) {
-            // Remover clases no deseadas que DataTables agrega
+          text: '',
+          init: function (api, node) {
             $(node).removeClass('btn btn-secondary');
 
-            // Inyectar el select correctamente
+            // Decide si agregar opción 'Todas las Empresas' según tipoUsuario
+            const agregarTodas = window.tipoUsuario !== 3;
+
+            const htmlOpciones = agregarTodas
+              ? `<option value="">-- Todas las Empresas --</option>${opcionesEmpresas}`
+              : opcionesEmpresas;
+
             $(node).html(`
               <select id="filtroEmpresa" class="form-select select2" style="min-width: 280px;">
-                <option value="">-- Todas las Empresas --</option>
-                ${opcionesEmpresas}
+                ${htmlOpciones}
               </select>
             `);
 
-            // Activar Select2
             $(node).find('select').select2();
           }
         },
         {
-          text: '',
           className: 'dt-custom-select p-0 me-2 btn-outline-dark form-select-sm',
-          init: function (api, node, config) {
+          text: '',
+          init: function (api, node) {
             $(node).removeClass('btn btn-secondary');
             $(node).html(`
               <select id="filtroInstalacion" class="form-select select2" style="min-width: 280px;">
@@ -283,14 +305,7 @@ $(function () {
             id: 'verBitacoraBtn'
           }
         },
-        {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Bitácora</span>',
-          className: 'add-new btn btn-primary me-2 mb-2 mb-sm-2 mt-4 mt-md-0 waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'modal',
-            'data-bs-target': '#RegistrarBitacoraMezcal'
-          }
-        }
+        buttonss
       ],
 
       responsive: {
@@ -324,6 +339,22 @@ $(function () {
             return data ? $('<table class="table"/><tbody />').append(data) : false;
           }
         }
+      },
+      initComplete: function () {
+        // Mover los selects desde los botones a la zona visible "filtrosBitacora"
+        var $botonesFiltros = $('.dt-buttons .dt-custom-select');
+        var $contenedorFiltros = $('.filtrosBitacora');
+        $botonesFiltros.appendTo($contenedorFiltros);
+
+        // Re-inicializar Select2 para que no se corte el dropdown, usando dropdownParent en body
+        $contenedorFiltros.find('select.select2').select2({
+          dropdownParent: $(document.body)
+        });
+
+        // Opcional: recargar tabla al cambiar filtros
+        $('#filtroEmpresa, #filtroInstalacion').on('change', function () {
+          dt_user.ajax.reload();
+        });
       }
     });
   }
@@ -354,8 +385,8 @@ $(function () {
   });
 
   $(document).ready(function () {
-    $('#filtroEmpresa').on('change', function () {
-      let empresaId = $(this).val();
+    function cargarInstalaciones() {
+      let empresaId = $('#filtroEmpresa').val();
 
       if (empresaId) {
         $.ajax({
@@ -366,14 +397,14 @@ $(function () {
 
             if (response.instalaciones.length > 0) {
               response.instalaciones.forEach(function (inst) {
-                let tipoLimpio = limpiarTipo(inst.tipo); // función tuya, asumo que limpia el texto
+                let tipoLimpio = limpiarTipo(inst.tipo);
                 opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
               });
             } else {
               opciones += '<option value="">Sin instalaciones registradas</option>';
             }
 
-            $('#filtroInstalacion').html(opciones).trigger('change'); // actualiza Select2 también
+            $('#filtroInstalacion').html(opciones).trigger('change');
           },
           error: function () {
             $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
@@ -382,7 +413,13 @@ $(function () {
       } else {
         $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
       }
-    });
+    }
+
+    // Ejecutar al cargar la página
+    cargarInstalaciones();
+
+    // Ejecutar cuando cambie el select
+    $('#filtroEmpresa').on('change', cargarInstalaciones);
   });
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
@@ -402,30 +439,55 @@ $(function () {
       });
       return;
     }
-    const iframe = $('#pdfViewer');
-    // Construye la URL con filtros
+
     let urlPDF = `/bitacora_mezcal?empresa=${empresaId}`;
     if (instalacionId) {
       urlPDF += `&instalacion=${instalacionId}`;
     }
     urlPDF += `&t=${new Date().getTime()}`;
-    // Spinner y reset
+
     $('#cargando').show();
-    iframe.hide().attr('src', '');
-    iframe.attr('src', urlPDF);
-    $('#NewPestana').attr('href', urlPDF).hide();
-    // Títulos del modal
-    $('#titulo_modal').text('Bitácora Mezcal a Granel');
-    $('#subtitulo_modal').text('Versión Filtrada');
-    // Mostrar modal
-    // Ocultar el spinner cuando el PDF esté completamente cargado
-    $('#pdfViewer').on('load', function () {
-      $('#cargando').hide();
-      $(this).show();
+    $('#pdfViewer').hide().attr('src', '');
+    $('#NewPestana').hide();
+
+    // Hacer una solicitud previa para verificar si hay datos
+    $.ajax({
+      url: urlPDF,
+      method: 'GET',
+      xhrFields: { responseType: 'blob' }, // permite manejar el PDF o error
+      success: function (data) {
+        // Mostrar PDF en iframe
+        const blobUrl = URL.createObjectURL(data);
+        $('#pdfViewer').attr('src', blobUrl);
+        $('#NewPestana').attr('href', blobUrl);
+        $('#titulo_modal').text('Bitácora Mezcal a Granel');
+        $('#subtitulo_modal').text('Versión Filtrada');
+        $('#mostrarPdf').modal('show');
+
+        $('#pdfViewer').on('load', function () {
+          $('#cargando').hide();
+          $(this).show();
+        });
+      },
+      error: function (xhr) {
+        $('#cargando').hide();
+        Swal.fire({
+          icon: 'info',
+          title: 'Sin registros',
+          text: xhr.responseJSON?.message || 'No hay datos para mostrar.',
+          confirmButtonText: 'Aceptar',
+          customClass: {
+            confirmButton: 'btn btn-info'
+          }
+        });
+      }
     });
-    $('#mostrarPdf').modal('show');
   });
 
+  /*     $('#pdfViewer').on('load', function () {
+      $('#cargando').hide();
+      $(this).show();
+    }); */
   /*  */
   $(document).on('click', '.delete-record', function () {
     var id_bitacora = $(this).data('id');
@@ -829,15 +891,19 @@ $(function () {
           $('#displayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
       } else if (tipo == 'Salidas') {
+        $('#displayEntradas, #displaySalidas').stop(true, true).hide();
+
         $('#displayEntradas').fadeOut(100, function () {
           $(this).css('display', 'none');
           $('#displaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
+      } else if (tipo == 'Entradas y salidas') {
+        $('#displayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 300);
+        $('#displaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 400);
       } else {
         $('#displayEntradas, #displaySalidas').fadeOut(200);
       }
     });
-
     $('#displayEntradas, #displaySalidas').hide();
   });
 
@@ -855,7 +921,11 @@ $(function () {
           $(this).css('display', 'none');
           $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
-      } else {
+      }else if (tipo == 'Entradas y salidas') {
+        $('#editDisplayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 300);
+        $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 400);
+      }
+       else {
         $('#editDisplayEntradas, #editDisplaySalidas').fadeOut(200);
       }
     });
@@ -1021,6 +1091,24 @@ $(function () {
       }
     });
   });
+
+$(document).ready(function () {
+  // Al abrir modal, disparas la carga inicial para el cliente seleccionado
+  $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
+    var empresaSeleccionada = $('#id_empresa').val();
+    if (empresaSeleccionada) {
+      obtenerGraneles(empresaSeleccionada);
+    } else {
+      obtenerDatosGraneles();
+    }
+  });
+
+  // También cuando cambia el select
+  $('#id_empresa').on('change', function () {
+    var empresa = $(this).val();
+    obtenerGraneles(empresa);
+  });
+});
 
   //end
 });

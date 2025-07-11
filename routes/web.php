@@ -941,7 +941,7 @@ Route::controller(CartaAsignacionController::class)->middleware(['auth'])->group
 
 // BitacoraMezcal
 Route::controller(BitacoraMezcalController::class)->middleware(['auth'])->group(function () {
-    Route::get('/bitacoraMezcal', 'UserManagement')->name('bitacora-mezcal');
+    Route::get('/bitacoraMezcalProductor', 'UserManagement')->name('bitacora-mezcal');
     Route::get('/bitacora_mezcal', 'PDFBitacoraMezcal');
     Route::get('bitacora_mezcal/{id_bitacora}/edit', 'edit');
     Route::get('bitacoraMezcal-list/{id_bitacora}', 'destroy')->name('bitacora.delete');

@@ -128,7 +128,37 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
 
     $marcasConHologramas = marcas::with('solicitudHolograma')->where('id_empresa',$empresaId)->get();
 
-    return view('content.dashboard.dashboards-analytics', compact('revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+
+
+$serviciosInstalacion = SolicitudesModel::with(['inspeccion', 'instalacion'])
+    ->whereHas('instalacion')
+    ->where('id_empresa', $empresaId)
+    ->where('id_tipo', 11)
+    ->where('fecha_solicitud', '>', '2025-05-30')
+    ->get()
+    ->groupBy(function ($item) {
+        // Agrupar por año-mes (ej. '2025-01')
+        return Carbon::parse($item->inspeccion->fecha_servicio)->format('Y-m');
+    })
+    ->map(function ($items) {
+        return $items->groupBy(function ($item) {
+            // Agrupar por fecha exacta del servicio (ej. '2025-01-05')
+            return Carbon::parse($item->inspeccion->fecha_servicio)->format('Y-m-d');
+        })->map(function ($porFecha) {
+            return $porFecha->groupBy(function ($item) {
+                return $item->instalacion->direccion_completa ?? 'Sin dirección';
+            })->map(function ($porInstalacion) {
+                return $porInstalacion
+                    ->pluck('inspeccion.num_servicio')
+                    ->filter()
+                    ->unique()
+                    ->count();
+            });
+        });
+    });
+
+
+    return view('content.dashboard.dashboards-analytics', compact('serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)

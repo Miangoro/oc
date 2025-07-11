@@ -305,11 +305,7 @@ public function getDocumentosSolicitud($id_solicitud)
 
         $ids = $solicitud->id_lote_envasado; // array de IDs
 
-                  $numero_cliente_lote = 'N/A';
-        $empresa = empresa::find($solicitud->lote_granel->id_empresa);
-        $cliente = $empresa->empresaNumClientes
-            ->first(fn($item) => !empty($item->numero_cliente));
-        $numero_cliente_lote = $cliente?->numero_cliente ?? 'No encontrado';
+       
 
   $certificados = collect();
 

@@ -19,6 +19,7 @@ class BitacoraMezcal extends Model
         'id_instalacion',
         'operacion_adicional',
         'tipo_operacion',
+        'tipo',
         //INVENTARIO INICIAL
         'volumen_inicial',
         'alcohol_inicial',

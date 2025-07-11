@@ -33,72 +33,72 @@
     <div class="row g-6">
         <!-- Gamification Card -->
         <!-- <div class="col-md-12 col-xxl-8">
-                <div class="card">
-                  <div class="d-flex align-items-end row">
-                    <div class="col-md-6 order-2 order-md-1">
-                      <div class="card-body">
-                        <h4 class="card-title mb-4">Bienvenid@ <span class="fw-bold">
-            @if (Auth::check())
+                        <div class="card">
+                          <div class="d-flex align-items-end row">
+                            <div class="col-md-6 order-2 order-md-1">
+                              <div class="card-body">
+                                <h4 class="card-title mb-4">Bienvenid@ <span class="fw-bold">
+                    @if (Auth::check())
     {{ Auth::user()->name }}
 @else
     John Doe
     @endif!
-            </span> 🎉</h4>
-                        <p class="mb-0">Personal del organismo certificador cidam</p><br>
-                        <a href="javascript:;" class="btn btn-primary">Ver pendientes</a>
-                      </div>
-                    </div>
-                    <div class="col-md-6 text-center text-md-end order-1 order-md-2">
-                      <div class="card-body pb-0 px-0 pt-2">
-                        <img src="{{ asset('assets/img/illustrations/illustration-john-' . $configData['style'] . '.png') }}" height="186" class="scaleX-n1-rtl" alt="View Profile" data-app-light-img="illustrations/illustration-john-light.png" data-app-dark-img="illustrations/illustration-john-dark.png">
-                        <img  height="186" class="scaleX-n1-rtl" alt="View Profile" src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/1.png') }}" >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>-->
+                    </span> 🎉</h4>
+                                <p class="mb-0">Personal del organismo certificador cidam</p><br>
+                                <a href="javascript:;" class="btn btn-primary">Ver pendientes</a>
+                              </div>
+                            </div>
+                            <div class="col-md-6 text-center text-md-end order-1 order-md-2">
+                              <div class="card-body pb-0 px-0 pt-2">
+                                <img src="{{ asset('assets/img/illustrations/illustration-john-' . $configData['style'] . '.png') }}" height="186" class="scaleX-n1-rtl" alt="View Profile" data-app-light-img="illustrations/illustration-john-light.png" data-app-dark-img="illustrations/illustration-john-dark.png">
+                                <img  height="186" class="scaleX-n1-rtl" alt="View Profile" src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/1.png') }}" >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>-->
         <!--/ Gamification Card -->
 
         <!-- Statistics Total Order -->
         <!--  <div class="col-xxl-2 col-sm-6">
-                <div class="card h-100">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                      <div class="avatar">
-                        <div class="avatar-initial bg-label-primary rounded-3">
-                          <i class="ri-shopping-cart-2-line ri-24px"></i>
+                        <div class="card h-100">
+                          <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                              <div class="avatar">
+                                <div class="avatar-initial bg-label-primary rounded-3">
+                                  <i class="ri-shopping-cart-2-line ri-24px"></i>
+                                </div>
+                              </div>
+                              <div class="d-flex align-items-center">
+                                <p class="mb-0 text-success me-1">+22%</p>
+                                <i class="ri-arrow-up-s-line text-success"></i>
+                              </div>
+                            </div>
+                            <div class="card-info mt-5">
+                              <h5 class="mb-1">50</h5>
+                              <p>Certificados de exportación</p>
+                              <div class="badge bg-label-secondary rounded-pill">Último mes</div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <p class="mb-0 text-success me-1">+22%</p>
-                        <i class="ri-arrow-up-s-line text-success"></i>
-                      </div>
-                    </div>
-                    <div class="card-info mt-5">
-                      <h5 class="mb-1">50</h5>
-                      <p>Certificados de exportación</p>
-                      <div class="badge bg-label-secondary rounded-pill">Último mes</div>
-                    </div>
-                  </div>
-                </div>
-              </div>-->
+                      </div>-->
         <!--/ Statistics Total Order -->
 
         <!-- Sessions line chart -->
         <!--<div class="col-xxl-2 col-sm-6">
-                <div class="card h-100">
-                  <div class="card-header pb-0">
-                    <div class="d-flex align-items-center mb-1 flex-wrap">
-                      <h5 class="mb-0 me-1">$38.5k</h5>
-                      <p class="mb-0 text-success">+62%</p>
-                    </div>
-                    <span class="d-block card-subtitle">Sessions</span>
-                  </div>
-                  <div class="card-body">
-                    <div id="sessions"></div>
-                  </div>
-                </div>
-              </div>-->
+                        <div class="card h-100">
+                          <div class="card-header pb-0">
+                            <div class="d-flex align-items-center mb-1 flex-wrap">
+                              <h5 class="mb-0 me-1">$38.5k</h5>
+                              <p class="mb-0 text-success">+62%</p>
+                            </div>
+                            <span class="d-block card-subtitle">Sessions</span>
+                          </div>
+                          <div class="card-body">
+                            <div id="sessions"></div>
+                          </div>
+                        </div>
+                      </div>-->
         <!--/ Sessions line chart -->
 
         <div class="row my-2">
@@ -168,8 +168,8 @@
                             </div>
                             <h6 class="mb-0 fw-normal">Pendiente de asignar inspector</h6>
                             <hr>
-                            <div class="d-flex align-items-center mb-2 cursor-pointer"
-                        data-bs-toggle="modal" data-bs-target="#modalSolicitudesSinActa">  
+                            <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                                data-bs-target="#modalSolicitudesSinActa">
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-warning"><i
                                             class="ri-file-list-fill ri-24px"></i></span>
@@ -179,8 +179,8 @@
                             <h6 class="mb-0 fw-normal">Pendiente de subir acta</h6>
 
                             <hr>
-                            <div class="d-flex align-items-center mb-2 cursor-pointer"
-                        data-bs-toggle="modal" data-bs-target="#modalSolicitudesSinActa">  
+                            <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                                data-bs-target="#modalSolicitudesSinActa">
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-warning"><i
                                             class="ri-file-list-fill ri-24px"></i></span>
@@ -188,7 +188,7 @@
                                 <h4 class="mb-0">{{ $lotesSinFq->count() }}</h4>
                             </div>
                             <h6 class="mb-0 fw-normal">Lotes pendientes de subir FQ</h6>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -224,8 +224,8 @@
                 <div class="col-sm-6 col-lg-3">
                     <div class="card card-border-shadow-primary h-100">
                         <div class="card-body">
-                            <div class="d-flex align-items-center mb-2 cursor-pointer"
-                        data-bs-toggle="modal" data-bs-target="#modalDictamenesInstalacionesPendientes">
+                            <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                                data-bs-target="#modalDictamenesInstalacionesPendientes">
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-danger"><i
                                             class="ri-file-warning-line ri-24px"></i></span>
@@ -234,8 +234,8 @@
                             </div>
                             <h6 class="mb-0 fw-normal">Pendiente de crear certificado de instalaciones</h6>
                             <hr>
-                            <div class="d-flex align-items-center mb-2 cursor-pointer"
-                        data-bs-toggle="modal" data-bs-target="#modalDictamenesGranelPendientes">
+                            <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                                data-bs-target="#modalDictamenesGranelPendientes">
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-danger"><i
                                             class="ri-file-warning-line ri-24px"></i></span>
@@ -245,16 +245,16 @@
                             <h6 class="mb-0 fw-normal">Pendiente de crear certificado de graneles</h6>
                             <hr>
                             <!-- BOTÓN o DIV CLICKABLE para abrir el modal -->
-                    <div class="d-flex align-items-center mb-2 cursor-pointer"
-                        data-bs-toggle="modal" data-bs-target="#modalDictamenesExportacionPendientes">
-                        <div class="avatar me-4">
-                            <span class="avatar-initial rounded-3 bg-label-danger">
-                                <i class="ri-file-warning-line ri-24px"></i>
-                            </span>
-                        </div>
-                        <h4 class="mb-0">{{ $dictamenesExportacionSinCertificado->count() }}</h4>
-                    </div>
-                    <h6 class="mb-0 fw-normal">Pendiente de crear certificado de exportación</h6>
+                            <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                                data-bs-target="#modalDictamenesExportacionPendientes">
+                                <div class="avatar me-4">
+                                    <span class="avatar-initial rounded-3 bg-label-danger">
+                                        <i class="ri-file-warning-line ri-24px"></i>
+                                    </span>
+                                </div>
+                                <h4 class="mb-0">{{ $dictamenesExportacionSinCertificado->count() }}</h4>
+                            </div>
+                            <h6 class="mb-0 fw-normal">Pendiente de crear certificado de exportación</h6>
 
                         </div>
                     </div>
@@ -281,8 +281,8 @@
                             </div>
                             <h6 class="mb-0 fw-normal">Certificados de instalaciones por vencer</h6>
                             <hr>
-                            <div class="d-flex align-items-center mb-2 cursor-pointer"
-                        data-bs-toggle="modal" data-bs-target="#modalSolicitudesSinActa">  
+                            <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                                data-bs-target="#modalSolicitudesSinActa">
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-warning"><i
                                             class="ri-file-list-fill ri-24px"></i></span>
@@ -292,54 +292,54 @@
                             <h6 class="mb-0 fw-normal">Certificados pendientes de subir escaneado</h6>
                             <p class="mb-0">
                                 <!--<span class="me-1 fw-medium">-2.5%</span>
-                                    <small class="text-muted">than last week</small>-->
+                                                    <small class="text-muted">than last week</small>-->
                             </p>
                         </div>
                     </div>
                 </div>
             @endcan
             @can('Estadísticas ui')
-            <div class="col-md-6 col-xxl-3">
-                <div class="card h-100">
-                    <div class="card-header d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">Inspecciones por inspector 2025</h5>
-                        <div class="dropdown">
-                            <!-- <button class="btn text-body-secondary p-0" type="button" id="meetingSchedule" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="icon-base ri ri-more-2-line"></i>
-              </button>
-              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="meetingSchedule">
-                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
-                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
-                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
-              </div>-->
+                <div class="col-md-6 col-xxl-3">
+                    <div class="card h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <h5 class="card-title m-0 me-2">Inspecciones por inspector 2025</h5>
+                            <div class="dropdown">
+                                <!-- <button class="btn text-body-secondary p-0" type="button" id="meetingSchedule" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="icon-base ri ri-more-2-line"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="meetingSchedule">
+                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
+                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
+                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
+                              </div>-->
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="p-0 m-0">
+
+                                @foreach ($inspeccionesInspector as $inspector)
+                                    <li class="d-flex align-items-center mb-4 pb-2">
+                                        <div class="avatar flex-shrink-0 me-4">
+                                            <img src="{{ asset('storage/' . $inspector['foto']) }}"
+                                                alt="Foto de {{ $inspector['nombre'] }}" class="rounded-3" width="50">
+                                        </div>
+                                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                            <div class="me-2">
+                                                <h6 class="mb-0">{{ $inspector['nombre'] }}</h6>
+                                                <small class="d-flex align-items-center">
+                                                    <!-- <i class="icon-base ri ri-calendar-line icon-16px"></i>
+                                      <span class="ms-2">21 Jul | 08:20-10:30</span>-->
+                                                </small>
+                                            </div>
+                                            <div class="badge bg-label-primary rounded-pill">
+                                                {{ $inspector['total_inspecciones'] }}</div>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <ul class="p-0 m-0">
-
-                            @foreach ($inspeccionesInspector as $inspector)
-                                <li class="d-flex align-items-center mb-4 pb-2">
-                                    <div class="avatar flex-shrink-0 me-4">
-                                        <img src="{{ asset('storage/' . $inspector['foto']) }}"
-                                            alt="Foto de {{ $inspector['nombre'] }}" class="rounded-3" width="50">
-                                    </div>
-                                    <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                        <div class="me-2">
-                                            <h6 class="mb-0">{{ $inspector['nombre'] }}</h6>
-                                            <small class="d-flex align-items-center">
-                                                <!-- <i class="icon-base ri ri-calendar-line icon-16px"></i>
-                      <span class="ms-2">21 Jul | 08:20-10:30</span>-->
-                                            </small>
-                                        </div>
-                                        <div class="badge bg-label-primary rounded-pill">
-                                            {{ $inspector['total_inspecciones'] }}</div>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
                 </div>
-            </div>
             @endcan
             @can('Estadísticas oc')
                 <!-- Line Chart -->
@@ -389,367 +389,469 @@
             @endcan
 
             @canany(['Estadísticas consejo', 'Estadísticas oc'])
-            @php
-                $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
+                @php
+                    $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
 
-                // Agrupar por user_id + rol
-                $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
-            @endphp
+                    // Agrupar por user_id + rol
+                    $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
+                @endphp
 
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">Resumen de revisiones por revisor y tipo de certificado</h5>
-                    <small class="text-muted">Muestra la cantidad de revisiones realizadas por cada persona según su rol.</small>
-                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Resumen de revisiones por revisor y tipo de certificado</h5>
+                        <small class="text-muted">Muestra la cantidad de revisiones realizadas por cada persona según su
+                            rol.</small>
+                    </div>
 
-                <div class="card-body pt-2">
-                    <div class="table-responsive text-nowrap border-top">
-                        <table class="table table-bordered table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Revisor</th>
-                                    <th>Rol</th>
-                                    <th>Instalaciones</th>
-                                    <th>Granel</th>
-                                    <th>Exportación</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($agrupado as $key => $grupo)
-                                    @php
-                                        $revisor = $usuarios[$grupo->first()->user_id] ?? null;
-                                        $rol = $grupo->first()->rol;
-
-                                        $inst = $grupo->firstWhere('tipo_certificado', 1)?->total ?? 0;
-                                        $gran = $grupo->firstWhere('tipo_certificado', 2)?->total ?? 0;
-                                        $expo = $grupo->firstWhere('tipo_certificado', 3)?->total ?? 0;
-                                    @endphp
+                    <div class="card-body pt-2">
+                        <div class="table-responsive text-nowrap border-top">
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-light">
                                     <tr>
-                                        <td>{{ $revisor?->name ?? '—' }}</td>
-                                        <td>{{ $rol }}</td>
-                                        <td class="text-end">{{ number_format($inst) }}</td>
-                                        <td class="text-end">{{ number_format($gran) }}</td>
-                                        <td class="text-end">{{ number_format($expo) }}</td>
+                                        <th>Revisor</th>
+                                        <th>Rol</th>
+                                        <th>Instalaciones</th>
+                                        <th>Granel</th>
+                                        <th>Exportación</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($agrupado as $key => $grupo)
+                                        @php
+                                            $revisor = $usuarios[$grupo->first()->user_id] ?? null;
+                                            $rol = $grupo->first()->rol;
+
+                                            $inst = $grupo->firstWhere('tipo_certificado', 1)?->total ?? 0;
+                                            $gran = $grupo->firstWhere('tipo_certificado', 2)?->total ?? 0;
+                                            $expo = $grupo->firstWhere('tipo_certificado', 3)?->total ?? 0;
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $revisor?->name ?? '—' }}</td>
+                                            <td>{{ $rol }}</td>
+                                            <td class="text-end">{{ number_format($inst) }}</td>
+                                            <td class="text-end">{{ number_format($gran) }}</td>
+                                            <td class="text-end">{{ number_format($expo) }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
             @endcanany
 
 
 
- 
-            
-             @can('Estadísticas exportación clientes')
-              <div class="col-md-6 col-xxl-4">
-                <div class="card h-100">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="card-title m-0 me-2">Certificados de exportación</h5>
-                    <div class="dropdown">
-                    <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1" type="button" id="mostSales" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="ri-more-2-line ri-20px"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="mostSales">
-                        <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
-                    </div>
+
+
+            @can('Estadísticas exportación clientes')
+                <div class="col-md-6 col-xxl-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <h5 class="card-title m-0 me-2">Certificados de exportación</h5>
+                            <div class="dropdown">
+                                <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1" type="button"
+                                    id="mostSales" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="ri-more-2-line ri-20px"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="mostSales">
+                                    <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
+                                    <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
+                                    <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pb-1 pt-0">
+                            <div class="mb-6 mt-1">
+
+                                <p class="mt-0">Cierre por mes</p>
+                            </div>
+                            <div class="table-responsive text-nowrap border-top">
+                                <table class="table">
+                                    <tbody class="table-border-bottom-0">
+                                        @foreach ($TotalCertificadosExportacionPorMes as $item)
+                                            <tr>
+                                                <td class="ps-0 pe-12 py-4">
+                                                    <span class="text-heading">
+                                                        {{ ucfirst(\Carbon\Carbon::parse($item->mes . '-01')->locale('es')->isoFormat('MMMM YYYY')) }}
+                                                    </span>
+                                                </td>
+                                                <td class="text-end py-4">
+                                                    <span class="text-heading fw-medium">{{ $item->total }}</span>
+                                                </td>
+                                                <td class="pe-0 py-4">
+                                                    <!--<div class="d-flex align-items-center justify-content-end">
+                                                        <span class="badge bg-success me-2">Pagado</span>
+                                                    </div>-->
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-                <div class="card-body pb-1 pt-0">
-                    <div class="mb-6 mt-1">
-                    
-                    <p class="mt-0">Cierre por mes</p>
+            @endcan
+            @php
+                use Carbon\Carbon;
+            @endphp
+            @can('Estadísticas exportación clientes')
+                <div class="col-md-10 col-xxl-6">
+                    <div class="card h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <h5 class="card-title m-0 me-2">Servicios de exportación</h5>
+
+                        </div>
+                        <div class="card-body pb-1 pt-0">
+                            <div class="mb-6 mt-1">
+
+                                <p class="mt-0">Cierre por mes</p>
+                            </div>
+                            <div class="table-responsive text-nowrap border-top">
+                                <table class="table">
+    <thead>
+        <tr>
+            <th>Año</th>
+            <th>Mes</th>
+            <th>Día del Servicio</th>
+            <th>Instalación</th>
+            <th>Servicios únicos</th>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $agrupadoPorAnio = collect($serviciosInstalacion)
+    ->filter(function ($_, $mes) {
+        return preg_match('/^\d{4}-\d{2}$/', $mes);
+    })
+    ->groupBy(function ($_, $mes) {
+        return \Carbon\Carbon::parse($mes . '-01')->format('Y');
+    });
+
+
+        @endphp
+
+        @foreach ($agrupadoPorAnio as $anio => $meses)
+            <tr class="table-primary fw-bold">
+                <td colspan="5">Año: {{ $anio }}</td>
+            </tr>
+
+            @foreach ($meses as $mes => $fechas)
+                <tr class="table-secondary">
+                    <td></td>
+                    @if (preg_match('/^\d{4}-\d{2}$/', $mes))
+    <tr class="table-primary fw-bold">
+        <td colspan="4">{{ \Carbon\Carbon::parse($mes . '-01')->locale('es')->isoFormat('MMMM YYYY') }}</td>
+    </tr>
+@else
+    <tr class="table-danger fw-bold">
+        <td colspan="4">Mes no válido: {{ $mes }}</td>
+    </tr>
+@endif
+
+                </tr>
+
+                @foreach ($fechas as $fecha => $instalaciones)
+                    @foreach ($instalaciones as $direccion => $cantidad)
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>{{ \Carbon\Carbon::parse($fecha)->format('d \d\e F') }}</td>
+                            <td>{{ $direccion }}</td>
+                            <td>{{ $cantidad }}</td>
+                        </tr>
+                    @endforeach
+                @endforeach
+            @endforeach
+        @endforeach
+    </tbody>
+</table>
+
+
+
+                            </div>
+
+                        </div>
                     </div>
-                    <div class="table-responsive text-nowrap border-top">
-                    <table class="table">
-                        <tbody class="table-border-bottom-0">
-                        @foreach ($TotalCertificadosExportacionPorMes as $item)
-                            <tr>
-                                <td class="ps-0 pe-12 py-4">
-                                    <span class="text-heading">
-                                    {{ ucfirst(\Carbon\Carbon::parse($item->mes . '-01')->locale('es')->isoFormat('MMMM YYYY')) }}
-                                    </span>
-                                </td>
-                                <td class="text-end py-4">
-                                    <span class="text-heading fw-medium">{{ $item->total }}</span>
-                                </td>
-                                <td class="pe-0 py-4">
-                                    <!--<div class="d-flex align-items-center justify-content-end">
-                                        <span class="badge bg-success me-2">Pagado</span>
-                                    </div>-->
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                    </div>
-
                 </div>
-                </div>
-            </div>
-
-             
-
             @endcan
 
-           @foreach($marcasConHologramas as $marca)
-    @php
-        $totalDisponibles = $marca->solicitudHolograma->sum(function ($solicitud) {
-            return $solicitud->cantidadDisponibles();
-        });
-    @endphp
+            @foreach ($marcasConHologramas as $marca)
+                @php
+                    $totalDisponibles = $marca->solicitudHolograma->sum(function ($solicitud) {
+                        return $solicitud->cantidadDisponibles();
+                    });
+                @endphp
 
-    <div class="col-sm-2">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex align-items-center flex-wrap">
-                    <div class="avatar me-4">
-                        <div class="avatar-initial bg-label-primary rounded-3">
-                            <i class="ri-price-tag-3-line ri-24px"></i>
+                <div class="col-sm-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="avatar me-4">
+                                    <div class="avatar-initial bg-label-primary rounded-3">
+                                        <i class="ri-price-tag-3-line ri-24px"></i>
+                                    </div>
+                                </div>
+                                <div class="card-info">
+                                    <div class="d-flex align-items-center">
+                                        <h5 class="mb-0 me-2">{{ number_format($totalDisponibles, 0) }}</h5>
+                                        <i class="ri-arrow-down-s-line text-danger ri-20px"></i>
+                                        <small class="text-danger">Hologramas disponibles</small>
+                                    </div>
+                                    <p class="mb-0">{{ $marca->marca }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-info">
-                        <div class="d-flex align-items-center">
-                            <h5 class="mb-0 me-2">{{ number_format($totalDisponibles,0) }}</h5>
-                            <i class="ri-arrow-down-s-line text-danger ri-20px"></i>
-                            <small class="text-danger">Hologramas disponibles</small>
-                        </div>
-                        <p class="mb-0">{{ $marca->marca }}</p>
+                </div>
+            @endforeach
+
+
+
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalDictamenesExportacionPendientes" tabindex="-1" aria-labelledby="modalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Dictámenes sin certificado de exportación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if ($dictamenesExportacionSinCertificado->count())
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Folio</th>
+                                            <th>Cliente</th>
+                                            <th>Fecha</th>
+                                            <th>Inspector</th>
+                                            <th>Dictamen</th>
+                                            <!--<th>Acciones</th>-->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($dictamenesExportacionSinCertificado as $dictamen)
+                                            <tr>
+                                                <td>{{ $dictamen->num_dictamen }}</td>
+                                                <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}
+                                                </td>
+                                                <td>{{ $dictamen->firmante->name ?? 'N/A' }}</td>
+                                                <th><a target="_Blank"
+                                                        href="/dictamen_exportacion/{{ $dictamen->id_dictamen }}"><i
+                                                            class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a>
+                                                </th>
+                                                <!--<td>
+                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                Ver
+                                            </a>
+                                        </td>-->
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <p>No hay dictámenes pendientes.</p>
+                        @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-@endforeach
 
-
-            
+        <!-- Modal -->
+        <div class="modal fade" id="modalDictamenesGranelPendientes" tabindex="-1" aria-labelledby="modalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Dictámenes sin certificado de Granel</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if ($dictamenesGranelesSinCertificado->count())
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Folio</th>
+                                            <th>Cliente</th>
+                                            <th>Fecha</th>
+                                            <th>Inspector</th>
+                                            <th>Dictamen</th>
+                                            <!--<th>Acciones</th>-->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($dictamenesGranelesSinCertificado as $dictamen)
+                                            <tr>
+                                                <td>{{ $dictamen->num_dictamen }}</td>
+                                                <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}
+                                                </td>
+                                                <td>{{ $dictamen->inspeccione->inspector->name ?? 'N/A' }}</td>
+                                                <th><a target="_Blank"
+                                                        href="/dictamen_granel/{{ $dictamen->id_dictamen }}"><i
+                                                            class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a>
+                                                </th>
+                                                <!--<td>
+                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                Ver
+                                            </a>
+                                        </td>-->
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <p>No hay dictámenes pendientes.</p>
+                        @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-<!-- Modal -->
-<div class="modal fade" id="modalDictamenesExportacionPendientes" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Dictámenes sin certificado de exportación</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        @if($dictamenesExportacionSinCertificado->count())
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Folio</th>
-                            <th>Cliente</th>
-                            <th>Fecha</th>
-                            <th>Inspector</th>
-                            <th>Dictamen</th>
-                            <!--<th>Acciones</th>-->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($dictamenesExportacionSinCertificado as $dictamen)
-                            <tr>
-                                <td>{{ $dictamen->num_dictamen }}</td>
-                                <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
-                                <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}</td>
-                                <td>{{ $dictamen->firmante->name ?? 'N/A' }}</td>
-                                <th><a target="_Blank" href="/dictamen_exportacion/{{ $dictamen->id_dictamen }}"><i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a></th>
-                                <!--<td>
-                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                        Ver
-                                    </a>
-                                </td>-->
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        <!-- Modal -->
+        <div class="modal fade" id="modalDictamenesInstalacionesPendientes" tabindex="-1" aria-labelledby="modalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Dictámenes sin certificado de Instalaciones</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if ($dictamenesInstalacionesSinCertificado->count())
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Folio</th>
+                                            <th>Cliente</th>
+                                            <th>Fecha</th>
+                                            <th>Inspector</th>
+                                            <th>Dictamen</th>
+                                            <!--<th>Acciones</th>-->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($dictamenesInstalacionesSinCertificado as $dictamen)
+                                            <tr>
+                                                <td>{{ $dictamen->num_dictamen }}</td>
+                                                <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}
+                                                </td>
+                                                <td>{{ $dictamen->inspeccione->inspector->name ?? 'N/A' }}</td>
+                                                @php
+                                                    if ($dictamen->tipo_dictamen == 1) {
+                                                        $pdf_dictamen = '/dictamen_productor/' . $dictamen->id_dictamen;
+                                                    }
+
+                                                    if ($dictamen->tipo_dictamen == 2) {
+                                                        $pdf_dictamen = '/dictamen_envasador/' . $dictamen->id_dictamen;
+                                                    }
+
+                                                    if ($dictamen->tipo_dictamen == 3) {
+                                                        $pdf_dictamen =
+                                                            '/dictamen_comercializador/' . $dictamen->id_dictamen;
+                                                    }
+
+                                                    if ($dictamen->tipo_dictamen == 4) {
+                                                        $pdf_dictamen = '/dictamen_almacen/' . $dictamen->id_dictamen;
+                                                    }
+                                                @endphp
+                                                <th><a target="_Blank" href="{{ $pdf_dictamen }}"><i
+                                                            class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a>
+                                                </th>
+                                                <!--<td>
+                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                Ver
+                                            </a>
+                                        </td>-->
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <p>No hay dictámenes pendientes.</p>
+                        @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
             </div>
-        @else
-            <p>No hay dictámenes pendientes.</p>
-        @endif
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
+        </div>
 
-<!-- Modal -->
-<div class="modal fade" id="modalDictamenesGranelPendientes" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Dictámenes sin certificado de Granel</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        @if($dictamenesGranelesSinCertificado->count())
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Folio</th>
-                            <th>Cliente</th>
-                            <th>Fecha</th>
-                            <th>Inspector</th>
-                            <th>Dictamen</th>
-                            <!--<th>Acciones</th>-->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($dictamenesGranelesSinCertificado as $dictamen)
-                            <tr>
-                                <td>{{ $dictamen->num_dictamen }}</td>
-                                <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
-                                <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}</td>
-                                <td>{{ $dictamen->inspeccione->inspector->name ?? 'N/A' }}</td>
-                                <th><a target="_Blank" href="/dictamen_granel/{{ $dictamen->id_dictamen }}"><i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a></th>
-                                <!--<td>
-                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                        Ver
-                                    </a>
-                                </td>-->
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        <!-- Modal -->
+        <div class="modal fade" id="modalSolicitudesSinActa" tabindex="-1" aria-labelledby="modalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Solicitudes pendientes de subir acta</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if ($solicitudesSinActa->count())
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Folio</th>
+                                            <th>Tipo</th>
+                                            <th>Cliente</th>
+                                            <th>Fecha</th>
+                                            <th>Inspector</th>
+                                            <!--<th>Acciones</th>-->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($solicitudesSinActa as $solicitud)
+                                            <tr>
+                                                <td>{{ $solicitud->folio }}</td>
+                                                <td>{{ $solicitud->tipo_solicitud->tipo }}</td>
+                                                <td>{{ $solicitud->empresa->razon_social ?? 'N/A' }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($solicitud->fecha_solicitud)->format('d/m/Y') }}
+                                                </td>
+                                                <td>{{ $solicitud->inspeccion->inspector->name ?? 'Sin asignar' }}</td>
+                                                <!--<td>
+                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                Ver
+                                            </a>
+                                        </td>-->
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <p>No hay dictámenes pendientes.</p>
+                        @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
             </div>
-        @else
-            <p>No hay dictámenes pendientes.</p>
-        @endif
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="modalDictamenesInstalacionesPendientes" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Dictámenes sin certificado de Instalaciones</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        @if($dictamenesInstalacionesSinCertificado->count())
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Folio</th>
-                            <th>Cliente</th>
-                            <th>Fecha</th>
-                            <th>Inspector</th>
-                            <th>Dictamen</th>
-                            <!--<th>Acciones</th>-->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($dictamenesInstalacionesSinCertificado as $dictamen)
-                            <tr>
-                                <td>{{ $dictamen->num_dictamen }}</td>
-                                <td>{{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
-                                <td>{{ \Carbon\Carbon::parse($dictamen->fecha_emision)->format('d/m/Y') }}</td>
-                                <td>{{ $dictamen->inspeccione->inspector->name ?? 'N/A' }}</td>
-                                @php
-                                    if($dictamen->tipo_dictamen == 1){
-                                        $pdf_dictamen = "/dictamen_productor/". $dictamen->id_dictamen;
-                                    }
-
-                                    if($dictamen->tipo_dictamen == 2){
-                                        $pdf_dictamen = "/dictamen_envasador/".$dictamen->id_dictamen;
-                                    }
-
-                                    if($dictamen->tipo_dictamen == 3){
-                                        $pdf_dictamen = "/dictamen_comercializador/".$dictamen->id_dictamen;
-                                    } 
-
-                                    if($dictamen->tipo_dictamen == 4){
-                                        $pdf_dictamen = "/dictamen_almacen/".$dictamen->id_dictamen;
-                                    }
-                                @endphp
-                                <th><a target="_Blank" href="{{ $pdf_dictamen }}"><i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a></th>
-                                <!--<td>
-                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                        Ver
-                                    </a>
-                                </td>-->
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @else
-            <p>No hay dictámenes pendientes.</p>
-        @endif
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="modalSolicitudesSinActa" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Solicitudes pendientes de subir acta</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        @if($solicitudesSinActa->count())
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Folio</th>
-                            <th>Tipo</th>
-                            <th>Cliente</th>
-                            <th>Fecha</th>
-                            <th>Inspector</th>
-                            <!--<th>Acciones</th>-->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($solicitudesSinActa as $solicitud)
-                            <tr>
-                                <td>{{ $solicitud->folio }}</td>
-                                <td>{{ $solicitud->tipo_solicitud->tipo }}</td>
-                                <td>{{ $solicitud->empresa->razon_social ?? 'N/A' }}</td>
-                                <td>{{ \Carbon\Carbon::parse($solicitud->fecha_solicitud)->format('d/m/Y') }}</td>
-                                <td>{{ $solicitud->inspeccion->inspector->name ?? 'Sin asignar' }}</td>
-                                <!--<td>
-                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                        Ver
-                                    </a>
-                                </td>-->
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @else
-            <p>No hay dictámenes pendientes.</p>
-        @endif
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
+        </div>
 
 
     @endsection
