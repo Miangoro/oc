@@ -174,15 +174,37 @@ $(function () {
           orderable: false,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
+                const folioCompleto = full['folio_fq_completo']?.trim();
+                const folioAjuste = full['folio_fq_ajuste']?.trim();
+                const urlCompleto = full['url_fq_completo'];
+                const urlAjuste = full['url_fq_ajuste'];
+                const razon_social = full['razon_social'];
+                let folioHtml = '';
+                if (folioCompleto) {
+                  folioHtml += urlCompleto
+                    ? `<a class="cursor-pointer pdfActa text-primary" data-id="${urlCompleto}" data-titulo="Análisis fisicoquímicos" data-empresa="${razon_social}" data-bs-toggle="modal" data-bs-target="#mostrarPdf" data-bs-dismiss="modal">${folioCompleto}</a>`
+                    : `${folioCompleto}`;
+                }
+
+                if (folioAjuste) {
+                  if (folioHtml) folioHtml += ', ';
+                  folioHtml += urlAjuste
+                    ? `<a class="cursor-pointer pdfActa text-primary" data-id="${urlAjuste}" data-titulo="Fisicoquímicos de ajuste de grado" data-empresa="${razon_social}" data-bs-toggle="modal" data-bs-target="#mostrarPdf" data-bs-dismiss="modal">${folioAjuste}</a>`
+                    : `${folioAjuste}`;
+                }
             return `<div class="small">
                 <b>Lote envasado:</b> ${full['lote_envasado']} <br>
                 <b>Lote granel:</b> ${full['lote_granel']} <br>
-                <b>Folio fq:</b> ${full['folio_fq']} <br>
+                <b>Folio fq:</b> ${folioHtml || 'N/A'} <br>
                 <b>Tipo maguey:</b> ${full['tipo_maguey']} <br>
                 <b>Marca:</b> ${full['marca']} <br>
                 <b>Presentación:</b> ${full['presentacion']} <br>
-                <b>sku:</b> ${full['sku']}
-
+                <b>%Alc. Vol:</b> ${
+                  !isNaN(parseFloat(full['cont_alc_envasado']))
+                    ? `${parseFloat(full['cont_alc_envasado']).toFixed(2)}%`
+                    : full['cont_alc_envasado']
+                }<br>
+                <b>sku:</b> ${full['sku']}<br>
                 ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
               </div>`;
           }
@@ -976,6 +998,7 @@ $(function () {
   $(document).on('click', '.pdfActa', function () {
     var id_acta = $(this).data('id');
     var empresa = $(this).data('empresa');
+    var titulo = $(this).data('titulo') || 'Acta de inspección'; // Aquí el condicional
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
@@ -989,7 +1012,7 @@ $(function () {
       .attr('href', '/files/' + id_acta)
       .show();
 
-    $('#titulo_modal').text('Acta de inspección');
+    $('#titulo_modal').text(titulo);
     $('#subtitulo_modal').text(empresa);
 
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
@@ -998,4 +1021,6 @@ $(function () {
       iframe.show();
     });
   });
+
+
 });

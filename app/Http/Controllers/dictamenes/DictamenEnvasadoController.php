@@ -134,6 +134,7 @@ public function index(Request $request)
             'inspeccion.solicitud',// Relación anidada: inspeccione > solicitu
             'inspeccion.solicitud.empresa',
             'inspeccion.solicitud.empresa.empresaNumClientes',
+            'lote_envasado.lotesGranel.fqs',
         ])->offset($start)->limit($limit)->get();
 
 
@@ -154,6 +155,7 @@ public function index(Request $request)
             $nestedData['fecha_servicio'] = Helpers::formatearFecha($dictamen->fecha_servicio);
             //$nestedData['id_lote_envasado'] = $dictamen->lote_envasado->nombre_lote ?? 'No encontrado';
             $nestedData['lote_envasado'] = $dictamen->lote_envasado->nombre ?? 'No encontrado';
+            $nestedData['cont_alc_envasado'] = $dictamen->lote_envasado->cont_alc_envasado ?? 'No disponible';
             $nestedData['lote_granel'] = $dictamen->lote_envasado->lotesGranel->first()->nombre_lote ?? 'No encontrado';
             $nestedData['folio_fq'] = $dictamen->lote_envasado->lotesGranel->first()->folio_fq ?? 'No encontrado';
             $nestedData['tipo_maguey'] = $dictamen->lote_envasado->lotesGranel->first()?->tiposRelacionados
@@ -195,6 +197,25 @@ public function index(Request $request)
             $urls = $dictamen->inspeccion?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
             $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
 
+              // Declarar el lote antes de usarlo
+              $lote = $dictamen->lote_envasado;
+              $loteGranel = $lote->lotesGranel->first();
+
+              $folioFq = $loteGranel?->folio_fq ?? '';
+              $folios = array_pad(explode(',', $folioFq), 2, '');
+
+              $documentoCompleto = $loteGranel?->fqs?->firstWhere('id_documento', 58);
+              $documentoAjuste   = $loteGranel?->fqs?->firstWhere('id_documento', 134);
+
+              $nestedData['folio_fq_completo'] = $folios[0];
+              $nestedData['folio_fq_ajuste'] = $folios[1];
+
+              $nestedData['url_fq_completo'] = $documentoCompleto
+                  ? $numero_cliente . '/fqs/' . $documentoCompleto->url
+                  : '';
+              $nestedData['url_fq_ajuste'] = $documentoAjuste
+                  ? $numero_cliente . '/fqs/' . $documentoAjuste->url
+                  : '';
 
             $data[] = $nestedData;
         }
@@ -519,7 +540,7 @@ public function MostrarDictamenEnvasado($id_dictamen)
     } else {
         $edicion = 'pdfs.dictamen_envasado_ed7';
     } */
-    
+
     if ($data->fecha_emision < "2024-12-10") {
         $edicion = 'pdfs.dictamen_envasado_ed6';
     } else {

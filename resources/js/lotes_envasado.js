@@ -129,7 +129,16 @@ $(function () {
             return row.presentacion + ' ' + row.unidad;
           }
         },
-        { data: 'cont_alc_envasado' },
+        {
+          data: 'cont_alc_envasado',
+          render: function (data, type, row) {
+            if (data) {
+              return `${parseFloat(data).toFixed(2)}% Alc. Vol.`;
+            } else {
+              return 'N/A';
+            }
+          }
+        },
         {
           data: null,
           searchable: true,
