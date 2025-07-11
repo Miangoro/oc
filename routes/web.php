@@ -224,6 +224,7 @@ use App\Http\Controllers\insertar_datos_bd_dictamenes_exportacion;
 use App\Http\Controllers\insertar_datos_bd_dictamenes_graneles;
 use App\Http\Controllers\insertar_datos_bd_lotes_envasado;
 use App\Http\Controllers\insertar_datos_bd_predios;
+use App\Http\Controllers\insertar_datos_bd_solicitudes_granel;
 use App\Http\Controllers\permisos\permisosController;
 use App\Http\Controllers\permisos\rolesController;
 
@@ -981,6 +982,7 @@ Route::get('/insertarCertificadosGranelDesdeAPI', [insertar_datos_bd_certificado
 Route::get('/insertarActasDesdeAPI', [insertar_datos_bd_actas::class, 'insertarActasDesdeAPI'])->name('insertarActasDesdeAPI');
 Route::get('/insertarLotesEnvasadoDesdeAPI', [insertar_datos_bd_lotes_envasado::class, 'insertarLotesEnvasadoDesdeAPI'])->name('insertarLotesEnvasadoDesdeAPI');
 Route::get('/insertarPrediosDesdeAPI', [insertar_datos_bd_predios::class, 'insertarPrediosDesdeAPI'])->name('insertarPrediosDesdeAPI');
+Route::get('/insertarSolicitudesGranelDesdeAPI', [insertar_datos_bd_solicitudes_granel::class, 'insertarSolicitudesGranelDesdeAPI'])->name('insertarSolicitudesGranelDesdeAPI');
 
 
 
