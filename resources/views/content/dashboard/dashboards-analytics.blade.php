@@ -522,9 +522,15 @@
     </thead>
     <tbody>
         @php
-            $agrupadoPorAnio = collect($serviciosInstalacion)->groupBy(function ($_, $mes) {
-                return \Carbon\Carbon::parse($mes . '-01')->format('Y');
-            });
+            $agrupadoPorAnio = collect($serviciosInstalacion)
+    ->filter(function ($_, $mes) {
+        return preg_match('/^\d{4}-\d{2}$/', $mes);
+    })
+    ->groupBy(function ($_, $mes) {
+        return \Carbon\Carbon::parse($mes . '-01')->format('Y');
+    });
+
+
         @endphp
 
         @foreach ($agrupadoPorAnio as $anio => $meses)
