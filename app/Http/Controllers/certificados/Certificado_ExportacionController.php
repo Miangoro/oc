@@ -318,6 +318,38 @@ public function index(Request $request)
             $nestedData['pais'] = $certificado->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado';
             $nestedData['cajas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_cajas'] ?? 'No encontrado';
             $nestedData['botellas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado';
+            
+            //servicio dictamen envasado
+            $empresa2 = $lotes_env->first()->dictamenEnvasado->inspeccion->solicitud->empresa ?? null;
+            $numero_cliente2 = $empresa2 && $empresa2->empresaNumClientes->isNotEmpty()
+                ? $empresa2->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa2
+                ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+            
+            $nestedData['servicio_envasado'] = $lotes_env->first()->dictamenEnvasado->inspeccion->num_servicio ?? 'No encontrado';
+            /* $urls = $lotes_env->first()->dictamenEnvasado->inspeccion?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
+            $nestedData['url_acta'] = (!empty($urls)) ? 
+                asset("files/{$numero_cliente2}/actas/$urls")
+                : 'Sin subir'; */
+            // Obtener actas (id_documento = 69) por cada lote
+            $actas = [];
+            foreach ($lotes_env as $lote) {
+                $dictamenEnvasado = $lote->dictamenEnvasado;
+                $inspeccion = $dictamenEnvasado?->inspeccion;
+                $num_servicio = $inspeccion?->num_servicio ?? 'No encontrado';
+
+                $urls = $inspeccion?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
+
+                if (!empty($urls)) {
+                    foreach ($urls as $url) {
+                        $actas[] = [
+                            'num_servicio' => $num_servicio,
+                            'url' => asset("files/{$numero_cliente2}/actas/{$url}")
+                        ];
+                    }
+                }
+            }
+            $nestedData['url_acta'] = !empty($actas) ? $actas : [];
+
             $nestedData['id_hologramas'] = $certificado->id_hologramas ?: null; //?:(no vacío, no null, no false)
             $nestedData['old_hologramas'] = $certificado->old_hologramas ?: null;
             //visto bueno
