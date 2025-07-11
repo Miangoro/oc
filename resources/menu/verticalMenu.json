@@ -101,6 +101,12 @@
           "name": "Historial",
           "slug": "solicitudes-historial",
           "can": "Visualizar solicitudes"
+        },
+        {
+          "url": "solicitudes-historial",
+          "name": "Historial",
+          "slug": "solicitudes-historial",
+          "can": "Visualizar solicitudes"
         }
       ]
     },
