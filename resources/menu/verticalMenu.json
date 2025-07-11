@@ -104,7 +104,7 @@
         },
         {
           "url": "solicitudes-eliminadas",
-          "name": "Solicituddes Eliminadas",
+          "name": "Solicitudes Eliminadas",
           "slug": "solicitudes-eliminadas",
           "can": "Visualizar solicitudes eliminadas"
         }
