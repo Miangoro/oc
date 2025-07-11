@@ -511,30 +511,49 @@
                             </div>
                             <div class="table-responsive text-nowrap border-top">
                                 <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Mes</th>
-                                            <th>Fecha del Servicio</th>
-                                            <th>Instalación</th>
-                                            <th>Servicios únicos</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($serviciosInstalacion as $mes => $fechas)
-                                            @foreach ($fechas as $fecha => $instalaciones)
-                                                @foreach ($instalaciones as $direccion => $cantidad)
-                                                    <tr>
-                                                        <td>{{ \Carbon\Carbon::parse($mes . '-01')->locale('es')->isoFormat('MMMM YYYY') }}
-                                                        </td>
-                                                        <td>{{ \Carbon\Carbon::parse($fecha)->format('d\-\ F') }}</td>
-                                                        <td>{{ $direccion }}</td>
-                                                        <td>{{ $cantidad }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            @endforeach
-                                        @endforeach
-                                    </tbody>
-                                </table>
+    <thead>
+        <tr>
+            <th>Año</th>
+            <th>Mes</th>
+            <th>Día del Servicio</th>
+            <th>Instalación</th>
+            <th>Servicios únicos</th>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $agrupadoPorAnio = collect($serviciosInstalacion)->groupBy(function ($_, $mes) {
+                return \Carbon\Carbon::parse($mes . '-01')->format('Y');
+            });
+        @endphp
+
+        @foreach ($agrupadoPorAnio as $anio => $meses)
+            <tr class="table-primary fw-bold">
+                <td colspan="5">Año: {{ $anio }}</td>
+            </tr>
+
+            @foreach ($meses as $mes => $fechas)
+                <tr class="table-secondary">
+                    <td></td>
+                    <td colspan="4">{{ \Carbon\Carbon::parse($mes . '-01')->locale('es')->isoFormat('MMMM YYYY') }}</td>
+                </tr>
+
+                @foreach ($fechas as $fecha => $instalaciones)
+                    @foreach ($instalaciones as $direccion => $cantidad)
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>{{ \Carbon\Carbon::parse($fecha)->format('d \d\e F') }}</td>
+                            <td>{{ $direccion }}</td>
+                            <td>{{ $cantidad }}</td>
+                        </tr>
+                    @endforeach
+                @endforeach
+            @endforeach
+        @endforeach
+    </tbody>
+</table>
+
 
 
                             </div>
