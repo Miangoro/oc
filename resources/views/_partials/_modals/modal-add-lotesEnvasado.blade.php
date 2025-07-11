@@ -47,7 +47,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class=" form-select id_marca" id="id_marca" name="id_marca" aria-label="Marca">
-                                    <option value="" selected>Selecciona una marca</option>
+                                    <option value="" disabled selected>Selecciona una marca</option>
                                 </select>
                                 <label for="id_marca">Marca</label>
                             </div>

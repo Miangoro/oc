@@ -33,8 +33,8 @@ $customizerHidden = 'customizer-hide';
     <!-- Forgot Password -->
     <div class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg p-sm-12 p-6">
       <div class="w-px-400 mx-auto">
-        <h4 class="mb-1">Forgot Password? xdxd🔒</h4>
-        <p class="mb-5">Enter your email and we'll send you instructions to reset your password</p>
+        <h4 class="mb-1">¿Has olvidado tu contraseña?🔒</h4>
+        <p class="mb-5">Ingrese su correo electrónico y le enviaremos instrucciones para restablecer su contraseña</p>
 
         @if (session('status'))
         <div class="mb-1 text-success">
@@ -52,13 +52,13 @@ $customizerHidden = 'customizer-hide';
             </span>
             @enderror
           </div>
-          <button type="submit" class="btn btn-primary d-grid w-100">Send Reset Link</button>
+          <button type="submit" class="btn btn-primary d-grid w-100">Enviar enlace para restablecer contraseña</button>
         </form>
         <div class="text-center">
           @if (Route::has('login'))
             <a href="{{ route('login') }}" class="d-flex align-items-center justify-content-center">
               <i class="ri-arrow-left-s-line scaleX-n1-rtl ri-20px me-1_5"></i>
-              Back to login
+              Volver al inicio
             </a>
           @endif
         </div>

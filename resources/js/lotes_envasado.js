@@ -312,7 +312,6 @@ $(function () {
               </div>
             `;
           }
-
         }
       ],
       order: [[2, 'desc']],
@@ -423,18 +422,13 @@ $(function () {
           $('.id_lote_granel').html(contenido);
           //fv.revalidateField('id_lote_granel');
           /* contenido marcas */
-          var Macontenido = '';
+          var Macontenido = '<option value="" disabled selected>Seleccione una marca</option>';
           for (let index = 0; index < response.marcas.length; index++) {
-            Macontenido =
-              '<option value="' +
-              response.marcas[index].id_marca +
-              '">' +
-              response.marcas[index].marca +
-              '</option>' +
-              Macontenido;
+            Macontenido +=
+              '<option value="' + response.marcas[index].id_marca + '">' + response.marcas[index].marca + '</option>';
           }
           if (response.marcas.length == 0) {
-            Macontenido = '<option value="">Sin marcas registradas</option>';
+            Macontenido = '<option value="" disabled selected>Sin marcas registradas</option>';
           }
           $('#id_marca').html(Macontenido);
           //fv.revalidateField('id_marca');
@@ -739,7 +733,7 @@ $(function () {
     $('#addlostesEnvasado').on('hidden.bs.modal', function () {
       // Restablecer select de empresa
       $('.id_lote_granel').html('');
-      $('#id_marca').html('');
+      $('#id_marca').html('<option value="" disabled selected>Seleccione una marca</option>');
       $('.id_instalacion').html('');
       $('#nombre').val('');
       $('#destino_lote').val('');
@@ -1254,5 +1248,4 @@ $(function () {
       $('input[name="volumen_parcial[]"]').val(volumenTotal ? volumenTotal.toFixed(2) : '');
     });
   });
-
 });
