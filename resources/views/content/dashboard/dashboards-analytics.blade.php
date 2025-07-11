@@ -498,7 +498,7 @@
                 use Carbon\Carbon;
             @endphp
             @can('Estadísticas exportación clientes')
-                <div class="col-md-8 col-xxl-6">
+                <div class="col-md-10 col-xxl-6">
                     <div class="card h-100">
                         <div class="card-header d-flex align-items-center justify-content-between">
                             <h5 class="card-title m-0 me-2">Servicios de exportación</h5>
