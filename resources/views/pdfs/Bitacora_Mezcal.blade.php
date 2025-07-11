@@ -28,7 +28,7 @@
 
     /* Estilo para filas alternadas tipo table-striped */
     tr.bitacora-row:nth-child(even) {
-        background-color: #f2f2f2;
+        background-color: #dddddd;
         /* Gris claro */
     }
 
@@ -93,7 +93,7 @@
         {{-- Título y Cliente --}}
         <td style="width: 50%; text-align: center; border:none;">
             <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
-                INVENTARIO DE MEZCAL A GRANEL
+                INVENTARIO DE MEZCAL A GRANEL (PRODUCTOR)
             </p>
             @php
                 $primerBitacora = $bitacoras->first();
@@ -112,7 +112,7 @@
                 }
             @endphp
             <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
-               <span>Cliente:</span><span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
+               <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
             </p>
         </td>
         {{-- Logo OC --}}

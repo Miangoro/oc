@@ -62,7 +62,7 @@
                         <th>Inspector asignado</th>
                         <th>Características</th>
                         <th>Fecha y hora de inspección</th>
-                        <th>Formato de solicitud</th>
+                        <th>Motivo de la eliminación</th>
                         <th>Estatus</th>
                         <th>Acciones</th>
                     </tr>

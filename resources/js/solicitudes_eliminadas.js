@@ -344,7 +344,8 @@ $(function () {
         searchable: false,
         orderable: false,
         render: function (data, type, full, meta) {
-          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['folio']}"></i>`;
+          var $motivo = full['motivo'];
+          return '<span class="text-danger fw-bold">'+$motivo+'</span>';
         }
       },
       {

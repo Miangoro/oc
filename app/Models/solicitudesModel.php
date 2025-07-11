@@ -314,6 +314,10 @@ public function clases_agave()
         return $this->caracteristicas ? json_decode($this->caracteristicas, true) : [];
     }
 
+    public function eliminada()
+    {
+        return $this->hasOne(solicitudes_eliminadas::class, 'id_solicitud', 'id_solicitud');
+    }
 
 
 }

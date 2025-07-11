@@ -257,6 +257,7 @@ class solicitudes_eliminadas_controller extends Controller
                 $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? '';
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo ?? 'N/A';
+                $nestedData['motivo'] = $solicitud->eliminada->motivo ?? 'N/A';
                 $nestedData['estatus'] = $solicitud->estatus ?? 'Vacío';
                 $nestedData['estatus_validado_oc'] = $solicitud->ultima_validacion_oc->estatus ?? 'Pendiente';
                 $nestedData['estatus_validado_ui'] = $solicitud->ultima_validacion_ui->estatus ?? 'Pendiente';

@@ -14,4 +14,8 @@ class solicitudes_eliminadas extends Model
     ];
 
     public $timestamps = false;
+
+    public function motivo(){
+      return $this->belongsTo(solicitudesModel::class, 'id_solicitud', 'id_solicitud');
+    }
 }
