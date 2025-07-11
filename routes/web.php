@@ -1057,7 +1057,11 @@ Route::middleware(['auth'])->controller(Certificado_InstalacionesController::cla
     Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::class, 'edit']);
     Route::post('certificados-list/{id}', [Certificado_InstalacionesController::class, 'update']);
     Route::get('/ruta-para-obtener-revisores', [Certificado_InstalacionesController::class, 'obtenerRevisores']);
-    Route::post('/asignar-revisor', [Certificado_InstalacionesController::class, 'storeRevisor'])->name('asignarRevisor'); //Agregar
+    //revisiones
+    Route::post('/asignar-revisor', [Certificado_InstalacionesController::class, 'storeRevisor'])->name('asignarRevisor');
+    Route::get('/obtener-revision-insta/{id_certificado}', [Certificado_InstalacionesController::class, 'obtenerRevision']);
+    Route::delete('/eliminar-doc-revision-insta/{id_certificado}', [Certificado_InstalacionesController::class, 'eliminarDocumentoRevision']);
+
     Route::post('/certificados/reexpedir', [Certificado_InstalacionesController::class, 'reexpedir'])->name('certificados.reexpedir');
     //Pdfs de certificados instalaciones
     Route::get('/certificado_comercializador/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_comercializador'])->name('certificado_comercializador');
@@ -1102,7 +1106,12 @@ Route::middleware(['auth'])->controller(Certificado_GranelController::class)->gr
         return app(Certificado_GranelController::class)->CertificadoGranel($id, false);
         })->name('PDF-cer-granel-sin-marca');
     Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
+    //revisiones
     Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
+    Route::get('/obtener-revision-granel/{id_certificado}', [Certificado_GranelController::class, 'obtenerRevision']);
+    Route::delete('/eliminar-doc-revision-granel/{id_certificado}', [Certificado_GranelController::class, 'eliminarDocumentoRevision']);
+
+
     Route::post('/granel/reexpedir', [Certificado_GranelController::class, 'reexpedir'])->name('cer-granel.reex');
 
     Route::post('/certificados/granel/documento', [Certificado_GranelController::class, 'subirCertificado']);
@@ -1129,9 +1138,13 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::get('/solicitud_certificado_exportacion/{id_certificado}', 'MostrarSolicitudCertificadoExportacion')->name('PDF-SOL-cer-exportacion');
     //Reexpedir
     Route::post('/creaCerExp/reexpedir', [Certificado_ExportacionController::class, 'reexpedir'])->name('cer-expor.reex');
+    
     //Asignar revisor
     Route::post('asignar_revisor_exportacion', [Certificado_ExportacionController::class, 'storeRevisor'])->name('cer-expor.asignarRevisor');
-    Route::get('/certificados/exportar', 'exportar')->name('certificados.exportar');
+    //Obtener revisiones documentos
+    Route::get('/obtener-revision/{id_certificado}', [Certificado_ExportacionController::class, 'obtenerRevision']);
+    //eliminar documento de revision
+    Route::delete('/eliminar-documento-revision/{id_certificado}', [Certificado_ExportacionController::class, 'eliminarDocumentoRevision']);
 
     //documentacion
     Route::get('/documentos/{id_certificado}', 'documentos')->name('documentos-cer-exportacion');
@@ -1145,7 +1158,7 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::get('/certificados/exportacion/documento/{id}', [Certificado_ExportacionController::class, 'CertificadoFirmado']);
     Route::delete('/certificados/exportacion/documento/{id}', [Certificado_ExportacionController::class, 'borrarCertificadofirmado']);
 
-
+    Route::get('/certificados/exportar', 'exportar')->name('certificados.exportar');
     //Obtener N° de lotes para hologramas en certificado
     Route::get('/certificados/contar-lotes/{id}', [Certificado_ExportacionController::class, 'contarLotes']);
 });

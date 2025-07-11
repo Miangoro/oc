@@ -269,15 +269,15 @@ NOM-070-SCFI-2016. Bebidas alcohólicas –mezcal-especificaciones
 
 
 <!--FIRMA DIGITAL-->
-<div class="firma" style="width: 75%; border: 1px solid red; border-bottom: 2px solid #23b850" >
+<div class="firma" style="width: 75%; border-bottom: 2px solid #23b850; display: flex;">
     @php
         use Illuminate\Support\Facades\Storage;
         /* $firma = $data->firmante->firma ?? null;
         $firmaPath = $firma ? 'firmas/' . $firma : null; */
     @endphp
-    <img  style="vertical-align: top;" src="{{ public_path('img_pdf/sello_uvem.png') }}" alt="Sello Uvem" width="110px" height="100px">
+    <img  style="margin-right:30px" src="{{ public_path('img_pdf/sello_uvem.png') }}" alt="Sello Uvem" width="110px" height="100px">
 
-    <p style="display: inline-block; text-align:center; margin-left:30px">
+    <p style="display: inline-block; text-align:center; padding-top: 10px;">
         QFB. Mario Villanueva Flores<br>
         Gerente Técnico Sustituto de la Unidad de Inspección
     </p>
