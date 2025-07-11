@@ -233,7 +233,7 @@
             <td style="font-size: 15px;padding-bottom: 25px; padding-top: 25px"><b>Razón social</b></td>
             <td>{{ mb_strtoupper ($empresa) }}</td>
             <td style="font-size: 15px"><b>Domicilio fiscal</b></td>
-            <td style="font-size: 9px">{{ mb_strtoupper ($domicilio) }}</td>
+            <td style="font-size: 9px">{{ mb_strtoupper ($domicilio) }} C.P.{{ $cp }}</td>
         </tr>
         <tr>
             <td style="font-size: 15px; padding-bottom: 15px; padding-top: 15px"><b>RFC</b></td>
