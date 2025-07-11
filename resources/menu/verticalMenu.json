@@ -103,10 +103,10 @@
           "can": "Visualizar solicitudes"
         },
         {
-          "url": "solicitudes-historial",
-          "name": "Historial",
-          "slug": "solicitudes-historial",
-          "can": "Visualizar solicitudes"
+          "url": "solicitudes-eliminadas",
+          "name": "Solicituddes Eliminadas",
+          "slug": "solicitudes-eliminadas",
+          "can": "Visualizar solicitudes eliminadas"
         }
       ]
     },

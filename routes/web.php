@@ -184,6 +184,7 @@ use App\Http\Controllers\usuarios\UsuariosConsejoController;
 use App\Http\Controllers\catalogo\lotesGranelController;
 use App\Http\Controllers\documentacion\DocumentosController;
 use App\Http\Controllers\solicitudes\SolicitudesTipoController;
+use App\Http\Controllers\solicitudes\solicitudes_eliminadas_controller;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\DictamenInstalacionesController;
@@ -863,8 +864,10 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::get('/obtener_dictamenes_envasado/{empresa}', [getFuncionesController::class, 'getDictamenesEnvasado'])->name('getDictamenesEnvasado');
     Route::get('/obtener_datos_inspeccion_dictamen/{id}', [getFuncionesController::class, 'obtenerDatosInspeccion']);
     Route::get('/getDocumentosSolicitud/{id_solicitud}', [getFuncionesController::class, 'getDocumentosSolicitud']);
+});
 
-
+Route::middleware(['auth'])->controller(solicitudes_eliminadas_controller::class)->group(function () {
+    Route::get('/solicitudes-eliminadas', 'UserManagement')->name('solicitudes-eliminadas');
 });
 
 //-------------------CATALOGO EQUIPOS-------------------
@@ -1138,7 +1141,7 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::get('/solicitud_certificado_exportacion/{id_certificado}', 'MostrarSolicitudCertificadoExportacion')->name('PDF-SOL-cer-exportacion');
     //Reexpedir
     Route::post('/creaCerExp/reexpedir', [Certificado_ExportacionController::class, 'reexpedir'])->name('cer-expor.reex');
-    
+
     //Asignar revisor
     Route::post('asignar_revisor_exportacion', [Certificado_ExportacionController::class, 'storeRevisor'])->name('cer-expor.asignarRevisor');
     //Obtener revisiones documentos
