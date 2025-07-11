@@ -1410,190 +1410,161 @@ if (!$select.find(`option[value="${datos.id_dictamen}"]`).length) {
 
 
 
-  ///OBTENER REVISORES
-  $(document).ready(function () {
-    $('#tipoRevisor').on('change', function () {
-      var tipoRevisor = $(this).val();
 
-      $('#nombreRevisor').empty().append('<option value="" disabled>Seleccione un revisor</option>');
 
-      if (tipoRevisor) {
-        var tipo = (tipoRevisor === '1') ? 1 : 4;
 
-        $.ajax({
-          url: '/ruta-para-obtener-revisores',
-          type: 'GET',
-          data: { tipo: tipo },
-          success: function (response) {
-
-            if (Array.isArray(response) && response.length > 0) {
-              response.forEach(function (revisor) {
-                $('#nombreRevisor').append('<option value="' + revisor.id + '">' + revisor.name + '</option>');
-              });
-            } else {
-              $('#nombreRevisor').append('<option value="">No hay revisores disponibles</option>');
-            }
-          },
-          error: function (xhr) {
-            console.log('Error:', xhr.responseText);
-            alert('Error al cargar los revisores. Inténtelo de nuevo.');
-          }
-        });
-      }
+///OBTENER REVISORES
+function cargarRevisores() {
+  $.get('/ruta-para-obtener-revisores', { tipo: 1 }, function (data) {
+    $('#personalOC').empty().append('<option value="">Seleccione personal OC</option>');
+    data.forEach(function (rev) {
+      $('#personalOC').append(`<option value="${rev.id}">${rev.name}</option>`);
     });
   });
 
-  ///ASIGNAR REVISOR
-  $('#asignarRevisorForm').hide();
-
-  const form = document.getElementById('asignarRevisorForm');
-  const fv2 = FormValidation.formValidation(form, {
-    fields: {
-      'tipoRevisor': {
-        validators: {
-          notEmpty: {
-            message: 'Debe seleccionar una opción para la revisión.'
-          }
-        }
-      },
-      'nombreRevisor': {
-        validators: {
-          notEmpty: {
-            message: 'Debe seleccionar un nombre para el revisor.'
-          }
-        }
-      },
-      'numeroRevision': {
-        validators: {
-          notEmpty: {
-            message: 'Debe seleccionar un número de revisión.'
-          }
-        }
-      }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        eleInvalidClass: 'is-invalid',
-        rowSelector: '.mb-3'
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function (e) {
-    var formData = new FormData(form);
-    var id_certificado = $('#id_certificado').val();
-    var tipoRevisor = $('#tipoRevisor').val();
-    var revisorValue = $('#nombreRevisor').val();
-
-    console.log('ID Certificado:', id_certificado);
-    console.log('Tipo de Revisor:', tipoRevisor);
-    console.log('Valor del Revisor:', revisorValue);
-
-    if (tipoRevisor == '1') {
-      formData.append('id_revisor', revisorValue);
-      formData.append('id_revisor2', null);
-    } else if (tipoRevisor == '2') {
-      formData.append('id_revisor2', revisorValue);
-      formData.append('id_revisor', null);
-    }
-
-    // Añadir otros datos
-    formData.append('id_certificado', id_certificado);
-    var esCorreccion = $('#esCorreccion').is(':checked') ? 'si' : 'no';
-    formData.append('esCorreccion', esCorreccion);
-
-    console.log('FormData:', Array.from(formData.entries()));
-
-    $.ajax({
-      url: '/asignar_revisor_exportacion',
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        $('#asignarRevisorModal').modal('hide');
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: response.message,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        }).then(function () {
-          form.reset();
-          $('#nombreRevisor').val(null).trigger('change');
-          $('#esCorreccion').prop('checked', false);
-          fv.resetForm();
-          $('.datatables-users').DataTable().ajax.reload();
-        });
-      },
-      error: function (xhr) {
-        $('#asignarRevisorModal').modal('hide');
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Revisor asignado exitosamente',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        }).then(function () {
-          form.reset();
-          $('#nombreRevisor').val(null).trigger('change');
-          $('#esCorreccion').prop('checked', false);
-          fv.resetForm();
-          $('.datatables-users').DataTable().ajax.reload();
-        });
-      }
+  $.get('/ruta-para-obtener-revisores', { tipo: 4 }, function (data) {
+    $('#miembroConsejo').empty().append('<option value="">Seleccione miembro del consejo</option>');
+    data.forEach(function (rev) {
+      $('#miembroConsejo').append(`<option value="${rev.id}">${rev.name}</option>`);
     });
   });
+}
 
-  $('#nombreRevisor').on('change', function () {
-    const $this = $(this);
-    const fieldName = $this.attr('name');
-    const value = $this.val();
+$(document).ready(function () {
+  cargarRevisores();
+});
 
-    fv2.revalidateField(fieldName);
+/// Cargar datos de revisión automáticamente al abrir el modal
+$('#asignarRevisorModal').on('show.bs.modal', function (event) {
+  const button = $(event.relatedTarget);
+  const idCertificado = button.data('id');
 
-    if (value) {
-      $this.removeClass('is-invalid').addClass('is-valid');
-      fv2.updateFieldStatus(fieldName, 'Valid', 'notEmpty');
-    } else {
-      $this.removeClass('is-valid').addClass('is-invalid');
-      fv2.updateFieldStatus(fieldName, 'Invalid', 'notEmpty');
-    }
-  });
+  $('#id_certificado').val(idCertificado);
+  $('#folio_certificado').html(`<span class="badge bg-info">${button.data('folio')}</span>`);
+  $('#asignarRevisorForm')[0].reset();
+  $('.select2').val(null).trigger('change');
+  $('#documentoRevision').empty();
 
-  $('#asignarRevisorModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget);
-    var id_certificado = button.data('id');
-    var num_certificado = button.data('folio');
-    $('#id_certificado').val(id_certificado);
-    $('#folio_certificado').html('<span class="badge bg-info">'+num_certificado+'</span>');
-    $('#asignarRevisorModalLabel').html('Asignar revisor <span class="badge bg-info">' + num_certificado + '</span>');
+  // Cargar observaciones y documento (tipo_revision = 1)
+  $.get(`/obtener-revision/${idCertificado}`, function (data) {
+    if (data.exists) {
+      $('#observaciones').val(data.observaciones || '');
+      $('#esCorreccion').prop('checked', data.es_correccion === 'si');
 
-    fv.resetForm();
-    form.reset();
-
-    // Resetear select2 manualmente
-    $('#nombreRevisor').val(null).trigger('change');
-    $('#nombreRevisor').removeClass('is-valid is-invalid');
-    fv2.updateFieldStatus('nombreRevisor', 'NotValidated');
-
-    $('#asignarRevisorForm').show();
-
-
-    // FORZAR VALIDACIÓN VISUAL AL ABRIR EL MODAL
-    ['tipoRevisor', 'nombreRevisor', 'numeroRevision'].forEach(function (field) {
-      const el = document.getElementById(field);
-      if (!el.value) {
-        el.classList.add('is-invalid');
+      if (data.documento) {
+        $('#documentoRevision').html(`
+          <p>Documento actual:
+            <a href="${data.documento.url}" target="_blank">${data.documento.nombre}</a>
+          </p>
+          <button type="button" class="btn btn-outline-danger btn-sm" id="EliminarDocRevisor">
+            <i class="ri-delete-bin-line"></i> Eliminar
+          </button>
+        `);
       } else {
-        el.classList.remove('is-invalid');
+        $('#documentoRevision').html('<p>No hay documento cargado.</p>');
       }
-    });
+    } else {
+      $('#observaciones').val('');
+      $('#esCorreccion').prop('checked', false);
+      $('#documentoRevision').html('<p>No hay documento cargado.</p>');
+    }
   });
+});
+
+///ELIMINAR DOCUMENTO REVISION
+$(document).on('click', '#EliminarDocRevisor', function () {
+  const idCertificado = $('#id_certificado').val();
+
+  Swal.fire({
+    title: '¿Está seguro?',
+    text: 'No podrá revertir este evento',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+    cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+    customClass: {
+      confirmButton: 'btn btn-primary me-2',
+      cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: `/eliminar-documento-revision/${idCertificado}`,
+        method: 'DELETE',
+        success: function (res) {
+          $('#documentoRevision').html('<p>Documento eliminado.</p>');
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: res.message,
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+          });
+        },
+        error: function (xhr) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: xhr.responseJSON?.message || 'No se pudo eliminar el documento.'
+          });
+        }
+      });
+    }
+  });
+});
+
+///ASIGNAR REVISION
+$('#asignarRevisorForm').on('submit', function (e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+  const idCertificado = $('#id_certificado').val();
+  formData.append('id_certificado', idCertificado);
+
+  const archivo = $('#archivo_documento').val();
+  const nombreDoc = $('#nombre_documento').val();
+  if (archivo && !nombreDoc) {
+    Swal.fire({ icon: 'warning', title: 'Falta el nombre del documento' });
+    return;
+  }
+
+  const esCorreccion = $('#esCorreccion').is(':checked') ? 'si' : 'no';
+  formData.append('esCorreccion', esCorreccion);
+
+  formData.append('numeroRevision', '1'); // puedes enviar fijo "1" ya que no se usa más
+
+  // También puedes enviar el ID del documento fijo desde el frontend
+  formData.append('id_documento', 133);
+
+  $.ajax({
+    url: '/asignar_revisor_exportacion',
+    method: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (res) {
+      $('#asignarRevisorModal').modal('hide');
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: res.message,
+        customClass: { confirmButton: 'btn btn-primary' }
+      });
+      $('#asignarRevisorForm')[0].reset();
+      $('.datatables-users').DataTable().ajax.reload();
+    },
+    error: function (xhr) {
+      $('#asignarRevisorModal').modal('hide');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: xhr.responseJSON?.message || 'Error inesperado.'
+      });
+    }
+  });
+});
 
 
 

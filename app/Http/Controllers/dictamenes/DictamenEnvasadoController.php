@@ -512,8 +512,14 @@ public function MostrarDictamenEnvasado($id_dictamen)
     ];
 
 
-    //if ($data->fecha_emision < "2024-07-15") {
-       // $edicion = 'pdfs.dictamen_envasado_ed4';
+    /* if ($data->fecha_emision < "2024-07-15") {
+        $edicion = 'pdfs.dictamen_envasado_ed4';
+    } elseif ($data->fecha_emision < "2024-12-10") {
+        $edicion = 'pdfs.dictamen_envasado_ed6';
+    } else {
+        $edicion = 'pdfs.dictamen_envasado_ed7';
+    } */
+    
     if ($data->fecha_emision < "2024-12-10") {
         $edicion = 'pdfs.dictamen_envasado_ed6';
     } else {
