@@ -746,4 +746,44 @@ public function asignarInspector(Request $request)
         // Pasar los filtros a la clase InspeccionesExport
         return Excel::download(new InspeccionesExport($filtros), 'reporte_inspecciones.xlsx');
     }
+
+
+//FUNCION ELIMINAR DOCUMENTOS 69 Y 70
+public function eliminarActa($id_solicitud, $id_documento)
+{
+    if (!in_array($id_documento, [69, 70])) {
+        return response()->json(['message' => 'Documento no permitido.'], 400);
+    }
+
+    $documento = Documentacion_url::where('id_relacion', $id_solicitud)
+        ->where('id_documento', $id_documento)
+        ->first();
+
+    if (!$documento) {
+        return response()->json(['message' => 'Documento no encontrado.'], 404);
+    }
+
+     // Buscar el número de cliente a través de la empresa
+    $empresa = Empresa::find($documento->id_empresa);
+    $numeroCliente = $empresa?->empresaNumClientes()->pluck('numero_cliente')->first();
+
+    if (!$numeroCliente) {
+        return response()->json(['message' => 'No se pudo encontrar el número de cliente.'], 404);
+    }
+
+    // Eliminar archivo físico
+    $ruta = public_path("files/{$numeroCliente}/actas/{$documento->url}");
+    if (file_exists($ruta)) {
+        unlink($ruta); // Eliminar archivo físico
+    }
+
+    // Eliminar de base de datos
+    $documento->delete();
+
+    return response()->json(['message' => 'Documento eliminado correctamente.']);
+}
+
+
+
+
 }

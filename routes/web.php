@@ -763,6 +763,8 @@ Route::middleware(['auth'])->controller(inspeccionesController::class)->group(fu
     Route::get('/acta_circunstanciada_unidades_produccion/{id_inspeccion}', [inspeccionesController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');
     Route::get('/inspecciones/exportar', 'exportar')->name('inspecciones.exportar');
    /*  Route::get('/getDatosSolicitud/{id_solicitud}',  'getDatosSolicitud')->name('getDatosSolicitud'); */
+    //borrar documentos 69 y 70
+    Route::delete('/eliminar-acta/{id_solicitud}/{id_documento}', [inspeccionesController::class, 'eliminarActa']);
 });
 
 //-------------------HOLOGRAMAS - SOLICITUD DE HOLOGRAMAS-------------------
