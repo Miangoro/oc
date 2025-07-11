@@ -869,6 +869,8 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
 
 Route::middleware(['auth'])->controller(solicitudes_eliminadas_controller::class)->group(function () {
     Route::get('/solicitudes-eliminadas', 'UserManagement')->name('solicitudes-eliminadas');
+    Route::resource('/solicitudes-list-eliminadas', solicitudes_eliminadas_controller::class);
+    Route::delete('/solicitudes-restaurar/{id_solicitud}', 'restore')->name('solicitudes-restaurar');
 });
 
 //-------------------CATALOGO EQUIPOS-------------------
