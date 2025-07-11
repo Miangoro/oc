@@ -302,6 +302,9 @@
                                         @elseif($pregunta->filtro == 'cont_alc')
                                             <td>{{ round($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc) ?? 'N/A' }}
                                             </td>
+                                        @elseif($pregunta->filtro == 'cont_alc_exportacion')
+                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->cont_alc_envasado ?? 'N/A' }}
+                                            </td>
                                         @elseif($pregunta->filtro == 'nbotellas')
                                             @php
                                                 $caracteristicas = json_decode(

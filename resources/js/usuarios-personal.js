@@ -176,9 +176,7 @@ $(function () {
               acciones += `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar personal OC </a>`;
             }
             if (window.puedeEliminarUsuario) {
-              acciones += `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record">
-                            <i class="ri-edit-box-line ri-20px text-info"></i> Editar personal OC
-                           </a>`;
+              acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar personal OC</a>`;
             }
             // Si no hay acciones, no retornar el dropdown
             if (!acciones.trim()) {

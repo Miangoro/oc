@@ -4,6 +4,7 @@ namespace App\Http\Controllers\solicitudes;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Helpers\Helpers;
 
 use App\Models\categorias;
 use App\Models\empresa;
@@ -41,7 +42,7 @@ class solicitudes_eliminadas_controller extends Controller
 {
        public function UserManagement()
     {
-        $solicitudes = solicitudesModel::where('habilitado', 1)
+        $solicitudes = solicitudesModel::where('habilitado', 0)
             ->where('id_tipo', '!=', 12)
             ->get();
         $solicitudesTipos = solicitudTipo::all();
@@ -63,7 +64,7 @@ class solicitudes_eliminadas_controller extends Controller
         $aduanas = catalogo_aduanas::all();
 
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
-        return view('solicitudes.find_solicitudes_view', compact('tipo_usuario','instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas', 'aduanas', 'solicitudes'));
+        return view('solicitudes.find_solicitudes_eliminadas_view', compact('tipo_usuario','instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas', 'aduanas', 'solicitudes'));
     }
     public function findCertificadosExportacion()
     {
@@ -73,11 +74,6 @@ class solicitudes_eliminadas_controller extends Controller
 
     public function index(Request $request)
     {
-        //Permiso de empresa
-        $empresaId = null;
-        if (Auth::check() && Auth::user()->tipo == 3) {
-            $empresaId = Auth::user()->empresa?->id_empresa;
-        }
 
         $userId = Auth::id();
 
@@ -97,12 +93,9 @@ class solicitudes_eliminadas_controller extends Controller
 
         $search = [];
 
-        $query = solicitudesModel::query()->where('habilitado', 1)
+        $query = solicitudesModel::query()->where('habilitado', 0)
             ->where('id_tipo', '!=', 12);
 
-        if ($empresaId) {
-            $query->where('id_empresa', $empresaId);
-        }
 
         if ($userId == 49) {
             $query->where('id_tipo', 11);
@@ -137,7 +130,7 @@ class solicitudes_eliminadas_controller extends Controller
                 'inspeccion.inspector',
                 'ultima_validacion_oc',
                 'ultima_validacion_ui'
-            ])->where('habilitado', 1)
+            ])->where('habilitado', 0)
                 ->where('id_tipo', '!=', 12);
 
             // Si se necesita ordenar por nombre del inspector
@@ -150,9 +143,6 @@ class solicitudes_eliminadas_controller extends Controller
             }
 
             // Filtrar por empresa si aplica
-            if ($empresaId) {
-                $query->where('id_empresa', $empresaId);
-            }
 
             if ($userId == 49) {
             $query->where('id_tipo', 11);
@@ -173,7 +163,7 @@ class solicitudes_eliminadas_controller extends Controller
                         'inspeccion.inspector',
                         'ultima_validacion_oc',
                         'ultima_validacion_ui'
-                    ])->where('habilitado', 1)
+                    ])->where('habilitado', 0)
                     ->where('id_tipo', '!=', 12)
                     ->where(function ($query) use ($search) {
                         $query->where(function ($q) use ($search) {
@@ -198,10 +188,6 @@ class solicitudes_eliminadas_controller extends Controller
                         });
                     });
 
-                if ($empresaId) {
-                    $solicitudes->where('id_empresa', $empresaId);
-                }
-
                 if ($userId == 49) {
                      $solicitudes->where('id_tipo', 11);
                 }
@@ -222,7 +208,7 @@ class solicitudes_eliminadas_controller extends Controller
                         'instalacion',
                         'inspeccion.inspector',
                         'ultima_validacion_oc',
-                        'ultima_validacion_ui')->where('habilitado', 1)
+                        'ultima_validacion_ui')->where('habilitado', 0)
                             ->where('id_tipo', '!=', 12)
                     ->where(function ($query) use ($search) {
                         $query->where(function ($q) use ($search) {
@@ -246,21 +232,12 @@ class solicitudes_eliminadas_controller extends Controller
                                 });
                         });
                     });
-
-                if ($empresaId) {
-                    $totalFilteredQuery->where('id_empresa', $empresaId);
-                }
-
                 if ($userId == 49) {
                      $totalFilteredQuery->where('id_tipo', 11);
                 }
-
                 $totalFiltered = $totalFilteredQuery->count();
-
         }
-
         $data = [];
-
         if (!empty($solicitudes)) {
             $ids = $start;
             $cajas = '';
@@ -394,10 +371,6 @@ class solicitudes_eliminadas_controller extends Controller
                 $nestedData['renovacion'] = $caracteristicas['renovacion'] ?? 'N/A';
                 $nestedData['volumen_ingresado'] = $caracteristicas['volumen_ingresado'] ?? 'N/A';
                 $nestedData['certificado_exportacion'] = $solicitud->certificadoExportacion()?->num_certificado ?? '';
-
-
-
-
                 $data[] = $nestedData;
             }
         }
@@ -410,26 +383,21 @@ class solicitudes_eliminadas_controller extends Controller
         ]);
     }
 
-
-
-    public function destroy(Request $request, $id_solicitud)
+    public function restore(Request $request, $id_solicitud)
     {
-    try {
-        $solicitud = solicitudesModel::findOrFail($id_solicitud);
-        // Guardar motivo recibido del request
-        $motivo = $request->input('reason', 'Sin motivo especificado');
-        // Registrar en tabla solicitudes_eliminadas
-        solicitudes_eliminadas::create([
-            'id_solicitud' => $id_solicitud,
-            'motivo' => $motivo,
-        ]);
-        // Deshabilitar la solicitud
-        $solicitud->habilitado = 0;
-        $solicitud->save();
-        return response()->json(['success' => 'Solicitud eliminada correctamente']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
+        try {
+            $solicitud = solicitudesModel::findOrFail($id_solicitud);
+            // Restaurar solicitud
+            $solicitud->habilitado = 1;
+            $solicitud->save();
+
+            // Eliminar el registro de la tabla de eliminados
+            solicitudes_eliminadas::where('id_solicitud', $id_solicitud)->delete();
+
+            return response()->json(['success' => 'Solicitud restaurada correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
 }
