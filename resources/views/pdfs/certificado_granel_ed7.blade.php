@@ -286,7 +286,7 @@
         <td class="columna">Dirección</td>
 
         <td class="columna-text">
-            <span class="negrita">Domicilio Fiscal:</span> {{ $domicilio_fiscal }}
+            <span class="negrita">Domicilio Fiscal:</span> {{ $domicilio_fiscal }} C.P.{{ $cp }}
             <br>
             <span class="negrita">Domicilio de Instalaciones:</span> {{ $direccion_completa }}
         </td>
