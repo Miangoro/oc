@@ -318,6 +318,8 @@ public function index(Request $request)
             $nestedData['pais'] = $certificado->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado';
             $nestedData['cajas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_cajas'] ?? 'No encontrado';
             $nestedData['botellas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado';
+            $nestedData['id_hologramas'] = $certificado->id_hologramas ?: null; //?:(no vacío, no null, no false)
+            $nestedData['old_hologramas'] = $certificado->old_hologramas ?: null;
             //visto bueno
             $nestedData['vobo'] = $certificado->vobo ? json_decode($certificado->vobo, true) : null;
             //Certificado Firmado

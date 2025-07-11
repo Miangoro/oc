@@ -151,7 +151,7 @@
         .margen_mezcal_granel {
             position: absolute;
             top: 90px; 
-            left: -80px; 
+            left: -67px; 
             width: 144px;
             height: 850px; 
             max-height: 100vh; 
