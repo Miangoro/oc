@@ -134,7 +134,7 @@ $serviciosInstalacion = SolicitudesModel::with(['inspeccion', 'instalacion'])
     ->whereHas('instalacion')
     ->where('id_empresa', $empresaId)
     ->where('id_tipo', 11)
-    ->where('fecha_solicitud', '>', '2024-12-31')
+    ->where('fecha_solicitud', '>', '2025-05-30')
     ->get()
     ->groupBy(function ($item) {
         // Agrupar por año-mes (ej. '2025-01')
