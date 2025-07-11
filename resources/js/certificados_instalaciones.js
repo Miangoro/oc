@@ -1318,11 +1318,8 @@ $('#asignarRevisorForm').on('submit', function (e) {
 
   const esCorreccion = $('#esCorreccion').is(':checked') ? 'si' : 'no';
   formData.append('esCorreccion', esCorreccion);
-
-  formData.append('numeroRevision', '1'); // puedes enviar fijo "1" ya que no se usa más
-
-  // También puedes enviar el ID del documento fijo desde el frontend
-  formData.append('id_documento', 133);
+  formData.append('numeroRevision', $('#numeroRevision').val());
+  formData.append('id_documento', 133);//fijo
 
   $.ajax({
     url: '/asignar-revisor',
