@@ -541,7 +541,16 @@
             @foreach ($meses as $mes => $fechas)
                 <tr class="table-secondary">
                     <td></td>
-                    <td colspan="4">{{ \Carbon\Carbon::parse($mes . '-01')->locale('es')->isoFormat('MMMM YYYY') }}</td>
+                    @if (preg_match('/^\d{4}-\d{2}$/', $mes))
+    <tr class="table-primary fw-bold">
+        <td colspan="4">{{ \Carbon\Carbon::parse($mes . '-01')->locale('es')->isoFormat('MMMM YYYY') }}</td>
+    </tr>
+@else
+    <tr class="table-danger fw-bold">
+        <td colspan="4">Mes no válido: {{ $mes }}</td>
+    </tr>
+@endif
+
                 </tr>
 
                 @foreach ($fechas as $fecha => $instalaciones)
