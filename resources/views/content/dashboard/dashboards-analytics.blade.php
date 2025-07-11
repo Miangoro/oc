@@ -526,7 +526,7 @@
                                                     <tr>
                                                         <td>{{ \Carbon\Carbon::parse($mes . '-01')->locale('es')->isoFormat('MMMM YYYY') }}
                                                         </td>
-                                                        <td>{{ \Carbon\Carbon::parse($fecha)->format('d \-\ F') }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($fecha)->format('d\-\f') }}</td>
                                                         <td>{{ $direccion }}</td>
                                                         <td>{{ $cantidad }}</td>
                                                     </tr>
