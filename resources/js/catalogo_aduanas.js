@@ -106,7 +106,7 @@ $(function () {
             title: 'catalogo aduanas',
             text: `<i class="ri-file-${type}-line me-1"></i>${type.charAt(0).toUpperCase() + type.slice(1)}`,
             className: 'dropdown-item',
-            exportOptions: { columns: [0, 1, 2] }
+            exportOptions: { columns: [0, 1,] }
           }))
         },
         {
@@ -181,7 +181,7 @@ $(function () {
     });
   });
 
-  // 🔴 Evento: Eliminar aduana
+  //  Evento: Eliminar aduana
   $(document).on('click', '.delete-record', function () {
     const id_aduana = $(this).data('id');
     const dtrModal = $('.dtr-bs-modal.show');
