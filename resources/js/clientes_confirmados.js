@@ -1,6 +1,21 @@
 'use strict';
 
 $(function () {
+      // Declaras el arreglo de botones
+  let buttons = [];
+
+  // Si tiene permiso, agregas el botón
+  if (puedeAgregarUsuario) {
+    buttons.push({
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo Confirmado</span>',
+          className: 'add-new btn btn-primary waves-effect waves-light',
+          attr: {
+            'data-bs-toggle': 'modal',
+            'data-bs-target': '#AddClientesConfirmados'
+      }
+    });
+  }
+
   var dt_user_table = $('.datatables-users'),
   userView = baseUrl + 'app/user/view/account',
   offCanvasForm = $('#offcanvasValidarSolicitud');
@@ -56,9 +71,9 @@ $(function () {
             var $row_output = "";
             array.forEach(function (numero1) {
             var numero = numero1.split(",");
-              $row_output += 
+              $row_output +=
                 '<div class="d-flex flex-column">' +
-                '<a data-pdf="' + numero[1] + '" id="pdf" data-bs-target="#mostrarPdf" href="javascript:;" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="' + numero[0] + '" data-registro="' + numero[0] + '" class="text-truncate text-heading"><span class="fw-medium">' +
+                '<a data-pdf="' + numero[1] + '" id="pdf" data-bs-target="#mostrarPdf" href="javascript:;" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="' + numero[0] + '" data-registro="' + numero[0] + '" class="text-truncate text-primary"><span class="fw-medium">' +
                 numero[0] +
                 '</span></a>' +
                 '</div>';
@@ -142,19 +157,32 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-
-              `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editCliente"   onclick="abrirModal(${full['id_empresa']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-edit-fill"></i>Editar</a>` +
-              `<a data-id="${full['id_empresa']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar Cliente</a>` +
+          let acciones = '';
+            if (window.puedeEditarUsuario) {
+              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editCliente"   onclick="abrirModal(${full['id_empresa']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-edit-fill"></i>Editar Cliente</a>`;
+            }
+            if (window.puedeEliminarUsuario) {
+              acciones += `<a data-id="${full['id_empresa']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar Cliente</a>`;
+            }
+            // Si no hay acciones, no retornar el dropdown
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+            // Si hay acciones, construir el dropdown
+            const dropdown = `<div class="d-flex align-items-center gap-50">
+              <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>
+              <div class="dropdown-menu dropdown-menu-end m-0">
+                  ${acciones}
+                </div>
+              </div>
+            `;
+            return dropdown;
               /* `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-search-eye-line"></i>Otra opción</a>` + */
 
-              '</div>' +
-              '</div>'
-            );
           }
         }
       ],
@@ -182,161 +210,7 @@ $(function () {
         }
       },
       // Buttons with Dropdown
-      buttons: [
-        {
-          extend: 'collection',
-          className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-          text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-          buttons: [
-            {
-              extend: 'print',
-              title: 'Users',
-              text: '<i class="ri-printer-line me-1" ></i>Print',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be print
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              },
-              customize: function (win) {
-                //customize print view for dark
-                $(win.document.body)
-                  .css('color', config.colors.headingColor)
-                  .css('border-color', config.colors.borderColor)
-                  .css('background-color', config.colors.body);
-                $(win.document.body)
-                  .find('table')
-                  .addClass('compact')
-                  .css('color', 'inherit')
-                  .css('border-color', 'inherit')
-                  .css('background-color', 'inherit');
-              }
-            },
-            {
-              extend: 'csv',
-              title: 'Clientes confirmados',
-              text: '<i class="ri-file-text-line me-1" ></i>Csv',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be print
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'excel',
-              title: 'Clientes confirmados',
-              text: '<i class="ri-file-excel-line me-1"></i>Excel',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'pdf',
-              title: 'Clientes confirmados',
-              text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            },
-            {
-              extend: 'copy',
-              title: 'Clientes confirmados',
-              text: '<i class="ri-file-copy-line me-1"></i>Copy',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be copy
-                format: {
-                  body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('user-name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo Confirmado</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'modal',
-            'data-bs-target': '#AddClientesConfirmados'
-          }
-        }
-      ],
+      buttons: buttons,
       // For responsive popup
       responsive: {
         details: {
@@ -450,7 +324,7 @@ $(function () {
           }
 
         });//fin AJAX
-        
+
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: 'Cancelado',
@@ -1018,7 +892,7 @@ $(document).ready(function() {
 
                   let normas = dato.empresa_num_clientes.map(cliente => cliente.id_norma);
                   let actividad = dato.catalogo_actividades.map(cliente => cliente.id_actividad);
-                  
+
                   $('#id_empresa').val(dato.id_empresa);
                   $('#razon_social_edit').val(dato.razon_social);
                   $('#regimen_edit').val(dato.regimen).trigger('change');
@@ -1027,7 +901,7 @@ $(document).ready(function() {
                     $('#num_cliente'+dato.empresa_num_clientes[index].id_norma).val(dato.empresa_num_clientes[index].numero_cliente);
                   }
                   $('#actividad_edit').val(actividad).trigger('change');
-                  
+
                   $('#estado_edit').val(dato.estado).trigger('change');
                   $('#cp_edit').val(dato.cp);
                   $('#representante_edit').val(dato.representante);
@@ -1047,10 +921,10 @@ $(document).ready(function() {
                     const firstOptionValue = $('#id_maquiladora option:first').val();
                     $('#id_maquiladora').val(firstOptionValue).trigger('change');
                   }
-                  
+
                   $('#estatus').val(dato.estatus).trigger('change');
-                 
-                 
+
+
 
                   $('#EditClientesConfirmados').modal('show');
               } else {

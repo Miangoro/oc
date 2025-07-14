@@ -42,6 +42,15 @@
 @endsection
 
 @section('page-script')
+<script>
+  window.puedeRegistrarCertificadoGranel = @json(auth()->user()->can('Registrar certificado de granel'));
+  window.puedeEditarCertificadoGranel = @json(auth()->user()->can('Editar certificado de granel'));
+  window.puedeEliminarCertificadoGranel = @json(auth()->user()->can('Eliminar certificado de granel'));
+  window.puedeReexpedirCertificadoGranel = @json(auth()->user()->can('Reexpedir certificado de granel'));
+  window.puedeSubirCertificadoGranel = @json(auth()->user()->can('Subir certificado de granel'));
+  window.puedeVerTrazabilidadCertificadoGranel = @json(auth()->user()->can('Trazabilidad certificado de granel'));
+  window.puedeAsignarRevisorCertificadoGranel = @json(auth()->user()->can('Asignar revisor certificado de granel'));
+</script>
     @vite(['resources/js/certificados_granel.js'])
 @endsection
 

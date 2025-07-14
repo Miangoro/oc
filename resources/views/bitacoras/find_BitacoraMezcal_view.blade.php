@@ -11,7 +11,7 @@
             white-space: nowrap !important;
             min-width: 280px;
             max-width: 290px !important;
-            font-size: 13px !important;
+            font-size: 14px !important;
         }
     </style>
     @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss', 'resources/assets/vendor/libs/select2/select2.scss', 'resources/assets/vendor/libs/@form-validation/form-validation.scss', 'resources/assets/vendor/libs/animate-css/animate.scss', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss', 'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss', 'resources/assets/vendor/libs/spinkit/spinkit.scss'])
@@ -23,6 +23,11 @@
 
 @section('page-script')
     <script>
+      window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar bitácoras'));
+      window.puedeEditarElUsuario = @json(auth()->user()->can('Editar bitácoras'));
+      window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar bitácoras'));
+      window.puedeFirmarElUsuario = @json(auth()->user()->can('Firmar bitácoras'));
+      window.tipoUsuario = {{ auth()->user()->tipo }};
         const opcionesEmpresas = `{!! collect($empresas)->map(function ($e) {
                 $num = $e->empresaNumClientes[0]->numero_cliente ?? ($e->empresaNumClientes[1]->numero_cliente ?? '');
                 return "<option value='{$e->id_empresa}'>{$num} | {$e->razon_social}</option>";
@@ -39,7 +44,7 @@
 
 
         <div class="card-header pb-0 mb-1">
-            <h3 class="card-title mb-0">Mezcal a Granel</h3>
+            <h3 class="card-title mb-0">Mezcal a Granel (Productor)</h3>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-users table">
@@ -47,11 +52,12 @@
                     <tr>
                         <th>#</th>
                         <th>ID</th>
+                        <th>Cliente</th>
                         <th>Datos Iniciales</th>
                         <th>Entradas</th>
                         <th>Salidas</th>
                         <th>Inventario Final</th>
-                        {{--                     <th>Bitácora</th> --}}
+                        <th>Estatus</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -67,6 +73,7 @@
     @include('_partials/_modals/modal-pdfs-frames')
     @include('_partials/_modals/modal-add-bitacoraMezcal')
     @include('_partials._modals.modal-edit-bitacoraMezcal')
+    @include('_partials._modals.modal-add-firma-bitacoraMezcal')
     <!-- /Modal -->
 
 @endsection

@@ -14,7 +14,7 @@
                     <input type="hidden" id="instalacion_ingreso">
                     <input type="hidden" id="lote_ingreso">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="edit_id_empresa_barricada"
                                     onchange="editobtenerInstalacionesBarricada(); editobtenerGranelesBarricada(this.value);"
@@ -29,7 +29,16 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                          <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" autocomplete="off" id="fecha_sol_ingreso_barrica"
+                                    value="@php
+echo date('Y-m-d H:m'); @endphp">
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     id="edit_fecha_visita" name="fecha_visita" />
@@ -44,6 +53,7 @@
                                     name="id_instalacion" aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
+                                <label >Domicilio de inspección</label>
                             </div>
                         </div>
                     </div>

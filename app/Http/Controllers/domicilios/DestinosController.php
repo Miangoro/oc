@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\empresa;
 use App\Models\Destinos;
+use App\Models\etiquetas_destino;
 use App\Notifications\GeneralNotification;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+
 
 class DestinosController extends Controller
 {
@@ -207,6 +210,9 @@ class DestinosController extends Controller
                     'nombre_recibe' => 'nullable|string',
                     'correo_recibe' => 'nullable|email',
                     'celular_recibe' => 'nullable|string',
+
+                    'id_etiqueta' => 'nullable|array',
+                    'id_etiqueta.*' => 'exists:etiquetas,id_etiqueta',
                 ]);
 
                 // Crear una nueva instancia del modelo Predios
@@ -225,6 +231,20 @@ class DestinosController extends Controller
 
                 // Guardar el nuevo predio en la base de datos
                 $destino->save();
+                /* dd($destino); */
+                //guardado de las etiquetas
+            if ($request->filled('id_etiqueta')) {
+                foreach ($request->id_etiqueta as $id_etiqueta) {
+                    $relacion = new etiquetas_destino();
+                    $relacion->id_etiqueta = $id_etiqueta;
+                    $relacion->id_direccion = $destino->id_direccion;
+                    $relacion->save();
+                }
+            }
+
+
+
+
                 // Obtener los usuarios por ID
                 $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
 
@@ -238,7 +258,7 @@ class DestinosController extends Controller
                 // Obtener el tipo de dirección basado en el valor de tipo_direccion
                 $tipoDireccion = isset($tipoDireccionMap[$destino->tipo_direccion]) ? $tipoDireccionMap[$destino->tipo_direccion] : 'Tipo desconocido';
 
-              
+
 
                 // Retornar una respuesta
                 return response()->json([
@@ -253,7 +273,12 @@ class DestinosController extends Controller
 
         try {
             $destino = Destinos::findOrFail($id_direccion);
-            return response()->json($destino);
+            $etiquetas = etiquetas_destino::where('id_direccion', $id_direccion)->pluck('id_etiqueta');
+
+            return response()->json([
+            'destino' => $destino,
+            'etiquetas' => $etiquetas,
+        ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener el domicilio de destino'], 500);
         }
@@ -273,6 +298,9 @@ class DestinosController extends Controller
                 'nombre_recibe' => 'nullable|string',
                 'correo_recibe' => 'nullable|email',
                 'celular_recibe' => 'nullable|string',
+
+                'id_etiqueta' => 'nullable|array',
+                'id_etiqueta.*' => 'exists:etiquetas,id_etiqueta',
             ]);
 
             $destino = Destinos::findOrFail($id_direccion);
@@ -290,6 +318,20 @@ class DestinosController extends Controller
                 'celular_recibe' => $validated['celular_recibe'],
             ]);
 
+          // Guardado de las etiquetas SOLO si vienen en la petición
+          if ($request->filled('id_etiqueta')) {
+              // Eliminar relaciones anteriores
+              etiquetas_destino::where('id_direccion', $destino->id_direccion)->delete();
+
+              // Insertar nuevas relaciones
+              foreach ($request->id_etiqueta as $id_etiqueta) {
+                  etiquetas_destino::create([
+                      'id_etiqueta' => $id_etiqueta,
+                      'id_direccion' => $destino->id_direccion,
+                  ]);
+              }
+          }
+
             // Devolver una respuesta de éxito
             return response()->json([
                 'success' => true,
@@ -299,7 +341,7 @@ class DestinosController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar el domicilio de destino: ' . $e->getMessage(),
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

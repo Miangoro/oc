@@ -25,7 +25,16 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" id="fecha_sol_geo" value="@php
+                                      echo date('Y-m-d H:i');
+                                    @endphp">
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     name="fecha_visita" id="fecha_visita_geo" />
@@ -39,7 +48,8 @@
                                 name="id_predio" aria-label="id_predio" id="id_predio_georefe">
                                 <option value="" disabled selected>Lista de predios</option>
                             </select>
-                            <label for="id_predio">Domicilio del predio a inspeccionar</label>
+                            {{-- <label for="id_predio">Domicilio del predio a inspeccionar</label> --}}
+                            <label >Domicilio de inspección</label>
                         </div>
                     </div>
                     <div class="row">
@@ -59,7 +69,8 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button disabled class="btn btn-primary me-1 d-none" type="button" id="btnSpinnerGeoreferenciacion">
+                        <button disabled class="btn btn-primary me-1 d-none" type="button"
+                            id="btnSpinnerGeoreferenciacion">
                             <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
                             Registrando...
                         </button>

@@ -46,6 +46,21 @@ $('#edit_fecha_emision').on('change', function() {
 
 
  $(function () {
+    let buttons = [];
+
+  // Si tiene permiso, agregas el botón
+  if (puedeRegistrarCertificado) {
+    buttons.push({
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo certificado</span>',
+          className: 'add-new btn btn-primary waves-effect waves-light',
+          attr: {
+            'data-bs-toggle': 'modal',
+            'data-bs-dismiss': 'modal',
+            'data-bs-target': '#ModalAgregar'
+          }
+    });
+  }
+
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
   select2 = $('.select2'),
@@ -317,42 +332,88 @@ initializeSelect2(select2Elements);
            title: 'Acciones',
            searchable: false,
            orderable: false,
-           render: function (data, type, full, meta) {
-            /*return (
-              '<div class="d-flex align-items-center gap-50">' +
-                `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info') + `" data-bs-toggle="dropdown">` +
-                (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') +
-                '</button>' +
-                '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar" data-bs-toggle="modal" data-bs-target="#ModalEditar">` + '<i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>' +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
-                  `<a data-id="${full['id_certificado']}"  data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-dark" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">` + '<i class="text-warning ri-user-search-fill"></i> Asignar revisor</a>' +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir" data-bs-toggle="modal" data-bs-target="#ModalReexpedir">` + '<i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>' +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar">` + '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>' +
-                '</div>' +
-              '</div>'
-            );*/
-            return (
-                '<div class="d-flex align-items-center gap-50">' +
-                `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger' : 'btn-info') + `" data-bs-toggle="dropdown">` +
-                (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') +
-                '</button>' +
+            render: function (data, type, full, meta) {
+              if (full['estatus'] == 1) {
+                if (window.puedeVerTrazabilidadCertificado) {
+                  return `
+                    <div class="d-flex align-items-center gap-50">
+                      <button class="btn btn-sm btn-danger disabled">
+                        Cancelado
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end m-0">
+                        <a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
+                          data-bs-toggle="modal" data-bs-target="#ModalTracking"
+                          class="dropdown-item waves-effect text-black trazabilidad">
+                          <i class="ri-history-line text-secondary"></i> Trazabilidad
+                        </a>
+                      </div>
+                    </div>
+                  `;
+                } else {
+                  return `
+                    <button class="btn btn-sm btn-danger disabled">Cancelado</button>
+                  `;
+                }
+              }
 
-                '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                ( full['estatus'] == 1 ?  //Mostrar solo trazabilidad si está cancelado
-                  `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>`
-                :// Mostrar todas las opciones
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar" data-bs-toggle="modal" data-bs-target="#ModalEditar">` + '<i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>' +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
-                  `<a data-id="${full['id_certificado']}"  data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-dark" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">` + '<i class="text-warning ri-user-search-fill"></i> Asignar revisor</a>' +
-                  `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>` +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir" data-bs-toggle="modal" data-bs-target="#ModalReexpedir">` + '<i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>' +
-                  `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar">` + '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>'
-                ) +
-                '</div>' +
-                '</div>'
-            );  
-           }
+              let acciones = '';
+
+              if (window.puedeEditarCertificado) {
+                acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar" data-bs-toggle="modal" data-bs-target="#ModalEditar">
+                              <i class="ri-edit-box-line ri-20px text-info"></i> Editar
+                            </a>`;
+              }
+
+              if (window.puedeSubirCertificado) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
+                              <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF
+                            </a>`;
+              }
+
+              if (window.puedeAsignarRevisorCertificado) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-dark" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">
+                              <i class="text-warning ri-user-search-fill"></i> Asignar revisor
+                            </a>`;
+              }
+
+              if (window.puedeVerTrazabilidadCertificado) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad">
+                              <i class="ri-history-line text-secondary"></i> Trazabilidad
+                            </a>`;
+              }
+
+              if (window.puedeReexpedirCertificado) {
+                acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir" data-bs-toggle="modal" data-bs-target="#ModalReexpedir">
+                              <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar
+                            </a>`;
+              }
+
+              if (window.puedeEliminarCertificado) {
+                acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar">
+                              <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
+                            </a>`;
+              }
+
+              if (!acciones.trim()) {
+                return `
+                  <button class="btn btn-sm btn-secondary" disabled>
+                    <i class="ri-lock-line ri-20px me-1"></i> Opciones
+                  </button>
+                `;
+              }
+
+              return `
+                <div class="d-flex align-items-center gap-50">
+                  <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                    <i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end m-0">
+                    ${acciones}
+                  </div>
+                </div>
+              `;
+            }
+
          }
        ],
        order: [[1, 'desc']],
@@ -378,158 +439,8 @@ initializeSelect2(select2Elements);
                  "sPrevious": "Anterior"
                }
        },
-
        // Opciones Exportar Documentos
-       buttons: [
-         {
-           extend: 'collection',
-           className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-           text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-           buttons: [
-             {
-               extend: 'print',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-printer-line me-1" ></i>Print',
-               className: 'dropdown-item',
-               exportOptions: {
-                 columns: [1, 2, 3, 4, 5, 6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               },
-               customize: function (win) {
-                 $(win.document.body)
-                   .css('color', config.colors.headingColor)
-                   .css('border-color', config.colors.borderColor)
-                   .css('background-color', config.colors.body);
-                 $(win.document.body)
-                   .find('table')
-                   .addClass('compact')
-                   .css('color', 'inherit')
-                   .css('border-color', 'inherit')
-                   .css('background-color', 'inherit');
-               }
-             },
-             {
-               extend: 'csv',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-file-text-line me-1" ></i>Csv',
-               className: 'dropdown-item',
-               exportOptions: {
-                 columns: [1, 2, 3, 4, 5 ,6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             },
-             {
-               extend: 'excel',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-file-excel-line me-1"></i>Excel',
-               className: 'dropdown-item',
-               exportOptions: {
-                columns: [1, 2, 3, 4, 5 ,6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             },
-             {
-               extend: 'pdf',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
-               className: 'dropdown-item',
-               exportOptions: {
-                columns: [1, 2, 3, 4, 5 ,6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             },
-             {
-               extend: 'copy',
-               title: 'Certificados Instalaciones',
-               text: '<i class="ri-file-copy-line me-1"></i>Copy',
-               className: 'dropdown-item',
-               exportOptions: {
-                columns: [1, 2, 3, 4, 5 ,6, 7],
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             }
-           ]
-         },
-         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo certificado</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'modal',
-            'data-bs-dismiss': 'modal',
-            'data-bs-target': '#ModalAgregar'
-          }
-        }
-       ],
+       buttons: buttons,
         responsive: {
          details: {
            display: $.fn.dataTable.Responsive.display.modal({
@@ -1070,6 +981,19 @@ $(document).ready(function () {
               return;
           }
 
+//obtener el dictamen ya asignado
+const $select = $('#rex_id_dictamen');
+// Eliminar opciones anteriores agregadas dinámicamente, pero dejar los disponibles
+$select.find('option[data-dinamico="true"]').remove();
+
+// Si el dictamen guardado no está en los disponibles, agregarlo temporalmente
+if (!$select.find(`option[value="${datos.id_dictamen}"]`).length) {
+    const texto = `${datos.num_dictamen} | ${datos.folio ?? 'Sin folio'}`;
+    $select.append(`<option value="${datos.id_dictamen}" selected data-dinamico="true">${texto}</option>`);
+} else {
+    $select.val(datos.id_dictamen).trigger('change');
+}
+
           $('#rex_id_dictamen').val(datos.id_dictamen).trigger('change');
           $('#rex_numero_certificado').val(datos.num_certificado);
           $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
@@ -1165,8 +1089,8 @@ $(document).ready(function () {
                     message: 'El número de certificado es obligatorio.'
                 },
                 stringLength: {
-                  min: 8,
-                  message: 'Debe tener al menos 8 caracteres.'
+                  min: 19,
+                  message: 'Debe tener al menos 19 caracteres.'
                 }
             }
         },
@@ -1273,165 +1197,160 @@ $(document).ready(function () {
 
 
 
+
+
 ///OBTENER REVISORES
-$(document).ready(function() {
-  $('#tipoRevisor').on('change', function() {
-      var tipoRevisor = $(this).val();
+function cargarRevisores() {
+  $.get('/ruta-para-obtener-revisores', { tipo: 1 }, function (data) {
+    $('#personalOC').empty().append('<option value="">Seleccione personal OC</option>');
+    data.forEach(function (rev) {
+      $('#personalOC').append(`<option value="${rev.id}">${rev.name}</option>`);
+    });
+  });
 
-      $('#nombreRevisor').empty().append('<option value="">Seleccione un nombre</option>');
+  $.get('/ruta-para-obtener-revisores', { tipo: 4 }, function (data) {
+    $('#miembroConsejo').empty().append('<option value="">Seleccione miembro del consejo</option>');
+    data.forEach(function (rev) {
+      $('#miembroConsejo').append(`<option value="${rev.id}">${rev.name}</option>`);
+    });
+  });
+}
 
-      if (tipoRevisor) {
-          var tipo = (tipoRevisor === '1') ? 1 : 4;
+$(document).ready(function () {
+  cargarRevisores();
+});
 
-          $.ajax({
-              url: '/ruta-para-obtener-revisores',
-              type: 'GET',
-              data: { tipo: tipo },
-              success: function(response) {
+/// Cargar datos de revisión automáticamente al abrir el modal
+$('#asignarRevisorModal').on('show.bs.modal', function (event) {
+  const button = $(event.relatedTarget);
+  const idCertificado = button.data('id');
 
-                  if (Array.isArray(response) && response.length > 0) {
-                      response.forEach(function(revisor) {
-                          $('#nombreRevisor').append('<option value="' + revisor.id + '">' + revisor.name + '</option>');
-                      });
-                  } else {
-                      $('#nombreRevisor').append('<option value="">No hay revisores disponibles</option>');
-                  }
-              },
-              error: function(xhr) {
-                  console.log('Error:', xhr.responseText);
-                  alert('Error al cargar los revisores. Inténtelo de nuevo.');
-              }
-          });
+  $('#id_certificado').val(idCertificado);
+  $('#folio_certificado').html(`<span class="badge bg-info">${button.data('folio')}</span>`);
+  $('#asignarRevisorForm')[0].reset();
+  $('.select2').val(null).trigger('change');
+  $('#documentoRevision').empty();
+
+  // Cargar observaciones y documento (tipo_revision = 1)
+  $.get(`/obtener-revision-insta/${idCertificado}`, function (data) {
+    if (data.exists) {
+      $('#observaciones').val(data.observaciones || '');
+      $('#esCorreccion').prop('checked', data.es_correccion === 'si');
+
+      if (data.documento) {
+        $('#documentoRevision').html(`
+          <p>Documento actual:
+            <a href="${data.documento.url}" target="_blank">${data.documento.nombre}</a>
+          </p>
+          <button type="button" class="btn btn-outline-danger btn-sm" id="EliminarDocRevisor">
+            <i class="ri-delete-bin-line"></i> Eliminar
+          </button>
+        `);
+      } else {
+        $('#documentoRevision').html('<p>No hay documento cargado.</p>');
       }
+    } else {
+      $('#observaciones').val('');
+      $('#esCorreccion').prop('checked', false);
+      $('#documentoRevision').html('<p>No hay documento cargado.</p>');
+    }
   });
 });
 
-// Agregar Revisor
-$.ajaxSetup({
-  headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  }
+///ELIMINAR DOCUMENTO REVISION
+$(document).on('click', '#EliminarDocRevisor', function () {
+  const idCertificado = $('#id_certificado').val();
+
+  Swal.fire({
+    title: '¿Está seguro?',
+    text: 'No podrá revertir este evento',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+    cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+    customClass: {
+      confirmButton: 'btn btn-primary me-2',
+      cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: `/eliminar-documento-revision-insta/${idCertificado}`,
+        method: 'DELETE',
+        success: function (res) {
+          $('#documentoRevision').html('<p>Documento eliminado.</p>');
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: res.message,
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+          });
+        },
+        error: function (xhr) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: xhr.responseJSON?.message || 'No se pudo eliminar el documento.'
+          });
+        }
+      });
+    }
+  });
 });
-///ASIGNAR REVISOR
-$('#asignarRevisorForm').hide();
-const form = document.getElementById('asignarRevisorForm');
-const fv = FormValidation.formValidation(form, {
-  fields: {
-      'tipoRevisor': {
-          validators: {
-              notEmpty: {
-                  message: 'Debe seleccionar una opción para la revisión.'
-              }
-          }
-      },
-      'nombreRevisor': {
-          validators: {
-              notEmpty: {
-                  message: 'Debe seleccionar un nombre para el revisor.'
-              }
-          }
-      },
-      'numeroRevision': {
-          validators: {
-              notEmpty: {
-                  message: 'Debe seleccionar un número de revisión.'
-              }
-          }
-      }
-  },
-  plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          eleInvalidClass: 'is-invalid',
-          rowSelector: '.mb-3'
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-  }
-}).on('core.form.valid', function (e) {
-  var formData = new FormData(form);
-  var id_certificado = $('#id_certificado').val();
-  var tipoRevisor = $('#tipoRevisor').val();
-  var revisorValue = $('#nombreRevisor').val();
 
-  console.log('ID Certificado:', id_certificado);
-  console.log('Tipo de Revisor:', tipoRevisor);
-  console.log('Valor del Revisor:', revisorValue);
+///ASIGNAR REVISION
+$('#asignarRevisorForm').on('submit', function (e) {
+  e.preventDefault();
 
-  if (tipoRevisor == '1') {
-      formData.append('id_revisor', revisorValue);
-      formData.append('id_revisor2', null);
-  } else if (tipoRevisor == '2') {
-      formData.append('id_revisor2', revisorValue);
-      formData.append('id_revisor', null);
+  const formData = new FormData(this);
+  const idCertificado = $('#id_certificado').val();
+  formData.append('id_certificado', idCertificado);
+
+  const archivo = $('#archivo_documento').val();
+  const nombreDoc = $('#nombre_documento').val();
+  if (archivo && !nombreDoc) {
+    Swal.fire({ icon: 'warning', title: 'Falta el nombre del documento' });
+    return;
   }
 
-  // Añadir otros datos
-  formData.append('id_certificado', id_certificado);
-  var esCorreccion = $('#esCorreccion').is(':checked') ? 'si' : 'no';
+  const esCorreccion = $('#esCorreccion').is(':checked') ? 'si' : 'no';
   formData.append('esCorreccion', esCorreccion);
-
-  console.log('FormData:', Array.from(formData.entries()));
+  formData.append('numeroRevision', $('#numeroRevision').val());
+  formData.append('id_documento', 133);//fijo
 
   $.ajax({
-      url: '/asignar-revisor',
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-          $('#asignarRevisorModal').modal('hide');
-          Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.message,
-              customClass: {
-                  confirmButton: 'btn btn-success'
-              }
-          }).then(function () {
-              form.reset();
-              $('#nombreRevisor').val(null).trigger('change');
-              $('#esCorreccion').prop('checked', false);
-              fv.resetForm();
-              $('.datatables-users').DataTable().ajax.reload();
-          });
-      },
-      error: function (xhr) {
-          $('#asignarRevisorModal').modal('hide');
-          Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: 'Revisor asignado exitosamente',
-              customClass: {
-                  confirmButton: 'btn btn-success'
-              }
-          }).then(function () {
-              form.reset();
-              $('#nombreRevisor').val(null).trigger('change');
-              $('#esCorreccion').prop('checked', false);
-              fv.resetForm();
-              $('.datatables-users').DataTable().ajax.reload();
-          });
-      }
+    url: '/asignar-revisor',
+    method: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (res) {
+      $('#asignarRevisorModal').modal('hide');
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: res.message,
+        customClass: { confirmButton: 'btn btn-primary' }
+      });
+      $('#asignarRevisorForm')[0].reset();
+      $('.datatables-users').DataTable().ajax.reload();
+    },
+    error: function (xhr) {
+      $('#asignarRevisorModal').modal('hide');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: xhr.responseJSON?.message || 'Error inesperado.'
+      });
+    }
   });
 });
 
-$('#nombreRevisor').on('change', function () {
-  fv.revalidateField($(this).attr('name'));
-});
 
-$('#asignarRevisorModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget);
-    var id_certificado = button.data('id');
-    var num_certificado = button.data('folio');
-    $('#id_certificado').val(id_certificado);
-    $('#folio_certificado').html('<span class="badge bg-info">'+num_certificado+'</span>');
-    fv.resetForm();
-    form.reset();
 
-    $('#asignarRevisorForm').show();
-});
 
 
 
@@ -1624,14 +1543,14 @@ $(document).on('click', '.pdf', function () {
       var url_pdf = '../pdf_bitacora_revision_certificado_granel/' + id_revisor;
     }
     //if (tipoRevision === 'Exportación') {
-    if (tipoRevision === 2) {  
+    if (tipoRevision === 2) {
       var url_pdf = '../pdf_bitacora_revision_personal/' + id_revisor;
     }
-    if (tipoRevision === 1) {  
+    if (tipoRevision === 1) {
       var url_pdf = '../pdf_bitacora_revision_personal/' + id_revisor;
     }
 
-    
+
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
     $('#cargando').show();
     $('#pdfViewer').hide();
@@ -1650,7 +1569,7 @@ $(document).on('click', '.pdf', function () {
       $('#pdfViewer').show();
     });
 });
-  
+
 ///VER TRAZABILIDAD
 $(document).on('click', '.trazabilidad', function () {
   var id_certificado = $(this).data('id');
@@ -1673,7 +1592,7 @@ $(document).on('click', '.trazabilidad', function () {
         .border-danger { border: 2px solid #ff0000 !important; }
       `)
       .appendTo('head');
-      
+
 
       // Extraemos y guardamos los Vo.Bo. (solo uno de cada)
       logs.forEach(function (log) {
@@ -1824,9 +1743,11 @@ $('#FormCertificadoFirmado').on('submit', function (e) {
 ///OBTENER CERTIFICADO FIRMADO
 $(document).on('click', '.subirPDF', function () {
   var id = $(this).data('id');
+  var num_certificado = $(this).data('folio');
   $('#doc_id_certificado').val(id);
   $('#documentoActual').html('Cargando documento...');
-  $('#modalTitulo').text('Certificado de instalaciones firmado');//Titulo
+  $('#botonEliminarDocumento').empty(); // <-- Limpia el botón eliminar al cambiar
+  $('#modalTitulo').html('Certificado de instalaciones firmado <span class="badge bg-info">' +num_certificado+ '</span>');//Titulo
 
   $.ajax({
     url: `/certificados/instalacion/documento/${id}`,
@@ -1837,6 +1758,9 @@ $(document).on('click', '.subirPDF', function () {
           `<p>Documento actual:
             <a href="${response.documento_url}" target="_blank">${response.nombre_archivo}</a>
           </p>`);
+          $('#botonEliminarDocumento').html(
+            `<button type="button" class="btn btn-outline-danger btn-sm" id="btnEliminarDocumento"><i class="ri-delete-bin-line"></i> Eliminar</button>`
+          );
       } else {
         $('#documentoActual').html('<p>No hay documento cargado.</p>');
       }
@@ -1846,6 +1770,73 @@ $(document).on('click', '.subirPDF', function () {
     }
   });
 });
+
+///BORRAR CERTIFICADO FIRMADO
+$(document).on('click', '#btnEliminarDocumento', function () {
+  const id_certificado = $('#doc_id_certificado').val();
+
+  // SweetAlert para confirmar la eliminación
+  Swal.fire({
+    title: '¿Está seguro?',
+    text: 'No podrá revertir este evento',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+    cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+    customClass: {
+      confirmButton: 'btn btn-primary me-2',
+      cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+  }).then(function (result) {
+    if (result.isConfirmed) {
+      // Enviar solicitud DELETE al servidor
+      $.ajax({
+        type: 'DELETE',
+        url: `/certificados/instalacion/documento/${id_certificado}`, // ← Ruta ajustada
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+          dataTable.draw(false); //Actualizar la tabla sin reiniciar
+          $('#documentoActual').html('<p>No hay documento cargado.</p>');
+          $('#botonEliminarDocumento').empty();
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Exito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+          });
+        },
+        error: function (error) {
+          console.log('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al eliminar.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      Swal.fire({
+        title: '¡Cancelado!',
+        text: 'La eliminación ha sido cancelada.',
+        icon: 'info',
+        customClass: {
+          confirmButton: 'btn btn-primary'
+        }
+      });
+    }
+  });
+});
+
 
 
 

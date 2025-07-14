@@ -252,7 +252,7 @@
             <td style="text-align: left;  width: 20%;" colspan="3">
                 &nbsp;&nbsp;10) Contenido Alcohólico:</td>
             <td style="font-weight: bold; width: 30%;" colspan="3"> 
-                {{ $lote->lotesGranel->first()->cont_alc ?? "No encontrado" }}% 
+                {{ $lote->cont_alc_envasado ?? "No encontrado" }}% 
             </td>
         </tr>
         <tr>
@@ -372,7 +372,7 @@
             <td style="text-align: left;  width: 20%;" colspan="3">
                 &nbsp;&nbsp;9) Contenido Alcohólico:</td>
             <td style="font-weight: bold; width: 30%;" colspan="3"> 
-                {{ $lote->lotesGranel->first()->cont_alc ?? "No encontrado" }}% 
+                {{ $lote->cont_alc_envasado ?? "No encontrado" }}% 
             </td>
         </tr>
         <tr>

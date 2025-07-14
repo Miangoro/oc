@@ -484,7 +484,8 @@ public function dictamen_productor($id_dictamen)
         //Busca el registro del certificado que tiene el id igual a $id_sustituye
         Dictamen_instalaciones::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
 
-    $pdf = Pdf::loadView('pdfs.dictamen_productor_ed10', [
+    //$pdf = Pdf::loadView('pdfs.dictamen_productor_ed10', [
+    $pdf = [
         'datos' => $datos,
         'fecha_inspeccion' => $fecha_inspeccion,
         'fecha_emision' => $fecha_emision,
@@ -494,9 +495,16 @@ public function dictamen_productor($id_dictamen)
 
         'firmaDigital' => $firmaDigital,
         'qrCodeBase64' => $qrCodeBase64
-    ])->setPaper('letter', 'portrait');
+    ];//->setPaper('letter', 'portrait');
 
-    return $pdf->stream($datos->num_dictamen .' Dictamen de cumplimiento de Instalaciones como productor.pdf');
+    if ($datos->fecha_emision < "2020-01-01") {
+        $edicion = 'pdfs.dictamen_productor_ed9';
+    } else {
+        $edicion = 'pdfs.dictamen_productor_ed10';//actual
+    }
+
+    //return $pdf->stream($datos->num_dictamen .' Dictamen de cumplimiento de Instalaciones como productor.pdf');
+    return Pdf::loadView($edicion, $pdf)->stream($datos->num_dictamen .' Dictamen de cumplimiento de Instalaciones como productor.pdf');
 }
 
 public function dictamen_envasador($id_dictamen)
@@ -531,7 +539,8 @@ public function dictamen_envasador($id_dictamen)
     $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ? Dictamen_instalaciones::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
 
-    $pdf = Pdf::loadView('pdfs.dictamen_envasador_ed10', [
+    //$pdf = Pdf::loadView('pdfs.dictamen_envasador_ed10', [
+    $pdf = [
         'datos' => $datos,
         'fecha_inspeccion' => $fecha_inspeccion,
         'fecha_emision' => $fecha_emision,
@@ -541,9 +550,17 @@ public function dictamen_envasador($id_dictamen)
 
         'firmaDigital' => $firmaDigital,
         'qrCodeBase64' => $qrCodeBase64
-    ])->setPaper('letter', 'portrait');
+    ];//)->setPaper('letter', 'portrait');
 
-    return $pdf->stream($datos->num_dictamen.' Dictamen de cumplimiento de Instalaciones como envasador.pdf');
+    if ($datos->fecha_emision < "2020-01-01") {
+        $edicion = 'pdfs.dictamen_envasador_ed9';
+    } else {
+        $edicion = 'pdfs.dictamen_envasador_ed10';//actual
+    }
+
+    //return $pdf->stream($datos->num_dictamen.' Dictamen de cumplimiento de Instalaciones como envasador.pdf');
+    return Pdf::loadView($edicion, $pdf)->stream($datos->num_dictamen.' Dictamen de cumplimiento de Instalaciones como envasador.pdf');
+
 }
 
 public function dictamen_comercializador($id_dictamen)
@@ -578,7 +595,8 @@ public function dictamen_comercializador($id_dictamen)
     $id_sustituye = json_decode($datos->observaciones, true)['id_sustituye'] ?? null;//obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ? Dictamen_instalaciones::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
 
-    $pdf = Pdf::loadView('pdfs.dictamen_comercializador_ed10', [
+    //$pdf = Pdf::loadView('pdfs.dictamen_comercializador_ed10', [
+    $pdf = [
         'datos' => $datos,
         'fecha_inspeccion' => $fecha_inspeccion,
         'fecha_emision' => $fecha_emision,
@@ -588,9 +606,17 @@ public function dictamen_comercializador($id_dictamen)
 
         'firmaDigital' => $firmaDigital,
         'qrCodeBase64' => $qrCodeBase64
-    ])->setPaper('letter', 'portrait');
+    ];//)->setPaper('letter', 'portrait');
 
-    return $pdf->stream($datos->num_dictamen . ' Dictamen de cumplimiento de instalaciones como comercializador.pdf');
+    if ($datos->fecha_emision < "2020-01-01") {
+        $edicion = 'pdfs.dictamen_comercializador_ed9';
+    } else {
+        $edicion = 'pdfs.dictamen_comercializador_ed10';//actual
+    }
+    
+    //return $pdf->stream($datos->num_dictamen . ' Dictamen de cumplimiento de instalaciones como comercializador.pdf');
+    return Pdf::loadView($edicion, $pdf)->stream($datos->num_dictamen . ' Dictamen de cumplimiento de instalaciones como comercializador.pdf');
+
 }
 
 public function dictamen_almacen($id_dictamen)
@@ -628,7 +654,9 @@ public function dictamen_almacen($id_dictamen)
     $categorias = json_decode($datos->categorias, true);
     $clases = json_decode($datos->clases, true);
     $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
-    $pdf = Pdf::loadView('pdfs.dictamen_almacen_ed1', [
+    
+    //$pdf = Pdf::loadView('pdfs.dictamen_almacen_ed1', [
+    $pdf = [
         'datos' => $datos,
         'fecha_inspeccion' => $fecha_inspeccion ?? '',
         'fecha_emision' => $fecha_emision ?? '',
@@ -638,9 +666,17 @@ public function dictamen_almacen($id_dictamen)
 
         'firmaDigital' => $firmaDigital,
         'qrCodeBase64' => $qrCodeBase64
-        ])->setPaper('letter', 'portrait');
+    ];//)->setPaper('letter', 'portrait');
 
-    return $pdf->stream($datos->num_dictamen .' Dictamen de cumplimiento de Instalaciones almacén.pdf');
+    if ($datos->fecha_emision < "2020-01-01") {
+        $edicion = 'pdfs.dictamen_almacen_ed0';
+    } else {
+        $edicion = 'pdfs.dictamen_almacen_ed1';//actual
+    }
+
+    //return $pdf->stream($datos->num_dictamen .' Dictamen de cumplimiento de Instalaciones almacén.pdf');
+    return Pdf::loadView($edicion, $pdf)->stream($datos->num_dictamen .' Dictamen de cumplimiento de Instalaciones almacén.pdf');
+
 }
 
 public function dictamen_maduracion($id_dictamen)

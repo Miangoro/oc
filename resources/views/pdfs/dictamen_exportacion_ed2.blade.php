@@ -225,15 +225,15 @@
     <table>
         <tr>
             <td style="font-size: 15px;padding-bottom: 15px; padding-top: 15px"><b>Fecha de emisión</b></td>
-            <td style="width: 130px">{{ $fecha_emision }}</td>
+            <td style="width: 130px; font-size: 9px">{{ mb_strtoupper ($fecha_emision) }}</td>
             <td style="font-size: 15px; width: 170px"><b>Número de dictamen:</b></td>
             <td style="width: 130px">{{ $no_dictamen }}</td>
         </tr>
         <tr>
             <td style="font-size: 15px;padding-bottom: 25px; padding-top: 25px"><b>Razón social</b></td>
-            <td>{{ $empresa }}</td>
+            <td>{{ mb_strtoupper ($empresa) }}</td>
             <td style="font-size: 15px"><b>Domicilio fiscal</b></td>
-            <td>{{$domicilio}}</td>
+            <td style="font-size: 9px">{{ mb_strtoupper ($domicilio) }} C.P.{{ $cp }}</td>
         </tr>
         <tr>
             <td style="font-size: 15px; padding-bottom: 15px; padding-top: 15px"><b>RFC</b></td>
@@ -298,7 +298,7 @@
             <td style="font-size: 15px;padding-bottom: 0; padding-top: 0;"><b>Clase</b></td>
             <td>{{ $lote->lotesGranel->first()->clase->clase ?? "N"}}</td>
             <td style="font-size: 15px;padding-bottom: 0; padding-top: 0;"><b>% Alc. Vol.<br>(etiqueta)</b></td>
-            <td> {{ $lote->lotesGranel->first()->cont_alc ?? "No encontrada" }}% </td>
+            <td> {{ $lote->cont_alc_envasado ?? "No encontrada" }}% </td>
         </tr>
         <tr>
             <td style="font-size: 15px;"><b>Cont. Net. <br>(mL)</b></td>

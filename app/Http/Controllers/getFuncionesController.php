@@ -278,6 +278,25 @@ public function getDocumentosSolicitud($id_solicitud)
             ? json_decode($solicitud->caracteristicas, true)
             : $solicitud->caracteristicas;
 
+        $id_lote_envasado = is_array($caracteristicas)
+            ? ($caracteristicas['id_lote_envasado'] ?? null)
+            : ($caracteristicas->id_lote_envasado ?? null);
+
+        $id_envasado = null;
+
+        if (is_array($caracteristicas) && !empty($caracteristicas['detalles'])) {
+            $id_envasado = $caracteristicas['detalles'][0]['id_lote_envasado'] ?? null;
+        } elseif (is_object($caracteristicas) && !empty($caracteristicas->detalles)) {
+            $id_envasado = $caracteristicas->detalles[0]->id_lote_envasado ?? null;
+        }
+        $id_dictamen_envasado = null;
+        if ($id_envasado) {
+            $id_dictamen_envasado = Dictamen_Envasado::where('id_lote_envasado', $id_envasado)->value('id_dictamen_envasado');
+        }
+
+
+        $url_etiqueta_envasado = lotes_envasado::with('etiquetas.url_etiqueta')->find($id_lote_envasado);
+
         $idEtiqueta = is_array($caracteristicas)
             ? ($caracteristicas['id_etiqueta'] ?? null)
             : ($caracteristicas->id_etiqueta ?? null);
@@ -300,11 +319,6 @@ public function getDocumentosSolicitud($id_solicitud)
 
         $ids = $solicitud->id_lote_envasado; // array de IDs
 
-                  $numero_cliente_lote = 'N/A';
-        $empresa = empresa::find($solicitud->lote_granel->id_empresa);
-        $cliente = $empresa->empresaNumClientes
-            ->first(fn($item) => !empty($item->numero_cliente));
-        $numero_cliente_lote = $cliente?->numero_cliente ?? 'No encontrado';
 
   $certificados = collect();
 
@@ -348,13 +362,6 @@ foreach ($certificados as $certificado) {
     }
 }
 
-
-
-
-
-
-
-
     return response()->json([
         'success' => true,
         'data' => $documentos,
@@ -368,6 +375,9 @@ foreach ($certificados as $certificado) {
         'url_certificado' => $urls_certificados ?? '',
         'url_fqs' => $url_fqs ?? '',
         'id_lote_envasado' => $certificados ?? '',
+        /* 'id_envasado' => $id_envasado ?? $id_lote_envasado ?? null, */
+        'id_dictamen_envasado' => $id_dictamen_envasado ?? null,
+        'url_etiqueta_envasado' => $url_etiqueta_envasado->etiquetas->url_etiqueta->url ?? '',
 
             ]);
 }

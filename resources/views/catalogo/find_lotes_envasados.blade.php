@@ -13,6 +13,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar lotes envasados'));
+  window.puedeEditarElUsuario = @json(auth()->user()->can('Editar lotes envasados'));
+  window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar lotes envasados'));
+</script>
     @vite(['resources/js/lotes_envasado.js'])
 @endsection
 
@@ -33,6 +38,7 @@
                         <th>Marca</th>
                         <th>Numero de botellas</th>
                         <th>Presentación</th>
+                        <th>%Alc. Vol</th>
                         <th>Volumen</th>
                         <th>Destino lote</th>
                         <th>Lugar de envasado</th>
@@ -46,7 +52,7 @@
     </div>
 
     <!-- Modal -->
-    
+
     @include('_partials/_modals/modal-add-lotesEnvasado')
     @include('_partials/_modals/modal-edit-lotesSKU')
     @include('_partials._modals/modal-edit-lotesEnvasado')

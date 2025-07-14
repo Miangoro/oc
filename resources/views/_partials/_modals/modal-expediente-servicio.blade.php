@@ -5,7 +5,7 @@
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       <div class="modal-body p-0">
         <div class="text-center">
-          <h4 class="mb-2">Expediente de inspección</h4>
+          <h4 class="mb-2">Expediente de solicitud</h4>
           <p class="mb-2 nombre_empresa badge bg-primary"></p>
           <p class="mb-2 inspectorName badge bg-primary"></p>
         </div>
@@ -24,7 +24,8 @@
                 </tr>
               </thead>
               <tbody class="table-border-bottom-0">
-{{--                 <p class="id_soli"></p>
+                <p class="id_soli"></p>
+{{--
                 <p class="numero_tipo"></p>
                 <p class="id_deinspeccion"></p> --}}
                 <tr class="table-success">

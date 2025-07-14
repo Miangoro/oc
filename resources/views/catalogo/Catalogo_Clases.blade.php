@@ -32,6 +32,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar clases de mezcal'));
+  window.puedeEditarElUsuario = @json(auth()->user()->can('Editar clases de mezcal'));
+  window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar clases de mezcal'));
+</script>
 @vite(['resources/js/catalogo_clases.js'])
 @endsection
 

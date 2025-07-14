@@ -10,7 +10,7 @@
                     <p class="mb-2 text-uppercase inspectorName badge bg-primary"></p>
                 </div>
                 <div class="text-center mb-2">
-                   <p class="mb-2 fw-bold text-black num_servicio badge bg-info"></p>
+                    <p class="mb-2 fw-bold text-black num_servicio badge bg-info"></p>
                     <p class="mb-2 folio_solicitud badge bg-info"></p>
                 </div>
 
@@ -24,6 +24,14 @@
                 <form id="addResultadosInspeccion" class="row g-5" onsubmit="return false">
                     <input name="id_solicitud" type="hidden" class="id_solicitud">
 
+                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                        <i class="ri-alert-line me-2 ri-lg"></i>
+                        <div>
+                            <strong>Atención:</strong> La suma total de los archivos que subas no debe exceder los
+                            <strong>40 MB</strong>.
+                            Asegúrate de revisar el tamaño antes de enviarlos.
+                        </div>
+                    </div>
 
 
                     <div id="datosOpcion2">

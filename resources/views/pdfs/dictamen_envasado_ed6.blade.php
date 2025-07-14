@@ -9,8 +9,8 @@
     <style>
         body {
             font-family: 'calibri';
-            margin-left: 20px;
-            margin-right: 20px;
+            margin-left: 10px;
+            margin-right: 10px;
         }
 
         .header {
@@ -306,7 +306,10 @@
                 </tr>
                 <tr>
                     <td class="column">Dirección</td>
-                    <td> {{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado'}}</td>
+                    <td> 
+                          <span style="font-family: fuenteNegrita; font-size: 10px;">Domicilio Fiscal:</span> <span style="font-size: 9px">{{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }}</span>
+                <br><span style="font-family: fuenteNegrita; font-size: 10px;">Domicilio de Instalaciones:</span> <span style="font-size: 9px">{{ $data->inspeccion?->solicitud?->instalacion?->direccion_completa ?? 'No encontrado' }}</span></td>
+                    
                     <td class="column">Fecha de emisión</td>
                     <td> {{ $fecha_emision ?? ''}}</td>
                 </tr>
@@ -431,7 +434,7 @@
                 </tr>
                 <tr>
                     <td class="column2">Presentación</td>
-                    <td>{{ $data->lote_envasado->presentacion ?? 'No encontrado' }}</td>
+                    <td>{{ $data->lote_envasado->presentacion ?? 'No encontrado' }} {{ $data->lote_envasado->unidad ?? 'N/A' }}</td>
                     <td class="column2">Volumen del lote</td>
 
                     <td>
@@ -441,7 +444,7 @@
                     <td>
                         @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
-                                {{ $loteGranel->cont_alc ?? '' }}
+                                {{ $loteGranel->cont_alc ?? '' }} % Alc. Vol.
                                 <!-- Añade una separación si deseas entre los nombres de lotes -->
                                 @if (!$loop->last)
                                     ,
@@ -449,8 +452,9 @@
                             @endforeach
                         @else
                             N/A
-                        @endif % Alc. Vol.
-                    </td> {{-- no se de donde se jala --}}
+                        @endif
+                        {{-- {{ $data->lote_envasado->cont_alc_envasado ?? 'No encontrado' }} % Alc. Vol. --}}
+                    </td>
                 </tr>
                 <tr>
                     <td class="column2">Tipo de maguey</td>

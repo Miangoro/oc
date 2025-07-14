@@ -27,6 +27,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar lotes a granel'));
+  window.puedeEditarElUsuario = @json(auth()->user()->can('Editar lotes a granel'));
+  window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar lotes a granel'));
+</script>
     @vite(['resources/js/catalogo_lotes.js'])
 @endsection
 

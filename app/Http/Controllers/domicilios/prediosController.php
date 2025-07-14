@@ -24,16 +24,17 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;//Permiso empresa
 
 
 
 class PrediosController extends Controller
 {public function UserManagement()
 {
+    //Permiso de empresa
     $empresaId = null;
-
-    if (auth()->user()->tipo == 3) {
-        $empresaId = auth()->user()->empresa?->id_empresa;
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaId = Auth::user()->empresa?->id_empresa;
     }
 
     // Filtrar predios si el usuario es tipo 3
@@ -83,10 +84,10 @@ class PrediosController extends Controller
 
         $search = [];
 
-        if (auth()->user()->tipo == 3) {
-            $empresaId = auth()->user()->empresa?->id_empresa;
-        } else {
-            $empresaId = null;
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
         }
 
 
@@ -102,8 +103,8 @@ class PrediosController extends Controller
 
         $limit = $request->input('length');
         $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')] ?? 'id_predio';
-        $dir = $request->input('order.0.dir') ?? 'asc';
+        $order = $columns[$request->input('order.0.column')] ?? 'num_predio';
+        $dir = $request->input('order.0.dir') ?? 'desc';
 
         if (empty($request->input('search.value'))) {
             $predios = Predios::with('empresa') // Carga la relación
@@ -115,7 +116,7 @@ class PrediosController extends Controller
                 })
                 ->offset($start)
                 ->limit($limit)
-                ->orderByDesc('id_predio')
+                ->orderByDesc('num_predio')
 
                 ->get();
         } else {
@@ -150,7 +151,7 @@ class PrediosController extends Controller
                 })
                 ->offset($start)
                 ->limit($limit)
-                ->orderByDesc('id_predio')
+                ->orderByDesc('num_predio')
 
                 ->get();
 
@@ -450,7 +451,7 @@ class PrediosController extends Controller
                     'url_documento' => $urlDocumento, // URL del documento
                     'numeroCliente' => $numeroCliente // Incluye el número del cliente
                 ]);
-            } catch (ModelNotFoundException $e) {
+            } catch (\Exception $e) {
                 return response()->json(['success' => false], 404);
             }
         }

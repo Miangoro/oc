@@ -45,6 +45,18 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeRegistrarCertificadoGranel = @json(auth()->user()->can('Registrar certificado de exportación'));
+  window.puedeFirmarCertificadoGranel = @json(auth()->user()->can('Firmar certificado de exportación'));
+  window.puedeEditarCertificadoGranel = @json(auth()->user()->can('Editar certificado de exportación'));
+  window.puedeEliminarCertificadoGranel = @json(auth()->user()->can('Eliminar certificado de exportación'));
+  window.puedeReexpedirCertificadoGranel = @json(auth()->user()->can('Reexpedir certificado de exportación'));
+  window.puedeSubirCertificadoGranel = @json(auth()->user()->can('Subir certificado de exportación'));
+  window.puedeVerTrazabilidadCertificadoGranel = @json(auth()->user()->can('Trazabilidad certificado de exportación'));
+  window.puedeAsignarRevisorCertificadoGranel = @json(auth()->user()->can('Asignar revisor certificado de exportación'));
+  window.puedeDarVoBoCertificadoGranel = @json(auth()->user()->can('Vo. Bo. certificado de exportación'));
+  window.puedeVerDocumentacionCertificadoGranel = @json(auth()->user()->can('Ver documentación de certificado de exportación'));
+</script>
   @vite(['resources/js/certificados_exportacion.js'])
 @endsection
 
@@ -75,7 +87,7 @@
             </thead>
         </table>
     </div>
-    
+
 </div>
 
 

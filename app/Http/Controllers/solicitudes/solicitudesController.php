@@ -27,6 +27,7 @@ use App\Models\guias;
 use App\Models\Destinos;
 use App\Models\BitacoraMezcal;
 use App\Models\catalogo_aduanas;
+use App\Models\solicitudes_eliminadas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -43,6 +44,9 @@ class solicitudesController extends Controller
 {
     public function UserManagement()
     {
+        $solicitudes = solicitudesModel::where('habilitado', 1)
+            ->where('id_tipo', '!=', 12)
+            ->get();
         $solicitudesTipos = solicitudTipo::all();
         $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
         $estados = estados::all(); // Obtener todos los estados
@@ -71,9 +75,8 @@ class solicitudesController extends Controller
         $marcas = marcas::all();
         $aduanas = catalogo_aduanas::all();
 
-
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
-        return view('solicitudes.find_solicitudes_view', compact('tipo_usuario','instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas', 'aduanas'));
+        return view('solicitudes.find_solicitudes_view', compact('tipo_usuario','instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas', 'aduanas', 'solicitudes'));
     }
     public function findCertificadosExportacion()
     {
@@ -107,13 +110,8 @@ class solicitudesController extends Controller
 
         $search = [];
 
-        /*if (auth()->user()->tipo == 3) {
-            $empresaId = auth()->user()->empresa?->id_empresa;
-        } else {
-            $empresaId = null;
-        }*/
-
-        $query = solicitudesModel::query();
+        $query = solicitudesModel::query()->where('habilitado', 1)
+            ->where('id_tipo', '!=', 12);
 
         if ($empresaId) {
             $query->where('id_empresa', $empresaId);
@@ -122,9 +120,6 @@ class solicitudesController extends Controller
         if ($userId == 49) {
             $query->where('id_tipo', 11);
         }
-
-
-
         // Filtros específicos por columna
       $columnsInput = $request->input('columns');
 
@@ -137,7 +132,6 @@ class solicitudesController extends Controller
       }
 
         $totalData = $query->count();
-
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -156,7 +150,8 @@ class solicitudesController extends Controller
                 'inspeccion.inspector',
                 'ultima_validacion_oc',
                 'ultima_validacion_ui'
-            ]);
+            ])->where('habilitado', 1)
+                ->where('id_tipo', '!=', 12);
 
             // Si se necesita ordenar por nombre del inspector
             if ($order === 'inspector') {
@@ -191,7 +186,8 @@ class solicitudesController extends Controller
                         'inspeccion.inspector',
                         'ultima_validacion_oc',
                         'ultima_validacion_ui'
-                    ])
+                    ])->where('habilitado', 1)
+                    ->where('id_tipo', '!=', 12)
                     ->where(function ($query) use ($search) {
                         $query->where(function ($q) use ($search) {
                             $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
@@ -234,12 +230,13 @@ class solicitudesController extends Controller
                     ->get();
 
 
-                            $totalFiltered = solicitudesModel::with('tipo_solicitud',
+                            $totalFilteredQuery = solicitudesModel::with('tipo_solicitud',
                         'empresa',
                         'instalacion',
                         'inspeccion.inspector',
                         'ultima_validacion_oc',
-                        'ultima_validacion_ui')
+                        'ultima_validacion_ui')->where('habilitado', 1)
+                            ->where('id_tipo', '!=', 12)
                     ->where(function ($query) use ($search) {
                         $query->where(function ($q) use ($search) {
                             $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
@@ -264,14 +261,14 @@ class solicitudesController extends Controller
                     });
 
                 if ($empresaId) {
-                    $totalFiltered->where('id_empresa', $empresaId);
+                    $totalFilteredQuery->where('id_empresa', $empresaId);
                 }
 
                 if ($userId == 49) {
-                     $totalFiltered->where('id_tipo', 11);
+                     $totalFilteredQuery->where('id_tipo', 11);
                 }
 
-                $totalFiltered = $totalFiltered->count();
+                $totalFiltered = $totalFilteredQuery->count();
 
         }
 
@@ -303,6 +300,9 @@ class solicitudesController extends Controller
                 $nestedData['estatus_validado_oc'] = $solicitud->ultima_validacion_oc->estatus ?? 'Pendiente';
                 $nestedData['estatus_validado_ui'] = $solicitud->ultima_validacion_ui->estatus ?? 'Pendiente';
                 $nestedData['info_adicional'] = $solicitud->info_adicional ?? 'Vacío';
+                $nestedData['folio_info'] = $solicitud->folio;
+                $nestedData['num_servicio_info'] = $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
+                $nestedData['inspectorName'] = $solicitud->inspector->name ?? 'Sin inspector';
                 $empresa = $solicitud->empresa;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
                     ? $empresa->empresaNumClientes
@@ -417,14 +417,12 @@ class solicitudesController extends Controller
                 $data[] = $nestedData;
             }
         }
-
-
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
             'recordsFiltered' => intval($totalFiltered),
             'code' => 200,
-            'data' => $data,
+            'data' => $data ?? [],
         ]);
     }
 
@@ -496,6 +494,7 @@ class solicitudesController extends Controller
   {
       $validated = $request->validate([
           'id_empresa' => 'required|integer',
+          'fecha_solicitud' => 'nullable|date',
           'fecha_visita' => 'required|date',
           'id_instalacion' => 'required|integer',
           'nombre_produccion' => 'required|string|max:255',
@@ -526,6 +525,7 @@ class solicitudesController extends Controller
           $VigilanciaProdu->id_empresa = $validated['id_empresa'];
           $VigilanciaProdu->id_tipo = 2;
           $VigilanciaProdu->id_predio = 0;
+          $VigilanciaProdu->fecha_solicitud = $validated['fecha_solicitud'];
           $VigilanciaProdu->fecha_visita = $validated['fecha_visita'];
           $VigilanciaProdu->id_instalacion = $validated['id_instalacion'];
           $VigilanciaProdu->info_adicional = $validated['info_adicional'] ?? null;
@@ -609,6 +609,7 @@ class solicitudesController extends Controller
         $emisionCertificado->id_empresa = $request->id_empresa;
         $emisionCertificado->id_tipo = 13;
         $emisionCertificado->id_predio = 0;
+        $emisionCertificado->fecha_solicitud = $request->fecha_solicitud;
         $emisionCertificado->fecha_visita = $request->fecha_visita;
         $emisionCertificado->id_instalacion = $request->id_instalacion;
         $emisionCertificado->info_adicional = $request->info_adicional;
@@ -647,6 +648,7 @@ class solicitudesController extends Controller
         $MuestreoLote->id_empresa = $request->id_empresa;
         $MuestreoLote->id_tipo = 3;
         $MuestreoLote->id_predio = 0;
+        $MuestreoLote->fecha_solicitud = $request->fecha_solicitud;
         $MuestreoLote->fecha_visita = $request->fecha_visita;
         $MuestreoLote->id_instalacion = $request->id_instalacion;
         $MuestreoLote->info_adicional = $request->info_adicional;
@@ -696,6 +698,7 @@ class solicitudesController extends Controller
         $VigilanciaTras->id_empresa = $request->id_empresa;
         $VigilanciaTras->id_tipo = 4;
         $VigilanciaTras->id_predio = 0;
+        $VigilanciaTras->fecha_solicitud = $request->fecha_solicitud;
         $VigilanciaTras->fecha_visita = $request->fecha_visita;
         $VigilanciaTras->id_instalacion = $request->id_instalacion;
         $VigilanciaTras->info_adicional = $request->info_adicional;
@@ -786,6 +789,7 @@ class solicitudesController extends Controller
         $InspeccionEnva->id_empresa = $request->id_empresa;
         $InspeccionEnva->id_tipo = 5;
         $InspeccionEnva->id_predio = 0;
+        $InspeccionEnva->fecha_solicitud = $request->fecha_solicitud;
         $InspeccionEnva->fecha_visita = $request->fecha_visita;
         $InspeccionEnva->id_instalacion = $request->id_instalacion;
         $InspeccionEnva->info_adicional = $request->info_adicional;
@@ -822,6 +826,7 @@ class solicitudesController extends Controller
         $InspeccionBarri->id_empresa = $request->id_empresa;
         $InspeccionBarri->id_tipo = 7;
         $InspeccionBarri->id_predio = 0;
+        $InspeccionBarri->fecha_solicitud = $request->fecha_solicitud;
         $InspeccionBarri->fecha_visita = $request->fecha_visita;
         $InspeccionBarri->id_instalacion = $request->id_instalacion;
         $InspeccionBarri->info_adicional = $request->info_adicional;
@@ -870,6 +875,7 @@ class solicitudesController extends Controller
         $BarricadaLib->id_empresa = $request->id_empresa;
         $BarricadaLib->id_tipo = 9;
         $BarricadaLib->id_predio = 0;
+        $BarricadaLib->fecha_solicitud = $request->fecha_solicitud;
         $BarricadaLib->fecha_visita = $request->fecha_visita;
         $BarricadaLib->id_instalacion = $request->id_instalacion;
         $BarricadaLib->info_adicional = $request->info_adicional;
@@ -918,6 +924,7 @@ class solicitudesController extends Controller
         $solicitud->folio = Helpers::generarFolioSolicitud();
         $solicitud->id_empresa = $request->id_empresa;
         $solicitud->id_tipo = 10;
+        $solicitud->fecha_solicitud = $request->fecha_solicitud;
         $solicitud->fecha_visita = $request->fecha_visita;
         $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
         $solicitud->id_predio = $request->id_predio;
@@ -951,6 +958,7 @@ class solicitudesController extends Controller
         $solicitud->folio = Helpers::generarFolioSolicitud();
         $solicitud->id_empresa = $request->id_empresa;
         $solicitud->id_tipo = 1;
+        $solicitud->fecha_solicitud = $request->fecha_solicitud;
         $solicitud->fecha_visita = $request->fecha_visita;
         $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
         $solicitud->info_adicional = $request->info_adicional;
@@ -991,6 +999,7 @@ class solicitudesController extends Controller
         $solicitud->folio = Helpers::generarFolioSolicitud();
         $solicitud->id_empresa = $request->id_empresa;
         $solicitud->id_tipo = 14;
+        $solicitud->fecha_solicitud = $request->fecha_solicitud;
         $solicitud->fecha_visita = $request->fecha_visita;
         //Auth::user()->id;
         $solicitud->id_instalacion = $request->id_instalacion;
@@ -1200,6 +1209,7 @@ class solicitudesController extends Controller
                 // Validar solo los campos que sí estás enviando
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'nombre_produccion' => 'required|string|max:255',
@@ -1212,6 +1222,7 @@ class solicitudesController extends Controller
                 // Actualizar la solicitud con solo los datos actuales
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1282,6 +1293,7 @@ class solicitudesController extends Controller
                 // Validar datos para georreferenciación
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1304,6 +1316,7 @@ class solicitudesController extends Controller
                 // Actualizar datos específicos para georreferenciación
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1315,6 +1328,7 @@ class solicitudesController extends Controller
             case 'vigilanciatraslado':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1339,6 +1353,7 @@ class solicitudesController extends Controller
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1349,6 +1364,7 @@ class solicitudesController extends Controller
             case 'LiberacionProductoTerminado':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1367,6 +1383,7 @@ class solicitudesController extends Controller
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1377,6 +1394,7 @@ class solicitudesController extends Controller
             case 'inspeccionenvasado':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1391,6 +1409,7 @@ class solicitudesController extends Controller
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1401,6 +1420,7 @@ class solicitudesController extends Controller
             case 'muestreobarricada':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1428,6 +1448,7 @@ class solicitudesController extends Controller
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1438,6 +1459,7 @@ class solicitudesController extends Controller
             case 'muestreobarricadaliberacion':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1462,6 +1484,7 @@ class solicitudesController extends Controller
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1474,6 +1497,7 @@ class solicitudesController extends Controller
                 // Validar datos para georreferenciación
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_predio' => 'required|integer|exists:predios,id_predio',
                     'punto_reunion' => 'required|string|max:255',
@@ -1490,6 +1514,7 @@ class solicitudesController extends Controller
                 // Actualizar datos específicos para georreferenciación
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_predio' => $request->id_predio,
                     'punto_reunion' => $request->punto_reunion,
@@ -1504,6 +1529,7 @@ class solicitudesController extends Controller
                 // Validar datos para dictaminación
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string|max:5000',
@@ -1520,6 +1546,7 @@ class solicitudesController extends Controller
                 // Actualizar datos específicos para dictaminación
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1530,6 +1557,7 @@ class solicitudesController extends Controller
             case 'muestreoagave':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string',
@@ -1545,6 +1573,7 @@ class solicitudesController extends Controller
                 // Actualizar los datos de la solicitud
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1553,9 +1582,11 @@ class solicitudesController extends Controller
                 break;
 
             case 'pedidosExportacion':
+             /* dd($request->all()); */
                 // Validación de datos del formulario
                 $validated = $request->validate([
                     'id_empresa' => 'required|integer',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer',
                     'id_nstalaciones_envasado_2_edit' => 'required|integer',
@@ -1571,11 +1602,18 @@ class solicitudesController extends Controller
                     'cantidad_cajas' => 'required|array',  // Asegurarse de que las cantidades sean arrays
                     'presentacion' => 'required|array',  // Asegurarse de que las presentaciones sean arrays
                     'id_etiqueta' => 'required|integer',
+                    'lote_envasado.*.id_lote_envasado' => 'required|integer',
+
+                    'lote_envasado.*.cont_alc' => [
+                        'required',            // Ya no nullable si siempre se guarda
+                        'numeric',
+                        'between:0,99.99',
+                        'regex:/^\d{1,2}(\.\d{1,2})?$/',
+                    ],
 
                     'lotes_granel' => 'nullable|array',
                     'lotes_granel.*.id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
                     'lotes_granel.*.folio_fq' => 'nullable|string',
-                    'lotes_granel.*.cont_alc' => 'nullable|numeric',
                 ]);
 
                 // Procesar características
@@ -1589,25 +1627,37 @@ class solicitudesController extends Controller
                 $data['id_etiqueta'] = $validated['id_etiqueta'];  // Solo si es enviado
                 $data['id_instalacion_envasado'] = $validated['id_nstalaciones_envasado_2_edit'];  // Solo si es enviado
                 // Preparar los detalles
-                $detalles = [];
-                $totalLotes = count($validated['lote_envasado']);  // Suponiendo que todos los arrays tienen el mismo tamaño
 
-                for ($i = 0; $i < $totalLotes; $i++) {
-                    if ($i === 0) {
-                        $detalles[] = [
-                            'id_lote_envasado' => (int)$validated['lote_envasado'][$i],
-                            'cantidad_botellas' => isset($validated['cantidad_botellas'][$i]) ? (int)$validated['cantidad_botellas'][$i] : null,
-                            'cantidad_cajas' => isset($validated['cantidad_cajas'][$i]) ? (int)$validated['cantidad_cajas'][$i] : null,
-                            'presentacion' => isset($validated['presentacion'][$i]) ? $validated['presentacion'][$i] : null,
-                        ];
-                    } else {
-                        $detalles[] = [
-                            'id_lote_envasado' => (int)$validated['lote_envasado'][$i],
-                        ];
-                    }
-                }
-                // Incluir los detalles dentro de las características
-                $data['detalles'] = $detalles;
+
+                  $detalles = [];
+
+                  foreach ($validated['lote_envasado'] as $i => $lote) {
+                    /* dd($i, $lote); */
+                      $idLote = $lote['id_lote_envasado'] ?? null;
+                      if (!$idLote) continue;
+
+                      if ($i === 0) {
+                          $detalles[] = [
+                              'id_lote_envasado' => (int) $idLote,
+                              'cantidad_botellas' => (int) ($validated['cantidad_botellas'][0] ?? 0),
+                              'cantidad_cajas' => (int) ($validated['cantidad_cajas'][0] ?? 0),
+                              'presentacion' => [ $validated['presentacion'][0] ?? '' ],
+                          ];
+                      } else {
+                          $detalles[] = [
+                              'id_lote_envasado' => (int) $idLote,
+                          ];
+                      }
+
+                      // Actualizar contenido alcohólico
+                      if (!is_null($lote['cont_alc'] ?? null)) {
+                          lotes_envasado::where('id_lote_envasado', $idLote)
+                              ->update(['cont_alc_envasado' => $lote['cont_alc']]);
+                      }
+                  }
+
+                  $data['detalles'] = $detalles;
+
 
 
                 // Obtener el número del cliente desde la tabla empresa_num_cliente
@@ -1619,6 +1669,7 @@ class solicitudesController extends Controller
 
                 // Guardar la solicitud
                 $solicitud->id_empresa = $validated['id_empresa'];
+                $solicitud->fecha_solicitud = $validated['fecha_solicitud'];
                 $solicitud->fecha_visita = $validated['fecha_visita'];
                 $solicitud->id_instalacion = $validated['id_instalacion'];
                 $solicitud->info_adicional = $validated['info_adicional'];
@@ -1631,7 +1682,7 @@ class solicitudesController extends Controller
                           if (!empty($granel['id_lote_granel'])) {lotesGranel::where('id_lote_granel', $granel['id_lote_granel'])
                                   ->update([
                                       'folio_fq' => $granel['folio_fq'] ?? null,
-                                      'cont_alc' => $granel['cont_alc'] ?? null,
+
                                   ]);
                           }
                       }
@@ -1701,6 +1752,7 @@ class solicitudesController extends Controller
             case 'emisionCertificadoVentaNacional':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'nullable|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -1714,6 +1766,7 @@ class solicitudesController extends Controller
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -1821,6 +1874,7 @@ class solicitudesController extends Controller
         // Validación de datos del formulario
         $validated = $request->validate([
             'id_empresa' => 'required|integer',
+            'fecha_solicitud' => 'nullable|date',
             'fecha_visita' => 'required|date',
             'id_instalacion' => 'required|integer',
             'id_instalacion_envasado_2' => 'required|integer',
@@ -1832,7 +1886,13 @@ class solicitudesController extends Controller
             'factura_proforma_cont' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
             /*  */
             'lote_envasado' => 'required|array',
-
+            'lote_envasado.*.id_lote_envasado' => 'required|integer',
+            'lote_envasado.*.cont_alc' => [
+                'required',            // Ya no nullable si siempre se guarda
+                'numeric',
+                'between:0,99.99',
+                'regex:/^\d{1,2}(\.\d{1,2})?$/',
+            ],
             'cantidad_botellas' => 'required|array|min:1',
             'cantidad_botellas.*' => 'required|integer|min:1',
 
@@ -1842,18 +1902,10 @@ class solicitudesController extends Controller
             'presentacion' => 'required|array|min:1',
             'presentacion.*' => 'required|string|',
 
-/*             'lote_envasado' => 'array',  */ // Asegurarse de que los lotes sean arrays
-/*             'cantidad_botellas' => 'required|array',
-            'cantidad_cajas' => 'required|array',
-            'presentacion' => 'required|array', */
             'id_etiqueta' => 'required|integer',
-/*             'cont_alc' => 'array',
-            'cont_alc.*' => 'nullable|numeric', */
-
             'lotes_granel' => 'nullable|array',
             'lotes_granel.*.id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
             'lotes_granel.*.folio_fq' => 'nullable|string',
-            'lotes_granel.*.cont_alc' => 'nullable|numeric',
         ]);
 
         // Procesar características
@@ -1869,30 +1921,63 @@ class solicitudesController extends Controller
         /* $data['cont_alc'] = $validated['cont_alc']; */
 
         // Preparar los detalles
-            $detalles = [];
+/*             $detalles = [];
             $totalLotes = count($validated['lote_envasado']);
 
-            for ($i = 0; $i < $totalLotes; $i++) {
+          foreach ($validated['lote_envasado'] as $index => $idLoteEnvasado) {
                 $detalle = [
-                    'id_lote_envasado' => (int) $validated['lote_envasado'][$i],
+                    'id_lote_envasado' => (int) $idLoteEnvasado,
                 ];
 
-                if (isset($validated['cantidad_botellas'][$i])) {
-                    $detalle['cantidad_botellas'] = (int) $validated['cantidad_botellas'][$i];
+                if (isset($validated['cantidad_botellas'][$index])) {
+                    $detalle['cantidad_botellas'] = (int) $validated['cantidad_botellas'][$index];
                 }
 
-                if (isset($validated['cantidad_cajas'][$i])) {
-                    $detalle['cantidad_cajas'] = (int) $validated['cantidad_cajas'][$i];
+                if (isset($validated['cantidad_cajas'][$index])) {
+                    $detalle['cantidad_cajas'] = (int) $validated['cantidad_cajas'][$index];
                 }
 
-                if (isset($validated['presentacion'][$i])) {
-                    $detalle['presentacion'] = [$validated['presentacion'][$i]]; // Mantener formato array
+                if (isset($validated['presentacion'][$index])) {
+                    $detalle['presentacion'] = [$validated['presentacion'][$index]];
                 }
 
                 $detalles[] = $detalle;
             }
-        // Incluir los detalles dentro de las características
         $data['detalles'] = $detalles;
+ */
+          $detalles = [];
+
+          foreach ($validated['lote_envasado'] as $index => $lote) {
+              $idLoteEnvasado = $lote['id_lote_envasado'] ?? null;
+              $contenidoAlc = $lote['cont_alc'] ?? null;
+
+              if (!$idLoteEnvasado) {
+                  continue;
+              }
+
+              if ($index === 0) {
+                  $detalle = [
+                      'id_lote_envasado' => (int) $idLoteEnvasado,
+                      'cantidad_botellas' => (int) ($validated['cantidad_botellas'][$index] ?? 0),
+                      'cantidad_cajas' => (int) ($validated['cantidad_cajas'][$index] ?? 0),
+                      'presentacion' => [$validated['presentacion'][$index] ?? ''],
+                  ];
+              } else {
+                  $detalle = [
+                      'id_lote_envasado' => (int) $idLoteEnvasado,
+                  ];
+              }
+
+              $detalles[] = $detalle;
+
+              // Actualizar contenido alcohólico
+              if (!is_null($contenidoAlc)) {
+                  lotes_envasado::where('id_lote_envasado', $idLoteEnvasado)
+                      ->update(['cont_alc_envasado' => $contenidoAlc]);
+              }
+          }
+
+          $data['detalles'] = $detalles;
 
 
         // Obtener el número del cliente desde la tabla empresa_num_cliente
@@ -1906,6 +1991,7 @@ class solicitudesController extends Controller
         $pedido = new solicitudesModel();
         $pedido->folio = Helpers::generarFolioSolicitud();
         $pedido->id_empresa = $validated['id_empresa'];
+        $pedido->fecha_solicitud = $validated['fecha_solicitud'];
         $pedido->fecha_visita = $validated['fecha_visita'];
         $pedido->id_tipo = 11;
         $pedido->id_instalacion = $validated['id_instalacion'];
@@ -1918,7 +2004,6 @@ class solicitudesController extends Controller
               if (!empty($granel['id_lote_granel'])) {lotesGranel::where('id_lote_granel', $granel['id_lote_granel'])
                   ->update([
                     'folio_fq' => $granel['folio_fq'] ?? null,
-                    'cont_alc' => $granel['cont_alc'] ?? null,
                 ]);
                   }
               }
@@ -1996,6 +2081,7 @@ class solicitudesController extends Controller
         $solicitud->folio = Helpers::generarFolioSolicitud();
         $solicitud->id_empresa = $request->id_empresa;
         $solicitud->id_tipo = 8;
+        $solicitud->fecha_solicitud = $request->fecha_solicitud;
         $solicitud->fecha_visita = $request->fecha_visita;
         //Auth::user()->id;
         $solicitud->id_instalacion = $request->id_instalacion;
@@ -2080,16 +2166,25 @@ class solicitudesController extends Controller
         return Excel::download(new SolicitudesExport($filtros), 'reporte_solicitudes.xlsx');
     }
 
-    public function destroy($id_solicitud)
+    public function destroy(Request $request, $id_solicitud)
     {
-        /*       try {
+    try {
         $solicitud = solicitudesModel::findOrFail($id_solicitud);
-        $solicitud->delete();
-
-        return response()->json(['success' => 'Solcitud eliminada correctamente']);
+        // Guardar motivo recibido del request
+        $motivo = $request->input('reason', 'Sin motivo especificado');
+        // Registrar en tabla solicitudes_eliminadas
+        solicitudes_eliminadas::create([
+            'id_solicitud' => $id_solicitud,
+            'motivo' => $motivo,
+        ]);
+        // Deshabilitar la solicitud
+        $solicitud->habilitado = 0;
+        $solicitud->save();
+        return response()->json(['success' => 'Solicitud eliminada correctamente']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al eliminar la solicitud: ' . $e->getMessage()], 500);
-    } */
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+
     }
 
     public function Etiqueta_240($id_solicitud)

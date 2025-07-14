@@ -145,6 +145,7 @@ class solicitudHolograma extends Controller
                 $nestedData = [
                     'fake_id' => ++$ids,
                     'id_solicitud' => $user->id_solicitud,
+                    'created_at' => Helpers::formatearFechaHora($user->created_at),
                     'folio' => $user->folio,
                     'id_empresa' => $user->id_empresa,
                     'id_solicitante' => $name,

@@ -46,8 +46,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select id_marca" id="id_marca" name="id_marca" aria-label="Marca">
-                                    <option value="" selected>Selecciona una marca</option>
+                                <select class="select2 form-select id_marca" id="id_marca" name="id_marca" aria-label="Marca">
+                                    <option value="" disabled selected>Selecciona una marca</option>
                                 </select>
                                 <label for="id_marca">Marca</label>
                             </div>
@@ -113,7 +113,7 @@
                         </tbody>
                     </table>
                     <div class="row">
-                        <div class="col-md-9 mb-4">
+                        <div class="col-md-12 mb-4">
                             <label class="form-label" for="basic-default-password42">Instalación de envasado
                                 certificada</label>
                             <div class="form-floating form-floating-outline">
@@ -123,18 +123,7 @@
                                 </select>
 
                             </div>
-
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label" for="Contenido alcohólico">Contenido alcohólico</label>
-                            <div class="form-floating form-floating-outline mb-4">
-                                <input class="form-control" type="number" step="0.01"
-                                    placeholder="Contenido alcohólico" id="cont_alc_envasado"
-                                    name="cont_alc_envasado" />
-                                <label for="Contenido alcohólico">Contenido alcohólico</label>
-                            </div>
-                        </div>
-
                     </div>
                     <div class="row">
                         <div class="col-md-4">
@@ -151,6 +140,14 @@
                                     <option value="Sin etiqueta">Sin etiqueta</option>
                                 </select>
                                 <label for="tipo">Etiqueta</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input class="form-control" type="number" step="0.01"
+                                    placeholder="Contenido alcohólico" id="cont_alc_envasado"
+                                    name="cont_alc_envasado" />
+                                <label for="Contenido alcohólico">Contenido alcohólico</label>
                             </div>
                         </div>
                     </div>

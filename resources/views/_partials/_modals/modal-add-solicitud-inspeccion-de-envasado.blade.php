@@ -8,7 +8,7 @@
             <div class="modal-body p-8">
                 <form id="addInspeccionEnvasadoForm">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="id_empresa_inspeccion" onchange="obtenerInstalacionesInspecciones();"
                                     name="id_empresa" class="id_empresa_inspeccion select2 form-select" required>
@@ -22,7 +22,15 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" autocomplete="off"
+                                    value="@php echo date('Y-m-d H:i'); @endphp">
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     id="fecha_visita_inspeccion_envasado" name="fecha_visita" autocomplete="off" />
@@ -37,6 +45,7 @@
                                     name="id_instalacion" aria-label="id_instalacion" required>
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                 </select>
+                                <label >Domicilio de inspección</label>
                             </div>
                         </div>
                     </div>
@@ -207,17 +216,17 @@
                     response.lotes_envasado.forEach(lote => {
                         const nombreLote = lote.nombre;
                         const loteGranel = lote.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.nombre_lote || '';
-                        
+
                         contenidoEnv += `<option value="${lote.id_lote_envasado}">
                             ${nombreLote} Granel: ${loteGranel}
                         </option>`;
                     });
-
+                    /* btenerDatosGranelesInspecciones(); */
                     if (response.lotes_envasado.length == 0) {
                         contenidoEnv = '<option disabled selected value="">Sin lotes registrados</option>';
                     } else {}
                     $('#id_lote_envasado_inspeccion').html(contenidoEnv);
-                    /* obtenerDatosGranelesInspecciones(); */
+                    obtenerDatosGranelesInspecciones();
                 },
                 error: function() {}
             });

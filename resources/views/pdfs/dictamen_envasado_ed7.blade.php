@@ -362,6 +362,7 @@
                 @else
                     N/A
                 @endif
+                {{-- {{ $data->lote_envasado->cont_alc_envasado ?? 'No encontrado' }} % Alc. Vol. --}}
             </td>
         </tr>
       <tr>

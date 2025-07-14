@@ -9,7 +9,7 @@
 </head>
 <style>
     table {
-        width: 101%;
+        width: 100%;
         border-collapse: collapse;
         table-layout: fixed;
     }
@@ -26,33 +26,32 @@
         font-family: 'calibri';
     }
 
-    img {
+    /* Estilo para filas alternadas tipo table-striped */
+    tr.bitacora-row:nth-child(even) {
+        background-color: #dddddd;
+        /* Gris claro */
+    }
+
+/*     img {
         display: flex;
         margin-bottom: 10px;
     }
+ */
+/*     .img .logo-small {
+        height: 80px;
 
-    .img .logo-small {
-        height: 70px;
-        width: auto;
-    }
-
-    .text {
-        text-align: center;
-        margin-top: -50px;
-        font-family: 'calibri-bold';
-        font-size: 18px;
-    }
+    } */
 
     tr.text-title td,
     tr.text-title th {
         padding: 2px;
         text-align: center;
-        font-size: 5px;
+        font-size: 14px;
         word-break: break-word;
         height: auto;
         width: auto;
         vertical-align: middle;
-        background: #D0CECE;
+        background: #bdbdbd;
         font-family: 'calibri-bold';
     }
 
@@ -73,25 +72,59 @@
         color: #A6A6A6;
     }
 
-    tr.bitacora-row td, tr.bitacora-row th {
-        font-size: 5px;
-/*         border: 1px solid #bbb; */
+    tr.bitacora-row td,
+    tr.bitacora-row th {
+        font-size: 14px;
+        /*         border: 1px solid #bbb; */
         padding: 3px 5px;
         text-align: center;
         vertical-align: middle;
         word-wrap: break-word;
     }
-
 </style>
 
 <body>
-    <div class="img">
-        <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" class="logo-small">
-    </div>
+<table width="100%" style="border: none;">
+    <tr>
+        {{-- Logo Unidad de Inspección --}}
+        <td style="width: 25%; text-align: left; vertical-align: top; padding-left: 0; border:none; ">
+            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" style="height: 80px; padding-top: 10px;">
+        </td>
+        {{-- Título y Cliente --}}
+        <td style="width: 50%; text-align: center; border:none;">
+            <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
+                INVENTARIO DE MEZCAL A GRANEL (PRODUCTOR)
+            </p>
+            @php
+                $primerBitacora = $bitacoras->first();
+                $razon = $primerBitacora->empresaBitacora->razon_social ?? 'Sin razón social';
+                $numeroCliente = 'Sin número cliente';
+                if (
+                    $primerBitacora->empresaBitacora &&
+                    $primerBitacora->empresaBitacora->empresaNumClientes->isNotEmpty()
+                ) {
+                    foreach ($primerBitacora->empresaBitacora->empresaNumClientes as $cliente) {
+                        if (!empty($cliente->numero_cliente)) {
+                            $numeroCliente = $cliente->numero_cliente;
+                            break;
+                        }
+                    }
+                }
+            @endphp
+            <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
+               <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
+            </p>
+        </td>
+        {{-- Logo OC --}}
+        <td style="width: 25%; text-align: right; vertical-align: top; padding-right: 0; border:none;">
+            <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo OC" style="height: 100px; width:auto;">
+        </td>
+    </tr>
+</table>
 
-    <div>
-        <p class="text">INVENTARIO DE MEZCAL A GRANEL</p>
-    </div>
+
+
+
     <table>
         <tbody>
             <tr class="text-title">
@@ -128,39 +161,57 @@
             </tr>
             @forelse($bitacoras as $bitacora)
                 <tr class="bitacora-row">
-                    <td>{{ $bitacora->fecha ?? '-' }}</td>
-                    <td>{{ $bitacora->loteBitacora?->id_tanque ?? '-' }}</td>
-                    <td>{{ $bitacora->loteBitacora?->nombre_lote ?? '-' }}</td>
-                    <td>{{ $bitacora->operacion_adicional ?? '-' }}</td>
-                    <td>{{ $bitacora->loteBitacora->categoria->categoria ?? '-' }}</td>
-                    <td>{{ $bitacora->loteBitacora->clase->clase ?? '-' }}</td>
-                    <td>{{ $bitacora->loteBitacora?->ingredientes ?? '-' }}</td>
-                    <td>{{ $bitacora->loteBitacora?->edad ?? '-' }}</td>
+                    <td>{{ $bitacora->fecha ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->id_tanque ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->nombre_lote ?? '----' }}</td>
+                    <td>{{ $bitacora->operacion_adicional ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora->categoria->categoria ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora->clase->clase ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->ingredientes ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->edad ?? '----' }}</td>
                     <td>
-                      @if ($bitacora->loteBitacora && $bitacora->loteBitacora->tiposRelacionados->isNotEmpty())
-                        {!! $bitacora->loteBitacora->tiposRelacionados->map(function ($tipo) {
-                            return $tipo->nombre . ' (<em>' . $tipo->cientifico . '</em>)';
-                        })->implode(', ') !!}
-                      @else
-                        -
-                      @endif
+                        @if ($bitacora->loteBitacora && $bitacora->loteBitacora->tiposRelacionados->isNotEmpty())
+                            {!! $bitacora->loteBitacora->tiposRelacionados->map(function ($tipo) {
+                                    return $tipo->nombre . ' (<em>' . $tipo->cientifico . '</em>)';
+                                })->implode(', ') !!}
+                        @else
+                            ---
+                        @endif
                     </td>
 
-                    <td>{{ $bitacora->loteBitacora?->folio_fq ?? '-' }}</td>
-                    <td>{{ $bitacora->loteBitacora?->folio_certificado ?? '-' }}</td>
-                    <td>{{ $bitacora->volumen_inicial ?? '-' }}</td>
-                    <td>{{ $bitacora->alcohol_inicial ?? '-' }}</td>
-                    <td>{{ $bitacora->procedencia_entrada ?? '-' }}</td>
-                    <td>{{ $bitacora->volumen_entrada ?? '-' }}</td>
-                    <td>{{ $bitacora->alcohol_entrada ?? '-' }}</td>
-                    <td>{{ $bitacora->agua_entrada ?? '-' }}</td>
-                    <td>{{ $bitacora->volumen_salidas ?? '-' }}</td>
-                    <td>{{ $bitacora->alcohol_salidas ?? '-' }}</td>
-                    <td>{{ $bitacora->destino_salidas ?? '-' }}</td>
-                    <td>{{ $bitacora->volumen_final ?? '-' }}</td>
-                    <td>{{ $bitacora->alcohol_final ?? '-' }}</td>
-                    <td>{{ $bitacora->observaciones ?? '-' }}</td>
-                    <td><!-- Aquí puedes dejar para la firma --></td>
+                    <td>{{ $bitacora->loteBitacora?->folio_fq ?? '----' }}</td>
+                    <td>{{ $bitacora->loteBitacora?->folio_certificado ?? '----' }}</td>
+                    <td>{{ $bitacora->volumen_inicial ?? '----' }}</td>
+                    <td>{{ $bitacora->alcohol_inicial ?? '----' }}</td>
+                    <td>{{ $bitacora->procedencia_entrada ?? '----' }}</td>
+                    <td>{{ $bitacora->volumen_entrada ?? '----' }}</td>
+                    <td>{{ $bitacora->alcohol_entrada ?? '----' }}</td>
+                    <td>{{ $bitacora->agua_entrada ?? '----' }}</td>
+                    <td>{{ $bitacora->volumen_salidas ?? '----' }}</td>
+                    <td>{{ $bitacora->alcohol_salidas ?? '----' }}</td>
+                    <td>{{ $bitacora->destino_salidas ?? '----' }}</td>
+                    <td>{{ $bitacora->volumen_final ?? '----' }}</td>
+                    <td>{{ $bitacora->alcohol_final ?? '----' }}</td>
+                    <td>{{ $bitacora->observaciones ?? '----' }}</td>
+                    <td>
+                        @if ($bitacora->id_firmante != 0 && $bitacora->firmante)
+                            @php
+                                $firma = $bitacora->firmante->firma;
+                                $rutaFirma = public_path('storage/firmas/' . $firma);
+                            @endphp
+
+                            @if (!empty($firma) && file_exists($rutaFirma))
+                                <img src="{{ $rutaFirma }}" alt="Firma" height="100">
+                                <br>
+                                <small>{{ $bitacora->firmante->name }}</small>
+                            @else
+                                <span class="text-muted">Firma no encontrada</span>
+                            @endif
+                        @else
+                            <span>Sin firma</span>
+                        @endif
+                    </td>
+
                 </tr>
             @empty
                 <tr>

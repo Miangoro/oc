@@ -4,10 +4,14 @@ namespace App\Http\Controllers\pages;
 
 use App\Http\Controllers\Controller;
 use App\Models\activarHologramasModelo;
+use App\Models\Certificado_Exportacion;
 use App\Models\empresa;
 use App\Models\empresaNumCliente;
 use App\Models\marcas;
+use App\Models\Guias;
+use App\Models\lotes_envasado;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class HologramasValidacion extends Controller
 {
@@ -58,9 +62,56 @@ class HologramasValidacion extends Controller
   }
 
 
+
+  public function qr_certificado($id)
+  {
+    $data = Certificado_Exportacion::find($id);
+
+    if (!$data) {
+        return abort(404, 'Registro no encontrado.');
+        //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
+    }
+
+    $empresa = $data->dictamen->inspeccione->solicitud->empresa ?? null;
+    $datos = $data->dictamen->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
+        $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
+        $detalles = $caracteristicas['detalles'] ?? [];//Acceder a detalles (que es un array)
+        // Obtener todos los IDs de los lotes
+        $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();//elimina valor vacios y devuelve array
+        // Buscar los lotes envasados
+    $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
+            : collect(); // Si no hay IDs, devolvemos una colección vacía
+
+    return view('content.pages.visualizar_certificado_qr', [
+      'datos' => $data,
+      'lotes' =>$lotes,
+      'empresa' => $empresa->razon_social ?? 'No encontrado',
+      'rfc' => $empresa->rfc ?? 'No encontrado',
+      'pais' => $data->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado',
+      'envasadoEN' => $data->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa ?? 'No encontrado',
+    ]);
+  }
+
+
+
   public function validar_dictamen()
   {
 
     return view('content.pages.visualizador_dictamen_qr');
   }
+
+
+
+  public function qr_guias($id)
+  {
+    $guias = Guias::with('Predios','empresa')
+      ->where('id_guia', $id)
+      ->get();
+
+    return view('content.pages.visualizar_guias_qr', [
+      'guia' => $guias[0],
+    ]);
+  }
+
+
 }

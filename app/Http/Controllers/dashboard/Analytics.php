@@ -12,17 +12,26 @@ use App\Models\Dictamen_Granel;
 use App\Models\Dictamen_instalaciones;
 use App\Models\inspecciones;
 use App\Models\LotesGranel;
+use App\Models\marcas;
+use App\Models\Revisor;
 use App\Models\solicitudesModel;
 use App\Models\solicitudTipo;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Analytics extends Controller
 {
   public function index()
   {
     //$datos = solicitudesModel::All();
-    $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')->where('fecha_solicitud','>','2024-12-31')->count();
+    /* $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')->where('fecha_solicitud','>','2024-12-31')->count(); */
+    $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')
+    ->where('fecha_solicitud', '>', '2024-12-31')
+    ->whereNotIn('id_tipo', [12, 13, 15])
+    ->get();
     $solicitudesSinActa = solicitudesModel::whereNotIn('id_tipo', [12, 13, 15])
     ->where('fecha_solicitud', '>', '2024-12-31')
     ->where(function ($query) {
@@ -33,6 +42,23 @@ class Analytics extends Controller
     })
     ->get();
 
+   $revisiones = Revisor::select(
+        'id_revisor as user_id',
+        DB::raw("CASE
+                    WHEN tipo_revision = 1 THEN 'Personal'
+                    WHEN tipo_revision = 2 THEN 'Consejo'
+                    ELSE 'Desconocido'
+                END as rol"),
+        'tipo_certificado',
+        DB::raw('COUNT(*) as total')
+    )
+    ->whereNotNull('id_revisor')
+    ->groupBy('id_revisor', 'tipo_revision', 'tipo_certificado')
+    ->get();
+
+// 2. Obtener usuarios
+$userIds = $revisiones->pluck('user_id')->unique();
+$usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
 
 
 
@@ -54,10 +80,10 @@ class Analytics extends Controller
     $certificadosInstalacion = Certificados::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $certificadosGranel = CertificadosGranel::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $certificadosExportacion = Certificado_Exportacion::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
-    $certificadosPorVencer = $certificadosInstalacion
-      ->merge($certificadosGranel)
-      ->merge($certificadosExportacion);
-
+    //$certificadosPorVencer = $certificadosInstalacion
+    //  ->merge($certificadosGranel)
+    //  ->merge($certificadosExportacion);
+$certificadosPorVencer = $certificadosInstalacion;
 
     $dictamenesInstalacionesSinCertificado = Dictamen_instalaciones::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
     $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
@@ -66,7 +92,22 @@ class Analytics extends Controller
     $lotesSinFq = LotesGranel::whereDoesntHave('fqs')->get();
 
     $certificadoGranelSinEscaneado = CertificadosGranel::whereDoesntHave('certificadoEscaneado')->get();
-    
+
+    $empresaId = Auth::user()?->empresa?->id_empresa;
+
+$TotalCertificadosExportacionPorMes = Certificado_Exportacion::select(
+        DB::raw("DATE_FORMAT(fecha_emision, '%Y-%m') as mes"),
+        DB::raw("COUNT(*) as total")
+    )
+    ->whereHas('dictamen.inspeccione.solicitud.empresa', function ($query) use ($empresaId) {
+        $query->where('id_empresa', $empresaId);
+    })
+    ->where('fecha_emision','>','2024-12-31')
+    ->groupBy('mes')
+    ->orderBy('mes')
+    ->get();
+
+
 
 
 // Traer las inspecciones futuras con su inspector
@@ -87,10 +128,45 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
         'foto' => $inspector->profile_photo_path,
         'total_inspecciones' => $grupo->count(),
     ];
-})->sortByDesc('total_inspecciones'); 
+})->sortByDesc('total_inspecciones');
+
+    $marcasConHologramas = marcas::with('solicitudHolograma')->where('id_empresa',$empresaId)->get();
 
 
-    return view('content.dashboard.dashboards-analytics', compact('certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+
+$serviciosInstalacion = SolicitudesModel::with(['inspeccion', 'instalacion'])
+    ->whereHas('instalacion')
+    ->whereHas('inspeccion') // <-- IMPORTANTE: filtra solo con inspección asociada
+    ->where('id_empresa', $empresaId)
+    ->where('id_tipo', 11)
+    ->where('fecha_solicitud', '>', '2025-05-30')
+    ->get()
+    ->groupBy(function ($item) {
+        return optional($item->inspeccion)->fecha_servicio
+            ? Carbon::parse($item->inspeccion->fecha_servicio)->format('Y-m')
+            : 'Sin fecha';
+    })
+    ->map(function ($items) {
+        return $items->groupBy(function ($item) {
+            return optional($item->inspeccion)->fecha_servicio
+                ? Carbon::parse($item->inspeccion->fecha_servicio)->format('Y-m-d')
+                : 'Sin fecha';
+        })->map(function ($porFecha) {
+            return $porFecha->groupBy(function ($item) {
+                return $item->instalacion->direccion_completa ?? 'Sin dirección';
+            })->map(function ($porInstalacion) {
+                return $porInstalacion
+                    ->pluck('inspeccion.num_servicio')
+                    ->filter()
+                    ->unique()
+                    ->count();
+            });
+        });
+    });
+
+
+
+    return view('content.dashboard.dashboards-analytics', compact('serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)
@@ -129,10 +205,10 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
   public function estadisticasServicios(Request $request)
   {
       $year = $request->input('year', now()->year);
-  
+
       // Trae todos los tipos de servicio con su ID y nombre
       $tipos = solicitudTipo::pluck('tipo', 'id_tipo'); // [1 => 'Instalaciones', 2 => 'Granel', ...]
-  
+
       $formatearDatos = function ($datos) {
           $meses = array_fill(1, 12, 0);
           foreach ($datos as $mes => $total) {
@@ -140,9 +216,9 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
           }
           return array_values($meses);
       };
-  
+
       $inspecciones = [];
-  
+
       foreach ($tipos as $id => $nombre) {
           $datos = inspecciones::whereHas('solicitud', function ($query) use ($id) {
                   $query->where('id_tipo', $id);
@@ -152,15 +228,15 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
               ->groupBy('mes')
               ->pluck('total', 'mes')
               ->toArray();
-  
+
           $inspecciones[$nombre] = $formatearDatos($datos);
       }
-  
+
       return response()->json([
           'inspecciones' => $inspecciones
       ]);
   }
-  
+
 
 
 

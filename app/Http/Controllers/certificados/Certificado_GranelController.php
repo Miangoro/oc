@@ -307,6 +307,11 @@ public function destroy($id_certificado)
         // Eliminar todos los revisores asociados al certificado en la tabla certificados_revision
         Revisor::where('id_certificado', $id_certificado)->delete();
 
+        // Eliminar la solicitud asociada (id_predio = id_certificado, id_tipo = 12)
+        solicitudesModel::where('id_predio', $id_certificado)
+            ->where('id_tipo', 12)
+            ->delete();
+            
         // Luego, eliminar el certificado
         $eliminar->delete();
 
@@ -371,6 +376,21 @@ public function update(Request $request, $id_certificado)
         $lote->folio_certificado = $validated['num_certificado'];
         $lote->update();
 
+
+        $soli = solicitudesModel::where('id_predio', $id_certificado)
+            ->where('id_tipo', 12)
+            ->first();
+        $soli->id_empresa = $dictamen->inspeccione->solicitud->id_empresa ?? '0';
+        $soli->fecha_solicitud = $validated['fecha_emision'];
+        $soli->fecha_visita = $validated['fecha_emision'];
+        $soli->id_instalacion =  $dictamen->inspeccione->solicitud->id_instalacion ?? '0';
+        $soli->caracteristicas = json_encode([
+            'id_lote_granel' => $idLoteGranel ?? '0',
+            'id_dictamen' => $dictamen->id_dictamen ?? '0'
+            ]);
+        $soli->update();
+        
+
         return response()->json(['message' => 'Actualizado correctamente.']);
     } catch (\Exception $e) {
         Log::error('Error al actualizar', [
@@ -383,98 +403,131 @@ public function update(Request $request, $id_certificado)
 
 
 
-///FUNCION AGREGAR REVISOR
+
+
+
+
+///OBTENER DOCUMENTO DE REVISION
+public function obtenerRevision($id_certificado)
+{
+    // Obtener la primera revisión (tipo_revision = 1)
+    $revision = Revisor::where('id_certificado', $id_certificado)
+        ->where('tipo_certificado', 2)
+        ->where('tipo_revision', 1) // fija
+        ->first();
+
+    if (!$revision) {
+        return response()->json(['exists' => false]);
+    }
+
+    $documento = Documentacion_url::where('id_relacion', $revision->id_revision)
+        ->where('id_documento', 133) 
+        ->first();
+
+    return response()->json([
+        'exists' => true,
+        'observaciones' => $revision->observaciones,
+        'es_correccion' => $revision->es_correccion,
+        'documento' => $documento ? [
+            'nombre' => $documento->nombre_documento,
+            'url' => asset('storage/revisiones/' . $documento->url),
+        ] : null,
+    ]);
+}
+///ELIMINAR DOCUMENTO REVISION
+public function eliminarDocumentoRevision($id_certificado)
+{
+    // Buscar el revisor con tipo_certificado 3 (puedes limitar más si quieres)
+    $revisor = Revisor::where('id_certificado', $id_certificado)
+        ->where('tipo_certificado', 2)
+        ->where('tipo_revision', 1)
+        ->first();
+
+    if (!$revisor) {
+        return response()->json(['message' => 'Revisión no encontrada.'], 404);
+    }
+
+    $documento = Documentacion_url::where('id_relacion', $revisor->id_revision)
+        ->where('id_documento', 133) // Asegúrate del ID correcto
+        ->first();
+
+    if (!$documento) {
+        return response()->json(['message' => 'Documento no encontrado.'], 404);
+    }
+
+    // Eliminar archivo físico
+    Storage::disk('public')->delete('revisiones/' . $documento->url);
+    // Eliminar de BD
+    $documento->delete();
+
+    return response()->json(['message' => 'Documento eliminado correctamente.']);
+}
+
+///ASIGNAR REVISION
 public function storeRevisor(Request $request)
 {
-    try {
-        $validatedData = $request->validate([
-            'tipoRevisor' => 'required|string|in:1,2',
-            'nombreRevisor' => 'required|integer|exists:users,id',
-            'numeroRevision' => 'required|string|max:50',
-            'esCorreccion' => 'nullable|in:si,no',
-            'observaciones' => 'nullable|string|max:255',
-            'id_certificado' => 'required|integer|exists:certificados_granel,id_certificado',
+    $validated = $request->validate([
+        'numeroRevision' => 'required|string|max:50',
+        'personalOC' => 'nullable|integer|exists:users,id',
+        'miembroConsejo' => 'nullable|integer|exists:users,id',
+        'esCorreccion' => 'nullable|in:si,no',
+        'observaciones' => 'nullable|string|max:5000',
+        'id_certificado' => 'required|integer|exists:certificados_granel,id_certificado',
+        'url' => 'nullable|file|max:10000',
+        'nombre_documento' => 'nullable|string|max:255',
+    ]);
+
+    $certificado = CertificadosGranel::find($validated['id_certificado']);
+    $empresa = $certificado->dictamen->inspeccione->solicitud->empresa;
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+
+    // Función para crear o actualizar revisor
+    $guardar = function ($idRevisor, $tipoRevisor, $conDocumento = false) use ($validated, $certificado, $empresa, $request, $numeroCliente) {
+        if (!$idRevisor) return;
+
+        $revisor = Revisor::firstOrNew([
+            'id_certificado' => $certificado->id_certificado,
+            'tipo_certificado' => 2,
+            'tipo_revision' => $tipoRevisor,
         ]);
 
-        $user = User::find($validatedData['nombreRevisor']);
-        if (!$user) {
-            return response()->json(['message' => 'El revisor no existe.'], 404);
-        }
-
-        $certificado = CertificadosGranel::find($validatedData['id_certificado']);
-        if (!$certificado) {
-            return response()->json(['message' => 'El certificado no existe.'], 404);
-        }
-
-         $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])
-                ->where('tipo_certificado', 2)
-                ->where('tipo_revision', $validatedData['tipoRevisor']) // buscar según tipo de revisión
-                ->first();
-
-
-            $message = ''; // Inicializar el mensaje
-
-            if ($revisor) {
-                if ($revisor->id_revisor == $validatedData['nombreRevisor']) {
-                    $message = 'Revisor reasignado.';
-                } else {
-                    $revisor->id_revisor = $validatedData['nombreRevisor'];
-                    $message = 'Revisor asignado exitosamente.';
-                }
-            } else {
-                $revisor = new Revisor();
-                $revisor->id_certificado = $validatedData['id_certificado'];
-               
-                $revisor->tipo_revision = $validatedData['tipoRevisor'];
-                $revisor->id_revisor = $validatedData['nombreRevisor'];
-                $message = 'Revisor asignado exitosamente.';
-            }
-        // Guardar los datos del revisor
-         $revisor->tipo_certificado = 2; //El 2 corresponde al certificado de granel
+        $revisor->id_revisor = $idRevisor;
+        $revisor->numero_revision = $validated['numeroRevision'];
+        $revisor->es_correccion = $validated['esCorreccion'] ?? 'no';
+        $revisor->observaciones = $validated['observaciones'] ?? '';
         $revisor->decision = 'Pendiente';
-        $revisor->numero_revision = $validatedData['numeroRevision'];
-        $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
-        $revisor->observaciones = $validatedData['observaciones'] ?? '';
         $revisor->save();
 
-        $empresa = $certificado->dictamen->inspeccione->solicitud->empresa;
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
-                return !empty($numero);
-            });
+        // Solo si es tipo 1 y se subió documento
+        if ($conDocumento && $request->hasFile('url')) {
+            $docAnterior = Documentacion_url::where('id_relacion', $revisor->id_revision)
+                ->where('id_documento', 133)
+                ->first();
 
-            if ($request->hasFile('url')) {
-            if ($revisor->id_revision) {
-                // Buscar el registro existente
-
-
-                    // Si no existe, crea una nueva instancia
-                    $documentacion_url = new Documentacion_url();
-                    $documentacion_url->id_relacion = $revisor->id_revision;
-                    $documentacion_url->id_documento = $request->id_documento;
-                    $documentacion_url->id_empresa = $empresa->id_empresa;
-
-
-                // Procesar el nuevo archivo
-                $file = $request->file('url');
-                $nombreLimpio = str_replace('/', '-', $request->nombre_documento);
-                $filename = $nombreLimpio . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('revisiones/', $filename, 'public');
-
-                // Actualizar los datos del registro
-                $documentacion_url->nombre_documento = $nombreLimpio;
-                $documentacion_url->url = $filename;
-                $documentacion_url->save();
-
+            if ($docAnterior) {
+                Storage::disk('public')->delete('revisiones/' . $docAnterior->url);
+                $docAnterior->delete();
             }
+
+            $file = $request->file('url');
+            $filename = str_replace('/', '-', $validated['nombre_documento']) . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('revisiones/', $filename, 'public');
+
+            Documentacion_url::create([
+                'id_relacion' => $revisor->id_revision,
+                'id_documento' => 133, // fijo
+                'id_empresa' => $empresa->id_empresa,
+                'nombre_documento' => $validated['nombre_documento'],
+                'url' => $filename,
+            ]);
         }
 
-            if($validatedData['tipoRevisor']==1){
-                $url_clic = '/add_revision/' . $revisor->id_revision;
-            }else{
-                 $url_clic = '/add_revision_consejo/' . $revisor->id_revision;
-            }
-         // Preparar datos para el correo
-            $data1 = [
+        // Notificación
+        $user = User::find($idRevisor);
+        if ($user) {
+            $url_clic = $tipoRevisor == 1 ? "/add_revision/{$revisor->id_revision}" : "/add_revision_consejo/{$revisor->id_revision}";
+
+            $user->notify(new GeneralNotification([
                 'asunto' => 'Revisión de certificado ' . $certificado->num_certificado,
                 'title' => 'Revisión de certificado',
                 'message' => 'Se te ha asignado el certificado ' . $certificado->num_certificado,
@@ -484,43 +537,30 @@ public function storeRevisor(Request $request)
                 'num_certificado' => $certificado->num_certificado,
                 'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
                 'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-                'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar',
+                'razon_social' => $empresa->razon_social ?? 'Sin asignar',
                 'numero_cliente' => $numeroCliente ?? 'Sin asignar',
-                'tipo_certificado' => 'Certificado de instalaciones',
+                'tipo_certificado' => 'Certificado granel',
                 'observaciones' => $revisor->observaciones,
-            ];
+            ]));
+        }
+    };
 
-       // Notificación Local
-            $users = User::whereIn('id', [$validatedData['nombreRevisor']])->get();
-            foreach ($users as $notifiedUser) {
-                $notifiedUser->notify(new GeneralNotification($data1));
-            }
-
-            // Correo a Revisores
-            try {
-                info('Enviando correo a: ' . $user->email);
-
-                if (empty($user->email)) {
-                    return response()->json(['message' => 'El correo del revisor no está disponible.'], 404);
-                }
-
-                Mail::to($user->email)->send(new CorreoCertificado($data1));
-                info('Correo enviado a: ' . $user->email);
-            } catch (\Exception $e) {
-                Log::error('Error al enviar el correo: ' . $e->getMessage());
-                return response()->json(['message' => 'Error al enviar el correo: ' . $e->getMessage()], 500);
-            }
-
-        return response()->json([
-            'message' => $message ?? 'Revisor del OC asignado exitosamente',
-        ]);
-
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json(['message' => $e->validator->errors()->first()], 422);
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Ocurrió un error al asignar el revisor: ' . $e->getMessage()], 500);
+    // Guardar primera revisión (personal OC) con documento si hay
+    if ($request->filled('personalOC')) {
+        $guardar($validated['personalOC'], 1, true);
     }
+
+    // Guardar segunda revisión (miembro consejo) sin documento
+    if ($request->filled('miembroConsejo')) {
+        $guardar($validated['miembroConsejo'], 2, false);
+    }
+
+    return response()->json(['message' => 'Revisor asignado correctamente.']);
 }
+
+
+
+
 
 
 
@@ -537,7 +577,7 @@ public function reexpedir(Request $request)
             $request->validate([
             'id_firmante' => 'required|integer',
             'id_dictamen' => 'required|integer',
-            'num_certificado' => 'required|string',
+            'num_certificado' => 'required|string|min:19',
             'fecha_emision' => 'required|date',
             'fecha_vigencia' => 'required|date',
             'observaciones' => 'nullable|string',
@@ -636,6 +676,7 @@ public function CertificadoGranel($id_certificado, $conMarca = true)
         'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'representante' => $certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'No encontrado',
         'domicilio_fiscal' => $certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'No encontrado',
+        'cp' => $certificado->dictamen->inspeccione->solicitud->empresa->cp ?? ' ',
         'rfc' => $certificado->dictamen->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'direccion_completa' => $certificado->dictamen->inspeccione->solicitud->instalaciones->direccion_completa ?? 'No encontrado',
         'nombre_firmante' => $certificado->user->name ?? 'No encontrado',
@@ -649,7 +690,7 @@ public function CertificadoGranel($id_certificado, $conMarca = true)
         'clase' => $certificado->dictamen->inspeccione->solicitud->lote_granel->clase->clase ?? 'No encontrado',
         'nombre_lote' => $certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote?? 'No encontrado',
         'n_analisis' => $certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'No encontrado',
-        'volumen' => $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen_restante ?? 'No encontrado',
+        'volumen' => $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen ?? 'No encontrado',
         'cont_alc' => $certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc?? 'No encontrado',
         'tipo_maguey' => $certificado->dictamen->inspeccione->solicitud->lote_granel ?? 'No encontrado',
         'edad' => $certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? '-----',
@@ -792,6 +833,44 @@ public function CertificadoFirmado($id)
         'nombre_archivo' => null,
         //'message' => 'Documento no encontrado.',
     ]);
+}
+///BORRAR CERTIFICADO FIRMADO
+public function borrarCertificadofirmado($id)
+{
+    $certificado = CertificadosGranel::findOrFail($id);
+
+    // Obtener id_lote_granel desde las características
+    $caracteristicas = json_decode($certificado->dictamen?->inspeccione?->solicitud?->caracteristicas, true);
+    $idLote = $caracteristicas['id_lote_granel'] ?? null;
+
+    $documentacion = Documentacion_url::where('id_relacion', $idLote)
+        ->where('id_documento', 59)
+        ->where('id_doc', $certificado->id_certificado)
+        ->first();
+
+    if (!$documentacion) {
+        return response()->json(['message' => 'Documento no encontrado.'], 404);
+    }
+
+    $empresa = empresa::with("empresaNumClientes")
+        ->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)
+        ->first();
+
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+
+    $rutaArchivo = "public/uploads/{$numeroCliente}/certificados_granel/{$documentacion->url}";
+
+    // Eliminar archivo físico
+    if (Storage::exists($rutaArchivo)) {
+        Storage::delete($rutaArchivo);
+    }
+
+    // Eliminar registro en la base de datos
+    $documentacion->delete();
+
+    return response()->json(['message' => 'Documento eliminado correctamente.']);
 }
 
 

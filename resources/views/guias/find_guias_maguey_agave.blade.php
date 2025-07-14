@@ -37,6 +37,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar guías de traslado'));
+  window.puedeEditarElUsuario = @json(auth()->user()->can('Editar guías de traslado'));
+  window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar guías de traslado'));
+</script>
 @vite(['resources/js/guias_maguey_agave.js'])
 @endsection
 
@@ -54,8 +59,8 @@
       <thead class="table-dark">
         <tr>
           <th></th>
-          <th>Id</th>
-          <th>Datos del cliente</th>
+          <th>#</th>
+          <th>Cliente</th>
           <th>Folio</th>
           <th>Run Folio</th>
           <th>Predio</th>
@@ -64,6 +69,7 @@
           <th>No. anterior</th>
           <th>Comercializadas</th>
           <th>No. mermas</th>
+          <th>Doc. Adjuntos</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -78,10 +84,7 @@
 @include('_partials/_modals/modal-add-guias-agave')
 @include('_partials/_modals/modal-edit-guias-agave')
 @include('_partials/_modals/modal-ver-guias-registardas')
-
-
-
-
-
 <!-- /Modal -->
+
+
 @endsection

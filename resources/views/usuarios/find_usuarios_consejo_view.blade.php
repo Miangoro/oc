@@ -32,6 +32,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarUsuario = @json(auth()->user()->can('Registrar usuarios'));
+  window.puedeEditarUsuario = @json(auth()->user()->can('Editar usuarios'));
+  window.puedeEliminarUsuario = @json(auth()->user()->can('Eliminar usuarios'));
+</script>
 @vite(['resources/js/usuarios-consejo.js'])
 @endsection
 

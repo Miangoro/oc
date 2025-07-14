@@ -11,39 +11,42 @@
         }
     }
 </style>
-<div class="modal fade" id="verGuiasRegistardas" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-custom-size modal-simple modal-add-new-address">
-        <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-body p-0">
-                <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Guías de traslado</h4>
-                    <p class="address-subtitle"></p>
-                </div>
 
+
+<div class="modal fade" id="verGuiasRegistardas" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+        <div class="modal-header bg-primary pb-4">
+            <h5 class="modal-title text-white">Guías de traslado</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <p class="address-subtitle"></p>
+        </div>
+
+            <div class="modal-body">
                 <form id="verGuiasRegistardasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="d-flex justify-content-center mb-3">
                         <a href="#" id="descargarPdfBtn" class="btn btn-primary waves-effect">Descargar PDFs</a>
                     </div>
-                    <div class="row">
-                        <div class="table-responsive">
+                    
+                        <div class="table-responsive px-12">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>folio</th>
                                         <th>Guía</th>
-                                        <th>Abrir Guia</th>
-                                        <th>Acciones</th>
+                                        {{-- <th>Acciones</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody id="tablita">
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                            <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                                aria-label="Close">Cerrar</button>
-                        </div>
+
+
+                    <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+                        <button type="reset" class="btn btn-secondary waves-effect waves-light" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
                 </form>
             </div>
         </div>

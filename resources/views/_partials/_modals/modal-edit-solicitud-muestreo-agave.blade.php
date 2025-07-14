@@ -27,7 +27,16 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" id="fecha_sol_muestr_agave_edit"
+                                    value="@php
+echo date('Y-m-d H:m'); @endphp">
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
                                     id="fecha_visita_muestr" type="text" name="fecha_visita" autocomplete="off" />
@@ -41,7 +50,8 @@
                                 aria-label="id_instalacion">
                                 <option value="" selected>Lista de instalaciones</option>
                             </select>
-                            <label for="id_predio">Domicilio de la instalación de producción</label>
+                           <label >Domicilio de inspección</label>
+                            {{-- <label for="domicilio">Domicilio de la instalación de producción</label> --}}
                         </div>
                     </div>
                     <div class="row">
@@ -61,10 +71,14 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnEditMA"><i class="ri-pencil-fill"></i>
+                        <button disabled class="btn btn-primary me-1 d-none" type="button" id="loading_mu_agv_edit">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Actualizando...
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnEditMA"><i class="ri-pencil-fill me-1"></i>
                             Editar</button>
                         <button type="reset" class="btn btn-danger " data-bs-dismiss="modal" aria-label="Close"><i
-                                class="ri-close-line"></i> Cancelar</button>
+                                class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
                 </form>
             </div>

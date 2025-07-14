@@ -13,6 +13,7 @@ use App\Models\Dictamen_Envasado;
 use App\Models\marcas;
 use App\Models\LotesGranel;
 use App\Models\solicitudesModel;
+use App\Models\Documentacion_url;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -134,6 +135,7 @@ public function index(Request $request)
             'inspeccion.solicitud',// Relación anidada: inspeccione > solicitu
             'inspeccion.solicitud.empresa',
             'inspeccion.solicitud.empresa.empresaNumClientes',
+            'lote_envasado.lotesGranel.fqs',
         ])->offset($start)->limit($limit)->get();
 
 
@@ -154,7 +156,20 @@ public function index(Request $request)
             $nestedData['fecha_servicio'] = Helpers::formatearFecha($dictamen->fecha_servicio);
             //$nestedData['id_lote_envasado'] = $dictamen->lote_envasado->nombre_lote ?? 'No encontrado';
             $nestedData['lote_envasado'] = $dictamen->lote_envasado->nombre ?? 'No encontrado';
+            $nestedData['cont_alc_envasado'] = $dictamen->lote_envasado->cont_alc_envasado ?? 'No disponible';
+
             $nestedData['lote_granel'] = $dictamen->lote_envasado->lotesGranel->first()->nombre_lote ?? 'No encontrado';
+            $empresa_granel = $dictamen->lote_envasado->lotesGranel->first()->empresa ?? null;
+            $numero_cliente_granel = $empresa_granel && $empresa_granel->empresaNumClientes?->isNotEmpty()
+                ? $empresa_granel->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa_granel
+                ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+            $lote_granel = $dictamen->lote_envasado->lotesGranel ?? null;
+            //Certificado Firmado
+            $documentacion = Documentacion_url::where('id_relacion', $lote_granel?->first()?->id_lote_granel)
+                ->where('id_documento', 59)->where('id_doc', $lote_granel?->first()?->certificadoGranel?->id_certificado)->first();
+            $nestedData['pdf_firmado'] = $documentacion?->url
+                ? asset("files/{$numero_cliente_granel}/certificados_granel/{$documentacion->url}") : null;
+
             $nestedData['folio_fq'] = $dictamen->lote_envasado->lotesGranel->first()->folio_fq ?? 'No encontrado';
             $nestedData['tipo_maguey'] = $dictamen->lote_envasado->lotesGranel->first()?->tiposRelacionados
                 ?->map(fn($t) => $t->nombre.' ('.$t->cientifico.')')->implode(', ') ?? 'No encontrado';
@@ -195,6 +210,25 @@ public function index(Request $request)
             $urls = $dictamen->inspeccion?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
             $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
 
+              // Declarar el lote antes de usarlo
+              $lote = $dictamen->lote_envasado;
+              $loteGranel = $lote->lotesGranel->first();
+
+              $folioFq = $loteGranel?->folio_fq ?? '';
+              $folios = array_pad(explode(',', $folioFq), 2, '');
+
+              $documentoCompleto = $loteGranel?->fqs?->firstWhere('id_documento', 58);
+              $documentoAjuste   = $loteGranel?->fqs?->firstWhere('id_documento', 134);
+
+              $nestedData['folio_fq_completo'] = $folios[0];
+              $nestedData['folio_fq_ajuste'] = $folios[1];
+
+              $nestedData['url_fq_completo'] = $documentoCompleto
+                  ? $numero_cliente . '/fqs/' . $documentoCompleto->url
+                  : '';
+              $nestedData['url_fq_ajuste'] = $documentoAjuste
+                  ? $numero_cliente . '/fqs/' . $documentoAjuste->url
+                  : '';
 
             $data[] = $nestedData;
         }
@@ -511,10 +545,19 @@ public function MostrarDictamenEnvasado($id_dictamen)
         'qrCodeBase64' => $qrCodeBase64
     ];
 
-    if ($data->fecha_emision >= "2024-12-10") {
-        $edicion = 'pdfs.dictamen_envasado_ed7';
-    }else{
+
+    /* if ($data->fecha_emision < "2024-07-15") {
+        $edicion = 'pdfs.dictamen_envasado_ed4';
+    } elseif ($data->fecha_emision < "2024-12-10") {
         $edicion = 'pdfs.dictamen_envasado_ed6';
+    } else {
+        $edicion = 'pdfs.dictamen_envasado_ed7';
+    } */
+
+    if ($data->fecha_emision < "2024-12-10") {
+        $edicion = 'pdfs.dictamen_envasado_ed6';
+    } else {
+        $edicion = 'pdfs.dictamen_envasado_ed7';
     }
     //return $pdf->stream('F-UV-04-17 Ver 6 Dictamen de Cumplimiento NOM de Mezcal Envasado.pdf');
     return Pdf::loadView($edicion, $pdf)->stream('Dictamen de Cumplimiento NOM de Mezcal Envasado F-UV-04-17.pdf');

@@ -1,4 +1,18 @@
 $(function () {
+    let buttons = [];
+
+  // Si tiene permiso, agregas el botón
+  if (puedeAgregarElUsuario) {
+    buttons.push({
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar Aduana</span>',
+          className: 'add-new btn btn-primary waves-effect waves-light',
+          attr: {
+            'data-bs-toggle': 'offcanvas',
+            'data-bs-target': '#offcanvasAddUser'
+          }
+    });
+  }
+
   const tabla = $('.datatables-aduanas');
 
   if (tabla.length) {
@@ -32,26 +46,53 @@ $(function () {
           orderable: false,
           responsivePriority: 3,
           render: function (data, type, full) {
+            let acciones = '';
+
+            // Acción: Editar aduana
+            if (window.puedeEditarElUsuario) {
+              acciones += `
+                <li>
+                  <a data-id="${full.id}" class="dropdown-item edit-record text-info fw-medium" style="cursor: pointer;">
+                    <i class="ri-edit-box-line ri-20px text-info"></i> Editar aduana
+                  </a>
+                </li>`;
+            }
+
+            // Acción: Eliminar aduana
+            if (window.puedeEliminarElUsuario) {
+              acciones += `
+                <li>
+                  <a data-id="${full.id}" class="dropdown-item delete-record text-danger fw-medium" style="cursor: pointer;">
+                    <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar aduana
+                  </a>
+                </li>`;
+            }
+
+            // Si no hay acciones → mostrar botón deshabilitado
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+
+            // Si hay acciones → mostrar dropdown
             return `
               <div class="dropdown">
                 <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                   <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end m-0">
-                  <li>
-                    <a data-id="${full.id}" class="dropdown-item edit-record text-info fw-medium" style="cursor: pointer;">
-  <i class="ri-edit-box-line ri-20px text-info"></i> Editar aduana
-</a>
-                  </li>
-                  <li>
-                    <a data-id="${full.id}" class="dropdown-item delete-record text-danger fw-medium" style="cursor: pointer;">
-  <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar aduana
-</a>
-                  </li>
+                  ${acciones}
                 </ul>
               </div>
             `;
           }
+
+
+
+
         }
       ],
       responsive: {
@@ -96,6 +137,7 @@ $(function () {
           sPrevious: 'Anterior'
         }
       },
+<<<<<<< HEAD
       buttons: [
         {
           extend: 'collection',
@@ -118,6 +160,9 @@ $(function () {
           }
         }
       ]
+=======
+      buttons: buttons,
+>>>>>>> e2b2c7a3b9f38ff21b4a69311185fa78a3c52b37
     });
   }
 

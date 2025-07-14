@@ -173,6 +173,7 @@
     </div>
 @endsection
 
+
 <script>
     function abrirModal(id_solicitud, id_inspeccion, tipo, nombre_empresa, id_tipo, folio, noservicio, inspectorName) {
 
@@ -254,9 +255,10 @@
             $('.etiquetasNA').hide(); // ocultar el tr
         }
 
+        //tabla dinamica
         $.ajax({
             url: '/getDocumentosSolicitud/' +
-            id_solicitud, // URL del servidor (puede ser .php, .json, .html, etc.)
+                id_solicitud, // URL del servidor (puede ser .php, .json, .html, etc.)
             type: 'GET', // O puede ser 'GET'
             dataType: 'json', // Puede ser 'html', 'text', 'json', etc.
             success: function(response) {
@@ -268,6 +270,8 @@
                     const urls_certificados = response.url_certificado;
                     const url_corrugado = response.url_corrugado;
                     const url_evidencias = response.url_evidencias;
+                    const url_etiqueta_envasado = response.url_etiqueta_envasado;
+                    const id_dictamen_envasado = response.id_dictamen_envasado;
                     let html = `
                     <table class="table table-bordered table-striped">
                         <thead class="table-dark">
@@ -284,17 +288,38 @@
                                 carpeta = 'actas/';
                             }
                             html += `
-                            <tr>
+                            <tr data-id-doc="${doc.id_documento}" data-id-solicitud="${id_solicitud}">
                                 <td>${doc.nombre}</td>
                                 <td>
                                     <a href="/files/${response.numero_cliente}/${carpeta}${doc.url}" target="_blank">
                                         <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
-                                    </a>
+                                    </a>`;
+
+                            if (doc.id_documento == 69 || doc.id_documento == 70) {
+                                html += `
+                                    <button type="button" class="btn btn-outline-danger btn-sm px-2 ms-2 eliminar-doc">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>`;
+                            }
+
+                            html += `
                                 </td>
                             </tr>`;
                         });
                     } else {
-                        html += `<tr><td colspan="2">No se encontraron documentos.</td></tr>`;
+                        html += ``;
+                    }
+
+                    if (url_etiqueta_envasado) {
+                        html += `
+                                    <tr>
+                                        <td>Etiqueta</td>
+                                        <td>
+                                            <a href="/files/${response.numero_cliente}/${url_etiqueta_envasado}" target="_blank">
+                                                <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                            </a>
+                                        </td>
+                                    </tr>`;
                     }
 
                     if (urls_certificados && urls_certificados.length > 0) {
@@ -311,7 +336,6 @@
                         });
                     }
 
-
                     if (fqs) {
                         fqs.forEach(function(fq) {
                             html += `
@@ -327,7 +351,6 @@
                     }
 
                     if (url_etiqueta) {
-
                         html += `
                             <tr>
                                 <td>Etiqueta</td>
@@ -337,11 +360,9 @@
                                     </a>
                                 </td>
                             </tr>`;
-
                     }
 
                     if (url_corrugado) {
-
                         html += `
                             <tr>
                                 <td>Corrugado</td>
@@ -351,27 +372,87 @@
                                     </a>
                                 </td>
                             </tr>`;
-
+                    }
+                    if (id_dictamen_envasado) {
+                        html += `
+                            <tr>
+                                <td>Dictamen de envasado</td>
+                                <td>
+                                    <a href="/dictamen_envasado/${id_dictamen_envasado}" target="_blank">
+                                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>`;
                     }
 
 
                     html += `</tbody></table>`;
                     $('#contenedor-documentos').html(html);
+
+                    //borrar documentos 69 y 70
+                    $(document).on('click', '.eliminar-doc', function() {
+                        const fila = $(this).closest('tr');
+                        const idDoc = fila.data('id-doc'); // 69 o 70
+                        const id_solicitud = fila.data('id-solicitud');
+                        console.log(idDoc, id_solicitud);
+                        Swal.fire({
+                            title: '¿Eliminar documento?',
+                            text: 'Esta acción no se puede deshacer.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+                            cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-2',
+                                cancelButton: 'btn btn-danger'
+                            },
+                            buttonsStyling: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                    url: `/eliminar-acta/${id_solicitud}/${idDoc}`,
+                                    method: 'DELETE',
+                                    success: function(res) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: '¡Exito!',
+                                            text: res.message,
+                                            customClass: {
+                                                confirmButton: 'btn btn-primary'
+                                            }
+                                        });
+                                        fila
+                                    .remove(); // elimina visualmente la fila sin recargar todo
+                                    },
+                                    error: function(error) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: '¡Error!',
+                                            text: 'Error al eliminar.',
+                                            //footer: `<pre>${error.responseText}</pre>`,
+                                            customClass: {
+                                                confirmButton: 'btn btn-danger'
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    });
                 }
             },
-
 
             error: function(xhr, status, error) {
                 // Aquí si algo salió mal
                 console.error('Error AJAX:', error);
                 $('#contenedor-documentos').html('');
             }
-        });
 
+        }); ///ajax
         $('#expedienteServicio').modal('show');
-
-
     }
+
+
 
     function abrirModalAsignarInspector(id_solicitud, tipo, nombre_empresa) {
         // Asignar valores iniciales

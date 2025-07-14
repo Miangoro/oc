@@ -471,6 +471,10 @@ public function MostrarDictamenExportacion($id_dictamen)
         $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
             : collect(); // Si no hay IDs, devolvemos una colección vacía
 
+        
+        $DOM = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA';
+        $convenio = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA';
+        $estado_productor = $lotes[0]->lotesGranel[0]->estados->nombre ?? 'No encontrado';
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
 
 
@@ -482,8 +486,10 @@ public function MostrarDictamenExportacion($id_dictamen)
         'fecha_emision' => $fecha_emision2,
         'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'domicilio' => $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
+        'cp' => $data->inspeccione->solicitud->empresa->cp ?? " ",
         'rfc' => $data->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
-        'productor_autorizado' => $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? '',
+        //'productor_autorizado' => $lotes[0]->lotesGranel[0]->empresa->registro_productor ?? '',
+        'productor_autorizado' => $DOM,
         'importador' => $data->inspeccione->solicitud->direccion_destino->destinatario ?? "No encontrado",
         //'direccion' => $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrado',
         'direccion' => $data->inspeccione->solicitud->direccion_destino->direccion ?? "No encontrado",
@@ -496,7 +502,7 @@ public function MostrarDictamenExportacion($id_dictamen)
         'aduana' => $aduana_salida ?? "No encontrado",
         'n_pedido' => $no_pedido ?? "No encontrado",
         //'envasado_en' => $envasado_en ?? "No encontrado",
-        'envasado_en' => $E_productor,
+        'envasado_en' => $estado_productor,
         'botellas' => $botellas ?? "No encontrado",
         'cajas' => $cajas ?? "No encontrado",
         'presentacion' => $presentacion ?? "No encontrado",

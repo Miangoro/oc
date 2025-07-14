@@ -11,7 +11,7 @@
                     <input type="hidden" name="id_solicitud" id="edit_id_solicitud_muestreo">
                     <input type="hidden" name="form_type" value="muestreoloteagranel">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="edit_id_empresa_muestreo"
                                     onchange="EditobtenerInstalacionesMuestreo(); editobtenerGranelesMuestreo(this.value);"
@@ -26,10 +26,17 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    id="edit_fecha_visita" name="fecha_visita" autocomplete="off"/>
+                                    name="fecha_solicitud" autocomplete="off" id="fecha_sol_edit_muestreo_lote">
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    id="edit_fecha_visita" name="fecha_visita" autocomplete="off" />
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -41,6 +48,7 @@
                                     name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
+                                <label >Domicilio de inspección</label>
                             </div>
                         </div>
                     </div>
@@ -96,7 +104,8 @@
                                 style="pointer-events: none;" />
                             <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
                         </div>
-                        <input type="hidden" id="edit_id_tipo_maguey_muestreo_ids" name="id_tipo_maguey_muestreo[0]">
+                        <input type="hidden" id="edit_id_tipo_maguey_muestreo_ids"
+                            name="id_tipo_maguey_muestreo[0]">
                     </div>
                     <div class="row">
                         <div class="col-md-5">
@@ -131,7 +140,8 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnEditMLote"><i class="ri-pencil-fill"></i> Editar</button>
+                        <button type="submit" class="btn btn-primary" id="btnEditMLote"><i
+                                class="ri-pencil-fill"></i> Editar</button>
                         <button type="reset" class="btn btn-danger " id="ejemploo" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>

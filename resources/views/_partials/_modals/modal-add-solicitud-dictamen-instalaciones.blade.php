@@ -25,10 +25,18 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                   id="fechaSoliInstalacion" name="fecha_visita" />
+                                    name="fecha_solicitud" id="fecha_sol_dic_ins"
+                                    value="@php echo date('Y-m-d H:i'); @endphp">
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    id="fechaSoliInstalacion" name="fecha_visita" />
                                 <label for="num_anterior">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -40,9 +48,10 @@
                                 <select class=" form-select select2" id="id_instalacion_dic" name="id_instalacion"
                                     aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
-                                    <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
+
                                 </select>
-                            </div>
+                                 <label >Domicilio de inspección</label>
+                            </div> {{-- Domicilio de la instalación --}}
                         </div>
                     </div>
                     <div class="row">
@@ -90,9 +99,15 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnRegistrarDicIns"><i class="ri-add-line"></i> Registrar</button>
+                        <button disabled class="btn btn-primary me-1 d-none" type="button"
+                            id="loading_dictamen">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Registrando...
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnRegistrarDicIns"><i
+                                class="ri-add-line me-1"></i> Registrar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
-                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                            aria-label="Close"><i class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
                 </form>
             </div>

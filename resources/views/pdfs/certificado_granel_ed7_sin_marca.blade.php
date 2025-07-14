@@ -92,7 +92,7 @@
             font-size: 8px;
             line-height: 1;
             position: fixed;
-            bottom: 20px;
+            bottom: 26px;
             left: 0;
             right: 0;
             width: calc(100% - 40px);
@@ -151,7 +151,7 @@
         .margen_mezcal_granel {
             position: absolute;
             top: 90px; 
-            left: -80px; 
+            left: -67px; 
             width: 144px;
             height: 850px; 
             max-height: 100vh; 
@@ -259,7 +259,7 @@
     </div>
 
     
-    <p class="text" style="padding-top: 4%">El Centro de Innovación y Desarrollo Agroalimentario de Michoacán, (CIDAM) acreditado como Organismo de Certificación con acreditación No. 144/18,
+    <p class="text" style="padding-top: 10%">El Centro de Innovación y Desarrollo Agroalimentario de Michoacán, (CIDAM) acreditado como Organismo de Certificación con acreditación No. 144/18,
     acreditado por la entidad mexicana de acreditación, a.c. y aprobado por la DGN con el No. 144/18 otorga el presente:</p>
 
     <p class="titulo">CERTIFICADO</p>
@@ -284,7 +284,7 @@
         <td class="columna">Dirección</td>
 
         <td class="columna-text">
-            <span class="negrita">Domicilio Fiscal:</span> {{ $domicilio_fiscal }}
+            <span class="negrita">Domicilio Fiscal:</span> {{ $domicilio_fiscal }} C.P.{{ $cp }}
             <br>
             <span class="negrita">Domicilio de Instalaciones:</span> {{ $direccion_completa }}
         </td>
@@ -320,7 +320,7 @@
 			<td class="columna">Ingredientes</td>
 			<td class="columna-norm">{{ $ingredientes }}</td>
 			<td class="columna" style="white-space: nowrap;">Volumen de lote</td>
-			<td class="columna-norm">{{ $volumen }} L</td>
+			<td class="columna-norm">{{ number_format($volumen) }} L</td>
 			<td class="columna">Contenido Alcohólico</td>
 			<td class="columna-norm" style="white-space: nowrap;">{{ $cont_alc }}% Alc. Vol.</td>
 		</tr>

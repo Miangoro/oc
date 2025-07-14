@@ -11,6 +11,16 @@ use App\Models\Documentacion_url;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+//codigo QR
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Support\Facades\Auth;//sesion iniciada
+use Illuminate\Support\Facades\Storage;
+
 
 class GuiasController  extends Controller
 {
@@ -37,11 +47,17 @@ class GuiasController  extends Controller
 
     public function index(Request $request)
     {
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
+        }
+
         $columns = [
             1 => 'id_guia',
             2 => 'id_plantacion',
             3 => 'folio',
-            4 => 'id_empresa',
+            4 => 'razon_social',
             5 => 'nombre_predio',
             6 => 'numero_plantas',
             7 => 'numero_guias',
@@ -70,6 +86,12 @@ class GuiasController  extends Controller
 
         $query = Guias::with(['empresa.empresaNumClientes', 'predios'])
             ->groupBy('run_folio');
+        if ($empresaId) {
+            $query->where('id_empresa', $empresaId);
+        }
+        $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
+        $totalData = $baseQuery->count();
+
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
@@ -89,32 +111,63 @@ class GuiasController  extends Controller
                     $Predio->where('nombre_predio', 'LIKE', "%{$searchValue}%");
                 });
             });
+
+            $totalData = $query->get()->count();
+            $totalFiltered = $query->count();
+
+        }else{
+            $totalFiltered = $totalData;
         }
 
-        $totalData = $query->get()->count();
-        $totalFiltered = $query->count();
+            
+        
 
-        $users = $query->offset($start)
+        $guias = $query->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
             ->get();
 
         $data = [];
 
-        if ($users->isNotEmpty()) {
+        if ($guias->isNotEmpty()) {
             $ids = $start;
 
-            foreach ($users as $user) {
-                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
+
+
+            foreach ($guias as $user) {
+                //$numero_cliente = empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
+                // Nombre y Número de empresa
+                $empresa = $user->empresa ?? null;
+
+                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                    ? $empresa->empresaNumClientes->first(fn($item) =>
+                        $item->empresa_id === $empresa->id && !empty($item->numero_cliente)
+                    )?->numero_cliente ?? 'No encontrado' : 'N/A';
+
+                
+                $documentoGuia = Documentacion_url::where('id_relacion', $user->id_guia)
+                    ->where('id_documento', 71)
+                    ->first();
+
+                $documentoArt = Documentacion_url::where('id_relacion', $user->id_guia)
+                    ->where('id_documento', 132)
+                    ->first();
 
                 $nestedData = [
+
+                    'documento_guia' => $documentoGuia?->url
+                        ? asset("files/{$numero_cliente}/{$documentoGuia->url}") : null,
+
+                    'documento_art' => $documentoArt?->url
+                        ? asset("files/{$numero_cliente}/{$documentoArt->url}") : null,
+
                     'id_guia' => $user->id_guia,
                     'id_plantacion' => $user->id_plantacion,
                     'fake_id' => ++$ids,
                     'folio' => $user->folio,
                     'run_folio' => $user->run_folio,
-                    'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
-                    'id_empresa' => $numero_cliente, // Asignar numero_cliente a id_empresa
+                    'razon_social' => $empresa->razon_social ?? 'No encontrado',
+                    'numero_cliente' => $numero_cliente, // Asignar numero_cliente
                     'id_predio' => $user->predios ? $user->predios->nombre_predio : '',
                     'numero_plantas' => $user->numero_plantas,
                     'num_anterior' => $user->num_anterior,
@@ -144,21 +197,49 @@ class GuiasController  extends Controller
         ]);
     }
 
-    //Metodo para eliminar
+
+
+    //ELIMINAR
     public function destroy($id_guia)
     {
         $guia = Guias::findOrFail($id_guia);
-    
         $run_folio = $guia->run_folio;
-    
-        Guias::where('run_folio', $run_folio)->delete();
-    
-        return response()->json(['success' => 'Todas las guías con el mismo run_folio se eliminaron correctamente']);
+
+        // Obtener todas las guías con ese run_folio
+        $guias = Guias::where('run_folio', $run_folio)->get();
+
+        foreach ($guias as $guia) {
+            // Buscar solo documentos con ID 71 (guía) o 132 (resultados ART)
+            $documentos = Documentacion_url::where('id_relacion', $guia->id_guia)
+                ->whereIn('id_documento', [71, 132])
+                ->get();
+
+            foreach ($documentos as $doc) {
+                //Busca el archivo fisico
+                $numeroCliente = $guia->empresa->empresaNumClientes->first()?->numero_cliente;
+                $rutaArchivo = 'uploads/' . $numeroCliente . '/' . $doc->url;
+                // Eliminar archivo físico si existe
+                if ($numeroCliente && Storage::disk('public')->exists($rutaArchivo)) {
+                    Storage::disk('public')->delete($rutaArchivo);
+                }
+
+                // Eliminar registro en la tabla documentacion_url
+                $doc->delete();
+            }
+
+            // Eliminar la guía
+            $guia->delete();
+        }
+
+        return response()->json(['success' => 'Guías y documentos con mismo run_folio eliminados correctamente.']);
     }
     
 
+
+    ///REGISTRAR
     public function store(Request $request)
     {
+        $userId = Auth::id(); // Obtiene el ID del usuario en sesión
         // Validación de los datos recibidos
         $request->validate([
             'empresa' => 'required|exists:empresa,id_empresa',
@@ -169,7 +250,24 @@ class GuiasController  extends Controller
             'comercializadas' => 'nullable|numeric',
             'mermas' => 'nullable|numeric',
             'plantas' => 'nullable|numeric',
+
+            // Nuevos campos opcionales
+            'edad' => 'nullable|string|max:255',
+            'art' => 'nullable|numeric|min:0',
+            'kg_maguey' => 'nullable|numeric|min:0',
+            'no_lote_pedido' => 'nullable|string|max:255',
+            'fecha_corte' => 'nullable|date',
+            'observaciones' => 'nullable|string|max:2000',
+            'nombre_cliente' => 'nullable|string|max:255',
+            'no_cliente' => 'nullable|string|regex:/^[A-Za-z0-9\-]+$/',
+            'fecha_ingreso' => 'nullable|date',
+            'domicilio' => 'nullable|string|max:255',
+
+            'url.*' => 'nullable|file|max:10240',
+            'id_documento.*' => 'nullable|integer',
+            'nombre_documento.*' => 'nullable|string|max:255',
         ]);
+
         // Obtener el valor de plantas actuales y num_anterior
         $plantasActuales = $request->input('plantas');
         $numAnterior = $request->input('anterior');
@@ -192,6 +290,10 @@ class GuiasController  extends Controller
         }
         // Formatear el nuevo run_folio
         $nuevoFolio = sprintf('SOL-GUIA-%06d-24', $nuevoNumero);
+
+
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
         // Procesar la creación de las guías
         for ($i = 0; $i < $request->input('numero_guias'); $i++) {
             // Crear una nueva instancia del modelo Guia
@@ -206,8 +308,42 @@ class GuiasController  extends Controller
             $guia->num_comercializadas = $request->input('comercializadas');
             $guia->mermas_plantas = $request->input('mermas');
             $guia->numero_plantas = $plantasActuales;
+
+            // Nuevos campos
+            $guia->edad = $request->input('edad');
+            $guia->art = $request->input('art');
+            $guia->kg_maguey = $request->input('kg_maguey');
+            $guia->no_lote_pedido = $request->input('no_lote_pedido');
+            $guia->fecha_corte = $request->input('fecha_corte');
+            $guia->observaciones = $request->input('observaciones');
+            $guia->nombre_cliente = $request->input('nombre_cliente');
+            $guia->no_cliente = $request->input('no_cliente');
+            $guia->fecha_ingreso = $request->input('fecha_ingreso');
+            $guia->domicilio = $request->input('domicilio');
+
+            $guia->id_registro = $userId;//guardar quien solicita
             $guia->save();
+
+            // Guardar documentos
+            if ($request->hasFile('url')) {
+                foreach ($request->file('url') as $index => $archivo) {
+                    if ($archivo) {
+                        $nombreDoc = $request->nombre_documento[$index] ?? 'Sin nombre';
+                        $filename = $nombreDoc . '_' . time() . '.' . $archivo->getClientOriginalExtension();
+                        $filePath = $archivo->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+
+                        $documento = new \App\Models\Documentacion_url();
+                        $documento->id_relacion = $guia->id_guia;
+                        $documento->id_documento = $request->id_documento[$index] ?? null;
+                        $documento->nombre_documento = $nombreDoc;
+                        $documento->url = $filename;
+                        $documento->id_empresa = $request->input('empresa');
+                        $documento->save();
+                    }
+                }
+            }
         }
+
         // Actualizar la cantidad de plantas en la tabla predio_plantacion si es necesario
         if ($plantasNuevas !== null) {
             $predioPlantacion = \App\Models\predio_plantacion::where('id_predio', $request->input('predios'))
@@ -218,11 +354,15 @@ class GuiasController  extends Controller
                 $predioPlantacion->save();
             }
         }
+
         // Responder con éxito
         return response()->json(['success' => 'Guía registrada correctamente']);
     }
 
-    // Método para obtener una guía por ID
+
+
+
+    // Método para OBTENER GUIA por ID
     public function edit($id_guia)
     {
         try {
@@ -232,7 +372,7 @@ class GuiasController  extends Controller
             return response()->json(['error' => 'Error al obtener la guía'], 500);
         }
     }
-    //Metodo par aeditar guias
+    //Metodo EDITAR GUIAS
     public function editGuias($run_folio)
     {
         $guias = Guias::where('run_folio', $run_folio)
@@ -241,7 +381,7 @@ class GuiasController  extends Controller
         return response()->json($guias);
     }
 
-    // Método para actualizar una guía existente
+    // Método para ACTUALIZAR una guía existente
     public function update(Request $request)
     {
         try {
@@ -291,11 +431,16 @@ class GuiasController  extends Controller
         }
     }
 
-    //Metodo para llenar el pdf
+
+
+
+
+    //Metodo para LLENAR PDF
     public function guiasTranslado($id_guia)
-    {
+    {   
+        
         $res = DB::select('SELECT f.numero_cliente, p.nombre_productor, a.razon_social, p.nombre_predio, p.num_predio, a.razon_social, t.nombre, t.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas,
-            e.art,e.kg_maguey,e.no_lote_pedido,e.fecha_corte, e.edad, e.nombre_cliente,e.no_cliente,e.fecha_ingreso,e.domicilio
+            e.art,e.kg_maguey,e.no_lote_pedido,e.fecha_corte, e.edad, e.nombre_cliente,e.no_cliente,e.fecha_ingreso,e.domicilio, e.id_registro
             FROM guias e 
             JOIN predios p ON (e.id_predio = p.id_predio) 
             JOIN predio_plantacion s ON (e.id_plantacion = s.id_plantacion) 
@@ -303,7 +448,47 @@ class GuiasController  extends Controller
             JOIN empresa a ON (a.id_empresa = e.id_empresa) 
             JOIN empresa_num_cliente f ON (f.id_empresa = e.id_empresa) 
             WHERE e.id_guia=' . $id_guia);
-        $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', ['datos' => $res]);
-        return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
+
+        
+        $id_empresa = $res[0]->id_empresa ?? null;
+        $data = empresa::find($id_empresa);//Obtener datos
+        $numero_cliente = $data && $data->empresaNumClientes->isNotEmpty()
+        ? $data->empresaNumClientes->first(fn($item) => $item->empresa_id === $data
+        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
+
+        //CODIGO QR
+        $url = route('QR-guias', ['id' => $id_guia]);
+        $qrCode = new QrCode(
+            data: $url,
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::Low,
+            size: 100,
+            margin: 10,
+            roundBlockSizeMode: RoundBlockSizeMode::Margin,
+            foregroundColor: new Color(0, 0, 0),
+            backgroundColor: new Color(255, 255, 255)
+        );
+        // Escribir el QR en formato PNG
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+        // Convertirlo a Base64
+        $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+
+        //dd($res[0]);
+        $id_registro = $res[0]->id_registro;
+
+        $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', [
+            'datos' => $res,
+            'razon_social' => $data->razon_social ?? '',
+            'numero_cliente' => $numero_cliente ?? '',
+            'id_registro' => $id_registro,
+            'qrCodeBase64' => $qrCodeBase64,
+        ]);
+        return $pdf->stream('Guia_de_traslado_de_maguey_o_agave.pdf');
     }
+
+
+
+
+
 }

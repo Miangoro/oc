@@ -1,27 +1,26 @@
 'use strict';
 
 $(function () {
-
-  var dt_user_table = $('.datatables-users')
+  var dt_user_table = $('.datatables-users');
 
   if (dt_user_table.length) {
     var dt_user = dt_user_table.DataTable({
       processing: true,
       serverSide: true,
       ajax: {
-        url: '/revision-consejo-list',
+        url: '/revision-consejo-list'
       },
       columns: [
-        { data: '#' },                //0
-        { data: 'fake_id' },          //1
-        { data: '' },    //2
-        { data: 'num_certificado' },  //3
-        { data: 'id_revisor' },       //4
-        { data: 'created_at' },       //5
-        { data: 'updated_at' },       //6
-        { data: 'PDF' },              //7
-        { data: 'decision' },         //8
-        { data: 'actions' }           //9
+        { data: '#' }, //0
+        { data: 'fake_id' }, //1
+        { data: '' }, //2
+        { data: 'num_certificado' }, //3
+        { data: 'id_revisor' }, //4
+        { data: 'created_at' }, //5
+        { data: 'updated_at' }, //6
+        { data: 'PDF' }, //7
+        { data: 'decision' }, //8
+        { data: 'actions' } //9
       ],
       columnDefs: [
         {
@@ -48,7 +47,13 @@ $(function () {
             var tipoRevision = row['tipo_revision'];
             var icono = '';
 
-            if (tipoRevision === 'Instalaciones de productor' || tipoRevision === 'Instalaciones de envasador' || tipoRevision === 'Instalaciones de comercializador' || tipoRevision === 'Instalaciones de almacén o bodega' || tipoRevision === 'Instalaciones de área de maduración') {
+            if (
+              tipoRevision === 'Instalaciones de productor' ||
+              tipoRevision === 'Instalaciones de envasador' ||
+              tipoRevision === 'Instalaciones de comercializador' ||
+              tipoRevision === 'Instalaciones de almacén o bodega' ||
+              tipoRevision === 'Instalaciones de área de maduración'
+            ) {
               icono = `<span class="fw-bold mt-1 badge bg-secondary">${tipoRevision}</span>`;
             }
             if (tipoRevision === 'Granel') {
@@ -65,7 +70,6 @@ $(function () {
           render: function (data, type, full, meta) {
             var $num_certificado = full['num_certificado'];
 
-
             return `
               <div style="display: flex; flex-direction: column; align-items: start; gap: 4px;">
                 <span class="fw-bold">
@@ -74,7 +78,6 @@ $(function () {
               </div>
               `;
           }
-
         },
         {
           targets: 4,
@@ -132,7 +135,6 @@ $(function () {
             let $nombreDesicion;
             let num_revision = '';
 
-
             if (full['num_revision'] == 1) {
               num_revision = 'Primera';
             } else {
@@ -140,12 +142,12 @@ $(function () {
             }
 
             switch ($decision) {
-              case "positiva":
+              case 'positiva':
                 $nombreDesicion = num_revision + ' Revisión positiva';
                 $colorDesicion = 'primary';
                 break;
 
-              case "negativa":
+              case 'negativa':
                 $nombreDesicion = num_revision + ' Revisión negativa';
                 $colorDesicion = 'danger';
                 break;
@@ -162,52 +164,76 @@ $(function () {
           targets: 9,
           title: 'Acciones',
           render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-              // Botón de Opciones
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">' +
-              '<i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>' +
-              '</button>' +
-              // Menú desplegable
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              // Botón para revisar
-              `<a class="dropdown-item waves-effect text-info cuest" ` +
-              `href="/add_revision_consejo/${full['id_revision']}" ` +
-              `data-id="${full['id_revision']}" ` +
-              `data-revisor-id="${full['id_revisor']}" ` +
-              `data-dictamen-id="${full['id_certificado']}" ` +
-              `data-num-certificado="${full['num_certificado']}" ` +
-              `data-num-dictamen="${full['num_dictamen']}" ` +
-              `data-tipo-dictamen="${full['tipo_dictamen']}" ` +
-              `data-fecha-vigencia="${full['fecha_vigencia']}" ` +
-              `data-fecha-vencimiento="${full['fecha_vigencia']}" ` +
-              `data-tipo="${full['tipo_dictamen']}" ` +
-              `data-tipo_revision="${full['tipo_revision']}" ` +
+            const puedeRegistrar  = window.puedeAgregarElUsuario;
+            const puedeEditar     = window.puedeEditarElUsuario;
+            const puedeHistorial  = window.puedeVerHistorialElUsuario;
 
-              `data-bs-target="#fullscreenModal">` +
-              '<i class="ri-eye-fill ri-20px text-info"></i> Revisar' +
-              '</a>' +
-              // Botón para editar revisión
-              `<a class="dropdown-item waves-effect text-primary editar-revision" ` +
-              `href="/edit_revision_consejo/${full['id_revision']}" ` +
-              `data-id="${full['id_revision']}" ` +
-              `data-tipo="${full['tipo_dictamen']}" ` +
-              `data-tipo_revision="${full['tipo_revision']}" ` +
-              `data-accion="editar" ` +  // Identificador
+            let acciones = '';
 
-              `>` +
-              '<i class="ri-pencil-fill ri-20px text-primary"></i> Editar Revisión' +
-              '</a>' +
+            // Revisar (Registrar revisión del consejo)
+            if (puedeRegistrar) {
+              acciones += `
+                <a class="dropdown-item waves-effect text-info cuest"
+                  href="/add_revision_consejo/${full['id_revision']}"
+                  data-id="${full['id_revision']}"
+                  data-revisor-id="${full['id_revisor']}"
+                  data-dictamen-id="${full['id_certificado']}"
+                  data-num-certificado="${full['num_certificado']}"
+                  data-num-dictamen="${full['num_dictamen']}"
+                  data-tipo-dictamen="${full['tipo_dictamen']}"
+                  data-fecha-vigencia="${full['fecha_vigencia']}"
+                  data-fecha-vencimiento="${full['fecha_vigencia']}"
+                  data-tipo="${full['tipo_dictamen']}"
+                  data-tipo_revision="${full['tipo_revision']}"
+                  data-bs-target="#fullscreenModal">
+                  <i class="ri-eye-fill ri-20px text-info"></i> Revisar
+                </a>`;
+            }
 
-              // Botón para Historial
-              `<a data-id='${full['id_revision']}' class="dropdown-item waves-effect text-warning abrir-historial" ` +
-              `data-bs-toggle="modal" data-bs-target="#historialModal">` +
-              '<i class="ri-history-line text-warning"></i> Historial' +
-              '</a>' +
-              '</div>' +
-              '</div>'
-            );
+            // Editar revisión
+            if (puedeEditar) {
+              acciones += `
+                <a class="dropdown-item waves-effect text-primary editar-revision"
+                  href="/edit_revision_consejo/${full['id_revision']}"
+                  data-id="${full['id_revision']}"
+                  data-tipo="${full['tipo_dictamen']}"
+                  data-tipo_revision="${full['tipo_revision']}"
+                  data-accion="editar">
+                  <i class="ri-pencil-fill ri-20px text-primary"></i> Editar Revisión
+                </a>`;
+            }
+
+            // Historial
+            if (puedeHistorial) {
+              acciones += `
+                <a data-id="${full['id_revision']}" class="dropdown-item waves-effect text-warning abrir-historial"
+                  data-bs-toggle="modal" data-bs-target="#historialModal">
+                  <i class="ri-history-line ri-20px text-warning"></i> Historial
+                </a>`;
+            }
+
+            // Si no hay acciones disponibles, mostrar botón deshabilitado
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+
+            // Si hay acciones, mostrar dropdown
+            return `
+              <div class="d-flex align-items-center gap-50">
+                <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="ri-settings-5-fill"></i> Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end m-0">
+                  ${acciones}
+                </div>
+              </div>
+            `;
           }
+
         }
       ],
       order: [[1, 'desc']],
@@ -227,10 +253,10 @@ $(function () {
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
         paginate: {
-          "sFirst": "Primero",
-          "sLast": "Último",
-          "sNext": "Siguiente",
-          "sPrevious": "Anterior"
+          sFirst: 'Primero',
+          sLast: 'Último',
+          sNext: 'Siguiente',
+          sPrevious: 'Anterior'
         }
       },
 
@@ -249,18 +275,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== ''
                 ? '<tr data-dt-row="' +
-                col.rowIndex +
-                '" data-dt-column="' +
-                col.columnIndex +
-                '">' +
-                '<td>' +
-                col.title +
-                ':' +
-                '</td> ' +
-                '<td>' +
-                col.data +
-                '</td>' +
-                '</tr>'
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
                 : '';
             }).join('');
 
@@ -285,7 +311,7 @@ $(function () {
     $elements.each(function () {
       var $this = $(this);
       $this.wrap('<div class="position-relative"></div>').select2({
-        dropdownParent: $this.parent(),
+        dropdownParent: $this.parent()
       });
     });
   }
@@ -293,7 +319,7 @@ $(function () {
   $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     autoclose: true,
-    todayHighlight: true,
+    todayHighlight: true
   });
 
   // Registrar Respuesta y mostrar PDF correspondiente
@@ -349,7 +375,9 @@ $(function () {
 
     // Ajuste de títulos y visibilidad según el tipo de revisión
     if (tipoRevision === 'Revisor') {
-      $('#modalFullTitle').text('REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (INSTALACIONES)');
+      $('#modalFullTitle').text(
+        'REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (INSTALACIONES)'
+      );
       $('tbody#revisor').show();
       $('tbody#revisorGranel').hide();
       cargarRespuestas(id_revision);
@@ -471,14 +499,18 @@ $(function () {
   });
 
   // Quitar Validacion al llenar Select
-  $(document).on('change', 'select[name^="respuesta"], textarea[name^="observaciones"], select[name^="tipo"]', function () {
-    $(this).removeClass('is-invalid');
-  });
+  $(document).on(
+    'change',
+    'select[name^="respuesta"], textarea[name^="observaciones"], select[name^="tipo"]',
+    function () {
+      $(this).removeClass('is-invalid');
+    }
+  );
 
   // Limpiar Validacion al cerrar Modal
   $(document).on('hidden.bs.modal', '#fullscreenModal', function () {
     const respuestas = document.querySelectorAll('select[name^="respuesta"]');
-    respuestas.forEach((respuesta) => {
+    respuestas.forEach(respuesta => {
       respuesta.classList.remove('is-invalid');
       respuesta.value = '';
     });
@@ -508,7 +540,9 @@ $(function () {
             respuestaSelect = '3';
           }
 
-          $(this).find('select').val(respuestaSelect || ''); // Asigna la respuesta
+          $(this)
+            .find('select')
+            .val(respuestaSelect || ''); // Asigna la respuesta
           $(this).find('textarea').val(observacionGuardada); // Asigna la observación
         });
 
@@ -533,7 +567,13 @@ $(function () {
     console.log('Número de Certificado:', num_certificado);
 
     // Definir URL según el tipo de revisión
-    if (tipoRevision === 'Instalaciones de productor' || tipoRevision === 'Instalaciones de envasador' || tipoRevision === 'Instalaciones de comercializador' || tipoRevision === 'Instalaciones de almacén o bodega' || tipoRevision === 'Instalaciones de área de maduración') {
+    if (
+      tipoRevision === 'Instalaciones de productor' ||
+      tipoRevision === 'Instalaciones de envasador' ||
+      tipoRevision === 'Instalaciones de comercializador' ||
+      tipoRevision === 'Instalaciones de almacén o bodega' ||
+      tipoRevision === 'Instalaciones de área de maduración'
+    ) {
       var url_pdf = '../pdf_bitacora_revision_certificado_instalaciones/' + id_revisor;
     }
 
@@ -544,11 +584,10 @@ $(function () {
       var url_pdf = '../pdf_bitacora_revision_certificado_exportacion/' + id_revisor;
     }
 
-
     console.log('URL del PDF:', url_pdf);
 
     // Configurar encabezados del modal
-    $('#titulo_modal_Dictamen').text("Bitácora de revisión documental");
+    $('#titulo_modal_Dictamen').text('Bitácora de revisión documental');
     $('#subtitulo_modal_Dictamen').text(num_certificado);
 
     // Configurar botón para abrir PDF
@@ -588,8 +627,12 @@ $(function () {
       url: `/aprobacion-consejo/${idRevision}`,
       method: 'GET',
       success: function (data) {
-        $('#id_firmante').val(data.revisor.id_aprobador || '').trigger('change');
-        $('#respuesta-aprobacion').val(data.revisor.aprobacion || '').prop('selected', true);
+        $('#id_firmante')
+          .val(data.revisor.id_aprobador || '')
+          .trigger('change');
+        $('#respuesta-aprobacion')
+          .val(data.revisor.aprobacion || '')
+          .prop('selected', true);
         if (data.revisor.fecha_aprobacion && data.revisor.fecha_aprobacion !== '0000-00-00') {
           $('#fecha-aprobacion').val(data.revisor.fecha_aprobacion);
         } else {
@@ -633,7 +676,7 @@ $(function () {
             }
           }
         },
-        'id_firmante': {
+        id_firmante: {
           validators: {
             notEmpty: {
               message: 'Por favor, selecciona la persona que aprueba.'
@@ -715,7 +758,6 @@ $(function () {
     $('#respuesta-aprobacion').prop('selected', true);
   });
 
-
   // Historial
   $(document).on('click', '.abrir-historial', function () {
     const id_revision = $(this).data('id');
@@ -753,7 +795,6 @@ $(function () {
                 </button>
             `;
         });
-
 
         $('#historialRespuestasContainer').html(botonesHTML);
         $('.btn-primary').on('click', function () {
@@ -815,7 +856,6 @@ $(function () {
     document.getElementById('respuestasContainer').innerHTML = respuestasHTML;
   }
 
-
   // Editar Respuestas
   let id_revision_edit;
   $(document).on('click', '.abrir-historial', function () {
@@ -825,13 +865,14 @@ $(function () {
     $('#historialModalConsejo').modal('show');
   });
 
-
-
-
   // Quitar Validación al llenar Select
-  $(document).on('change', 'select[name^="respuesta"], textarea[name^="observaciones"], select[name^="tipo"]', function () {
-    $(this).removeClass('is-invalid');
-  });
+  $(document).on(
+    'change',
+    'select[name^="respuesta"], textarea[name^="observaciones"], select[name^="tipo"]',
+    function () {
+      $(this).removeClass('is-invalid');
+    }
+  );
 
   /*   // Limpiar Validación al cerrar Modal
     $(document).on('hidden.bs.modal', '#fullscreenModal', function () {
@@ -841,7 +882,6 @@ $(function () {
         respuesta.value = '';
       });
     }); */
-
 
   /* $(function () {
     // Configuración de AJAX para enviar el token CSRF
@@ -921,11 +961,10 @@ $(function () {
 
   }); */
 
-
   //end
 });
 
-'use strict';
+('use strict');
 
 $(function () {
   // Configuración de AJAX para enviar el token CSRF
@@ -945,7 +984,7 @@ $(function () {
             message: 'Selecciona una respuesta.'
           }
         }
-      },
+      }
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -969,8 +1008,8 @@ $(function () {
       url: '/registrar_revision_consejo',
       type: 'POST',
       data: formData,
-      contentType: false,  // Importante para enviar los datos correctamente
-      processData: false,  // Importante para evitar la transformación de los datos en cadena de consulta
+      contentType: false, // Importante para enviar los datos correctamente
+      processData: false, // Importante para evitar la transformación de los datos en cadena de consulta
       success: function (response) {
         $('#btnSpinnerRevConse').addClass('d-none');
         $('#btnAddRevConse').removeClass('d-none');
@@ -999,16 +1038,10 @@ $(function () {
         $('#btnAddRevConse').removeClass('d-none');
       }
     });
-
   });
-
-
-
 });
 
-
-
-'use strict';
+('use strict');
 
 $(function () {
   // Configuración de AJAX para enviar el token CSRF
@@ -1029,7 +1062,7 @@ $(function () {
               message: 'Selecciona una respuesta.'
             }
           }
-        },
+        }
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -1083,9 +1116,6 @@ $(function () {
           $('#btnEditRevConse').removeClass('d-none');
         }
       });
-
     });
   }
 });
-
-

@@ -14,7 +14,7 @@
                         <div class="card-body">
 
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-floating form-floating-outline mb-6">
                                         <select id="tipo_solicitud" class="form-select" name="tipo_solicitud">
                                             <option value="1">Inspección y certificado de exportación</option>
@@ -27,7 +27,7 @@
                                         <label for="tipo_solicitud">Tipo de solicitud</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-floating form-floating-outline mb-6">
                                         <select id="id_empresa_solicitud_exportacion" onchange="cargarDatosCliente();"
                                             name="id_empresa" class="select2 form-select">
@@ -41,6 +41,14 @@
                                             @endforeach
                                         </select>
                                         <label for="id_empresa">Cliente</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating form-floating-outline mb-5">
+                                        <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
+                                            type="text" name="fecha_solicitud" autocomplete="off"
+                                            value="@php echo date('Y-m-d H:i'); @endphp">
+                                        <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
                                     </div>
                                 </div>
                             </div>
@@ -70,7 +78,7 @@
                                 <div class="col-md-12">
                                     <div class="form-floating form-floating-outline mb-4">
                                         <select onchange="cargarMarcas();" class="form-select select2"
-                                            name="direccion_destinatario" id="direccion_destinatario_ex">
+                                            name="direccion_destinatario" id="direccion_destinatario">
                                             <option value="" disabled selected>Seleccione una dirección</option>
                                         </select>
                                         <label for="direccion_destinatario">Domicilio del destinatario</label>
@@ -98,7 +106,8 @@
                                         <input type="file" class="form-control" id="factura_proforma"
                                             name="factura_proforma">
                                         <input type="hidden" name="id_documento_factura" value="55">
-                                        <input type="hidden" name="nombre_documento_factura" value="Factura proforma">
+                                        <input type="hidden" name="nombre_documento_factura"
+                                            value="Factura proforma">
                                         <label for="factura_proforma">Adjuntar Factura/Proforma</label>
                                     </div>
                                 </div>
@@ -143,8 +152,7 @@
                                     <div class="col-md-8">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select onchange="cargarDetallesLoteEnvasadoex(this.value)"
-                                                id="lote_envasadoExportPe" name="lote_envasado[0]"
-                                                class="select2 form-select evasado_export">
+                                                id="lote_envasadoExportPe" class="select2 form-select evasado_export">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
                                                 <!-- Opciones dinámicas -->
@@ -195,6 +203,7 @@
                                                     <th>#</th>
                                                     <th>Nombre del Lote</th>
                                                     <th>SKU</th>
+                                                    <th>Contenido alcohólico</th>
                                                     <th>Presentación</th>
                                                     <th>Cantidad de botellas</th>
                                                 </tr>
@@ -402,7 +411,7 @@
             contenidoDirecciones =
                 '<option value="" disabled selected>Seleccione un domicililio del destinatario</option>' +
                 contenidoDirecciones;
-            $('#direccion_destinatario_ex').html(contenidoDirecciones);
+            $('#direccion_destinatario').html(contenidoDirecciones);
             //cargarMarcas();
         }
     }
@@ -476,8 +485,13 @@
                         let filaEnvasado = `
                         <tr>
                             <td>1</td>
-                            <td>${response.lote_envasado.nombre}</td>
+                            <td>${response.lote_envasado.nombre}
+                              <input type="text" class="d-none form-control form-control-sm" name="lote_envasado[0][id_lote_envasado]" autocomplete="off" value="${response.lote_envasado.id_lote_envasado || 'N/A'}" />
+                            </td>
                             <td>${limpiarSku(response.lote_envasado.sku) == '{"inicial":""}' ? "SKU no definido" : limpiarSku(response.lote_envasado.sku)}</td>
+                            <td>
+                            <input type="text" class="form-control form-control-sm" name="lote_envasado[0][cont_alc]" autocomplete="off" value="${response.lote_envasado.cont_alc_envasado || 'N/A'}" />
+                            </td>
                             <td>${response.lote_envasado.presentacion || 'N/A'} ${response.lote_envasado.unidad || ''}</td>
 
                             <td>Botellas: ${response.lote_envasado.cant_botellas}
@@ -493,7 +507,7 @@
                               <th>Nombre de lote a granel</th>
                               <th>Folio FQ</th>
                               <th>Cont. Alc.</th>
-                              <th>Categoría / Clase / Tipos de Maguey</th>
+                              <th colspan="2">Categoría / Clase / Tipos de Maguey</th>
                           </tr>`);
                         let nombre_lote_granel = "";
                         response.detalle.forEach((lote, index) => {
@@ -510,9 +524,9 @@
                                   <input type="text" class="form-control form-control-sm" name="lotes_granel[0][folio_fq]" autocomplete="off" value="${lote.folio_fq || ''}" />
                                 </td>
                                 <td>
-                                  <input type="text" class="form-control form-control-sm" name="lotes_granel[0][cont_alc]" autocomplete="off" value="${lote.cont_alc || ''}" />
+                                  ${lote.cont_alc || ''}
                                 </td>
-                               <td>
+                               <td colspan="2">
                                 ${lote.categoria.categoria || 'N/A'}<br>
                                 ${lote.clase.clase || 'N/A'}<br>
                                 ${lote.tiposMaguey.length ? lote.tiposMaguey.map(tipo => tipo.nombre + ' (<i>'+tipo.cientifico+'</i>)').join('<br>') : 'N/A'}
@@ -565,7 +579,7 @@
     function cargarMarcas() {
         var id_empresa = $('#id_empresa_solicitud_exportacion').val();
         var id_marca = $('#lote_envasadoExportPe option:selected').data('id-marca') || 0;
-        var id_direccion = $('#direccion_destinatario_ex').val();
+        var id_direccion = $('#direccion_destinatario').val();
         //alert('/marcas/' + id_marca + '/' + id_direccion)
         if (id_empresa) {
             $.ajax({
@@ -667,6 +681,52 @@
                 url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
                 method: 'GET',
                 success: function(response) {
+
+
+                    const contenedor = $(`#caracteristicas_Ex${sectionCount} .card-body`);
+                    let tablaEnvasadoID = `tablaLoteEnvasado_${sectionCount}`;
+                    if ($(`#${tablaEnvasadoID}`).length === 0) {
+                        contenedor.append(`
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <table id="${tablaEnvasadoID}" class="table table-bordered table-sm mb-2">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nombre del Lote</th>
+                                            <th>SKU</th>
+                                            <th>Contenido alcohólico</th>
+                                            <th>Presentación</th>
+                                            <th>Cantidad de botellas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `);
+                    }
+
+                    let $tbodyEnvasado = $(`#${tablaEnvasadoID} tbody`);
+                    $tbodyEnvasado.empty();
+
+                    if (response.lote_envasado) {
+                        $tbodyEnvasado.append(`
+                        <tr>
+                            <td>1</td>
+                            <td>${response.lote_envasado.nombre}
+                              <input type="text" class="d-none form-control form-control-sm" name="lote_envasado[${sectionCount}][id_lote_envasado]" autocomplete="off" value="${response.lote_envasado.id_lote_envasado || 'N/A'}" />
+                              </td>
+                            <td>${limpiarSku(response.lote_envasado.sku) == '{"inicial":""}' ? "SKU no definido" : limpiarSku(response.lote_envasado.sku)}</td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="lote_envasado[${sectionCount}][cont_alc]" autocomplete="off" value="${response.lote_envasado.cont_alc_envasado || 'N/A'}" />
+                            </td>
+                            <td>${response.lote_envasado.presentacion || 'N/A'} ${response.lote_envasado.unidad || ''}</td>
+                            <td>Botellas: ${response.lote_envasado.cant_botellas}</td>
+                        </tr>
+                    `);
+                    }
+
                     // Rellena el input de lote a granel
                     $(`#lote_granel_${sectionCount}`).val(
                         response.detalle && response.detalle.length > 0 ?
@@ -679,7 +739,7 @@
                     if ($tabla.length === 0) {
                         // Si no existe la tabla, créala dinámicamente
                         $(`#caracteristicas_Ex${sectionCount} .card-body`).append(`
-                        <div class="row mt-2">
+                        <div class="row">
                             <div class="col-12">
                                 <table id="tablaLotes_${sectionCount}" class="table table-bordered table-sm mt-3">
                                         <thead>
@@ -717,7 +777,7 @@
                                   <input type="text" class="form-control form-control-sm" name="lotes_granel[${sectionCount}][folio_fq]" autocomplete="off" value="${lote.folio_fq || ''}" />
                                 </td>
                                 <td>
-                                  <input type="text" class="form-control form-control-sm" name="lotes_granel[${sectionCount}][cont_alc]" autocomplete="off" value="${lote.cont_alc || ''}" />
+                                  ${lote.cont_alc || ''}
                                 </td>
                                   <td>
                                       ${lote.categoria?.categoria || 'N/A'}<br>

@@ -45,6 +45,14 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeRegistrarCertificadoVentaNacional = @json(auth()->user()->can('Registrar certificado de venta nacional'));
+  window.puedeEditarCertificadoVentaNacional = @json(auth()->user()->can('Editar certificado de venta nacional'));
+  window.puedeEliminarCertificadoVentaNacional = @json(auth()->user()->can('Eliminar certificado de venta nacional'));
+  window.puedeReexpedirCertificadoVentaNacional = @json(auth()->user()->can('Reexpedir certificado de venta nacional'));
+  window.puedeAsignarRevisorCertificadoVentaNacional = @json(auth()->user()->can('Asignar revisor certificado de venta nacional'));
+  window.puedeFirmarCertificadoVentaNacional = @json(auth()->user()->can('Firmar certificado de venta nacional'));
+</script>
   @vite(['resources/js/certificados_nacional.js'])
 @endsection
 
@@ -75,7 +83,7 @@
             </thead>
         </table>
     </div>
-    
+
 </div>
 
 
@@ -86,7 +94,7 @@
 @include('_partials/_modals/modal-reexpedir-certificado-nacional')
 @include('_partials/_modals/modal-add-asignar-revisor')
 
-{{-- 
+{{--
 @include('_partials/_modals/modal-trazabilidad-certificados') --}}
 <!-- /Modal -->
 

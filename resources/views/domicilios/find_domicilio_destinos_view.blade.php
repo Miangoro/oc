@@ -14,6 +14,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarUsuario = @json(auth()->user()->can('Registrar destinos'));
+  window.puedeEditarUsuario = @json(auth()->user()->can('Editar destinos'));
+  window.puedeEliminarUsuario = @json(auth()->user()->can('Eliminar destinos'));
+</script>
  @vite(['resources/js/domicilios_destinos.js'])
 @endsection
 

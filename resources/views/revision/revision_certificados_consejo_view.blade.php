@@ -33,6 +33,12 @@
 @endsection
 
 @section('page-script')
+<script>
+  window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar revisión del consejo'));
+  window.puedeEditarElUsuario = @json(auth()->user()->can('Editar revisión del consejo'));
+  window.puedeVerHistorialElUsuario = @json(auth()->user()->can('Historial revisión del consejo'));
+  window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar revisión del consejo'));
+</script>
 @vite(['resources/js/revision_certificado_consejo.js'])
 @endsection
 <meta name="csrf-token" content="{{ csrf_token() }}">

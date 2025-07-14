@@ -37,12 +37,21 @@
 @endsection
 
 @section('page-script')
+<script>
+  window.puedeRegistrarCertificado = @json(auth()->user()->can('Registar certificado de instalaciones'));
+  window.puedeEditarCertificado = @json(auth()->user()->can('Editar certificado de instalaciones'));
+  window.puedeEliminarCertificado = @json(auth()->user()->can('Eliminar certificado de instalaciones'));
+  window.puedeReexpedirCertificado = @json(auth()->user()->can('Reexpedir certificado de instalaciones'));
+  window.puedeSubirCertificado = @json(auth()->user()->can('Subir certificado de instalaciones'));
+  window.puedeAsignarRevisorCertificado = @json(auth()->user()->can('Asignar revisor certificado de instalaciones'));
+  window.puedeVerTrazabilidadCertificado = @json(auth()->user()->can('Trazabilidad certificado de instalaciones'));
+</script>
     @vite(['resources/js/certificados_instalaciones.js'])
 @endsection
 
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
 <!-- Users List Table -->
 <div class="card">
     <div class="card-header pb-0">

@@ -28,6 +28,11 @@
 
 <!-- Page Scripts -->
 @section('page-script')
+<script>
+  window.puedeAgregarUsuario = @json(auth()->user()->can('Registrar predios'));
+  window.puedeEditarUsuario = @json(auth()->user()->can('Editar predios'));
+  window.puedeEliminarUsuario = @json(auth()->user()->can('Eliminar predios'));
+</script>
     @vite(['resources/js/domicilio_predios.js'])
 @endsection
 
@@ -56,7 +61,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th></th>
-                        <th>ID</th>
+                        <th>#</th>
                         <th>Cliente</th>
                         <th>Número de predio</th>
                         <th>Nombre Predio</th>
@@ -76,7 +81,9 @@
             </table>
         </div>
     </div>
-    <!-- Modal -->
+
+
+<!-- Modal -->
 
     @include('_partials/_modals/modal-edit-registro-predio')
 
@@ -90,8 +97,6 @@
 
     @include('_partials/_modals/modal-add-predio-inspeccion')
     @include('_partials/_modals/modal-pdfs-frames')
-
-
 
 
     @include('_partials/_modals/modal-edit-predio-inspeccion')

@@ -109,7 +109,7 @@
             Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
         @endif
         <br>Solicitud de emisión de Certificado para Exportación NOM-070-SCFI-2016 F7.1-01-21<br>
-        Edición 11 Entrada en vigor: 2025
+        Edición 11 Entrada en vigor: 01-07-2025
     </p>
     <div class="img-footer">
             <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705">
@@ -248,7 +248,7 @@
             <td style="text-align: left;  width: 20%;" colspan="3">
                 &nbsp;&nbsp;9) Contenido Alcohólico:</td>
             <td style="font-weight: bold; width: 30%;" colspan="3"> 
-                {{ $lote->lotesGranel->first()->cont_alc ?? "No encontrado" }}% 
+                {{ $lote->cont_alc_envasado ?? "No encontrado" }}% 
             </td>
         </tr>
         <tr>
@@ -293,17 +293,18 @@
             <td>L</td>
             <td><b>{{ $lote->unidad === 'L' ? 'X' : '' }}</b></td>
         </tr>
+    </table>
 
-        @if($loop->iteration == 1)
+    @if($loop->last)
+        <table>
             <tr>
-                <td style="padding-top:12px; padding-bottom:12px;">Cantidad total del<br>producto combinado: </td>
-                <td colspan="7">
+                <td style="padding-top:12px; padding-bottom:12px; width: 20%;">Cantidad total<br>del producto : </td>
+                <td>
                     <b>{{ $cajas }} Cajas y {{ $botellas }} Botellas</b>
                 </td>
             </tr>
-        @endif
-    </table>
-
+        </table>
+    @endif
 
     @if($loop->iteration == 1 OR $loop->iteration == 3)<!--Salto de pag después de tabla 2-->
         <div style="page-break-before: always;"></div> 
@@ -458,7 +459,7 @@
                 N° DE SOLICITUD: 
             </td>
             <td style="width: 35%">
-                {{$folio}}
+                {{$folio}}-E
             </td>
         </tr>
     </table>

@@ -9,7 +9,7 @@
             <div class="modal-body p-8">
                 <form id="addLiberacionProductoForm">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="id_empresa_solicitud_lib_ter" onchange="obtenerInstalacion_lib_ter();"
                                     name="id_empresa" class="select2 form-select">
@@ -23,7 +23,15 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" autocomplete="off"
+                                    value="@php echo date('Y-m-d H:i'); @endphp">
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     id="fecha_visita_liberacion_produto" name="fecha_visita" autocomplete="off"/>
@@ -39,6 +47,7 @@
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
+                                <label >Domicilio de inspección</label>
                             </div>
                         </div>
                     </div>
@@ -253,7 +262,7 @@
                     for (let index = 0; index < response.lotes_envasado.length; index++) {
                         contenidoLotesEnvasados = '<option value="' + response.lotes_envasado[index]
                             .id_lote_envasado + '">' +
-                            response.lotes_envasado[index].nombre + '</option>' +
+                            response.lotes_envasado[index].nombre + ' Botellas: ' + response.lotes_envasado[index].cant_botellas + '</option>' +
                             contenidoLotesEnvasados;
                     }
                     if (response.lotes_envasado.length == 0) {

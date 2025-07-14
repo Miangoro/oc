@@ -12,7 +12,7 @@
                     <input type="hidden" name="id_solicitud" id="edit_id_solicitud_liberacion">
                     <input type="hidden" name="form_type" value="muestreobarricadaliberacion">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="edit_id_empresa_liberacion"
                                     onchange="editobtenerInstalacionesLiberacion(); editobtenerGranelesLiberacion(this.value);"
@@ -27,7 +27,16 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                               <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" autocomplete="off" id="sol_fecha_inspecc_lib_barrica"
+                                    value="@php
+echo date('Y-m-d H:m'); @endphp">
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     id="edit_fecha_visita" name="fecha_visita" autocomplete="off"/>

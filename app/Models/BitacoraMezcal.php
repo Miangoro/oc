@@ -19,6 +19,7 @@ class BitacoraMezcal extends Model
         'id_instalacion',
         'operacion_adicional',
         'tipo_operacion',
+        'tipo',
         //INVENTARIO INICIAL
         'volumen_inicial',
         'alcohol_inicial',
@@ -37,14 +38,24 @@ class BitacoraMezcal extends Model
         //INVENTARIO FINAL
         'volumen_final',
         'alcohol_final',
-
+        'id_firmante',
         'observaciones',
     ];
        public $timestamps = false;
        // En BitacoraMezcal.php
-public function loteBitacora()
-{
-    return $this->belongsTo(LotesGranel::class, 'id_lote_granel', 'id_lote_granel');
-}
+    public function loteBitacora()
+    {
+        return $this->belongsTo(LotesGranel::class, 'id_lote_granel', 'id_lote_granel');
+    }
+    public function empresaBitacora()
+    {
+        return $this->belongsTo(empresa::class, 'id_empresa');
+    }
+    // BitacoraMezcal.php
+    public function firmante()
+    {
+        return $this->belongsTo(User::class, 'id_firmante');
+    }
+
 
 }

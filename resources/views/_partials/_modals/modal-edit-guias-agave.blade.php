@@ -1,3 +1,4 @@
+
 <div class="modal fade" id="editGuias" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -13,7 +14,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange="editobtenerNombrePredio(); editobtenerPlantacionPredio();"
-                                    id="edit_id_empresa" name="empresa" class="select2 form-select" required>
+                                    id="edit_id_empresa" name="empresa" class="select2 form-select" required disabled>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresa as $id_cliente)
                                         <option value="{{ $id_cliente->id_empresa }}">
@@ -22,7 +23,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="edit_id_empresa">Cliente</label>
+                                <label>Cliente</label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -30,24 +31,24 @@
                                 <input class="form-control bg-light text-muted" type="number"
                                     placeholder="Número de guías solicitadas" id="edit_numero_guias" name="numero_guias"
                                     readonly style="pointer-events: none;" />
-                                <label for="edit_numero_guias">Número de guías solicitadas</label>
+                                <label>Número de guías solicitadas</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
                         <select class="select2 form-select" id="edit_nombre_predio" name="predios" aria-label="Predio"
-                            required>
+                            required disabled>
                             /*Se puede quitar*/
                             @foreach ($predios as $id_predio)
                                 <option value="{{ $id_predio->id_empresa }}">{{ $id_predio->nombre_predio }}</option>
                             @endforeach
                             <option value="" selected>Lista de predios</option>
                         </select>
-                        <label for="edit_nombre_predio">Lista de predios</label>
+                        <label>Lista de predios</label>
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
                         <select class="select2 form-select" id="edit_id_plantacion" name="plantacion"
-                            aria-label="Plantación" required>
+                            aria-label="Plantación" required disabled>
                             <option value="" selected>Plantación del predio</option>
                         </select>
                         <label for="edit_id_plantacion">Características del predio</label>
@@ -60,17 +61,18 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Número de plantas anterior"
+                                <input class="form-control bg-light text-muted" type="number" placeholder="Número de plantas anterior"
                                     id="edit_num_anterior" name="anterior" oninput="editcalcularPlantasActualmente()"
-                                    readonly />
+                                    readonly style="pointer-events: none;"/>
                                 <label for="edit_num_anterior">Número de plantas anterior</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number"
+                                <input class="form-control bg-light text-muted" type="number"
                                     placeholder="Número de plantas comercializadas" id="edit_num_comercializadas"
-                                    name="comercializadas" oninput="editcalcularPlantasActualmente()" />
+                                    name="comercializadas" oninput="editcalcularPlantasActualmente()" 
+                                    readonly style="pointer-events: none;" />
                                 <label for="edit_num_comercializadas">Número de plantas comercializadas</label>
                             </div>
                         </div>
@@ -78,16 +80,18 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Mermas plantas"
+                                <input class="form-control bg-light text-muted" type="number" placeholder="Mermas plantas"
                                     id="edit_mermas_plantas" name="mermas"
-                                    oninput="editcalcularPlantasActualmente()" />
+                                    oninput="editcalcularPlantasActualmente()"
+                                    readonly style="pointer-events: none;"  />
                                 <label for="edit_mermas_plantas">Mermas plantas</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Número de plantas actualmente"
-                                    id="edit_numero_plantas" name="plantas" readonly />
+                                <input class="form-control bg-light text-muted" type="number" placeholder="Número de plantas actualmente"
+                                    id="edit_numero_plantas" name="plantas" 
+                                    readonly style="pointer-events: none;"  />
                                 <label for="edit_numero_plantas">Número de plantas actualmente</label>
                             </div>
                         </div>
@@ -159,7 +163,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number"
+                                <input class="form-control" type="text"
                                     placeholder="Ingrese el No. del cliente/comprador" id="edit_no_cliente"
                                     name="no_cliente" />
                                 <label for="edit_no_cliente">No del cliente/comprador</label>

@@ -29,7 +29,14 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" id="edit_fecha_sol_dic_ins">
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     id="edit_fecha_visita" name="fecha_visita" />
@@ -47,6 +54,7 @@
                                     <option value="" selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
+                                <label >Domicilio de inspección</label>
                             </div>
                         </div>
                     </div>
@@ -98,9 +106,15 @@
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary" id="btnEditDicIns"><i class="ri-pencil-fill"></i> Editar</button>
-                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
-                            aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
+                        <button disabled class="btn btn-primary me-1 d-none" type="button" id="loading_dictamen_edit">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Actualizando...
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnEditDicIns"><i
+                                class="ri-pencil-fill me-1"></i>
+                            Editar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
                 </form>
             </div>

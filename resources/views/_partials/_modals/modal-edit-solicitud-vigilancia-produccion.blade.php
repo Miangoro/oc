@@ -25,7 +25,14 @@
                                 <label for="id_empresa">Empresa</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" id="fecha_sol_vigi_prod" autocomplete="off">
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
                                     id="edit_fecha_visita_vig" type="text" name="fecha_visita" />
@@ -40,7 +47,7 @@
                                     name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                 </select>
-                                <label for="id_instalacion">Instalaciones</label>
+                                <label >Domicilio de inspección</label>
                             </div>
                         </div>
                     </div>
@@ -48,7 +55,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_nombre_produccion"
-                                    name="nombre_produccion" placeholder="Nombre de la producción o tapada" required />
+                                    name="nombre_produccion" placeholder="Nombre de la producción o tapada" />
                                 <label for="nombre_produccion">Nombre de la producción o tapada</label>
                             </div>
                         </div>

@@ -46,7 +46,20 @@ $('#edit_fecha_emision').on('change', function() {
 
 // Datatable (jquery)
 $(function () {
- 
+   let buttons = [];
+  // Si tiene permiso, agregas el botón
+  if (puedeAgregarElUsuario) {
+    buttons.push({
+        text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo dictamen</span>',
+        className: 'add-new btn btn-primary waves-effect waves-light',
+        attr: {
+          'data-bs-toggle': 'modal',
+          'data-bs-dismiss': 'modal',
+          'data-bs-target': '#ModalAgregar'
+        }
+    });
+  }
+
 // Variable declaration for table
 var dt_user_table = $('.datatables-users'),
   userView = baseUrl + 'app/user/view/account',
@@ -121,9 +134,9 @@ if (dt_user_table.length) {
           var $num_dictamen = full['num_dictamen'];
           return '<small class="fw-bold">'+ $num_dictamen +'</small>' +
                 `<i data-id="${full['id_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"  data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
-                
+
         }
-      }, 
+      },
       {
         targets: 2,
         searchable: true,
@@ -155,15 +168,15 @@ if (dt_user_table.length) {
             <i data-id="${full['id_solicitud']}" data-folio="${$folio_solicitud}"
               class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
               data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
-            </i> 
+            </i>
           `;
         }
-      }, 
+      },
       {//caracteristicas
         targets: 4,
         searchable: true,
         orderable: false,
-        responsivePriority: 4, 
+        responsivePriority: 4,
         render: function (data, type, full, meta) {
           var $ = full[''];
           return `<div class="small">
@@ -176,13 +189,13 @@ if (dt_user_table.length) {
           }
       },
       {
-        ///fechas 
+        ///fechas
         targets: 5,
         searchable: true,
         orderable: true,
         className: 'text-center',//columna centrada
         render: function (data, type, full, meta) {
-          var $fecha_emision = full['fecha_emision'] ?? 'No encontrado'; 
+          var $fecha_emision = full['fecha_emision'] ?? 'No encontrado';
           var $fecha_vigencia = full['fecha_vigencia'] ?? 'No encontrado';
           return `
             <div>
@@ -211,7 +224,7 @@ if (dt_user_table.length) {
             } else {
               estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
             }
-            
+
           return estatus;
         }
     },
@@ -221,25 +234,60 @@ if (dt_user_table.length) {
         targets: -1,
         title: 'Acciones',
         render: function (data, type, full, meta) {
-          return (
-          '<div class="d-flex align-items-center gap-50">' +
-            `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger disabled' : 'btn-info') + `" data-bs-toggle="dropdown">` +
-            (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') + 
-            '</button>' +
-            '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                //Botón Editar
-                `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-                //Botón Reexpedir Certificado
-                `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#ModalReexpedir" class="dropdown-item waves-effect text-dark reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
-                //Botón Eliminar
-                `<a data-id="${full['id_dictamen']}" class="dropdown-item waves-effect text-dark eliminar"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="' + userView + '" class="dropdown-item">View</a>' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-              '</div>' +
-          '</div>'
-          );
+          const estatus = full['estatus'];
+          const puedeEditar = window.puedeEditarElUsuario;
+          const puedeEliminar = window.puedeEliminarElUsuario;
+          const puedeReexpedir = window.puedeReexpedirElUsuario;
+
+          // Si estatus == 1 → Cancelado
+          if (estatus == 1) {
+            return `
+              <button class="btn btn-sm btn-danger disabled">
+                <i class="ri-close-line ri-20px me-1"></i> Cancelado
+              </button>
+            `;
+          }
+          let acciones = '';
+          if (puedeEditar) {
+            acciones += `
+              <a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar">
+                <i class="ri-edit-box-line ri-20px text-info"></i> Editar
+              </a>`;
+          }
+          if (puedeReexpedir) {
+            acciones += `
+              <a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#ModalReexpedir" class="dropdown-item waves-effect text-dark reexpedir">
+                <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar
+              </a>`;
+          }
+          if (puedeEliminar) {
+            acciones += `
+              <a data-id="${full['id_dictamen']}" class="dropdown-item waves-effect text-dark eliminar">
+                <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
+              </a>`;
+          }
+          // Si no hay permisos válidos
+          if (!acciones.trim()) {
+            return `
+              <button class="btn btn-sm btn-secondary" disabled>
+                <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
+              </button>
+            `;
+          }
+
+          // Construir y retornar el dropdown
+          return `
+            <div class="d-flex align-items-center gap-50">
+              <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                <i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end m-0">
+                ${acciones}
+              </div>
+            </div>
+          `;
         }
+
       }
     ],
 
@@ -539,7 +587,7 @@ FormValidation.formValidation(FormAgregar, {
         $('#FormAgregar')[0].reset();
         $('.select2').val(null).trigger('change');
         dataTable.ajax.reload(false);//Recarga los datos del datatable
-        
+
         // Mostrar alerta de éxito
         Swal.fire({
             icon: 'success',
@@ -714,7 +762,7 @@ $(function () {
       // Validar y enviar el formulario cuando pase la validación
       var formData = new FormData(form);
       var dictamen = $('#edit_id_dictamen').val();
-  
+
       $.ajax({
           url: '/editar2/' + dictamen,
           type: 'POST',
@@ -740,7 +788,7 @@ $(function () {
               var errorMessages = Object.keys(errors).map(function (key) {
                 return errors[key].join('<br>');
               }).join('<br>');
-              /*var errorMessages = Object.values(errors).map(msgArray => 
+              /*var errorMessages = Object.values(errors).map(msgArray =>
                 msgArray.join('<br>')).join('<br><hr>');*/
 
               Swal.fire({
@@ -781,7 +829,7 @@ $(function () {
               $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
               $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();
             //$('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');//funciona igual que arriba
-            
+
               flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
                 dateFormat: "Y-m-d",
                 enableTime: false,
@@ -810,14 +858,14 @@ $(function () {
       // Revalidar el campo cuando se cambia el valor del select2
       fv.revalidateField($(this).attr('name'));
   });*/
-    
+
 });
 
 
 
 ///REEXPEDIR
 let isLoadingData = false;
-let fieldsValidated = []; 
+let fieldsValidated = [];
 $(document).ready(function () {
 
   $(document).on('click', '.reexpedir', function () {
@@ -857,11 +905,11 @@ $(document).ready(function () {
   function cargarDatosReexpedicion(id_dictamen) {
       console.log('Cargando datos para la reexpedición con ID:', id_dictamen);
       clearFields();
-      
+
       //cargar los datos
       $.get(`/editar2/${id_dictamen}/edit`).done(function (datos) {
       console.log('Respuesta completa:', datos);
-  
+
           if (datos.error) {
               showError(datos.error);
               return;
@@ -873,7 +921,7 @@ $(document).ready(function () {
           $('#rex_fecha_emision').val(datos.fecha_emision);
           $('#rex_fecha_vigencia').val(datos.fecha_vigencia);
 
-          $('#accion_reexpedir').trigger('change'); 
+          $('#accion_reexpedir').trigger('change');
           isLoadingData = false;
 
           flatpickr("#rex_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
@@ -913,7 +961,7 @@ $(document).ready(function () {
       $('#FormReexpedir')[0].reset();
       clearFields();
       $('#campos_condicionales').hide();
-      fieldsValidated = []; 
+      fieldsValidated = [];
   });
 
   //validar formulario
@@ -1044,11 +1092,11 @@ $(document).on('click', '.pdfDictamen', function ()  {
   var pdfUrl = '/dictamen_exportacion/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
-      
+
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
     spinner.show();
     iframe.hide();
-    
+
     //Cargar el PDF con el ID
     iframe.attr('src', pdfUrl);
     //Configurar el botón para abrir el PDF en una nueva pestaña
@@ -1071,11 +1119,11 @@ $(document).on('click', '.pdfSolicitud', function ()  {
   var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
-      
+
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
     spinner.show();
     iframe.hide();
-    
+
     //Cargar el PDF con el ID
     iframe.attr('src', pdfUrl);
     //Configurar el botón para abrir el PDF en una nueva pestaña
@@ -1100,7 +1148,7 @@ $(document).on('click', '.pdfActa', function () {
   //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
   spinner.show();
   iframe.hide();
-  
+
     //Cargar el PDF con el ID
     iframe.attr('src', '/files/' + id_acta);
     //Configurar el botón para abrir el PDF en una nueva pestaña
@@ -1117,8 +1165,7 @@ $(document).on('click', '.pdfActa', function () {
 });
 
 
- 
- 
- 
+
+
+
 });//end-function(jquery)
- 
