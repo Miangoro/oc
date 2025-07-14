@@ -73,7 +73,7 @@ $(function () {
             var numero = numero1.split(",");
               $row_output +=
                 '<div class="d-flex flex-column">' +
-                '<a data-pdf="' + numero[1] + '" id="pdf" data-bs-target="#mostrarPdf" href="javascript:;" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="' + numero[0] + '" data-registro="' + numero[0] + '" class="text-truncate text-heading"><span class="fw-medium">' +
+                '<a data-pdf="' + numero[1] + '" id="pdf" data-bs-target="#mostrarPdf" href="javascript:;" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="' + numero[0] + '" data-registro="' + numero[0] + '" class="text-truncate text-primary"><span class="fw-medium">' +
                 numero[0] +
                 '</span></a>' +
                 '</div>';

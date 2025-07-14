@@ -194,7 +194,13 @@ $(function () {
                 }
             return `<div class="small">
                 <b>Lote envasado:</b> ${full['lote_envasado']} <br>
-                <b>Lote granel:</b> ${full['lote_granel']} <br>
+
+                <b>Lote granel:</b> ${full['pdf_firmado']
+                    ? `<a href="${full['pdf_firmado']}" class="text-primary" target="_blank">${full['lote_granel']}</a>`
+                    : `${full['lote_granel']}`
+                } <br>
+
+
                 <b>Folio fq:</b> ${folioHtml || 'N/A'} <br>
                 <b>Tipo maguey:</b> ${full['tipo_maguey']} <br>
                 <b>Marca:</b> ${full['marca']} <br>
@@ -207,7 +213,7 @@ $(function () {
                 <b>sku:</b> ${full['sku']}<br>
                 ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
               </div>`;
-          }
+          }//<b>Lote granel:</b> ${full['lote_granel']} <br>
         },
         {
           ///fechas
