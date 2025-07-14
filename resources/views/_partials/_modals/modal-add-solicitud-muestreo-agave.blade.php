@@ -45,7 +45,8 @@
                                 aria-label="id_instalacion">
                                 <option value="" selected>Lista de instalaciones</option>
                             </select>
-                            <label for="domicilio">Domicilio de la instalación de producción</label>
+                            <label >Domicilio de inspección</label>
+                            {{-- <label for="domicilio">Domicilio de la instalación de producción</label> --}}
                         </div>
                     </div>
                     <div class="row">

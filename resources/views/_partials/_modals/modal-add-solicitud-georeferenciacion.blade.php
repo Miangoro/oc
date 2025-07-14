@@ -48,7 +48,8 @@
                                 name="id_predio" aria-label="id_predio" id="id_predio_georefe">
                                 <option value="" disabled selected>Lista de predios</option>
                             </select>
-                            <label for="id_predio">Domicilio del predio a inspeccionar</label>
+                            {{-- <label for="id_predio">Domicilio del predio a inspeccionar</label> --}}
+                            <label >Domicilio de inspección</label>
                         </div>
                     </div>
                     <div class="row">

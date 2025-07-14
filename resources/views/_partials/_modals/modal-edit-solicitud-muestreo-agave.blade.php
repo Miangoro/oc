@@ -50,7 +50,8 @@ echo date('Y-m-d H:m'); @endphp">
                                 aria-label="id_instalacion">
                                 <option value="" selected>Lista de instalaciones</option>
                             </select>
-                            <label for="id_predio">Domicilio de la instalación de producción</label>
+                           <label >Domicilio de inspección</label>
+                            {{-- <label for="domicilio">Domicilio de la instalación de producción</label> --}}
                         </div>
                     </div>
                     <div class="row">

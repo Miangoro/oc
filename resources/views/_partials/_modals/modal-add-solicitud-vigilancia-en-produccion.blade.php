@@ -45,7 +45,7 @@
                                     aria-label="id_instalacion" id="id_instalacion_vigi">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                 </select>
-                                <label for="id_instalacion">Instalaciones</label>
+                                <label >Domicilio de inspección</label>
                             </div>
                         </div>
                     </div>

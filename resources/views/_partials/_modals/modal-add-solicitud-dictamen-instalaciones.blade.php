@@ -48,9 +48,10 @@
                                 <select class=" form-select select2" id="id_instalacion_dic" name="id_instalacion"
                                     aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
-                                    <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
+
                                 </select>
-                            </div>
+                                 <label >Domicilio de inspección</label>
+                            </div> {{-- Domicilio de la instalación --}}
                         </div>
                     </div>
                     <div class="row">

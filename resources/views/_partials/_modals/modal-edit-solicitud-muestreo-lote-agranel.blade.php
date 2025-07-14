@@ -48,6 +48,7 @@
                                     name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
+                                <label >Domicilio de inspección</label>
                             </div>
                         </div>
                     </div>
