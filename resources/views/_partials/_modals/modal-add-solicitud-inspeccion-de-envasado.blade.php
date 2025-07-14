@@ -220,12 +220,12 @@
                             ${nombreLote} Granel: ${loteGranel}
                         </option>`;
                     });
-
+                    /* btenerDatosGranelesInspecciones(); */
                     if (response.lotes_envasado.length == 0) {
                         contenidoEnv = '<option disabled selected value="">Sin lotes registrados</option>';
                     } else {}
                     $('#id_lote_envasado_inspeccion').html(contenidoEnv);
-                    /* obtenerDatosGranelesInspecciones(); */
+                    obtenerDatosGranelesInspecciones();
                 },
                 error: function() {}
             });
