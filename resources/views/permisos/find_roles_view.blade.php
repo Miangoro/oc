@@ -65,11 +65,13 @@
 
                     <div class="form-group">
 
-                        <label for="permisos" class="form-label">Seleccionar Permisos</label>
-                        <div class="mb-2">
+
+                        <div class="form-floating form-floating-outline mb-2">
                             <input type="text" class="form-control form-control-sm" id="buscadorPermisos"
                                 placeholder="Buscar permiso...">
+                                <label>Buscar...</label>
                         </div>
+                         <label for="permisos" class="form-label">Seleccionar Permisos</label>
                         <div class="form-check mb-2">
                             <input class="form-check-input" type="checkbox" id="checkAllPermisos">
                             <label class="form-check-label" for="checkAllPermisos">
