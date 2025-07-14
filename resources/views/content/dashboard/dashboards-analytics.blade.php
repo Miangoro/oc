@@ -159,12 +159,12 @@
                 <div class="col-sm-6 col-lg-3">
                     <div class="card card-border-shadow-primary h-100">
                         <div class="card-body">
-                            <div class="d-flex align-items-center mb-2">
+                            <div class="d-flex align-items-center mb-2" data-bs-toggle="modal" data-bs-target="#modalSolicitudesSinInspector">
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-primary"><i
                                             class="ri-group-fill ri-24px"></i></span>
                                 </div>
-                                <h4 class="mb-0">{{ $solicitudesSinInspeccion }}</h4>
+                                <h4 class="mb-0">{{ $solicitudesSinInspeccion->count() }}</h4>
                             </div>
                             <h6 class="mb-0 fw-normal">Pendiente de asignar inspector</h6>
                             <hr>
@@ -853,5 +853,57 @@
             </div>
         </div>
 
+
+                <div class="modal fade" id="modalSolicitudesSinInspector" tabindex="-1" aria-labelledby="modalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Solicitudes pendientes de asignar inspector</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if ($solicitudesSinInspeccion->count())
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Folio</th>
+                                            <th>Tipo</th>
+                                            <th>Cliente</th>
+                                            <th>Fecha</th>
+                                            <th>Inspector</th>
+                                            <!--<th>Acciones</th>-->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($solicitudesSinInspeccion as $solicitud)
+                                            <tr>
+                                                <td>{{ $solicitud->folio }}</td>
+                                                <td>{{ $solicitud->tipo_solicitud->tipo }}</td>
+                                                <td>{{ $solicitud->empresa->razon_social ?? 'N/A' }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($solicitud->fecha_solicitud)->format('d/m/Y') }}
+                                                </td>
+                                                <td>{{ $solicitud->inspeccion->inspector->name ?? 'Sin asignar' }}</td>
+                                                <!--<td>
+                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                Ver
+                                            </a>
+                                        </td>-->
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <p>No hay dictámenes pendientes.</p>
+                        @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     @endsection

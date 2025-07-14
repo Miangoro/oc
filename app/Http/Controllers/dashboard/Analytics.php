@@ -31,7 +31,7 @@ class Analytics extends Controller
     $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')
     ->where('fecha_solicitud', '>', '2024-12-31')
     ->where('id_tipo', '!=', 12)
-    ->count();
+    ->get();
     $solicitudesSinActa = solicitudesModel::whereNotIn('id_tipo', [12, 13, 15])
     ->where('fecha_solicitud', '>', '2024-12-31')
     ->where(function ($query) {
