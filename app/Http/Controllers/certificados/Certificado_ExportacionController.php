@@ -324,21 +324,14 @@ public function index(Request $request)
             $numero_cliente2 = $empresa2 && $empresa2->empresaNumClientes->isNotEmpty()
                 ? $empresa2->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa2
                 ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
-            
             $nestedData['servicio_envasado'] = $lotes_env->first()->dictamenEnvasado->inspeccion->num_servicio ?? 'No encontrado';
-            /* $urls = $lotes_env->first()->dictamenEnvasado->inspeccion?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
-            $nestedData['url_acta'] = (!empty($urls)) ? 
-                asset("files/{$numero_cliente2}/actas/$urls")
-                : 'Sin subir'; */
             // Obtener actas (id_documento = 69) por cada lote
             $actas = [];
             foreach ($lotes_env as $lote) {
-                $dictamenEnvasado = $lote->dictamenEnvasado;
-                $inspeccion = $dictamenEnvasado?->inspeccion;
-                $num_servicio = $inspeccion?->num_servicio ?? 'No encontrado';
+                $num_servicio = $lote->dictamenEnvasado->inspeccion->num_servicio ?? 'No encontrado';
+                $inspeccion = $lote->dictamenEnvasado?->inspeccion;
 
                 $urls = $inspeccion?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
-
                 if (!empty($urls)) {
                     foreach ($urls as $url) {
                         $actas[] = [

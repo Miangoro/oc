@@ -13,6 +13,7 @@ use App\Models\Dictamen_Envasado;
 use App\Models\marcas;
 use App\Models\LotesGranel;
 use App\Models\solicitudesModel;
+use App\Models\Documentacion_url;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -156,7 +157,19 @@ public function index(Request $request)
             //$nestedData['id_lote_envasado'] = $dictamen->lote_envasado->nombre_lote ?? 'No encontrado';
             $nestedData['lote_envasado'] = $dictamen->lote_envasado->nombre ?? 'No encontrado';
             $nestedData['cont_alc_envasado'] = $dictamen->lote_envasado->cont_alc_envasado ?? 'No disponible';
+
             $nestedData['lote_granel'] = $dictamen->lote_envasado->lotesGranel->first()->nombre_lote ?? 'No encontrado';
+            $empresa_granel = $dictamen->lote_envasado->lotesGranel->first()->empresa ?? null;
+            $numero_cliente_granel = $empresa_granel && $empresa_granel->empresaNumClientes?->isNotEmpty()
+                ? $empresa_granel->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa_granel
+                ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+            $lote_granel = $dictamen->lote_envasado->lotesGranel ?? null;
+            //Certificado Firmado
+            $documentacion = Documentacion_url::where('id_relacion', $lote_granel?->first()?->id_lote_granel)
+                ->where('id_documento', 59)->where('id_doc', $lote_granel?->first()?->certificadoGranel?->id_certificado)->first();
+            $nestedData['pdf_firmado'] = $documentacion?->url
+                ? asset("files/{$numero_cliente_granel}/certificados_granel/{$documentacion->url}") : null;
+
             $nestedData['folio_fq'] = $dictamen->lote_envasado->lotesGranel->first()->folio_fq ?? 'No encontrado';
             $nestedData['tipo_maguey'] = $dictamen->lote_envasado->lotesGranel->first()?->tiposRelacionados
                 ?->map(fn($t) => $t->nombre.' ('.$t->cientifico.')')->implode(', ') ?? 'No encontrado';
