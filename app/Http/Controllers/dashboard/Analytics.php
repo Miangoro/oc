@@ -27,7 +27,11 @@ class Analytics extends Controller
   public function index()
   {
     //$datos = solicitudesModel::All();
-    $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')->where('fecha_solicitud','>','2024-12-31')->count();
+    /* $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')->where('fecha_solicitud','>','2024-12-31')->count(); */
+    $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')
+    ->where('fecha_solicitud', '>', '2024-12-31')
+    ->where('id_tipo', '!=', 12)
+    ->count();
     $solicitudesSinActa = solicitudesModel::whereNotIn('id_tipo', [12, 13, 15])
     ->where('fecha_solicitud', '>', '2024-12-31')
     ->where(function ($query) {
@@ -40,10 +44,10 @@ class Analytics extends Controller
 
    $revisiones = Revisor::select(
         'id_revisor as user_id',
-        DB::raw("CASE 
-                    WHEN tipo_revision = 1 THEN 'Personal' 
-                    WHEN tipo_revision = 2 THEN 'Consejo' 
-                    ELSE 'Desconocido' 
+        DB::raw("CASE
+                    WHEN tipo_revision = 1 THEN 'Personal'
+                    WHEN tipo_revision = 2 THEN 'Consejo'
+                    ELSE 'Desconocido'
                 END as rol"),
         'tipo_certificado',
         DB::raw('COUNT(*) as total')
@@ -102,8 +106,8 @@ $TotalCertificadosExportacionPorMes = Certificado_Exportacion::select(
     ->groupBy('mes')
     ->orderBy('mes')
     ->get();
-    
-    
+
+
 
 
 // Traer las inspecciones futuras con su inspector
@@ -124,7 +128,7 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
         'foto' => $inspector->profile_photo_path,
         'total_inspecciones' => $grupo->count(),
     ];
-})->sortByDesc('total_inspecciones'); 
+})->sortByDesc('total_inspecciones');
 
     $marcasConHologramas = marcas::with('solicitudHolograma')->where('id_empresa',$empresaId)->get();
 
@@ -201,10 +205,10 @@ $serviciosInstalacion = SolicitudesModel::with(['inspeccion', 'instalacion'])
   public function estadisticasServicios(Request $request)
   {
       $year = $request->input('year', now()->year);
-  
+
       // Trae todos los tipos de servicio con su ID y nombre
       $tipos = solicitudTipo::pluck('tipo', 'id_tipo'); // [1 => 'Instalaciones', 2 => 'Granel', ...]
-  
+
       $formatearDatos = function ($datos) {
           $meses = array_fill(1, 12, 0);
           foreach ($datos as $mes => $total) {
@@ -212,9 +216,9 @@ $serviciosInstalacion = SolicitudesModel::with(['inspeccion', 'instalacion'])
           }
           return array_values($meses);
       };
-  
+
       $inspecciones = [];
-  
+
       foreach ($tipos as $id => $nombre) {
           $datos = inspecciones::whereHas('solicitud', function ($query) use ($id) {
                   $query->where('id_tipo', $id);
@@ -224,15 +228,15 @@ $serviciosInstalacion = SolicitudesModel::with(['inspeccion', 'instalacion'])
               ->groupBy('mes')
               ->pluck('total', 'mes')
               ->toArray();
-  
+
           $inspecciones[$nombre] = $formatearDatos($datos);
       }
-  
+
       return response()->json([
           'inspecciones' => $inspecciones
       ]);
   }
-  
+
 
 
 
