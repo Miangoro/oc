@@ -345,6 +345,8 @@
                     const url_corrugado = response.url_corrugado;
                     const url_evidencias = response.url_evidencias;
                     const url_etiqueta_envasado = response.url_etiqueta_envasado;
+                    const id_lote_envasado = response.id_envasado;
+                    console.log(id_lote_envasado);
                     let html = `
                     <table class="table table-bordered table-striped">
                         <thead class="table-dark">
@@ -375,7 +377,7 @@
                     }
 
                     if (url_etiqueta_envasado) {
-                     
+
                             html += `
                                     <tr>
                                         <td>Etiqueta</td>
@@ -385,7 +387,7 @@
                                             </a>
                                         </td>
                                     </tr>`;
-                       
+
                     }
 
                     if (urls_certificados && urls_certificados.length > 0) {
