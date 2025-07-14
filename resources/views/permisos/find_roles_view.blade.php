@@ -64,26 +64,32 @@
                     </div>
 
                     <div class="form-group">
-                      <label for="permisos" class="form-label">Seleccionar Permisos</label>
-                      <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="checkAllPermisos">
-                        <label class="form-check-label" for="checkAllPermisos">
-                          Seleccionar todos
-                        </label>
-                      </div>
-                      
-                      <div style="max-height: 800px; overflow-y: auto;">
-                          @foreach($permisos as $permiso)
-                              <div class="form-check form-check-sm">
-                                  <input class="form-check-input" type="checkbox" value="{{ $permiso->name }}" id="permiso{{ $permiso->id }}" name="permisos[]">
-                                  <label class="form-check-label" for="permiso{{ $permiso->id }}">
-                                      {{ $permiso->name }}
-                                  </label>
-                              </div>
-                          @endforeach
-                      </div>
-                  </div>
-                  
+
+                        <label for="permisos" class="form-label">Seleccionar Permisos</label>
+                        <div class="mb-2">
+                            <input type="text" class="form-control form-control-sm" id="buscadorPermisos"
+                                placeholder="Buscar permiso...">
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="checkAllPermisos">
+                            <label class="form-check-label" for="checkAllPermisos">
+                                Seleccionar todos
+                            </label>
+                        </div>
+
+                        <div id="listaPermisos" style="max-height: 800px; overflow-y: auto;">
+                            @foreach ($permisos as $permiso)
+                                <div class="form-check form-check-sm">
+                                    <input class="form-check-input" type="checkbox" value="{{ $permiso->name }}"
+                                        id="permiso{{ $permiso->id }}" name="permisos[]">
+                                    <label class="form-check-label" for="permiso{{ $permiso->id }}">
+                                        {{ $permiso->name }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
 
 
 
