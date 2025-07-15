@@ -80,20 +80,6 @@
     
 
 
-    .watermark {
-        color: red;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
-        opacity: 0.5;
-        /* Opacidad predeterminada */
-        letter-spacing: 3px;
-        font-size: 150px;
-        white-space: nowrap;
-        z-index: -1;
-    }
-
 
     .fondo {
         position: fixed;
@@ -149,12 +135,6 @@
 </head>
 
 <body>
-
-@if ($watermarkText)
-    <div class="watermark">
-        Cancelado
-    </div>
-@endif
 
 <img class="fondo" src="{{ public_path('img_pdf/fondo_dictamen.png') }}"  alt="Fondo agave">
 
@@ -291,9 +271,9 @@ NOM-070-SCFI-2016. Bebidas alcohólicas –mezcal-especificaciones
 
 
     <p class="leyenda">
-        @if ($id_sustituye)
+        {{-- @if ($id_sustituye)
         Este dictamen sustituye al: {{ $id_sustituye }}
-        @endif
+        @endif --}}
         <br>F-UV-04-17 Versión 4
         <br>Entrada en vigor: 08-11-2021
     </p>

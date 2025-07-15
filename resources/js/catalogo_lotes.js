@@ -369,6 +369,8 @@ $(function () {
     });
   });
 
+
+  
   // Delete Record
   $(document).on('click', '.delete-record', function () {
     var id_lote = $(this).data('id'); // Obtener el ID de la clase

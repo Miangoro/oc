@@ -213,7 +213,7 @@ public function store(Request $request)
 }
 
 
-/*
+
 ///PDF DICTAMEN
 public function DictamenNoCumplimiento($id_dictamen)
 {
@@ -256,7 +256,7 @@ public function DictamenNoCumplimiento($id_dictamen)
         $pass = 'v921009villa';
     }
     $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccione?->num_servicio, $pass, $data->id_firmante);
-
+*/
 
     // Verifica qué valor tiene esta variable
     $fecha_emision2 = Helpers::formatearFecha($data->fecha_emision);
@@ -277,9 +277,9 @@ public function DictamenNoCumplimiento($id_dictamen)
         'fecha_vigencia' => $fecha_vigencia,
     ]);
     //nombre al descarga
-    return $pdf->stream('Dictamen de Cumplimiento para Producto de Exportación F-UV-04-18.pdf');
+    return $pdf->stream('F-UV-04-30 Dictamen de no cumplimiento Ed. 0.pdf');
 }
-*/
+
 
 
 
