@@ -439,13 +439,13 @@ class RevisionPersonalController extends Controller
 
         $certificadoEscaneado = '';
 
-if (!empty($datos->certificado?->id_lote_granel)) {
-    $doc = Documentacion_url::where('id_documento', 59)
-        ->where('id_relacion', $datos->certificado->id_lote_granel)
-        ->first();
+        if (!empty($datos->certificado?->id_lote_granel)) {
+            $doc = Documentacion_url::where('id_documento', 59)
+                ->where('id_relacion', $datos->certificado->id_lote_granel)
+                ->first();
 
-    $certificadoEscaneado = $doc?->url ?? '';
-}
+            $certificadoEscaneado = $doc?->url ?? '';
+        }
 
         return view('certificados.add_revision', compact('datos', 'preguntas', 'url', 'tipo','certificadoEscaneado'));
     }
@@ -568,7 +568,18 @@ if (!empty($datos->certificado?->id_lote_granel)) {
             $url = "/certificado_exportacion/" . $datos->id_certificado;
             $tipo = "Exportación";
         }
-        return view('certificados.edit_revision', compact('datos', 'preguntas', 'url', 'tipo', 'respuestas_map'));
+
+         $certificadoEscaneado = '';
+
+        if (!empty($datos->certificado?->id_lote_granel)) {
+            $doc = Documentacion_url::where('id_documento', 59)
+                ->where('id_relacion', $datos->certificado->id_lote_granel)
+                ->first();
+
+            $certificadoEscaneado = $doc?->url ?? '';
+        }
+
+        return view('certificados.edit_revision', compact('datos', 'preguntas', 'url', 'tipo', 'respuestas_map','certificadoEscaneado'));
     }
 
     public function editar_revision(Request $request)
