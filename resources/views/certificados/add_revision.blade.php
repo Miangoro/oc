@@ -58,11 +58,19 @@
                             @php
                                 $nuevoId = $datos->certificado->certificadoReexpedido()?->id_certificado;
                                 $urlConNuevoId = $nuevoId ? preg_replace('/\d+$/', $nuevoId, $url) : null;
+                                 $empresa =
+                                    $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa;
+                                $cliente = $empresa?->empresaNumClientes?->firstWhere(
+                                    'numero_cliente',
+                                    '!=',
+                                    null,
+                                );
+
                             @endphp
 
 
                             <p>Este certificado sustituye al certificado <a target="_blank"
-                                    href="{{ $urlConNuevoId ?? 'N/A' }}">{{ $datos->certificado->certificadoReexpedido()->num_certificado }}</a>
+                                    href="{{ '/files/' . $cliente->numero_cliente . '/' . $certificadoEscaneado }}">{{ $datos->certificado->certificadoReexpedido()->num_certificado }}</a>
                                 @php
                                     $obs = json_decode($datos->certificado->certificadoReexpedido()?->observaciones);
                                 @endphp
