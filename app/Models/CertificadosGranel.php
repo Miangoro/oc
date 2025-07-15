@@ -54,7 +54,7 @@ class CertificadosGranel extends Model
     {
         $datos = json_decode($this->observaciones, true);
         if (isset($datos['id_sustituye'])) {
-            return Certificados::find($datos['id_sustituye']);
+            return CertificadosGranel::find($datos['id_sustituye']);
         }
         return null;
     }
