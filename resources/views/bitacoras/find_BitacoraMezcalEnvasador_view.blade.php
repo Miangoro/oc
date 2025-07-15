@@ -1,7 +1,7 @@
 
 @extends('layouts.layoutMaster')
 
-@section('title', 'Bitácora Hologramas')
+@section('title', 'Bitácora Mezcal a Granel')
 
 @section('vendor-style')
     <style>
@@ -34,7 +34,7 @@
                 return "<option value='{$e->id_empresa}'>{$num} | {$e->razon_social}</option>";
             })->implode('') !!}`;
     </script>
-    @vite(['resources/js/bitacora_hologramas.js'])
+    @vite(['resources/js/bitacora_mezcal_envasador.js'])
 @endsection
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -45,7 +45,7 @@
 
 
         <div class="card-header pb-0 mb-1">
-            <h3 class="card-title mb-0">Control de hologramas (Envasador)</h3>
+            <h3 class="card-title mb-0">Mezcal a Granel (Envasador)</h3>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-users table">
@@ -71,8 +71,8 @@
 
     <!-- Modal -->
     @include('_partials/_modals/modal-pdfs-frames')
-    @include('_partials/_modals/modal-add-bitacoraHologramasEnvasador')
-    @include('_partials._modals.modal-edit-bitacoraHologramasEnvasador')
+    @include('_partials/_modals/modal-add-bitacoraMezcalEnvasador')
+    @include('_partials._modals.modal-edit-bitacoraMezcalEnvasador')
     <!-- /Modal -->
 
 @endsection

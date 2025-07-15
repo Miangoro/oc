@@ -206,6 +206,7 @@ use App\Http\Controllers\revision\RevisionPersonalController;
 use App\Http\Controllers\revision\RevisionConsejoController;
 use App\Http\Controllers\revision\catalogo_personal_seleccion_preguntas_controller;
 use App\Http\Controllers\bitacoras\BitacoraMezcalController;
+use App\Http\Controllers\bitacoras\BitacoraMezcalEnvasadorController;
 use App\Http\Controllers\bitacoras\BitacoraProductoMaduracionController;
 use App\Http\Controllers\bitacoras\BitacoraProcesoElaboracionController;
 use App\Http\Controllers\bitacoras\BitacoraProductoTerminadoController;
@@ -958,11 +959,32 @@ Route::controller(BitacoraMezcalController::class)->middleware(['auth'])->group(
     Route::post('/bitacoraMezcalStore', 'store')->name('bitacora.store');
     Route::post('/bitacorasUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
     Route::post('/FirmaBitacoraMezcal/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
-
 });
 
 Route::resource('/bitacoraMezcal-list', BitacoraMezcalController::class)->middleware(['auth']);
 
+Route::controller(BitacoraMezcalEnvasadorController::class)->middleware(['auth'])->group(function () {
+    Route::get('/bitacoraMezcalEnvasador', 'UserManagement')->name('bitacora-mezcal-envasador');
+    Route::get('/bitacora_mezcal_envasador', 'PDFBitacoraMezcal');
+    Route::get('bitacora_mezcal_envasador/{id_bitacora}/edit', 'edit');
+    Route::get('bitacoraMezcalEnvasador-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::post('/bitacoraMezcalEnvasadorStore', 'store')->name('bitacora.store');
+    Route::post('/bitacorasEnvasadorUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaBitacoraMezcalEnvasador/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+});
+
+Route::resource('/bitacoraMezcalEnvasador-list', BitacoraMezcalEnvasadorController::class)->middleware(['auth']);
+
+Route::controller(BitacoraHologramasController::class)->middleware(['auth'])->group(function () {
+    Route::get('/bitacoraHologramasEnvasador', 'UserManagement')->name('bitacora-hologramas-envasador');
+    Route::get('/bitacora_hologramas_envasador', 'PDFBitacoraHologramas');
+    Route::get('bitacora_hologramas_envasador/{id_bitacora}/edit', 'edit');
+    Route::get('bitacoraHologramasEnvasador-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::post('/bitacoraHologramasEnvasadorStore', 'store')->name('bitacora.store');
+    Route::post('/bitacorasHologramasEnvasadorUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaBitacoraHologramasEnvasador/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+});
+Route::resource('/bitacoraHologramasEnvasador-list', BitacoraHologramasController::class)->middleware(['auth']);
 
 Route::middleware(['auth'])->group(function () {
     // BitacoraMaduracion

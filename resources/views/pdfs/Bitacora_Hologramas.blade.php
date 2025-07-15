@@ -10,7 +10,7 @@
     table {
         width: 101%;
         border-collapse: collapse;
-        table-layout: fixed; 
+        table-layout: fixed;
     }
 
     th, td {
@@ -26,30 +26,30 @@
 
     img {
         display: flex;
-        margin-bottom: 10px; 
+        margin-bottom: 10px;
     }
 
     .img .logo-small {
-        height: 70px; 
+        height: 70px;
         width: auto;
     }
 
     .text {
         text-align: center;
-        margin-top: -50px; 
+        margin-top: -50px;
         font-family: 'calibri-bold';
         font-size: 18px;
     }
 
     tr.text-title td, tr.text-title th {
-        padding: 2px; 
-        text-align: center; 
-        font-size: 5px; 
+        padding: 2px;
+        text-align: center;
+        font-size: 5px;
         word-break: break-word;
         height: auto;
         width: auto;
         vertical-align: middle;
-        background: #D0CECE;     
+        background: #D0CECE;
         font-family: 'calibri-bold';
     }
 
@@ -66,18 +66,18 @@
             margin-right: 30px;
             padding: 10px 0;
             font-family: 'Lucida Sans Unicode';
-            z-index: 1; 
+            z-index: 1;
             color: #A6A6A6;
      }
 
 </style>
 <body>
-    <div class="img"> 
+    <div class="img">
         <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" class="logo-small">
     </div>
 
     <div>
-        <p class="text">ICONTROL DE HOLOGRAMAS</p>
+        <p class="text">CONTROL DE HOLOGRAMAS</p>
     </div>
 
     <table>
@@ -131,201 +131,13 @@
                 <td></td>
                 <td></td>
             </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+
         </tbody>
     </table>
 
     <div class="pie">
         <p>Página 1 de 1</p>
     </div>
-    
+
 </body>
 </html>

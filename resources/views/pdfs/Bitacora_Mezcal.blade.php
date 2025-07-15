@@ -93,7 +93,7 @@
         {{-- Título y Cliente --}}
         <td style="width: 50%; text-align: center; border:none;">
             <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
-                INVENTARIO DE MEZCAL A GRANEL (PRODUCTOR)
+                INVENTARIO DE MEZCAL A GRANEL {{ $title ? "($title)" : '' }}
             </p>
             @php
                 $primerBitacora = $bitacoras->first();

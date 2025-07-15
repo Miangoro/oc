@@ -333,7 +333,7 @@
             {
               "url": "/bitacoraMezcalEnvasador",
               "name": "Mezcla a granel (Inventario)",
-              "slug": "bitacora-mezcal",
+              "slug": "bitacora-mezcal-envasador",
               "can": "Visualizar bitácoras"
             },
             {
@@ -347,9 +347,11 @@
               "slug": "bitacoraProductoTerminado"
             },
             {
-              "url": "/bitacoraHologramas",
+              "url": "/bitacoraHologramasEnvasador",
               "name": "Control de hologramas",
-              "slug": "bitacoraHologramas"
+              "slug": "bitacora-hologramas-envasador",
+              "can": "Visualizar bitácoras"
+
             },
             {
               "url": "/bitacoraProductoMaduracion",
