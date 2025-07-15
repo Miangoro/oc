@@ -137,7 +137,6 @@ $(function () {
           sPrevious: 'Anterior'
         }
       },
-<<<<<<< HEAD
       buttons: [
         {
           extend: 'collection',
@@ -160,9 +159,6 @@ $(function () {
           }
         }
       ]
-=======
-      buttons: buttons,
->>>>>>> e2b2c7a3b9f38ff21b4a69311185fa78a3c52b37
     });
   }
 
