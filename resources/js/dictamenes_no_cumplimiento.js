@@ -124,7 +124,8 @@ if (dt_user_table.length) {
         responsivePriority: 1,
         render: function (data, type, full, meta) {
           var $num_dictamen = full['num_dictamen'];
-          return '<small class="fw-bold">'+ $num_dictamen +'</small>';
+          return '<small class="fw-bold">'+ $num_dictamen +'</small>' +
+              `<i data-id="${full['id_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"  data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
         }
       },
 
@@ -334,6 +335,29 @@ FormValidation.formValidation(FormAgregar, {
 
 });
 
+
+
+///FORMATO PDF DICTAMEN
+$(document).on('click', '.pdfDictamen', function () {
+  var id = $(this).data('id');
+  var pdfUrl = '/dictamen_no_cumplimiento/' + id; //Ruta del PDF
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+  spinner.show();
+  iframe.hide();
+  //Cargar el PDF con el ID
+  iframe.attr('src', pdfUrl);
+  //Configurar el botón para abrir el PDF en una nueva pestaña
+  $("#NewPestana").attr('href', pdfUrl).show();
+  $("#titulo_modal").text("Dictamen de No Cumplimiento");
+  $("#subtitulo_modal").text("PDF del Dictamen");
+  //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+  iframe.on('load', function () {
+    spinner.hide();
+    iframe.show();
+  });
+});
 
 
 

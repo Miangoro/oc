@@ -201,8 +201,10 @@ $(function () {
             return `<div class="small">
             <b>Lote granel:</b> ${full['nombre_lote']} <br>
             <b>FQs:</b> ${full['n_analisis']}
+            
 
-            ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
+            ${full['sustituye'] ? `<br><b>Sustituye:</b> <span class="text-primary">${full['sustituye']}</span>` : ''} 
+            ${full['motivo'] ? `<br><b>Motivo:</b> <span class="text-danger">${full['motivo']}</span>` : ''}
           </div>`;
           }
         },

@@ -58,11 +58,25 @@
                             @php
                                 $nuevoId = $datos->certificado->certificadoReexpedido()?->id_certificado;
                                 $urlConNuevoId = $nuevoId ? preg_replace('/\d+$/', $nuevoId, $url) : null;
+                                 $solicitud =
+                                                    $datos->certificado->dictamen->inspeccione->solicitud ?? null;
+                                                $loteGranel = $solicitud->lote_granel ?? null;
+                                                $loteEnvasado = $solicitud->lote_envasado ?? null;
+                                                $empresa = $loteGranel?->empresa ?? null;
+
+                                                $numero_cliente =
+                                                    $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                                                        ? $empresa->empresaNumClientes->first(
+                                                                fn($item) => $item->empresa_id === $empresa->id &&
+                                                                    !empty($item->numero_cliente),
+                                                            )?->numero_cliente ?? null
+                                                        : null;
+
                             @endphp
 
 
                             <p>Este certificado sustituye al certificado <a target="_blank"
-                                    href="{{ $urlConNuevoId ?? 'N/A' }}">{{ $datos->certificado->certificadoReexpedido()->num_certificado }}</a>
+                                    href="{{ '/files/' . $numero_cliente . '/certificados_granel/' . $certificadoEscaneado }}">{{ $datos->certificado->certificadoReexpedido()->num_certificado }}</a>
                                 @php
                                     $obs = json_decode($datos->certificado->certificadoReexpedido()?->observaciones);
                                 @endphp

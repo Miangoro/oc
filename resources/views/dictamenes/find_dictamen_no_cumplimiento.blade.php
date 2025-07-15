@@ -78,9 +78,10 @@
     </div>
 
     <!-- Modal -->
+    @include('_partials/_modals/modal-pdfs-frames')
     @include('_partials/_modals/modal-add-dictamen-no-cumplimiento')
-    {{-- @include('_partials/_modals/modal-pdfs-frames')
-    @include('_partials/_modals/modal-reexpedir-dictamen-envasado') --}}
+    
+    {{-- @include('_partials/_modals/modal-reexpedir-dictamen-envasado') --}}
     <!-- /Modal -->
 
 @endsection

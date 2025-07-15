@@ -214,6 +214,71 @@ public function store(Request $request)
 
 
 
+///PDF DICTAMEN
+public function DictamenNoCumplimiento($id_dictamen)
+{
+    // Obtener los datos del dictamen
+    $data = Dictamen_NoCumplimiento::find($id_dictamen);
+
+    if (!$data) {
+        return abort(404, 'Registro no encontrado.');
+        //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
+    }
+/*
+    //firma electronica
+    $url = route('validar_dictamen', ['id_dictamen' => $id_dictamen]);
+    $qrCode = new QrCode(
+        data: $url,
+        encoding: new Encoding('UTF-8'),
+        errorCorrectionLevel: ErrorCorrectionLevel::Low,
+        size: 300,
+        margin: 10,
+        roundBlockSizeMode: RoundBlockSizeMode::Margin,
+        foregroundColor: new Color(0, 0, 0),
+        backgroundColor: new Color(255, 255, 255)
+    );
+    // Escribir el QR en formato PNG
+    $writer = new PngWriter();
+    $result = $writer->write($qrCode);
+    // Convertirlo a Base64
+    $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+    
+    if($data->id_firmante == 9){ //Erik
+        $pass = 'Mejia2307';
+    }
+    if($data->id_firmante == 6){ //Karen velazquez
+        $pass = '890418jks';
+    }
+    if($data->id_firmante == 7){ //Zaida
+        $pass = 'ZA27CI09';
+    }
+    if($data->id_firmante == 14){ //Mario
+        $pass = 'v921009villa';
+    }
+    $firmaDigital = Helpers::firmarCadena($data->num_dictamen . '|' . $data->fecha_emision . '|' . $data->inspeccione?->num_servicio, $pass, $data->id_firmante);
+*/
+
+    // Verifica qué valor tiene esta variable
+    $fecha_emision2 = Helpers::formatearFecha($data->fecha_emision);
+    $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
+    $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
+    
+    //return response()->json(['message' => 'No se encontraron características.', $data], 404);
+
+    $pdf = Pdf::loadView('pdfs.dictamen_no_cumplimiento_ed0', [//formato del PDF
+        'data' => $data,
+        'no_dictamen' => $data->num_dictamen,
+        'fecha_emision' => $fecha_emision2,
+        'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
+        'domicilio' => $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
+        'cp' => $data->inspeccione->solicitud->empresa->cp ?? " ",
+        'rfc' => $data->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
+        'fecha_servicio' => $fecha_servicio,
+        'fecha_vigencia' => $fecha_vigencia,
+    ]);
+    //nombre al descarga
+    return $pdf->stream('F-UV-04-30 Dictamen de no cumplimiento Ed. 0.pdf');
+}
 
 
 
