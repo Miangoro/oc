@@ -190,6 +190,8 @@ use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\DictamenInstalacionesController;
 use App\Http\Controllers\dictamenes\DictamenGranelController;
 use App\Http\Controllers\dictamenes\DictamenEnvasadoController;
+use App\Http\Controllers\dictamenes\DictamenNoCumplimientoController;
+
 use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\certificados\Certificado_GranelController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
@@ -1056,6 +1058,20 @@ Route::middleware(['auth'])->controller(DictamenExportacionController::class)->g
     Route::get('/dictamen_exportacion/{id_dictamen}', 'MostrarDictamenExportacion')->name('PDF-dictamen-exportacion');
     //Reexpedir
     Route::post('/registrar/reexpedir', 'reexpedir')->name('dic-expor.reex');
+});
+
+//-------------------DICTAMEN NO CUMPLIMIENTO-------------------
+Route::middleware(['auth'])->controller(DictamenNoCumplimientoController::class)->group(function () {
+    Route::get('/dictamenes/no_cumplimiento', 'UserManagement')->name('dictamenes-no-cumplimiento');
+    Route::resource('no_cumplimiento-list', DictamenNoCumplimientoController::class);
+    Route::post('registrar/no_cumplimiento', 'store')->name('registrar');
+
+    /*Route::delete('dictamen/envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'destroy'])->name('dictamen.delete');
+    route::get('/dictamenes/envasado/{id_dictamen}/edit', [DictamenEnvasadoController::class, 'edit'])->name('dictamenes.edit');
+    Route::post('/dictamenes/envasado/{id_dictamen}/update', [DictamenEnvasadoController::class, 'update'])->name('dictamen.update');
+    Route::post('/registrar/reexpedir-envasado', [DictamenEnvasadoController::class, 'reexpedir'])->name('dic-envasado.reex');
+    Route::get('/dictamen_envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'MostrarDictamenEnvasado'])->name('formato-dictamen-envasado');
+    Route::get('/getDatosLotesEnv/{id_inspeccion}', [DictamenEnvasadoController::class, 'getDatosLotesEnv'])->name('getDatosLotesEnv');*/
 });
 
 //-------------------CERTIFICADO INSTALACIONES-------------------

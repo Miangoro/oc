@@ -145,6 +145,12 @@
           "name": "Exportación",
           "slug": "dictamenes-exportacion",
           "can": "Visualizar dictamen de exportación"
+        },
+        {
+          "url": "dictamenes/no_cumplimiento",
+          "name": "No cumplimiento",
+          "slug": "dictamenes-no-cumplimiento",
+          "can": "Visualizar dictamen de exportación"
         }
       ]
     },
