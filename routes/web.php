@@ -160,7 +160,7 @@ use App\Http\Controllers\charts\ApexCharts;
 use App\Http\Controllers\charts\ChartJs;
 use App\Http\Controllers\maps\Leaflet;
 use App\Http\Controllers\solicitudCliente\solicitudClienteController;
-use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
+use App\Http\Controllers\pdfsControllers\CartaAsignacionController;
 use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\catalogo\categoriasController;
