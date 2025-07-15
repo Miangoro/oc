@@ -348,7 +348,7 @@ public function edit($id_dictamen_envasado)
 ///FUNCION ACTUALIZAR
 public function update(Request $request, $id_dictamen_envasado)
 {
-    //try {
+    try {
         $validated = $request->validate([
             'num_dictamen' => 'required|string|max:70',
             'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
@@ -392,13 +392,13 @@ public function update(Request $request, $id_dictamen_envasado)
         $lote->save();
 
         return response()->json(['message' => 'Actualizado correctamente.']);
-    /*} catch (\Exception $e) {
+    } catch (\Exception $e) {
         Log::error('Error al actualizar dictamen', [
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
         return response()->json(['error' => 'Error al actualizar.'], 500);
-    }*/
+    }
 }
 
 
