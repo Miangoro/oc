@@ -76,7 +76,7 @@
 
 
                             <p>Este certificado sustituye al certificado <a target="_blank"
-                                    href="{{ '/files/' . $numero_cliente . '/' . $certificadoEscaneado }}">{{ $datos->certificado->certificadoReexpedido()->num_certificado }}</a>
+                                    href="{{ '/files/' . $numero_cliente . '/certificados_granel/' . $certificadoEscaneado }}">{{ $datos->certificado->certificadoReexpedido()->num_certificado }}</a>
                                 @php
                                     $obs = json_decode($datos->certificado->certificadoReexpedido()?->observaciones);
                                 @endphp
