@@ -72,14 +72,43 @@
 
 </style>
 <body>
-    <div class="img">
-        <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" class="logo-small">
-    </div>
-
-    <div>
-        <p class="text">CONTROL DE HOLOGRAMAS</p>
-    </div>
-
+<table width="100%" style="border: none;">
+    <tr>
+        {{-- Logo Unidad de Inspección --}}
+        <td style="width: 25%; text-align: left; vertical-align: top; padding-left: 0; border:none; ">
+            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" style="height: 80px; padding-top: 10px;">
+        </td>
+        {{-- Título y Cliente --}}
+        <td style="width: 50%; text-align: center; border:none;">
+            <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
+                CONTROL DE HOLOGRAMAS {{ $title ? "($title)" : '' }}
+            </p>
+            @php
+                $primerBitacora = $bitacoras->first();
+                $razon = $primerBitacora->empresaBitacora->razon_social ?? 'Sin razón social';
+                $numeroCliente = 'Sin número cliente';
+                if (
+                    $primerBitacora->empresaBitacora &&
+                    $primerBitacora->empresaBitacora->empresaNumClientes->isNotEmpty()
+                ) {
+                    foreach ($primerBitacora->empresaBitacora->empresaNumClientes as $cliente) {
+                        if (!empty($cliente->numero_cliente)) {
+                            $numeroCliente = $cliente->numero_cliente;
+                            break;
+                        }
+                    }
+                }
+            @endphp
+            <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
+               <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
+            </p>
+        </td>
+        {{-- Logo OC --}}
+        <td style="width: 25%; text-align: right; vertical-align: top; padding-right: 0; border:none;">
+            <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo OC" style="height: 100px; width:auto;">
+        </td>
+    </tr>
+</table>
     <table>
         <tbody>
             <tr class="text-title">
@@ -110,29 +139,70 @@
                 <td>SERIE</td>
                 <td>NÚM. SELLOS</td>
             </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+              @forelse($bitacoras as $bitacora)
+                  <tr class="bitacora-row">
+                      <td>{{ $bitacora->fecha ?? '----' }}</td>
 
-        </tbody>
+                      {{-- Marca (puedes cambiar esto por nombre de marca si hay relación) --}}
+                      <td>{{ $bitacora->loteBitacora->marca->nombre ?? '----' }}</td>
+                      {{-- Lote de envasado --}}
+                      <td>{{ $bitacora->loteBitacora->nombre ?? '----' }}</td>
+                      {{-- Categoría --}}
+                      <td>{{ $bitacora->loteBitacora->categoria->nombre ?? '----' }}</td>
+                      {{-- Clase --}}
+                      <td>{{ $bitacora->loteBitacora->clase->nombre ?? '----' }}</td>
+                      {{-- Capacidad --}}
+                      <td>{{ $bitacora->loteBitacora->capacidad ?? '----' }}</td>
+                      {{-- % Alc. Vol. --}}
+                      <td>{{ $bitacora->loteBitacora->alc_vol ?? '----' }}</td>
+                      {{-- Inventario Inicial --}}
+                      <td>{{ $bitacora->serie_inicial ?? '----' }}</td>
+                      <td>{{ $bitacora->num_sellos_inicial ?? '----' }}</td>
+
+                      {{-- Entradas --}}
+                      <td>{{ $bitacora->serie_entrada ?? '----' }}</td>
+                      <td>{{ $bitacora->num_sellos_entrada ?? '----' }}</td>
+
+                      {{-- Salidas --}}
+                      <td>{{ $bitacora->serie_salidas ?? '----' }}</td>
+                      <td>{{ $bitacora->num_sellos_salidas ?? '----' }}</td>
+
+                      {{-- Final --}}
+                      <td>{{ $bitacora->serie_final ?? '----' }}</td>
+                      <td>{{ $bitacora->num_sellos_final ?? '----' }}</td>
+
+                      {{-- Mermas --}}
+                      <td>{{ $bitacora->serie_mermas ?? '----' }}</td>
+                      <td>{{ $bitacora->num_sellos_mermas ?? '----' }}</td>
+
+                      {{-- Observaciones --}}
+                      <td>{{ $bitacora->observaciones ?? '----' }}</td>
+
+                      {{-- Firma --}}
+                      <td>
+                          @if ($bitacora->id_firmante != 0 && $bitacora->firmante)
+                              @php
+                                  $firma = $bitacora->firmante->firma;
+                                  $rutaFirma = public_path('storage/firmas/' . $firma);
+                              @endphp
+
+                              @if (!empty($firma) && file_exists($rutaFirma))
+                                  <img src="{{ $rutaFirma }}" alt="Firma" height="100"><br>
+                                  <small>{{ $bitacora->firmante->name }}</small>
+                              @else
+                                  <span class="text-muted">Firma no encontrada</span>
+                              @endif
+                          @else
+                              <span>Sin firma</span>
+                          @endif
+                      </td>
+                  </tr>
+              @empty
+                  <tr>
+                      <td colspan="15" class="text-center">No hay datos para mostrar</td>
+                  </tr>
+              @endforelse
+          </tbody>
     </table>
 
     <div class="pie">

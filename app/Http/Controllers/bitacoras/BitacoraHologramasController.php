@@ -171,11 +171,13 @@ class BitacoraHologramasController extends Controller
      public function PDFBitacoraHologramas(Request $request)
     {
         $empresaId = $request->query('empresa');
-        $title = 'PRODUCTOR'; // Cambia a 'Envasador' si es necesario
+        $title = 'ENVASADOR'; // Cambia a 'Envasador' si es necesario
         $bitacoras = BitacoraHologramas::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
-        ])->where('tipo', 2)
+            'loteBitacora',              // <-- asegúrate de esto
+        ])
+        ->where('tipo', 2)
         ->when($empresaId, function ($query) use ($empresaId) {
             $query->where('id_empresa', $empresaId);
         })

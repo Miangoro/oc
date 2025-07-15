@@ -37,8 +37,7 @@ class BitacoraHologramas extends Model
         'observaciones',
     ];
        public $timestamps = false;
-
-           public function loteBitacora()
+    public function loteBitacora()
     {
         return $this->belongsTo(lotes_envasado::class, 'id_lote_envasado', 'id_lote_envasado');
     }
