@@ -65,6 +65,7 @@ $(function () {
 
     columns: [
       { data: '' },
+      { data: 'fake_id' },
       {
         data: 'folio',
         render: function (data, type, row) {
@@ -306,7 +307,7 @@ $(function () {
       },
       {
         // User full name
-        targets: 8,
+        targets: 9,
         render: function (data, type, full, meta) {
           var $name = full['inspector'];
           var foto_inspector = full['foto_inspector'];
@@ -337,12 +338,12 @@ $(function () {
         }
       },
       {
-        targets: 9,
+        targets: 10,
         searchable: false,
         orderable: false
       },
       {
-        targets: 11,
+        targets: 12,
         className: 'text-center',
         searchable: false,
         orderable: false,
@@ -351,7 +352,7 @@ $(function () {
         }
       },
       {
-        targets: 12, // o el índice correcto de la columna 'estatus'
+        targets: 13, // o el índice correcto de la columna 'estatus'
         orderable: false,
         searchable: false
       },
