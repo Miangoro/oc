@@ -437,7 +437,7 @@ class RevisionPersonalController extends Controller
             $tipo = "Exportación";
         }
 
-         $certificadoEscaneado = Documentacion_url::where('id_documento', 59)->where('id_doc', $datos->certificado->id_certificado) ->first();
+         $certificadoEscaneado = Documentacion_url::where('id_documento', 59)->where('id_relacion', $datos->certificado->id_lote_granel) ->first();
         return view('certificados.add_revision', compact('datos', 'preguntas', 'url', 'tipo','certificadoEscaneado'));
     }
     public function registrar_revision(Request $request)
