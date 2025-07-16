@@ -743,6 +743,28 @@
                                         @elseif($pregunta->filtro == 'tipo_maguey')
                                             <td>
 
+                                                 @php
+                                                $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
+                                                $lote_granel = $solicitud->lote_granel;
+                                                $lote_envasado = $solicitud->lote_envasado;
+
+                                                 $ids = $solicitud->id_lote_envasado; // array de IDs
+                                                            $lotes_graneles = collect();
+
+                                                            foreach ($ids as $id) {
+                                                                $lote = App\Models\lotes_envasado::find($id);
+                                                                if ($lote) {
+                                                                    foreach ($lote->lotesGranel as $granel) {
+                                                                        if ($granel) {
+                                                                            $lotes_graneles->push($granel);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            
+                                            @endphp
+
                                                     @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
                                                         {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
                                                     @empty
