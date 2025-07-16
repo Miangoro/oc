@@ -46,9 +46,11 @@
                          @php
                             $caracteristicas = json_decode( $datos->certificado->dictamen->inspeccione->solicitud->caracteristicas);
                              $tipo_certificado = $tipo;
+                              $combinado = 'No';
                         @endphp
                         @if (isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
                             <span class="badge bg-info">Combinado</span>
+                            @php $combinado = 'Si'; @endphp
                         @endif
                         @if ($datos->es_correccion === 'si')
                             <span class="badge bg-danger">Es corrección</span>
