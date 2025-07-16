@@ -39,7 +39,7 @@ class BitacoraProcesoElaboracionController extends Controller
       $columns = [
           1 => 'id',
           2 => 'fecha_ingreso',
-          3 => 'id_lote_granel'
+          3 => 'lote_granel'
       ];
         $empresaIdAut = null;
           if (Auth::check() && Auth::user()->tipo == 3) {
@@ -94,7 +94,7 @@ class BitacoraProcesoElaboracionController extends Controller
               $nestedData['fecha_ingreso'] = Helpers::formatearFecha($bitacora->fecha_ingreso);
               $nestedData['nombre_cliente'] = $bitacora->empresaBitacora->razon_social ?? 'Sin razón social';
               $nestedData['numero_tapada'] = $bitacora->numero_tapada ?? 'N/A';
-              $nestedData['lote_granel'] = $bitacora->loteBitacora->nombre_lote ?? 'N/A';
+              $nestedData['lote_granel'] = $bitacora->lote_granel ?? 'N/A';
               $nestedData['numero_guia'] = $bitacora->numero_guia ?? 'N/A';
               $nestedData['tipo_maguey'] = $bitacora->tipo_maguey ?? 'N/A';
               $nestedData['numero_pinas'] = $bitacora->numero_pinas ?? 'N/A';
