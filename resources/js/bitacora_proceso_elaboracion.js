@@ -68,8 +68,8 @@ $(function () {
               '<div class="d-flex align-items-center gap-50">' +
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              `<a data-id="${full['id_bitacora_maduracion']}" data-bs-toggle="offcanvas" data-bs-target="#editClase" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>` +
-              `<a data-id="${full['id_bitacora_maduracion']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora</a>` +
+              `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#editClase" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>` +
+              `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora</a>` +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
               '</div>' +
@@ -227,7 +227,7 @@ $(function () {
       return;
     }
 
-    let urlPDF = `/bitacora_hologramas_envasador?empresa=${empresaId}`;
+    let urlPDF = `/bitacoraProcesoElabPDF?empresa=${empresaId}`;
 
     urlPDF += `&t=${new Date().getTime()}`;
 
@@ -301,7 +301,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}bitacoraHologramasEnvasador-list/${id_bitacora}`,
+          url: `${baseUrl}bitacoraProcesoElab-list/${id_bitacora}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -344,6 +344,148 @@ $(function () {
     });
   });
 
+
+
+    let indexMolienda = 1;
+  function agregarFilaMolienda() {
+    const html = `
+      <div class="card mb-3 border rounded p-3 position-relative">
+        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 btn-eliminar">Eliminar</button>
+        <div class="row g-3 align-items-center">
+          <div class="col-md-3">
+            <div class="form-floating form-floating-outline">
+              <input type="date" class="form-control" name="molienda[${indexMolienda}][fecha_molienda]" id="fecha_molienda_${indexMolienda}">
+              <label for="fecha_molienda_${indexMolienda}">Fecha de molienda</label>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-floating form-floating-outline">
+              <input type="text" class="form-control" name="molienda[${indexMolienda}][numero_tina]" id="numero_tina_${indexMolienda}">
+              <label for="numero_tina_${indexMolienda}">Nº de tina</label>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-floating form-floating-outline">
+              <input type="date" class="form-control" name="molienda[${indexMolienda}][fecha_formulacion]" id="fecha_formulacion_${indexMolienda}">
+              <label for="fecha_formulacion_${indexMolienda}">Fecha de formulación</label>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-floating form-floating-outline">
+              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][volumen_formulacion]" id="volumen_formulacion_${indexMolienda}">
+              <label for="volumen_formulacion_${indexMolienda}">Volumen de formulación</label>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-floating form-floating-outline">
+              <input type="date" class="form-control" name="molienda[${indexMolienda}][fecha_destilacion]" id="fecha_destilacion_${indexMolienda}">
+              <label for="fecha_destilacion_${indexMolienda}">Fecha de destilación</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3 g-3">
+          <div class="col-md-4">
+            <div class="fw-semibold mb-1">Puntas</div>
+            <div class="form-floating form-floating-outline mb-2">
+              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][puntas_volumen]" id="puntas_volumen_${indexMolienda}">
+              <label for="puntas_volumen_${indexMolienda}">Volumen</label>
+            </div>
+            <div class="form-floating form-floating-outline">
+              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][puntas_alcohol]" id="puntas_alcohol_${indexMolienda}">
+              <label for="puntas_alcohol_${indexMolienda}">% Alc. Vol.</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="fw-semibold mb-1">Mezcal</div>
+            <div class="form-floating form-floating-outline mb-2">
+              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][mezcal_volumen]" id="mezcal_volumen_${indexMolienda}">
+              <label for="mezcal_volumen_${indexMolienda}">Volumen</label>
+            </div>
+            <div class="form-floating form-floating-outline">
+              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][mezcal_alcohol]" id="mezcal_alcohol_${indexMolienda}">
+              <label for="mezcal_alcohol_${indexMolienda}">% Alc. Vol.</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="fw-semibold mb-1">Colas</div>
+            <div class="form-floating form-floating-outline mb-2">
+              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][colas_volumen]" id="colas_volumen_${indexMolienda}">
+              <label for="colas_volumen_${indexMolienda}">Volumen</label>
+            </div>
+            <div class="form-floating form-floating-outline">
+              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][colas_alcohol]" id="colas_alcohol_${indexMolienda}">
+              <label for="colas_alcohol_${indexMolienda}">% Alc. Vol.</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    $('#seccionMoliendaDinamica').append(html);
+    indexMolienda++;
+  }
+
+  let indexSegundaDestilacion = 1;
+  function agregarFilaSegundaDestilacion() {
+    const html = `
+      <div class="card mb-3 border rounded p-3 position-relative">
+        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 btn-eliminar">Eliminar</button>
+        <div class="row g-3 align-items-center">
+          <div class="col-md-4">
+            <div class="form-floating form-floating-outline">
+              <input type="date" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][fecha_destilacion]" id="segunda_fecha_destilacion_${indexSegundaDestilacion}">
+              <label for="segunda_fecha_destilacion_${indexSegundaDestilacion}">Fecha de destilación</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3 g-3">
+          <div class="col-md-4">
+            <div class="fw-semibold mb-1">Puntas</div>
+            <div class="form-floating form-floating-outline mb-2">
+              <input type="number" step="0.01" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][puntas_volumen]" id="segunda_puntas_volumen_${indexSegundaDestilacion}">
+              <label for="segunda_puntas_volumen_${indexSegundaDestilacion}">Volumen</label>
+            </div>
+            <div class="form-floating form-floating-outline">
+              <input type="number" step="0.01" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][puntas_alcohol]" id="segunda_puntas_alcohol_${indexSegundaDestilacion}">
+              <label for="segunda_puntas_alcohol_${indexSegundaDestilacion}">% Alc. Vol.</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="fw-semibold mb-1">Mezcal</div>
+            <div class="form-floating form-floating-outline mb-2">
+              <input type="number" step="0.01" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][mezcal_volumen]" id="segunda_mezcal_volumen_${indexSegundaDestilacion}">
+              <label for="segunda_mezcal_volumen_${indexSegundaDestilacion}">Volumen</label>
+            </div>
+            <div class="form-floating form-floating-outline">
+              <input type="number" step="0.01" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][mezcal_alcohol]" id="segunda_mezcal_alcohol_${indexSegundaDestilacion}">
+              <label for="segunda_mezcal_alcohol_${indexSegundaDestilacion}">% Alc. Vol.</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="fw-semibold mb-1">Colas</div>
+            <div class="form-floating form-floating-outline mb-2">
+              <input type="number" step="0.01" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][colas_volumen]" id="segunda_colas_volumen_${indexSegundaDestilacion}">
+              <label for="segunda_colas_volumen_${indexSegundaDestilacion}">Volumen</label>
+            </div>
+            <div class="form-floating form-floating-outline">
+              <input type="number" step="0.01" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][colas_alcohol]" id="segunda_colas_alcohol_${indexSegundaDestilacion}">
+              <label for="segunda_colas_alcohol_${indexSegundaDestilacion}">% Alc. Vol.</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    $('#seccionSegundaDestilacion').append(html);
+    indexSegundaDestilacion++;
+  }
+
+  // Delegar evento para eliminar fila (funciona para elementos dinámicos)
+  $(document).on('click', '.btn-eliminar', function () {
+    $(this).closest('.card').remove();
+  });
 
 /* fin chelo */
 });

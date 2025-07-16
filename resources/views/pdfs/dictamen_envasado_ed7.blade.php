@@ -280,7 +280,7 @@
         <tr>
             <td class="column" style="width: 20%; vertical-align: middle; ">Dirección</td>
             <td style="width: 39%; vertical-align: middle; text-align: justify; line-height: 0.8;">
-                <span style="font-family: fuenteNegrita; font-size: 11px;">Domicilio Fiscal:</span> {{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }}
+                <span style="font-family: fuenteNegrita; font-size: 11px;">Domicilio Fiscal:</span> {{ $data->inspeccion?->solicitud?->empresa?->domicilio_fiscal ?? 'No encontrado' }} C.P. {{ $data->inspeccion?->solicitud?->empresa?->cp ?? 'No encontrado' }}
                 <br><span style="font-family: fuenteNegrita; font-size: 11px;">Domicilio de Instalaciones:</span> {{ $data->inspeccion?->solicitud?->instalacion?->direccion_completa ?? 'No encontrado' }}
             </td>
             <td class="column" style="width: 16%; vertical-align: middle;">Fecha de emisión</td>

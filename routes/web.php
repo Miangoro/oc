@@ -1111,14 +1111,10 @@ Route::middleware(['auth'])->controller(DictamenNoCumplimientoController::class)
     Route::get('/dictamenes/no_cumplimiento', 'UserManagement')->name('dictamenes-no-cumplimiento');
     Route::resource('no_cumplimiento-list', DictamenNoCumplimientoController::class);
     Route::post('registrar/no_cumplimiento', 'store')->name('registrar');
-
+    Route::delete('dictamen/no_cumplimiento/{id}', 'destroy')->name('eliminar');
+    Route::get('dictamen/no_cumplimiento/{id}', 'edit')->name('obtener-editar');
+    Route::post('dictamen/no_cumplimiento/{id}', 'update')->name('actualizar');
     Route::get('/dictamen_no_cumplimiento/{id}', 'DictamenNoCumplimiento')->name('PDF-dictamen-no-cumplimiento');
-
-    /*Route::delete('dictamen/envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'destroy'])->name('dictamen.delete');
-    route::get('/dictamenes/envasado/{id_dictamen}/edit', [DictamenEnvasadoController::class, 'edit'])->name('dictamenes.edit');
-    Route::post('/dictamenes/envasado/{id_dictamen}/update', [DictamenEnvasadoController::class, 'update'])->name('dictamen.update');
-    Route::post('/registrar/reexpedir-envasado', [DictamenEnvasadoController::class, 'reexpedir'])->name('dic-envasado.reex');
-    Route::get('/getDatosLotesEnv/{id_inspeccion}', [DictamenEnvasadoController::class, 'getDatosLotesEnv'])->name('getDatosLotesEnv');*/
 });
 
 //-------------------CERTIFICADO INSTALACIONES-------------------
