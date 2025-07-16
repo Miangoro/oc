@@ -353,23 +353,74 @@
                                           $documentos = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs ?? collect();
                                           $doc1 = $documentos->get(0);
                                            $doc2 = $documentos->get(1);
+                                        
+
+                                           // Obtener documentos
+                                                $documentos = $loteGranel->fqs ?? collect();
+                                                $doc1 = $documentos->get(0); // Primer análisis
+                                                $doc2 = $documentos->get(1); // Ajuste
+                                                $numeroCliente =
+                                                    $loteGranel->empresa->empresaNumClientes->firstWhere(
+                                                        'numero_cliente',
+                                                        '!=',
+                                                        null,
+                                                    )->numero_cliente ?? null;
+                                                    if (!empty($certificados)){
+                                                       $fqs = collect();
+
+                                                foreach ($certificados as $certificado) {
+                                                    $documentos2 = \App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+                                                        ->whereIn('id_documento', [58, 134])
+                                                        ->get(['url', 'nombre_documento', 'id_documento']);
+
+                                                    foreach ($documentos2 as $documento) {
+                                                        $fqs->push([
+                                                            'id_documento' => $documento->id_documento,
+                                                            'url' => $documento->url,
+                                                            'nombre_documento' => $documento->nombre_documento
+                                                        ]);
+                                                    }
+                                                }
+
+                                            }
+
+
+
+
+
                                       @endphp
                                       <td>
-                                          @if ($doc1)
-                                              <a target="_blank"
-                                                  href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente }}/fqs/{{ $doc1->url }}">
-                                                  <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                              </a>
-                                          @endif
-                                        Completo: {{ $primerFolio }}
-                                         <!--   @if($tipo_certificado == 'Granel' AND $doc2)
-                                                    <a target="_blank"
-                                                        href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente }}/fqs/{{ $doc2->url }}"><i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                    </a>
-                                                Ajuste: {{ $segundoFolio }}
-                                            @endif-->
-                                      </td>
+                      {{-- 📎 Documentos FQ's (si existen) --}}
+
+                                    @if (!empty($certificados) && $combinado === 'Si')
+
+                                        @forelse ($fqs as $doc)
+                                            @if (!empty($doc['url']) && $doc['id_documento']==58)
+                                                <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>{{ $doc['nombre_documento'] }}<br>
+                                            @endif
+                                        @empty
+                                            <span class="text-muted">Sin documentos FQ encontrados</span>
+                                        @endforelse
+
+                                    @elseif (!empty($doc1) && $combinado == 'No')
+
+                                        <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
+                                            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                        </a>
+                                    Completo: {{ $primerFolio }}
+                                    @endif
+                                               
+
+                                                @if($tipo_certificado == 'Granel' AND $doc2)
+                                                        <a target="_blank"
+                                                            href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}"><i
+                                                                class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                        </a>
+                                                    Ajuste: {{ $segundoFolio }}
+                                                @endif
+                                            </td>
 
                                   @elseif($pregunta->filtro == 'nanalisis_ajuste')
                                       @php
