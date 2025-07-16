@@ -205,6 +205,16 @@
           <label for="id_contacto">Persona de contacto CIDAM</label>
         </div>
 
+        <div class="form-floating form-floating-outline mb-5">
+          <select id="rol_id" name="rol_id" data-placeholder="Selecciona un rol" class="select2 form-select" aria-label="Default select example" >
+              <option value="" disabled>Sleecciona un rol</option>
+              @foreach ($roles as $rol)
+                  <option value="{{ $rol->name }}">{{ $rol->name }}</option>
+              @endforeach
+          </select>
+          <label for="id_contacto">Rol</label>
+        </div>
+
         <div class="d-flex mt-6 justify-content-center">
           <button type="submit" id="registrar-editar" class="btn btn-primary me-sm-3 me-1 data-submit"><i class="ri-add-line"></i> Registrar</button>
           <button type="reset" class="btn btn-danger" data-bs-dismiss="offcanvas"><i class="ri-close-line"></i> Cancelar</button>

@@ -667,18 +667,18 @@
                                                             }
 
                                                             $urls_certificados = collect();
-                                                           foreach ($certificados as $certificado) {
-    $documento = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
-        ->where('id_documento', 59)
-        ->first(['url', 'nombre_documento']); // ✅ Usa first() en lugar de value()
+                                                                                                            foreach ($certificados as $certificado) {
+                                                        $documento = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+                                                            ->where('id_documento', 59)
+                                                            ->first(['url', 'nombre_documento']); // ✅ Usa first() en lugar de value()
 
-    if ($documento) {
-        $urls_certificados->push([
-            'url' => $documento->url,
-            'nombre_documento' => $documento->nombre_documento,
-        ]);
-    }
-}
+                                                        if ($documento) {
+                                                            $urls_certificados->push([
+                                                                'url' => $documento->url,
+                                                                'nombre_documento' => $documento->nombre_documento,
+                                                            ]);
+                                                        }
+                                                    }
 
                                             @endphp
 
@@ -766,6 +766,8 @@
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
                                                 $lote_granel = $solicitud->lote_granel;
                                                 $lote_envasado = $solicitud->lote_envasado;
+
+                                                echo $lote_envasado = $solicitud->lote_envasado->lotesGranel;
                                             @endphp
                                             <td>
 
