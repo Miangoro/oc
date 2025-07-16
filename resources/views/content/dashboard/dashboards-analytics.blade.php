@@ -601,7 +601,7 @@
                                                     <tr>
                                                         <td></td>
                                                         <td></td>
-                                                        <td>{{ \Carbon\Carbon::parse($fecha)->format('d \d\e F') }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($fecha)->locale('es')->translatedFormat('d \d\e F') }}</td>
                                                         <td>{{ $direccion }}</td>
                                                         <td>{{ $cantidad }}</td>
                                                     </tr>
