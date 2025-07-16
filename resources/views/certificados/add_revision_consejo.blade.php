@@ -446,6 +446,8 @@
 
                                             <td>
                       {{-- 📎 Documentos FQ's (si existen) --}}
+
+                      @if($certificados)
                                                 @forelse ($fqs as $doc)
                                                     @if (!empty($doc['url']))
                                                     {{ $doc['nombre_documento'] }}
@@ -456,6 +458,18 @@
                                                 @empty
                                                     <span class="text-muted">Sin documentos FQ encontrados</span>
                                                 @endforelse
+
+                                        @else
+
+                                        @if ($doc1)
+                                                    <a target="_blank"
+                                                        href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                    </a>
+                                                @endif
+
+                                        @endif
 
 
                                                 Completo: {{ $primerFolio }}
