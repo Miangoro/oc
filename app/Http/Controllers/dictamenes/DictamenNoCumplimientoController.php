@@ -382,6 +382,7 @@ public function DictamenNoCumplimiento($id_dictamen)
         'inspector' => $data->firmante->name ?? 'No encontrado',
         'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'dom_fiscal' => $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
+        'cp' => $data->inspeccione->solicitud->empresa->cp ?? "No encontrado",
         'rfc' => $data->inspeccione->solicitud->empresa->rfc ?? 'No encontrado',
         'representante' => $data->inspeccione->solicitud->empresa->representante ?? 'No encontrado',
         'dom_inspeccion' => $data->inspeccione->solicitud->instalacion->direccion_completa ?? "No encontrado",

@@ -231,7 +231,7 @@
         <tr>
             <td class="bold" rowspan="2" style="width: 16%;">Dirección</td>
             <td rowspan="2" style="padding: 5px 5px; font-size:14px; width: 40%;">
-                <span class="sub-negrita">Domicilio Fiscal:</span> {{ $dom_fiscal }}<br>
+                <span class="sub-negrita">Domicilio Fiscal:</span> {{ $dom_fiscal }} C.P. {{ $cp }}<br>
                 <span class="sub-negrita">Domicilio de Instalaciones:</span> {{ $dom_inspeccion }}
             </td>
             <td class="bold" style="width: 25%;">RFC</td>
