@@ -776,7 +776,8 @@
                                                         {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
                                                     @empty
                                                         N/A
-                                                    @endforelse
+                                                    @endforelse 
+                                                    <br>
 
                                                 @endforeach
 
