@@ -365,6 +365,7 @@
                     </div>
                 </div>
             @endcan
+            <div class="row">
             @can('Estadísticas ui')
                 <!-- Line Chart -->
                 <div class="col-6 mb-6">
@@ -395,7 +396,7 @@
         $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
     @endphp
 
-    <div class="row">
+ 
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header pb-2">
@@ -473,10 +474,10 @@
             </div>
         </div>
 
-    </div>
+
 @endcanany
 
-
+    </div>
 
 
 
