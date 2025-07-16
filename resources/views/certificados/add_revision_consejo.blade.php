@@ -789,7 +789,7 @@
                                                 {{ $lote_envasado->marca->marca ?? 'N/A' }}<br>
                                                 {{ $lote_granel->clase->clase ?? 'N/A' }}<br>
 
-                                                @foreach($lotes_graneles = $lotess)
+                                                @foreach($lotes_graneles as $lotess)
 
                                                     {{ $lotess->edad ?? 'N/A' }}
                                                 @endforeach
