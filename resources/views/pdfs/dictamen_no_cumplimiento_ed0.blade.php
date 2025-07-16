@@ -13,15 +13,20 @@
     }
     /*@font-face {
         font-family: 'fuenteNegrita';
+        font-family: 'calibri';
+        font-family: 'Arial Negrita', Gadget, sans-serif;
+        font-family: sans-serif;
+        font-family: Arial, Helvetica, Verdana;
+        font-family: lucida sans seminegrita;
         src: url('{{ storage_path('fonts/LSANSD.ttf') }}');
     }*/
 
     body {/*ajustes generales*/
         font-family: 'calibri';
-        font-size: 14px;
+        font-size: 15px;
         line-height: 0.9;/*interlineado*/
         text-align: justify
-    }
+    }*/
 
     /*.fondo {
         position: fixed;
@@ -33,6 +38,7 @@
     }*/
 
     .encabezado {
+        border: 2px solid blue;
         position: fixed;
         /*width: 100%; 
         border: 2px solid blue;
@@ -54,34 +60,32 @@
         text-align: center;
     }
 
-    
 
-    /*falta*/
+    /*pie de pagina*/
     .footer {
+        /*border: 2px solid blue;*/
         position: fixed;/*lo fija en pantalla*/
-        bottom: -30px; 
         left: -60px;
         right: -60px;
-        padding-bottom: 5px;
-        background-color: #158F60;
-        color: white;/*color letra*/
-        text-align: center;
-        font-size: 11px;
+        bottom: -30px;
     }
-    .footer p {
-        margin: 1;
-        line-height: 1;
-    }
-
-    .leyenda {
-        position: fixed;
-        bottom: 6px;
-        right: 0;
+    .footer p{
+        margin: 0px 60px 4px 0px; /*arriba, derecha, abajo, izquierda*/
+        font-size: 10px;
+        line-height: 0.8;
+    } 
+    .leyenda{
         text-align: right;
         font-family: 'Lucida Sans Unicode';
-        font-size: 9px;
-        line-height: 0.9;
     }
+    .footer-text {
+        text-align: center;
+        background-color: #158F60;
+        padding: 6px;
+        color: rgb(248, 248, 248);
+    }
+
+
 
 
     .contenido {
@@ -92,32 +96,57 @@
 
     
 
-    
+
+    .sub-negrita{
+        font-family: sans-serif;
+        font-weight: bold;
+    }
+
+    /*tabla*/
+    table {
+        border-collapse: collapse;
+        border: 2px solid #003300;
+    }
+    td {
+        border: 2px solid #003300;
+        padding-left: 10px;
+    }
+    .bold{
+        font-family: sans-serif;
+        font-style: italic;
+        font-weight: bold;
+        padding: 5px 10px; /*top-bottom, left-right*/
+        font-size: 14px;
+        text-align: center;
+        color: #171353;
+    }
 
 
-     /*inicia firma digital DIV*/
+
+
+    /*inicia firma digital DIV*/
     .firma {
+        border: 2px solid blue;
+    }
+
+    .images-container {
         position: relative;
         width: 100%;
         /*vertical-align: bottom;*/
     }
-    
-
-
-
-    /*tabla*/
-    
-    table {
-        color: #000000;
+    .image-right {
+        position: absolute;
+        width: 200px;
+        right: 10px;
+        margin-top: -5px;
     }
-    td, th {
-        border: solid #003300;
+    .sello {
+        position: absolute;
+        right: 5%;
+        margin-top: -13px;
+        font-size: 11px;
+        font-family: 'Arial Negrita' !important;
     }
-    .bold{
-        text-align: center;
-        color: rgb(19, 117, 230);
-    }
-
     </style>
 </head>
 
@@ -136,95 +165,144 @@
 
 
 <div class="footer">
-    <p style="font-family: Lucida Sans Seminegrita;">www.cidam.org . unidadverificacion@cidam.org</p>
-    <p style="font-family: Lucida Sans Unicode; font-size: 10px;">Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341. Morelia Michoacán</p>
+    <p class="leyenda">
+        {{-- @if ($id_sustituye)
+        Este dictamen sustituye al: {{ $id_sustituye }}
+        @endif --}}
+        <br>Entrada en vigor: 10-07-2025
+        <br>F-UV-04-30 Ed. 0.
+    </p>
+    <div class="footer-text">
+        <p style="font-family: Lucida Sans Seminegrita;">www.cidam.org . unidadverificacion@cidam.org</p>
+        <p style="font-family: Lucida Sans Unicode;">Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341. Morelia Michoacán</p>
+    </div>
 </div> 
 
 
 
 <div class="contenido">
 
-    <p style="text-align: center; font-size:26px; font-family:'Arial Negrita', Gadget, sans-serif; padding-top:6px;"><b>Dictamen de No Cumplimiento</b></p>
+    <p style="text-align: center; font-size:26px; font-family:'Arial Negrita', Gadget, sans-serif; padding-top:6px;">Dictamen de No Cumplimiento</p>
  
+    <p style="margin-top: -25px">No.: <span class="sub-negrita">{{ $num_dictamen }}</span></p>
 
-    <p>No.: <b></b></p>
 
-
-    <div style="text-align: center; font-weight: bold">
-        <p style="display: inline-block;">Instalaciones ( ) </p>
-        <p style="display: inline-block; padding: 0 10%">Lote de mezcal a granel ( ) </p><!--orden: top right bottom left; equivale top:0; bottom:0; left:10%; right:10%; -->
-        <p style="display: inline-block;">Envasado ( )</p>
+    <div style="font-family: fuenteNegrita; margin-top: -5px; text-align: center;">
+        <p style="display: inline-block;">Instalaciones (  ) </p>
+        <p style="display: inline-block; padding: 0 10%">Lote de mezcal a granel (  ) </p><!--orden: top right bottom left; equivale top:0; bottom:0; left:10%; right:10%; -->
+        <p style="display: inline-block;">Envasado (  )</p>
     </div>
 
-    <p style="font-size: 16px">De acuerdo con lo establecido en los procedimientos internos de la Unidad de Inspección
-No. UVNOM 129 para la revisión de procesos de producción del producto Mezcal, su
-envasado y comercialización; y con fundamento en los artículos 56 Fracción I y 60 fracción I
-de la Ley de Infraestructura de la Calidad que establece el funcionamiento de las Unidades
-de Inspección.</p>
-
-
-<div style="color: #003300;">I. Datos de la empresa</div>
-<table>
-    <tr>
-        <td class="bold">Nombre de la Empresa</td>
-        <td colspan="3">AMANTES DEL MEZCAL S.A. DE C.V.</td>
-    </tr>
-    <tr>
-        <td class="bold" rowspan="2">Dirección</td>
-        <td rowspan="2">
-            <strong>Domicilio Fiscal:</strong> Av. Ferrocarril Número exterior 69, Número interior Bis. San Sebastián Tutla, Oaxaca De Juárez, Oaxaca. C.P. 71320.<br>
-            <strong>Domicilio de Instalaciones:</strong> Lib. 5 Señores No. 915, Carretera Internacional, Tlalixtac De Cabrera, C.P. 68270, Tlalixtac De Cabrera, Oaxaca.
-        </td>
-        <td class="bold">RFC</td>
-        <td>AME1906138K7</td>
-    </tr>
-    <tr>
-        <td class="bold">Representante legal</td>
-        <td>Francisco Arrañaga Patrón</td>
-    </tr>
-    <tr>
-        <td class="bold">No. de servicio</td>
-        <td>UMS-0785/2025</td>
-        <td class="bold">Fecha de servicio</td>
-        <td>26/Junio/2025</td>
-    </tr>
-    <tr>
-        <td class="bold">Nombre del inspector</td>
-        <td></td>
-        <td class="bold">Fecha de emisión</td>
-        <td></td>
-    </tr>
-</table>
-
-
-
-<p style="margin: 0 30px;"><!--orden: top right bottom left; equivale top:0; bottom:0; left:30; right:30; -->
-Este dictamen de cumplimiento de lote de mezcal envasado se expide de acuerdo a la Norma Oficial Mexicana
-NOM-070-SCFI-2016. Bebidas alcohólicas –mezcal-especificaciones
-</p>
-
-
-
-
-
-
-
-
-    <p class="leyenda">
-        {{-- @if ($id_sustituye)
-        Este dictamen sustituye al: {{ $id_sustituye }}
-        @endif --}}
-        <br>F-UV-04-17 Versión 4
-        <br>Entrada en vigor: 08-11-2021
+    <p style="margin-top: -10px;">De acuerdo con lo establecido en los procedimientos internos de la Unidad de Inspección
+        No. UVNOM 129 para la revisión de procesos de producción del producto Mezcal, su
+        envasado y comercialización; y con fundamento en los artículos 56 Fracción I y 60 fracción I
+        de la Ley de Infraestructura de la Calidad que establece el funcionamiento de las Unidades
+        de Inspección.
     </p>
+
+
+
+    <div class="sub-negrita">I. Datos de la empresa</div>
+    <table>
+        <tr>
+            <td class="bold">Nombre de la Empresa</td>
+            <td colspan="3">{{ $empresa }}</td>
+        </tr>
+        <tr>
+            <td class="bold" rowspan="2" style="width: 16%;">Dirección</td>
+            <td rowspan="2" style="padding: 5px 5px; font-size:14px; width: 40%;">
+                <span class="sub-negrita">Domicilio Fiscal:</span> {{ $dom_fiscal }}<br>
+                <span class="sub-negrita">Domicilio de Instalaciones:</span> {{ $dom_inspeccion }}
+            </td>
+            <td class="bold" style="width: 25%;">RFC</td>
+            <td style="width: 20%;">{{ $rfc }}</td>
+        </tr>
+        <tr>
+            <td class="bold">Representante legal</td>
+            <td>{{ $representante }}</td>
+        </tr>
+        <tr>
+            <td class="bold">No. de servicio</td>
+            <td>{{ $num_servicio }}</td>
+            <td class="bold" style="text-align: left">Fecha de servicio</td>
+            <td>{{ $fecha_servicio }}</td>
+        </tr>
+        <tr>
+            <td class="bold">Nombre del inspector</td>
+            <td>{{ $inspector }}</td>
+            <td class="bold" style="text-align: left">Fecha de emisión</td>
+            <td>{{ $fecha_emision }}</td>
+        </tr>
+    </table>
+
+
+    <div style="margin-top: 10px;"><span class="sub-negrita">II. Descripción de la No Conformidad</span><br>
+        Se emite el presente Dictamen debido al incumplimiento de requisitos establecidos en la
+        NOM-070-SCFI-2016, Bebidas alcohólicas-Mezcal- Especiaciones y por la Unidad de
+        Inspección del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C.
+        (CIDAM), indicados a continuación:
+    </div>
+    <table style="width: 100%; border: 1px; margin-top:2px;">
+        <tr>
+            <td class="sub-negrita" style="padding: 30px 10px; width: 50%; border: 1px solid #171353;"><b>ANOMALIAS, INCONFORMIDADES U OBSERVACIONES:</b></td>
+            <td style="border:1px solid #171353;">{{ $observaciones }}</td>
+        </tr>
+    </table>
+
+
+    <p style="font-size: 13px;">
+        El presente Dictamen no deberá ser alterado ni reproducido en formar parcial o total son la del Centro de
+        Innovación y Desarrollo Agroalimentario de Michoacán A.C.
+    </p>
+
+
+</div>
+
+
+
+<!--FIRMA DIGITAL-->
+<div class="firma">
+    <div class="images-container">
+        <img src="{{ $qrCodeBase64 }}" alt="QR" width="75px">
+        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Sello UI" class="image-right">
+    </div>
+    <p class="sello">Sello de Unidad de Inspección</p>
+    
+
+        {{-- @php
+            use Illuminate\Support\Facades\Storage;
+            $firma = $data->firmante->firma ?? null;
+            $firmaPath = $firma ? 'firmas/' . $firma : null;
+        @endphp
+
+        @if ($firma && Storage::disk('public')->exists($firmaPath))
+            <img style="position: absolute; margin-top: -10%; left: 45%;" height="60px"
+            src="{{ public_path('storage/' . $firmaPath) }}">
+        @endif
+
+    <p class="textx" style="margin-top: -5px">
+        <strong>AUTORIZÓ</strong>
+        <span style="margin-left: 54px; display: inline-block; text-align: center; position: relative;">
+            <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
+        </span>
+    </p>
+    <p class="textx">
+        <strong>CADENA ORIGINAL</strong>
+        <span style="margin-left: 14px;">
+            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+        </span>
+    </p>
+    <p class="textx">
+        <strong>SELLO DIGITAL</strong>
+    </p>
+    <p class="textsello">
+        {{ $firmaDigital['firma'] }}
+    </p> --}}
 </div>
 
 
 
 
-
-
-    
 
 
 

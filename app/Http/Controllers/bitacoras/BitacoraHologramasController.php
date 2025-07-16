@@ -175,7 +175,9 @@ class BitacoraHologramasController extends Controller
         $bitacoras = BitacoraHologramas::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
-            'loteBitacora',              // <-- asegúrate de esto
+            'loteBitacora.marca',
+            'loteBitacora.lotes_envasado_granel.loteGranel.categoria',
+            'loteBitacora.lotes_envasado_granel.loteGranel.clase',             // <-- asegúrate de esto
         ])
         ->where('tipo', 2)
         ->when($empresaId, function ($query) use ($empresaId) {

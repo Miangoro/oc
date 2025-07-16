@@ -1163,7 +1163,7 @@ public function documentos($id)
             continue;
         }
 
-        $id_lote_granel = $lote_envasado->lotesGranel->first()->id_lote_granel ?? null;
+        $id_lote_granel = $lote_envasado->lotesGranel->first()?->certificadoGranel?->id_lote_granel ?? null;
         if (!$id_lote_granel) {
             continue;
         }

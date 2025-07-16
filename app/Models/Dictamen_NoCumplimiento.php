@@ -28,6 +28,11 @@ class Dictamen_NoCumplimiento extends Model
         return $this->belongsTo(inspecciones::class, 'id_inspeccion', 'id_inspeccion');
     }
 
+    public function firmante()
+    {
+        return $this->belongsTo(User::class, 'id_firmante', 'id');
+    }
+
     
 
     
