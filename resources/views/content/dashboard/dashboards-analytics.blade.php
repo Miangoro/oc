@@ -430,11 +430,14 @@
                                         <td>
                                             <li class="d-flex align-items-center mb-6">
                                                 <div class="avatar flex-shrink-0 me-4">
-                                               <img 
-                                                src="{{ $revisor?->profile_photo_path ? '/storage/' . $revisor->profile_photo_path : '/images/default-avatar.png' }}" 
-                                                alt="{{ $revisor?->name ?? '—' }}" 
-                                                class="rounded-3" 
-                                                style="width: 40px; height: 40px;">
+                                               @if (!empty($revisor?->profile_photo_path))
+                                                    <img 
+                                                        src="/storage/{{ $revisor->profile_photo_path }}" 
+                                                        alt="{{ $revisor->name ?? '—' }}" 
+                                                        class="rounded-3" 
+                                                        style="width: 40px; height: 40px;">
+                                                @endif
+
 
                                                 </div>
                                                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
