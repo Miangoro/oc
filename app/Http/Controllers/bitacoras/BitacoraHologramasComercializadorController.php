@@ -187,7 +187,7 @@ class BitacoraHologramasComercializadorController extends Controller
           }
         $pdf = Pdf::loadView('pdfs.Bitacora_Hologramas', compact('bitacoras', 'title'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
-        return $pdf->stream('Bitácora de control de hologramas de envasador.pdf');
+        return $pdf->stream('Bitácora de control de hologramas de comercializador.pdf');
     }
 
 

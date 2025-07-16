@@ -386,7 +386,7 @@ $(function () {
         const blobUrl = URL.createObjectURL(data);
         $('#pdfViewer').attr('src', blobUrl);
         $('#NewPestana').attr('href', blobUrl);
-        $('#titulo_modal').text('Bitácora de control de hologramas de envasador');
+        $('#titulo_modal').text('Bitácora de control de hologramas de comercializador');
         /* $('#subtitulo_modal').text('Versión Filtrada'); */
         $('#mostrarPdf').modal('show');
 
