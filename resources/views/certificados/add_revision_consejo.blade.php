@@ -603,7 +603,36 @@
                                                         )
                                                         : null;
 
-                                              
+                                                          $ids = $solicitud->id_lote_envasado; // array de IDs
+
+
+  $certificados = collect();
+
+foreach ($ids as $id) {
+    $lote = App\Models\lotes_envasado::find($id);
+    if ($lote) {
+        foreach ($lote->lotesGranel as $granel) {
+            if ($granel->certificadoGranel) {
+                $certificados->push($granel->certificadoGranel);
+            }
+        }
+    }
+}
+
+
+$urls_certificados = collect();
+
+foreach ($certificados as $certificado) {
+    $url = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+        ->where('id_documento', 59)
+        ->value('url');
+
+    if ($url) {
+        $urls_certificados->push($url);
+    }
+}
+
+                                              print_r($urls_certificados);
 
                                             @endphp
 
