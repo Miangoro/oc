@@ -1163,7 +1163,9 @@ public function documentos($id)
             continue;
         }
 
-        $id_lote_granel = $lote_envasado->lotesGranel->first()?->certificadoGranel?->id_lote_granel ?? null;
+        //$id_lote_granel = $lote_envasado->lotesGranel->first()->id_lote_granel ?? null;
+        $id_lote_granel = $lote_envasado->lotesGranel->first()?->certificadoGranel;
+
         if (!$id_lote_granel) {
             continue;
         }
@@ -1176,7 +1178,8 @@ public function documentos($id)
 
         $dictamenEnvasado = Dictamen_Envasado::where('id_lote_envasado', $id_lote_envasado)->first();
 
-        $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel)
+        $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel->id_lote_granel)
+            ->where('id_doc', $id_lote_granel->id_certificado)
             ->where('id_documento', 59)->first();
 
         $fqs = Documentacion_url::where('id_relacion', $id_lote_granel)
