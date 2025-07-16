@@ -988,15 +988,15 @@ Route::controller(BitacoraHologramasController::class)->middleware(['auth'])->gr
 Route::resource('/bitacoraHologramasEnvasador-list', BitacoraHologramasController::class)->middleware(['auth']);
 
 Route::controller(BitacoraHologramasComercializadorController::class)->middleware(['auth'])->group(function () {
-    Route::get('/bitacoraHologramasComercializador', 'UserManagement')->name('bitacora-hologramas-comercializador');
-    Route::get('/bitacora_hologramas_comercializador', 'PDFBitacoraHologramas');
-    Route::get('bitacora_hologramas_comercializador/{id_bitacora}/edit', 'edit');
-    Route::get('bitacoraHologramasComercializador-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
-    Route::post('/bitacoraHologramasComercializadorStore', 'store')->name('bitacora.store');
-    Route::post('/bitacorasHologramasComercializadorUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
-    Route::post('/FirmaBitacoraHologramasComercializador/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+    Route::get('/bitacoraHologramasCom', 'UserManagement')->name('bitacora-hologramas-com');
+    Route::get('/bitacora_hologramas_com', 'PDFBitacoraHologramas');
+    Route::get('bitacora_hologramas_com/{id_bitacora}/edit', 'edit');
+    Route::get('bitacoraHologramasCom-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::post('/bitacoraHologramasComStore', 'store')->name('bitacora.store');
+    Route::post('/bitacorasHologramasComUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaBitacoraHologramasCom/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
 });
-Route::resource('/bitacoraHologramasComercializador-list', BitacoraHologramasComercializadorController::class)->middleware(['auth']);
+Route::resource('/bitacoraHologramasCom-list', BitacoraHologramasComercializadorController::class)->middleware(['auth']);
 
 
 Route::middleware(['auth'])->group(function () {

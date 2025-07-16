@@ -34,7 +34,7 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'bitacoraHologramasComercializador-list',
+        url: baseUrl + 'bitacoraHologramasCom-list',
         data: function (d) {
           d.empresa = $('#filtroEmpresa').val();
           d.instalacion = $('#filtroInstalacion').val();
@@ -368,7 +368,7 @@ $(function () {
       return;
     }
 
-    let urlPDF = `/bitacora_hologramas_comercializador?empresa=${empresaId}`;
+    let urlPDF = `/bitacora_hologramas_com?empresa=${empresaId}`;
 
     urlPDF += `&t=${new Date().getTime()}`;
 
@@ -386,7 +386,7 @@ $(function () {
         const blobUrl = URL.createObjectURL(data);
         $('#pdfViewer').attr('src', blobUrl);
         $('#NewPestana').attr('href', blobUrl);
-        $('#titulo_modal').text('Bitácora de control de hologramas de envasador');
+        $('#titulo_modal').text('Bitácora de control de hologramas de comercializador');
         /* $('#subtitulo_modal').text('Versión Filtrada'); */
         $('#mostrarPdf').modal('show');
 
@@ -442,7 +442,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}bitacoraHologramasComercializador-list/${id_bitacora}`,
+          url: `${baseUrl}bitacoraHologramasCom-list/${id_bitacora}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -556,7 +556,7 @@ $(function () {
       var formData = $(form).serialize();
 
       $.ajax({
-        url: '/bitacoraHologramasComercializadorStore',
+        url: '/bitacoraHologramasComStore',
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -605,7 +605,7 @@ $(function () {
     var bitacoraID = $(this).data('id');
     $('#edit_bitacora_id').val(bitacoraID);
     $.ajax({
-      url: '/bitacora_hologramas_comercializador/' + bitacoraID + '/edit',
+      url: '/bitacora_hologramas_com/' + bitacoraID + '/edit',
       method: 'GET',
       success: function (data) {
         if (data.success) {
@@ -727,7 +727,7 @@ $(function () {
       const id = $('#edit_bitacora_id').val();
 
       $.ajax({
-        url: '/bitacorasHologramasComercializadorUpdate/' + id,
+        url: '/bitacorasHologramasCom/' + id,
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -947,7 +947,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'POST',
-          url: `/FirmaBitacoraHologramasComercializador/${id_bitacora_firma}`,
+          url: `/FirmaBitacoraHologramasCom/${id_bitacora_firma}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
