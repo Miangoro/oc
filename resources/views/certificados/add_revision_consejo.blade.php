@@ -670,10 +670,13 @@
                                                             foreach ($certificados as $certificado) {
                                                                 $url = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
                                                                     ->where('id_documento', 59)
-                                                                    ->value('url','nombre_documento');
+                                                                    ->get(['url','nombre_documento']);
 
                                                                 if ($url) {
-                                                                    $urls_certificados->push($url);
+                                                                    $urls_certificados->push([
+            'url' => $documento->url,
+            'nombre_documento' => $documento->nombre_documento,
+        ]);
                                                                 }
                                                             }
 
