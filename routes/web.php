@@ -988,7 +988,7 @@ Route::controller(BitacoraHologramasController::class)->middleware(['auth'])->gr
 Route::resource('/bitacoraHologramasEnvasador-list', BitacoraHologramasController::class)->middleware(['auth']);
 
 Route::controller(BitacoraHologramasComercializadorController::class)->middleware(['auth'])->group(function () {
-    Route::get('/bitacoraHologramasCom', 'UserManagement')->name('bitacora-hologramas-comercializador');
+    Route::get('/bitacoraHologramasCom', 'UserManagement')->name('bitacora-hologramas-com');
     Route::get('/bitacora_hologramas_com', 'PDFBitacoraHologramas');
     Route::get('bitacora_hologramas_com/{id_bitacora}/edit', 'edit');
     Route::get('bitacoraHologramasCom-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
