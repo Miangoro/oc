@@ -997,6 +997,17 @@ Route::controller(BitacoraHologramasComercializadorController::class)->middlewar
     Route::post('/FirmaBitacoraHologramasCom/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
 });
 Route::resource('/bitacoraHologramasCom-list', BitacoraHologramasComercializadorController::class)->middleware(['auth']);
+//bitacora proceso de elaboracion
+Route::controller(BitacoraProcesoElabController::class)->middleware(['auth'])->group(function () {
+    Route::get('/bitacoraProcesoElaboracion', 'UserManagement')->name('bitacora-proceso-elab');
+    Route::get('/bitacoraProcesoElabPDF', 'PDFBitacoraHologramas');
+    Route::get('bitacoraProcesoElab/{id_bitacora}/edit', 'edit');
+    Route::get('bitacoraProcesoElab-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::post('/bitacoraProcesoElabStore', 'store')->name('bitacora.store');
+    Route::post('/bitacoraProcesoElabUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaProcesoElab/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+});
+Route::resource('/bitacoraProcesoElab-list', BitacoraHologramasComercializadorController::class)->middleware(['auth']);
 
 
 Route::middleware(['auth'])->group(function () {
