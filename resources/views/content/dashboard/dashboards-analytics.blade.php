@@ -365,6 +365,7 @@
                     </div>
                 </div>
             @endcan
+            <div class="row">
             @can('Estadísticas ui')
                 <!-- Line Chart -->
                 <div class="col-6 mb-6">
@@ -395,8 +396,8 @@
         $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
     @endphp
 
-    <div class="row">
-        <div class="col-md-9">
+ 
+        <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header pb-2">
                     <h5 class="mb-1">📊 Resumen de revisiones por revisor</h5>
@@ -429,11 +430,14 @@
                                         <td>
                                             <li class="d-flex align-items-center mb-6">
                                                 <div class="avatar flex-shrink-0 me-4">
-                                               <img 
-                                                src="{{ $revisor?->profile_photo_path ? '/storage/' . $revisor->profile_photo_path : '/images/default-avatar.png' }}" 
-                                                alt="{{ $revisor?->name ?? '—' }}" 
-                                                class="rounded-3" 
-                                                style="width: 40px; height: 40px;">
+                                               @if (!empty($revisor?->profile_photo_path))
+                                                    <img 
+                                                        src="/storage/{{ $revisor->profile_photo_path }}" 
+                                                        alt="{{ $revisor->name ?? '—' }}" 
+                                                        class="rounded-3" 
+                                                        style="width: 40px; height: 40px;">
+                                                @endif
+
 
                                                 </div>
                                                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
@@ -445,10 +449,10 @@
                                                     </small>--}}
                                                 </div>
                                                <div class="badge 
-    {{ $rol === 'Personal' ? 'bg-label-info' : ($rol === 'Consejo' ? 'bg-label-warning' : 'bg-label-secondary') }} 
-    rounded-pill">
-    {{ $rol }}
-</div>
+                                                    {{ $rol === 'Personal' ? 'bg-label-info' : ($rol === 'Consejo' ? 'bg-label-warning' : 'bg-label-secondary') }} 
+                                                    rounded-pill">
+                                                    {{ $rol }}
+                                                </div>
 
                                                 </div>
                                             </li>
@@ -456,9 +460,10 @@
                                         <td class="text-end">{{ number_format($inst) }}</td>
                                         <td class="text-end">{{ number_format($gran) }}</td>
                                         <td class="text-end">{{ number_format($expo) }}</td>
-                                        <td class="text-end">
+                                       <td class="text-end {{ $pendientes > 0 ? 'bg-danger text-white fw-bold' : '' }}">
                                             {{ number_format($pendientes) }}
                                         </td>
+
 
                                     </tr>
                                 @empty
@@ -473,10 +478,10 @@
             </div>
         </div>
 
-    </div>
+
 @endcanany
 
-
+    </div>
 
 
 
