@@ -449,29 +449,27 @@
                                             <td>
                       {{-- 📎 Documentos FQ's (si existen) --}}
 
-                      @if(!empty($certificados) && isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
-                                                @forelse ($fqs as $doc)
-                                                    @if (!empty($doc['url']))
-                                                    {{ $doc['nombre_documento'] }}
-                                                        <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
-                                                            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                        </a>
-                                                    @endif
-                                                @empty
-                                                    <span class="text-muted">Sin documentos FQ encontrados</span>
-                                                @endforelse
+            @if (!empty($certificados) && isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
 
-                                        @else
+    @forelse ($fqs as $doc)
+        @if (!empty($doc['url']))
+            {{ $doc['nombre_documento'] }}
+            <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
+                <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+            </a>
+        @endif
+    @empty
+        <span class="text-muted">Sin documentos FQ encontrados</span>
+    @endforelse
 
-                                        @if ($doc1 && isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud != '2')
-                                                    <a target="_blank"
-                                                        href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                    </a>
-                                                @endif
+@elseif (!empty($doc1) && isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud != '2')
 
-                                        @endif
+    <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
+        <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+    </a>
+
+@endif
+
 
 
                                                 Completo: {{ $primerFolio }}
