@@ -460,9 +460,10 @@
                                         <td class="text-end">{{ number_format($inst) }}</td>
                                         <td class="text-end">{{ number_format($gran) }}</td>
                                         <td class="text-end">{{ number_format($expo) }}</td>
-                                        <td class="text-end">
+                                       <td class="text-end {{ $pendientes > 0 ? 'bg-danger text-white fw-bold' : '' }}">
                                             {{ number_format($pendientes) }}
                                         </td>
+
 
                                     </tr>
                                 @empty
