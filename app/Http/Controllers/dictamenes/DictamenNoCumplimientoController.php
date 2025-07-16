@@ -192,6 +192,7 @@ public function store(Request $request)
         'fecha_emision' => 'required|date',
         'fecha_vigencia' => 'required|date',
         'id_firmante' => 'required|exists:users,id',
+        'observaciones' => 'nullable|string',
     ]);
         // Crear un registro
         $new = new Dictamen_NoCumplimiento();
@@ -200,6 +201,7 @@ public function store(Request $request)
         $new->fecha_emision = $validated['fecha_emision'];
         $new->fecha_vigencia = $validated['fecha_vigencia'];
         $new->id_firmante = $validated['id_firmante'];
+        $new->observaciones = $validated['observaciones'];
         $new->save();
 
         return response()->json(['message' => 'Registrado correctamente.']);
@@ -210,6 +212,76 @@ public function store(Request $request)
         ]);
         return response()->json(['error' => 'Error al registrar.'], 500);
     }
+}
+
+
+
+///FUNCION ELIMINAR
+public function destroy($id_dictamen)
+{
+    try {
+        $eliminar = Dictamen_NoCumplimiento::findOrFail($id_dictamen);
+        $eliminar->delete();
+
+        return response()->json(['message' => 'Eliminado correctamente.']);
+    } catch (\Exception $e) {
+        Log::error('Error al eliminar', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al eliminar.'], 500);
+    }
+}
+
+
+
+///FUNCION PARA OBTENER LOS REGISTROS
+public function edit($id_dictamen)
+{
+    try {
+        $editar = Dictamen_NoCumplimiento::findOrFail($id_dictamen);
+
+        return response()->json([
+            'id_dictamen' => $editar->id_dictamen,
+            'num_dictamen' => $editar->num_dictamen,
+            'id_inspeccion' => $editar->id_inspeccion,
+            'fecha_emision' => $editar->fecha_emision,
+            'fecha_vigencia' => $editar->fecha_vigencia,
+            'id_firmante' => $editar->id_firmante,
+            'observaciones' => $editar->observaciones,
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Error al obtener', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al obtener los datos.'], 500);
+    }
+}
+///FUNCION ACTUALIZAR
+public function update(Request $request, $id_dictamen)
+{
+        // Validar los datos del formulario
+        $validated = $request->validate([
+            'num_dictamen' => 'required|string|max:30',
+            'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
+            'fecha_emision' => 'required|date',
+            'fecha_vigencia' => 'required|date',
+            'id_firmante' => 'required|exists:users,id',
+            'observaciones' => 'nullable|string',
+        ]);
+
+        $actualizar = Dictamen_NoCumplimiento::findOrFail($id_dictamen);
+        $actualizar->update([// Actualizar
+            'num_dictamen' => $validated['num_dictamen'],
+            'id_inspeccion' => $validated['id_inspeccion'],
+            'fecha_emision' => $validated['fecha_emision'],
+            'fecha_vigencia' => $validated['fecha_vigencia'],
+            'id_firmante' => $validated['id_firmante'],
+            'observaciones' => $validated['observaciones'],
+        ]);
+
+        return response()->json(['message' => 'Actualizado correctamente.']);
 }
 
 

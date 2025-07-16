@@ -11,34 +11,34 @@ $(document).ready(function () {
       locale: "es",        // idioma a español
   });
 });
-//FECHAS
-$('#fecha_emision').on('change', function() {
+//FUNCION FECHAS
+$('#fecha_emision').on('change', function () {
   var fechaInicial = new Date($(this).val());
-  fechaInicial.setDate(fechaInicial.getDate() + 90); // +90 días
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
   var fechaVigencia = fechaInicial.toISOString().split('T')[0];
   $('#fecha_vigencia').val(fechaVigencia);
-  flatpickr("#fecha_vigencia", {
-      dateFormat: "Y-m-d",
-      enableTime: false,
-      allowInput: true,
-      locale: "es",
-      static: true,
-      disable: true
+  flatpickr('#fecha_vigencia', {
+    dateFormat: 'Y-m-d',
+    enableTime: false,
+    allowInput: true,
+    locale: 'es',
+    static: true,
+    disable: true
   });
 });
-//FECHAS EDIT
-$('#edit_fecha_emision').on('change', function() {
+//FUNCION FECHAS EDIT
+$('#edit_fecha_emision').on('change', function () {
   var fechaInicial = new Date($(this).val());
-  fechaInicial.setDate(fechaInicial.getDate() + 90); // +90 días
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
   var fechaVigencia = fechaInicial.toISOString().split('T')[0];
   $('#edit_fecha_vigencia').val(fechaVigencia);
-  flatpickr("#edit_fecha_vigencia", {
-      dateFormat: "Y-m-d",
-      enableTime: false,
-      allowInput: true,
-      locale: "es",
-      static: true,
-      disable: true
+  flatpickr('#edit_fecha_vigencia', {
+    dateFormat: 'Y-m-d',
+    enableTime: false,
+    allowInput: true,
+    locale: 'es',
+    static: true,
+    disable: true
   });
 });
 
@@ -230,11 +230,7 @@ if (dt_user_table.length) {
 
 
 
-
-///AGREGAR
-// Validación del formulario
-/*const form = document.getElementById('FormAgregar');//id del formulario
-const fv = FormValidation.formValidation(form, {*///se define el formulario
+///REGISTRAR
 FormValidation.formValidation(FormAgregar, {
   fields: {
     'id_inspeccion': {
@@ -334,6 +330,250 @@ FormValidation.formValidation(FormAgregar, {
   });
 
 });
+
+
+
+///ELIMINAR
+$(document).on('click', '.eliminar', function () {
+  var id_dictamen = $(this).data('id'); // Obtener el ID de la clase
+  var dtrModal = $('.dtr-bs-modal.show');
+
+  // Ocultar modal responsivo en pantalla pequeña si está abierto
+  if (dtrModal.length) {
+      dtrModal.modal('hide');
+  }
+
+  // SweetAlert para confirmar la eliminación
+  Swal.fire({
+      title: '¿Está seguro?',
+      text: 'No podrá revertir este evento',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+      cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-primary me-2',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+  }).then(function (result) {
+  if (result.isConfirmed) {
+    // Enviar solicitud DELETE al servidor
+    $.ajax({
+      type: 'DELETE',
+      url: `${baseUrl}dictamen/no_cumplimiento/${id_dictamen}`,
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+        success: function (response) {
+          dataTable.draw(false);//Actualizar la tabla, "null,false" evita que vuelva al inicio
+          // Mostrar SweetAlert de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Exito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+          });
+        },
+        error: function (error) {
+          console.log('Error:', error);
+          // Mostrar SweetAlert de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al eliminar.',
+            //footer: `<pre>${error.responseText}</pre>`,
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      // Acción cancelar, mostrar mensaje informativo
+      Swal.fire({
+        title: '¡Cancelado!',
+        text: 'La eliminación ha sido cancelada.',
+        icon: 'info',
+        customClass: {
+          confirmButton: 'btn btn-primary'
+        }
+      });
+    }
+  });
+
+});
+
+
+
+///EDITAR
+$(function () { //$(document).ready(function () {
+  
+  $.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+  });
+  
+  // Inicializar FormValidation para el formulario
+  const form = document.getElementById('FormEditar');
+  const fv = FormValidation.formValidation(form, {
+    fields: {
+      'id_inspeccion': {
+          validators: {
+          notEmpty: {
+            message: 'El número de servicio es obligatorio.'
+          }
+          }
+      },
+      'num_dictamen': {
+          validators: {
+          notEmpty: {
+            message: 'El número de dictamen es obligatorio.'
+          },
+          }
+      },
+      'id_firmante': {
+          validators: {
+          notEmpty: {
+            message: 'El nombre del firmante es obligatorio.',
+          }
+          }
+      },
+      'fecha_emision': {
+          validators: {
+          notEmpty: {
+            message: 'La fecha de emisión es obligatoria.'
+          },
+          date: {
+            format: 'YYYY-MM-DD',
+            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+          }
+          }
+      },
+      'fecha_vigencia': {
+          validators: {
+          notEmpty: {
+            message: 'La fecha de vigencia es obligatoria.'
+          },
+          date: {
+            format: 'YYYY-MM-DD',
+            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+          }
+          }
+      },
+    },
+    plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+              eleValidClass: '',
+              eleInvalidClass: 'is-invalid',
+              rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+      // Validar y enviar el formulario cuando pase la validación
+      var formData = new FormData(form);
+      var dictamen = $('#edit_id_dictamen').val();
+
+      $.ajax({
+          url: '/dictamen/no_cumplimiento/' + dictamen,
+          type: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+            dataTable.ajax.reload(null, false);//Recarga los datos del datatable, "null,false" evita que vuelva al inicio
+            $('#ModalEditar').modal('hide');//ocultar modal
+            Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.message,
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              }
+            });
+          },
+          error: function (xhr) {
+            //error de validación del lado del servidor
+            if (xhr.status === 422) {
+              var errors = xhr.responseJSON.errors;
+              var errorMessages = Object.keys(errors).map(function (key) {
+                return errors[key].join('<br>');
+              }).join('<br>');
+              /*var errorMessages = Object.values(errors).map(msgArray =>
+                msgArray.join('<br>')).join('<br><hr>');*/
+
+              Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                html: errorMessages,
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
+            } else {//otro tipo de error
+              Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al actualizar.',
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
+            }
+          }
+      });
+  });
+
+  // Función para cargar los datos
+  $(document).on('click', '.editar', function () {
+      var id_dictamen = $(this).data('id');
+      $('#edit_id_dictamen').val(id_dictamen);
+
+      $.ajax({
+          url: '/dictamen/no_cumplimiento/' + id_dictamen,
+          method: 'GET',
+          success: function (datos) {
+              // Asignar valores a los campos del formulario
+              $('#edit_id_inspeccion').val(datos.id_inspeccion).trigger('change');
+              $('#edit_num_dictamen').val(datos.num_dictamen);
+              $('#edit_fecha_emision').val(datos.fecha_emision);
+              $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
+              $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();
+              $('#edit_observaciones').val(datos.observaciones);
+
+              flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
+                dateFormat: "Y-m-d",
+                enableTime: false,
+                allowInput: true,
+                locale: "es"
+              });
+              // Mostrar el modal
+              $('#ModalEditar').modal('show');
+          },
+          error: function (error) {
+            console.error('Error al cargar los datos:', error);
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al cargar los datos.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+      });
+  });
+  
+});
+
+
+
 
 
 
