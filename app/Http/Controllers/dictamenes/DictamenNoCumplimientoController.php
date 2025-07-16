@@ -260,7 +260,6 @@ public function DictamenNoCumplimiento($id_dictamen)
 
     // Verifica qué valor tiene esta variable
     $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
-    $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
     $fecha_servicio = Helpers::formatearFecha($data->inspeccione->fecha_servicio);
     
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
@@ -279,8 +278,8 @@ public function DictamenNoCumplimiento($id_dictamen)
         'fecha_emision' => $fecha_emision ?? 'No encontrado',
         'fecha_servicio' => $fecha_servicio ?? 'No encontrado',
 
-        'firmaDigital' => $firmaDigital,
-        'qrCodeBase64' => $qrCodeBase64,
+        'firmaDigital' => $firmaDigital ?? 'No encontrado',
+        'qrCodeBase64' => $qrCodeBase64 ?? 'No encontrado',
     ]);
     //nombre al descarga
     return $pdf->stream('F-UV-04-30 Dictamen de no cumplimiento Ed. 0.pdf');
