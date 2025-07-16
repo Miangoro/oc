@@ -695,8 +695,8 @@
 
 
                                                 {{-- 🧪 Granel --}}
-                                                Granel:
-                                                {{ $loteGranel?->nombre_lote ?? 'N/A' }}
+                                                {{-- Granel:
+                                                {{ $loteGranel?->nombre_lote ?? 'N/A' }} --}}
                                                 <br>
                                                 {{-- 🧴 Envasado --}}
                                                 @foreach ($ids as $id)
