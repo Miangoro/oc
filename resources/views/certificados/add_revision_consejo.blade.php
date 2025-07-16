@@ -768,20 +768,20 @@
                                                 $lote_envasado = $solicitud->lote_envasado;
 
                                                  $ids = $solicitud->id_lote_envasado; // array de IDs
-                                                            $lote_granel = collect();
+                                                            $lotes_graneles = collect();
 
                                                             foreach ($ids as $id) {
                                                                 $lote = App\Models\lotes_envasado::find($id);
                                                                 if ($lote) {
                                                                     foreach ($lote->lotesGranel as $granel) {
                                                                         if ($granel) {
-                                                                            $lote_granel->push($granel);
+                                                                            $lotes_graneles->push($granel);
                                                                         }
                                                                     }
                                                                 }
                                                             }
 
-                                                            echo $lote_granel;
+                                                            echo $lotes_graneles;
                                             @endphp
                                             <td>
 
