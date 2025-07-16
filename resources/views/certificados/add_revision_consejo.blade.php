@@ -46,9 +46,11 @@
                         @php
                             $caracteristicas = json_decode( $datos->certificado->dictamen->inspeccione->solicitud->caracteristicas);
                             $tipo_certificado = $tipo;
+                            $combinado = 'No';
                         @endphp
                         @if (isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
                             <span class="badge bg-info">Combinado</span>
+                            @php $combinado = 'Si'; @endphp
                         @endif
 
                         @if ($datos->es_correccion === 'si')
@@ -425,17 +427,51 @@
                                                         '!=',
                                                         null,
                                                     )->numero_cliente ?? null;
+                                                    if (!empty($certificados)){
+                                                       $fqs = collect();
+
+                                                foreach ($certificados as $certificado) {
+                                                    $documentos2 = \App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+                                                        ->whereIn('id_documento', [58, 134])
+                                                        ->get(['url', 'nombre_documento', 'id_documento']);
+
+                                                    foreach ($documentos2 as $documento) {
+                                                        $fqs->push([
+                                                            'id_documento' => $documento->id_documento,
+                                                            'url' => $documento->url,
+                                                            'nombre_documento' => $documento->nombre_documento
+                                                        ]);
+                                                    }
+                                                }
+
+                                            }
+
+                                                    
                                             @endphp
 
                                             <td>
-                                                @if ($doc1)
-                                                    <a target="_blank"
-                                                        href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                    </a>
-                                                @endif
-                                                Completo: {{ $primerFolio }}
+                      {{-- 📎 Documentos FQ's (si existen) --}}
+
+                                    @if (!empty($certificados) && $combinado === 'Si')
+
+                                        @forelse ($fqs as $doc)
+                                            @if (!empty($doc['url']) && $doc['id_documento']==58)
+                                                <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>{{ $doc['nombre_documento'] }}<br>
+                                            @endif
+                                        @empty
+                                            <span class="text-muted">Sin documentos FQ encontrados</span>
+                                        @endforelse
+
+                                    @elseif (!empty($doc1) && $combinado == 'No')
+
+                                        <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
+                                            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                        </a>
+                                    Completo: {{ $primerFolio }}
+                                    @endif
+                                               
 
                                                 @if($tipo_certificado == 'Granel' AND $doc2)
                                                         <a target="_blank"
@@ -447,16 +483,29 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis_ajuste')
                                             <td>
-                                                @if ($doc2)
+                                                @if (!empty($certificados) && $combinado === 'Si')
+
+                                        @forelse ($fqs as $doc)
+                                            @if (!empty($doc['url']) && $doc['id_documento']==134)
+                                                <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>{{ $doc['nombre_documento'] }}<br>
+                                            @endif
+                                        @empty
+                                            <span class="text-muted">Sin documentos FQ encontrados</span>
+                                        @endforelse
+
+                                            @elseif ($doc2 && $combinado == 'No')
                                                     <a target="_blank"
                                                         href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
                                                         <i
                                                             class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                     </a>
+                                                     {{ $segundoFolio }}
                                                 @else
                                                     <i class="text-muted">Sin archivo</i>
                                                 @endif
-                                                {{ $segundoFolio }}
+                                               
                                             </td>
                                         @elseif($pregunta->filtro == 'aduana')
                                             @php
@@ -603,32 +652,66 @@
                                                         )
                                                         : null;
 
-                                              
+                                                          $ids = $solicitud->id_lote_envasado; // array de IDs
+                                                            $certificados = collect();
+
+                                                            foreach ($ids as $id) {
+                                                                $lote = App\Models\lotes_envasado::find($id);
+                                                                if ($lote) {
+                                                                    foreach ($lote->lotesGranel as $granel) {
+                                                                        if ($granel->certificadoGranel) {
+                                                                            $certificados->push($granel->certificadoGranel);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            $urls_certificados = collect();
+                                                            foreach ($certificados as $certificado) {
+                                                                $url = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+                                                                    ->where('id_documento', 59)
+                                                                    ->value('url','nombre_documento');
+
+                                                                if ($url) {
+                                                                    $urls_certificados->push($url);
+                                                                }
+                                                            }
 
                                             @endphp
 
                                             <td>
-                                                {{-- 📎 Documento firmado PDF (si existe) --}}
-                                                @if ($urlFirmado)
-                                                    <a target="_blank" href="{{ $urlFirmado }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                {{-- 📎 Documentos firmados PDF (si existen) --}}
+                                                @forelse ($urls_certificados as $pdf)
+                                                    <a target="_blank" href="/files/{{$numero_cliente}}/certificados_granel/{{ $pdf['url'] }}" class="me-1">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf['url']) }}"></i>
                                                     </a>
-                                                @else
-                                                    <span class="text-muted">Sin certificado firmado adjunto</span>
-                                                @endif
+                                                    {{ $pdf['nombre_documento'] }}
+                                                @empty
+                                                    <span class="text-muted">Sin certificados firmados adjuntos</span>
+                                                @endforelse
+
 
                                                 {{-- 🧪 Granel --}}
                                                 Granel:
                                                 {{ $loteGranel?->nombre_lote ?? 'N/A' }}
                                                 <br>
                                                 {{-- 🧴 Envasado --}}
-                                                <a target="_blank"
-                                                    href="/dictamen_envasado/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->dictamenEnvasado->id_dictamen_envasado }}">
-                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                </a>
-                                                Envasado:
-                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }}
+                                                @foreach ($ids as $id)
+                                                @php
+                                                    $lote = \App\Models\lotes_envasado::find($id);
+                                                @endphp
+
+                                                @if ($lote && $lote->dictamenEnvasado)
+                                                    <a target="_blank"
+                                                        href="/dictamen_envasado/{{ $lote->dictamenEnvasado->id_dictamen_envasado }}"
+                                                        class="me-2"
+                                                        title="Dictamen Envasado {{ $lote->num_dictamen }}">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a> {{ $lote->dictamenEnvasado->num_dictamen }}
+                                                @endif
+                                            @endforeach
+                                                {{--Envasado:
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }} --}}
                                             </td>
                                             @elseif($pregunta->filtro == 'dom')
                                             <td>
