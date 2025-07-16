@@ -450,7 +450,7 @@
                                 </div>
                                 <div class="card-info">
                                     <div class="d-flex align-items-center">
-                                        <h5 class="mb-0 me-2">{{ $pendientesRevisarCertificadosConsejo->count() }}</h5>
+                                        <h5 class="mb-0 me-2">{{ $pendientesRevisarCertificadosConsejo->count() ?? 0 }}</h5>
                                         <i class="ri-arrow-down-s-line text-danger ri-20px"></i>
                                         <small class="text-danger">Pendiente de revisar</small>
                                     </div>
