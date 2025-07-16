@@ -452,29 +452,25 @@
                                             <td>
                       {{-- 📎 Documentos FQ's (si existen) --}}
 
-                                        @if (!empty($certificados) && $combinado === 'Si')
+                                    @if (!empty($certificados) && $combinado === 'Si')
 
-                                                    @forelse ($fqs as $doc)
-                                                        @if (!empty($doc['url']) && $doc['id_documento']==58)
-                                                            {{ $doc['id_documento'] }}
-                                                            <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
-                                                                <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                            </a>{{ $doc['nombre_documento'] }}<br>
-                                                        @endif
-                                                    @empty
-                                                        <span class="text-muted">Sin documentos FQ encontrados</span>
-                                                    @endforelse
+                                        @forelse ($fqs as $doc)
+                                            @if (!empty($doc['url']) && $doc['id_documento']==58)
+                                                <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>{{ $doc['nombre_documento'] }}<br>
+                                            @endif
+                                        @empty
+                                            <span class="text-muted">Sin documentos FQ encontrados</span>
+                                        @endforelse
 
-                                                @elseif (!empty($doc1) && $combinado == 'No')
+                                    @elseif (!empty($doc1) && $combinado == 'No')
 
-                                                    <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
-                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                    </a>
-                                                Completo: {{ $primerFolio }}
-                                                @endif
-
-
-
+                                        <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
+                                            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                        </a>
+                                    Completo: {{ $primerFolio }}
+                                    @endif
                                                
 
                                                 @if($tipo_certificado == 'Granel' AND $doc2)
@@ -487,7 +483,19 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'nanalisis_ajuste')
                                             <td>
-                                                @if ($doc2)
+                                                @if (!empty($certificados) && $combinado === 'Si')
+
+                                        @forelse ($fqs as $doc)
+                                            @if (!empty($doc['url']) && $doc['id_documento']==58)
+                                                <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>{{ $doc['nombre_documento'] }}<br>
+                                            @endif
+                                        @empty
+                                            <span class="text-muted">Sin documentos FQ encontrados</span>
+                                        @endforelse
+
+                                            @elseif ($doc2 && $combinado == 'No')
                                                     <a target="_blank"
                                                         href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
                                                         <i
