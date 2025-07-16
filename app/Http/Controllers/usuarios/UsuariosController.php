@@ -209,7 +209,7 @@ class UsuariosController extends Controller
         'telefono' => $request->telefono, 'id_contacto' => $request->id_contacto,
         'id_empresa' => $request->id_empresa]
       );
-
+ $users->syncRoles($request->rol_id); 
       // user updated
       return response()->json('Modificado');
     } else {
@@ -225,6 +225,8 @@ class UsuariosController extends Controller
           'telefono' => $request->telefono, 'id_contacto' => $request->id_contacto,
            'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa,'tipo'=>3]
         );
+
+         $users->syncRoles($request->rol_id); 
 
         // user created
         return response()->json('Registrado');

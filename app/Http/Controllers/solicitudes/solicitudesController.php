@@ -11,7 +11,7 @@ use App\Models\empresa;
 use App\Models\estados;
 use App\Models\instalaciones;
 use App\Models\organismos;
-use App\Models\lotesGranel;
+use App\Models\LotesGranel;
 use App\Models\lotes_envasado;
 use App\Models\solicitudesModel;
 use App\Models\clases;
@@ -1679,7 +1679,7 @@ class solicitudesController extends Controller
                   // Actualizar lotes a granel si los hay
                   if ($request->has('lotes_granel')) {
                       foreach ($request->input('lotes_granel') as $granel) {
-                          if (!empty($granel['id_lote_granel'])) {lotesGranel::where('id_lote_granel', $granel['id_lote_granel'])
+                          if (!empty($granel['id_lote_granel'])) {LotesGranel::where('id_lote_granel', $granel['id_lote_granel'])
                                   ->update([
                                       'folio_fq' => $granel['folio_fq'] ?? null,
 
@@ -2001,7 +2001,7 @@ class solicitudesController extends Controller
 
         if ($request->has('lotes_granel')) {
          foreach ($request->input('lotes_granel') as $granel) {
-              if (!empty($granel['id_lote_granel'])) {lotesGranel::where('id_lote_granel', $granel['id_lote_granel'])
+              if (!empty($granel['id_lote_granel'])) {LotesGranel::where('id_lote_granel', $granel['id_lote_granel'])
                   ->update([
                     'folio_fq' => $granel['folio_fq'] ?? null,
                 ]);
@@ -2176,6 +2176,8 @@ class solicitudesController extends Controller
         solicitudes_eliminadas::create([
             'id_solicitud' => $id_solicitud,
             'motivo' => $motivo,
+            'responsable'       => Auth::id(),
+            'fecha_eliminacion' => Carbon::now(), // Laravel te da la fecha/hora actual
         ]);
         // Deshabilitar la solicitud
         $solicitud->habilitado = 0;

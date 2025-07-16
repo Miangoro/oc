@@ -145,13 +145,31 @@ public function index(Request $request)
             $q->where('num_certificado', 'LIKE', "%{$search}%")
               ->orWhere('id_certificado', 'LIKE', "%{$search}%");
         });*/
-        $query->where(function ($q) use ($search) {
+        //Buscar lote envasado y granel
+        $loteIds = DB::table('lotes_envasado')
+            ->select('id_lote_envasado')
+            ->where('nombre', 'LIKE', "%{$search}%")
+            ->union(
+                DB::table('lotes_envasado_granel')
+                    ->join('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'lotes_envasado_granel.id_lote_granel')
+                    ->select('lotes_envasado_granel.id_lote_envasado')
+                    ->where('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
+                )
+            ->pluck('id_lote_envasado')
+            ->toArray();
+
+        $query->where(function ($q) use ($search, $loteIds) {
             $q->where('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
             ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
             ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
             ->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+            
+            // Buscar por cada id_lote_envasado dentro del JSON de caracteristicas
+            foreach ($loteIds as $idLote) {
+                $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
+            }
         });
 
         $totalFiltered = $query->count();
@@ -1163,7 +1181,8 @@ public function documentos($id)
             continue;
         }
 
-        $id_lote_granel = $lote_envasado->lotesGranel->first()->id_lote_granel ?? null;
+        //$id_lote_granel = $lote_envasado->lotesGranel->first()->id_lote_granel ?? null;
+        $id_lote_granel = $lote_envasado->lotesGranel->first()?->certificadoGranel ?? null;
         if (!$id_lote_granel) {
             continue;
         }
@@ -1176,13 +1195,14 @@ public function documentos($id)
 
         $dictamenEnvasado = Dictamen_Envasado::where('id_lote_envasado', $id_lote_envasado)->first();
 
-        $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel)
+        $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel->id_lote_granel)
+            ->where('id_doc', $id_lote_granel->id_certificado)
             ->where('id_documento', 59)->first();
 
-        $fqs = Documentacion_url::where('id_relacion', $id_lote_granel)
+        $fqs = Documentacion_url::where('id_relacion', $id_lote_granel->id_lote_granel)
             ->where('id_documento', 58)->get()->pluck('url')->toArray();
 
-        $fqs_ajuste = Documentacion_url::where('id_relacion', $id_lote_granel)
+        $fqs_ajuste = Documentacion_url::where('id_relacion', $id_lote_granel->id_lote_granel)
             ->where('id_documento', 134)->get()->pluck('url')->toArray();
 
         $documentosPorLote[] = [

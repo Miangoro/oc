@@ -56,12 +56,12 @@
     }
 
     .pie {
-        text-align: right;
+        text-align: left;
         font-size: 12px;
         line-height: 1;
         position: fixed;
         bottom: -40px;
-        left: 0;
+        left: 200px;
         right: 0;
         width: calc(100% - 40px);
         height: 45px;
@@ -69,7 +69,7 @@
         padding: 10px 0;
         font-family: 'Lucida Sans Unicode';
         z-index: 1;
-        color: #A6A6A6;
+        /* color: #A6A6A6; */
     }
 
     tr.bitacora-row td,
@@ -93,7 +93,7 @@
         {{-- Título y Cliente --}}
         <td style="width: 50%; text-align: center; border:none;">
             <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
-                INVENTARIO DE MEZCAL A GRANEL (PRODUCTOR)
+                INVENTARIO DE MEZCAL A GRANEL {{ $title ? "($title)" : '' }}
             </p>
             @php
                 $primerBitacora = $bitacoras->first();
@@ -223,7 +223,8 @@
     </table>
 
     <div class="pie">
-        <p>Página 1 de 1</p>
+        <p>PROHIBIDA SU REPRODUCCIÓN TOTAL O PARCIAL. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          SECCIÓN II | Página 1 de 1</p>
     </div>
 
 </body>

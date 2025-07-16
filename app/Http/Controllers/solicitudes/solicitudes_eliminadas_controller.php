@@ -258,6 +258,8 @@ class solicitudes_eliminadas_controller extends Controller
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo ?? 'N/A';
                 $nestedData['motivo'] = $solicitud->eliminada->motivo ?? 'N/A';
+                $nestedData['responsable'] = $solicitud->eliminada->usuario->name ?? 'Sin registro';
+                $nestedData['fecha_eliminacion'] = Helpers::formatearFechaHora($solicitud->eliminada->fecha_eliminacion) ?? 'N/A';
                 $nestedData['estatus'] = $solicitud->estatus ?? 'Vacío';
                 $nestedData['estatus_validado_oc'] = $solicitud->ultima_validacion_oc->estatus ?? 'Pendiente';
                 $nestedData['estatus_validado_ui'] = $solicitud->ultima_validacion_ui->estatus ?? 'Pendiente';
@@ -316,9 +318,8 @@ class solicitudes_eliminadas_controller extends Controller
                 $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
                 $nestedData['folio_caracteristicas'] = $caracteristicas['folio'] ?? 'N/A';
                 $nestedData['combinado'] = ($caracteristicas['tipo_solicitud'] ?? null) == 2
-    ? '<span class="badge rounded-pill bg-info"><b>Combinado</b></span>'
-    : '';
-
+                ? '<span class="badge rounded-pill bg-info"><b>Combinado</b></span>'
+                : '';
                 $nestedData['etapa'] = $caracteristicas['etapa'] ?? 'N/A';
                 $nestedData['fecha_corte'] = isset($caracteristicas['fecha_corte']) ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i') : 'N/A';
                 $nestedData['marca'] = $marca ?? 'N/A';

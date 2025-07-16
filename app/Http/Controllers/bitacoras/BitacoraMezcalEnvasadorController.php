@@ -14,9 +14,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class BitacoraMezcalController extends Controller
+
+class BitacoraMezcalEnvasadorController extends Controller
 {
-    public function UserManagement()
+   public function UserManagement()
     {
         $bitacora = BitacoraMezcal::all();
 /*         $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); */
@@ -29,8 +30,7 @@ class BitacoraMezcalController extends Controller
                   ->get();
           }
       $tipo_usuario =  Auth::user()->tipo;
-        return view('bitacoras.find_BitacoraMezcal_view', compact('bitacora', 'empresas', 'tipo_usuario'));
-
+        return view('bitacoras.find_BitacoraMezcalEnvasador_view', compact('bitacora', 'empresas', 'tipo_usuario'));
     }
 
     public function index(Request $request)
@@ -61,7 +61,7 @@ class BitacoraMezcalController extends Controller
 
         $query = BitacoraMezcal::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
                   $query->where('id_empresa', $empresaIdAut);
-              })->where('tipo', 1);
+              })->where('tipo', 2);
 
         if ($empresaId) {
             $query->where('id_empresa', $empresaId);
@@ -181,11 +181,11 @@ class BitacoraMezcalController extends Controller
     {
         $empresaId = $request->query('empresa');
         $instalacionId = $request->query('instalacion');
-        $title = 'PRODUCTOR'; // Cambia a 'Envasador' si es necesario
+        $title = 'ENVASADOR'; // Cambia a 'Envasador' si es necesario
         $bitacoras = BitacoraMezcal::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
-        ])->where('tipo', 1)
+        ])->where('tipo', 2)
         ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
             $query->where('id_empresa', $empresaId);
             if ($instalacionId) {
@@ -237,7 +237,7 @@ class BitacoraMezcalController extends Controller
             $bitacora->id_instalacion = $request->id_instalacion;
             $bitacora->id_lote_granel = $request->id_lote_granel;
             $bitacora->tipo_operacion = $request->tipo_operacion;
-            $bitacora->tipo = 1;
+            $bitacora->tipo = 2;
             $bitacora->operacion_adicional = $request->operacion_adicional;
             $bitacora->volumen_inicial = $request->volumen_inicial;
             $bitacora->alcohol_inicial = $request->alcohol_inicial;
@@ -348,7 +348,7 @@ class BitacoraMezcalController extends Controller
               'id_instalacion'   => $request->id_instalacion,
               'fecha'            => $request->fecha,
               'operacion_adicional' => $request->operacion_adicional,
-              'tipo' => 1,
+              'tipo' => 2,
               'tipo_operacion' => $request->tipo_operacion,
               'volumen_inicial' => $request->volumen_inicial,
               'alcohol_inicial' => $request->alcohol_inicial ,

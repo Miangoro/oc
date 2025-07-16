@@ -12,6 +12,7 @@ use App\Models\empresa;
 use App\Models\User;
 use App\Models\empresaNumCliente;
 use App\Helpers\Helpers;
+use App\Models\Documentacion_url;
 use App\Models\preguntas_revision;
 use Illuminate\Support\Facades\Schema;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -435,7 +436,18 @@ class RevisionPersonalController extends Controller
             $url = "/certificado_exportacion/" . $datos->id_certificado;
             $tipo = "Exportación";
         }
-        return view('certificados.add_revision', compact('datos', 'preguntas', 'url', 'tipo'));
+
+        $certificadoEscaneado = '';
+
+        if (!empty($datos->certificado?->id_lote_granel)) {
+            $doc = Documentacion_url::where('id_documento', 59)
+                ->where('id_relacion', $datos->certificado->id_lote_granel)
+                ->first();
+
+            $certificadoEscaneado = $doc?->url ?? '';
+        }
+
+        return view('certificados.add_revision', compact('datos', 'preguntas', 'url', 'tipo','certificadoEscaneado'));
     }
     public function registrar_revision(Request $request)
     {
@@ -556,7 +568,18 @@ class RevisionPersonalController extends Controller
             $url = "/certificado_exportacion/" . $datos->id_certificado;
             $tipo = "Exportación";
         }
-        return view('certificados.edit_revision', compact('datos', 'preguntas', 'url', 'tipo', 'respuestas_map'));
+
+         $certificadoEscaneado = '';
+
+        if (!empty($datos->certificado?->id_lote_granel)) {
+            $doc = Documentacion_url::where('id_documento', 59)
+                ->where('id_relacion', $datos->certificado->id_lote_granel)
+                ->first();
+
+            $certificadoEscaneado = $doc?->url ?? '';
+        }
+
+        return view('certificados.edit_revision', compact('datos', 'preguntas', 'url', 'tipo', 'respuestas_map','certificadoEscaneado'));
     }
 
     public function editar_revision(Request $request)
