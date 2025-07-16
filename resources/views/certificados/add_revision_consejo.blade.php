@@ -433,7 +433,7 @@
                                                 foreach ($certificados as $certificado) {
                                                     $documentos2 = \App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
                                                         ->whereIn('id_documento', [58, 134])
-                                                        ->get(['url', 'nombre_documento']);
+                                                        ->get(['url', 'nombre_documento', 'id_documento']);
 
                                                     foreach ($documentos2 as $documento) {
                                                         $fqs->push([
@@ -455,7 +455,7 @@
                                         @if (!empty($certificados) && $combinado === 'Si')
 
                                                     @forelse ($fqs as $doc)
-                                                        @if (!empty($doc['url']))
+                                                        @if (!empty($doc['url']) && $doc['id_documento']==58)
                                                             {{ $doc['id_documento'] }}
                                                             <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
                                                                 <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
