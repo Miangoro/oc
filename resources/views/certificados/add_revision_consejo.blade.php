@@ -673,7 +673,7 @@
                                                                     ->get(['url','nombre_documento']);
 
                                                                 if ($url) {
-                                                                    $urls_certificados->push([
+                                                                     $urls_certificados->push([
             'url' => $documento->url,
             'nombre_documento' => $documento->nombre_documento,
         ]);
