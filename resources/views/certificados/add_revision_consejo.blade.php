@@ -668,7 +668,7 @@
 
                                                             $urls_certificados = collect();
                                                                                                             foreach ($certificados as $certificado) {
-                                                        $documento = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+                                                        $documento = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)->where('id_doc', $certificado->id_certificado)
                                                             ->where('id_documento', 59)
                                                             ->first(['url', 'nombre_documento']); // ✅ Usa first() en lugar de value()
 
