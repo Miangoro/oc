@@ -47,7 +47,7 @@
     tr.text-title th {
         padding: 2px;
         text-align: center;
-        font-size: 12px;
+        font-size: 13px;
         word-break: break-word;
         height: auto;
         width: auto;
@@ -57,12 +57,12 @@
     }
 
     .pie {
-        text-align: right;
-        font-size: 12px;
+        text-align: left;
+        font-size: 13px;
         line-height: 1;
         position: fixed;
         bottom: -40px;
-        left: 0;
+        left: 200px;
         right: 0;
         width: calc(100% - 40px);
         height: 45px;
@@ -70,7 +70,7 @@
         padding: 10px 0;
         font-family: 'Lucida Sans Unicode';
         z-index: 1;
-        color: #A6A6A6;
+        /* color: #A6A6A6; */
     }
 </style>
 
@@ -215,7 +215,9 @@
     </table>
 
     <div class="pie">
-        <p>Página 1 de 1</p>
+
+        <p>PROHIBIDA SU REPRODUCCIÓN TOTAL O PARCIAL. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           SECCIÓN VI | Página 1 de 1</p>
     </div>
 
 </body>
