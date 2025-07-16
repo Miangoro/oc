@@ -209,7 +209,7 @@ class UsuariosController extends Controller
         'telefono' => $request->telefono, 'id_contacto' => $request->id_contacto,
         'id_empresa' => $request->id_empresa]
       );
-
+ $users->syncRoles($request->rol_id); 
       // user updated
       return response()->json('Modificado');
     } else {
