@@ -455,8 +455,8 @@
                                         @if (!empty($certificados) && $combinado === 'Si')
 
                                                     @forelse ($fqs as $doc)
-                                                        @if (!empty($doc['url']) && $doc['id_documento']==58)
-                                                            
+                                                        @if (!empty($doc['url']))
+                                                            {{ $doc['id_documento'] }}
                                                             <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
                                                                 <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                             </a>{{ $doc['nombre_documento'] }}<br>
