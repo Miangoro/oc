@@ -785,9 +785,9 @@
                                             @endphp
                                             <td>
 
-                                                {{ $lote_granel->categoria->categoria ?? 'N/A' }}<br>
+                                               {{--  <br>
                                                 {{ $lote_envasado->marca->marca ?? 'N/A' }}<br>
-                                                {{ $lote_granel->clase->clase ?? 'N/A' }}<br>
+                                                {{ $lote_granel->clase->clase ?? 'N/A' }}<br> --}}
 
                                                 @foreach($lotes_graneles as $lotess)
                                                    <b>Granel: </b>{{ $lotess->nombre_lote ?? 'N/A' }}
