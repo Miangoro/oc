@@ -486,7 +486,7 @@
                                                 @if (!empty($certificados) && $combinado === 'Si')
 
                                         @forelse ($fqs as $doc)
-                                            @if (!empty($doc['url']) && $doc['id_documento']==58)
+                                            @if (!empty($doc['url']) && $doc['id_documento']==134)
                                                 <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
                                                     <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                 </a>{{ $doc['nombre_documento'] }}<br>
@@ -501,10 +501,11 @@
                                                         <i
                                                             class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                     </a>
+                                                     {{ $segundoFolio }}
                                                 @else
                                                     <i class="text-muted">Sin archivo</i>
                                                 @endif
-                                                {{ $segundoFolio }}
+                                               
                                             </td>
                                         @elseif($pregunta->filtro == 'aduana')
                                             @php
