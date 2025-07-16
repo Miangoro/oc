@@ -668,7 +668,7 @@
 
                                                             $urls_certificados = collect();
                                                                                                             foreach ($certificados as $certificado) {
-                                                        $documento = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+                                                        $documento = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)->where('id_doc', $certificado->id_certificado)
                                                             ->where('id_documento', 59)
                                                             ->first(['url', 'nombre_documento']); // ✅ Usa first() en lugar de value()
 
@@ -781,14 +781,22 @@
                                                                 }
                                                             }
 
-                                                            echo $lotes_graneles;
+                                                            $lotes_graneles;
                                             @endphp
                                             <td>
 
-                                                {{ $lote_granel->categoria->categoria ?? 'N/A' }}<br>
+                                               {{--  <br>
                                                 {{ $lote_envasado->marca->marca ?? 'N/A' }}<br>
-                                                {{ $lote_granel->clase->clase ?? 'N/A' }}<br>
-                                                {{ $lote_granel->edad ?? 'N/A' }}
+                                                {{ $lote_granel->clase->clase ?? 'N/A' }}<br> --}}
+
+                                                @foreach($lotes_graneles as $lotess)
+                                                   <b>Granel: </b>{{ $lotess->nombre_lote ?? 'N/A' }}
+                                                    <b>Categoría: </b>{{ $lotess->categoria->categoria ?? 'N/A' }}
+                                                    <b>Edad: </b> {{ $lotess->edad ?? 'N/A' }}
+                                                   <b>Marca: </b> {{ $lote_envasado->marca->marca ?? 'N/A' }} <br>
+
+                                                @endforeach
+                                                
 
                                             </td>
                                         @elseif($pregunta->filtro == 'ingredientes')
