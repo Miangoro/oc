@@ -93,10 +93,8 @@ class BitacoraMezcalEnvasadorController extends Controller
                       ->orWhere('alcohol_entrada', 'LIKE', "%{$search}%")
                       ->orWhere('volumen_salidas', 'LIKE', "%{$search}%")
                       ->orWhere('alcohol_salidas', 'LIKE', "%{$search}%")
-                      ->orWhere('destino_salidas', 'LIKE', "%{$search}%")
                       ->orWhere('volumen_final', 'LIKE', "%{$search}%")
                       ->orWhere('alcohol_final', 'LIKE', "%{$search}%")
-                      ->orWhere('observaciones', 'LIKE', "%{$search}%")
                       ->orWhere(function ($date) use ($search) {
                        $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
                       ->orWhereHas('empresaBitacora', function ($sub) use ($search) {

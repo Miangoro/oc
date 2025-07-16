@@ -86,8 +86,9 @@
                 style="font-size: 14px; padding-left: 5px; padding-right: 5px;">SOLICITUD DE SERVICIOS</td>
             <td colspan="5" style="text-align: right; font-size: 8px; padding-left: 0; padding-top: 0;">Solicitud de
                 servicios NOM-070-SCFI-2016 F7.1-01-32<br>
-                Edición 10 Entrada en vigor:
-                20/06/2024
+                Edición {{ ($datos->fecha_solicitud) > '2025-07-16' 
+                    ? '11 Entrada en vigor: 16-07-2025' 
+                    : '10 Entrada en vigor: 20/06/2024' }} 
             </td>
         </tr>
         <tr>
@@ -118,7 +119,7 @@
         </tr>
         <tr>
             <td class="con-negra" colspan="2">Fecha de solicitud:</td>
-            <td colspan="4">{{ $datos->created_at }}</td>
+            <td colspan="4">{{ $datos->fecha_solicitud }}</td>
             <td class="con-negra" colspan="3">Teléfono:</td>
             <td colspan="4">{{ $datos->empresa->telefono }}</td>
         </tr>
@@ -166,7 +167,10 @@
         <tr>
             <th>II:</th>
             <th colspan="12" style="padding-top: 0;padding-bottom: 0;">
-                SERVICIO SOLICITADO A LA UVEM
+                SERVICIO SOLICITADO A LA 
+                {{ ($datos->fecha_solicitud) > '2025-07-16' 
+                    ? 'UNIDAD DE INSPECCIÓN (UI)' 
+                    : 'UVEM' }}
             </th>
         </tr>
         <tr>
@@ -882,7 +886,9 @@
         </tr>
         <tr>
             <td class="con-negra" colspan="9" style="font-size: 8px">La empresa se da por enterada que: la Unidad
-                de Verificación
+                de {{ ($datos->fecha_solicitud) > '2025-07-16' 
+                    ? 'Inspección' 
+                    : 'Verificación' }}
                 establecerá una vigilancia
                 de cumplimiento con la NOM permanente a sus instalaciones una vez que
                 el Certificado NOM sea emitido. Para validar la información el OC podrá solicitar los documentos

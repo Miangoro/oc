@@ -4,8 +4,9 @@ namespace App\Http\Controllers\bitacoras;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\LotesGranel;
-use App\Models\BitacoraMezcal;
+use App\Models\BitacoraHologramas;
+use App\Models\lotes_envasado;
+use App\Models\User;
 use App\Models\empresa;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
@@ -14,11 +15,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class BitacoraMezcalController extends Controller
+class BitacoraHologramasComercializadorController extends Controller
 {
-    public function UserManagement()
+        public function UserManagement()
     {
-        $bitacora = BitacoraMezcal::all();
+        $bitacora = BitacoraHologramas::all();
 /*         $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); */
             if (Auth::check() && Auth::user()->tipo == 3) {
         $empresaIdA = Auth::user()->empresa?->id_empresa;
@@ -29,20 +30,19 @@ class BitacoraMezcalController extends Controller
                   ->get();
           }
       $tipo_usuario =  Auth::user()->tipo;
-        return view('bitacoras.find_BitacoraMezcal_view', compact('bitacora', 'empresas', 'tipo_usuario'));
-
+        return view('bitacoras.find_BitacoraHologramasComercializador_view', compact('bitacora', 'empresas', 'tipo_usuario'));
     }
 
     public function index(Request $request)
     {
       $empresaId = $request->input('empresa');
-      $instalacionId = $request->input('instalacion');
+      /* $instalacionId = $request->input('instalacion'); */
       DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
 
         $columns = [
             1 => 'id',
             2 => 'fecha',
-            3 => 'id_lote_granel',
+            3 => 'id_lote_envasado',
         ];
 
         $empresaIdAut = null;
@@ -51,7 +51,7 @@ class BitacoraMezcalController extends Controller
           }
 
         $search = $request->input('search.value');
-        $totalData = BitacoraMezcal::count();
+        $totalData = BitacoraHologramas::count();
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -59,16 +59,12 @@ class BitacoraMezcalController extends Controller
         $order = $columns[$request->input('order.0.column')] ?? 'fecha';
         $dir = $request->input('order.0.dir');
 
-        $query = BitacoraMezcal::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
+        $query = BitacoraHologramas::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
                   $query->where('id_empresa', $empresaIdAut);
-              })->where('tipo', 1);
+              })->where('tipo', 3);
 
         if ($empresaId) {
             $query->where('id_empresa', $empresaId);
-
-            if ($instalacionId) {
-                $query->where('id_instalacion', $instalacionId);
-            }
         }
           if (!empty($search)) {
               $query->where(function ($q) use ($search) {
@@ -81,29 +77,22 @@ class BitacoraMezcalController extends Controller
                           $sub->whereNull('id_firmante')->orWhere('id_firmante', 0);
                       });
                   } else {
-
                     $q->where('fecha', 'LIKE', "%{$search}%")
-                      ->orWhere('id_lote_granel', 'LIKE', "%{$search}%")
-                      ->orWhere('procedencia_entrada', 'LIKE', "%{$search}%")
-                      ->orWhere('destino_salidas', 'LIKE', "%{$search}%")
-                      ->orWhere('operacion_adicional', 'LIKE', "%{$search}%")
-                      ->orWhere('volumen_inicial', 'LIKE', "%{$search}%")
-                      ->orWhere('alcohol_inicial', 'LIKE', "%{$search}%")
-                      ->orWhere('volumen_entrada', 'LIKE', "%{$search}%")
-                      ->orWhere('alcohol_entrada', 'LIKE', "%{$search}%")
-                      ->orWhere('volumen_salidas', 'LIKE', "%{$search}%")
-                      ->orWhere('alcohol_salidas', 'LIKE', "%{$search}%")
-                      ->orWhere('volumen_final', 'LIKE', "%{$search}%")
-                      ->orWhere('alcohol_final', 'LIKE', "%{$search}%")
+                      ->orWhere('id_lote_envasado', 'LIKE', "%{$search}%")
+                      ->orWhere('serie_inicial', 'LIKE', "%{$search}%")
+                      ->orWhere('num_sellos_inicial', 'LIKE', "%{$search}%")
+                      ->orWhere('serie_entrada', 'LIKE', "%{$search}%")
+                      ->orWhere('num_sellos_entrada', 'LIKE', "%{$search}%")
+                      ->orWhere('serie_salidas', 'LIKE', "%{$search}%")
+                      ->orWhere('num_sellos_salidas', 'LIKE', "%{$search}%")
+                      ->orWhere('serie_final', 'LIKE', "%{$search}%")
+                      ->orWhere('num_sellos_final', 'LIKE', "%{$search}%")
                       ->orWhere(function ($date) use ($search) {
                        $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
                       ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
                           $sub->where('razon_social', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('loteBitacora', function ($sub) use ($search) {
-                          $sub->where('nombre_lote', 'LIKE', "%{$search}%")
-                              ->orWhere('folio_fq', 'LIKE', "%{$search}%")
-                              ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
+                      })->orWhereHas('loteBitacora', function ($sub) use ($search) {
+                          $sub->where('nombre', 'LIKE', "%{$search}%");
                       });
                   }
               });
@@ -141,26 +130,22 @@ class BitacoraMezcalController extends Controller
                 'numero_cliente' => $numeroCliente,
                 'cliente' => '<b>' . $numeroCliente . '</b><br>' . $razonSocial,
                 //
-                'nombre_lote' => $bitacora->loteBitacora->nombre_lote ?? 'N/A',
+                'nombre_lote' => $bitacora->loteBitacora->nombre ?? 'N/A',
                 'folio_fq' => $bitacora->loteBitacora->folio_fq ?? 'N/A',
                 'folio_certificado' => $bitacora->loteBitacora->folio_certificado ?? 'N/A',
 /*                 'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
                 'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A', */
-
                 //Entradas
-                'procedencia_entrada' => $bitacora->procedencia_entrada ?? 'N/A',
-                'volumen_entrada' => $bitacora->volumen_entrada ?? 'N/A',
-                'alcohol_entrada' => $bitacora->alcohol_entrada ?? 'N/A',
-                'agua_entrada' => $bitacora->agua_entrada ?? 'N/A',
+                'serie_entrada' => $bitacora->serie_entrada ?? 'N/A',
+                'num_sellos_entrada' => $bitacora->num_sellos_entrada ?? 'N/A',
                 'id_firmante' => $bitacora->id_firmante ?? 'N/A',
                 // Salidas
-                'volumen_salidas' => $bitacora->volumen_salidas ?? 'N/A',
-                'alcohol_salidas' => $bitacora->alcohol_salidas ?? 'N/A',
-                'destino_salidas' => $bitacora->destino_salidas ?? 'N/A',
+                'serie_salidas' => $bitacora->serie_salidas ?? 'N/A',
+                'num_sellos_salidas' => $bitacora->num_sellos_salidas ?? 'N/A',
 
                 // Inventario final
-                'volumen_final' => $bitacora->volumen_final ?? 'N/A',
-                'alcohol_final' => $bitacora->alcohol_final ?? 'N/A',
+                'serie_final' => $bitacora->serie_final ?? 'N/A',
+                'num_sellos_final' => $bitacora->num_sellos_final ?? 'N/A',
 
                 'observaciones' => $bitacora->observaciones ?? 'N/A',
                 'firma_ui' => $bitacora->firma_ui ?? 'N/A',
@@ -177,20 +162,20 @@ class BitacoraMezcalController extends Controller
         ]);
     }
 
-     public function PDFBitacoraMezcal(Request $request)
+     public function PDFBitacoraHologramas(Request $request)
     {
         $empresaId = $request->query('empresa');
-        $instalacionId = $request->query('instalacion');
-        $title = 'PRODUCTOR'; // Cambia a 'Envasador' si es necesario
-        $bitacoras = BitacoraMezcal::with([
+        $title = 'COMERCIALIZADOR'; // Cambia a 'Envasador' si es necesario
+        $bitacoras = BitacoraHologramas::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
-        ])->where('tipo', 1)
-        ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
+            'loteBitacora.marca',
+            'loteBitacora.lotes_envasado_granel.loteGranel.categoria',
+            'loteBitacora.lotes_envasado_granel.loteGranel.clase',             // <-- asegúrate de esto
+        ])
+        ->where('tipo', 3)
+        ->when($empresaId, function ($query) use ($empresaId) {
             $query->where('id_empresa', $empresaId);
-            if ($instalacionId) {
-                $query->where('id_instalacion', $instalacionId);
-            }
         })
         ->orderBy('fecha', 'desc')
         ->get();
@@ -200,10 +185,9 @@ class BitacoraMezcalController extends Controller
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
               ], 404);
           }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title'))
+        $pdf = Pdf::loadView('pdfs.Bitacora_Hologramas', compact('bitacoras', 'title'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
-
-        return $pdf->stream('Bitácora Mezcal a Granel.pdf');
+        return $pdf->stream('Bitácora de control de hologramas de envasador.pdf');
     }
 
 
@@ -212,44 +196,38 @@ class BitacoraMezcalController extends Controller
         $request->validate([
             'fecha' => 'required|date',
             'id_empresa' => 'required|integer|exists:empresa,id_empresa',
-            'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
-            'id_instalacion' => 'required|integer',
-            'operacion_adicional' => 'nullable|string',
+            'id_lote_envasado' => 'required|integer|exists:lotes_envasado,id_lote_envasado',
             'tipo_operacion' => 'required|string',
-            'volumen_inicial' => 'nullable|numeric|min:0',
-            'alcohol_inicial' => 'nullable|numeric|min:0',
-            'procedencia_entrada' => 'nullable|string',
-            'volumen_entrada'=> 'nullable|numeric|min:0',
-            'alcohol_entrada' => 'nullable|numeric|min:0',
-            'agua_entrada' => 'nullable|numeric|min:0',
-            'volumen_salida' => 'nullable|numeric|min:0' ,
-            'alc_vol_salida' => 'nullable|numeric|min:0',
-            'destino' => 'nullable|string|max:255',
-            'volumen_final' => 'required|numeric|',
-            'alc_vol_final' => 'required|numeric|',
+            'serie_inicial' => 'nullable|string',
+            'num_sellos_inicial' => 'nullable|string',
+            'serie_entrada'=> 'nullable|string',
+            'num_sellos_entrada' => 'nullable|string',
+            'serie_salida' => 'nullable|string' ,
+            'num_sellos_salida' => 'nullable|string',
+            'serie_final' => 'required|string',
+            'num_sellos_final' => 'required|string',
+            'serie_merma' => 'nullable|string',
+            'num_sellos_merma' => 'nullable|string',
             'observaciones' => 'nullable|string|',
         ]);
 
         try {
-            $bitacora = new BitacoraMezcal();
+            $bitacora = new BitacoraHologramas();
             $bitacora->fecha = $request->fecha;
             $bitacora->id_empresa = $request->id_empresa;
-            $bitacora->id_instalacion = $request->id_instalacion;
-            $bitacora->id_lote_granel = $request->id_lote_granel;
+            $bitacora->id_lote_envasado = $request->id_lote_envasado;
             $bitacora->tipo_operacion = $request->tipo_operacion;
-            $bitacora->tipo = 1;
-            $bitacora->operacion_adicional = $request->operacion_adicional;
-            $bitacora->volumen_inicial = $request->volumen_inicial;
-            $bitacora->alcohol_inicial = $request->alcohol_inicial;
-            $bitacora->procedencia_entrada  = $request->procedencia_entrada ?? 0;
-            $bitacora->volumen_entrada  = $request->volumen_entrada ?? 0;
-            $bitacora->alcohol_entrada  = $request->alcohol_entrada ?? 0;
-            $bitacora->agua_entrada  = $request->agua_entrada ?? 0;
-            $bitacora->volumen_salidas = $request->volumen_salida ?? 0;
-            $bitacora->alcohol_salidas = $request->alc_vol_salida ?? 0;
-            $bitacora->destino_salidas = $request->destino ?? 0;
-            $bitacora->volumen_final = $request->volumen_final;
-            $bitacora->alcohol_final = $request->alc_vol_final;
+            $bitacora->tipo = 3;
+            $bitacora->serie_inicial = $request->serie_inicial ?? 0;
+            $bitacora->num_sellos_inicial = $request->num_sellosl_inicial ?? 0;
+            $bitacora->serie_entrada  = $request->serie_entrada ?? 0;
+            $bitacora->num_sellos_entrada  = $request->num_sellos_entrada ?? 0;
+            $bitacora->serie_salidas = $request->serie_salida ?? 0;
+            $bitacora->num_sellos_salidas = $request->num_sellos_salida ?? 0;
+            $bitacora->serie_final = $request->serie_final;
+            $bitacora->num_sellos_final = $request->num_sellos_final;
+            $bitacora->serie_merma = $request->serie_merma ?? 0;
+            $bitacora->num_sellos_merma = $request->num_sellos_merma ?? 0;
             $bitacora->observaciones = $request->observaciones;
 
             $bitacora->save();
@@ -264,7 +242,7 @@ class BitacoraMezcalController extends Controller
     }
     public function destroy($id_bitacora)
     {
-        $bitacora = BitacoraMezcal::find($id_bitacora);
+        $bitacora = BitacoraHologramas::find($id_bitacora);
 
         if (!$bitacora) {
             return response()->json([
@@ -282,29 +260,27 @@ class BitacoraMezcalController extends Controller
     public function edit($id_bitacora)
     {
         try {
-            $bitacora = BitacoraMezcal::findOrFail($id_bitacora);
+            $bitacora = BitacoraHologramas::findOrFail($id_bitacora);
             $fecha_formateada = Carbon::parse($bitacora->fecha)->format('Y-m-d');
             return response()->json([
                 'success' => true,
                 'bitacora' => [
                     'id' => $bitacora->id,
                     'id_empresa' => $bitacora->id_empresa,
-                    'id_instalacion' => $bitacora->id_instalacion,
+                    /* 'id_instalacion' => $bitacora->id_instalacion, */
                     'fecha' => $fecha_formateada, // para que el input date lo acepte
-                    'id_lote_granel' => $bitacora->id_lote_granel,
-                    'operacion_adicional' => $bitacora->operacion_adicional,
-                    'volumen_inicial'    =>     $bitacora->volumen_inicial,
-                    'alcohol_inicial'   =>     $bitacora->alcohol_inicial,
+                    'id_lote_envasado' => $bitacora->id_lote_envasado,
+                    'serie_inicial'    =>     $bitacora->serie_inicial,
+                    'num_sellos_inicial'   =>     $bitacora->num_sellos_inicial,
                     'tipo_operacion' => $bitacora->tipo_operacion,
-                    'procedencia_entrada'  =>     $bitacora->procedencia_entrada,
-                    'volumen_entrada'   =>    $bitacora->volumen_entrada,
-                    'alcohol_entrada'  =>     $bitacora->alcohol_entrada,
-                    'agua_entrada' => $bitacora->agua_entrada,
-                    'volumen_salida' => $bitacora->volumen_salidas,
-                    'alc_vol_salida' => $bitacora->alcohol_salidas,
-                    'destino' => $bitacora->destino_salidas,
-                    'volumen_final' => $bitacora->volumen_final,
-                    'alc_vol_final' => $bitacora->alcohol_final,
+                    'serie_entrada'   =>    $bitacora->serie_entrada,
+                    'num_sellos_entrada'  =>     $bitacora->num_sellos_entrada,
+                    'serie_salida' => $bitacora->serie_salidas,
+                    'num_sellos_salida' => $bitacora->num_sellos_salidas,
+                    'serie_final' => $bitacora->serie_final,
+                    'num_sellos_final' => $bitacora->num_sellos_final,
+                    'serie_merma' => $bitacora->serie_merma,
+                    'num_sellos_merma' => $bitacora->num_sellos_merma,
                     'observaciones' => $bitacora->observaciones,
                     // agrega otros campos que necesites si existen
                 ],
@@ -322,45 +298,41 @@ class BitacoraMezcalController extends Controller
           $request->validate([
               'edit_bitacora_id' => 'required|exists:bitacora_mezcal,id',
               'id_empresa'       => 'required|exists:empresa,id_empresa',
-              'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
-              'id_instalacion' => 'required|integer',
-              'operacion_adicional' => 'nullable|string',
+              'id_lote_envasado' => 'required|integer|exists:lotes_envasado,id_lote_envasado',
+              /* 'id_instalacion' => 'required|integer', */
               'tipo_operacion' => 'required|string',
-              'volumen_inicial' => 'nullable|numeric|min:0',
-              'alcohol_inicial' => 'nullable|numeric|min:0',
-              'procedencia_entrada' => 'nullable|string',
-              'volumen_entrada'=> 'nullable|numeric|min:0',
-              'alcohol_entrada' => 'nullable|numeric|min:0',
-              'agua_entrada' => 'nullable|numeric|min:0',
-              'volumen_salida' => 'nullable|numeric|min:0' ,
-              'alc_vol_salida' => 'nullable|numeric|min:0',
-              'destino' => 'nullable|string|max:255',
-              'volumen_final' => 'required|numeric|',
-              'alc_vol_final' => 'required|numeric|',
+              'serie_inicial' => 'nullable|string',
+              'num_sellos_inicial' => 'nullable|string',
+              'serie_entrada'=> 'nullable|string',
+              'num_sellos_entrada' => 'nullable|string',
+              'serie_salida' => 'nullable|string' ,
+              'num_sellos_salida' => 'nullable|string',
+              'serie_final' => 'required|string',
+              'num_sellos_final' => 'required|string',
+              'serie_merma' => 'nullable|string',
+              'num_sellos_merma' => 'nullable|string',
               'observaciones'    => 'nullable|string',
           ]);
 
-          $bitacora = BitacoraMezcal::findOrFail($id_bitacora);
+          $bitacora = BitacoraHologramas::findOrFail($id_bitacora);
 
           $bitacora->update([
               'id_empresa'       => $request->id_empresa,
-              'id_lote_granel'   => $request->id_lote_granel,
-              'id_instalacion'   => $request->id_instalacion,
+              'id_lote_envasado'   => $request->id_lote_envasado,
+              /* 'id_instalacion'   => $request->id_instalacion, */
               'fecha'            => $request->fecha,
-              'operacion_adicional' => $request->operacion_adicional,
-              'tipo' => 1,
+              'tipo' => 3,
               'tipo_operacion' => $request->tipo_operacion,
-              'volumen_inicial' => $request->volumen_inicial,
-              'alcohol_inicial' => $request->alcohol_inicial ,
-              'procedencia_entrada' => $request->procedencia_entrada ?? 0,
-              'volumen_entrada'=> $request->volumen_entrada ?? 0,
-              'alcohol_entrada' => $request->alcohol_entrada ?? 0,
-              'agua_entrada' => $request->agua_entrada ?? 0,
-              'volumen_salidas'   => $request->volumen_salida ?? 0,
-              'alcohol_salidas'   => $request->alc_vol_salida ?? 0,
-              'destino_salidas'  => $request->destino ?? 0,
-              'volumen_final'    => $request->volumen_final,
-              'alcohol_final'    => $request->alc_vol_final,
+              'serie_inicial' => $request->serie_inicial ?? 0,
+              'num_sellos_inicial' => $request->num_sellos_inicial ?? 0,
+              'serie_entrada'=> $request->serie_entrada ?? 0,
+              'num_sellos_entrada' => $request->num_sellos_entrada ?? 0,
+              'serie_salidas'   => $request->serie_salida ?? 0,
+              'num_sellos_salidas'   => $request->num_sellos_salida ?? 0,
+              'serie_final'    => $request->serie_final ?? 0,
+              'num_sellos_final'    => $request->num_sellos_final ?? 0,
+              'serie_merma' => $request->serie_merma ?? 0,
+              'num_sellos_merma' => $request->num_sellos_merma ?? 0,
               'observaciones'    => $request->observaciones,
           ]);
 
@@ -370,7 +342,7 @@ class BitacoraMezcalController extends Controller
       public function firmarBitacora($id_bitacora)
       {
         try {
-          $bitacora = BitacoraMezcal::findOrFail($id_bitacora);
+          $bitacora = BitacoraHologramas::findOrFail($id_bitacora);
           // Solo usuarios tipo 2 pueden firmar
           if (auth()->user()->tipo === 2) {
               $bitacora->id_firmante = auth()->id();
@@ -383,5 +355,4 @@ class BitacoraMezcalController extends Controller
             return response()->json(['message' => 'Error al firmar la bitácora.'], 500);
           }
       }
-
 }

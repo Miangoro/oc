@@ -78,7 +78,6 @@ class BitacoraHologramasController extends Controller
                           $sub->whereNull('id_firmante')->orWhere('id_firmante', 0);
                       });
                   } else {
-
                     $q->where('fecha', 'LIKE', "%{$search}%")
                       ->orWhere('id_lote_envasado', 'LIKE', "%{$search}%")
                       ->orWhere('serie_inicial', 'LIKE', "%{$search}%")
@@ -89,16 +88,12 @@ class BitacoraHologramasController extends Controller
                       ->orWhere('num_sellos_salidas', 'LIKE', "%{$search}%")
                       ->orWhere('serie_final', 'LIKE', "%{$search}%")
                       ->orWhere('num_sellos_final', 'LIKE', "%{$search}%")
-                      ->orWhere('observaciones', 'LIKE', "%{$search}%")
                       ->orWhere(function ($date) use ($search) {
                        $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
                       ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
                           $sub->where('razon_social', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('loteBitacora', function ($sub) use ($search) {
-                          $sub->where('nombre_lote', 'LIKE', "%{$search}%")
-                              ->orWhere('folio_fq', 'LIKE', "%{$search}%")
-                              ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
+                      })->orWhereHas('loteBitacora', function ($sub) use ($search) {
+                          $sub->where('nombre', 'LIKE', "%{$search}%");
                       });
                   }
               });
