@@ -427,7 +427,7 @@
                                         <td>
                                             <li class="d-flex align-items-center mb-6">
                                                 <div class="avatar flex-shrink-0 me-4">
-                                                <img src="https://demos.pixinvent.com/materialize-html-laravel-admin-template/demo/assets/img/avatars/4.png" alt="avatar" class="rounded-3">
+                                                <img src="/storage/{{ $revisor?->profile_photo_path }}" alt="{{ $revisor?->name ?? '—' }}" class="rounded-3">
                                                 </div>
                                                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                 <div class="me-2">
