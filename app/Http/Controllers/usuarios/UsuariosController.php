@@ -226,6 +226,8 @@ class UsuariosController extends Controller
            'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa,'tipo'=>3]
         );
 
+         $users->syncRoles($request->rol_id); 
+
         // user created
         return response()->json('Registrado');
       } else {
