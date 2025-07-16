@@ -337,7 +337,7 @@ foreach ($ids as $id) {
 $urls_certificados = collect();
 
 foreach ($certificados as $certificado) {
-    $url = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+    $url = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)->where('id_doc', $certificado->id_certificado)
         ->where('id_documento', 59)
         ->value('url');
 
