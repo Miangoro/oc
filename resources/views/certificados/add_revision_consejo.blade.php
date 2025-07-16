@@ -604,48 +604,43 @@
                                                         : null;
 
                                                           $ids = $solicitud->id_lote_envasado; // array de IDs
+                                                            $certificados = collect();
 
+                                                            foreach ($ids as $id) {
+                                                                $lote = App\Models\lotes_envasado::find($id);
+                                                                if ($lote) {
+                                                                    foreach ($lote->lotesGranel as $granel) {
+                                                                        if ($granel->certificadoGranel) {
+                                                                            $certificados->push($granel->certificadoGranel);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
 
-  $certificados = collect();
+                                                            $urls_certificados = collect();
+                                                            foreach ($certificados as $certificado) {
+                                                                $url = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+                                                                    ->where('id_documento', 59)
+                                                                    ->value('url');
 
-foreach ($ids as $id) {
-    $lote = App\Models\lotes_envasado::find($id);
-    if ($lote) {
-        foreach ($lote->lotesGranel as $granel) {
-            if ($granel->certificadoGranel) {
-                $certificados->push($granel->certificadoGranel);
-            }
-        }
-    }
-}
+                                                                if ($url) {
+                                                                    $urls_certificados->push($url);
+                                                                }
+                                                            }
 
-
-$urls_certificados = collect();
-
-foreach ($certificados as $certificado) {
-    $url = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
-        ->where('id_documento', 59)
-        ->value('url');
-
-    if ($url) {
-        $urls_certificados->push($url);
-    }
-}
-
-                                              print_r($urls_certificados);
 
                                             @endphp
 
                                             <td>
-                                                {{-- 📎 Documento firmado PDF (si existe) --}}
-                                                @if ($urlFirmado)
-                                                    <a target="_blank" href="{{ $urlFirmado }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                    </a>
-                                                @else
-                                                    <span class="text-muted">Sin certificado firmado adjunto</span>
-                                                @endif
+                                                {{-- 📎 Documentos firmados PDF (si existen) --}}
+@forelse ($urls_certificados as $pdf)
+    <a target="_blank" href="/files/{{$numero_cliente}}/certificados_granel/{{ $pdf }}" class="me-1">
+        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf) }}"></i>
+    </a>
+@empty
+    <span class="text-muted">Sin certificados firmados adjuntos</span>
+@endforelse
+
 
                                                 {{-- 🧪 Granel --}}
                                                 Granel:
