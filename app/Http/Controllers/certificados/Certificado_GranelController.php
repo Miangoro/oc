@@ -166,6 +166,7 @@ public function index(Request $request)
             $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
             $id_sustituye = json_decode($certificado->observaciones, true) ['id_sustituye'] ?? null;
             $nestedData['sustituye'] = $id_sustituye ? CertificadosGranel::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
+            $nestedData['motivo']  = json_decode($certificado->observaciones, true) ['observaciones'] ?? null;
             $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
             $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
             ///Folio y no. servicio

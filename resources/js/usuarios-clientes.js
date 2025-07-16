@@ -392,6 +392,7 @@ $(function () {
       //$('#id_empresa').val(data.id_empresa).prop('selected', true).change();
       $('#id_empresa').val(data.id_empresa).trigger('change');
       $('#id_contacto').val(data.id_contacto).trigger('change');
+       $('#rol_id').val(data.rol).prop('selected', true).change();
     });
   });
 

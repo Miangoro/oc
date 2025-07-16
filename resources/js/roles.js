@@ -74,7 +74,7 @@ $(function () {
               `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar rol</a>` +
               `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar rol</a>` +
 
-             
+
               '</div>'
             );
           }
@@ -356,7 +356,7 @@ $(function () {
     var registro = $(this).data('registro');
       var iframe = $('#pdfViewer');//contenido
       var spinner = $('#cargando');
-      
+
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
       spinner.show();
       iframe.hide();
@@ -498,3 +498,11 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
+  $(document).ready(function () {
+    $('#buscadorPermisos').on('keyup', function () {
+      var valor = $(this).val().toLowerCase();
+      $('#listaPermisos .form-check').filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(valor) > -1)
+      });
+    });
+  });

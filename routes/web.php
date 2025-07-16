@@ -160,7 +160,7 @@ use App\Http\Controllers\charts\ApexCharts;
 use App\Http\Controllers\charts\ChartJs;
 use App\Http\Controllers\maps\Leaflet;
 use App\Http\Controllers\solicitudCliente\solicitudClienteController;
-use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
+use App\Http\Controllers\pdfsControllers\CartaAsignacionController;
 use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\catalogo\categoriasController;
@@ -190,6 +190,8 @@ use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\DictamenInstalacionesController;
 use App\Http\Controllers\dictamenes\DictamenGranelController;
 use App\Http\Controllers\dictamenes\DictamenEnvasadoController;
+use App\Http\Controllers\dictamenes\DictamenNoCumplimientoController;
+
 use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\certificados\Certificado_GranelController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
@@ -204,10 +206,12 @@ use App\Http\Controllers\revision\RevisionPersonalController;
 use App\Http\Controllers\revision\RevisionConsejoController;
 use App\Http\Controllers\revision\catalogo_personal_seleccion_preguntas_controller;
 use App\Http\Controllers\bitacoras\BitacoraMezcalController;
+use App\Http\Controllers\bitacoras\BitacoraMezcalEnvasadorController;
 use App\Http\Controllers\bitacoras\BitacoraProductoMaduracionController;
 use App\Http\Controllers\bitacoras\BitacoraProcesoElaboracionController;
 use App\Http\Controllers\bitacoras\BitacoraProductoTerminadoController;
 use App\Http\Controllers\bitacoras\BitacoraHologramasController;
+use App\Http\Controllers\bitacoras\BitacoraHologramasComercializadorController;
 use App\Http\Controllers\catalogo\EtiquetasController;
 use App\Http\Controllers\certificados\Certificado_ExportacionController;
 use App\Http\Controllers\certificados\Certificado_NacionalController;
@@ -956,10 +960,43 @@ Route::controller(BitacoraMezcalController::class)->middleware(['auth'])->group(
     Route::post('/bitacoraMezcalStore', 'store')->name('bitacora.store');
     Route::post('/bitacorasUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
     Route::post('/FirmaBitacoraMezcal/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
-
 });
 
 Route::resource('/bitacoraMezcal-list', BitacoraMezcalController::class)->middleware(['auth']);
+
+Route::controller(BitacoraMezcalEnvasadorController::class)->middleware(['auth'])->group(function () {
+    Route::get('/bitacoraMezcalEnvasador', 'UserManagement')->name('bitacora-mezcal-envasador');
+    Route::get('/bitacora_mezcal_envasador', 'PDFBitacoraMezcal');
+    Route::get('bitacora_mezcal_envasador/{id_bitacora}/edit', 'edit');
+    Route::get('bitacoraMezcalEnvasador-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::post('/bitacoraMezcalEnvasadorStore', 'store')->name('bitacora.store');
+    Route::post('/bitacorasEnvasadorUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaBitacoraMezcalEnvasador/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+});
+
+Route::resource('/bitacoraMezcalEnvasador-list', BitacoraMezcalEnvasadorController::class)->middleware(['auth']);
+
+Route::controller(BitacoraHologramasController::class)->middleware(['auth'])->group(function () {
+    Route::get('/bitacoraHologramasEnvasador', 'UserManagement')->name('bitacora-hologramas-envasador');
+    Route::get('/bitacora_hologramas_envasador', 'PDFBitacoraHologramas');
+    Route::get('bitacora_hologramas_envasador/{id_bitacora}/edit', 'edit');
+    Route::get('bitacoraHologramasEnvasador-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::post('/bitacoraHologramasEnvasadorStore', 'store')->name('bitacora.store');
+    Route::post('/bitacorasHologramasEnvasadorUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaBitacoraHologramasEnvasador/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+});
+Route::resource('/bitacoraHologramasEnvasador-list', BitacoraHologramasController::class)->middleware(['auth']);
+
+Route::controller(BitacoraHologramasComercializadorController::class)->middleware(['auth'])->group(function () {
+    Route::get('/bitacoraHologramasCom', 'UserManagement')->name('bitacora-hologramas-com');
+    Route::get('/bitacora_hologramas_com', 'PDFBitacoraHologramas');
+    Route::get('bitacora_hologramas_com/{id_bitacora}/edit', 'edit');
+    Route::get('bitacoraHologramasCom-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::post('/bitacoraHologramasComStore', 'store')->name('bitacora.store');
+    Route::post('/bitacorasHologramasComUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaBitacoraHologramasCom/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+});
+Route::resource('/bitacoraHologramasCom-list', BitacoraHologramasComercializadorController::class)->middleware(['auth']);
 
 
 Route::middleware(['auth'])->group(function () {
@@ -1056,6 +1093,21 @@ Route::middleware(['auth'])->controller(DictamenExportacionController::class)->g
     Route::get('/dictamen_exportacion/{id_dictamen}', 'MostrarDictamenExportacion')->name('PDF-dictamen-exportacion');
     //Reexpedir
     Route::post('/registrar/reexpedir', 'reexpedir')->name('dic-expor.reex');
+});
+
+//-------------------DICTAMEN NO CUMPLIMIENTO-------------------
+Route::middleware(['auth'])->controller(DictamenNoCumplimientoController::class)->group(function () {
+    Route::get('/dictamenes/no_cumplimiento', 'UserManagement')->name('dictamenes-no-cumplimiento');
+    Route::resource('no_cumplimiento-list', DictamenNoCumplimientoController::class);
+    Route::post('registrar/no_cumplimiento', 'store')->name('registrar');
+
+    Route::get('/dictamen_no_cumplimiento/{id}', 'DictamenNoCumplimiento')->name('PDF-dictamen-no-cumplimiento');
+
+    /*Route::delete('dictamen/envasado/{id_dictamen}', [DictamenEnvasadoController::class, 'destroy'])->name('dictamen.delete');
+    route::get('/dictamenes/envasado/{id_dictamen}/edit', [DictamenEnvasadoController::class, 'edit'])->name('dictamenes.edit');
+    Route::post('/dictamenes/envasado/{id_dictamen}/update', [DictamenEnvasadoController::class, 'update'])->name('dictamen.update');
+    Route::post('/registrar/reexpedir-envasado', [DictamenEnvasadoController::class, 'reexpedir'])->name('dic-envasado.reex');
+    Route::get('/getDatosLotesEnv/{id_inspeccion}', [DictamenEnvasadoController::class, 'getDatosLotesEnv'])->name('getDatosLotesEnv');*/
 });
 
 //-------------------CERTIFICADO INSTALACIONES-------------------

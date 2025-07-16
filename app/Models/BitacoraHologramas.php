@@ -9,9 +9,46 @@ class BitacoraHologramas extends Model
 {
     use HasFactory;
     protected $table = 'bitacora_hologramas';
-    protected $primaryKey = 'id_bitacora_hologramas';
-    protected $fillable = [
-     'fecha',
-    'lote_a_granel'
-   ];
+    protected $primaryKey = 'id';
+       protected $fillable = [
+        'fecha',
+        'id_empresa',
+        'id_lote_envasado',
+        'tipo_operacion',
+        'tipo',
+        //INVENTARIO INICIAL
+        'serie_inicial',
+        'num_sellos_inicial',
+
+        //ENTRADA
+        'serie_entrada',
+        'num_sellos_entrada',
+
+        //SALIDAS
+        'serie_salidas',
+        'num_sellos_salidas',
+
+        //INVENTARIO FINAL
+        'serie_final',
+        'num_sellos_final',
+        'serie_mermas',
+        'num_sellos_mermas',
+        'id_firmante',
+        'observaciones',
+    ];
+       public $timestamps = false;
+    public function loteBitacora()
+    {
+        return $this->belongsTo(lotes_envasado::class, 'id_lote_envasado', 'id_lote_envasado');
+    }
+    public function empresaBitacora()
+    {
+        return $this->belongsTo(empresa::class, 'id_empresa');
+    }
+    // BitacoraMezcal.php
+    public function firmante()
+    {
+        return $this->belongsTo(User::class, 'id_firmante');
+    }
+
 }

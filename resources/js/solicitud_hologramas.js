@@ -169,7 +169,7 @@ $(function () {
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $id = full['id_solicitud'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_solicitud']}" data-registro="${full['razon_social_pdf']} "></i>`;
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdfSolicitudHolograma cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_solicitud']}" data-registro="${full['razon_social_pdf']} "></i>`;
           }
         },
         {
@@ -697,23 +697,31 @@ $('#addHologramas').on('hidden.bs.modal', function () {
     });
   });
 
-  // Registrar Respuesta y mostrar PDF correspondiente
-  $(document).on('click', '.pdf', function () {
+
+
+///FORMATO PDF SOLICITUD HOLOGRAMAS
+$(document).on('click', '.pdfSolicitudHolograma', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
     var iframe = $('#pdfViewer');
-    $('#cargando').show(); //se el agrega esto
-    iframe.hide(); //se el agrega esto
-    iframe.attr('src', '../solicitud_de_holograma/' + id);
-    $('#titulo_modal').text('Solicitud de entrega de hologramas');
-    $('#subtitulo_modal').text(registro);
-    $('#mostrarPdf').modal('show');
-  });
-  // Ocultar el spinner cuando el PDF esté completamente cargado
-  $('#pdfViewer').on('load', function () {
-    $('#cargando').hide();
-    $(this).show();
-  });
+    var spinner = $('#cargando');
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    //Cargar el PDF con el ID
+    iframe.attr('src', '/solicitud_de_holograma/' + id);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', '/solicitud_de_holograma/' + id).show();
+    $("#titulo_modal").text("Solicitud de entrega de hologramas");
+    $("#subtitulo_modal").text(registro);
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
+
+
 
   // Editar Registro
   $(document).on('click', '.edit-record', function () {

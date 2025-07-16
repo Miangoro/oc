@@ -165,7 +165,7 @@ $(function () {
               '</span><br><span class="fw-bold text-dark small">Certificado:</span><span class="small"> ' +
               // Verifica si hay URL del certificado
               (row.url_certificado
-                ? `<a class="text-decoration-underline waves-effect text-primary pdf3" data-bs-target="#mostrarPdfDictamen1"
+                ? `<a class="text-decoration-underline waves-effect text-primary pdfCerGranel" data-bs-target="#mostrarPdf"
                   data-bs-toggle="modal" data-bs-dismiss="modal"
                   data-id="${row.id_lote_granel}" data-registro="${row.id_empresa}"
                   data-url="${row.url_certificado}">${row.folio_certificado}</a>`
@@ -322,30 +322,31 @@ $(function () {
 
   initializeSelect2(select2Elements);
 
-  // Reciben los datos del PDF
-  $(document).on('click', '.pdf3', function () {
+
+  ///FORMATO PDF DICTAMEN
+  $(document).on('click', '.pdfCerGranel', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
     var url = $(this).data('url'); // Aquí obtenemos la URL del certificado
-    var iframe = $('#pdfViewerDictamen1');
-    var openPdfBtn = $('#openPdfBtnDictamen1');
-    // Mostrar el spinner y ocultar el iframe
-    $('#loading-spinner1').show();
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
     iframe.hide();
-    // Cargar el PDF en el iframe usando la URL
+    //Cargar el PDF con el ID
     iframe.attr('src', url);
-    openPdfBtn.attr('href', url);
-    openPdfBtn.show();
-    $('#titulo_modal_Dictamen1').text('Certificado de lote a granel');
-    $('#subtitulo_modal_Dictamen1').html(registro);
-    $('#mostrarPdfDictamen1').modal('show');
-  });
-  // Ocultar el spinner cuando el PDF esté completamente cargado
-  $('#pdfViewerDictamen1').on('load', function () {
-    $('#loading-spinner1').hide(); // Ocultar el spinner
-    $(this).show(); // Mostrar el iframe con el PDF
-  });
 
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', url).show();
+    $("#titulo_modal").text("Certificado de lote a granel");
+    $("#subtitulo_modal").html(registro);
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+  });
+  
   // Reciben los datos del PDF
   $(document).on('click', '.pdf', function () {
     var id = $(this).data('id'); //Obtén el ID desde el atributo "data-id" en PDF
@@ -368,6 +369,8 @@ $(function () {
     });
   });
 
+
+  
   // Delete Record
   $(document).on('click', '.delete-record', function () {
     var id_lote = $(this).data('id'); // Obtener el ID de la clase

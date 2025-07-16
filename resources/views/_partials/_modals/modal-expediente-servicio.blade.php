@@ -24,7 +24,7 @@
                 </tr>
               </thead>
               <tbody class="table-border-bottom-0">
-                <p class="id_soli"></p>
+{{--                 <p class="id_soli"></p> --}}
 {{--
                 <p class="numero_tipo"></p>
                 <p class="id_deinspeccion"></p> --}}

@@ -11,6 +11,8 @@ class solicitudes_eliminadas extends Model
     protected $fillable = [
         'id_solicitud',
         'motivo',
+        'responsable',
+        'fecha_eliminacion',
     ];
 
     public $timestamps = false;
@@ -18,4 +20,9 @@ class solicitudes_eliminadas extends Model
     public function motivo(){
       return $this->belongsTo(solicitudesModel::class, 'id_solicitud', 'id_solicitud');
     }
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'responsable', 'id');
+    }
+
 }

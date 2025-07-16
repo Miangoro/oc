@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
-                <h5 class="modal-title text-white" id="editBitacora">Editar Bitácora de mezcal a granel</h5>
+                <h5 class="modal-title text-white" id="editBitacora">Editar Bitácora de hologramas (Envasador)</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -36,7 +36,7 @@
                                     <div class="col-md-5 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="date" class="form-control datepicker" id="edit_fecha"
-                                                name="fecha" aria-label="Fecha" >
+                                                name="fecha" aria-label="Fecha">
                                             <label for="fecha">Fecha</label>
                                         </div>
                                     </div>
@@ -54,53 +54,39 @@
                                             </select>
                                             <label for="tipo_op">Tipo de operación</label>
                                         </div>
+
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="edit_operacion_adicional"
-                                                name="operacion_adicional" placeholder="Operación adicional"
-                                                aria-label="Operación adicional">
-                                            <label for="operacion_adicional">Operación adicional</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select id="edit_id_lote_granel" name="id_lote_granel"
+                                            <select id="edit_id_lote_envasado" name="id_lote_envasado"
                                                 class="select2 form-select">
-                                                <option value="">Selecciona un lote</option>
+                                                <option value="">Selecciona un lote envasado</option>
                                             </select>
-                                            <label for="id_lote_granel">Lote a granel</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="form-floating form-floating-outline mb-6">
-                                            <select class=" form-select select2" id="edit_id_instalacion"
-                                                name="id_instalacion" aria-label="id_instalacion">
-                                                <option value="" disabled selected>Lista de instalaciones</option>
-                                                <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
-                                            </select>
+                                            <label for="id_lote_envasado">Lote envasado</label>
                                         </div>
                                     </div>
                                 </div>
+                                {{--                                 <div class="row">
+
+
+                                </div> --}}
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="number" class="form-control" id="edit_volumen_inicial"
-                                                name="volumen_inicial" placeholder="Volumen inicial"
-                                                aria-label="Volumen inicial">
-                                            <label for="volumen_inicial">Volumen inicial</label>
+                                            <input type="text" class="form-control" id="edit_serie_inicial"
+                                                name="serie_inicial" placeholder="Serie inicial"
+                                                aria-label="serie inicial">
+                                            <label for="serie_inicial">Serie inicial</label>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="number" step="0.01" class="form-control"
-                                                id="edit_alcohol_inicial" name="alcohol_inicial"
-                                                placeholder="% Alc. inicial" aria-label="% Alc. inicial">
-                                            <label for="alcohol_inicial">% Alc. inicial</label>
+                                            <input type="text" class="form-control" id="edit_num_sellos_inicial"
+                                                name="num_sellos_inicial" placeholder="Número de sellos inicial"
+                                                aria-label="N° de sellos inicial">
+                                            <label for="num_sellos_inicial">N° de sellos inicial</label>
                                         </div>
                                     </div>
                                 </div>
@@ -109,7 +95,7 @@
                     </div>
 
 
-                    {{-- Entradas --}}
+                    <!-- Entradas / Operaciones Adicionales -->
                     <div id="editDisplayEntradas">
                         <div class="card mt-4 mb-4 border rounded">
                             <div class="badge rounded-2 bg-label-primary fw-bold fs-6 px-4 py-4 mb-5">
@@ -118,46 +104,27 @@
                             {{-- <h6></h6> --}}
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-12 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="edit_procedencia_entrada"
-                                                name="procedencia_entrada" placeholder="Procedencia entrada"
-                                                aria-label="Procedencia entrada">
-                                            <label for="procedencia_entrada">Procedencia de la entrada</label>
+                                            <input type="text" class="form-control" id="edit_serie_entrada"
+                                                name="serie_entrada" placeholder="Serie entrada"
+                                                aria-label="Serie entrada">
+                                            <label for="serie_entrada">Serie entrada</label>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 mb-3">
-                                        <div class="form-floating form-floating-outline">
-                                            <input type="number" class="form-control" id="edit_volumen_entrada"
-                                                name="volumen_entrada" placeholder="Volumen entrada"
-                                                aria-label="Volumen entrada">
-                                            <label for="volumen_entrada">Volumen entrada</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="number" step="0.01" class="form-control"
-                                                id="edit_alcohol_entrada" name="alcohol_entrada"
-                                                placeholder="% Alc. entrada" aria-label="% Alc. entrada">
-                                            <label for="alcohol_entrada">% Alc. Vol. entrada</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4 mb-3">
-                                        <div class="form-floating form-floating-outline">
-                                            <input type="number" step="0.01" class="form-control"
-                                                id="edit_agua_entrada" name="agua_entrada"
-                                                placeholder="Agua agregada (L)" aria-label="Agua entrada">
-                                            <label for="agua_entrada">Agua agregada (L)</label>
+                                                id="edit_num_sellos_entrada" name="num_sellos_entrada"
+                                                placeholder="% Alc. entrada" aria-label="N° DE SELLOS entrada">
+                                            <label for="num_sellos_entrada">N° de sellos entrada</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- Salidas -->
                     <div id="editDisplaySalidas">
                         <div class="card mt-4 mb-4 border rounded">
@@ -168,32 +135,24 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="number" class="form-control" id="edit_volumen_salida"
-                                                name="volumen_salida" placeholder="Volumen" aria-label="Volumen"
-                                                required>
-                                            <label for="volumen_salida">Volumen</label>
+                                            <input type="text" class="form-control" id="edit_serie_salida"
+                                                name="serie_salida" placeholder="Serie salida"
+                                                aria-label="Serie salida" required>
+                                            <label for="serie_salida">Serie salidas</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="number" step="0.01" class="form-control"
-                                                id="edit_alc_vol_salida" name="alc_vol_salida"
-                                                placeholder="% Alc. Vol." aria-label="% Alc. Vol." required>
-                                            <label for="alc_vol_salida">% Alc. Vol.</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="edit_destino"
-                                                name="destino" placeholder="Destino" aria-label="Destino" required>
-                                            <label for="destino">Destino</label>
+                                            <input type="text" class="form-control" id="edit_num_sellos_salida"
+                                                name="num_sellos_salida" placeholder="N° de sellos  Salida"
+                                                aria-label="N° de sellos  Salida" required>
+                                            <label for="num_sellos_salida">N° de sellos salidas</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- Inventario Final -->
                     <div>
                         <div class="card mt-4 mb-4 border rounded">
@@ -201,33 +160,63 @@
                                 INVENTARIO FINAL
                             </div>
                             <div class="card-body">
-
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="number" class="form-control" id="edit_volumen_final"
-                                                name="volumen_final" placeholder="Volumen" aria-label="Volumen"
+                                            <input type="text" class="form-control" id="edit_serie_final"
+                                                name="serie_final" placeholder="Serie final" aria-label="Serie final"
                                                 required>
-                                            <label for="volumen_final">Volumen</label>
+                                            <label for="serie_final">Serie final</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="number" step="0.01" class="form-control"
-                                                id="edit_alc_vol_final" name="alc_vol_final"
-                                                placeholder="% Alc. Vol." aria-label="% Alc. Vol." required>
-                                            <label for="alc_vol_final">% Alc. Vol.</label>
+                                            <input type="number" step="1" class="form-control"
+                                                id="edit_num_sellos_final" name="num_sellos_final"
+                                                placeholder="N° de sellos final" aria-label="N° de sellos final"
+                                                required>
+                                            <label for="num_sellos_final">N° de sellos final</label>
                                         </div>
                                     </div>
-                                    <!-- Observaciones -->
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card mt-4 mb-4 border rounded">
+                            <div class="badge rounded-2 bg-label-warning fw-bold fs-6 px-4 py-4 mb-5">
+                                MERMAS
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control" id="edit_serie_merma"
+                                                name="serie_merma" placeholder="Serie merma"
+                                                aria-label="Serie merma">
+                                            <label for="serie_merma">Serie merma</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" step="1" class="form-control"
+                                                id="edit_num_sellos_merma" name="num_sellos_merma"
+                                                placeholder="N° de sellos merma" aria-label="N° de sellos merma">
+                                            <label for="num_sellos_merma">N° de sellos merma</label>
+                                        </div>
+                                    </div>
                                     <div class="mb-3">
                                         <textarea class="form-control" id="edit_observaciones" name="observaciones" rows="3"
                                             placeholder="Escribe observaciones"></textarea>
                                     </div>
                                 </div>
                             </div>
+
+
                         </div>
+
+
                     </div>
+
 
                     <!-- Botones -->
                     <div class="d-flex justify-content-center">
@@ -254,41 +243,24 @@
                 url: '/getDatos/' + empresa,
                 method: 'GET',
                 success: function(response) {
-                    var contenido = "";
-                    for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                            response
-                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
-                    }
-                    if (response.lotes_granel.length == 0) {
-                        contenido = '<option value="">Sin lotes registrados</option>';
-                    } else {
+                var contenido = "";
+                for (let index = 0; index < response.lotes_envasado.length; index++) {
+                    const lote = response.lotes_envasado[index];
+                    const nombre = lote.nombre ?? 'Sin nombre';
+                    const botellas = lote.cant_botellas ?? 0;
+                    contenido += `<option value="${lote.id_lote_envasado}">${nombre} | Botellas: ${botellas}</option>`;
+                }
 
-                    }
+                if (response.lotes_envasado.length === 0) {
+                    contenido = '<option value="">Sin lotes registrados</option>';
+                }
 
-                    $('#edit_id_lote_granel').html(contenido);
-                    const idlote = $('#edit_id_lote_granel').data('selected');
+                    $('#edit_id_lote_envasado').html(contenido);
+
+                    $('#edit_id_lote_envasado').html(contenido);
+                    const idlote = $('#edit_id_lote_envasado').data('selected');
                     if (idlote) {
-                        $('#edit_id_lote_granel').val(idlote).trigger('change');
-                    }
-
-                    var contenidoI = "";
-                    for (let index = 0; index < response.instalaciones.length; index++) {
-                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-
-                        contenidoI = '<option value="' + response.instalaciones[index].id_instalacion +
-                            '">' +
-                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                            '</option>' +
-                            contenidoI;
-                    }
-                    if (response.instalaciones.length == 0) {
-                        contenidoI = '<option value="">Sin instalaciones registradas</option>';
-                    }
-                    $('#edit_id_instalacion').html(contenidoI);
-                    const idInst = $('#edit_id_instalacion').data('selected');
-                    if (idInst) {
-                        $('#edit_id_instalacion').val(idInst).trigger('change');
+                        $('#edit_id_lote_envasado').val(idlote).trigger('change');
                     }
 
                 },

@@ -34,7 +34,7 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'bitacoraHologramasEnvasador-list',
+        url: baseUrl + 'bitacoraMezcalEnvasador-list',
         data: function (d) {
           d.empresa = $('#filtroEmpresa').val();
           d.instalacion = $('#filtroInstalacion').val();
@@ -83,7 +83,7 @@ $(function () {
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $fecha = full['fecha'] ?? 'N/A';
-            var $id_lote_envasado = full['nombre_lote'] ?? 'N/A';
+            var $id_lote_granel = full['nombre_lote'] ?? 'N/A';
             var $folio_fq = full['folio_fq'] ?? 'N/A';
             var $certificado = full['folio_certificado'] ?? 'N/A';
             return (
@@ -91,10 +91,10 @@ $(function () {
               '<span class="small">' +
               $fecha +
               '</span>' +
-              '<br><span class="fw-bold small">Lote envasado: </span>' +
+              '<br><span class="fw-bold small">Lote a Granel: </span>' +
               '<span class="small">' +
-              $id_lote_envasado +
-              '</span>' /* +
+              $id_lote_granel +
+              '</span>' +
               '<br><span class="fw-bold small">Folio FQ: </span>' +
               '<span class="small">' +
               $folio_fq +
@@ -102,7 +102,7 @@ $(function () {
               '<br><span class="fw-bold small">Certificado: </span>' +
               '<span class="small">' +
               $certificado +
-              '</span>' */
+              '</span>'
             );
           }
         },
@@ -110,16 +110,27 @@ $(function () {
           targets: 4,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
-            var $serie_entrada = full['serie_entrada'] ?? 'N/A';
-            var $num_sellos_entrada = full['num_sellos_entrada'] ?? 'N/A';
+            var $procedencia_entrada = full['procedencia_entrada'] ?? 'N/A';
+            var $volumen_entrada = full['volumen_entrada'] ?? 'N/A';
+            var $alcohol_entrada = full['alcohol_entrada'] ?? 'N/A';
+            var $agua_entrada = full['agua_entrada'] ?? 'N/A';
+
             return (
-              '<span class="fw-bold small">Serie: </span>' +
+              '<span class="fw-bold small">Procedencia: </span>' +
               '<span class="small">' +
-              $serie_entrada +
+              $procedencia_entrada +
               '</span>' +
-              '<br><span class="fw-bold small">N° de sellos: </span>' +
+              '<br><span class="fw-bold small">Volumen: </span>' +
               '<span class="small">' +
-              $num_sellos_entrada +
+              $volumen_entrada +
+              '</span>' +
+              '<br><span class="fw-bold small">%Alc. Vol.: </span>' +
+              '<span class="small">' +
+              $alcohol_entrada +
+              '</span>' +
+              '<br><span class="fw-bold small">Agua Agregada: </span>' +
+              '<span class="small">' +
+              $agua_entrada +
               '</span>'
             );
           }
@@ -129,16 +140,22 @@ $(function () {
           targets: 5,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
-            var $serie_salidas = full['serie_salidas'] ?? 'N/A';
-            var $num_sellos_salidas = full['num_sellos_salidas'] ?? 'N/A';
+            var $volumen_salidas = full['volumen_salidas'] ?? 'N/A';
+            var $alcohol_salidas = full['alcohol_salidas'] ?? 'N/A';
+            var $destino_salidas = full['destino_salidas'] ?? 'N/A';
+
             return (
-              '<span class="fw-bold small">Serie de Salidas: </span>' +
+              '<span class="fw-bold small">Volumen de Salidas: </span>' +
               '<span class="small">' +
-              $serie_salidas +
+              $volumen_salidas +
               '</span>' +
-              '<br><span class="fw-bold small">N° de sellos de Salidas: </span>' +
+              '<br><span class="fw-bold small">%Alc. Vol. de Salidas: </span>' +
               '<span class="small">' +
-              $num_sellos_salidas +
+              $alcohol_salidas +
+              '</span>' +
+              '<br><span class="fw-bold small">Destino de Salidas: </span>' +
+              '<span class="small">' +
+              $destino_salidas +
               '</span>'
             );
           }
@@ -147,17 +164,17 @@ $(function () {
           targets: 6,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
-            var $serie_final = full['serie_final'] ?? 'N/A';
-            var $num_sellos_final = full['num_sellos_final'] ?? 'N/A';
+            var $volumen_final = full['volumen_final'] ?? 'N/A';
+            var $alcohol_final = full['alcohol_final'] ?? 'N/A';
 
             return (
-              '<span class="fw-bold small">Serie Final: </span>' +
+              '<span class="fw-bold small">Volumen Final: </span>' +
               '<span class="small">' +
-              $serie_final +
+              $volumen_final +
               '</span>' +
-              '<br><span class="fw-bold small">N° de sellos Final: </span>' +
+              '<br><span class="fw-bold small">%Alc. Vol. Final: </span>' +
               '<span class="small">' +
-              $num_sellos_final +
+              $alcohol_final +
               '</span>'
             );
           }
@@ -236,7 +253,6 @@ $(function () {
         search: '',
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
-        emptyTable: 'No hay datos disponibles en la tabla',
         paginate: {
           sFirst: 'Primero',
           sLast: 'Último',
@@ -266,6 +282,19 @@ $(function () {
               </select>
             `);
 
+            $(node).find('select').select2();
+          }
+        },
+        {
+          className: 'dt-custom-select p-0 me-2 btn-outline-dark form-select-sm',
+          text: '',
+          init: function (api, node) {
+            $(node).removeClass('btn btn-secondary');
+            $(node).html(`
+              <select id="filtroInstalacion" class="form-select select2" style="min-width: 280px;">
+                <option value="">-- Todas las Instalaciones --</option>
+              </select>
+            `);
             $(node).find('select').select2();
           }
         },
@@ -351,9 +380,52 @@ $(function () {
     $('#filtroEmpresa').next('.select2-container').find('.select2-selection__rendered').attr('title', selectedText);
   });
 
+  $('#filtroEmpresa, #filtroInstalacion').on('change', function () {
+    $('.datatables-users').DataTable().ajax.reload();
+  });
+
+  $(document).ready(function () {
+    function cargarInstalaciones() {
+      let empresaId = $('#filtroEmpresa').val();
+
+      if (empresaId) {
+        $.ajax({
+          url: '/getDatos/' + empresaId,
+          method: 'GET',
+          success: function (response) {
+            let opciones = '<option value="">-- Todas las Instalaciones --</option>';
+
+            if (response.instalaciones.length > 0) {
+              response.instalaciones.forEach(function (inst) {
+                let tipoLimpio = limpiarTipo(inst.tipo);
+                opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
+              });
+            } else {
+              opciones += '<option value="">Sin instalaciones registradas</option>';
+            }
+
+            $('#filtroInstalacion').html(opciones).trigger('change');
+          },
+          error: function () {
+            $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+          }
+        });
+      } else {
+        $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
+      }
+    }
+
+    // Ejecutar al cargar la página
+    cargarInstalaciones();
+
+    // Ejecutar cuando cambie el select
+    $('#filtroEmpresa').on('change', cargarInstalaciones);
+  });
+
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   $(document).on('click', '#verBitacoraBtn', function () {
     const empresaId = $('#filtroEmpresa').val();
+    const instalacionId = $('#filtroInstalacion').val();
 
     if (!empresaId) {
       Swal.fire({
@@ -368,8 +440,10 @@ $(function () {
       return;
     }
 
-    let urlPDF = `/bitacora_hologramas_envasador?empresa=${empresaId}`;
-
+    let urlPDF = `/bitacora_mezcal_envasador?empresa=${empresaId}`;
+    if (instalacionId) {
+      urlPDF += `&instalacion=${instalacionId}`;
+    }
     urlPDF += `&t=${new Date().getTime()}`;
 
     $('#cargando').show();
@@ -386,8 +460,8 @@ $(function () {
         const blobUrl = URL.createObjectURL(data);
         $('#pdfViewer').attr('src', blobUrl);
         $('#NewPestana').attr('href', blobUrl);
-        $('#titulo_modal').text('Bitácora de control de hologramas de envasador');
-        /* $('#subtitulo_modal').text('Versión Filtrada'); */
+        $('#titulo_modal').text('Bitácora Mezcal a Granel Envasador');
+       /*  $('#subtitulo_modal').text('Versión Filtrada'); */
         $('#mostrarPdf').modal('show');
 
         $('#pdfViewer').on('load', function () {
@@ -442,7 +516,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}bitacoraHologramasEnvasador-list/${id_bitacora}`,
+          url: `${baseUrl}bitacoraMezcalEnvasador-list/${id_bitacora}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -518,24 +592,31 @@ $(function () {
             }
           }
         },
-        id_lote_envasado: {
+        id_lote_granel: {
           validators: {
             notEmpty: {
               message: 'Por favor seleccione el lote'
             }
           }
         },
-        serie_final: {
+        id_instalacion: {
           validators: {
             notEmpty: {
-              message: 'Por favor ingrese la serie final'
+              message: 'Por favor seleccione la instalación'
             }
           }
         },
-        num_sellos_final: {
+        volumen_final: {
           validators: {
             notEmpty: {
-              message: 'Por favor ingresa el N° de sellos final'
+              message: 'Por favor ingrese el volumen final'
+            }
+          }
+        },
+        alc_vol_final: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el contenido alcohólico final'
             }
           }
         }
@@ -556,7 +637,7 @@ $(function () {
       var formData = $(form).serialize();
 
       $.ajax({
-        url: '/bitacoraHologramasEnvasadorStore',
+        url: '/bitacoraMezcalEnvasadorStore',
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -567,7 +648,7 @@ $(function () {
           $('#registroInventarioForm')[0].reset();
           $('#registroInventarioForm select').val(null).trigger('change');
           $('#id_instalacion').empty().trigger('change');
-          $('#id_lote_envasado').empty().trigger('change');
+          $('#id_lote_granel').empty().trigger('change');
           $('.datatables-users').DataTable().ajax.reload();
           // Mostrar alerta de éxito
           Swal.fire({
@@ -596,7 +677,7 @@ $(function () {
     });
 
     // Inicializar select2 y revalidar el campo cuando cambie
-    $('#id_empresa, #id_lote_envasado, #fecha').on('change', function () {
+    $('#id_empresa, #id_lote_granel, #fecha').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
   });
@@ -605,7 +686,7 @@ $(function () {
     var bitacoraID = $(this).data('id');
     $('#edit_bitacora_id').val(bitacoraID);
     $.ajax({
-      url: '/bitacora_hologramas_envasador/' + bitacoraID + '/edit',
+      url: '/bitacora_mezcal_envasador/' + bitacoraID + '/edit',
       method: 'GET',
       success: function (data) {
         if (data.success) {
@@ -614,20 +695,23 @@ $(function () {
           $('#edit_bitacora_id').val(bitacora.id);
           $('#edit_id_empresa').val(bitacora.id_empresa).trigger('change');
           $('#edit_fecha').val(bitacora.fecha);
-          $('#edit_id_lote_envasado').data('selected', bitacora.id_lote_envasado).trigger('change');
-          $('#edit_serie_inicial').val(bitacora.serie_inicial);
-          $('#edit_num_sellos_inicial').val(bitacora.num_sellos_inicial);
+          $('#edit_id_lote_granel').data('selected', bitacora.id_lote_granel).trigger('change');
+          $('#edit_id_instalacion').data('selected', bitacora.id_instalacion).trigger('change');
+          $('#edit_operacion_adicional').val(bitacora.operacion_adicional);
+          $('#edit_volumen_inicial').val(bitacora.volumen_inicial);
+          $('#edit_alcohol_inicial').val(bitacora.alcohol_inicial);
           /*  */
           $('#edit_tipo_op').val(bitacora.tipo_operacion).trigger('change');
 
-          $('#edit_serie_entrada').val(bitacora.serie_entrada);
-          $('#edit_num_sellos_entrada').val(bitacora.num_sellos_entrada);
-          $('#edit_serie_salida').val(bitacora.serie_salida);
-          $('#edit_num_sellos_salida').val(bitacora.num_sellos_salida);
-          $('#edit_serie_final').val(bitacora.serie_final);
-          $('#edit_num_sellos_final').val(bitacora.num_sellos_final);
-          $('#edit_serie_merma').val(bitacora.serie_merma);
-          $('#edit_num_sellos_merma').val(bitacora.num_sellos_merma);
+          $('#edit_procedencia_entrada').val(bitacora.procedencia_entrada);
+          $('#edit_volumen_entrada').val(bitacora.volumen_entrada);
+          $('#edit_alcohol_entrada').val(bitacora.alcohol_entrada);
+          $('#edit_agua_entrada').val(bitacora.agua_entrada);
+          $('#edit_volumen_salida').val(bitacora.volumen_salida);
+          $('#edit_alc_vol_salida').val(bitacora.alc_vol_salida);
+          $('#edit_destino').val(bitacora.destino);
+          $('#edit_volumen_final').val(bitacora.volumen_final);
+          $('#edit_alc_vol_final').val(bitacora.alc_vol_final);
           $('#edit_observaciones').val(bitacora.observaciones);
           $('#editarBitacoraMezcal').modal('show');
         } else {
@@ -674,10 +758,10 @@ $(function () {
             }
           }
         },
-        id_lote_envasado: {
+        id_lote_granel: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote envasado.'
+              message: 'Selecciona un lote a granel.'
             }
           }
         },
@@ -695,17 +779,23 @@ $(function () {
             }
           }
         },
-        serie_final: {
+        volumen_final: {
           validators: {
             notEmpty: {
-              message: 'Ingresa la serie final.'
+              message: 'Ingresa el volumen final.'
             },
+            numeric: {
+              message: 'Debe ser un número.'
+            }
           }
         },
-        num_sellos_final: {
+        alc_vol_final: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el N° de sellos final.'
+              message: 'Ingresa el % Alc. Vol. final.'
+            },
+            numeric: {
+              message: 'Debe ser un número decimal.'
             }
           }
         }
@@ -727,7 +817,7 @@ $(function () {
       const id = $('#edit_bitacora_id').val();
 
       $.ajax({
-        url: '/bitacorasHologramasEnvasadorUpdate/' + id,
+        url: '/bitacorasEnvasadorUpdate/' + id,
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -759,7 +849,7 @@ $(function () {
     });
   });
 
-/*   $(document).ready(function () {
+  $(document).ready(function () {
     function calcular() {
       let volumenInicial = parseFloat($('#volumen_inicial').val()) || 0;
       let alcoholInicial = parseFloat($('#alcohol_inicial').val()) || 0;
@@ -777,19 +867,19 @@ $(function () {
 
       if (volumenFinal > 0) {
         let alcoholTotal =
-          volumenInicial * alcoholInicial + serieEntrada * alcoholEntrada - serieSalida * alcoholSalida;
+          volumenInicial * alcoholInicial + volumenEntrada * alcoholEntrada - volumenSalida * alcoholSalida;
 
-        alcoholFinal = alcoholTotal / serieFinal;
+        alcoholFinal = alcoholTotal / volumenFinal;
       }
 
-      $('#serie_final').val(serieFinal.toFixed(2));
+      $('#volumen_final').val(volumenFinal.toFixed(2));
       $('#alc_vol_final').val(alcoholFinal.toFixed(2));
     }
 
     $(
-      '#serie_inicial, #alcohol_inicial, #serie_entrada, #alcohol_entrada, #agua_entrada, #serie_salida, #alc_vol_salida'
+      '#volumen_inicial, #alcohol_inicial, #volumen_entrada, #alcohol_entrada, #agua_entrada, #volumen_salida, #alc_vol_salida'
     ).on('input', calcular);
-  }); */
+  });
 
   $(document).ready(function () {
     $('#tipo_op').on('change', function () {
@@ -947,7 +1037,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'POST',
-          url: `/FirmaBitacoraHologramasEnvasador/${id_bitacora_firma}`,
+          url: `/FirmaBitacoraMezcalEnvasador/${id_bitacora_firma}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -1009,7 +1099,7 @@ $(document).ready(function () {
     if (empresaSeleccionada) {
       obtenerGraneles(empresaSeleccionada);
     } else {
-      /* obtenerDatosGraneles(); */
+      obtenerDatosGraneles();
     }
   });
 

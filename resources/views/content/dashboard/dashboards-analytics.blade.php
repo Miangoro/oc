@@ -33,72 +33,72 @@
     <div class="row g-6">
         <!-- Gamification Card -->
         <!-- <div class="col-md-12 col-xxl-8">
-                        <div class="card">
-                          <div class="d-flex align-items-end row">
-                            <div class="col-md-6 order-2 order-md-1">
-                              <div class="card-body">
-                                <h4 class="card-title mb-4">Bienvenid@ <span class="fw-bold">
-                    @if (Auth::check())
+                            <div class="card">
+                              <div class="d-flex align-items-end row">
+                                <div class="col-md-6 order-2 order-md-1">
+                                  <div class="card-body">
+                                    <h4 class="card-title mb-4">Bienvenid@ <span class="fw-bold">
+                        @if (Auth::check())
     {{ Auth::user()->name }}
 @else
     John Doe
     @endif!
-                    </span> 🎉</h4>
-                                <p class="mb-0">Personal del organismo certificador cidam</p><br>
-                                <a href="javascript:;" class="btn btn-primary">Ver pendientes</a>
+                        </span> 🎉</h4>
+                                    <p class="mb-0">Personal del organismo certificador cidam</p><br>
+                                    <a href="javascript:;" class="btn btn-primary">Ver pendientes</a>
+                                  </div>
+                                </div>
+                                <div class="col-md-6 text-center text-md-end order-1 order-md-2">
+                                  <div class="card-body pb-0 px-0 pt-2">
+                                    <img src="{{ asset('assets/img/illustrations/illustration-john-' . $configData['style'] . '.png') }}" height="186" class="scaleX-n1-rtl" alt="View Profile" data-app-light-img="illustrations/illustration-john-light.png" data-app-dark-img="illustrations/illustration-john-dark.png">
+                                    <img  height="186" class="scaleX-n1-rtl" alt="View Profile" src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/1.png') }}" >
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                            <div class="col-md-6 text-center text-md-end order-1 order-md-2">
-                              <div class="card-body pb-0 px-0 pt-2">
-                                <img src="{{ asset('assets/img/illustrations/illustration-john-' . $configData['style'] . '.png') }}" height="186" class="scaleX-n1-rtl" alt="View Profile" data-app-light-img="illustrations/illustration-john-light.png" data-app-dark-img="illustrations/illustration-john-dark.png">
-                                <img  height="186" class="scaleX-n1-rtl" alt="View Profile" src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/1.png') }}" >
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>-->
+                          </div>-->
         <!--/ Gamification Card -->
 
         <!-- Statistics Total Order -->
         <!--  <div class="col-xxl-2 col-sm-6">
-                        <div class="card h-100">
-                          <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                              <div class="avatar">
-                                <div class="avatar-initial bg-label-primary rounded-3">
-                                  <i class="ri-shopping-cart-2-line ri-24px"></i>
+                            <div class="card h-100">
+                              <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                                  <div class="avatar">
+                                    <div class="avatar-initial bg-label-primary rounded-3">
+                                      <i class="ri-shopping-cart-2-line ri-24px"></i>
+                                    </div>
+                                  </div>
+                                  <div class="d-flex align-items-center">
+                                    <p class="mb-0 text-success me-1">+22%</p>
+                                    <i class="ri-arrow-up-s-line text-success"></i>
+                                  </div>
+                                </div>
+                                <div class="card-info mt-5">
+                                  <h5 class="mb-1">50</h5>
+                                  <p>Certificados de exportación</p>
+                                  <div class="badge bg-label-secondary rounded-pill">Último mes</div>
                                 </div>
                               </div>
-                              <div class="d-flex align-items-center">
-                                <p class="mb-0 text-success me-1">+22%</p>
-                                <i class="ri-arrow-up-s-line text-success"></i>
-                              </div>
                             </div>
-                            <div class="card-info mt-5">
-                              <h5 class="mb-1">50</h5>
-                              <p>Certificados de exportación</p>
-                              <div class="badge bg-label-secondary rounded-pill">Último mes</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>-->
+                          </div>-->
         <!--/ Statistics Total Order -->
 
         <!-- Sessions line chart -->
         <!--<div class="col-xxl-2 col-sm-6">
-                        <div class="card h-100">
-                          <div class="card-header pb-0">
-                            <div class="d-flex align-items-center mb-1 flex-wrap">
-                              <h5 class="mb-0 me-1">$38.5k</h5>
-                              <p class="mb-0 text-success">+62%</p>
+                            <div class="card h-100">
+                              <div class="card-header pb-0">
+                                <div class="d-flex align-items-center mb-1 flex-wrap">
+                                  <h5 class="mb-0 me-1">$38.5k</h5>
+                                  <p class="mb-0 text-success">+62%</p>
+                                </div>
+                                <span class="d-block card-subtitle">Sessions</span>
+                              </div>
+                              <div class="card-body">
+                                <div id="sessions"></div>
+                              </div>
                             </div>
-                            <span class="d-block card-subtitle">Sessions</span>
-                          </div>
-                          <div class="card-body">
-                            <div id="sessions"></div>
-                          </div>
-                        </div>
-                      </div>-->
+                          </div>-->
         <!--/ Sessions line chart -->
 
         <div class="row my-2">
@@ -159,7 +159,8 @@
                 <div class="col-sm-6 col-lg-3">
                     <div class="card card-border-shadow-primary h-100">
                         <div class="card-body">
-                            <div class="d-flex align-items-center mb-2" data-bs-toggle="modal" data-bs-target="#modalSolicitudesSinInspector">
+                            <div class="d-flex align-items-center mb-2" data-bs-toggle="modal"
+                                data-bs-target="#modalSolicitudesSinInspector">
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-primary"><i
                                             class="ri-group-fill ri-24px"></i></span>
@@ -292,7 +293,7 @@
                             <h6 class="mb-0 fw-normal">Certificados pendientes de subir escaneado</h6>
                             <p class="mb-0">
                                 <!--<span class="me-1 fw-medium">-2.5%</span>
-                                                    <small class="text-muted">than last week</small>-->
+                                                            <small class="text-muted">than last week</small>-->
                             </p>
                         </div>
                     </div>
@@ -305,13 +306,13 @@
                             <h5 class="card-title m-0 me-2">Inspecciones por inspector 2025</h5>
                             <div class="dropdown">
                                 <!-- <button class="btn text-body-secondary p-0" type="button" id="meetingSchedule" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="icon-base ri ri-more-2-line"></i>
-                              </button>
-                              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="meetingSchedule">
-                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
-                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
-                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
-                              </div>-->
+                                        <i class="icon-base ri ri-more-2-line"></i>
+                                      </button>
+                                      <div class="dropdown-menu dropdown-menu-end" aria-labelledby="meetingSchedule">
+                                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
+                                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
+                                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
+                                      </div>-->
                             </div>
                         </div>
                         <div class="card-body">
@@ -328,7 +329,7 @@
                                                 <h6 class="mb-0">{{ $inspector['nombre'] }}</h6>
                                                 <small class="d-flex align-items-center">
                                                     <!-- <i class="icon-base ri ri-calendar-line icon-16px"></i>
-                                      <span class="ms-2">21 Jul | 08:20-10:30</span>-->
+                                              <span class="ms-2">21 Jul | 08:20-10:30</span>-->
                                                 </small>
                                             </div>
                                             <div class="badge bg-label-primary rounded-pill">
@@ -388,57 +389,99 @@
                 </div>
             @endcan
 
-            @canany(['Estadísticas consejo', 'Estadísticas oc'])
-                @php
-                    $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
+@canany(['Estadísticas consejo', 'Estadísticas oc'])
+    @php
+        $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
+        $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
+    @endphp
 
-                    // Agrupar por user_id + rol
-                    $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
-                @endphp
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card mb-4">
+                <div class="card-header pb-2">
+                    <h5 class="mb-1">📊 Resumen de revisiones por revisor</h5>
+                    <small class="text-muted">Cantidad de revisiones realizadas por revisor y tipo de certificado.</small>
+                </div>
 
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">Resumen de revisiones por revisor y tipo de certificado</h5>
-                        <small class="text-muted">Muestra la cantidad de revisiones realizadas por cada persona según su
-                            rol.</small>
-                    </div>
-
-                    <div class="card-body pt-2">
-                        <div class="table-responsive text-nowrap border-top">
-                            <table class="table table-bordered table-hover">
-                                <thead class="table-light">
+                <div class="card-body pt-2">
+                    <div class="table-responsive border-top">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>👤 Revisor</th>
+                                    <th class="text-center">🏗️ Instalaciones</th>
+                                    <th class="text-center">🌾 Granel</th>
+                                    <th class="text-center">🚢 Exportación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($agrupado as $key => $grupo)
+                                    @php
+                                        $revisor = $usuarios[$grupo->first()->user_id] ?? null;
+                                        $rol = $grupo->first()->rol;
+                                        $inst = $grupo->firstWhere('tipo_certificado', 1)?->total ?? 0;
+                                        $gran = $grupo->firstWhere('tipo_certificado', 2)?->total ?? 0;
+                                        $expo = $grupo->firstWhere('tipo_certificado', 3)?->total ?? 0;
+                                    @endphp
                                     <tr>
-                                        <th>Revisor</th>
-                                        <th>Rol</th>
-                                        <th>Instalaciones</th>
-                                        <th>Granel</th>
-                                        <th>Exportación</th>
+                                        <td>
+                                            <li class="d-flex align-items-center mb-6">
+                                                <div class="avatar flex-shrink-0 me-4">
+                                                <img src="/storage/{{ $revisor?->profile_photo_path }}" alt="{{ $revisor?->name ?? '—' }}" class="rounded-3">
+                                                </div>
+                                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                                <div class="me-2">
+                                                    <h6 class="mb-0"> {{ $revisor?->name ?? '—' }}</h6>
+                                                   {{--  <small class="d-flex align-items-center">
+                                                     <i class="icon-base ri ri-calendar-line icon-16px"></i>
+                                                    <span class="ms-2">21 Jul | 08:20-10:30</span>
+                                                    </small>--}}
+                                                </div>
+                                                <div class="badge bg-label-primary rounded-pill">{{ $rol }}</div>
+                                                </div>
+                                            </li>
+                                           </td>
+                                        <td class="text-end">{{ number_format($inst) }}</td>
+                                        <td class="text-end">{{ number_format($gran) }}</td>
+                                        <td class="text-end">{{ number_format($expo) }}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($agrupado as $key => $grupo)
-                                        @php
-                                            $revisor = $usuarios[$grupo->first()->user_id] ?? null;
-                                            $rol = $grupo->first()->rol;
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted">No hay revisiones registradas.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                                            $inst = $grupo->firstWhere('tipo_certificado', 1)?->total ?? 0;
-                                            $gran = $grupo->firstWhere('tipo_certificado', 2)?->total ?? 0;
-                                            $expo = $grupo->firstWhere('tipo_certificado', 3)?->total ?? 0;
-                                        @endphp
-                                        <tr>
-                                            <td>{{ $revisor?->name ?? '—' }}</td>
-                                            <td>{{ $rol }}</td>
-                                            <td class="text-end">{{ number_format($inst) }}</td>
-                                            <td class="text-end">{{ number_format($gran) }}</td>
-                                            <td class="text-end">{{ number_format($expo) }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+        {{-- Panel de pendientes de revisión --}}
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar me-3">
+                            <div class="avatar-initial bg-label-warning rounded-3">
+                                <i class="ri-alert-line ri-24px"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <small class="text-muted">Certificados pendientes</small>
+                            <div class="d-flex align-items-center mt-1">
+                                <h4 class="mb-0 me-2 text-warning">{{ $pendientesRevisarCertificadosConsejo->count() }}</h4>
+                                <i class="ri-time-line text-warning ri-20px"></i>
+                            </div>
+                            <small class="text-muted">Revisión por consejo</small>
                         </div>
                     </div>
                 </div>
-            @endcanany
+            </div>
+        </div>
+    </div>
+@endcanany
+
 
 
 
@@ -481,8 +524,8 @@
                                                 </td>
                                                 <td class="pe-0 py-4">
                                                     <!--<div class="d-flex align-items-center justify-content-end">
-                                                        <span class="badge bg-success me-2">Pagado</span>
-                                                    </div>-->
+                                                                <span class="badge bg-success me-2">Pagado</span>
+                                                            </div>-->
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -511,63 +554,64 @@
                             </div>
                             <div class="table-responsive text-nowrap border-top">
                                 <table class="table">
-    <thead>
-        <tr>
-            <th>Año</th>
-            <th>Mes</th>
-            <th>Día del Servicio</th>
-            <th>Instalación</th>
-            <th>Servicios únicos</th>
-        </tr>
-    </thead>
-    <tbody>
-        @php
-            $agrupadoPorAnio = collect($serviciosInstalacion)
-    ->filter(function ($_, $mes) {
-        return preg_match('/^\d{4}-\d{2}$/', $mes);
-    })
-    ->groupBy(function ($_, $mes) {
-        return \Carbon\Carbon::parse($mes . '-01')->format('Y');
-    });
+                                    <thead>
+                                        <tr>
+                                            <th>Año</th>
+                                            <th>Mes</th>
+                                            <th>Día del Servicio</th>
+                                            <th>Instalación</th>
+                                            <th>Servicios únicos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $agrupadoPorAnio = collect($serviciosInstalacion)
+                                                ->filter(function ($_, $mes) {
+                                                    return preg_match('/^\d{4}-\d{2}$/', $mes);
+                                                })
+                                                ->groupBy(function ($_, $mes) {
+                                                    return \Carbon\Carbon::parse($mes . '-01')->format('Y');
+                                                });
 
+                                        @endphp
 
-        @endphp
+                                        @foreach ($agrupadoPorAnio as $anio => $meses)
+                                            <tr class="table-primary fw-bold">
+                                                <td colspan="5">Año: {{ $anio }}</td>
+                                            </tr>
 
-        @foreach ($agrupadoPorAnio as $anio => $meses)
-            <tr class="table-primary fw-bold">
-                <td colspan="5">Año: {{ $anio }}</td>
-            </tr>
+                                            @foreach ($meses as $mes => $fechas)
+                                                <tr class="table-secondary">
+                                                    <td></td>
+                                                    @if (preg_match('/^\d{4}-\d{2}$/', $mes))
+                                                <tr class="table-primary fw-bold">
+                                                    <td colspan="4">
+                                                        {{ \Carbon\Carbon::parse($mes . '-01')->locale('es')->isoFormat('MMMM YYYY') }}
+                                                    </td>
+                                                </tr>
+                                            @else
+                                                <tr class="table-danger fw-bold">
+                                                    <td colspan="4">Mes no válido: {{ $mes }}</td>
+                                                </tr>
+                                            @endif
 
-            @foreach ($meses as $mes => $fechas)
-                <tr class="table-secondary">
-                    <td></td>
-                    @if (preg_match('/^\d{4}-\d{2}$/', $mes))
-    <tr class="table-primary fw-bold">
-        <td colspan="4">{{ \Carbon\Carbon::parse($mes . '-01')->locale('es')->isoFormat('MMMM YYYY') }}</td>
-    </tr>
-@else
-    <tr class="table-danger fw-bold">
-        <td colspan="4">Mes no válido: {{ $mes }}</td>
-    </tr>
-@endif
+                                            </tr>
 
-                </tr>
-
-                @foreach ($fechas as $fecha => $instalaciones)
-                    @foreach ($instalaciones as $direccion => $cantidad)
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td>{{ \Carbon\Carbon::parse($fecha)->format('d \d\e F') }}</td>
-                            <td>{{ $direccion }}</td>
-                            <td>{{ $cantidad }}</td>
-                        </tr>
-                    @endforeach
-                @endforeach
-            @endforeach
-        @endforeach
-    </tbody>
-</table>
+                                            @foreach ($fechas as $fecha => $instalaciones)
+                                                @foreach ($instalaciones as $direccion => $cantidad)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>{{ \Carbon\Carbon::parse($fecha)->format('d \d\e F') }}</td>
+                                                        <td>{{ $direccion }}</td>
+                                                        <td>{{ $cantidad }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            @endforeach
+                                        @endforeach
+                                        @endforeach
+                                    </tbody>
+                                </table>
 
 
 
@@ -649,10 +693,10 @@
                                                             class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a>
                                                 </th>
                                                 <!--<td>
-                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                Ver
-                                            </a>
-                                        </td>-->
+                                                <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                    Ver
+                                                </a>
+                                            </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -706,10 +750,10 @@
                                                             class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a>
                                                 </th>
                                                 <!--<td>
-                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                Ver
-                                            </a>
-                                        </td>-->
+                                                <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                    Ver
+                                                </a>
+                                            </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -780,10 +824,10 @@
                                                             class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a>
                                                 </th>
                                                 <!--<td>
-                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                Ver
-                                            </a>
-                                        </td>-->
+                                                <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                    Ver
+                                                </a>
+                                            </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -833,10 +877,10 @@
                                                 </td>
                                                 <td>{{ $solicitud->inspeccion->inspector->name ?? 'Sin asignar' }}</td>
                                                 <!--<td>
-                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                Ver
-                                            </a>
-                                        </td>-->
+                                                <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                    Ver
+                                                </a>
+                                            </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -854,7 +898,7 @@
         </div>
 
 
-                <div class="modal fade" id="modalSolicitudesSinInspector" tabindex="-1" aria-labelledby="modalLabel"
+        <div class="modal fade" id="modalSolicitudesSinInspector" tabindex="-1" aria-labelledby="modalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
@@ -886,10 +930,10 @@
                                                 </td>
                                                 <td>{{ $solicitud->inspeccion->inspector->name ?? 'Sin asignar' }}</td>
                                                 <!--<td>
-                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                Ver
-                                            </a>
-                                        </td>-->
+                                                <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                    Ver
+                                                </a>
+                                            </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>

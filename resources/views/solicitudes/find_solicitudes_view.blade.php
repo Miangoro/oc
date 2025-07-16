@@ -182,6 +182,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th></th>
+                        <th>#</th>
                         <th>Folio</th>
                         <th>No. de servicio</th>
                         <th>Cliente</th>

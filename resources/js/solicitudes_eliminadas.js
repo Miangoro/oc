@@ -345,7 +345,15 @@ $(function () {
         orderable: false,
         render: function (data, type, full, meta) {
           var $motivo = full['motivo'];
-          return '<span class="text-danger fw-bold">'+$motivo+'</span>';
+          var $responsable = full['responsable'];
+          var $fecha_eliminacion = full['fecha_eliminacion'];
+          if ($responsable && $fecha_eliminacion) {
+            return `<span class="text-danger fw-bold">${$motivo}</span><br>
+                    <span class="fw-bold">Eliminada por: </span> <span class="">${$responsable}</span><br>
+                    <span class="fw-bold">Fecha: </span> <span class=""> ${$fecha_eliminacion}</span>`;
+          } else {
+              return '<span class="text-danger fw-bold">'+$motivo+'</span>';
+          }
         }
       },
       {

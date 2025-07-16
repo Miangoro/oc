@@ -64,21 +64,35 @@ $(function () {
             }
             return icono;
           }
-        },
+        },  
         {
-          targets: 3,
-          render: function (data, type, full, meta) {
-            var $num_certificado = full['num_certificado'];
+        targets: 3,
+        render: function (data, type, full, meta) {
+          const $num_certificado = full['num_certificado'];
+          const reexpedido = full['reexpedido'];
+            const combinado = full['combinado'];
 
-            return `
-              <div style="display: flex; flex-direction: column; align-items: start; gap: 4px;">
-                <span class="fw-bold">
-                  ${$num_certificado}
-                </span>
-              </div>
-              `;
-          }
-        },
+
+          const mostrarReexpedido = reexpedido && reexpedido.trim() !== ''
+          ? `<br><span class="badge bg-info text-dark rounded-pill px-2">${reexpedido}</span>`
+          : '';
+
+        
+          const mostrarCombinado = combinado && combinado.trim() !== ''
+          ? `<br><span class="badge bg-info text-dark rounded-pill px-2">${combinado}</span>`
+          : '';
+
+
+          return `
+            <div style="display: flex; flex-direction: column; align-items: start; gap: 4px;">
+              <span class="fw-bold">
+                ${$num_certificado}${mostrarReexpedido}${mostrarCombinado}
+              </span>
+            </div>
+          `;
+        }
+      },
+
         {
           targets: 4,
           render: function (data, type, full, meta) {

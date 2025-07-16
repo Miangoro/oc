@@ -775,6 +775,21 @@ class RevisionConsejoController extends Controller
         ->firstWhere('numero_cliente', '!=', null)
         ->numero_cliente ?? 'Sin asignar';
 
+        
+            $reexpedido = '';
+          if($revisor->certificado->certificadoReexpedido()){
+            $reexpedido = 'Reexpedido';
+          }
+
+         $caracteristicas = json_decode( $revisor->certificado->dictamen->inspeccione->solicitud->caracteristicas);
+                         
+            
+            $combinado = '';
+          if(isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2'){
+            $combinado = 'Combinado';
+          }
+
+
 
         $pdfData = [
             'numero_revision' => $revisor->numero_revision,
@@ -790,7 +805,9 @@ class RevisionConsejoController extends Controller
             'aprobacion' => $aprobacion,
             'id_aprobador' => $id_aprobador,
             'fecha_aprobacion' => Helpers::formatearFecha($fecha_aprobacion),
-            'preguntas' => $preguntasConRespuestas
+            'preguntas' => $preguntasConRespuestas,
+            'reexpedido' =>$reexpedido,
+             'combinado' =>$combinado
         ];
 
         $pdf = Pdf::loadView('pdfs.pdf_bitacora_revision_certificado_instalaciones',$pdfData)

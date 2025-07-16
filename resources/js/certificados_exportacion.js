@@ -232,7 +232,8 @@ if (dt_user_table.length) {
           orderable: false,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
-
+            /*console.log(full['old_hologramas']);
+            console.log(full['id_hologramas']);*/
             return `<div class="small">
             ${full['combinado'] ? '<span class="badge rounded-pill bg-info"><b>Combinado</b></span> <br>' : ''}
                 <b>Lote envasado:</b> ${full['nombre_lote_envasado']} <br>
@@ -242,9 +243,26 @@ if (dt_user_table.length) {
                 <b>Botellas:</b> ${full['botellas']} <br>
                 <b>Pedido:</b> ${full['n_pedido']} <br>
                 <b>Pais destino:</b> ${full['pais']} <br>
-                ${ (full['id_hologramas'] || full['old_hologramas']) 
-                  ? `<span style="color:green">Hologramas activados</span> <br>`
-                  : `<span style="color:red">Hologramas no activados</span> <br>` }
+
+                ${//para hologramas
+                  ( Array.isArray(full['id_hologramas']) && full['id_hologramas'].length > 0 ) ||
+                  ( () => {
+                    try {
+                      const old = typeof full['old_hologramas'] === 'string'
+                        ? JSON.parse(full['old_hologramas'])
+                        : full['old_hologramas'];
+
+                      return Object.values(old || {}).some(val => typeof val === 'string' && val.trim() !== '');
+                    } catch {
+                      return false;
+                    }
+                  } ) ()
+                    ? `<span style="color:green">Hologramas activados</span> <br>`
+                    : `<span style="color:red">Hologramas no activados</span> <br>`
+                }
+
+
+                
 
                 <b>Ser. Env:</b> ${
                   Array.isArray(full['url_acta']) && full['url_acta'].length > 0
@@ -257,7 +275,9 @@ if (dt_user_table.length) {
 
                 ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
               </div>`;
-          }
+          }/*${ (full['id_hologramas'] || full['old_hologramas']) 
+                  ? `<span style="color:green">Hologramas activados</span> <br>`
+                  : `<span style="color:red">Hologramas no activados</span> <br>` }*/
         },
         {//fechas
           targets: 6,
