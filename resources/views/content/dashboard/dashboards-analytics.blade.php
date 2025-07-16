@@ -396,7 +396,7 @@
     @endphp
 
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header pb-2">
                     <h5 class="mb-1">📊 Resumen de revisiones por revisor</h5>
@@ -445,10 +445,10 @@
                                                     </small>--}}
                                                 </div>
                                                <div class="badge 
-    {{ $rol === 'Personal' ? 'bg-label-info' : ($rol === 'Consejo' ? 'bg-label-warning' : 'bg-label-secondary') }} 
-    rounded-pill">
-    {{ $rol }}
-</div>
+                                                    {{ $rol === 'Personal' ? 'bg-label-info' : ($rol === 'Consejo' ? 'bg-label-warning' : 'bg-label-secondary') }} 
+                                                    rounded-pill">
+                                                    {{ $rol }}
+                                                </div>
 
                                                 </div>
                                             </li>
