@@ -371,9 +371,10 @@
               "slug": "bitacoraProductoTerminado"
             },
             {
-              "url": "/bitacoraHologramas",
+              "url": "/bitacoraHologramasComercializador",
               "name": "Control de hologramas",
-              "slug": "bitacoraHologramas"
+              "slug": "bitacora-hologramas-comercializador",
+              "can": "Visualizar bitácoras"
             }
           ]
         }
