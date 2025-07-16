@@ -84,7 +84,13 @@
 
 
         .contenido {
+            font-family: 'TeXGyreTermes', serif;
             margin-top: 15%;
+            margin-left: 30px;
+            margin-right: 20px;
+            font-size: 14px;
+            line-height: 1.3;
+            color: #000000;
             /*margin-left: 30px;
         margin-right: 20px;*/
         }
@@ -124,39 +130,131 @@
             /*vertical-align: bottom;*/
         }
 
-
-
-        /*tabla*/
-        table {
-            border: 1px solid #003300;
-            width: 100%;
-            color: #000000;
-        }
-
-        td,
-        th {
-            border: 1px solid #003300;
-            /* padding: 5px 8px; 
-        line-height: 1.2;*/
-            vertical-align: top;
-        }
-
-        th {
+        /* Encabezados principales */
+        .title {
+            font-family: 'TeXGyreTermes', serif;
+            font-size: 18px;
             font-weight: bold;
+            text-align: center;
+            margin: 1.5;
+            padding: 0;
+        }
+
+        .title2 {
+            font-family: 'TeXGyreTermes', serif;
+            font-size: 38px;
+            font-weight: bold;
+            color: #a9a9a9ff;
+            text-align: center;
+            margin: 10px 0 20px 0;
+        }
+
+        /* Textos generales */
+        .text {
+            font-family: 'TeXGyreTermes', serif;
+            margin: 0;
+            font-size: 14px;
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+
+        .textx {
+            line-height: 0.5;
+            font-size: 9px;
+            font-family: Arial, Helvetica, Verdana;
+        }
+
+        /* Etiquetas como "No.", "A:" */
+        .textimg {
+            font-family: 'TeXGyreTermes', serif;
+            text-align: center;
+            font-weight: bold;
+            font-size: 15px;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .textp {
+            font-family: 'TeXGyreTermes', serif;
+            font-size: 28px;
+            font-weight: bold;
+            color: #004A80;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .textsello {
+            width: 85%;
+            text-align: left;
+            word-wrap: break-word;
+            margin-top: -5px;
+            line-height: 1.2;
+            font-size: 8px;
+            font-family: Arial, Helvetica, Verdana;
+        }
+
+        /* Tabla de datos */
+        .table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 13px;
+        }
+
+        .table td,
+        .table th {
+            font-family: 'TeXGyreTermes', serif;
+            border: 1px solid #003300;
+            padding: 8px;
+            vertical-align: middle;
             text-align: left;
         }
+
+        .datos-comercio {
+            font-family: 'TeXGyreTermes', serif;
+            font-size: 15px;
+            line-height: 1.3;
+            color: #000;
+            margin-top: 25px;
+            text-align: justify;
+        }
+
+        .resaltado2 {
+            font-weight: bold;
+            display: inline;
+        }
+
 
         .bold {
             font-weight: bold;
         }
 
         .subtitulos {
-            font-size: 16px;
-            margin-top: 1em;
+            font-family: 'TeXGyreTermes', serif;
+            font-size: 14px;
+            margin-top: 1.5;
             margin-bottom: 0.3em;
             padding-left: 1em;
             font-weight: bold;
+            text-align: center;
         }
+
+        .pie {
+            text-align: right;
+            font-size: 9px;
+            line-height: 1;
+            position: fixed;
+            bottom: -4;
+            left: 0;
+            right: 0;
+            width: calc(100% - 40px);
+            height: 45px;
+            margin-right: 30px;
+            padding: 10px 0px;
+            font-family: 'Lucida Sans Unicode';
+        }
+
+       
     </style>
 </head>
 
@@ -188,99 +286,91 @@
 
 
     <div class="contenido">
-        <div class="textimg negrita">No.: </div>
-        <div class="title"> Constancia de cumplimiento con la NOM-070-SCFI-2016 <br> como</div>
-        <div class="title2">Producto de Mezcal </div>
+        <div class="title">No.:UMC-102/2025 </div>
+
+        <div class="title"> Constancia de cumplimiento con la NOM-070-SCFI-2016 </div>
+        <div class="subtitulos">como</div>
+
+        <div class="title2">Productor de Mezcal</div>
         <div class="text">
-            <p>De acuerdo a lo establecido en los procedimientos internos de la Unidad de Inspección No. UVNOM 129 para
-                la revisión de procesos de producción del producto Mezcal, su envasado y comercialización; y con
-                fundamento
-                en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la Calidad que establece
-                el
-                funcionamiento de las Unidades de Inspección.</p>
-            <p>Después de realizar la inspección de las instalaciones en fecha del <u><span
-                        class="negrita">{{ $fecha_inspeccion }}</span></u> partiendo del acta
-                circunstanciada o número de inspección: <u><span
-                        class="negrita">{{ $datos->inspeccione->num_servicio ?? '' }}</u></span></p>
-            <p class="textp">Nombre del productor/empresa:
-                <u>{{ $datos->inspeccione->solicitud->empresa->razon_social ?? '' }}</u></p>
+            De acuerdo a lo establecido en los procedimientos internos de la Unidad de Inspección <strong>No.UVNOM129
+            </strong>de la
+            Universidad Michoacana de San Nicolás de Hidalgo,con domicilio en Francisco J.Múgica s/n Col. Felicitas del
+            Rio,Morelia Michoacán para la revisión de procesos de producción del producto Mezcal, su envasado y
+            comercialización; y confundamento en los artículos 56 Fracción I y 60 fracción I de la Ley de
+            Infraestructura de la
+            Calidad que establece el funcionamiento de las Unidades de Inspección. Después de realizar la inspección de
+            las
+            instalaciones en fecha del <u><span class="negrita">{{ $fecha_inspeccion }}</span></u> partiendo del acta
+            circunstanciada o número de inspección: <u><span
+                    class="negrita">{{ $datos->inspeccione->num_servicio ?? '' }}</u></span></p>
         </div>
 
         <div class="textimg negrita">A:</div>
-        <p class="textp"><u>{{ $datos->inspeccione->solicitud->empresa->razon_social ?? '' }}</u></p>
+        <p class="textp">ISIDRO RODRIGUEZ MONTOYA</p>
 
-        <table class="interlineado">
-            <tbody>
-                <tr>
-                    <td>
-                        <span class="negrita">Domicilio Fiscal:</span>
-                    </td>
-
-                    <td style="text-align: center; vertical-align: middle;">
-                        {{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal ?? '' }}</td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="negrita">Domicilio de la unidad de producción:</span>
-                    </td>
-                    <td style="text-align: center; vertical-align: middle;">
-                        {{ $datos->instalaciones->direccion_completa ?? '' }}</td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="negrita">Categorías de mezcal:</span>
-                    </td>
-                    <td style="text-align: center; vertical-align: middle;"></td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="negrita">Clasesdemezcalqueproduce:</span>
-                    </td>
-                    <td style="text-align: center; vertical-align: middle;"></td>
-                </tr>
-                <tr>
-                    <td class="negrita">Fecha de emisión de dictamen:</td>
-                    <td style="text-align: center; vertical-align: middle;">{{ $fecha_emision }}</td>
-                </tr>
-                <tr>
-                    <td class="negrita">Periodo de vigencia hasta:</td>
-                    <td style="text-align: center; vertical-align: middle;">{{ $fecha_vigencia }}</td>
-                </tr>
-            </tbody>
-            </table>
-            <p class="text">
-                Elpresentedictamenamparaexclusivamentelaproduccióndelproductomezcalqueseelaboraenlasinstalaciones
-                referidas en el presente documento. Dichas Instalaciones de producción cuentan con la infraestructura y
-                equipamientorequeridoparalaproduccióndemezcal indicadosenlaNOM-070-SCFI-2016,Bebidasalcohólicas
-                Mezcal-Especificacionesyseencuentrandentrodelosestadosymunicipiosquecontemplalaresoluciónmediante
-                elcualseotorgalaprotecciónprevistaaladenominacióndeorigenMezcal,paraseraplicadaalabebidaalcohólica
-                del mismo nombre, publicada el 28 de noviembre de 1994, así como sus modificaciones subsecuentes.
+        <p class="datos-comercio">
+            <span class="resaltado2">Domicilio Fiscal: </span>
+            {{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal ?? '' }}<br>
+            <span class="resaltado2">Domicilio de la unidad de comercialización: </span>
+            {{ $datos->instalaciones->direccion_completa ?? '' }}<br>
+            <span class="resaltado2">Categorías de mezcal:</span> Mezcal, Mezcal Artesanal, Mezcal Ancestral<br>
+            <span class="resaltado2">Clases de mezcal que comercializa: </span>Blanco o Joven, Madurado en Vidrio,
+            Reposado, Añejo, Abocado con, Destilado con<br>
+            <span class="resaltado2">Fecha de emisión del dictamen: </span>{{ $fecha_emision }}<br>
+            <span class="resaltado2">Fecha de vigencia del dictamen: </span>{{ $fecha_vigencia }}
+        </p>
+        <p class="text">
+            El presente dictamen ampara exclusivamente la producción del producto mezcal que se elabora en las
+            instalaciones
+            referidas en el presente documento. Dichas Instalaciones de producción cuentan con la infraestructura y
+            equipamiento requerido para la producción de mezcal indicados en la NOM-070-SCFI-2016,Bebidas alcohólicas
+            Mezcal-Especificaciones y se encuentran dentro de los estados y municipios que contempla la resolución
+            mediante
+            el cual se otorga la protección prevista a la denominación de origen Mezcal,para ser aplicada a la bebida
+            alcohólica
+            del mismo nombre, publicada el 28 de noviembre de 1994, así como sus modificaciones subsecuentes.
+        </p>
+        <br>
+        <div>
+            <p class="textx">
+                <strong>AUTORIZÓ</strong>
+                <span style="margin-left: 54px; display: inline-block; text-align: center; position: relative;">
+                    <strong>{{ $datos->firmante->puesto ?? '' }} | {{ $datos->firmante->name ?? '' }}</strong>
+                    {{-- <strong>Gerente Técnico Sustituto de la Unidad de Inspección | Juana Karen Velázquez
+                        Sánchez</strong> --}}
+                </span>
             </p>
-          <p class="textx">
-        <strong>AUTORIZÓ</strong>
-        <span style="margin-left: 54px; display: inline-block; text-align: center; position: relative;">
-            <strong>{{ $datos->firmante->puesto ?? '' }} | {{ $datos->firmante->name ?? '' }}</strong>
-            {{-- <strong>Gerente Técnico Sustituto de la Unidad de Inspección | Juana Karen Velázquez Sánchez</strong> --}}
-        </span>
-    </p>
-    <p class="textx">
-        <strong>CADENA ORIGINAL</strong>
-        <span style="margin-left: 14px;">
-            <strong></strong>
-        </span>
-    </p>
-    <p class="textx">
-        <strong>SELLO DIGITAL</strong>
-    </p>
-    <p class="textsello">
+            <p class="textx">
+                <strong>CADENA ORIGINAL</strong>
+                <span style="margin-left: 14px;">
+                    <strong>UMC-102/2025|2025-07-03|UMS-0593/2025</strong>
+                </span>
+            </p>
+            <p class="textx">
+                <strong>SELLO DIGITAL</strong>
+            </p>
+            <p class="textsello">
+                X+FJsmqH0mqd7HIO9qbD+1Jt/7nM2XETteB+EVdPeMD9xip5joKOUE1yJzzBSwvraL878G/Umvi06/1/bVVZyFO1LCP53AfSlhYsvN/APhk4Fax7GSk6EK/EEmvM4LzDc0
+                Oziy6AJRM48u3hi3uPtEc0yVSzQH3AbkG8diWo7pzzx6xAA3WzKc67CR4FTiBJNpdtQhgjv/CnxPlv2U1lwQQtRLEnJfBejxUbC303bSB+m10tT4SfjCYeAKBUUUtSy+HH
+                GNrRawUUkJO5iWp6RBdHMuKrpriq4oOGgaeGEcRL1WujGV1Xi9C5rSHmZl9kxji+CbtY1gE9eekydqt0CA== <br>
+                C.c.p. Dirección General de Normas, DGN.<br>
+                C.c.p. Gerente del Organismo Certificador del CIDAM A.C.<br>
+                C.c.p. Expediente de la Unidad de Verificación del UMSNH.
+            </p>
+
+        </div>
        
-    </p>
+
+        <p class="pie">
+            @if ($id_sustituye)
+                Este dictamen sustituye al: {{ $id_sustituye }}
+            @endif
+            <br>Entrada en vigor: 22-06-2024
+            <br>F-UV-02-04 Ver 9.
+        </p>
 
     </div>
-
-
-
-
 
 
 
