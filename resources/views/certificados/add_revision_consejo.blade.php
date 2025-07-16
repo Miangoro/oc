@@ -449,7 +449,7 @@
                                             <td>
                       {{-- 📎 Documentos FQ's (si existen) --}}
 
-            @if (!empty($certificados) && isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
+            @if (!empty($certificados) && $tipo_certificado === '2')
 
     @forelse ($fqs as $doc)
         @if (!empty($doc['url']))
@@ -462,7 +462,7 @@
         <span class="text-muted">Sin documentos FQ encontrados</span>
     @endforelse
 
-@elseif (!empty($doc1) && isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud != '2')
+@elseif (!empty($doc1) && $tipo_certificado != '2')
 
     <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
         <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
