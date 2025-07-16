@@ -767,7 +767,7 @@
                                                 $lote_granel = $solicitud->lote_granel;
                                                 $lote_envasado = $solicitud->lote_envasado;
 
-                                                echo $lote_envasado = $solicitud->lote_envasado;
+                                                echo $lote_envasado = $solicitud->lote_envasado->lotesGranel;
                                             @endphp
                                             <td>
 
