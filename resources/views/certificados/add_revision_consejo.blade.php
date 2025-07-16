@@ -50,7 +50,7 @@
                         @endphp
                         @if (isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
                             <span class="badge bg-info">Combinado</span>
-                            @php $combinado == 'Si'; @endphp
+                            @php $combinado = 'Si'; @endphp
                         @endif
 
                         @if ($datos->es_correccion === 'si')
