@@ -429,7 +429,12 @@
                                         <td>
                                             <li class="d-flex align-items-center mb-6">
                                                 <div class="avatar flex-shrink-0 me-4">
-                                                <img src="/storage/{{ $revisor?->profile_photo_path }}" alt="{{ $revisor?->name ?? '—' }}" class="rounded-3">
+                                               <img 
+                                                src="{{ $revisor?->profile_photo_path ? '/storage/' . $revisor->profile_photo_path : '/images/default-avatar.png' }}" 
+                                                alt="{{ $revisor?->name ?? '—' }}" 
+                                                class="rounded-3" 
+                                                style="width: 40px; height: 40px;">
+
                                                 </div>
                                                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                 <div class="me-2">
@@ -439,7 +444,12 @@
                                                     <span class="ms-2">21 Jul | 08:20-10:30</span>
                                                     </small>--}}
                                                 </div>
-                                                <div class="badge bg-label-primary rounded-pill">{{ $rol }}</div>
+                                               <div class="badge 
+    {{ $rol === 'Personal' ? 'bg-label-info' : ($rol === 'Consejo' ? 'bg-label-warning' : 'bg-label-secondary') }} 
+    rounded-pill">
+    {{ $rol }}
+</div>
+
                                                 </div>
                                             </li>
                                            </td>
@@ -447,8 +457,8 @@
                                         <td class="text-end">{{ number_format($gran) }}</td>
                                         <td class="text-end">{{ number_format($expo) }}</td>
                                         <td class="text-end">
-    {{ number_format($pendientes) }}
-</td>
+                                            {{ number_format($pendientes) }}
+                                        </td>
 
                                     </tr>
                                 @empty
