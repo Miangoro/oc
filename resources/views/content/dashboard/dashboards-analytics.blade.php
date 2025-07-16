@@ -389,78 +389,99 @@
                 </div>
             @endcan
 
-            @canany(['Estadísticas consejo', 'Estadísticas oc'])
-                @php
-                    $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
+@canany(['Estadísticas consejo', 'Estadísticas oc'])
+    @php
+        $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
+        $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
+    @endphp
 
-                    // Agrupar por user_id + rol
-                    $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
-                @endphp
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card mb-4">
+                <div class="card-header pb-2">
+                    <h5 class="mb-1">📊 Resumen de revisiones por revisor</h5>
+                    <small class="text-muted">Cantidad de revisiones realizadas por revisor y tipo de certificado.</small>
+                </div>
 
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">Resumen de revisiones por revisor y tipo de certificado</h5>
-                        <small class="text-muted">Muestra la cantidad de revisiones realizadas por cada persona según su
-                            rol.</small>
-                    </div>
-
-                    <div class="card-body pt-2">
-                        <div class="table-responsive text-nowrap border-top">
-                            <table class="table table-bordered table-hover">
-                                <thead class="table-light">
+                <div class="card-body pt-2">
+                    <div class="table-responsive border-top">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>👤 Revisor</th>
+                                    <th class="text-center">🏗️ Instalaciones</th>
+                                    <th class="text-center">🌾 Granel</th>
+                                    <th class="text-center">🚢 Exportación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($agrupado as $key => $grupo)
+                                    @php
+                                        $revisor = $usuarios[$grupo->first()->user_id] ?? null;
+                                        $rol = $grupo->first()->rol;
+                                        $inst = $grupo->firstWhere('tipo_certificado', 1)?->total ?? 0;
+                                        $gran = $grupo->firstWhere('tipo_certificado', 2)?->total ?? 0;
+                                        $expo = $grupo->firstWhere('tipo_certificado', 3)?->total ?? 0;
+                                    @endphp
                                     <tr>
-                                        <th>Revisor</th>
-                                        <th>Rol</th>
-                                        <th>Instalaciones</th>
-                                        <th>Granel</th>
-                                        <th>Exportación</th>
+                                        <td>
+                                            <li class="d-flex align-items-center mb-6">
+                                                <div class="avatar flex-shrink-0 me-4">
+                                                <img src="https://demos.pixinvent.com/materialize-html-laravel-admin-template/demo/assets/img/avatars/4.png" alt="avatar" class="rounded-3">
+                                                </div>
+                                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                                <div class="me-2">
+                                                    <h6 class="mb-0"> {{ $revisor?->name ?? '—' }}</h6>
+                                                   {{--  <small class="d-flex align-items-center">
+                                                     <i class="icon-base ri ri-calendar-line icon-16px"></i>
+                                                    <span class="ms-2">21 Jul | 08:20-10:30</span>
+                                                    </small>--}}
+                                                </div>
+                                                <div class="badge bg-label-primary rounded-pill">{{ $rol }}</div>
+                                                </div>
+                                            </li>
+                                           </td>
+                                        <td class="text-end">{{ number_format($inst) }}</td>
+                                        <td class="text-end">{{ number_format($gran) }}</td>
+                                        <td class="text-end">{{ number_format($expo) }}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($agrupado as $key => $grupo)
-                                        @php
-                                            $revisor = $usuarios[$grupo->first()->user_id] ?? null;
-                                            $rol = $grupo->first()->rol;
-
-                                            $inst = $grupo->firstWhere('tipo_certificado', 1)?->total ?? 0;
-                                            $gran = $grupo->firstWhere('tipo_certificado', 2)?->total ?? 0;
-                                            $expo = $grupo->firstWhere('tipo_certificado', 3)?->total ?? 0;
-                                        @endphp
-                                        <tr>
-                                            <td>{{ $revisor?->name ?? '—' }}</td>
-                                            <td>{{ $rol }}</td>
-                                            <td class="text-end">{{ number_format($inst) }}</td>
-                                            <td class="text-end">{{ number_format($gran) }}</td>
-                                            <td class="text-end">{{ number_format($expo) }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted">No hay revisiones registradas.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="col-sm-2">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="avatar me-4">
-                                    <div class="avatar-initial bg-label-primary rounded-3">
-                                        <i class="ri-price-tag-3-line ri-24px"></i>
-                                    </div>
-                                </div>
-                                <div class="card-info">
-                                    <div class="d-flex align-items-center">
-                                        <h5 class="mb-0 me-2">{{ $pendientesRevisarCertificadosConsejo->count() ?? 0 }}</h5>
-                                        <i class="ri-arrow-down-s-line text-danger ri-20px"></i>
-                                        <small class="text-danger">Pendiente de revisar</small>
-                                    </div>
-                                    <p class="mb-0"></p>
-                                </div>
+            </div>
+        </div>
+
+        {{-- Panel de pendientes de revisión --}}
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar me-3">
+                            <div class="avatar-initial bg-label-warning rounded-3">
+                                <i class="ri-alert-line ri-24px"></i>
                             </div>
                         </div>
+                        <div class="flex-grow-1">
+                            <small class="text-muted">Certificados pendientes</small>
+                            <div class="d-flex align-items-center mt-1">
+                                <h4 class="mb-0 me-2 text-warning">{{ $pendientesRevisarCertificadosConsejo->count() }}</h4>
+                                <i class="ri-time-line text-warning ri-20px"></i>
+                            </div>
+                            <small class="text-muted">Revisión por consejo</small>
+                        </div>
                     </div>
                 </div>
-            @endcanany
+            </div>
+        </div>
+    </div>
+@endcanany
+
 
 
 
