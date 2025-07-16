@@ -446,15 +446,16 @@
 
                                             <td>
                       {{-- 📎 Documentos FQ's (si existen) --}}
-@forelse ($fqs as $doc)
-    @if (!empty($doc['url']))
-        <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
-            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-        </a>
-    @endif
-@empty
-    <span class="text-muted">Sin documentos FQ encontrados</span>
-@endforelse
+                                                @forelse ($fqs as $doc)
+                                                    @if (!empty($doc['url']))
+                                                    {{ $doc['nombre_documento'] }}
+                                                        <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
+                                                            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                        </a>
+                                                    @endif
+                                                @empty
+                                                    <span class="text-muted">Sin documentos FQ encontrados</span>
+                                                @endforelse
 
 
                                                 Completo: {{ $primerFolio }}
