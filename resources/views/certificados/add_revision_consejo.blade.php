@@ -425,7 +425,7 @@
                                                         '!=',
                                                         null,
                                                     )->numero_cliente ?? null;
-
+                                                    if($certificados) {
                                                        $fqs = collect();
 
                                                 foreach ($certificados as $certificado) {
@@ -440,6 +440,8 @@
                                                         ]);
                                                     }
                                                 }
+
+                                            }
 
                                                     
                                             @endphp
