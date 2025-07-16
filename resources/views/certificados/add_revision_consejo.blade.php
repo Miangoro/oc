@@ -695,17 +695,10 @@
                                                 {{ $loteGranel?->nombre_lote ?? 'N/A' }}
                                                 <br>
                                                 {{-- 🧴 Envasado --}}
-                                              @foreach ($datos->certificado->dictamen->inspeccione->solicitud->lotes_envasado ?? [] as $lote)
-    @if (!empty($lote->dictamenEnvasado?->id_dictamen_envasado))
-        <a target="_blank"
-            href="/dictamen_envasado/{{ $lote->dictamenEnvasado->id_dictamen_envasado }}"
-            class="me-2" 
-            title="Dictamen Envasado #{{ $lote->dictamenEnvasado->id_dictamen_envasado }}">
-            <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-        </a>
-    @endif
-@endforeach
-
+                                                <a target="_blank"
+                                                    href="/dictamen_envasado/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->dictamenEnvasado->id_dictamen_envasado }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                </a>
                                                 Envasado:
                                                 {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }}
                                             </td>
