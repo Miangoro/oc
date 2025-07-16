@@ -709,8 +709,8 @@
                                                     </a> {{ $lote->dictamenEnvasado->num_dictamen }}
                                                 @endif
                                             @endforeach
-                                                Envasado:
-                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }}
+                                                {{--Envasado:
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }} --}}
                                             </td>
                                             @elseif($pregunta->filtro == 'dom')
                                             <td>
