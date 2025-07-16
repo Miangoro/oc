@@ -412,6 +412,7 @@
                                     <th class="text-center">🏗️ Instalaciones</th>
                                     <th class="text-center">🌾 Granel</th>
                                     <th class="text-center">🚢 Exportación</th>
+                                    <th class="text-center">Pendientes</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -422,6 +423,7 @@
                                         $inst = $grupo->firstWhere('tipo_certificado', 1)?->total ?? 0;
                                         $gran = $grupo->firstWhere('tipo_certificado', 2)?->total ?? 0;
                                         $expo = $grupo->firstWhere('tipo_certificado', 3)?->total ?? 0;
+                                         $pendientes = $grupo->where('decision', 'Pendiente')->sum('total');
                                     @endphp
                                     <tr>
                                         <td>
@@ -444,6 +446,10 @@
                                         <td class="text-end">{{ number_format($inst) }}</td>
                                         <td class="text-end">{{ number_format($gran) }}</td>
                                         <td class="text-end">{{ number_format($expo) }}</td>
+                                        <td class="text-end">
+    {{ number_format($pendientes) }}
+</td>
+
                                     </tr>
                                 @empty
                                     <tr>
@@ -457,28 +463,6 @@
             </div>
         </div>
 
-        {{-- Panel de pendientes de revisión --}}
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="avatar me-3">
-                            <div class="avatar-initial bg-label-warning rounded-3">
-                                <i class="ri-alert-line ri-24px"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <small class="text-muted">Certificados pendientes</small>
-                            <div class="d-flex align-items-center mt-1">
-                                <h4 class="mb-0 me-2 text-warning">{{ $pendientesRevisarCertificadosConsejo->count() }}</h4>
-                                <i class="ri-time-line text-warning ri-20px"></i>
-                            </div>
-                            <small class="text-muted">Revisión por consejo</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 @endcanany
 

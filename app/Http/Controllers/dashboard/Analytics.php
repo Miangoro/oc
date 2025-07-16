@@ -42,7 +42,7 @@ class Analytics extends Controller
     })
     ->get();
 
-   $revisiones = Revisor::select(
+$revisiones = Revisor::select(
         'id_revisor as user_id',
         DB::raw("CASE
                     WHEN tipo_revision = 1 THEN 'Personal'
@@ -50,11 +50,13 @@ class Analytics extends Controller
                     ELSE 'Desconocido'
                 END as rol"),
         'tipo_certificado',
+        'decision', // 👈 Agrupas también por esto
         DB::raw('COUNT(*) as total')
     )
     ->whereNotNull('id_revisor')
-    ->groupBy('id_revisor', 'tipo_revision', 'tipo_certificado')
+    ->groupBy('id_revisor', 'tipo_revision', 'tipo_certificado', 'decision')
     ->get();
+
 
 // 2. Obtener usuarios
 $userIds = $revisiones->pluck('user_id')->unique();
