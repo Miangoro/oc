@@ -125,10 +125,6 @@
 
 
     /*inicia firma digital DIV*/
-    .firma {
-        border: 2px solid blue;
-    }
-
     .images-container {
         position: relative;
         width: 100%;
@@ -146,6 +142,20 @@
         margin-top: -13px;
         font-size: 11px;
         font-family: 'Arial Negrita' !important;
+    }
+    .textx {
+        line-height: 0.5;
+        font-size: 9px;
+        font-family: Arial, Helvetica, Verdana;
+    }
+    .textsello {
+        width: 85%; 
+        text-align: left;
+        word-wrap: break-word;
+        margin-top: -5px;
+        line-height: 1.2;
+        font-size: 8px;
+        font-family: Arial, Helvetica, Verdana;
     }
     </style>
 </head>
@@ -260,7 +270,7 @@
 
 
 
-<!--FIRMA DIGITAL-->
+<!--FIRMA DIGITAL FALTA-->
 <div class="firma">
     <div class="images-container">
         <img src="{{ $qrCodeBase64 }}" alt="QR" width="75px">
@@ -269,7 +279,7 @@
     <p class="sello">Sello de Unidad de Inspección</p>
     
 
-        {{-- @php
+        @php
             use Illuminate\Support\Facades\Storage;
             $firma = $data->firmante->firma ?? null;
             $firmaPath = $firma ? 'firmas/' . $firma : null;
@@ -297,7 +307,7 @@
     </p>
     <p class="textsello">
         {{ $firmaDigital['firma'] }}
-    </p> --}}
+    </p> 
 </div>
 
 
