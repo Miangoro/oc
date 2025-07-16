@@ -781,14 +781,19 @@
                                                                 }
                                                             }
 
-                                                            echo $lotes_graneles;
+                                                            $lotes_graneles;
                                             @endphp
                                             <td>
 
                                                 {{ $lote_granel->categoria->categoria ?? 'N/A' }}<br>
                                                 {{ $lote_envasado->marca->marca ?? 'N/A' }}<br>
                                                 {{ $lote_granel->clase->clase ?? 'N/A' }}<br>
-                                                {{ $lote_granel->edad ?? 'N/A' }}
+
+                                                @foreach($lotes_graneles = $lotess)
+
+                                                    {{ $lotess->edad ?? 'N/A' }}
+                                                @endforeach
+                                                
 
                                             </td>
                                         @elseif($pregunta->filtro == 'ingredientes')
