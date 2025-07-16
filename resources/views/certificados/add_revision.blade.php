@@ -425,19 +425,31 @@
                                             </td>
 
                                   @elseif($pregunta->filtro == 'nanalisis_ajuste')
-                                      @php
-                                          $documentos = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs ?? collect();
-                                          $doc2 = $documentos->get(1);
-                                      @endphp
-                                      <td>
-                                          @if ($doc2)
-                                              <a target="_blank"
-                                                  href="/files/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente }}/fqs/{{ $doc2->url }}">
-                                                  <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                              </a>
-                                          @endif
-                                        {{ $segundoFolio }}
-                                      </td>
+                                            <td>
+                                                @if (!empty($certificados) && $combinado === 'Si')
+
+                                        @forelse ($fqs as $doc)
+                                            @if (!empty($doc['url']) && $doc['id_documento']==134)
+                                                <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>{{ $doc['nombre_documento'] }}<br>
+                                            @endif
+                                        @empty
+                                            <span class="text-muted">Sin documentos FQ encontrados</span>
+                                        @endforelse
+
+                                            @elseif ($doc2 && $combinado == 'No')
+                                                    <a target="_blank"
+                                                        href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                    </a>
+                                                     {{ $segundoFolio }}
+                                                @else
+                                                    <i class="text-muted">N/A</i>
+                                                @endif
+                                               
+                                            </td>
                                         @elseif($pregunta->filtro == 'aduana')
                                             <td>
                                                     {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['aduana_salida'] ?? 'N/A' }} <br>
