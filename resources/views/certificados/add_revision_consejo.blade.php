@@ -670,7 +670,7 @@
                                                             foreach ($certificados as $certificado) {
                                                                 $url = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
                                                                     ->where('id_documento', 59)
-                                                                    ->value('url');
+                                                                    ->value('url','nombre_documento');
 
                                                                 if ($url) {
                                                                     $urls_certificados->push($url);
@@ -682,9 +682,10 @@
                                             <td>
                                                 {{-- 📎 Documentos firmados PDF (si existen) --}}
                                                 @forelse ($urls_certificados as $pdf)
-                                                    <a target="_blank" href="/files/{{$numero_cliente}}/certificados_granel/{{ $pdf }}" class="me-1">
-                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf) }}"></i>
+                                                    <a target="_blank" href="/files/{{$numero_cliente}}/certificados_granel/{{ $pdf['url'] }}" class="me-1">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf['url']) }}"></i>
                                                     </a>
+                                                    {{ $pdf['nombre_documento'] }}
                                                 @empty
                                                     <span class="text-muted">Sin certificados firmados adjuntos</span>
                                                 @endforelse
@@ -704,7 +705,7 @@
                                                     <a target="_blank"
                                                         href="/dictamen_envasado/{{ $lote->dictamenEnvasado->id_dictamen_envasado }}"
                                                         class="me-2"
-                                                        title="Dictamen Envasado del lote #{{ $lote->id_lote_envasado }}">
+                                                        title="Dictamen Envasado {{ $lote->num_dictamen }}">
                                                         <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a> {{ $lote->dictamenEnvasado->num_dictamen }}
                                                 @endif
