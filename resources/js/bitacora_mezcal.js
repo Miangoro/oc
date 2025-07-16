@@ -253,6 +253,7 @@ $(function () {
         search: '',
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
+        emptyTable: 'No hay datos disponibles en la tabla',
         paginate: {
           sFirst: 'Primero',
           sLast: 'Último',
