@@ -503,7 +503,7 @@
                                                     </a>
                                                      {{ $segundoFolio }}
                                                 @else
-                                                    <i class="text-muted">Sin archivo</i>
+                                                    <i class="text-muted">N/A</i>
                                                 @endif
                                                
                                             </td>
