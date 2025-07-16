@@ -517,18 +517,47 @@
                                                             "files/{$numero_cliente}/certificados_granel/{$docFirmado->url}",
                                                         )
                                                         : null;
+
+                                                         $ids = $solicitud->id_lote_envasado; // array de IDs
+                                                            $certificados = collect();
+
+                                                            foreach ($ids as $id) {
+                                                                $lote = App\Models\lotes_envasado::find($id);
+                                                                if ($lote) {
+                                                                    foreach ($lote->lotesGranel as $granel) {
+                                                                        if ($granel->certificadoGranel) {
+                                                                            $certificados->push($granel->certificadoGranel);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            $urls_certificados = collect();
+                                                            foreach ($certificados as $certificado) {
+                                                        $documento = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)->where('id_doc', $certificado->id_certificado)
+                                                            ->where('id_documento', 59)
+                                                            ->first(['url', 'nombre_documento']); // ✅ Usa first() en lugar de value()
+
+                                                        if ($documento) {
+                                                            $urls_certificados->push([
+                                                                'url' => $documento->url,
+                                                                'nombre_documento' => $documento->nombre_documento,
+                                                            ]);
+                                                        }
+                                                    }
+
                                             @endphp
 
                                             <td>
-                                                {{-- 📎 Documento firmado PDF (si existe) --}}
-                                                @if ($urlFirmado)
-                                                    <a target="_blank" href="{{ $urlFirmado }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                {{-- 📎 Documentos firmados PDF (si existen) --}}
+                                                @forelse ($urls_certificados as $pdf)
+                                                    <a target="_blank" href="/files/{{$numero_cliente}}/certificados_granel/{{ $pdf['url'] }}" class="me-1">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf['url']) }}"></i>
                                                     </a>
-                                                @else
-                                                    <span class="text-muted">Sin certificado firmado adjunto</span>
-                                                @endif
+                                                    {{ $pdf['nombre_documento'] }}
+                                                @empty
+                                                    <span class="text-muted">Sin certificados firmados adjuntos</span>
+                                                @endforelse
 
                                                 {{-- 🧪 Granel --}}
                                                 Granel:
