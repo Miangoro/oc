@@ -458,7 +458,7 @@
             {{ $doc['nombre_documento'] }}
             <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
                 <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-            </a>
+            </a><br>
         @endif
     @empty
         <span class="text-muted">Sin documentos FQ encontrados</span>
