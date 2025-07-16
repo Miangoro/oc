@@ -679,7 +679,42 @@
                                                 @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria')
-                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'N/A' }}
+                                            @php
+                                                $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
+                                                $lote_granel = $solicitud->lote_granel;
+                                                $lote_envasado = $solicitud->lote_envasado;
+
+                                                 $ids = $solicitud->id_lote_envasado; // array de IDs
+                                                            $lotes_graneles = collect();
+
+                                                            foreach ($ids as $id) {
+                                                                $lote = App\Models\lotes_envasado::find($id);
+                                                                if ($lote) {
+                                                                    foreach ($lote->lotesGranel as $granel) {
+                                                                        if ($granel) {
+                                                                            $lotes_graneles->push($granel);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            $lotes_graneles;
+                                            @endphp
+                                            <td>
+
+                                               {{--  <br>
+                                                {{ $lote_envasado->marca->marca ?? 'N/A' }}<br>
+                                                {{ $lote_granel->clase->clase ?? 'N/A' }}<br> --}}
+
+                                                @foreach($lotes_graneles as $lotess)
+                                                   <b>Granel: </b>{{ $lotess->nombre_lote ?? 'N/A' }}
+                                                    <b>Categoría: </b>{{ $lotess->categoria->categoria ?? 'N/A' }}
+                                                    <b>Edad: </b> {{ $lotess->edad ?? 'N/A' }}
+                                                   <b>Marca: </b> {{ $lote_envasado->marca->marca ?? 'N/A' }} <br>
+
+                                                @endforeach
+                                                
+
                                             </td>
                                         @elseif($pregunta->filtro == 'ingredientes')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->ingredientes ?? 'N/A' }}
@@ -713,6 +748,15 @@
                                                     @empty
                                                         N/A
                                                     @endforelse
+
+                                                    @foreach($lotes_graneles as $lotess)
+                                                   @forelse ($lotess->tiposRelacionados as $tipo)
+                                                        {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
+                                                    @empty
+                                                        N/A
+                                                    @endforelse
+
+                                                @endforeach
 
                                             </td>
                                         @elseif($pregunta->filtro == 'responsable')
