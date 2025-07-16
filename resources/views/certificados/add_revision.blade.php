@@ -559,17 +559,28 @@
                                                     <span class="text-muted">Sin certificados firmados adjuntos</span>
                                                 @endforelse
 
-                                                {{-- 🧪 Granel --}}
-                                                Granel:
-                                                {{ $loteGranel?->nombre_lote ?? 'N/A' }}
-                                                <br>
-                                                <a target="_blank"
-                                                    href="/dictamen_envasado/{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->dictamenEnvasado->id_dictamen_envasado }}">
-                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                </a>
-                                                Envasado:
-                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }}
 
+                                                {{-- 🧪 Granel --}}
+                                                {{-- Granel:
+                                                {{ $loteGranel?->nombre_lote ?? 'N/A' }} --}}
+                                                <br>
+                                                {{-- 🧴 Envasado --}}
+                                                @foreach ($ids as $id)
+                                                @php
+                                                    $lote = \App\Models\lotes_envasado::find($id);
+                                                @endphp
+
+                                                @if ($lote && $lote->dictamenEnvasado)
+                                                    <a target="_blank"
+                                                        href="/dictamen_envasado/{{ $lote->dictamenEnvasado->id_dictamen_envasado }}"
+                                                        class="me-2"
+                                                        title="Dictamen Envasado {{ $lote->num_dictamen }}">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a> {{ $lote->dictamenEnvasado->num_dictamen }}
+                                                @endif
+                                            @endforeach
+                                                {{--Envasado:
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->nombre ?? 'N/A' }} --}}
                                             </td>
                                         @elseif($pregunta->filtro == 'dom')
                                             <td>
