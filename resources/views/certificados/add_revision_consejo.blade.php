@@ -791,7 +791,7 @@
 
                                                 @foreach($lotes_graneles as $lotess)
                                                    <b>Granel: </b>{{ $lotess->nombre_lote ?? 'N/A' }}
-                                                    <b>Categoría: </b>{{ $lotess->categoria ?? 'N/A' }}
+                                                    <b>Categoría: </b>{{ $lotess->categoria->categoria ?? 'N/A' }}
                                                     <b>Edad: </b> {{ $lotess->edad ?? 'N/A' }}
                                                    <b>Marca: </b> {{ $lote_envasado->marca->marca ?? 'N/A' }} <br>
 
