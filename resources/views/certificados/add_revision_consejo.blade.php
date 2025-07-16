@@ -425,16 +425,38 @@
                                                         '!=',
                                                         null,
                                                     )->numero_cliente ?? null;
+
+                                                       $fqs = collect();
+
+                                                foreach ($certificados as $certificado) {
+                                                    $documentos2 = \App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+                                                        ->whereIn('id_documento', [58, 134])
+                                                        ->get(['url', 'nombre_documento']);
+
+                                                    foreach ($documentos2 as $documento) {
+                                                        $fqs->push([
+                                                            'url' => $documento->url,
+                                                            'nombre_documento' => $documento->nombre_documento
+                                                        ]);
+                                                    }
+                                                }
+
+                                                    
                                             @endphp
 
                                             <td>
-                                                @if ($doc1)
-                                                    <a target="_blank"
-                                                        href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                    </a>
-                                                @endif
+                      {{-- 📎 Documentos FQ's (si existen) --}}
+@forelse ($fqs as $doc)
+    @if (!empty($doc['url']))
+        <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc['url'] }}" class="me-2" title="{{ $doc['nombre_documento'] }}">
+            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+        </a>
+    @endif
+@empty
+    <span class="text-muted">Sin documentos FQ encontrados</span>
+@endforelse
+
+
                                                 Completo: {{ $primerFolio }}
 
                                                 @if($tipo_certificado == 'Granel' AND $doc2)
@@ -628,18 +650,17 @@
                                                                 }
                                                             }
 
-
                                             @endphp
 
                                             <td>
                                                 {{-- 📎 Documentos firmados PDF (si existen) --}}
-@forelse ($urls_certificados as $pdf)
-    <a target="_blank" href="/files/{{$numero_cliente}}/certificados_granel/{{ $pdf }}" class="me-1">
-        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf) }}"></i>
-    </a>
-@empty
-    <span class="text-muted">Sin certificados firmados adjuntos</span>
-@endforelse
+                                                @forelse ($urls_certificados as $pdf)
+                                                    <a target="_blank" href="/files/{{$numero_cliente}}/certificados_granel/{{ $pdf }}" class="me-1">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf) }}"></i>
+                                                    </a>
+                                                @empty
+                                                    <span class="text-muted">Sin certificados firmados adjuntos</span>
+                                                @endforelse
 
 
                                                 {{-- 🧪 Granel --}}
