@@ -449,7 +449,7 @@
                                             <td>
                       {{-- 📎 Documentos FQ's (si existen) --}}
 
-                      @if($certificados)
+                      @if(!empty($certificados))
                                                 @forelse ($fqs as $doc)
                                                     @if (!empty($doc['url']))
                                                     {{ $doc['nombre_documento'] }}
