@@ -38,7 +38,7 @@
     }*/
 
     .encabezado {
-        border: 2px solid blue;
+        /* border: 2px solid blue; */
         position: fixed;
         /*width: 100%; 
         border: 2px solid blue;
@@ -196,11 +196,21 @@
  
     <p style="margin-top: -25px">No.: <span class="sub-negrita">{{ $num_dictamen }}</span></p>
 
-
+@php
+    function marcar($valor) {
+        return $valor === 'X' ? '( X )' : '( )';
+    }
+@endphp
     <div style="font-family: fuenteNegrita; margin-top: -5px; text-align: center;">
-        <p style="display: inline-block;">Instalaciones (  ) </p>
-        <p style="display: inline-block; padding: 0 10%">Lote de mezcal a granel (  ) </p><!--orden: top right bottom left; equivale top:0; bottom:0; left:10%; right:10%; -->
-        <p style="display: inline-block;">Envasado (  )</p>
+        <p style="display: inline-block;">
+            Instalaciones {{ marcar($instalaciones) }}
+        </p>
+        <p style="display: inline-block; padding: 0 10%"><!--orden: top right bottom left; equivale top:0; bottom:0; left:10%; right:10%; -->
+            Lote de mezcal a granel {{ marcar($granel) }}
+        </p>
+        <p style="display: inline-block;">
+            Envasado {{ marcar($envasado) }}
+        </p>
     </div>
 
     <p style="margin-top: -10px;">De acuerdo con lo establecido en los procedimientos internos de la Unidad de Inspección

@@ -69,7 +69,6 @@
                         <th>Cliente</th>
                         <th>Características</th>
                         <th>Fechas</th>
-                        <th>Estatus</th>
                         <th>ACCIONES</th>
                     </tr>
                 </thead>
@@ -80,8 +79,6 @@
     <!-- Modal -->
     @include('_partials/_modals/modal-pdfs-frames')
     @include('_partials/_modals/modal-add-dictamen-no-cumplimiento')
-    
-    {{-- @include('_partials/_modals/modal-reexpedir-dictamen-envasado') --}}
     <!-- /Modal -->
 
 @endsection

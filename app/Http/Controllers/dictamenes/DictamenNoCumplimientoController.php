@@ -38,10 +38,10 @@ class DictamenNoCumplimientoController extends Controller
         $inspecciones = inspecciones::whereHas('solicitud', function ($q) {
                 $q->whereDate('created_at', '>', '2024-12-01')
                 ->whereHas('tipo_solicitud', function ($query) {
-                    $query->whereIn('id_tipo', [5, 8, 11, 3, 14]);
+                    $query->whereIn('id_tipo', [5, 8, 3, 14]);//11,
                 });
             })
-            ->whereDoesntHave('dictamenExportacion')//SIN DICTAMENES
+            //->whereDoesntHave('dictamenExportacion')//SIN DICTAMENES
             ->whereDoesntHave('dictamenGranel')
             ->whereDoesntHave('dictamenEnvasado')
             ->whereDoesntHave('dictamen')
@@ -72,8 +72,7 @@ public function index(Request $request)
         3 => '', 
         4 => '', //caracteristicas
         5 => 'fecha_emision',
-        6 => 'estatus',            
-        7 => '',// acciones
+        6 => '',// acciones
     ];
 
     /*$totalData = Dictamen_Exportacion::count();
@@ -155,10 +154,37 @@ public function index(Request $request)
         foreach ($dictamenes as $dictamen) {
             $nestedData['id_dictamen'] = $dictamen->id_dictamen ?? 'No encontrado';
             $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
+
             $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
             $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
-            $nestedData['estatus'] = $dictamen->estatus ?? 'No encontrado';
+            ///dias vigencia
+            $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
+            $nestedData['fecha_actual'] = $fechaActual;
+            $nestedData['vigencia'] = $dictamen->fecha_vigencia;
+            $fechaVigencia = Carbon::parse($dictamen->fecha_vigencia)->startOfDay();
+                if ($fechaActual->isSameDay($fechaVigencia)) {
+                    $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
+                } else {
+                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+                    if ($diasRestantes > 0) {
+                        if ($diasRestantes > 15) {
+                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
+                        } else {
+                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
+                        }
+                        $nestedData['diasRestantes'] = $res;
+                    } else {
+                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                    }
+                }
+
             $nestedData['num_servicio'] = $dictamen->inspeccione->num_servicio ?? 'No encontrado';
+            $nestedData['folio_solicitud'] = $dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
+            ///solicitud y acta
+            $nestedData['id_solicitud'] = $dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
+            $urls = $dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
+            $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
+
             ///numero y nombre empresa
             $empresa = $dictamen->inspeccione->solicitud->empresa ?? null;
             $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
@@ -185,7 +211,6 @@ public function index(Request $request)
 ///FUNCION REGISTRAR
 public function store(Request $request)
 {
-    try {
     $validated = $request->validate([
         'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
         'num_dictamen' => 'required|string|max:30',
@@ -205,13 +230,6 @@ public function store(Request $request)
         $new->save();
 
         return response()->json(['message' => 'Registrado correctamente.']);
-    } catch (\Exception $e) {
-        Log::error('Error al registrar', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        return response()->json(['error' => 'Error al registrar.'], 500);
-    }
 }
 
 
@@ -334,6 +352,27 @@ public function DictamenNoCumplimiento($id_dictamen)
     $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
     $fecha_servicio = Helpers::formatearFecha($data->inspeccione->fecha_servicio);
     
+
+    //$query->whereIn('id_tipo', [5, 8, 11, 3, 14]);
+    $tipo_solicitud = $data->inspeccione->solicitud->id_tipo ?? null;
+    // Inicializa marcadores
+    $instalaciones = $granel = $envasado = $exportacion = ' ';
+
+    switch ($tipo_solicitud) {
+        case 14:
+            $instalaciones = 'X';
+            break;
+        case 3:
+            $granel = 'X';
+            break;
+        case 5:
+        case 8:
+            $envasado = 'X';
+            break;
+        case 11:
+            $exportacion = 'X';
+            break;
+    }
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
 
     $pdf = Pdf::loadView('pdfs.dictamen_no_cumplimiento_ed0', [//formato del PDF
@@ -352,6 +391,11 @@ public function DictamenNoCumplimiento($id_dictamen)
 
         'firmaDigital' => $firmaDigital ?? 'No encontrado',
         'qrCodeBase64' => $qrCodeBase64 ?? 'No encontrado',
+
+        'instalaciones' => $instalaciones ?? ' ',
+        'granel' => $granel ?? ' ',
+        'envasado' => $envasado ?? ' ',
+        'exportacion' => $exportacion ?? ' ',
     ]);
     //nombre al descarga
     return $pdf->stream('F-UV-04-30 Dictamen de no cumplimiento Ed. 0.pdf');
