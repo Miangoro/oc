@@ -620,7 +620,7 @@
                     </div>
                 </div>
             @endcan
-
+             @can('Estadísticas hologramas clientes')
             @foreach ($marcasConHologramas as $marca)
                 @php
                     $totalDisponibles = $marca->solicitudHolograma->sum(function ($solicitud) {
@@ -650,6 +650,8 @@
                     </div>
                 </div>
             @endforeach
+
+            @endcan
 
 
 
