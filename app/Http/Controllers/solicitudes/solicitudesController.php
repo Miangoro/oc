@@ -2176,6 +2176,8 @@ class solicitudesController extends Controller
         solicitudes_eliminadas::create([
             'id_solicitud' => $id_solicitud,
             'motivo' => $motivo,
+            'responsable'       => Auth::id(),
+            'fecha_eliminacion' => Carbon::now(), // Laravel te da la fecha/hora actual
         ]);
         // Deshabilitar la solicitud
         $solicitud->habilitado = 0;
