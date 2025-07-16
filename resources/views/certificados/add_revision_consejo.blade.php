@@ -449,7 +449,7 @@
                                             <td>
                       {{-- 📎 Documentos FQ's (si existen) --}}
 
-                      @if(!empty($certificados))
+                      @if(!empty($certificados) && isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
                                                 @forelse ($fqs as $doc)
                                                     @if (!empty($doc['url']))
                                                     {{ $doc['nombre_documento'] }}
@@ -463,7 +463,7 @@
 
                                         @else
 
-                                        @if ($doc1)
+                                        @if ($doc1 && isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud != '2')
                                                     <a target="_blank"
                                                         href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
                                                         <i
