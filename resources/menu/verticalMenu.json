@@ -332,7 +332,7 @@
           "submenu": [
             {
               "url": "/bitacoraMezcalEnvasador",
-              "name": "Mezcla a granel (Inventario)",
+              "name": "Mezcal a granel (Inventario)",
               "slug": "bitacora-mezcal-envasador",
               "can": "Visualizar bitácoras"
             },

@@ -9,6 +9,15 @@ $(function () {
     select2 = $('.select2'),
     offCanvasForm = $('#offcanvasAddUser');
 
+  $(document).ready(function () {
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      todayHighlight: true,
+      language: 'es'
+    });
+  });
+
   // ajax setup
   $.ajaxSetup({
     headers: {
@@ -83,13 +92,13 @@ $(function () {
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' + // input de búsqueda
         '<"d-flex justify-content-start justify-content-md-end align-items-baseline"' +
-          '<"filtrosBitacora d-flex gap-2 align-items-center" >' + // filtros personalizados
-          '<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>' + // botones y length
+        '<"filtrosBitacora d-flex gap-2 align-items-center" >' + // filtros personalizados
+        '<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>' + // botones y length
         '>>' +
         't' + // tabla
         '<"row mx-1"' +
-          '<"col-sm-12 col-md-6"i>' + // info
-          '<"col-sm-12 col-md-6"p>' + // paginación
+        '<"col-sm-12 col-md-6"i>' + // info
+        '<"col-sm-12 col-md-6"p>' + // paginación
         '>',
       lengthMenu: [10, 20, 50, 70, 100], //for length of menu
       language: {
@@ -189,21 +198,22 @@ $(function () {
     });
   }
 
-  var dt_user_table = $('.datatables-users'),
-    select2Elements = $('.select2'),
-    userView = baseUrl + 'app/user/view/account';
-  // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
     $elements.each(function () {
       var $this = $(this);
       select2Focus($this);
-      $this.wrap('<div class="position-relative"></div>').select2({
-        dropdownParent: $this.parent()
+
+      var parent = $this.closest('.modal'); // Detecta si está en modal
+      if (parent.length === 0) parent = $('body');
+
+      $this.select2({
+        dropdownParent: parent
       });
     });
   }
 
-  initializeSelect2(select2Elements);
+  // Después de insertar el HTML dinámico
+  initializeSelect2($('.select2')); // Re-evalúa todos los .select2 del DOM
 
   $(document).on('select2:select', '#filtroEmpresa', function (e) {
     const selectedText = $(this).find('option:selected').text();
@@ -344,148 +354,284 @@ $(function () {
     });
   });
 
-
-
+  $(document).ready(function () {
     let indexMolienda = 1;
-  function agregarFilaMolienda() {
-    const html = `
-      <div class="card mb-3 border rounded p-3 position-relative">
-        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 btn-eliminar">Eliminar</button>
-        <div class="row g-3 align-items-center">
-          <div class="col-md-3">
-            <div class="form-floating form-floating-outline">
-              <input type="date" class="form-control" name="molienda[${indexMolienda}][fecha_molienda]" id="fecha_molienda_${indexMolienda}">
-              <label for="fecha_molienda_${indexMolienda}">Fecha de molienda</label>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="form-floating form-floating-outline">
-              <input type="text" class="form-control" name="molienda[${indexMolienda}][numero_tina]" id="numero_tina_${indexMolienda}">
-              <label for="numero_tina_${indexMolienda}">Nº de tina</label>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-floating form-floating-outline">
-              <input type="date" class="form-control" name="molienda[${indexMolienda}][fecha_formulacion]" id="fecha_formulacion_${indexMolienda}">
-              <label for="fecha_formulacion_${indexMolienda}">Fecha de formulación</label>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="form-floating form-floating-outline">
-              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][volumen_formulacion]" id="volumen_formulacion_${indexMolienda}">
-              <label for="volumen_formulacion_${indexMolienda}">Volumen de formulación</label>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="form-floating form-floating-outline">
-              <input type="date" class="form-control" name="molienda[${indexMolienda}][fecha_destilacion]" id="fecha_destilacion_${indexMolienda}">
-              <label for="fecha_destilacion_${indexMolienda}">Fecha de destilación</label>
-            </div>
-          </div>
-        </div>
 
-        <div class="row mt-3 g-3">
-          <div class="col-md-4">
-            <div class="fw-semibold mb-1">Puntas</div>
-            <div class="form-floating form-floating-outline mb-2">
-              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][puntas_volumen]" id="puntas_volumen_${indexMolienda}">
-              <label for="puntas_volumen_${indexMolienda}">Volumen</label>
-            </div>
-            <div class="form-floating form-floating-outline">
-              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][puntas_alcohol]" id="puntas_alcohol_${indexMolienda}">
-              <label for="puntas_alcohol_${indexMolienda}">% Alc. Vol.</label>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="fw-semibold mb-1">Mezcal</div>
-            <div class="form-floating form-floating-outline mb-2">
-              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][mezcal_volumen]" id="mezcal_volumen_${indexMolienda}">
-              <label for="mezcal_volumen_${indexMolienda}">Volumen</label>
-            </div>
-            <div class="form-floating form-floating-outline">
-              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][mezcal_alcohol]" id="mezcal_alcohol_${indexMolienda}">
-              <label for="mezcal_alcohol_${indexMolienda}">% Alc. Vol.</label>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="fw-semibold mb-1">Colas</div>
-            <div class="form-floating form-floating-outline mb-2">
-              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][colas_volumen]" id="colas_volumen_${indexMolienda}">
-              <label for="colas_volumen_${indexMolienda}">Volumen</label>
-            </div>
-            <div class="form-floating form-floating-outline">
-              <input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][colas_alcohol]" id="colas_alcohol_${indexMolienda}">
-              <label for="colas_alcohol_${indexMolienda}">% Alc. Vol.</label>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
+    $(document).on('click', '#agregarFilaMolienda', function () {
+      let nuevaFila = `
+            <tr>
+                <td class="text-nowrap">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">
+                        <i class="ri-close-circle-fill"></i>
+                    </button>
+                </td>
+                <td><input type="text" class="form-control datepicker" name="molienda[${indexMolienda}][fecha_molienda]" placeholder="aaaa-mm-dd"></td>
+                <td><input type="text" class="form-control" name="molienda[${indexMolienda}][numero_tina]" placeholder="Nº de tina"></td>
+                <td><input type="text" class="form-control datepicker" name="molienda[${indexMolienda}][fecha_formulacion]" placeholder="aaaa-mm-dd"></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][volumen_formulacion]" placeholder="Vol."></td>
+                <td><input type="text" class="form-control datepicker" name="molienda[${indexMolienda}][fecha_destilacion]" placeholder="aaaa-mm-dd"></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][puntas_volumen]" placeholder="Vol."></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][puntas_alcohol]" placeholder="% Alc."></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][mezcal_volumen]" placeholder="Vol."></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][mezcal_alcohol]" placeholder="% Alc."></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][colas_volumen]" placeholder="Vol."></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][colas_alcohol]" placeholder="% Alc."></td>
+            </tr>
+        `;
 
-    $('#seccionMoliendaDinamica').append(html);
-    indexMolienda++;
-  }
+      $('#tablaMolienda').append(nuevaFila);
 
-  let indexSegundaDestilacion = 1;
-  function agregarFilaSegundaDestilacion() {
-    const html = `
-      <div class="card mb-3 border rounded p-3 position-relative">
-        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 btn-eliminar">Eliminar</button>
-        <div class="row g-3 align-items-center">
-          <div class="col-md-4">
-            <div class="form-floating form-floating-outline">
-              <input type="date" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][fecha_destilacion]" id="segunda_fecha_destilacion_${indexSegundaDestilacion}">
-              <label for="segunda_fecha_destilacion_${indexSegundaDestilacion}">Fecha de destilación</label>
-            </div>
-          </div>
-        </div>
+      // Reinicializa datepicker en los nuevos campos si estás usando uno como flatpickr o bootstrap-datepicker
+      $('.datepicker').datepicker({ format: 'yyyy-mm-dd', autoclose: true });
 
-        <div class="row mt-3 g-3">
-          <div class="col-md-4">
-            <div class="fw-semibold mb-1">Puntas</div>
-            <div class="form-floating form-floating-outline mb-2">
-              <input type="number" step="0.01" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][puntas_volumen]" id="segunda_puntas_volumen_${indexSegundaDestilacion}">
-              <label for="segunda_puntas_volumen_${indexSegundaDestilacion}">Volumen</label>
-            </div>
-            <div class="form-floating form-floating-outline">
-              <input type="number" step="0.01" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][puntas_alcohol]" id="segunda_puntas_alcohol_${indexSegundaDestilacion}">
-              <label for="segunda_puntas_alcohol_${indexSegundaDestilacion}">% Alc. Vol.</label>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="fw-semibold mb-1">Mezcal</div>
-            <div class="form-floating form-floating-outline mb-2">
-              <input type="number" step="0.01" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][mezcal_volumen]" id="segunda_mezcal_volumen_${indexSegundaDestilacion}">
-              <label for="segunda_mezcal_volumen_${indexSegundaDestilacion}">Volumen</label>
-            </div>
-            <div class="form-floating form-floating-outline">
-              <input type="number" step="0.01" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][mezcal_alcohol]" id="segunda_mezcal_alcohol_${indexSegundaDestilacion}">
-              <label for="segunda_mezcal_alcohol_${indexSegundaDestilacion}">% Alc. Vol.</label>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="fw-semibold mb-1">Colas</div>
-            <div class="form-floating form-floating-outline mb-2">
-              <input type="number" step="0.01" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][colas_volumen]" id="segunda_colas_volumen_${indexSegundaDestilacion}">
-              <label for="segunda_colas_volumen_${indexSegundaDestilacion}">Volumen</label>
-            </div>
-            <div class="form-floating form-floating-outline">
-              <input type="number" step="0.01" class="form-control" name="segunda_destilacion[${indexSegundaDestilacion}][colas_alcohol]" id="segunda_colas_alcohol_${indexSegundaDestilacion}">
-              <label for="segunda_colas_alcohol_${indexSegundaDestilacion}">% Alc. Vol.</label>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-
-    $('#seccionSegundaDestilacion').append(html);
-    indexSegundaDestilacion++;
-  }
-
-  // Delegar evento para eliminar fila (funciona para elementos dinámicos)
-  $(document).on('click', '.btn-eliminar', function () {
-    $(this).closest('.card').remove();
+      indexMolienda++;
+    });
   });
 
-/* fin chelo */
+  $(document).ready(function () {
+    let indexSegundaDestilacion = 1;
+
+    $(document).on('click', '#agregarFilaSegundaDestilacion', function () {
+      let filaNueva = `
+            <tr>
+                <td class="text-nowrap">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">
+                        <i class="ri-close-circle-fill"></i>
+                    </button>
+                </td>
+                <td>
+                    <input type="text" class="form-control datepicker"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][fecha_destilacion]"
+                        placeholder="aaaa-mm-dd">
+                </td>
+                <td>
+                    <input type="number" step="0.01" class="form-control"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][puntas_volumen]"
+                        placeholder="Vol.">
+                </td>
+                <td>
+                    <input type="number" step="0.01" class="form-control"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][puntas_alcohol]"
+                        placeholder="% Alc.">
+                </td>
+                <td>
+                    <input type="number" step="0.01" class="form-control"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][mezcal_volumen]"
+                        placeholder="Vol.">
+                </td>
+                <td>
+                    <input type="number" step="0.01" class="form-control"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][mezcal_alcohol]"
+                        placeholder="% Alc.">
+                </td>
+                <td>
+                    <input type="number" step="0.01" class="form-control"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][colas_volumen]"
+                        placeholder="Vol.">
+                </td>
+                <td>
+                    <input type="number" step="0.01" class="form-control"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][colas_alcohol]"
+                        placeholder="% Alc.">
+                </td>
+            </tr>
+        `;
+
+      $('#tablaSegundaDestilacion').append(filaNueva);
+
+      // Reinicializa el datepicker si estás usando uno
+      $('.datepicker').datepicker({ format: 'yyyy-mm-dd', autoclose: true });
+
+      indexSegundaDestilacion++;
+    });
+  });
+
+  // Delegar evento para eliminar fila (funciona para elementos dinámicos)
+  /*   $(document).on('click', '.btn-eliminar', function () {
+    $(this).closest('.card').remove();
+  }); */
+
+  $(function () {
+    // Configuración de CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation
+    const form = document.getElementById('registroInventarioForm');
+    const fv = FormValidation.formValidation(form, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione el cliente'
+            }
+          }
+        },
+        fecha_ingreso: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha de ingreso'
+            }
+          }
+        },
+        numero_tapada: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un número de tapada'
+            }
+          }
+        },
+        lote_granel: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione el lote'
+            }
+          }
+        },
+        'id_tipo[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un tipo de agave'
+            }
+          }
+        },
+        numero_guia: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el número de guía'
+            }
+          }
+        },
+        numero_pinas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el número de piñas'
+            },
+            numeric: {
+              message: 'Debe ser un número'
+            }
+          }
+        },
+        kg_maguey: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese los kilogramos de maguey'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        porcentaje_azucar: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el porcentaje de azúcar'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        kg_coccion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese los kilogramos a cocción'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        fecha_inicio_coccion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha inicial de cocción'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'El formato debe ser aaaa-mm-dd'
+            }
+          }
+        },
+        fecha_fin_coccion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha final de cocción'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'El formato debe ser aaaa-mm-dd'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          /* rowSelector: '.form-floating' */
+          rowSelector: function (field, ele) {
+            // field is the field name & ele is the field element
+            return '.mb-4, .mb-1';
+          }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      $('#btnRegistrar').addClass('d-none');
+      $('#loading').removeClass('d-none');
+      var formData = $(form).serialize();
+
+      $.ajax({
+        url: '/bitacoraHologramasEnvasadorStore',
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+          // Ocultar el offcanvas
+          $('#RegistrarBitacoraMezcal').modal('hide');
+          $('#loading').addClass('d-none');
+          $('#btnRegistrar').removeClass('d-none');
+          $('#registroInventarioForm')[0].reset();
+          $('#registroInventarioForm select').val(null).trigger('change');
+          $('#id_instalacion').empty().trigger('change');
+          $('#id_lote_envasado').empty().trigger('change');
+          $('.datatables-users').DataTable().ajax.reload();
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.success,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al agregar la bitácora',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+          $('#loading').addClass('d-none');
+          $('#btnRegistrar').removeClass('d-none');
+        }
+      });
+    });
+
+    // Inicializar select2 y revalidar el campo cuando cambie
+    $('#id_empresa, #id_tipo, #fecha_ingreso, #fecha_fin_coccion, #fecha_inicio_coccion').on('change', function () {
+      fv.revalidateField($(this).attr('name'));
+    });
+  });
+
+  /* fin chelo */
 });

@@ -10,6 +10,7 @@ use App\Models\LotesGranel;
 use App\Models\empresa;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
+use App\Models\tipos;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -28,8 +29,9 @@ class BitacoraProcesoElaboracionController extends Controller
                   ->where('tipo', 2)
                   ->get();
           }
+      $tipos = tipos::all(); // Obtén todos los tipos de agave
       $tipo_usuario =  Auth::user()->tipo;
-      return view('Bitacoras.BitacoraProcesoElaboracion_view', compact('bitacora', 'empresas', 'tipo_usuario'));
+      return view('Bitacoras.BitacoraProcesoElaboracion_view', compact('bitacora', 'empresas', 'tipo_usuario', 'tipos'));
   }
 
   public function index(Request $request)
