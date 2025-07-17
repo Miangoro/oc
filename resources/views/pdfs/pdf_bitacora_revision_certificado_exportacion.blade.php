@@ -260,7 +260,7 @@
         </tr>
         <tr>
             <td class="letra-fondo" style="text-align: left" colspan="2">No. De certificado:</td>
-            <td colspan="2">{{ $num_certificado }}</td>
+            <td class="text-danger" colspan="2">{{ $num_certificado }}</td>
             <td class="td-no-border"></td>
             <td class="td-no-border"></td>
         </tr>
@@ -427,7 +427,7 @@
                         use Illuminate\Support\Facades\Storage;
                         $firmaPath = $firmaRevisor ? 'firmas/' . $firmaRevisor : null;
                     @endphp
-                    <div style="width: 100%; text-align: right; position: fixed; margin-top: -10px; right: 80px;">
+                    <div style="width: 100%; text-align: right; position: fixed; margin-top: -10px; right: 150px;">
                         @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
                             <img src="{{ public_path('storage/' . $firmaPath) }}" alt="Firma"
                                 style="width: 120px; height: auto;">
