@@ -234,7 +234,7 @@
         <tr>
             <td class="letra-fondo negrita" style="text-align: right; padding-top: 0; padding-bottom: 0">NO. DE
                 CERTIFICADO:</td>
-            <td class="negrita" style="padding-top: 0; padding-bottom: 0">{{ $num_certificado }}</td>
+            <td class="negrita" style="padding-top: 0; padding-bottom: 0; color: red;">{{ $num_certificado }}</td>
         </tr>
         <tr>
             <td class="letra-fondo negrita " style="text-align: right; padding-top: 0; padding-bottom: 0">TIPO DE
@@ -390,7 +390,7 @@
                     $firmaPath = $firmaRevisor ? 'firmas/' . $firmaRevisor : null;
                 @endphp
                 @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
-                    <img style="position: absolute; top: 830px; left: 165; right: 0; margin: 0 auto;" height="50px"
+                    <img style="position: absolute; top: 810px; left: 165; right: 0; margin: 0 auto;" height="50px"
                         src="{{ public_path('storage/' . $firmaPath) }}">
                 @endif
                 DE QUIEN TOMA LA APROBACIÓN</td>
@@ -398,7 +398,7 @@
                 Gerente Técnico del Organismo <br>
                 Certificador de CIDAM <br>
                 <span class="negrita">{{ $fecha_aprobacion === 'N/A' ? $fecha : $fecha_aprobacion }}<div style="padding-top: 20px"></span></div>
-                <img style="position: absolute; top: 900px; left: 140; right: 0; margin: 0 auto;" height="50px"
+                <img style="position: absolute; top: 875px; left: 140; right: 0; margin: 0 auto;" height="50px"
                         src="{{ public_path('storage/firmas/firma_Q.F.B._Mayra_Gutiérrez_Romero_1739201715.png') }}">
             </td>
         </tr>
