@@ -427,7 +427,10 @@
                                          $pendientes = $grupo->where('decision', 'Pendiente')->sum('total');
                                     @endphp
                                     <tr>
-                                        <td>
+                                       <td @class([
+                                                'bg-primary text-white fw-bold' => $revisor?->id == auth()->id()
+                                            ])>
+
                                             <li class="d-flex align-items-center mb-6">
                                                 <div class="avatar flex-shrink-0 me-4">
                                                @if (!empty($revisor?->profile_photo_path))
@@ -443,10 +446,7 @@
                                                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                 <div class="me-2">
                                                     <h6 class="mb-0"> {{ $revisor?->name ?? '—' }}</h6>
-                                                   {{--  <small class="d-flex align-items-center">
-                                                     <i class="icon-base ri ri-calendar-line icon-16px"></i>
-                                                    <span class="ms-2">21 Jul | 08:20-10:30</span>
-                                                    </small>--}}
+                                               
                                                 </div>
                                                <div class="badge 
                                                     {{ $rol === 'Personal' ? 'bg-label-info' : ($rol === 'Consejo' ? 'bg-label-warning' : 'bg-label-secondary') }} 
