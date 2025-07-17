@@ -260,7 +260,7 @@
         </tr>
         <tr>
             <td class="letra-fondo" style="text-align: left" colspan="2">No. De certificado:</td>
-            <td style="color: red" colspan="2">{{ $num_certificado }}</td>
+            <td class="negrita" style="color: red; font-size: 14px" colspan="2">{{ $num_certificado }}</td>
             <td class="td-no-border"></td>
             <td class="td-no-border"></td>
         </tr>
