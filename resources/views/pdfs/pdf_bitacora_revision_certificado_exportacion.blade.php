@@ -350,7 +350,7 @@
                         <td class="letra-fondo" style="width: 50px">N/A</td>
                     </tr>
                     @foreach ($preguntas as $pregunta)
-                        @if ($pregunta['id_pregunta'] >= 124 && $pregunta['id_pregunta'] <= 128)
+                        @if ($pregunta['id_pregunta'] >= 48 && $pregunta['id_pregunta'] <= 62)
                             <tr>
                                 <td style="text-align: left">{{ $pregunta['pregunta'] }}</td>
                                 <td>{{ $pregunta['respuesta'] == 'C' ? 'C' : '------' }}</td>
@@ -385,13 +385,16 @@
                         <td class="letra-fondo">N/C</td>
                         <td class="letra-fondo">N/A</td>
                     </tr>
-                    <tr>
-                        <td class="leftLetter" style="height: 40px;"> Dictamen de cumplimiento para producto de
-                            exportación</td>
-                        <td class="leftLetter">C</td>
-                        <td class="leftLetter">------</td>
-                        <td class="leftLetter">------</td>
-                    </tr>
+                    @foreach ($preguntas as $pregunta)
+                        @if ($pregunta['id_pregunta'] >= 124 && $pregunta['id_pregunta'] <= 128)
+                            <tr>
+                                <td style="text-align: left">{{ $pregunta['pregunta'] }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'C' ? 'C' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NC' ? 'NC' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NA' ? 'NA' : '------' }}</td>
+                            </tr>
+                        @endif
+                    @endforeach
 
                 </table>
             </td>
