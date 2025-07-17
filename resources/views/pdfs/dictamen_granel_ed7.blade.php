@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel</title>
+    <title>Dictamen de Cumplimiento NOM Mezcal a Granel</title>
     <style>
             @font-face {
                 font-family: 'fuenteNormal';
