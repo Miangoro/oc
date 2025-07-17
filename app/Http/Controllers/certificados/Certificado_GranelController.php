@@ -215,7 +215,24 @@ public function index(Request $request)
                 $idLote = $caracteristicas['id_lote_granel'] ?? null;
             $loteGranel = LotesGranel::find($idLote);
             $nestedData['nombre_lote'] = $loteGranel?->nombre_lote ?? 'No encontrado';
-            $nestedData['n_analisis'] = $loteGranel?->folio_fq ?? 'No encontrado';
+            //obtener folios FQ con URL
+                $empresa_granel = $loteGranel->empresa ?? null;
+                $num_cliente_granel = $empresa_granel && $empresa_granel->empresaNumClientes->isNotEmpty()
+                    ? $empresa_granel->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa_granel
+                    ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+            $folios = array_map('trim', explode(',', $loteGranel?->folio_fq ?? ''));//separo los folios
+            $documentosFQ = $loteGranel?->fqs ?? collect(); // Relación ya filtrada por 58 y 134
+            $urls = $documentosFQ->pluck('url')->toArray();//obtengo la url
+            $fq_documentos = [];//inicializo
+            foreach ($folios as $index => $folio) {
+                $fq_documentos[] = [
+                    'folio' => !empty($folio) ? $folio : null,
+                    'url' => isset($urls[$index]) ? asset("files/{$num_cliente_granel}/fqs/{$urls[$index]}") : null
+                ];
+            }
+            $fq_documentos = array_filter($fq_documentos, fn($item) => !empty($item['folio']));
+            $nestedData['fq_documentos'] = array_values($fq_documentos);
+
             //Certificado Firmado
             $documentacion = Documentacion_url::where('id_relacion', $idLote)
                 ->where('id_documento', 59)->where('id_doc', $certificado->id_certificado) ->first();

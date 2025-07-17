@@ -192,6 +192,7 @@ $(function () {
           }
         },
         {
+          //caracteristicas
           targets: 4,
           searchable: true,
           orderable: false,
@@ -200,8 +201,15 @@ $(function () {
             var $ = full[''];
             return `<div class="small">
             <b>Lote granel:</b> ${full['nombre_lote']} <br>
-            <b>FQs:</b> ${full['n_analisis']}
-            
+            <b>FQs:</b> ${
+              Array.isArray(full['fq_documentos']) && full['fq_documentos'].length > 0
+                ? full['fq_documentos'].map(item =>
+                    item.url
+                      ? `<a href="${item.url}" class="text-primary" target="_blank">${item.folio ?? ''}</a>`
+                      : `${item.folio ?? ''}`
+                  ).join(', ')
+                : 'Sin FQ registrado'
+            }
 
             ${full['sustituye'] ? `<br><b>Sustituye:</b> <span class="text-primary">${full['sustituye']}</span>` : ''} 
             ${full['motivo'] ? `<br><b>Motivo:</b> <span class="text-danger">${full['motivo']}</span>` : ''}
