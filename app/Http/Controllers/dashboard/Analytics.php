@@ -117,7 +117,7 @@ $certificadosPorVencer = $certificadosInstalacion;
 
     $lotesSinFq = LotesGranel::whereDoesntHave('fqs')->get();
 
-    $certificadoGranelSinEscaneado = CertificadosGranel::whereDoesntHave('certificadoEscaneado')->get();
+    $certificadoGranelSinEscaneado = CertificadosGranel::whereDoesntHave('certificadoEscaneado')->orderByDesc('fecha_emision')->get();
 
     $empresaId = Auth::user()?->empresa?->id_empresa;
 
