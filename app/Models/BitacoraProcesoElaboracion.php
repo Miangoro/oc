@@ -43,5 +43,15 @@ class BitacoraProcesoElaboracion extends Model
     {
         return $this->belongsTo(User::class, 'id_firmante');
     }
+    public function molienda()
+    {
+        return $this->hasMany(BitacoraProcesoMoliendaDestilacion::class, 'id_bitacora');
+    }
+
+    public function segundaDestilacion()
+    {
+        return $this->hasMany(BitacoraProcesoSegundaDestilacion::class, 'id_bitacora');
+    }
+
 
 }

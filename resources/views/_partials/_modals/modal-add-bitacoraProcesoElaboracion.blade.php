@@ -17,19 +17,19 @@
                                 PROCESO DE ELABORACIÓN DE MEZCAL (PRODUCTOR ARTESANAL)
                             </div>
                             <div class="card-body">
-
+                              <input type="hidden" name="id" id="edit_bitacora_id" >
                                 <!-- GENERALES -->
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control datepicker" id="fecha_ingreso"
+                                            <input type="text" class="form-control datepicker" id="edit_fecha_ingreso"
                                                 name="fecha_ingreso" placeholder="Fecha de ingreso">
                                             <label for="fecha_ingreso">Fecha de ingreso</label>
                                         </div>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <select id="id_empresa" name="id_empresa" class="select2 form-select"
+                                            <select id="edit_id_empresa" name="id_empresa" class="select2 form-select"
                                                 data-error-message="por favor selecciona la empresa">
                                                 @if ($tipo_usuario != 3)
                                                     <option value="" disabled selected>Selecciona el cliente
@@ -47,14 +47,14 @@
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="lote_granel"
+                                            <input type="text" class="form-control" id="edit_lote_granel"
                                                 name="lote_granel" placeholder="Lote a granel">
                                             <label for="lote_granel">Lote a granel</label>
                                         </div>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="numero_tapada"
+                                            <input type="text" class="form-control" id="edit_numero_tapada"
                                                 name="numero_tapada" placeholder="Nº de tapada">
                                             <label for="numero_tapada">Nº de tapada</label>
                                         </div>
@@ -85,12 +85,12 @@
                                                 <tbody>
                                                     <tr>
                                                         <td><span class="position-relative d-block mb-1"><input
-                                                                    type="text" class="form-control" id="numero_guia"
+                                                                    type="text" class="form-control" id="edit_numero_guia"
                                                                     name="numero_guia" placeholder="N° de guía"></span>
                                                         </td>
                                                         <td> {{-- <span class="position-relative d-block mb-1"> --}}
                                                                 <div class="form-floating form-floating-outline mb-4">
-                                                                <select id="tipo_agave" name="id_tipo[]"
+                                                                <select id="edit_tipo_agave" name="id_tipo[]"
                                                                     class="select2 form-select mb-4" multiple>
                                                                     @foreach ($tipos as $tipo)
                                                                         <option value="{{ $tipo->id_tipo }}">
@@ -103,15 +103,15 @@
                                                         </td>
                                                         <td><span class="position-relative d-block mb-1"><input
                                                                     type="number" class="form-control"
-                                                                    id="numero_pinas" name="numero_pinas"
+                                                                    id="edit_numero_pinas" name="numero_pinas"
                                                                     placeholder="N° de piñas"></span></td>
                                                         <td><span class="position-relative d-block mb-1"><input
                                                                     type="number" step="0.01" class="form-control"
-                                                                    id="kg_maguey" name="kg_maguey"
+                                                                    id="edit_kg_maguey" name="kg_maguey"
                                                                     placeholder="Kg. de maguey"></span></td>
                                                         <td><span class="position-relative d-block mb-1"><input
                                                                     type="number" step="0.01" class="form-control"
-                                                                    placeholder="% de art." id="porcentaje_azucar"
+                                                                    placeholder="% de art." id="edit_porcentaje_azucar"
                                                                     name="porcentaje_azucar"></sapn>
                                                         </td>
                                                     </tr>
@@ -143,14 +143,14 @@
                                                         <td>
                                                             <span class="position-relative d-block mb-1">
                                                                 <input type="number" step="0.01"
-                                                                    class="form-control" id="kg_coccion"
+                                                                    class="form-control" id="edit_kg_coccion"
                                                                     name="kg_coccion" placeholder="Kg. a cocción">
                                                             </span>
                                                         </td>
                                                         <td>
                                                             <span class="position-relative d-block mb-1">
                                                                 <input type="text" class="form-control datepicker"
-                                                                    id="fecha_inicio_coccion"
+                                                                    id="edit_fecha_inicio_coccion"
                                                                     name="fecha_inicio_coccion"
                                                                     placeholder="aaaa-mm-dd">
                                                             </span>
@@ -158,7 +158,7 @@
                                                         <td>
                                                             <span class="position-relative d-block mb-1">
                                                                 <input type="text" class="form-control datepicker"
-                                                                    id="fecha_fin_coccion" name="fecha_fin_coccion"
+                                                                    id="edit_fecha_fin_coccion" name="fecha_fin_coccion"
                                                                     placeholder="aaaa-mm-dd">
                                                             </span>
                                                         </td>
@@ -189,7 +189,7 @@
                                             <tr>
                                                 <th rowspan="2">
                                                     <button type="button" class="btn btn-primary btn-sm"
-                                                        id="agregarFilaMolienda">
+                                                        id="edit_agregarFilaMolienda">
                                                         <i class="ri-add-circle-fill text-white"></i>
                                                     </button>
                                                 </th>
@@ -211,7 +211,7 @@
                                                 <th>% Alc. Vol.</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="tablaMolienda">
+                                        <tbody id="edit_tablaMolienda">
                                             <tr>
                                                 <td class="text-nowrap">
                                                     <button type="button" class="btn btn-danger btn-sm" disabled
