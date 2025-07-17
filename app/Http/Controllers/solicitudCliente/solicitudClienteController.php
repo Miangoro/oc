@@ -13,7 +13,7 @@ use App\Models\empresa_clasificacion_bebidas;
 use App\Models\catalogo_clasificacion_bebidas;
 use App\Models\estados;
 use App\Mail\correoEjemplo;
-use App\Models\Instalaciones;
+use App\Models\instalaciones;
 use Illuminate\Support\Facades\Mail;
 
 class solicitudClienteController extends Controller
