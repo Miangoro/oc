@@ -474,7 +474,7 @@ public function storeRevisor(Request $request)
         'esCorreccion' => 'nullable|in:si,no',
         'observaciones' => 'nullable|string|max:5000',
         'id_certificado' => 'required|integer|exists:certificados_granel,id_certificado',
-        'url' => 'nullable|file|max:10000',
+        'url' => 'nullable|file|mimes:pdf|max:3072',
         'nombre_documento' => 'nullable|string|max:255',
     ]);
 
