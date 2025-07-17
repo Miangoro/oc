@@ -533,7 +533,7 @@
 
 
 
-  <table style="width: 340px; float: right; margin-top: -100px;">
+  <table style="width: 340px; float: right; margin-top: -70px;">
         <tr>
             <td class="letra-fondo negrita" colspan="2"
                 style="font-size: 10.5px; padding-top: 0; vertical-align: top"> FIRMAS DE LAS PERSONAS RESPONSABLES DE
