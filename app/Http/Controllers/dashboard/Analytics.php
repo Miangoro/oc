@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\dashboard;
 
+use App\Exports\CertificadosExport;
 use App\Http\Controllers\Controller;
 use App\Models\Certificado_Exportacion;
 use App\Models\Certificados;
@@ -118,6 +119,8 @@ $certificadosPorVencer = $certificadosInstalacion;
     $lotesSinFq = LotesGranel::whereDoesntHave('fqs')->get();
 
     $certificadoGranelSinEscaneado = CertificadosGranel::whereDoesntHave('certificadoEscaneado')->orderByDesc('fecha_emision')->get();
+    $certificadoExportacionSinEscaneado = Certificado_Exportacion::whereDoesntHave('certificadoEscaneado')->orderByDesc('fecha_emision')->get();
+    
 
     $empresaId = Auth::user()?->empresa?->id_empresa;
 
@@ -198,7 +201,7 @@ $pendientesRevisarCertificadosConsejo = Revisor::where('decision', 'Pendiente')
 
 
 
-    return view('content.dashboard.dashboards-analytics', compact('pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+    return view('content.dashboard.dashboards-analytics', compact('certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)
