@@ -176,11 +176,20 @@ $(function () {
           render: function (data, type, full, meta) {
             return `<div class="small">
                 <b>Lote granel:</b> ${full['nombre_lote']} <br>
-                <b>FQs: </b> ${full['analisis']}
+                <b>FQs:</b> ${
+                  Array.isArray(full['fq_documentos']) && full['fq_documentos'].length > 0
+                    ? full['fq_documentos'].map(item =>
+                        item.url
+                          ? `<a href="${item.url}" class="text-primary" target="_blank">${item.folio ?? ''}</a>`
+                          : `${item.folio ?? ''}`
+                      ).join(', ')
+                    : 'Sin FQ registrado'
+                }
+                
 
                 ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
               </div>`;
-          }
+          }//<b>FQs: </b> ${full['analisis']}
         },
         {
           //fechas

@@ -168,7 +168,7 @@ $(function () {
               `;
           }
         },
-        {
+        {//caracteristicas
           targets: 4,
           searchable: true,
           orderable: false,
@@ -201,7 +201,7 @@ $(function () {
                 } <br>
 
 
-                <b>Folio fq:</b> ${folioHtml || 'N/A'} <br>
+                <b>FQs:</b> ${folioHtml || 'N/A'} <br>
                 <b>Tipo maguey:</b> ${full['tipo_maguey']} <br>
                 <b>Marca:</b> ${full['marca']} <br>
                 <b>Presentación:</b> ${full['presentacion']} <br>
