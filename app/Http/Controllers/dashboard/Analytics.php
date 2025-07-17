@@ -42,6 +42,30 @@ class Analytics extends Controller
     })
     ->get();
 
+$solicitudesSinDictamen = solicitudesModel::where('fecha_solicitud', '>', '2024-12-31')
+    ->where(function ($query) {
+        $query
+            ->where(function ($q) {
+                $q->where('id_tipo', 14)
+                  ->whereDoesntHave('inspeccion.dictamen');
+            })
+            ->orWhere(function ($q) {
+                $q->where('id_tipo', 3)
+                  ->whereDoesntHave('inspeccion.dictamenGranel');
+            })
+            ->orWhere(function ($q) {
+                $q->where('id_tipo', 5)
+                  ->whereDoesntHave('inspeccion.dictamenEnvasado');
+            })
+            ->orWhere(function ($q) {
+                $q->where('id_tipo', 11)
+                  ->whereDoesntHave('inspeccion.dictamenExportacion');
+            });
+    })->orderByDesc('fecha_solicitud')
+    ->get();
+
+
+
 $revisiones = Revisor::select(
         'id_revisor as user_id',
         DB::raw("CASE
@@ -174,7 +198,7 @@ $pendientesRevisarCertificadosConsejo = Revisor::where('decision', 'Pendiente')
 
 
 
-    return view('content.dashboard.dashboards-analytics', compact('pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa', 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+    return view('content.dashboard.dashboards-analytics', compact('pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
   public function estadisticasCertificados(Request $request)

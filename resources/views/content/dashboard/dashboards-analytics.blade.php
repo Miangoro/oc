@@ -181,6 +181,17 @@
 
                             <hr>
                             <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                                data-bs-target="#modalSolicitudesSinDictamen">
+                                <div class="avatar me-4">
+                                    <span class="avatar-initial rounded-3 bg-label-warning"><i
+                                            class="ri-file-list-fill ri-24px"></i></span>
+                                </div>
+                                <h4 class="mb-0">{{ $solicitudesSinDictamen->count() }}</h4>
+                            </div>
+                            <h6 class="mb-0 fw-normal">Pendiente de crear dictamen</h6>
+
+                            <hr>
+                            <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
                                 data-bs-target="#modalSolicitudesSinActa">
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-warning"><i
@@ -945,5 +956,58 @@
                 </div>
             </div>
         </div>
+
+    <!-- Modal -->
+<div class="modal fade" id="modalSolicitudesSinDictamen" tabindex="-1" aria-labelledby="modalDictamenLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-label-warning">
+                <h5 class="modal-title" id="modalDictamenLabel">
+                    <i class="ri-file-warning-fill me-2"></i>Solicitudes pendientes de generar dictamen
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+                @if ($solicitudesSinDictamen->count())
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Folio</th>
+                                    <th>Tipo</th>
+                                    <th>Cliente</th>
+                                    <th>Fecha</th>
+                                    <th>Inspector</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($solicitudesSinDictamen as $solicitud)
+                                    <tr>
+                                        <td><strong>{{ $solicitud->folio }}</strong></td>
+                                        <td>{{ $solicitud->tipo_solicitud->tipo ?? '—' }}</td>
+                                        <td>{{ $solicitud->empresa->razon_social ?? 'N/A' }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</td>
+                                        <td>{{ $solicitud->inspeccion->inspector->name ?? 'Sin asignar' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="alert alert-info mb-0">No hay solicitudes pendientes de generar dictamen.</div>
+                @endif
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+        
 
     @endsection
