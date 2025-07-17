@@ -427,7 +427,8 @@
                         use Illuminate\Support\Facades\Storage;
                         $firmaPath = $firmaRevisor ? 'firmas/' . $firmaRevisor : null;
                     @endphp
-                    <div style="width: 100%; text-align: right; margin-top: -10px;">
+                   <div style="width: 100%; text-align: right; margin-top: 20px; margin-right: 190px;">
+
                         @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
                             <img src="{{ public_path('storage/' . $firmaPath) }}" alt="Firma"
                                 style="width: 120px; height: auto;">
