@@ -665,7 +665,7 @@ public function obtenerRevision($id_certificado)
         'es_correccion' => $revision->es_correccion,
         'documento' => $documento ? [
             'nombre' => $documento->nombre_documento,
-            'url' => asset('storage/revisiones/' . $documento->url),
+            'url' => asset('files/revisiones/' . $documento->url),
         ] : null,
     ]);
 }
