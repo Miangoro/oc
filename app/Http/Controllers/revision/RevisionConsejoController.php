@@ -922,8 +922,8 @@ class RevisionConsejoController extends Controller
         $nameRevisor = $revisor->user->name ?? null;
         $firmaRevisor = $revisor->user->firma ?? '';
         $puestoRevisor = $revisor->user->puesto ?? null;
-        $fecha = $revisor->updated_at;
-        $fecha_segunda = $revisor->created_at;
+        $fecha = $revisor->created_at;
+        $fecha_segunda = $revisor->updated_at;
         $id_aprobador = $revisor->aprobador->name ?? 'Sin asignar';
         $aprobacion = $revisor->aprobacion ?? 'Pendiente de aprobar';
         $fecha_aprobacion = $revisor->fecha_aprobacion;
