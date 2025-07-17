@@ -503,9 +503,9 @@
                                     <tbody class="table-border-bottom-0">
                                         <th>
                                             <tr>
-                                                <td>Mes</td>
-                                                <td>Certificados</td>
-                                                <td>Reexpediciónes</td>
+                                                <td class="text-end">Mes</td>
+                                                <td class="text-end">Certificados</td>
+                                                <td class="text-end">Reexpediciónes</td>
                                             </tr>
                                         </th>
                                         @foreach ($TotalCertificadosExportacionPorMes as $item)
@@ -518,7 +518,7 @@
                                                 <td class="text-end py-4">
                                                     <span class="text-heading fw-medium">{{ $item->total }}</span>
                                                 </td>
-                                                <td class="pe-0 py-4">
+                                                <td class="text-end pe-0 py-4">
                                                     <span class="text-heading fw-medium"> {{ $item->certificado_reexpedido ? 1 : 0 }}</span>
                                                 </td>
                                             </tr>

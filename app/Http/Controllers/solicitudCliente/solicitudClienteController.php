@@ -59,12 +59,7 @@ class solicitudClienteController extends Controller
       $producto->save();
     }
 
-    for ($i = 0; $i < count($request->norma); $i++) {
-      $norma = new empresa_norma();
-      $norma->id_norma = $request->norma[$i];
-      $norma->id_empresa = $id_empresa;
-      $norma->save();
-    }
+
 
     if (!empty($request->domicilio_productora) && !empty($request->estado_productora)) {
       $productora = new instalaciones();
