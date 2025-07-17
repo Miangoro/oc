@@ -28,7 +28,7 @@ class solicitudClienteController extends Controller
 
   public function RegistroExitoso()
   {
-    return view('solicitudes.Registro_exitoso');
+    return view('solicitudes.registro_exitoso');
   }
 
   public function registrar(Request $request)
@@ -144,7 +144,7 @@ if (is_array($request->clasificacion)) {
 
 
 
-    return view('solicitudes.Registro_exitoso');
+    return view('solicitudes.registro_exitoso');
   }
 
 
