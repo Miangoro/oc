@@ -98,7 +98,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header bg-primary pb-4">
-          <h5 class="modal-title text-white">Visto Bueno <span id="folio_certificado"></span></h5>
+          <h5 class="modal-title text-white">Visto Bueno <span id="folio_cer"></span></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">

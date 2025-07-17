@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Certificado de Exportacion</title>
+    <title>Certificado de Exportación</title>
     <style>
         @page {
             size: 227mm 292mm;
@@ -321,7 +321,7 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px;">
                 Certificado <br> NOM a <br>Granel:</td>
             <td style="text-align: left; padding-left: 4px;">
-                {{ $lote->lotesGranel->first()->folio_certificado ?? 'No encontrado' }}&nbsp;
+                {{ $lote->lotesGranel->first()->certificadoGranel->num_certificado ?? 'No encontrado' }}&nbsp;
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Volumen:</td>
             <td style="text-align: left; padding-left: 4px;">
@@ -447,7 +447,7 @@
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px;">
                     Certificado <br> NOM a <br>Granel:</td>
                 <td style="text-align: left; padding-left: 4px;">
-                    {{ $lote->lotesGranel->first()->folio_certificado ?? 'No encontrado' }}&nbsp;
+                    {{ $lote->lotesGranel->first()->certificadoGranel->num_certificado ?? 'No encontrado' }}&nbsp;
                 </td>
                 <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Volumen:</td>
                 <td style="text-align: left; padding-left: 4px;">

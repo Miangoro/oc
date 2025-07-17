@@ -622,7 +622,7 @@ public function MostrarDictamenGranel($id_dictamen)
             }
     }
 
-    $pdf = Pdf::loadView('pdfs.dictamen_granel_ed7', [
+    $pdf = [
         'data' => $data,
         'estado' => $estado,
         'fecha_servicio' => $fecha_servicio,
@@ -632,9 +632,15 @@ public function MostrarDictamenGranel($id_dictamen)
         'id_sustituye' => $nombre_id_sustituye,
         'firmaDigital' => $firmaDigital,
         'qrCodeBase64' => $qrCodeBase64
-    ]);
+    ];
 
-    return $pdf->stream('Dictamen de Cumplimiento NOM Mezcal a Granel F-UV-04-16.pdf');
+    if ($data->fecha_emision < "2020-01-01") {
+        $edicion = 'pdfs.dictamen_granel_ed6';
+    } else {
+        $edicion = 'pdfs.dictamen_granel_ed7';//actual
+    }
+
+    return Pdf::loadView($edicion, $pdf)->stream('Dictamen de Cumplimiento NOM Mezcal a Granel F-UV-04-16.pdf');
 }
 
 /*

@@ -491,17 +491,7 @@
                     <div class="card h-100">
                         <div class="card-header d-flex align-items-center justify-content-between">
                             <h5 class="card-title m-0 me-2">Certificados de exportación</h5>
-                            <div class="dropdown">
-                                <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1" type="button"
-                                    id="mostSales" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="ri-more-2-line ri-20px"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="mostSales">
-                                    <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
-                                    <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
-                                    <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
-                                </div>
-                            </div>
+                            
                         </div>
                         <div class="card-body pb-1 pt-0">
                             <div class="mb-6 mt-1">
@@ -511,6 +501,13 @@
                             <div class="table-responsive text-nowrap border-top">
                                 <table class="table">
                                     <tbody class="table-border-bottom-0">
+                                        <th>
+                                            <tr>
+                                                <td class="text-end">Mes</td>
+                                                <td class="text-end">Certificados</td>
+                                                <td class="text-end">Reexpediciónes</td>
+                                            </tr>
+                                        </th>
                                         @foreach ($TotalCertificadosExportacionPorMes as $item)
                                             <tr>
                                                 <td class="ps-0 pe-12 py-4">
@@ -521,10 +518,8 @@
                                                 <td class="text-end py-4">
                                                     <span class="text-heading fw-medium">{{ $item->total }}</span>
                                                 </td>
-                                                <td class="pe-0 py-4">
-                                                    <!--<div class="d-flex align-items-center justify-content-end">
-                                                                <span class="badge bg-success me-2">Pagado</span>
-                                                            </div>-->
+                                                <td class="text-end pe-0 py-4">
+                                                    <span class="text-heading fw-medium"> {{ $item->certificado_reexpedido ? 1 : 0 }}</span>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -601,7 +596,7 @@
                                                     <tr>
                                                         <td></td>
                                                         <td></td>
-                                                        <td>{{ \Carbon\Carbon::parse($fecha)->format('d \d\e F') }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($fecha)->locale('es')->translatedFormat('d \d\e F') }}</td>
                                                         <td>{{ $direccion }}</td>
                                                         <td>{{ $cantidad }}</td>
                                                     </tr>
@@ -620,7 +615,7 @@
                     </div>
                 </div>
             @endcan
-
+             @can('Estadísticas hologramas clientes')
             @foreach ($marcasConHologramas as $marca)
                 @php
                     $totalDisponibles = $marca->solicitudHolograma->sum(function ($solicitud) {
@@ -650,6 +645,8 @@
                     </div>
                 </div>
             @endforeach
+
+            @endcan
 
 
 

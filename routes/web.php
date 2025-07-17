@@ -998,7 +998,7 @@ Route::controller(BitacoraHologramasComercializadorController::class)->middlewar
 });
 Route::resource('/bitacoraHologramasCom-list', BitacoraHologramasComercializadorController::class)->middleware(['auth']);
 //bitacora proceso de elaboracion
-Route::controller(BitacoraProcesoElabController::class)->middleware(['auth'])->group(function () {
+Route::controller(BitacoraProcesoElaboracionController::class)->middleware(['auth'])->group(function () {
     Route::get('/bitacoraProcesoElaboracion', 'UserManagement')->name('bitacora-proceso-elab');
     Route::get('/bitacoraProcesoElabPDF', 'PDFBitacoraHologramas');
     Route::get('bitacoraProcesoElab/{id_bitacora}/edit', 'edit');

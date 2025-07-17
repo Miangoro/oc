@@ -260,7 +260,7 @@
         </tr>
         <tr>
             <td class="letra-fondo" style="text-align: left" colspan="2">No. De certificado:</td>
-            <td colspan="2">{{ $num_certificado }}</td>
+            <td class="negrita" style="color: red; font-size: 14px" colspan="2">{{ $num_certificado }}</td>
             <td class="td-no-border"></td>
             <td class="td-no-border"></td>
         </tr>
@@ -385,13 +385,16 @@
                         <td class="letra-fondo">N/C</td>
                         <td class="letra-fondo">N/A</td>
                     </tr>
-                    <tr>
-                        <td class="leftLetter" style="height: 40px;"> Dictamen de cumplimiento para producto de
-                            exportación</td>
-                        <td class="leftLetter">C</td>
-                        <td class="leftLetter">------</td>
-                        <td class="leftLetter">------</td>
-                    </tr>
+                    @foreach ($preguntas as $pregunta)
+                        @if ($pregunta['id_pregunta'] >= 124 && $pregunta['id_pregunta'] <= 128)
+                            <tr>
+                                <td style="text-align: left">{{ $pregunta['pregunta'] }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'C' ? 'C' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NC' ? 'NC' : '------' }}</td>
+                                <td>{{ $pregunta['respuesta'] == 'NA' ? 'NA' : '------' }}</td>
+                            </tr>
+                        @endif
+                    @endforeach
 
                 </table>
             </td>
@@ -403,7 +406,7 @@
                         <td class="letra-fondo">Fecha de segunda revisión</td>
                     </tr>
                     <tr>
-                        <td style="height: 60px;" class="">2025-05-29</td>
+                        <td style="height: 60px;" class="">{{ $fecha_segunda }}</td>
                     </tr>
                 </table>
             </td>
@@ -424,7 +427,7 @@
                         use Illuminate\Support\Facades\Storage;
                         $firmaPath = $firmaRevisor ? 'firmas/' . $firmaRevisor : null;
                     @endphp
-                    <div style="width: 100%; text-align: right; position: fixed; margin-top: -30px; right: 20px;">
+                    <div style="width: 100%; text-align: right; position: fixed; margin-top: -10px; right: 115px;">
                         @if ($firmaRevisor && Storage::disk('public')->exists($firmaPath))
                             <img src="{{ public_path('storage/' . $firmaPath) }}" alt="Firma"
                                 style="width: 120px; height: auto;">

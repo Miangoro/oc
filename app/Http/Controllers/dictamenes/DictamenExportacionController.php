@@ -478,7 +478,8 @@ public function MostrarDictamenExportacion($id_dictamen)
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
 
 
-    $pdf = Pdf::loadView('pdfs.dictamen_exportacion_ed2', [//formato del PDF
+    //$pdf = Pdf::loadView('pdfs.dictamen_exportacion_ed2', [//formato del PDF
+    $pdf = [//formato del PDF
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
         'lotes' =>$lotes,
         'producto' => $lotes->first()?->lotesGranel->first()?->categoria?->categoria ?? 'No encontrado',
@@ -509,10 +510,17 @@ public function MostrarDictamenExportacion($id_dictamen)
 
         'fecha_servicio' => $fecha_servicio,
         'fecha_vigencia' => $fecha_vigencia,
+    ];
 
-    ]);
+    if ($data->fecha_emision < "2020-01-01") {
+        $edicion = 'pdfs.dictamen_exportacion_ed1';
+    } else {
+        $edicion = 'pdfs.dictamen_exportacion_ed2';//actual
+    }
+
     //nombre al descarga
-    return $pdf->stream('Dictamen de Cumplimiento para Producto de Exportación F-UV-04-18.pdf');
+    //return $pdf->stream('Dictamen de Cumplimiento para Producto de Exportación F-UV-04-18.pdf');
+    return Pdf::loadView($edicion, $pdf)->stream('Dictamen de Cumplimiento para Producto de Exportación F-UV-04-18.pdf');
 }
 
 

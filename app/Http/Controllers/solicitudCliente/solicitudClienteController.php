@@ -13,7 +13,7 @@ use App\Models\empresa_clasificacion_bebidas;
 use App\Models\catalogo_clasificacion_bebidas;
 use App\Models\estados;
 use App\Mail\correoEjemplo;
-use App\Models\Instalaciones;
+use App\Models\instalaciones;
 use Illuminate\Support\Facades\Mail;
 
 class solicitudClienteController extends Controller
@@ -28,7 +28,7 @@ class solicitudClienteController extends Controller
 
   public function RegistroExitoso()
   {
-    return view('solicitudes.Registro_exitoso');
+    return view('solicitudes.registro_exitoso');
   }
 
   public function registrar(Request $request)
@@ -59,12 +59,7 @@ class solicitudClienteController extends Controller
       $producto->save();
     }
 
-    for ($i = 0; $i < count($request->norma); $i++) {
-      $norma = new empresa_norma();
-      $norma->id_norma = $request->norma[$i];
-      $norma->id_empresa = $id_empresa;
-      $norma->save();
-    }
+
 
     if (!empty($request->domicilio_productora) && !empty($request->estado_productora)) {
       $productora = new instalaciones();
@@ -149,7 +144,7 @@ if (is_array($request->clasificacion)) {
 
 
 
-    return view('solicitudes.Registro_exitoso');
+    return view('solicitudes.registro_exitoso');
   }
 
 

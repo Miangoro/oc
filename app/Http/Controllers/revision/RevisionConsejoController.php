@@ -922,7 +922,8 @@ class RevisionConsejoController extends Controller
         $nameRevisor = $revisor->user->name ?? null;
         $firmaRevisor = $revisor->user->firma ?? '';
         $puestoRevisor = $revisor->user->puesto ?? null;
-        $fecha = $revisor->updated_at;
+        $fecha = $revisor->created_at;
+        $fecha_segunda = $revisor->updated_at;
         $id_aprobador = $revisor->aprobador->name ?? 'Sin asignar';
         $aprobacion = $revisor->aprobacion ?? 'Pendiente de aprobar';
         $fecha_aprobacion = $revisor->fecha_aprobacion;
@@ -944,6 +945,7 @@ class RevisionConsejoController extends Controller
             'puestoRevisor' => $puestoRevisor,
             'razon_social' => $razonSocial,
             'fecha' => Helpers::formatearFecha($fecha),
+            'fecha_segunda' => Helpers::formatearFecha($fecha_segunda),
             'numero_cliente' => $numero_cliente,
             'aprobacion' => $aprobacion,
             'id_aprobador' => $id_aprobador,

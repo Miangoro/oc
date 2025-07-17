@@ -546,19 +546,14 @@ public function MostrarDictamenEnvasado($id_dictamen)
     ];
 
 
-    /* if ($data->fecha_emision < "2024-07-15") {
+    if ($data->fecha_emision < "2020-01-01") {
         $edicion = 'pdfs.dictamen_envasado_ed4';
     } elseif ($data->fecha_emision < "2024-12-10") {
         $edicion = 'pdfs.dictamen_envasado_ed6';
     } else {
-        $edicion = 'pdfs.dictamen_envasado_ed7';
-    } */
-
-    if ($data->fecha_emision < "2024-12-10") {
-        $edicion = 'pdfs.dictamen_envasado_ed6';
-    } else {
-        $edicion = 'pdfs.dictamen_envasado_ed7';
+        $edicion = 'pdfs.dictamen_envasado_ed7';//actual
     }
+
     //return $pdf->stream('F-UV-04-17 Ver 6 Dictamen de Cumplimiento NOM de Mezcal Envasado.pdf');
     return Pdf::loadView($edicion, $pdf)->stream('Dictamen de Cumplimiento NOM de Mezcal Envasado F-UV-04-17.pdf');
 

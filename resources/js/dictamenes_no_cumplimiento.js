@@ -99,9 +99,7 @@ if (dt_user_table.length) {
           return ` `;
         }},
       { data: 'fecha_emision' },
-      { data: null,  render: function(data, type, row) {
-          return ` `;
-        }},
+
       { data: 'action', orderable: false, searchable: false }
 
     ],
@@ -127,6 +125,52 @@ if (dt_user_table.length) {
           return '<small class="fw-bold">'+ $num_dictamen +'</small>' +
               `<i data-id="${full['id_dictamen']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"  data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
         }
+      },
+      {
+        targets: 2,
+        searchable: true,
+        orderable: true,
+        render: function (data, type, full, meta) {
+          var $num_servicio = full['num_servicio'];
+          var $folio_solicitud = full['folio_solicitud'];
+          if ( full['url_acta'] == 'Sin subir' ) {
+            var $acta = '<a href="/img_pdf/FaltaPDF.png" target="_blank"> <img src="/img_pdf/FaltaPDF.png" height="25" width="25" title="Ver documento" alt="FaltaPDF"> </a>'
+          }else {
+            var $acta = full['url_acta'].map(url => `
+              <i data-id="${full['numero_cliente']}/actas/${url}" data-empresa="${full['razon_social']}"
+                 class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfActa"
+                 data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+              </i>
+            `).join('');//concatena en un string.
+          }
+
+          return `
+          <span class="fw-bold">Servicio:</span> ${$num_servicio}
+            <span>${$acta}</span>
+          <br><span class="fw-bold">Solicitud:</span> ${$folio_solicitud}
+            <i data-id="${full['id_solicitud']}" data-folio="${$folio_solicitud}"
+              class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud"
+              data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal">
+            </i>
+          `;
+        }
+      },
+      {
+        ///fechas
+        targets: 5,
+        searchable: true,
+        orderable: true,
+        className: 'text-center',//columna centrada
+        render: function (data, type, full, meta) {
+          var $fecha_emision = full['fecha_emision'] ?? 'No encontrado';
+          var $fecha_vigencia = full['fecha_vigencia'] ?? 'No encontrado';
+          return `
+            <div>
+                <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:<br></strong> ${$fecha_emision}</span></div>
+                <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:<br></strong> ${$fecha_vigencia}</span></div>
+                <div class="small">${full['diasRestantes']}</div>
+            </div> `;
+          }
       },
 
       {
@@ -505,8 +549,6 @@ $(function () { //$(document).ready(function () {
               var errorMessages = Object.keys(errors).map(function (key) {
                 return errors[key].join('<br>');
               }).join('<br>');
-              /*var errorMessages = Object.values(errors).map(msgArray =>
-                msgArray.join('<br>')).join('<br><hr>');*/
 
               Swal.fire({
                 icon: 'error',
@@ -599,6 +641,58 @@ $(document).on('click', '.pdfDictamen', function () {
   });
 });
 
+
+///FORMATO PDF SOLICITUD
+$(document).on('click', '.pdfSolicitud', function ()  {
+  var id = $(this).data('id');
+  var folio = $(this).data('folio');
+  var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+
+    //Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
+
+    $("#titulo_modal").text("Solicitud de servicios");
+    $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
+
+
+///FORMATO PDF ACTA
+$(document).on('click', '.pdfActa', function () {
+  var id_acta = $(this).data('id');
+  var empresa = $(this).data('empresa');
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+  spinner.show();
+  iframe.hide();
+
+    //Cargar el PDF con el ID
+    iframe.attr('src', '/files/' + id_acta);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', '/files/' + id_acta).show();
+
+    $("#titulo_modal").text("Acta de inspección");
+    $("#subtitulo_modal").text(empresa);
+
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+});
 
 
 
