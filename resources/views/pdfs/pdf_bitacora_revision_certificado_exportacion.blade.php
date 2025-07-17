@@ -406,7 +406,7 @@
                         <td class="letra-fondo">Fecha de segunda revisión</td>
                     </tr>
                     <tr>
-                        <td style="height: 60px;" class="">2025-05-29</td>
+                        <td style="height: 60px;" class="">{{ $fecha_segunda }}</td>
                     </tr>
                 </table>
             </td>
