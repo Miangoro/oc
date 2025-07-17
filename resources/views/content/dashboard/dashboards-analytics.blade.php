@@ -293,7 +293,7 @@
                             <h6 class="mb-0 fw-normal">Certificados de instalaciones por vencer</h6>
                             <hr>
                             <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
-                                data-bs-target="#modalSolicitudesSinActa">
+                                data-bs-target="#modalCertificadosSinEscaner">
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-warning"><i
                                             class="ri-file-list-fill ri-24px"></i></span>
@@ -1004,6 +1004,50 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalCertificadosSinEscaner" tabindex="-1" aria-labelledby="modalCertificadosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCertificadosLabel">Certificados sin escaneo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                @if ($certificadoGranelSinEscaneado->count())
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Certificado</th>
+                                    <th>Cliente</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($certificadoGranelSinEscaneado as $certificado)
+                                    <tr>
+                                        <td>{{ $certificado->num_certificado }}</td>
+                                        <td>{{ $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($certificado->fecha_emision)->format('d/m/Y') }}</td>
+                                     
+                                 
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <p>No hay certificados sin escanear.</p>
+                @endif
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
