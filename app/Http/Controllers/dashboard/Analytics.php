@@ -39,7 +39,7 @@ class Analytics extends Controller
               ->orWhereDoesntHave('documentacion_completa', function ($q) {
                   $q->where('id_documento', 69);
               });
-    })
+    })->orderByDesc('fecha_solicitud')
     ->get();
 
 $solicitudesSinDictamen = solicitudesModel::where('fecha_solicitud', '>', '2024-12-31')

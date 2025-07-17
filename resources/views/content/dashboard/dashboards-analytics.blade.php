@@ -183,8 +183,7 @@
                             <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
                                 data-bs-target="#modalSolicitudesSinDictamen">
                                 <div class="avatar me-4">
-                                    <span class="avatar-initial rounded-3 bg-label-warning"><i
-                                            class="ri-file-list-fill ri-24px"></i></span>
+                                    <span class="avatar-initial rounded-3 bg-label-warning"><i class="ri-file-warning-line ri-24px"></i></span>
                                 </div>
                                 <h4 class="mb-0">{{ $solicitudesSinDictamen->count() }}</h4>
                             </div>
