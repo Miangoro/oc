@@ -88,8 +88,8 @@
                                                                     type="text" class="form-control" id="numero_guia"
                                                                     name="numero_guia" placeholder="N° de guía"></span>
                                                         </td>
-                                                        <td> <span class="position-relative d-block mb-1">
-                                                                {{-- <div class="form-floating form-floating-outline mb-4"> --}}
+                                                        <td> {{-- <span class="position-relative d-block mb-1"> --}}
+                                                                <div class="form-floating form-floating-outline mb-4">
                                                                 <select id="tipo_agave" name="id_tipo[]"
                                                                     class="select2 form-select mb-4" multiple>
                                                                     @foreach ($tipos as $tipo)
@@ -98,8 +98,8 @@
                                                                             ({{ $tipo->cientifico }})
                                                                         </option>
                                                                     @endforeach
-                                                                </select></span>
-                                                            {{-- </div> --}}
+                                                                </select>{{-- </span> --}}
+                                                            </div>
                                                         </td>
                                                         <td><span class="position-relative d-block mb-1"><input
                                                                     type="number" class="form-control"
@@ -386,37 +386,56 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="volumen_total_formulado" id="volumen_total_formulado" disabled
-                                                        placeholder="Vol.">
+                                                    <span class="position-relative d-block mb-1">
+                                                        <input type="number" step="0.01" class="form-control bg-light"
+                                                            name="volumen_total_formulado"
+                                                            id="volumen_total_formulado" style="pointer-events: none;" readonly placeholder="Vol.">
+                                                    </span>
                                                 </td>
                                                 <td>
-                                                    <input type="number" step="0.01" class="form-control" disabled
-                                                        name="puntas_volumen" id="puntas_volumen" placeholder="Vol.">
+                                                    <span class="position-relative d-block mb-1">
+                                                        <input type="number" step="0.01" class="form-control bg-light"
+                                                            readonly style="pointer-events: none;" name="puntas_volumen" id="puntas_volumen"
+                                                            placeholder="Vol.">
+                                                    </span>
                                                 </td>
                                                 <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="puntas_alcohol" id="puntas_alcohol"
-                                                        placeholder="% Alc.">
+                                                    <span class="position-relative d-block mb-1">
+                                                        <input type="number" step="0.01" class="form-control"
+                                                            name="puntas_alcohol" id="puntas_alcohol"
+                                                            placeholder="% Alc.">
+                                                    </span>
                                                 </td>
                                                 <td>
-                                                    <input type="number" step="0.01" class="form-control" disabled
-                                                        name="mezcal_volumen" id="mezcal_volumen" placeholder="Vol.">
+                                                    <span class="position-relative d-block mb-1">
+                                                        <input type="number" step="0.01" class="form-control bg-light"
+                                                            readonly style="pointer-events: none;" name="mezcal_volumen" id="mezcal_volumen"
+                                                            placeholder="Vol.">
+                                                    </span>
                                                 </td>
                                                 <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="mezcal_alcohol" id="mezcal_alcohol"
-                                                        placeholder="% Alc.">
+                                                    <span class="position-relative d-block mb-1">
+                                                        <input type="number" step="0.01" class="form-control"
+                                                            name="mezcal_alcohol" id="mezcal_alcohol"
+                                                            placeholder="% Alc.">
+                                                    </span>
                                                 </td>
                                                 <td>
-                                                    <input type="number" step="0.01" class="form-control" disabled
-                                                        name="colas_volumen" id="colas_volumen" placeholder="Vol.">
+                                                    <span class="position-relative d-block mb-1">
+                                                        <input type="number" step="0.01" class="form-control bg-light"
+                                                            readonly style="pointer-events: none;" name="colas_volumen" id="colas_volumen"
+                                                            placeholder="Vol.">
+                                                    </span>
                                                 </td>
                                                 <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="colas_alcohol" id="colas_alcohol" placeholder="% Alc.">
+                                                    <span class="position-relative d-block mb-1">
+                                                        <input type="number" step="0.01" class="form-control"
+                                                            name="colas_alcohol" id="colas_alcohol"
+                                                            placeholder="% Alc.">
+                                                    </span>
                                                 </td>
                                             </tr>
+
                                         </tbody>
                                     </table>
                                     <div class="mt-5">

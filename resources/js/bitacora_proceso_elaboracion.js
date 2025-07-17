@@ -73,17 +73,33 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#editClase" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>` +
-              `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora</a>` +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-              '</div>' +
-              '</div>'
-            );
+                let acciones = '';
+            if (window.puedeFirmarElUsuario) {
+              acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
+            }
+            if (window.puedeEditarElUsuario) {
+              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#EditBitacora" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
+            }
+            if (window.puedeEliminarElUsuario) {
+              acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora</a>`;
+            }
+            // Si no hay acciones, no retornar el dropdown
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+            // Si hay acciones, construir el dropdown
+            const dropdown = `<div class="d-flex align-items-center gap-50">
+              <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button><div class="dropdown-menu dropdown-menu-end m-0">
+
+                  ${acciones}
+                </div>
+              </div>
+            `;
+            return dropdown;
           }
         }
       ],
@@ -283,6 +299,89 @@ $(function () {
       $('#cargando').hide();
       $(this).show();
     }); */
+
+      $(document).on('click', '.firma-record', function () {
+    var id_bitacora_firma = $(this).data('id');
+    var dtrModal = $('.dtr-bs-modal.show');
+
+    // Ocultar modal responsivo en pantalla pequeña si está abierto
+    if (dtrModal.length) {
+      dtrModal.modal('hide');
+    }
+
+    // SweetAlert para confirmar la eliminación
+    Swal.fire({
+      title: '¿Deseas firmar esta bitácora?',
+      /* text: 'No podrá revertir este evento', */
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, firmar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-primary me-3',
+        cancelButton: 'btn btn-label-secondary'
+      },
+      buttonsStyling: false
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        // Enviar solicitud DELETE al servidor
+        $.ajax({
+          type: 'POST',
+          url: `/FirmaProcesoElab/${id_bitacora_firma}`,
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function () {
+            dt_user.draw();
+            Swal.fire({
+              icon: 'success',
+              title: '¡Firmado!',
+              text: '¡Se ha firmado la bitácora!',
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            });
+          },
+          error: function (error) {
+            let mensaje = 'Error desconocido del servidor.';
+            let icono = 'error';
+            let titulo = 'Error del servidor';
+            // Si la respuesta viene como JSON con mensaje
+            if (error.responseJSON && error.responseJSON.message) {
+              mensaje = error.responseJSON.message;
+              // Si es error por permisos
+              if (error.status === 403) {
+                icono = 'warning';
+                titulo = 'Permiso denegado';
+              }
+              // Si es error de validación o petición mal formada
+              else if (error.status === 400 || error.status === 422) {
+                titulo = '¡A ocurrido un error!';
+              }
+            }
+            Swal.fire({
+              icon: icono,
+              title: titulo,
+              text: mensaje,
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelado',
+          text: 'La firma de la bitácora ha sido cancelada',
+          icon: 'info',
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      }
+    });
+  });
+
   /*  */
   $(document).on('click', '.delete-record', function () {
     var id_bitacora = $(this).data('id');
@@ -353,103 +452,6 @@ $(function () {
       }
     });
   });
-
-  $(document).ready(function () {
-    let indexMolienda = 1;
-
-    $(document).on('click', '#agregarFilaMolienda', function () {
-      let nuevaFila = `
-            <tr>
-                <td class="text-nowrap">
-                    <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">
-                        <i class="ri-close-circle-fill"></i>
-                    </button>
-                </td>
-                <td><input type="text" class="form-control datepicker" name="molienda[${indexMolienda}][fecha_molienda]" placeholder="aaaa-mm-dd"></td>
-                <td><input type="text" class="form-control" name="molienda[${indexMolienda}][numero_tina]" placeholder="Nº de tina"></td>
-                <td><input type="text" class="form-control datepicker" name="molienda[${indexMolienda}][fecha_formulacion]" placeholder="aaaa-mm-dd"></td>
-                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][volumen_formulacion]" placeholder="Vol."></td>
-                <td><input type="text" class="form-control datepicker" name="molienda[${indexMolienda}][fecha_destilacion]" placeholder="aaaa-mm-dd"></td>
-                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][puntas_volumen]" placeholder="Vol."></td>
-                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][puntas_alcohol]" placeholder="% Alc."></td>
-                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][mezcal_volumen]" placeholder="Vol."></td>
-                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][mezcal_alcohol]" placeholder="% Alc."></td>
-                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][colas_volumen]" placeholder="Vol."></td>
-                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][colas_alcohol]" placeholder="% Alc."></td>
-            </tr>
-        `;
-
-      $('#tablaMolienda').append(nuevaFila);
-
-      // Reinicializa datepicker en los nuevos campos si estás usando uno como flatpickr o bootstrap-datepicker
-      $('.datepicker').datepicker({ format: 'yyyy-mm-dd', autoclose: true });
-
-      indexMolienda++;
-    });
-  });
-
-  $(document).ready(function () {
-    let indexSegundaDestilacion = 1;
-
-    $(document).on('click', '#agregarFilaSegundaDestilacion', function () {
-      let filaNueva = `
-            <tr>
-                <td class="text-nowrap">
-                    <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">
-                        <i class="ri-close-circle-fill"></i>
-                    </button>
-                </td>
-                <td>
-                    <input type="text" class="form-control datepicker"
-                        name="segunda_destilacion[${indexSegundaDestilacion}][fecha_destilacion]"
-                        placeholder="aaaa-mm-dd">
-                </td>
-                <td>
-                    <input type="number" step="0.01" class="form-control"
-                        name="segunda_destilacion[${indexSegundaDestilacion}][puntas_volumen]"
-                        placeholder="Vol.">
-                </td>
-                <td>
-                    <input type="number" step="0.01" class="form-control"
-                        name="segunda_destilacion[${indexSegundaDestilacion}][puntas_alcohol]"
-                        placeholder="% Alc.">
-                </td>
-                <td>
-                    <input type="number" step="0.01" class="form-control"
-                        name="segunda_destilacion[${indexSegundaDestilacion}][mezcal_volumen]"
-                        placeholder="Vol.">
-                </td>
-                <td>
-                    <input type="number" step="0.01" class="form-control"
-                        name="segunda_destilacion[${indexSegundaDestilacion}][mezcal_alcohol]"
-                        placeholder="% Alc.">
-                </td>
-                <td>
-                    <input type="number" step="0.01" class="form-control"
-                        name="segunda_destilacion[${indexSegundaDestilacion}][colas_volumen]"
-                        placeholder="Vol.">
-                </td>
-                <td>
-                    <input type="number" step="0.01" class="form-control"
-                        name="segunda_destilacion[${indexSegundaDestilacion}][colas_alcohol]"
-                        placeholder="% Alc.">
-                </td>
-            </tr>
-        `;
-
-      $('#tablaSegundaDestilacion').append(filaNueva);
-
-      // Reinicializa el datepicker si estás usando uno
-      $('.datepicker').datepicker({ format: 'yyyy-mm-dd', autoclose: true });
-
-      indexSegundaDestilacion++;
-    });
-  });
-
-  // Delegar evento para eliminar fila (funciona para elementos dinámicos)
-  /*   $(document).on('click', '.btn-eliminar', function () {
-    $(this).closest('.card').remove();
-  }); */
 
   $(function () {
     // Configuración de CSRF para Laravel
@@ -566,6 +568,76 @@ $(function () {
               message: 'El formato debe ser aaaa-mm-dd'
             }
           }
+        },
+        volumen_total_formulado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el volumen total formulado'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        puntas_alcohol: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el porcentaje de alcohol en puntas'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        puntas_volumen: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el volumen de puntas'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        mezcal_volumen: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el volumen de mezcal'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        mezcal_alcohol: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el porcentaje de alcohol en mezcal'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        colas_volumen: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el volumen de colas'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        colas_alcohol: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el porcentaje de alcohol en colas'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
         }
       },
       plugins: {
@@ -588,18 +660,17 @@ $(function () {
       var formData = $(form).serialize();
 
       $.ajax({
-        url: '/bitacoraHologramasEnvasadorStore',
+        url: '/bitacoraProcesoElabStore',
         type: 'POST',
         data: formData,
         success: function (response) {
           // Ocultar el offcanvas
-          $('#RegistrarBitacoraMezcal').modal('hide');
+          $('#RegistrarBitacora').modal('hide');
           $('#loading').addClass('d-none');
           $('#btnRegistrar').removeClass('d-none');
+          $('#id_empresa').empty().trigger('change');
           $('#registroInventarioForm')[0].reset();
           $('#registroInventarioForm select').val(null).trigger('change');
-          $('#id_instalacion').empty().trigger('change');
-          $('#id_lote_envasado').empty().trigger('change');
           $('.datatables-users').DataTable().ajax.reload();
           // Mostrar alerta de éxito
           Swal.fire({
@@ -611,19 +682,27 @@ $(function () {
             }
           });
         },
-        error: function (xhr) {
-          // Mostrar alerta de error
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al agregar la bitácora',
-            customClass: {
-              confirmButton: 'btn btn-danger'
+          error: function (xhr) {
+            let errorMsg = 'Error al agregar la bitácora';
+            if (xhr.responseJSON && xhr.responseJSON.errors) {
+              // Construimos un string con todos los mensajes de error
+              const errors = xhr.responseJSON.errors;
+              errorMsg = Object.values(errors)
+                .map(arr => arr.join(', ')) // cada campo puede tener múltiples errores
+                .join('\n'); // separa errores por salto de línea
             }
-          });
-          $('#loading').addClass('d-none');
-          $('#btnRegistrar').removeClass('d-none');
-        }
+
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              html: errorMsg.replace(/\n/g, '<br>'), // para que respete saltos de línea en HTML
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+            $('#loading').addClass('d-none');
+            $('#btnRegistrar').removeClass('d-none');
+          }
       });
     });
 
@@ -631,7 +710,272 @@ $(function () {
     $('#id_empresa, #id_tipo, #fecha_ingreso, #fecha_fin_coccion, #fecha_inicio_coccion').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
+
+    /* $(document).ready(function () { */
+    let indexMolienda = 1;
+
+    $(document).on('click', '#agregarFilaMolienda', function () {
+      let nuevaFila = `
+            <tr>
+                <td class="text-nowrap">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">
+                        <i class="ri-close-circle-fill"></i>
+                    </button>
+                </td>
+                <td><input type="text" class="form-control datepicker" name="molienda[${indexMolienda}][fecha_molienda]" placeholder="aaaa-mm-dd"></td>
+                <td><input type="text" class="form-control" name="molienda[${indexMolienda}][numero_tina]" placeholder="Nº de tina"></td>
+                <td><input type="text" class="form-control datepicker" name="molienda[${indexMolienda}][fecha_formulacion]" placeholder="aaaa-mm-dd"></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][volumen_formulacion]" placeholder="Vol."></td>
+                <td><input type="text" class="form-control datepicker" name="molienda[${indexMolienda}][fecha_destilacion]" placeholder="aaaa-mm-dd"></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][puntas_volumen]" placeholder="Vol."></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][puntas_alcohol]" placeholder="% Alc."></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][mezcal_volumen]" placeholder="Vol."></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][mezcal_alcohol]" placeholder="% Alc."></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][colas_volumen]" placeholder="Vol."></td>
+                <td><input type="number" step="0.01" class="form-control" name="molienda[${indexMolienda}][colas_alcohol]" placeholder="% Alc."></td>
+            </tr>
+        `;
+
+      $('#tablaMolienda').append(nuevaFila);
+
+      // Reinicializa datepicker en los nuevos campos si estás usando uno como flatpickr o bootstrap-datepicker
+      $('.datepicker').datepicker({ format: 'yyyy-mm-dd', autoclose: true });
+
+      indexMolienda++;
+    });
+
+    let indexSegundaDestilacion = 1;
+
+    $(document).on('click', '#agregarFilaSegundaDestilacion', function () {
+      let filaNueva = `
+            <tr>
+                <td class="text-nowrap">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">
+                        <i class="ri-close-circle-fill"></i>
+                    </button>
+                </td>
+                <td>
+                    <input type="text" class="form-control datepicker"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][fecha_destilacion]"
+                        placeholder="aaaa-mm-dd">
+                </td>
+                <td>
+                    <input type="number" step="0.01" class="form-control"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][puntas_volumen]"
+                        placeholder="Vol.">
+                </td>
+                <td>
+                    <input type="number" step="0.01" class="form-control"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][puntas_alcohol]"
+                        placeholder="% Alc.">
+                </td>
+                <td>
+                    <input type="number" step="0.01" class="form-control"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][mezcal_volumen]"
+                        placeholder="Vol.">
+                </td>
+                <td>
+                    <input type="number" step="0.01" class="form-control"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][mezcal_alcohol]"
+                        placeholder="% Alc.">
+                </td>
+                <td>
+                    <input type="number" step="0.01" class="form-control"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][colas_volumen]"
+                        placeholder="Vol.">
+                </td>
+                <td>
+                    <input type="number" step="0.01" class="form-control"
+                        name="segunda_destilacion[${indexSegundaDestilacion}][colas_alcohol]"
+                        placeholder="% Alc.">
+                </td>
+            </tr>
+        `;
+
+      $('#tablaSegundaDestilacion').append(filaNueva);
+
+      // Reinicializa el datepicker si estás usando uno
+      $('.datepicker').datepicker({ format: 'yyyy-mm-dd', autoclose: true });
+
+      indexSegundaDestilacion++;
+    });
+
+    function calcularTotales() {
+      // --- MOLIENDA: volumen_total_formulado ---
+      let totalFormulacion = 0;
+      $('[name^="molienda"][name$="[volumen_formulacion]"]').each(function () {
+        const val = parseFloat($(this).val()) || 0;
+        totalFormulacion += val;
+      });
+      $('#volumen_total_formulado').val(totalFormulacion.toFixed(2));
+
+      // --- SEGUNDA DESTILACIÓN: Volúmenes ---
+      let totalPuntas = 0,
+        totalMezcal = 0,
+        totalColas = 0;
+
+      $('[name^="segunda_destilacion"][name$="[puntas_volumen]"]').each(function () {
+        const val = parseFloat($(this).val()) || 0;
+        totalPuntas += val;
+      });
+
+      $('[name^="segunda_destilacion"][name$="[mezcal_volumen]"]').each(function () {
+        const val = parseFloat($(this).val()) || 0;
+        totalMezcal += val;
+      });
+
+      $('[name^="segunda_destilacion"][name$="[colas_volumen]"]').each(function () {
+        const val = parseFloat($(this).val()) || 0;
+        totalColas += val;
+      });
+
+      $('#puntas_volumen').val(totalPuntas.toFixed(2));
+      $('#mezcal_volumen').val(totalMezcal.toFixed(2));
+      $('#colas_volumen').val(totalColas.toFixed(2));
+    }
+
+    // Trigger cada que cambie un input relevante
+    $(document).on(
+      'input',
+      '[name^="molienda"][name$="[volumen_formulacion]"], \
+                                [name^="segunda_destilacion"][name$="[puntas_volumen]"], \
+                                [name^="segunda_destilacion"][name$="[mezcal_volumen]"], \
+                                [name^="segunda_destilacion"][name$="[colas_volumen]"]',
+      function () {
+        calcularTotales();
+        // Revalidar campos calculados
+        fv.revalidateField('volumen_total_formulado');
+        fv.revalidateField('puntas_volumen');
+        fv.revalidateField('mezcal_volumen');
+        fv.revalidateField('colas_volumen');
+
+      }
+    );
+
+    // También cada que agregues fila nueva
+    $('#agregarFilaMolienda, #agregarFilaSegundaDestilacion').on('click', function () {
+      setTimeout(calcularTotales, 100); // Espera a que se agregue al DOM
+    });
+    /* }); */
+
+    // Delegar evento para eliminar fila (funciona para elementos dinámicos)
+    /*   $(document).on('click', '.btn-eliminar', function () {
+    $(this).closest('.card').remove();
+  }); */
   });
 
+
+  
+
+/* bitacoras update */
+    $(function () {
+    // Configurar CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation
+    const form = document.getElementById('editInventarioForm');
+    const fv = FormValidation.formValidation(form, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una empresa.'
+            }
+          }
+        },
+        id_lote_granel: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un lote a granel.'
+            }
+          }
+        },
+        tipo_operacion: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un tipo de operación'
+            }
+          }
+        },
+        destino: {
+          validators: {
+            notEmpty: {
+              message: 'Ingresa el destino.'
+            }
+          }
+        },
+        volumen_final: {
+          validators: {
+            notEmpty: {
+              message: 'Ingresa el volumen final.'
+            },
+            numeric: {
+              message: 'Debe ser un número.'
+            }
+          }
+        },
+        alc_vol_final: {
+          validators: {
+            notEmpty: {
+              message: 'Ingresa el % Alc. Vol. final.'
+            },
+            numeric: {
+              message: 'Debe ser un número decimal.'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      $('#btnEdit').addClass('d-none');
+      $('#loadingEdit').removeClass('d-none');
+      const formData = $(form).serialize();
+      const id = $('#edit_bitacora_id').val();
+
+      $.ajax({
+        url: '/bitacorasUpdate/' + id,
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+          $('#loadingEdit').addClass('d-none');
+          $('#btnEdit').removeClass('d-none');
+          $('#editarBitacoraMezcal').modal('hide');
+          $('#editInventarioForm')[0].reset();
+          $('.datatables-users').DataTable().ajax.reload();
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.success || 'La bitácora fue actualizada correctamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la bitácora.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+  });
   /* fin chelo */
 });

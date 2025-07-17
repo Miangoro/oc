@@ -939,7 +939,7 @@ $(function () {
       $('#bitacora_id_firma').val(bitacoraID);
     });
  */
-  $(function () {
+/*   $(function () {
     // Configurar CSRF para Laravel
     $.ajaxSetup({
       headers: {
@@ -1010,7 +1010,7 @@ $(function () {
       });
     });
   });
-
+ */
   $(document).on('click', '.firma-record', function () {
     var id_bitacora_firma = $(this).data('id');
     var dtrModal = $('.dtr-bs-modal.show');

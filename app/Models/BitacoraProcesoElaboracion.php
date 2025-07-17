@@ -13,10 +13,10 @@ class BitacoraProcesoElaboracion extends Model
     protected $fillable = [
         'fecha_ingreso',
         'id_empresa',
-        'id_lote_granel',
+        'lote_granel',
         'numero_tapada',
         'numero_guia',
-        'tipo_maguey',
+        'id_tipo_maguey',
         'numero_pinas',
         'kg_maguey',
         'porcentaje_azucar',
@@ -35,10 +35,6 @@ class BitacoraProcesoElaboracion extends Model
 
     public $timestamps = false;
        // En BitacoraMezcal.php
-    public function loteBitacora()
-    {
-        return $this->belongsTo(LotesGranel::class, 'id_lote_granel', 'id_lote_granel');
-    }
     public function empresaBitacora()
     {
         return $this->belongsTo(empresa::class, 'id_empresa');
