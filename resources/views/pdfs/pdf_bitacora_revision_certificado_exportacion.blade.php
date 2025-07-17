@@ -350,7 +350,7 @@
                         <td class="letra-fondo" style="width: 50px">N/A</td>
                     </tr>
                     @foreach ($preguntas as $pregunta)
-                        @if ($pregunta['id_pregunta'] >= 48 && $pregunta['id_pregunta'] <= 62)
+                        @if ($pregunta['tipo_revisor'] == 2 && $pregunta['tipo_certificado'] == 3 && $pregunta['orden'] == 1)
                             <tr>
                                 <td style="text-align: left">{{ $pregunta['pregunta'] }}</td>
                                 <td>{{ $pregunta['respuesta'] == 'C' ? 'C' : '------' }}</td>
