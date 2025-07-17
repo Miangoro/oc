@@ -2050,7 +2050,7 @@ Estimado cliente, envío a usted el siguiente pre certificado con codificación 
             }
         }
 
-        $('#folio_certificado').html('<span class="badge bg-info">'+num_certificado+'</span>');
+        $('#folio_cer').html('<span class="badge bg-info">'+num_certificado+'</span>');
         $('#contenidoVobo').html(html);
         initializeSelect2($('#contenidoVobo .select2'));
         $('#formVobo input[name="id_certificado"]').val(id_certificado);
