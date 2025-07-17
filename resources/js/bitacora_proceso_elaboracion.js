@@ -865,7 +865,56 @@ $(function () {
   });
 
 
-  
+    $(document).on('click', '.edit-record', function () {
+    var bitacoraID = $(this).data('id');
+    $('#edit_bitacora_id').val(bitacoraID);
+    $.ajax({
+      url: '/bitacoraProcesoElab/' + bitacoraID + '/edit',
+      method: 'GET',
+      success: function (data) {
+        if (data.success) {
+          var bitacora = data.bitacora;
+          $('#edit_bitacora_id').val(bitacora.id);
+          $('#edit_id_empresa').val(bitacora.id_empresa).trigger('change');
+          
+          // MOLIENDA
+          $('#tablaMoliendaEdit tbody').html(''); // limpiar antes
+          bitacora.molienda.forEach((fila, index) => {
+            agregarFilaMoliendaEdit(fila, index);
+          });
+
+          // SEGUNDA DESTILACIÓN
+          $('#tablaSegundaDestilacionEdit tbody').html('');
+          bitacora.segunda_destilacion.forEach((fila, index) => {
+            agregarFilaSegundaDestilacionEdit(fila, index);
+          });
+
+          $('#EditBitacora').modal('show');
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo cargar los datos.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      },
+      error: function (error) {
+        console.error('Error al cargar los datos', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo cargar los datos.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  });
+
 
 /* bitacoras update */
     $(function () {
@@ -877,7 +926,7 @@ $(function () {
     });
 
     // Inicializar FormValidation
-    const form = document.getElementById('editInventarioForm');
+    const form = document.getElementById('EditInventarioForm');
     const fv = FormValidation.formValidation(form, {
       fields: {
         id_empresa: {
@@ -952,8 +1001,8 @@ $(function () {
         success: function (response) {
           $('#loadingEdit').addClass('d-none');
           $('#btnEdit').removeClass('d-none');
-          $('#editarBitacoraMezcal').modal('hide');
-          $('#editInventarioForm')[0].reset();
+          $('#EditBitacora').modal('hide');
+          $('#EditBitacora')[0].reset();
           $('.datatables-users').DataTable().ajax.reload();
           Swal.fire({
             icon: 'success',

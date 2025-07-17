@@ -75,16 +75,19 @@ class BitacoraProcesoElaboracionController extends Controller
       } else {
           $search = $request->input('search.value');
 
-          $users = BitacoraProcesoElaboracion::where('id_bitacora_elaboracion', 'LIKE', "%{$search}%")
-              ->orWhere('fecha_ingreso', 'LIKE', "%{$search}%")
-              ->offset($start)
-              ->limit($limit)
-              ->orderBy($order, $dir)
-              ->get();
+          $users = $query->where(function ($q) use ($search) {
+              $q->where('id', 'LIKE', "%{$search}%")
+                ->orWhere('fecha_ingreso', 'LIKE', "%{$search}%");
+          })
+          ->offset($start)
+          ->limit($limit)
+          ->orderBy($order, $dir)
+          ->get();
 
-          $totalFiltered = BitacoraProcesoElaboracion::where('id_bitacora_elaboracion', 'LIKE', "%{$search}%")
-              ->orWhere('fecha_ingreso', 'LIKE', "%{$search}%")
-              ->count();
+          $totalFiltered = $query->where(function ($q) use ($search) {
+          $q->where('id', 'LIKE', "%{$search}%")
+            ->orWhere('fecha_ingreso', 'LIKE', "%{$search}%");
+      })->count();
       }
 
       $data = [];
@@ -93,7 +96,7 @@ class BitacoraProcesoElaboracionController extends Controller
           $ids = $start;
           foreach ($users as $bitacora) {
               $nestedData = [];
-
+              $nestedData['id'] = $bitacora->id ?? 'N/A';
               $nestedData['fake_id'] = ++$ids; // ← ¡Aquí está tu índice visible!
               $nestedData['fecha_ingreso'] = Helpers::formatearFecha($bitacora->fecha_ingreso);
               $nestedData['nombre_cliente'] = $bitacora->empresaBitacora->razon_social ?? 'Sin razón social';
@@ -104,6 +107,7 @@ class BitacoraProcesoElaboracionController extends Controller
               $nestedData['numero_pinas'] = $bitacora->numero_pinas ?? 'N/A';
               $nestedData['kg_maguey'] = $bitacora->kg_maguey ?? 'N/A';
               $nestedData['observaciones'] = $bitacora->observaciones ?? 'N/A';
+              $nestedData['action'] = '';
 
               $data[] = $nestedData;
           }
@@ -182,26 +186,26 @@ class BitacoraProcesoElaboracionController extends Controller
               'colas_alcohol'          => 'required|numeric|min:0|max:100',
               'observaciones'          => 'nullable|string',
               'molienda'                      => 'nullable|array',
-              'molienda.*.fecha_molienda'    => 'required|date',
-              'molienda.*.numero_tina'       => 'required|string|max:50',
-              'molienda.*.fecha_formulacion' => 'required|date',
-              'molienda.*.volumen_formulacion' => 'required|numeric|min:0',
-              'molienda.*.fecha_destilacion' => 'required|date',
-              'molienda.*.puntas_volumen'    => 'required|numeric|min:0',
-              'molienda.*.puntas_alcohol'    => 'required|numeric|min:0|max:100',
-              'molienda.*.mezcal_volumen'    => 'required|numeric|min:0',
-              'molienda.*.mezcal_alcohol'    => 'required|numeric|min:0|max:100',
-              'molienda.*.colas_volumen'     => 'required|numeric|min:0',
-              'molienda.*.colas_alcohol'     => 'required|numeric|min:0|max:100',
+              'molienda.*.fecha_molienda'    => 'nullable|date',
+              'molienda.*.numero_tina'       => 'nullable|string',
+              'molienda.*.fecha_formulacion' => 'nullable|date',
+              'molienda.*.volumen_formulacion' => 'nullable|numeric|min:0',
+              'molienda.*.fecha_destilacion' => 'nullable|date',
+              'molienda.*.puntas_volumen'    => 'nullable|numeric|min:0',
+              'molienda.*.puntas_alcohol'    => 'nullable|numeric|min:0|max:100',
+              'molienda.*.mezcal_volumen'    => 'nullable|numeric|min:0',
+              'molienda.*.mezcal_alcohol'    => 'nullable|numeric|min:0|max:100',
+              'molienda.*.colas_volumen'     => 'nullable|numeric|min:0',
+              'molienda.*.colas_alcohol'     => 'nullable|numeric|min:0|max:100',
 
               'segunda_destilacion'                      => 'nullable|array',
-              'segunda_destilacion.*.fecha_destilacion'  => 'required|date',
-              'segunda_destilacion.*.puntas_volumen'     => 'required|numeric|min:0',
-              'segunda_destilacion.*.puntas_alcohol'     => 'required|numeric|min:0|max:100',
-              'segunda_destilacion.*.mezcal_volumen'     => 'required|numeric|min:0',
-              'segunda_destilacion.*.mezcal_alcohol'     => 'required|numeric|min:0|max:100',
-              'segunda_destilacion.*.colas_volumen'      => 'required|numeric|min:0',
-              'segunda_destilacion.*.colas_alcohol'      => 'required|numeric|min:0|max:100',
+              'segunda_destilacion.*.fecha_destilacion'  => 'nullable|date',
+              'segunda_destilacion.*.puntas_volumen'     => 'nullable|numeric|min:0',
+              'segunda_destilacion.*.puntas_alcohol'     => 'nullable|numeric|min:0|max:100',
+              'segunda_destilacion.*.mezcal_volumen'     => 'nullable|numeric|min:0',
+              'segunda_destilacion.*.mezcal_alcohol'     => 'nullable|numeric|min:0|max:100',
+              'segunda_destilacion.*.colas_volumen'      => 'nullable|numeric|min:0',
+              'segunda_destilacion.*.colas_alcohol'      => 'nullable|numeric|min:0|max:100',
           ]);
           try {
               DB::beginTransaction();
@@ -267,7 +271,45 @@ class BitacoraProcesoElaboracionController extends Controller
           }
       }
 
-
+        public function edit($id_bitacora)
+        {
+            try {
+                $bitacora = BitacoraProcesoElaboracion::with(['molienda', 'segundaDestilacion'])->findOrFail($id_bitacora);
+                return response()->json([
+                    'success' => true,
+                    'bitacora' => [
+                        'id'                     => $bitacora->id,
+                        'fecha_ingreso'          => $bitacora->fecha_ingreso,
+                        'id_empresa'             => $bitacora->id_empresa,
+                        'lote_granel'            => $bitacora->lote_granel,
+                        'numero_tapada'          => $bitacora->numero_tapada,
+                        'numero_guia'            => $bitacora->numero_guia,
+                        'id_tipo'                => json_decode($bitacora->id_tipo_maguey),
+                        'numero_pinas'           => $bitacora->numero_pinas,
+                        'kg_maguey'              => $bitacora->kg_maguey,
+                        'porcentaje_azucar'      => $bitacora->porcentaje_azucar,
+                        'kg_coccion'             => $bitacora->kg_coccion,
+                        'fecha_inicio_coccion'   => $bitacora->fecha_inicio_coccion,
+                        'fecha_fin_coccion'      => $bitacora->fecha_fin_coccion,
+                        'volumen_total_formulado'=> $bitacora->molienda_total_formulado,
+                        'puntas_volumen'         => $bitacora->total_puntas_volumen,
+                        'puntas_alcohol'         => $bitacora->total_puntas_porcentaje,
+                        'mezcal_volumen'         => $bitacora->total_mezcal_volumen,
+                        'mezcal_alcohol'         => $bitacora->total_mezcal_porcentaje,
+                        'colas_volumen'          => $bitacora->total_colas_volumen,
+                        'colas_alcohol'          => $bitacora->total_colas_porcentaje,
+                        'observaciones'          => $bitacora->observaciones,
+                        'molienda'               => $bitacora->molienda,
+                        'segunda_destilacion'    => $bitacora->segundaDestilacion,
+                    ]
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al obtener datos: ' . $e->getMessage()
+                ], 500);
+            }
+        }
 
     public function destroy($id_bitacora)
     {
@@ -286,4 +328,20 @@ class BitacoraProcesoElaboracionController extends Controller
         ]);
     }
 
+      public function firmarBitacora($id_bitacora)
+      {
+        try {
+          $bitacora = BitacoraMezcal::findOrFail($id_bitacora);
+          // Solo usuarios tipo 2 pueden firmar
+          if (auth()->user()->tipo === 2) {
+              $bitacora->id_firmante = auth()->id();
+              $bitacora->save();
+              return response()->json(['message' => 'Bitácora firmada correctamente.']);
+          }
+          return response()->json(['message' => 'No tienes permiso para firmar esta bitácora.'], 403);
+          }catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['message' => 'Error al firmar la bitácora.'], 500);
+          }
+      }
 }
