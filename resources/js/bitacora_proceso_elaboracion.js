@@ -1027,24 +1027,22 @@ $(function () {
         calcularTotalesEdit();
 
         // Revalidar campos si estás usando FormValidation
-        if (typeof fv !== 'undefined') {
+        /*         if (typeof fv !== 'undefined') {
           fv.revalidateField('edit_volumen_total_formulado');
           fv.revalidateField('edit_puntas_volumen');
           fv.revalidateField('edit_mezcal_volumen');
           fv.revalidateField('edit_colas_volumen');
-        }
+        } */
       }
     );
 
-    $('#edit_agregarFilaMolienda')
-      .on('click', function () {
-        agregarFilaMoliendaEdit({}, edit_indexMolienda++);
-      });
+    $('#edit_agregarFilaMolienda').on('click', function () {
+      agregarFilaMoliendaEdit({}, edit_indexMolienda++);
+    });
 
     $('#edit_agregarFilaSegundaDestilacion').on('click', function () {
-        agregarFilaSegundaDestilacionEdit({}, edit_indexSegundaDestilacion++);
-      });
-
+      agregarFilaSegundaDestilacionEdit({}, edit_indexSegundaDestilacion++);
+    });
   });
 
   /* bitacoras update */
@@ -1063,48 +1061,175 @@ $(function () {
         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una empresa.'
+              message: 'Por favor seleccione el cliente'
             }
           }
         },
-        id_lote_granel: {
+        fecha_ingreso: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote a granel.'
+              message: 'Por favor ingrese la fecha de ingreso'
             }
           }
         },
-        tipo_operacion: {
+        numero_tapada: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un tipo de operación'
+              message: 'Selecciona un número de tapada'
             }
           }
         },
-        destino: {
+        lote_granel: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el destino.'
+              message: 'Por favor seleccione el lote'
             }
           }
         },
-        volumen_final: {
+
+        numero_guia: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el volumen final.'
+              message: 'Por favor ingrese el número de guía'
+            }
+          }
+        },
+        'id_tipo[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un tipo de agave'
+            }
+          }
+        },
+        numero_pinas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el número de piñas'
             },
             numeric: {
-              message: 'Debe ser un número.'
+              message: 'Debe ser un número'
             }
           }
         },
-        alc_vol_final: {
+        kg_maguey: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el % Alc. Vol. final.'
+              message: 'Por favor ingrese los kilogramos de maguey'
             },
             numeric: {
-              message: 'Debe ser un número decimal.'
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        porcentaje_azucar: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el porcentaje de azúcar'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        kg_coccion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese los kilogramos a cocción'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        fecha_inicio_coccion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha inicial de cocción'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'El formato debe ser aaaa-mm-dd'
+            }
+          }
+        },
+        fecha_fin_coccion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha final de cocción'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'El formato debe ser aaaa-mm-dd'
+            }
+          }
+        },
+                volumen_total_formulado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el volumen total formulado'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        puntas_alcohol: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el porcentaje de alcohol en puntas'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        puntas_volumen: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el volumen de puntas'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        mezcal_volumen: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el volumen de mezcal'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        mezcal_alcohol: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el porcentaje de alcohol en mezcal'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        colas_volumen: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el volumen de colas'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
+            }
+          }
+        },
+        colas_alcohol: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el porcentaje de alcohol en colas'
+            },
+            numeric: {
+              message: 'Debe ser un número válido'
             }
           }
         }
@@ -1114,7 +1239,11 @@ $(function () {
         bootstrap5: new FormValidation.plugins.Bootstrap5({
           eleValidClass: '',
           eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating'
+          /*  rowSelector: '.form-floating' */
+          rowSelector: function (field, ele) {
+            // field is the field name & ele is the field element
+            return '.mb-4, .mb-1';
+          }
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
@@ -1153,7 +1282,6 @@ $(function () {
               .map(arr => arr.join(', ')) // cada campo puede tener múltiples errores
               .join('\n'); // separa errores por salto de línea
           }
-
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
@@ -1168,5 +1296,6 @@ $(function () {
       });
     });
   });
+
   /* fin chelo */
 });
