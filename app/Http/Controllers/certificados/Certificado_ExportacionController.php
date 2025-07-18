@@ -45,7 +45,9 @@ class Certificado_ExportacionController extends Controller
 
     public function UserManagement()
     {
-        //$certificado = Certificado_Exportacion::all(); // Obtener todos los datos
+        $certificados = Certificado_Exportacion::where('estatus', '!=', 1)
+            ->orderBy('id_certificado', 'desc')
+            ->get();
         // Obtener solo los dictámenes que NO tienen certificado
         $dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')
             ->where('estatus', '!=', 1)
@@ -59,7 +61,7 @@ class Certificado_ExportacionController extends Controller
         $revisores = Revisor::all();
         $hologramas = activarHologramasModelo::all();
 
-        return view('certificados.find_certificados_exportacion', compact('dictamen', 'users', 'empresa', 'revisores', 'hologramas'));
+        return view('certificados.find_certificados_exportacion', compact('certificados','dictamen', 'users', 'empresa', 'revisores', 'hologramas'));
     }
 ///FUNCION PARA OBTENER N° DE LOTES PARA HOLOGRAMAS
 public function contarLotes($id)
@@ -710,14 +712,27 @@ public function storeRevisor(Request $request)
         'id_certificado' => 'required|integer|exists:certificados_exportacion,id_certificado',
         'url' => 'nullable|file|mimes:pdf|max:3072',
         'nombre_documento' => 'nullable|string|max:255',
+
+        'certificados' => 'nullable|array',
+        'certificados.*' => 'integer|exists:certificados_exportacion,id_certificado',
     ]);
 
     $certificado = Certificado_Exportacion::find($validated['id_certificado']);
     $empresa = $certificado->dictamen->inspeccione->solicitud->empresa;
     $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
-    // Función para crear o actualizar revisor
-    $guardar = function ($idRevisor, $tipoRevisor, $conDocumento = false) use ($validated, $certificado, $empresa, $request, $numeroCliente) {
+
+    $nombreArchivo = null;
+    // Subida de archivo solo 1 vez (para todos)
+    if ($request->hasFile('url')) {
+        $file = $request->file('url');
+        $nombreArchivo = str_replace('/', '-', $validated['nombre_documento']) . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $file->storeAs('revisiones/', $nombreArchivo, 'public');
+    }
+
+     // --- Guardar revisiones del certificado principal ---
+    $guardar = function ($idRevisor, $tipoRevisor, $conDocumento = false) use ($validated, $certificado, $empresa, $request, $numeroCliente, $nombreArchivo)
+    {
         if (!$idRevisor) return;
 
         $revisor = Revisor::firstOrNew([
@@ -733,29 +748,17 @@ public function storeRevisor(Request $request)
         $revisor->decision = 'Pendiente';
         $revisor->save();
 
-        // Solo si es tipo 1 y se subió documento
-        if ($conDocumento && $request->hasFile('url')) {
-            $docAnterior = Documentacion_url::where('id_relacion', $revisor->id_revision)
-                ->where('id_documento', 133)
-                ->first();
-
-            if ($docAnterior) {
-                Storage::disk('public')->delete('revisiones/' . $docAnterior->url);
-                $docAnterior->delete();
-            }
-
-            $file = $request->file('url');
-            $filename = str_replace('/', '-', $validated['nombre_documento']) . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('revisiones/', $filename, 'public');
-
+        // Documento (solo si tipo = 1 y subido)
+        if ($conDocumento && $nombreArchivo) {
             Documentacion_url::create([
                 'id_relacion' => $revisor->id_revision,
-                'id_documento' => 133, // fijo
+                'id_documento' => 133,
                 'id_empresa' => $empresa->id_empresa,
                 'nombre_documento' => $validated['nombre_documento'],
-                'url' => $filename,
+                'url' => $nombreArchivo,
             ]);
         }
+
 
         // Notificación
         $user = User::find($idRevisor);
@@ -778,17 +781,99 @@ public function storeRevisor(Request $request)
                 'observaciones' => $revisor->observaciones,
             ]));
         }
+
+
+        // Sincronizar observaciones y documento si tipo_revision=2 y existe tipo_revision=1
+        if ($tipoRevisor == 2) {
+            $revisionTipo1 = Revisor::where('id_certificado', $certificado->id_certificado)
+                ->where('tipo_certificado', 3)
+                ->where('tipo_revision', 1)
+                ->first();
+
+            if ($revisionTipo1) {
+                $revisionTipo1->observaciones = $validated['observaciones'] ?? '';
+                $revisionTipo1->es_correccion = $validated['esCorreccion'] ?? 'no';
+                $revisionTipo1->save();
+
+                // Actualizar documento si se subió uno nuevo
+                if ($nombreArchivo) {
+                    // Eliminar documento previo si existe
+                    $docAnterior = Documentacion_url::where('id_relacion', $revisionTipo1->id_revision)
+                        ->where('id_documento', 133)
+                        ->first();
+                    if ($docAnterior) {
+                        Storage::disk('public')->delete('revisiones/' . $docAnterior->url);
+                        $docAnterior->delete();
+                    }
+
+                    // Crear nuevo documento
+                    Documentacion_url::create([
+                        'id_relacion' => $revisionTipo1->id_revision,
+                        'id_documento' => 133,
+                        'id_empresa' => $empresa->id_empresa,
+                        'nombre_documento' => $validated['nombre_documento'],
+                        'url' => $nombreArchivo,
+                    ]);
+                }
+            }
+        }
+
     };
 
-    // Guardar primera revisión (personal OC) con documento si hay
-    if ($request->filled('personalOC')) {
-        $guardar($validated['personalOC'], 1, true);
-    }
 
-    // Guardar segunda revisión (miembro consejo) sin documento
-    if ($request->filled('miembroConsejo')) {
-        $guardar($validated['miembroConsejo'], 2, false);
-    }
+    // Guardar revisores principales
+    if ($request->filled('personalOC')) $guardar($validated['personalOC'], 1, true);
+    if ($request->filled('miembroConsejo')) $guardar($validated['miembroConsejo'], 2, false);
+
+        // --- Guardar revisiones de certificados seleccionados ---
+        if (!empty($validated['certificados'])) {
+            foreach ($validated['certificados'] as $idRelacionado) {
+                $certRelacionado = Certificado_Exportacion::find($idRelacionado);
+                if (!$certRelacionado) continue;
+
+                foreach ([1, 2] as $tipoRev) {
+                    $revis = Revisor::where('id_certificado', $idRelacionado)
+                        ->where('tipo_certificado', 3)
+                        ->where('tipo_revision', $tipoRev)
+                        ->first();
+
+                    if ($revis) {
+                        // Solo sincronizar observaciones
+                        $revis->observaciones = $validated['observaciones'] ?? '';
+                        $revis->save();
+                    } else {
+                        // Crear nueva revisión (solo observaciones)
+                        $revis = new Revisor();
+                        $revis->id_certificado = $idRelacionado;
+                        $revis->tipo_revision = $tipoRev;
+                        $revis->tipo_certificado = 3;
+                        $revis->observaciones = $validated['observaciones'] ?? '';
+                        $revis->save();
+                    }
+
+                    // Subir documento solo si es tipo 1 y hay archivo
+                    if ($tipoRev === 1 && $nombreArchivo) {
+                        // Eliminar anterior si existe
+                        $docAnterior = Documentacion_url::where('id_relacion', $revis->id_revision)
+                            ->where('id_documento', 133)
+                            ->first();
+                        if ($docAnterior) {
+                            Storage::disk('public')->delete('revisiones/' . $docAnterior->url);
+                            $docAnterior->delete();
+                        }
+
+                        Documentacion_url::create([
+                            'id_relacion' => $revis->id_revision,
+                            'id_documento' => 133,
+                            'id_empresa' => $empresa->id_empresa,
+                            'nombre_documento' => $validated['nombre_documento'],
+                            'url' => $nombreArchivo,
+                        ]);
+                    }
+                }
+            }
+        }
+
 
     return response()->json(['message' => 'Revisor asignado correctamente.']);
 }

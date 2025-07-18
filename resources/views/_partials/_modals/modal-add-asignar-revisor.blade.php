@@ -49,28 +49,27 @@
 
           
 
-          <!-- Documento -->
+          <!-- Nombre Documento -->
           <div class="form-floating form-floating-outline mb-3">
             <input type="text" class="form-control form-control-sm" id="nombre_documento" name="nombre_documento" placeholder="Nombre del documento">
             <label for="nombre_documento">Nombre del documento</label>
           </div>
 
+          <!-- Archivo -->
           <div class="form-floating form-floating-outline mb-3">
             <input type="file" class="form-control form-control-sm" id="archivo_documento" name="url" placeholder="Archivo">
             <label for="archivo_documento">Archivo</label>
           </div>
 
-
-
-          {{-- <div class="form-floating form-floating-outline mb-3 select2-primary">
+          <!-- Agregar a mas CERTIFICADOS -->
+          <div class="form-floating form-floating-outline mb-3 select2-primary">
               <select name="certificados[]" multiple class="form-control select2">
                 @foreach ($certificados as $cert)
                     <option value="{{ $cert->id_certificado }}">{{ $cert->num_certificado }}</option>
                 @endforeach
               </select>
             <label>Asignar a certificados</label>
-          </div> --}}
-
+          </div>
 
 
 
