@@ -1229,6 +1229,10 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::get('/certificados/exportar', 'exportar')->name('certificados.exportar');
     //Obtener N° de lotes para hologramas en certificado
     Route::get('/certificados/contar-lotes/{id}', [Certificado_ExportacionController::class, 'contarLotes']);
+
+     Route::get('/api/certificados_exportacion', [Certificado_ExportacionController::class, 'api']);
+
+
 });
 
 //-------------------CERTIFICADO VENTA NACIONAL-------------------

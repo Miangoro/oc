@@ -1331,6 +1331,17 @@ public function guardarVobo(Request $request)
     return response()->json(['success' => true]);
 }
 
+public function api()
+    {
+        // Puedes aplicar filtros, relaciones o paginación si lo deseas
+        $certificados = Certificado_Exportacion::all();
+
+        return response()->json([
+            'success' => true,
+            'data' => $certificados
+        ]);
+    }
+
 
 
 
