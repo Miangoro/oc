@@ -1330,6 +1330,36 @@ public function guardarVobo(Request $request)
 
     return response()->json(['success' => true]);
 }
+public function api()
+{
+    $certificados = Certificado_Exportacion::with([
+        'dictamen.inspeccione.solicitud.empresa',
+        'dictamen.inspeccione',
+        'dictamen.inspeccione.solicitud.direccion_destino'
+    ])
+   // ->where('fecha_emision', '>=', '2025-07-01')
+    ->orderByDesc('fecha_emision')
+    ->get();
+
+    // Agregamos los datos de los lotes manualmente
+    foreach ($certificados as $certificado) {
+        $solicitud = $certificado->dictamen->inspeccione->solicitud ?? null;
+
+        if ($solicitud && method_exists($solicitud, 'getIdLoteEnvasadoAttribute')) {
+            $ids = $solicitud->id_lote_envasado; // esto llama al accessor getIdLoteEnvasadoAttribute()
+
+            $lotes = lotes_envasado::whereIn('id_lote_envasado', $ids)->with('marca')->get();
+
+            // Puedes añadirlos como una propiedad adicional
+            $solicitud->lotes = $lotes;
+        }
+    }
+
+    return response()->json([
+        'success' => true,
+        'data' => $certificados
+    ]);
+}
 
 
 
