@@ -73,7 +73,7 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-                let acciones = '';
+            let acciones = '';
             if (window.puedeFirmarElUsuario) {
               acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
             }
@@ -300,7 +300,7 @@ $(function () {
       $(this).show();
     }); */
 
-      $(document).on('click', '.firma-record', function () {
+  $(document).on('click', '.firma-record', function () {
     var id_bitacora_firma = $(this).data('id');
     var dtrModal = $('.dtr-bs-modal.show');
 
@@ -682,27 +682,27 @@ $(function () {
             }
           });
         },
-          error: function (xhr) {
-            let errorMsg = 'Error al agregar la bitácora';
-            if (xhr.responseJSON && xhr.responseJSON.errors) {
-              // Construimos un string con todos los mensajes de error
-              const errors = xhr.responseJSON.errors;
-              errorMsg = Object.values(errors)
-                .map(arr => arr.join(', ')) // cada campo puede tener múltiples errores
-                .join('\n'); // separa errores por salto de línea
-            }
-
-            Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              html: errorMsg.replace(/\n/g, '<br>'), // para que respete saltos de línea en HTML
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-            $('#loading').addClass('d-none');
-            $('#btnRegistrar').removeClass('d-none');
+        error: function (xhr) {
+          let errorMsg = 'Error al agregar la bitácora';
+          if (xhr.responseJSON && xhr.responseJSON.errors) {
+            // Construimos un string con todos los mensajes de error
+            const errors = xhr.responseJSON.errors;
+            errorMsg = Object.values(errors)
+              .map(arr => arr.join(', ')) // cada campo puede tener múltiples errores
+              .join('\n'); // separa errores por salto de línea
           }
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            html: errorMsg.replace(/\n/g, '<br>'), // para que respete saltos de línea en HTML
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+          $('#loading').addClass('d-none');
+          $('#btnRegistrar').removeClass('d-none');
+        }
       });
     });
 
@@ -848,7 +848,6 @@ $(function () {
         fv.revalidateField('puntas_volumen');
         fv.revalidateField('mezcal_volumen');
         fv.revalidateField('colas_volumen');
-
       }
     );
 
@@ -856,41 +855,75 @@ $(function () {
     $('#agregarFilaMolienda, #agregarFilaSegundaDestilacion').on('click', function () {
       setTimeout(calcularTotales, 100); // Espera a que se agregue al DOM
     });
-    /* }); */
-
-    // Delegar evento para eliminar fila (funciona para elementos dinámicos)
-    /*   $(document).on('click', '.btn-eliminar', function () {
-    $(this).closest('.card').remove();
-  }); */
   });
 
+  let edit_indexMolienda = 0;
+  let edit_indexSegundaDestilacion = 0;
 
+  $(function () {
     $(document).on('click', '.edit-record', function () {
-    var bitacoraID = $(this).data('id');
-    $('#edit_bitacora_id').val(bitacoraID);
-    $.ajax({
-      url: '/bitacoraProcesoElab/' + bitacoraID + '/edit',
-      method: 'GET',
-      success: function (data) {
-        if (data.success) {
-          var bitacora = data.bitacora;
-          $('#edit_bitacora_id').val(bitacora.id);
-          $('#edit_id_empresa').val(bitacora.id_empresa).trigger('change');
-          
-          // MOLIENDA
-          $('#tablaMoliendaEdit tbody').html(''); // limpiar antes
-          bitacora.molienda.forEach((fila, index) => {
-            agregarFilaMoliendaEdit(fila, index);
-          });
+      var bitacoraID = $(this).data('id');
+      $('#edit_bitacora_id').val(bitacoraID);
+      $.ajax({
+        url: '/bitacoraProcesoElab/' + bitacoraID + '/edit',
+        method: 'GET',
+        success: function (data) {
+          if (data.success) {
+            const bitacora = data.bitacora;
+            // Cargar campos simples
+            $('#edit_fecha_ingreso').val(bitacora.fecha_ingreso);
+            $('#edit_id_empresa').val(bitacora.id_empresa).trigger('change');
+            $('#edit_lote_granel').val(bitacora.lote_granel);
+            $('#edit_numero_tapada').val(bitacora.numero_tapada);
+            $('#edit_numero_guia').val(bitacora.numero_guia);
+            $('#edit_numero_pinas').val(bitacora.numero_pinas);
+            $('#edit_kg_maguey').val(bitacora.kg_maguey);
+            $('#edit_porcentaje_azucar').val(bitacora.porcentaje_azucar);
+            $('#edit_kg_coccion').val(bitacora.kg_coccion);
+            $('#edit_fecha_inicio_coccion').val(bitacora.fecha_inicio_coccion);
+            $('#edit_fecha_fin_coccion').val(bitacora.fecha_fin_coccion);
 
-          // SEGUNDA DESTILACIÓN
-          $('#tablaSegundaDestilacionEdit tbody').html('');
-          bitacora.segunda_destilacion.forEach((fila, index) => {
-            agregarFilaSegundaDestilacionEdit(fila, index);
-          });
+            // Totales
+            $('#edit_volumen_total_formulado').val(bitacora.volumen_total_formulado);
+            $('#edit_puntas_volumen').val(bitacora.puntas_volumen);
+            $('#edit_puntas_alcohol').val(bitacora.puntas_alcohol);
+            $('#edit_mezcal_volumen').val(bitacora.mezcal_volumen);
+            $('#edit_mezcal_alcohol').val(bitacora.mezcal_alcohol);
+            $('#edit_colas_volumen').val(bitacora.colas_volumen);
+            $('#edit_colas_alcohol').val(bitacora.colas_alcohol);
+            $('#edit_observaciones').val(bitacora.observaciones);
 
-          $('#EditBitacora').modal('show');
-        } else {
+            // Tipos de maguey (select múltiple con Select2, por ejemplo)
+            if (bitacora.id_tipo) {
+              $('#edit_tipo_agave').val(bitacora.id_tipo).trigger('change');
+            }
+            // Tablas relacionales
+            $('#edit_tablaMolienda').empty();
+            edit_indexMolienda = 0;
+            bitacora.molienda.forEach(fila => {
+              agregarFilaMoliendaEdit(fila, edit_indexMolienda++);
+            });
+
+            $('#edit_tablaSegundaDestilacion').empty();
+            edit_indexSegundaDestilacion = 0;
+            bitacora.segunda_destilacion.forEach(fila => {
+              agregarFilaSegundaDestilacionEdit(fila, edit_indexSegundaDestilacion++);
+            });
+            // Mostrar modal
+            $('#EditBitacora').modal('show');
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo cargar los datos.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        },
+        error: function (error) {
+          console.error('Error al cargar los datos', error);
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -900,24 +933,122 @@ $(function () {
             }
           });
         }
-      },
-      error: function (error) {
-        console.error('Error al cargar los datos', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo cargar los datos.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
+      });
     });
+
+    function agregarFilaMoliendaEdit(fila = {}, index) {
+      const nuevaFila = `
+          <tr>
+            <td>
+              <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">
+                <i class="ri-close-circle-fill"></i>
+              </button>
+            </td>
+            <td><input type="text" class="form-control datepicker" name="molienda[${index}][fecha_molienda]" value="${fila.fecha_molienda || ''}"></td>
+            <td><input type="text" class="form-control" name="molienda[${index}][numero_tina]" value="${fila.numero_tina || ''}"></td>
+            <td><input type="text" class="form-control datepicker" name="molienda[${index}][fecha_formulacion]" value="${fila.fecha_formulacion || ''}"></td>
+            <td><input type="number" step="0.01" class="form-control" name="molienda[${index}][volumen_formulacion]" value="${fila.volumen_formulacion || ''}"></td>
+            <td><input type="text" class="form-control datepicker" name="molienda[${index}][fecha_destilacion]" value="${fila.fecha_destilacion || ''}"></td>
+            <td><input type="number" step="0.01" class="form-control" name="molienda[${index}][puntas_volumen]" value="${fila.puntas_volumen || ''}"></td>
+            <td><input type="number" step="0.01" class="form-control" name="molienda[${index}][puntas_alcohol]" value="${fila.puntas_porcentaje || ''}"></td>
+            <td><input type="number" step="0.01" class="form-control" name="molienda[${index}][mezcal_volumen]" value="${fila.mezcal_volumen || ''}"></td>
+            <td><input type="number" step="0.01" class="form-control" name="molienda[${index}][mezcal_alcohol]" value="${fila.mezcal_porcentaje || ''}"></td>
+            <td><input type="number" step="0.01" class="form-control" name="molienda[${index}][colas_volumen]" value="${fila.colas_volumen || ''}"></td>
+            <td><input type="number" step="0.01" class="form-control" name="molienda[${index}][colas_alcohol]" value="${fila.colas_porcentaje || ''}"></td>
+          </tr>
+        `;
+      $('#edit_tablaMolienda').append(nuevaFila);
+      $('.datepicker').datepicker({ format: 'yyyy-mm-dd', autoclose: true });
+    }
+
+    function agregarFilaSegundaDestilacionEdit(fila = {}, index) {
+      const nuevaFila = `
+        <tr>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">
+              <i class="ri-close-circle-fill"></i>
+            </button>
+          </td>
+          <td><input type="text" class="form-control datepicker" name="segunda_destilacion[${index}][fecha_destilacion]" value="${fila.fecha_destilacion || ''}"></td>
+          <td><input type="number" step="0.01" class="form-control" name="segunda_destilacion[${index}][puntas_volumen]" value="${fila.puntas_volumen || ''}"></td>
+          <td><input type="number" step="0.01" class="form-control" name="segunda_destilacion[${index}][puntas_alcohol]" value="${fila.puntas_porcentaje || ''}"></td>
+          <td><input type="number" step="0.01" class="form-control" name="segunda_destilacion[${index}][mezcal_volumen]" value="${fila.mezcal_volumen || ''}"></td>
+          <td><input type="number" step="0.01" class="form-control" name="segunda_destilacion[${index}][mezcal_alcohol]" value="${fila.mezcal_porcentaje || ''}"></td>
+          <td><input type="number" step="0.01" class="form-control" name="segunda_destilacion[${index}][colas_volumen]" value="${fila.colas_volumen || ''}"></td>
+          <td><input type="number" step="0.01" class="form-control" name="segunda_destilacion[${index}][colas_alcohol]" value="${fila.colas_porcentaje || ''}"></td>
+        </tr>
+      `;
+      $('#edit_tablaSegundaDestilacion').append(nuevaFila);
+      $('.datepicker').datepicker({ format: 'yyyy-mm-dd', autoclose: true });
+    }
+
+    function calcularTotalesEdit() {
+      console.log('Calculando totales de edición');
+      // --- MOLIENDA: volumen_total_formulado ---
+      let totalFormulacion = 0;
+      $('[name^="molienda"][name$="[volumen_formulacion]"]').each(function () {
+        const val = parseFloat($(this).val()) || 0;
+        totalFormulacion += val;
+      });
+      $('#edit_volumen_total_formulado').val(totalFormulacion.toFixed(2));
+
+      // --- SEGUNDA DESTILACIÓN: Volúmenes ---
+      let totalPuntas = 0,
+        totalMezcal = 0,
+        totalColas = 0;
+
+      $('[name^="segunda_destilacion"][name$="[puntas_volumen]"]').each(function () {
+        const val = parseFloat($(this).val()) || 0;
+        totalPuntas += val;
+      });
+
+      $('[name^="segunda_destilacion"][name$="[mezcal_volumen]"]').each(function () {
+        const val = parseFloat($(this).val()) || 0;
+        totalMezcal += val;
+      });
+
+      $('[name^="segunda_destilacion"][name$="[colas_volumen]"]').each(function () {
+        const val = parseFloat($(this).val()) || 0;
+        totalColas += val;
+      });
+
+      $('#edit_puntas_volumen').val(totalPuntas.toFixed(2));
+      $('#edit_mezcal_volumen').val(totalMezcal.toFixed(2));
+      $('#edit_colas_volumen').val(totalColas.toFixed(2));
+    }
+
+    $(document).on(
+      'input',
+      '[name^="molienda"][name$="[volumen_formulacion]"], \
+        [name^="segunda_destilacion"][name$="[puntas_volumen]"], \
+        [name^="segunda_destilacion"][name$="[mezcal_volumen]"], \
+        [name^="segunda_destilacion"][name$="[colas_volumen]"]',
+      function () {
+        calcularTotalesEdit();
+
+        // Revalidar campos si estás usando FormValidation
+        if (typeof fv !== 'undefined') {
+          fv.revalidateField('edit_volumen_total_formulado');
+          fv.revalidateField('edit_puntas_volumen');
+          fv.revalidateField('edit_mezcal_volumen');
+          fv.revalidateField('edit_colas_volumen');
+        }
+      }
+    );
+
+    $('#edit_agregarFilaMolienda')
+      .on('click', function () {
+        agregarFilaMoliendaEdit({}, edit_indexMolienda++);
+      });
+
+    $('#edit_agregarFilaSegundaDestilacion').on('click', function () {
+        agregarFilaSegundaDestilacionEdit({}, edit_indexSegundaDestilacion++);
+      });
+
   });
 
-
-/* bitacoras update */
-    $(function () {
+  /* bitacoras update */
+  $(function () {
     // Configurar CSRF para Laravel
     $.ajaxSetup({
       headers: {
@@ -995,7 +1126,7 @@ $(function () {
       const id = $('#edit_bitacora_id').val();
 
       $.ajax({
-        url: '/bitacorasUpdate/' + id,
+        url: '/bitacoraProcesoElabUpdate/' + id,
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -1014,14 +1145,25 @@ $(function () {
           });
         },
         error: function (xhr) {
+          let errorMsg = 'Error al agregar la bitácora';
+          if (xhr.responseJSON && xhr.responseJSON.errors) {
+            // Construimos un string con todos los mensajes de error
+            const errors = xhr.responseJSON.errors;
+            errorMsg = Object.values(errors)
+              .map(arr => arr.join(', ')) // cada campo puede tener múltiples errores
+              .join('\n'); // separa errores por salto de línea
+          }
+
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al actualizar la bitácora.',
+            html: errorMsg.replace(/\n/g, '<br>'), // para que respete saltos de línea en HTML
             customClass: {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#loadingEdit').addClass('d-none');
+          $('#btnEdit').removeClass('d-none');
         }
       });
     });
