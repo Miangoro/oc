@@ -385,10 +385,9 @@
 
                     html += `</tbody></table>`;
                     $('#contenedor-documentos').html(html);
-                }
-            },
 
-                 $(document).on('click', '.eliminar-doc', function () {
+                    
+                     $(document).on('click', '.eliminar-doc', function () {
                         const fila = $(this).closest('tr');
                         const idDoc = fila.data('id-doc'); // 69 o 70
                         const id_solicitud = fila.data('id-solicitud');
@@ -438,6 +437,8 @@
                     });
                }
             },
+
+            
 
 
             error: function(xhr, status, error) {
