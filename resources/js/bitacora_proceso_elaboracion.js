@@ -1262,7 +1262,7 @@ $(function () {
           $('#loadingEdit').addClass('d-none');
           $('#btnEdit').removeClass('d-none');
           $('#EditBitacora').modal('hide');
-          $('#EditBitacora')[0].reset();
+          $('#EditInventarioForm')[0].reset();
           $('.datatables-users').DataTable().ajax.reload();
           Swal.fire({
             icon: 'success',
