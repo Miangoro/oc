@@ -56,8 +56,7 @@
                             <span class="badge bg-danger">Es corrección</span>
                         @endif
 
-                        @if ($datos->certificado->certificadoReexpedido())
-                            @php
+                         @php
                                 $nuevoId = $datos->certificado->certificadoReexpedido()?->id_certificado;
                                 $urlConNuevoId = $nuevoId ? preg_replace('/\d+$/', $nuevoId, $url) : null;
                                  $solicitud =
@@ -76,6 +75,9 @@
 
                             @endphp
 
+
+                        @if ($datos->certificado->certificadoReexpedido())
+                           
 
                             <p>Este certificado sustituye al certificado <a target="_blank"
                                     href="{{ '/files/' . $numero_cliente . '/certificados_granel/' . $certificadoEscaneado }}">{{ $datos->certificado->certificadoReexpedido()->num_certificado }}</a>

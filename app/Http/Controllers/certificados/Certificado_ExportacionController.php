@@ -1334,7 +1334,7 @@ public function guardarVobo(Request $request)
 public function api()
     {
         // Puedes aplicar filtros, relaciones o paginación si lo deseas
-        $certificados = Certificado_Exportacion::all();
+        $certificados = Certificado_Exportacion::with('dictamen.inspeccione.solicitud.empresa')->get();
 
         return response()->json([
             'success' => true,
