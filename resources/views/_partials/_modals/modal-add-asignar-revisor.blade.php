@@ -60,6 +60,20 @@
             <label for="archivo_documento">Archivo</label>
           </div>
 
+
+
+          {{-- <div class="form-floating form-floating-outline mb-3 select2-primary">
+              <select name="certificados[]" multiple class="form-control select2">
+                @foreach ($certificados as $cert)
+                    <option value="{{ $cert->id_certificado }}">{{ $cert->num_certificado }}</option>
+                @endforeach
+              </select>
+            <label>Asignar a certificados</label>
+          </div> --}}
+
+
+
+
           <!-- Documento existente (se inserta dinámicamente desde JS) -->
           <div id="documentoRevision" class="mt-2"></div>
 
