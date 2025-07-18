@@ -313,7 +313,7 @@ $(function () {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de Certificado de Instalaciones: ' + data['nombre_lote'];
+              return 'Detalles de la bitácora '/*  + data['nombre_lote'] */;
             }
           }),
           type: 'column',

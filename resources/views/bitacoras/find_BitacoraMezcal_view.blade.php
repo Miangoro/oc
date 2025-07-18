@@ -73,7 +73,7 @@
     @include('_partials/_modals/modal-pdfs-frames')
     @include('_partials/_modals/modal-add-bitacoraMezcal')
     @include('_partials._modals.modal-edit-bitacoraMezcal')
-    @include('_partials._modals.modal-add-firma-bitacoraMezcal')
+    {{-- @include('_partials._modals.modal-add-firma-bitacoraMezcal') --}}
     <!-- /Modal -->
 
 @endsection

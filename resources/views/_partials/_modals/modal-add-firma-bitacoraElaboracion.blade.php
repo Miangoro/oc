@@ -8,16 +8,23 @@
         <form class="add-new-user pt-0" id="addFirma">
             @csrf
             <input type="hidden" id="bitacora_id_firma">
-            <div class="form-floating form-floating-outline mb-6">
-                <label for="smallSelect" class="form-label"> Persona que firmará</label>
-                <select  class="form-select select2" name="PersonaFirmante">
-                    <option disabled selected value="">Selecciona la persona</option>
-                </select>
+
+            <div class="form-floating form-floating-outline mb-4">
+               <label for="etapa_proceso" class="form-label">Etapa del proceso</label>
+                <select id="etapa_proceso" name="etapa_proceso" class="select2 form-select mb-4" multiple aria-placeholder="Selecciona la etapa del proceso">
+                    {{-- <option disabled selected value="">Selecciona la etapa</option> --}}
+                    <option value="entrada_maguey">Entrada de maguey</option>
+                    <option value="coccion">Cocción del maguey</option>
+                    <option value="molienda">Molienda y primera destilación</option>
+                    <option value="segunda_destilacion">Segunda destilación</option>
+                    <option value="producto_terminado">Producto terminado</option>
+                </select>{{-- </span> --}}
             </div>
-            <div class="form-floating form-floating-outline mb-6">
+
+            {{--             <div class="form-floating form-floating-outline mb-6">
                 <input class="form-control" type="password" placeholder="password" name="password" />
                 <label for="html5-password-input">Password</label>
-            </div>
+            </div> --}}
             <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                 <button disabled class="btn btn-primary me-1 d-none" type="button" id="btnSpinner">
                     <span class="spinner-border me-1" role="status" aria-hidden="true"></span>

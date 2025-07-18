@@ -1,5 +1,4 @@
-<div class="modal fade" id="EditBitacora" tabindex="-1" aria-labelledby="EditarInventarioModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="EditBitacora" tabindex="-1" aria-labelledby="EditarInventarioModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
@@ -18,12 +17,13 @@
                             </div>
                             <div class="card-body">
                                 <!-- GENERALES -->
-                                <input type="hidden" name="id" id="edit_bitacora_id" >
+                                <input type="hidden" name="id" id="edit_bitacora_id">
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control datepicker" id="edit_fecha_ingreso"
-                                                name="fecha_ingreso" placeholder="Fecha de ingreso">
+                                            <input type="text" class="form-control datepicker"
+                                                id="edit_fecha_ingreso" name="fecha_ingreso"
+                                                placeholder="Fecha de ingreso">
                                             <label for="fecha_ingreso">Fecha de ingreso</label>
                                         </div>
                                     </div>
@@ -85,11 +85,12 @@
                                                 <tbody>
                                                     <tr>
                                                         <td><span class="position-relative d-block mb-1"><input
-                                                                    type="text" class="form-control" id="edit_numero_guia"
-                                                                    name="numero_guia" placeholder="N° de guía"></span>
+                                                                    type="text" class="form-control"
+                                                                    id="edit_numero_guia" name="numero_guia"
+                                                                    placeholder="N° de guía"></span>
                                                         </td>
                                                         <td> {{-- <span class="position-relative d-block mb-1"> --}}
-                                                                <div class="form-floating form-floating-outline mb-4">
+                                                            <div class="form-floating form-floating-outline mb-4">
                                                                 <select id="edit_tipo_agave" name="id_tipo[]"
                                                                     class="select2 form-select mb-4" multiple>
                                                                     @foreach ($tipos as $tipo)
@@ -158,8 +159,8 @@
                                                         <td>
                                                             <span class="position-relative d-block mb-1">
                                                                 <input type="text" class="form-control datepicker"
-                                                                    id="edit_fecha_fin_coccion" name="fecha_fin_coccion"
-                                                                    placeholder="aaaa-mm-dd">
+                                                                    id="edit_fecha_fin_coccion"
+                                                                    name="fecha_fin_coccion" placeholder="aaaa-mm-dd">
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -256,7 +257,7 @@
                                             </tr>
                                         </thead>
                                         <tbody id="edit_tablaSegundaDestilacion">
-                                          {{-- filas dinamicas --}}
+                                            {{-- filas dinamicas --}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -291,16 +292,19 @@
                                             <tr>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
-                                                        <input type="number" step="0.01" class="form-control bg-light"
+                                                        <input type="number" step="0.01"
+                                                            class="form-control bg-light"
                                                             name="volumen_total_formulado"
-                                                            id="edit_volumen_total_formulado" style="pointer-events: none;" readonly placeholder="Vol.">
+                                                            id="edit_volumen_total_formulado"
+                                                            style="pointer-events: none;" readonly placeholder="Vol.">
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
-                                                        <input type="number" step="0.01" class="form-control bg-light"
-                                                            readonly style="pointer-events: none;" name="puntas_volumen" id="edit_puntas_volumen"
-                                                            placeholder="Vol.">
+                                                        <input type="number" step="0.01"
+                                                            class="form-control bg-light" readonly
+                                                            style="pointer-events: none;" name="puntas_volumen"
+                                                            id="edit_puntas_volumen" placeholder="Vol.">
                                                     </span>
                                                 </td>
                                                 <td>
@@ -312,9 +316,10 @@
                                                 </td>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
-                                                        <input type="number" step="0.01" class="form-control bg-light"
-                                                            readonly style="pointer-events: none;" name="mezcal_volumen" id="edit_mezcal_volumen"
-                                                            placeholder="Vol.">
+                                                        <input type="number" step="0.01"
+                                                            class="form-control bg-light" readonly
+                                                            style="pointer-events: none;" name="mezcal_volumen"
+                                                            id="edit_mezcal_volumen" placeholder="Vol.">
                                                     </span>
                                                 </td>
                                                 <td>
@@ -326,9 +331,10 @@
                                                 </td>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
-                                                        <input type="number" step="0.01" class="form-control bg-light"
-                                                            readonly style="pointer-events: none;" name="colas_volumen" id="edit_colas_volumen"
-                                                            placeholder="Vol.">
+                                                        <input type="number" step="0.01"
+                                                            class="form-control bg-light" readonly
+                                                            style="pointer-events: none;" name="colas_volumen"
+                                                            id="edit_colas_volumen" placeholder="Vol.">
                                                     </span>
                                                 </td>
                                                 <td>

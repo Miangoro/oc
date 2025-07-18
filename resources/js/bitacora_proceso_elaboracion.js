@@ -103,10 +103,10 @@ $(function () {
           render: function (data, type, full, meta) {
             let acciones = '';
             if (window.puedeFirmarElUsuario) {
-              acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
+              acciones += `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddFirma" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
             }
             if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#EditBitacora" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
+              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#EditBitacora" class="dropdown-item edit-record waves-effect"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
             }
             if (window.puedeEliminarElUsuario) {
               acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora</a>`;
@@ -198,13 +198,13 @@ $(function () {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de ' + data[''];
+              return 'Detalles de la bitácora';
             }
           }),
           type: 'column',
           renderer: function (api, rowIdx, columns) {
             var data = $.map(columns, function (col, i) {
-              return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+              return col.title !== ''
                 ? '<tr data-dt-row="' +
                     col.rowIndex +
                     '" data-dt-column="' +
@@ -264,66 +264,66 @@ $(function () {
     $('#filtroEmpresa').next('.select2-container').find('.select2-selection__rendered').attr('title', selectedText);
   });
 
-      //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
-    $(document).on('click', '.verBitacoraBtn', function () {
-      const empresaId = $(this).data('empresa');
-      const id = $(this).data('id');
+  //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
+  $(document).on('click', '.verBitacoraBtn', function () {
+    const empresaId = $(this).data('empresa');
+    const id = $(this).data('id');
 
-      if (!empresaId) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Empresa no válida',
-          text: 'No se encontró la empresa asociada a esta fila.',
-          confirmButtonText: 'Aceptar',
-          customClass: {
-            confirmButton: 'btn btn-warning'
-          }
-        });
-        return;
-      }
-
-      let urlPDF = `/bitacoraProcesoElabPDF?empresa=${empresaId}`;
-
-      if (id) {
-        urlPDF += `&id=${id}`;
-      }
-
-      urlPDF += `&t=${new Date().getTime()}`; // evita caché
-
-      $('#cargando').show();
-      $('#pdfViewer').hide().attr('src', '');
-      $('#NewPestana').hide();
-
-      $.ajax({
-        url: urlPDF,
-        method: 'GET',
-        xhrFields: { responseType: 'blob' },
-        success: function (data) {
-          const blobUrl = URL.createObjectURL(data);
-          $('#pdfViewer').attr('src', blobUrl);
-          $('#NewPestana').attr('href', blobUrl);
-          $('#titulo_modal').text('BITÁCORA PROCESO DE ELABORACIÓN DE MEZCAL');
-          $('#mostrarPdf').modal('show');
-
-          $('#pdfViewer').on('load', function () {
-            $('#cargando').hide();
-            $(this).show();
-          });
-        },
-        error: function (xhr) {
-          $('#cargando').hide();
-          Swal.fire({
-            icon: 'info',
-            title: 'Sin registros',
-            text: xhr.responseJSON?.message || 'No hay datos para mostrar.',
-            confirmButtonText: 'Aceptar',
-            customClass: {
-              confirmButton: 'btn btn-info'
-            }
-          });
+    if (!empresaId) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Empresa no válida',
+        text: 'No se encontró la empresa asociada a esta fila.',
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'btn btn-warning'
         }
       });
+      return;
+    }
+
+    let urlPDF = `/bitacoraProcesoElabPDF?empresa=${empresaId}`;
+
+    if (id) {
+      urlPDF += `&id=${id}`;
+    }
+
+    urlPDF += `&t=${new Date().getTime()}`; // evita caché
+
+    $('#cargando').show();
+    $('#pdfViewer').hide().attr('src', '');
+    $('#NewPestana').hide();
+
+    $.ajax({
+      url: urlPDF,
+      method: 'GET',
+      xhrFields: { responseType: 'blob' },
+      success: function (data) {
+        const blobUrl = URL.createObjectURL(data);
+        $('#pdfViewer').attr('src', blobUrl);
+        $('#NewPestana').attr('href', blobUrl);
+        $('#titulo_modal').text('BITÁCORA PROCESO DE ELABORACIÓN DE MEZCAL');
+        $('#mostrarPdf').modal('show');
+
+        $('#pdfViewer').on('load', function () {
+          $('#cargando').hide();
+          $(this).show();
+        });
+      },
+      error: function (xhr) {
+        $('#cargando').hide();
+        Swal.fire({
+          icon: 'info',
+          title: 'Sin registros',
+          text: xhr.responseJSON?.message || 'No hay datos para mostrar.',
+          confirmButtonText: 'Aceptar',
+          customClass: {
+            confirmButton: 'btn btn-info'
+          }
+        });
+      }
     });
+  });
 
   /*     $('#pdfViewer').on('load', function () {
       $('#cargando').hide();
@@ -331,7 +331,7 @@ $(function () {
     }); */
 
   $(document).on('click', '.firma-record', function () {
-    var id_bitacora_firma = $(this).data('id');
+    // Cierra todos los modales de Bootstrap que estén abiertos
     var dtrModal = $('.dtr-bs-modal.show');
 
     // Ocultar modal responsivo en pantalla pequeña si está abierto
@@ -339,76 +339,95 @@ $(function () {
       dtrModal.modal('hide');
     }
 
-    // SweetAlert para confirmar la eliminación
-    Swal.fire({
-      title: '¿Deseas firmar esta bitácora?',
-      /* text: 'No podrá revertir este evento', */
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, firmar',
-      cancelButtonText: 'Cancelar',
-      customClass: {
-        confirmButton: 'btn btn-primary me-3',
-        cancelButton: 'btn btn-label-secondary'
-      },
-      buttonsStyling: false
-    }).then(function (result) {
-      if (result.isConfirmed) {
-        // Enviar solicitud DELETE al servidor
-        $.ajax({
-          type: 'POST',
-          url: `/FirmaProcesoElab/${id_bitacora_firma}`,
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
-          success: function () {
-            dt_user.draw();
-            Swal.fire({
-              icon: 'success',
-              title: '¡Firmado!',
-              text: '¡Se ha firmado la bitácora!',
-              customClass: {
-                confirmButton: 'btn btn-success'
-              }
-            });
-          },
-          error: function (error) {
-            let mensaje = 'Error desconocido del servidor.';
-            let icono = 'error';
-            let titulo = 'Error del servidor';
-            // Si la respuesta viene como JSON con mensaje
-            if (error.responseJSON && error.responseJSON.message) {
-              mensaje = error.responseJSON.message;
-              // Si es error por permisos
-              if (error.status === 403) {
-                icono = 'warning';
-                titulo = 'Permiso denegado';
-              }
-              // Si es error de validación o petición mal formada
-              else if (error.status === 400 || error.status === 422) {
-                titulo = '¡A ocurrido un error!';
-              }
-            }
-            Swal.fire({
-              icon: icono,
-              title: titulo,
-              text: mensaje,
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          }
-        });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: 'Cancelado',
-          text: 'La firma de la bitácora ha sido cancelada',
-          icon: 'info',
-          customClass: {
-            confirmButton: 'btn btn-primary'
-          }
-        });
+    // Tu lógica después de cerrar modales
+    var bitacoraID = $(this).data('id');
+    $('#bitacora_id_firma').val(bitacoraID);
+  });
+
+  $(document).ready(function () {
+    $('.select2').select2({
+      dropdownParent: $('#offcanvasAddFirma'), // o el contenedor correspondiente si no es un offcanvas
+      width: '100%'
+    });
+  });
+  $(function () {
+    // Configurar CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
+    });
+
+    // Inicializar FormValidation
+    const form = document.getElementById('addFirma');
+    const fv = FormValidation.formValidation(form, {
+      fields: {
+        etapa_proceso: {
+          validators: {
+            notEmpty: {
+              message: 'Seleccione por lo menos una etapa.'
+            }
+          }
+        }
+        /*         password: {
+          validators: {
+            notEmpty: {
+              message: 'Ingresa su contraseña.'
+            }
+          }
+        } */
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      const formData = $(form).serialize();
+      const id = $('#bitacora_id_firma').val();
+
+      $.ajax({
+        url: '/Firmar_bitacorasMezcal/' + id,
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+          $('#offcanvasAddFirma').offcanvas('hide');
+          $('#addFirma')[0].reset();
+          $('.datatables-users').DataTable().ajax.reload();
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.success || 'La bitácora fue firmada correctamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          let errorMsg = 'Error al firmar la bitácora';
+          if (xhr.responseJSON && xhr.responseJSON.errors) {
+            // Construimos un string con todos los mensajes de error
+            const errors = xhr.responseJSON.errors;
+            errorMsg = Object.values(errors)
+              .map(arr => arr.join(', ')) // cada campo puede tener múltiples errores
+              .join('\n'); // separa errores por salto de línea
+          }
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            html: errorMsg.replace(/\n/g, '<br>'), // para que respete saltos de línea en HTML
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
     });
   });
 

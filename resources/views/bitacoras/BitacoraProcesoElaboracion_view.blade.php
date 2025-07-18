@@ -68,6 +68,7 @@
     @include('_partials/_modals/modal-pdfs-frames')
     @include('_partials/_modals/modal-add-bitacoraProcesoElaboracion')
     @include('_partials._modals.modal-edit-bitacoraProcesoElaboracion')
+    @include('_partials._modals.modal-add-firma-bitacoraElaboracion')
     <!-- /Modal -->
 
 @endsection
