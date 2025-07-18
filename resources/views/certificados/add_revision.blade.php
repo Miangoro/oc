@@ -786,11 +786,15 @@
                                                             
                                             @endphp
 
-                                                   {{--   @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
+                                             @if($lotes_graneles)
+
+                                                     @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
                                                         {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
                                                     @empty
                                                         N/A
-                                                    @endforelse --}}
+                                                    @endforelse 
+
+                                            @endif
 
                                                     @foreach($lotes_graneles as $lotess)
                                                    @forelse ($lotess->tiposRelacionados as $tipo)
