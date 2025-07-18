@@ -52,6 +52,8 @@
                         <th>N° Piñas</th>
                         <th>Kg Maguey</th>
                         <th>Observaciones</th>
+                        <th>Bitácora</th>
+                        <th>Estatus</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>

@@ -31,6 +31,7 @@ class BitacoraProcesoElaboracion extends Model
         'total_colas_volumen',
         'total_colas_porcentaje',
         'observaciones',
+        'id_firmante',
     ];
 
     public $timestamps = false;

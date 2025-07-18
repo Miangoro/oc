@@ -100,8 +100,10 @@ class BitacoraProcesoElaboracionController extends Controller
               $nestedData['fake_id'] = ++$ids; // ← ¡Aquí está tu índice visible!
               $nestedData['fecha_ingreso'] = Helpers::formatearFecha($bitacora->fecha_ingreso);
               $nestedData['nombre_cliente'] = $bitacora->empresaBitacora->razon_social ?? 'Sin razón social';
+              $nestedData['id_empresa'] = $bitacora->id_empresa ?? 'N/A';
               $nestedData['numero_tapada'] = $bitacora->numero_tapada ?? 'N/A';
               $nestedData['lote_granel'] = $bitacora->lote_granel ?? 'N/A';
+              $nestedData['id_firmante'] = $bitacora->id_firmante ?? 'N/A';
               $nestedData['numero_guia'] = $bitacora->numero_guia ?? 'N/A';
               $nestedData['tipo_maguey'] = $bitacora->tipo_maguey ?? 'N/A';
               $nestedData['numero_pinas'] = $bitacora->numero_pinas ?? 'N/A';
@@ -132,34 +134,33 @@ class BitacoraProcesoElaboracionController extends Controller
   }
 
 
-      public function PDFBitacoraMezcal(Request $request)
-    {
-        $empresaId = $request->query('empresa');
-        $instalacionId = $request->query('instalacion');
-        $title = 'PRODUCTOR'; // Cambia a 'Envasador' si es necesario
-        $bitacoras = BitacoraMezcal::with([
-            'empresaBitacora.empresaNumClientes',
-            'firmante',
-        ])->where('tipo', 1)
-        ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
-            $query->where('id_empresa', $empresaId);
-            if ($instalacionId) {
-                $query->where('id_instalacion', $instalacionId);
-            }
-        })
-        ->orderBy('fecha', 'desc')
-        ->get();
+      public function PDFBitacoraProcesoElab(Request $request)
+      {
+          $empresaId = $request->query('empresa');
+          $title = 'PRODUCTOR';
+
+          $bitacoras = BitacoraProcesoElaboracion::with([
+              'empresaBitacora.empresaNumClientes',
+              'firmante',
+          ])
+          ->when($empresaId, function ($query) use ($empresaId) {
+              $query->where('id_empresa', $empresaId);
+          })
+          ->orderBy('fecha_ingreso', 'desc')
+          ->get();
 
           if ($bitacoras->isEmpty()) {
               return response()->json([
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
               ], 404);
           }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title'))
-            ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
 
-        return $pdf->stream('Bitácora Mezcal a Granel.pdf');
-    }
+          $pdf = Pdf::loadView('pdfs.Bitacora_Productor', compact('bitacoras', 'title'))
+              ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
+
+          return $pdf->stream('Bitácora PROCESO DE ELABORACIÓN DE MEZCAL.pdf');
+      }
+
 
       public function store(Request $request)
       {

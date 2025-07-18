@@ -44,6 +44,34 @@ $(function () {
         { data: 'numero_pinas', title: 'N° piñas' },
         { data: 'kg_maguey', title: 'Kg maguey' },
         { data: 'observaciones', title: 'Observaciones' },
+        {
+          data: 'bitacora',
+          className: 'text-center',
+          searchable: false,
+          orderable: false,
+          render: function (data, type, full, meta) {
+            return `<i class="ri-file-pdf-2-fill text-danger ri-48px verBitacoraBtn cursor-pointer"
+                      data-id="${full['id']}"
+                      data-empresa="${full['id_empresa']}"></i>`;
+          }
+        },
+        {
+          data: 'id_firmante',
+          render: function (data, type, full, meta) {
+            let texto = '';
+            let badge = '';
+
+            if (data !== null && data != 0) {
+              texto = 'Firmado';
+              badge = 'bg-success';
+            } else {
+              texto = 'Sin firmar';
+              badge = 'bg-warning';
+            }
+
+            return `<span class="badge rounded-pill ${badge} mb-1">${texto}</span>`;
+          }
+        },
         { data: 'action', title: 'Acciones' }
       ],
       columnDefs: [
@@ -236,64 +264,66 @@ $(function () {
     $('#filtroEmpresa').next('.select2-container').find('.select2-selection__rendered').attr('title', selectedText);
   });
 
-  //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
-  $(document).on('click', '#verBitacoraBtn', function () {
-    const empresaId = $('#filtroEmpresa').val();
+      //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
+    $(document).on('click', '.verBitacoraBtn', function () {
+      const empresaId = $(this).data('empresa');
+      const id = $(this).data('id');
 
-    if (!empresaId) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Selecciona una empresa',
-        text: 'Debes elegir una empresa para ver su bitácora',
-        confirmButtonText: 'Aceptar',
-        customClass: {
-          confirmButton: 'btn btn-warning'
-        }
-      });
-      return;
-    }
-
-    let urlPDF = `/bitacoraProcesoElabPDF?empresa=${empresaId}`;
-
-    urlPDF += `&t=${new Date().getTime()}`;
-
-    $('#cargando').show();
-    $('#pdfViewer').hide().attr('src', '');
-    $('#NewPestana').hide();
-
-    // Hacer una solicitud previa para verificar si hay datos
-    $.ajax({
-      url: urlPDF,
-      method: 'GET',
-      xhrFields: { responseType: 'blob' }, // permite manejar el PDF o error
-      success: function (data) {
-        // Mostrar PDF en iframe
-        const blobUrl = URL.createObjectURL(data);
-        $('#pdfViewer').attr('src', blobUrl);
-        $('#NewPestana').attr('href', blobUrl);
-        $('#titulo_modal').text('Bitácora de control de hologramas de envasador');
-        /* $('#subtitulo_modal').text('Versión Filtrada'); */
-        $('#mostrarPdf').modal('show');
-
-        $('#pdfViewer').on('load', function () {
-          $('#cargando').hide();
-          $(this).show();
-        });
-      },
-      error: function (xhr) {
-        $('#cargando').hide();
+      if (!empresaId) {
         Swal.fire({
-          icon: 'info',
-          title: 'Sin registros',
-          text: xhr.responseJSON?.message || 'No hay datos para mostrar.',
+          icon: 'warning',
+          title: 'Empresa no válida',
+          text: 'No se encontró la empresa asociada a esta fila.',
           confirmButtonText: 'Aceptar',
           customClass: {
-            confirmButton: 'btn btn-info'
+            confirmButton: 'btn btn-warning'
           }
         });
+        return;
       }
+
+      let urlPDF = `/bitacoraProcesoElabPDF?empresa=${empresaId}`;
+
+      if (id) {
+        urlPDF += `&id=${id}`;
+      }
+
+      urlPDF += `&t=${new Date().getTime()}`; // evita caché
+
+      $('#cargando').show();
+      $('#pdfViewer').hide().attr('src', '');
+      $('#NewPestana').hide();
+
+      $.ajax({
+        url: urlPDF,
+        method: 'GET',
+        xhrFields: { responseType: 'blob' },
+        success: function (data) {
+          const blobUrl = URL.createObjectURL(data);
+          $('#pdfViewer').attr('src', blobUrl);
+          $('#NewPestana').attr('href', blobUrl);
+          $('#titulo_modal').text('BITÁCORA PROCESO DE ELABORACIÓN DE MEZCAL');
+          $('#mostrarPdf').modal('show');
+
+          $('#pdfViewer').on('load', function () {
+            $('#cargando').hide();
+            $(this).show();
+          });
+        },
+        error: function (xhr) {
+          $('#cargando').hide();
+          Swal.fire({
+            icon: 'info',
+            title: 'Sin registros',
+            text: xhr.responseJSON?.message || 'No hay datos para mostrar.',
+            confirmButtonText: 'Aceptar',
+            customClass: {
+              confirmButton: 'btn btn-info'
+            }
+          });
+        }
+      });
     });
-  });
 
   /*     $('#pdfViewer').on('load', function () {
       $('#cargando').hide();
@@ -1163,7 +1193,7 @@ $(function () {
             }
           }
         },
-                volumen_total_formulado: {
+        volumen_total_formulado: {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese el volumen total formulado'

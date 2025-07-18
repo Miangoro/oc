@@ -321,7 +321,8 @@
             {
               "url": "/bitacoraProductoMaduracion",
               "name": "Maduración en barricas o vidrio",
-              "slug": "bitacoraProductoMaduracion"
+              "slug": "bitacoraProductoMaduracion",
+              "can": "Visualizar bitácoras maduración"
             }
           ]
         },
@@ -339,12 +340,14 @@
             {
               "url": "/bitacoraProductoTerminado",
               "name": "Producto y etiqueta",
-              "slug": "bitacoraProductoTerminado"
+              "slug": "bitacoraProductoTerminado",
+              "can": "Visualizar bitácoras maduración"
             },
             {
               "url": "/bitacoraProductoTerminado",
               "name": "Producto terminado",
-              "slug": "bitacoraProductoTerminado"
+              "slug": "bitacoraProductoTerminado",
+              "can": "Visualizar bitácoras maduración"
             },
             {
               "url": "/bitacoraHologramasEnvasador",
@@ -356,7 +359,8 @@
             {
               "url": "/bitacoraProductoMaduracion",
               "name": "Maduración en barricas o vidrio",
-              "slug": "bitacoraProductoMaduracion"
+              "slug": "bitacoraProductoMaduracion",
+              "can": "Visualizar bitácoras maduración"
             }
           ]
         },
@@ -368,7 +372,8 @@
             {
               "url": "/bitacoraProductoTerminado",
               "name": "Producto terminado",
-              "slug": "bitacoraProductoTerminado"
+              "slug": "bitacoraProductoTerminado",
+              "can": "Visualizar bitácoras maduración"
             },
             {
               "url": "/bitacoraHologramasCom",
