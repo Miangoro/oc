@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary pb-4">
-                <h5 class="modal-title text-white" id="addBitacora">Editar Bitácora de mezcal a granel</h5>
+                <h5 class="modal-title text-white" id="editBitacora">Editar Bitácora de mezcal a granel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -18,10 +18,11 @@
                             </div>
                             <div class="card-body">
                                 <!-- GENERALES -->
+                                <input type="hidden" name="id" id="edit_bitacora_id" >
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control datepicker" id="fecha_ingreso"
+                                            <input type="text" class="form-control datepicker" id="edit_fecha_ingreso"
                                                 name="fecha_ingreso" placeholder="Fecha de ingreso">
                                             <label for="fecha_ingreso">Fecha de ingreso</label>
                                         </div>
@@ -46,14 +47,14 @@
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="lote_granel"
+                                            <input type="text" class="form-control" id="edit_lote_granel"
                                                 name="lote_granel" placeholder="Lote a granel">
                                             <label for="lote_granel">Lote a granel</label>
                                         </div>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="numero_tapada"
+                                            <input type="text" class="form-control" id="edit_numero_tapada"
                                                 name="numero_tapada" placeholder="Nº de tapada">
                                             <label for="numero_tapada">Nº de tapada</label>
                                         </div>
@@ -84,7 +85,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td><span class="position-relative d-block mb-1"><input
-                                                                    type="text" class="form-control" id="numero_guia"
+                                                                    type="text" class="form-control" id="edit_numero_guia"
                                                                     name="numero_guia" placeholder="N° de guía"></span>
                                                         </td>
                                                         <td> {{-- <span class="position-relative d-block mb-1"> --}}
@@ -102,15 +103,15 @@
                                                         </td>
                                                         <td><span class="position-relative d-block mb-1"><input
                                                                     type="number" class="form-control"
-                                                                    id="numero_pinas" name="numero_pinas"
+                                                                    id="edit_numero_pinas" name="numero_pinas"
                                                                     placeholder="N° de piñas"></span></td>
                                                         <td><span class="position-relative d-block mb-1"><input
                                                                     type="number" step="0.01" class="form-control"
-                                                                    id="kg_maguey" name="kg_maguey"
+                                                                    id="edit_kg_maguey" name="kg_maguey"
                                                                     placeholder="Kg. de maguey"></span></td>
                                                         <td><span class="position-relative d-block mb-1"><input
                                                                     type="number" step="0.01" class="form-control"
-                                                                    placeholder="% de art." id="porcentaje_azucar"
+                                                                    placeholder="% de art." id="edit_porcentaje_azucar"
                                                                     name="porcentaje_azucar"></sapn>
                                                         </td>
                                                     </tr>
@@ -142,14 +143,14 @@
                                                         <td>
                                                             <span class="position-relative d-block mb-1">
                                                                 <input type="number" step="0.01"
-                                                                    class="form-control" id="kg_coccion"
+                                                                    class="form-control" id="edit_kg_coccion"
                                                                     name="kg_coccion" placeholder="Kg. a cocción">
                                                             </span>
                                                         </td>
                                                         <td>
                                                             <span class="position-relative d-block mb-1">
                                                                 <input type="text" class="form-control datepicker"
-                                                                    id="fecha_inicio_coccion"
+                                                                    id="edit_fecha_inicio_coccion"
                                                                     name="fecha_inicio_coccion"
                                                                     placeholder="aaaa-mm-dd">
                                                             </span>
@@ -157,7 +158,7 @@
                                                         <td>
                                                             <span class="position-relative d-block mb-1">
                                                                 <input type="text" class="form-control datepicker"
-                                                                    id="fecha_fin_coccion" name="fecha_fin_coccion"
+                                                                    id="edit_fecha_fin_coccion" name="fecha_fin_coccion"
                                                                     placeholder="aaaa-mm-dd">
                                                             </span>
                                                         </td>
@@ -188,7 +189,7 @@
                                             <tr>
                                                 <th rowspan="2">
                                                     <button type="button" class="btn btn-primary btn-sm"
-                                                        id="agregarFilaMolienda">
+                                                        id="edit_agregarFilaMolienda">
                                                         <i class="ri-add-circle-fill text-white"></i>
                                                     </button>
                                                 </th>
@@ -210,62 +211,8 @@
                                                 <th>% Alc. Vol.</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="tablaMolienda">
-                                            <tr>
-                                                <td class="text-nowrap">
-                                                    <button type="button" class="btn btn-danger btn-sm" disabled
-                                                        {{-- onclick="this.closest('tr').remove()" --}}>
-                                                        <i class="ri-close-circle-fill"></i>
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <input type="text" class="form-control datepicker"
-                                                        name="molienda[0][fecha_molienda]" placeholder="aaaa-mm-dd">
-                                                </td>
-                                                <td>
-                                                    <input type="text" class="form-control"
-                                                        name="molienda[0][numero_tina]" placeholder="Nº de tina">
-                                                </td>
-                                                <td>
-                                                    <input type="text" class="form-control datepicker"
-                                                        name="molienda[0][fecha_formulacion]"
-                                                        placeholder="aaaa-mm-dd">
-                                                </td>
-                                                <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="molienda[0][volumen_formulacion]" placeholder="Vol.">
-                                                </td>
-                                                <td>
-                                                    <input type="text" class="form-control datepicker"
-                                                        name="molienda[0][fecha_destilacion]"
-                                                        placeholder="aaaa-mm-dd">
-                                                </td>
-                                                <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="molienda[0][puntas_volumen]" placeholder="Vol.">
-                                                </td>
-                                                <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="molienda[0][puntas_alcohol]" placeholder="% Alc.">
-                                                </td>
-                                                <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="molienda[0][mezcal_volumen]" placeholder="Vol.">
-                                                </td>
-                                                <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="molienda[0][mezcal_alcohol]" placeholder="% Alc.">
-                                                </td>
-                                                <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="molienda[0][colas_volumen]" placeholder="Vol.">
-                                                </td>
-                                                <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="molienda[0][colas_alcohol]" placeholder="% Alc.">
-                                                </td>
-                                            </tr>
-
+                                        <tbody id="edit_tablaMolienda">
+                                            {{-- filas dinamicas --}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -290,7 +237,7 @@
                                             <tr>
                                                 <td rowspan="2"> <button type="button"
                                                         class="btn btn-primary btn-sm"
-                                                        id="agregarFilaSegundaDestilacion">
+                                                        id="edit_agregarFilaSegundaDestilacion">
                                                         <i class="ri-add-circle-fill text-white"></i>
                                                     </button></td>
                                                 <th rowspan="2">Fecha de destilación</th>
@@ -308,50 +255,8 @@
                                                 <th>% Alc. Vol.</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="tablaSegundaDestilacion">
-                                            <tr>
-                                                <td class="text-nowrap">
-                                                    <button type="button" class="btn btn-danger btn-sm" disabled
-                                                        {{--  onclick="this.closest('tr').remove()" --}}>
-                                                        <i class="ri-close-circle-fill"></i>
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <input type="text" class="form-control datepicker"
-                                                        name="segunda_destilacion[0][fecha_destilacion]"
-                                                        placeholder="aaaa-mm-dd">
-                                                </td>
-                                                <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="segunda_destilacion[0][puntas_volumen]"
-                                                        placeholder="Vol.">
-                                                </td>
-                                                <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="segunda_destilacion[0][puntas_alcohol]"
-                                                        placeholder="% Alc.">
-                                                </td>
-                                                <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="segunda_destilacion[0][mezcal_volumen]"
-                                                        placeholder="Vol.">
-                                                </td>
-                                                <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="segunda_destilacion[0][mezcal_alcohol]"
-                                                        placeholder="% Alc.">
-                                                </td>
-                                                <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="segunda_destilacion[0][colas_volumen]"
-                                                        placeholder="Vol.">
-                                                </td>
-                                                <td>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="segunda_destilacion[0][colas_alcohol]"
-                                                        placeholder="% Alc.">
-                                                </td>
-                                            </tr>
+                                        <tbody id="edit_tablaSegundaDestilacion">
+                                          {{-- filas dinamicas --}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -388,59 +293,58 @@
                                                     <span class="position-relative d-block mb-1">
                                                         <input type="number" step="0.01" class="form-control bg-light"
                                                             name="volumen_total_formulado"
-                                                            id="volumen_total_formulado" style="pointer-events: none;" readonly placeholder="Vol.">
+                                                            id="edit_volumen_total_formulado" style="pointer-events: none;" readonly placeholder="Vol.">
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
                                                         <input type="number" step="0.01" class="form-control bg-light"
-                                                            readonly style="pointer-events: none;" name="puntas_volumen" id="puntas_volumen"
+                                                            readonly style="pointer-events: none;" name="puntas_volumen" id="edit_puntas_volumen"
                                                             placeholder="Vol.">
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
                                                         <input type="number" step="0.01" class="form-control"
-                                                            name="puntas_alcohol" id="puntas_alcohol"
+                                                            name="puntas_alcohol" id="edit_puntas_alcohol"
                                                             placeholder="% Alc.">
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
                                                         <input type="number" step="0.01" class="form-control bg-light"
-                                                            readonly style="pointer-events: none;" name="mezcal_volumen" id="mezcal_volumen"
+                                                            readonly style="pointer-events: none;" name="mezcal_volumen" id="edit_mezcal_volumen"
                                                             placeholder="Vol.">
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
                                                         <input type="number" step="0.01" class="form-control"
-                                                            name="mezcal_alcohol" id="mezcal_alcohol"
+                                                            name="mezcal_alcohol" id="edit_mezcal_alcohol"
                                                             placeholder="% Alc.">
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
                                                         <input type="number" step="0.01" class="form-control bg-light"
-                                                            readonly style="pointer-events: none;" name="colas_volumen" id="colas_volumen"
+                                                            readonly style="pointer-events: none;" name="colas_volumen" id="edit_colas_volumen"
                                                             placeholder="Vol.">
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
                                                         <input type="number" step="0.01" class="form-control"
-                                                            name="colas_alcohol" id="colas_alcohol"
+                                                            name="colas_alcohol" id="edit_colas_alcohol"
                                                             placeholder="% Alc.">
                                                     </span>
                                                 </td>
                                             </tr>
-
                                         </tbody>
                                     </table>
                                     <div class="mt-5">
                                         <label for="observaciones"
                                             class="form-label fw-bold fs-6">Observaciones</label>
-                                        <textarea class="form-control" id="observaciones" name="observaciones" rows="3"
+                                        <textarea class="form-control" id="edit_observaciones" name="observaciones" rows="3"
                                             placeholder="Escribe observaciones"></textarea>
                                     </div>
                                 </div>

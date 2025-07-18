@@ -712,13 +712,16 @@
                                                                 }
                                                             }
 
-                                                            $lotes_graneles;
+                                                    
                                             @endphp
                                             <td>
 
-                                               {{--  <br>
-                                                {{ $lote_envasado->marca->marca ?? 'N/A' }}<br>
-                                                {{ $lote_granel->clase->clase ?? 'N/A' }}<br> --}}
+                                                @if($lotes_graneles)
+
+                                                {{-- {{ $lote_envasado->marca->marca ?? 'N/A' }}<br>--}}
+                                                {{ $lote_granel->categoria->categoria ?? 'N/A' }}<br>
+
+                                                @endif
 
                                                 @foreach($lotes_graneles as $lotess)
                                                    <b>Granel: </b>{{ $lotess->nombre_lote ?? 'N/A' }}
@@ -727,6 +730,10 @@
                                                    <b>Marca: </b> {{ $lote_envasado->marca->marca ?? 'N/A' }} <br>
 
                                                 @endforeach
+
+                                                 {{--  <br>
+                                                {{ $lote_envasado->marca->marca ?? 'N/A' }}<br>
+                                                {{ $lote_granel->clase->clase ?? 'N/A' }}<br> --}}
                                                 
 
                                             </td>
@@ -779,11 +786,15 @@
                                                             
                                             @endphp
 
-                                                   {{--   @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
+                                             @if($lotes_graneles)
+
+                                                     @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
                                                         {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
                                                     @empty
                                                         N/A
-                                                    @endforelse --}}
+                                                    @endforelse 
+
+                                            @endif
 
                                                     @foreach($lotes_graneles as $lotess)
                                                    @forelse ($lotess->tiposRelacionados as $tipo)
