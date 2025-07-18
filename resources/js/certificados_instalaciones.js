@@ -1276,7 +1276,7 @@ $(document).on('click', '#EliminarDocRevisor', function () {
   }).then((result) => {
     if (result.isConfirmed) {
       $.ajax({
-        url: `/eliminar-documento-revision-insta/${idCertificado}`,
+        url: `/eliminar-doc-revision-insta/${idCertificado}`,
         method: 'DELETE',
         success: function (res) {
           $('#documentoRevision').html('<p>Documento eliminado.</p>');
