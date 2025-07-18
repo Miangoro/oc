@@ -1337,7 +1337,7 @@ public function api()
         'dictamen.inspeccione',
         'dictamen.inspeccione.solicitud.direccion_destino'
     ])
-    ->where('fecha_emision', '>=', '2025-07-01')
+   // ->where('fecha_emision', '>=', '2025-07-01')
     ->orderByDesc('fecha_emision')
     ->get();
 
