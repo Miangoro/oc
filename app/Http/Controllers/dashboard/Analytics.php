@@ -120,6 +120,8 @@ $certificadosPorVencer = $certificadosInstalacion;
 
     $certificadoGranelSinEscaneado = CertificadosGranel::whereDoesntHave('certificadoEscaneado')->orderByDesc('fecha_emision')->get();
     $certificadoExportacionSinEscaneado = Certificado_Exportacion::whereDoesntHave('certificadoEscaneado')->orderByDesc('fecha_emision')->get();
+
+
     
 
     $empresaId = Auth::user()?->empresa?->id_empresa;
