@@ -285,12 +285,21 @@
                                 carpeta = 'actas/';
                             }
                             html += `
-                            <tr>
+                             <tr data-id-doc="${doc.id_documento}" data-id-solicitud="${id_solicitud}">
                                 <td>${doc.nombre}</td>
                                 <td>
                                     <a href="/files/${response.numero_cliente}/${carpeta}${doc.url}" target="_blank">
                                         <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
-                                    </a>
+                                    </a>`;
+                                
+                            if (doc.id_documento == 69 || doc.id_documento == 70) {
+                                html += `
+                                    <button type="button" class="btn btn-outline-danger btn-sm px-2 ms-2 eliminar-doc">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>`;
+                            }
+
+                            html +=`
                                 </td>
                             </tr>`;
                         });
