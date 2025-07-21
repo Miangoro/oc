@@ -160,9 +160,24 @@
             <p>Sin otro particular quedamos de usted.</p>
             <br>
     </div>
+
+    @php
+        use Illuminate\Support\Facades\Storage;
+        $firma = $contacto->firma ?? null;
+        $firmaPath = $firma ? 'firmas/' . $firma : null;
+    @endphp
+
+    @if ($firma && Storage::disk('public')->exists($firmaPath))
+        <img style="position: absolute; left: 37%; margin-top: 4%; " height="60px"
+        src="{{ public_path('storage/' . $firmaPath) }}">
+    @endif
+    
     <div class="Atentamente">
-        <p>Atentamente.</p>
-        <p>_______________________</p>
+        <p>Atentamente. <br><br><br>
+
+            <u>{{$contacto->name ?? 'No encontrado'}}</u>
+        </p>
+        
     </div>
 </body>
 </html>

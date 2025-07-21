@@ -36,11 +36,11 @@ $(function () {
         { data: '' }, // Responsive control
         { data: 'fake_id', title: '#' },
         { data: 'fecha_ingreso', title: 'Fecha ingreso' },
-        { data: 'nombre_cliente', title: 'Cliente' },
+        { data: 'cliente', title: 'Cliente' },
         { data: 'numero_tapada', title: 'N° tapada' },
         { data: 'lote_granel', title: 'Lote granel' },
         { data: 'numero_guia', title: 'N° guía' },
-        { data: 'tipo_maguey', title: 'Tipo maguey' },
+        { data: 'id_tipo_maguey', title: 'Tipo maguey' },
         { data: 'numero_pinas', title: 'N° piñas' },
         { data: 'kg_maguey', title: 'Kg maguey' },
         { data: 'observaciones', title: 'Observaciones' },
@@ -51,8 +51,8 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             return `<i class="ri-file-pdf-2-fill text-danger ri-48px verBitacoraBtn cursor-pointer"
-                      data-id="${full['id']}"
-                      data-empresa="${full['id_empresa']}"></i>`;
+                      data-id="${full['id']}" data-empresa="${full['nombre_cliente']}"
+                      data-bs-toggle="modal" data-bs-target="#mostrarPdf"></i>`;
           }
         },
         {
@@ -265,7 +265,7 @@ $(function () {
   });
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
-  $(document).on('click', '.verBitacoraBtn', function () {
+  /*   $(document).on('click', '.verBitacoraBtn', function () {
     const empresaId = $(this).data('empresa');
     const id = $(this).data('id');
 
@@ -281,15 +281,11 @@ $(function () {
       });
       return;
     }
-
     let urlPDF = `/bitacoraProcesoElabPDF?empresa=${empresaId}`;
-
     if (id) {
       urlPDF += `&id=${id}`;
     }
-
     urlPDF += `&t=${new Date().getTime()}`; // evita caché
-
     $('#cargando').show();
     $('#pdfViewer').hide().attr('src', '');
     $('#NewPestana').hide();
@@ -322,6 +318,33 @@ $(function () {
           }
         });
       }
+    });
+  }); */
+
+  //FORMATO PFD PRE-REGISTRO DE PREDIOS
+  $(document).on('click', '.verBitacoraBtn', function () {
+    var id = $(this).data('id');
+    var empresa = $(this).data('empresa');
+    var pdfUrl = 'bitacoraProcesoElabPDF/' + id; //Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+
+    //Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $('#NewPestana').attr('href', pdfUrl).show();
+
+    $('#titulo_modal').text('BITÁCORA PROCESO DE ELABORACIÓN DE MEZCAL');
+    $('#subtitulo_modal').html(empresa);
+    //$("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + empresa + '</p>');
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
     });
   });
 

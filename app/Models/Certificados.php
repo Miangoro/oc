@@ -64,6 +64,12 @@ class Certificados extends Model
         }
         return null;
     }
+        public function certificadoEscaneado()
+        {
+            return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_certificado')
+                ->whereIn('id_documento', [127, 128, 129, 130, 131]);
+        }
+
 
     
 }

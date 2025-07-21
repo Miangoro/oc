@@ -1000,7 +1000,8 @@ Route::resource('/bitacoraHologramasCom-list', BitacoraHologramasComercializador
 //bitacora proceso de elaboracion
 Route::controller(BitacoraProcesoElaboracionController::class)->middleware(['auth'])->group(function () {
     Route::get('/bitacoraProcesoElaboracion', 'UserManagement')->name('bitacora-proceso-elab');
-    Route::get('/bitacoraProcesoElabPDF', 'PDFBitacoraProcesoElab');
+    Route::get('/bitacoraProcesoElabPDF/{id_bitacora}', 'PDFBitacoraProcesoElab');
+
     Route::get('bitacoraProcesoElab/{id_bitacora}/edit', 'edit');
     Route::get('bitacoraProcesoElab-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
     Route::post('/bitacoraProcesoElabStore', 'store')->name('bitacora.store');
@@ -1237,10 +1238,12 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
 
 Route::controller(Certificado_ExportacionController::class)->group(function () {
     //Mostrar
-
      Route::get('/api/certificados_exportacion', [Certificado_ExportacionController::class, 'api']);
+});
 
-
+Route::controller(Certificado_InstalacionesController::class)->group(function () {
+    //Mostrar
+     Route::get('/api/certificados_instalaciones', [Certificado_InstalacionesController::class, 'api']);
 });
 
 //-------------------CERTIFICADO VENTA NACIONAL-------------------

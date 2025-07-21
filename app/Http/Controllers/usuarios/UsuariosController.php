@@ -12,6 +12,12 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Spatie\Permission\Models\Role;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
+
 
 class UsuariosController extends Controller
 {
@@ -64,11 +70,19 @@ class UsuariosController extends Controller
     $mes = $currentDate->translatedFormat('F');
     $anio = $currentDate->year;
         $res = User::with('empresa')->where('id', $id)->first();
-        $pdf = Pdf::loadView('pdfs.AsignacionUsuario',['datos'=>$res,'dia'=>$dia,'mes'=>$mes,'anio'=>$anio]);
+        $id_contacto = $res->empresa->id_contacto ?? '0';
+        $contacto = User::find($id_contacto);
+
+        $pdf = Pdf::loadView('pdfs.AsignacionUsuario',[
+          'datos'=>$res,
+          'contacto'=>$contacto,
+          'dia'=>$dia,
+          'mes'=>$mes,
+          'anio'=>$anio,
+        ]);
         return $pdf->stream('F7.1-01-46 Carta de asignación de usuario y contraseña para plataforma del OC Ed. 0, Vigente.pdf');
-        
-  
     }
+
 
   public function index(Request $request)
   {

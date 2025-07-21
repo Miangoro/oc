@@ -838,22 +838,22 @@ public function storeRevisor(Request $request)
                         ->first();
 
                     if ($revis) {
-                        // Solo sincronizar observaciones
                         $revis->observaciones = $validated['observaciones'] ?? '';
+                        $revis->es_correccion = $validated['esCorreccion'] ?? 'no';
                         $revis->save();
                     } else {
-                        // Crear nueva revisión (solo observaciones)
                         $revis = new Revisor();
                         $revis->id_certificado = $idRelacionado;
                         $revis->tipo_revision = $tipoRev;
                         $revis->tipo_certificado = 3;
                         $revis->observaciones = $validated['observaciones'] ?? '';
+                        $revis->es_correccion = $validated['esCorreccion'] ?? 'no';
                         $revis->save();
                     }
 
-                    // Subir documento solo si es tipo 1 y hay archivo
+                    // Documento (si tipo 1 y hay archivo)
                     if ($tipoRev === 1 && $nombreArchivo) {
-                        // Eliminar anterior si existe
+                        // Eliminar documento anterior si existe
                         $docAnterior = Documentacion_url::where('id_relacion', $revis->id_revision)
                             ->where('id_documento', 133)
                             ->first();
@@ -862,6 +862,7 @@ public function storeRevisor(Request $request)
                             $docAnterior->delete();
                         }
 
+                        // Crear nuevo documento
                         Documentacion_url::create([
                             'id_relacion' => $revis->id_revision,
                             'id_documento' => 133,
@@ -872,6 +873,7 @@ public function storeRevisor(Request $request)
                     }
                 }
             }
+
         }
 
 
