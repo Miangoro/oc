@@ -82,7 +82,7 @@
         }
 
         .titulos {
-            font-size: 20px;
+            font-size: 18px;
             line-height: 0.9;
             padding: 10px;
             text-align: center;
