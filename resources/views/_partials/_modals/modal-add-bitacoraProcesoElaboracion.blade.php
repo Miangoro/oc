@@ -29,8 +29,7 @@
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <select id="id_empresa" name="id_empresa" class="select2 form-select"
-                                                data-error-message="por favor selecciona la empresa">
+                                            <select id="id_empresa" name="id_empresa" class="select2 form-select">
                                                 @if ($tipo_usuario != 3)
                                                     <option value="" disabled selected>Selecciona el cliente
                                                     </option>

@@ -5,9 +5,7 @@
 // Datatable (jquery)
 $(function () {
   // Variable declaration for table
-  var dt_user_table = $('.datatables-users'),
-    select2 = $('.select2'),
-    offCanvasForm = $('#offcanvasAddUser');
+  var dt_user_table = $('.datatables-users');
 
   $(document).ready(function () {
     $('.datepicker').datepicker({
@@ -30,7 +28,10 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'bitacoraProcesoElaboracion-list'
+        url: baseUrl + 'bitacoraProcesoElaboracion-list',
+          data: function (d) {
+          d.empresa = $('#filtroEmpresa').val();
+        }
       },
       columns: [
         { data: '' }, // Responsive control
@@ -57,20 +58,23 @@ $(function () {
         },
         {
           data: 'id_firmante',
-          render: function (data, type, full, meta) {
-            let texto = '';
-            let badge = '';
+          render: function(data, type, full) {
+          if (!data) return `<span class="badge bg-warning rounded-pill">Sin firmar</span>`;
 
-            if (data !== null && data != 0) {
-              texto = 'Firmado';
-              badge = 'bg-success';
+          try {
+            const etapas = JSON.parse(data);
+            const firmadas = Object.values(etapas).some(e => e.id_firmante && e.id_firmante != 0);
+
+            if (firmadas) {
+              return `<span class="badge bg-success rounded-pill">Firmado</span>`;
             } else {
-              texto = 'Sin firmar';
-              badge = 'bg-warning';
+              return `<span class="badge bg-warning rounded-pill">Sin firmar</span>`;
             }
-
-            return `<span class="badge rounded-pill ${badge} mb-1">${texto}</span>`;
+          } catch {
+            return `<span class="badge bg-secondary rounded-pill">Error</span>`;
           }
+        }
+
         },
         { data: 'action', title: 'Acciones' }
       ],
@@ -106,7 +110,7 @@ $(function () {
               acciones += `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddFirma" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
             }
             if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#EditBitacora" class="dropdown-item edit-record waves-effect"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
+              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#EditBitacora" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
             }
             if (window.puedeEliminarElUsuario) {
               acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora</a>`;
@@ -242,27 +246,57 @@ $(function () {
     });
   }
 
+
   function initializeSelect2($elements) {
     $elements.each(function () {
       var $this = $(this);
-      select2Focus($this);
 
-      var parent = $this.closest('.modal'); // Detecta si está en modal
-      if (parent.length === 0) parent = $('body');
+      if ($this.hasClass('select2-hidden-accessible')) {
+        $this.select2('destroy'); // reiniciar si ya está inicializado
+      }
+      // Detectar contenedor padre específico o general
+      var $offcanvasFirma = $this.closest('#offcanvasAddFirma');
+      var dropdownParent;
+      if ($offcanvasFirma.length) {
+        dropdownParent = $offcanvasFirma;
+      } else {
+        // Si no es offcanvasAddFirma, buscar otro offcanvas o modal
+        var $modal = $this.closest('.modal');
+        var $offcanvas = $this.closest('.offcanvas');
+
+        if ($modal.length) {
+          dropdownParent = $modal;
+        } else if ($offcanvas.length) {
+          dropdownParent = $offcanvas;
+        } else {
+          dropdownParent = $('body');
+        }
+      }
 
       $this.select2({
-        dropdownParent: parent
+        dropdownParent: dropdownParent,
+        width: '100%'
       });
     });
   }
 
-  // Después de insertar el HTML dinámico
-  initializeSelect2($('.select2')); // Re-evalúa todos los .select2 del DOM
+  // Inicializa al cargar la página
+  $(document).ready(function () {
+    initializeSelect2($('.select2'));
+  });
 
-  $(document).on('select2:select', '#filtroEmpresa', function (e) {
+/*
+  initializeSelect2($('.select2'));
+ */
+
+/*   $(document).on('select2:select', '#filtroEmpresa', function (e) {
     const selectedText = $(this).find('option:selected').text();
     $('#filtroEmpresa').next('.select2-container').find('.select2-selection__rendered').attr('title', selectedText);
-  });
+  }); */
+/*     $('#filtroEmpresa').on('change', function () {
+    $('.datatables-users').DataTable().ajax.reload();
+  }); */
+
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   /*   $(document).on('click', '.verBitacoraBtn', function () {
@@ -367,12 +401,12 @@ $(function () {
     $('#bitacora_id_firma').val(bitacoraID);
   });
 
-  $(document).ready(function () {
+/*   $(document).ready(function () {
     $('.select2').select2({
       dropdownParent: $('#offcanvasAddFirma'), // o el contenedor correspondiente si no es un offcanvas
       width: '100%'
     });
-  });
+  }); */
   $(function () {
     // Configurar CSRF para Laravel
     $.ajaxSetup({
@@ -385,7 +419,7 @@ $(function () {
     const form = document.getElementById('addFirma');
     const fv = FormValidation.formValidation(form, {
       fields: {
-        etapa_proceso: {
+        'etapa_proceso[]': {
           validators: {
             notEmpty: {
               message: 'Seleccione por lo menos una etapa.'
@@ -415,7 +449,7 @@ $(function () {
       const id = $('#bitacora_id_firma').val();
 
       $.ajax({
-        url: '/Firmar_bitacorasMezcal/' + id,
+        url: '/FirmaProcesoElab/' + id,
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -431,20 +465,25 @@ $(function () {
             }
           });
         },
-        error: function (xhr) {
-          let errorMsg = 'Error al firmar la bitácora';
-          if (xhr.responseJSON && xhr.responseJSON.errors) {
-            // Construimos un string con todos los mensajes de error
-            const errors = xhr.responseJSON.errors;
-            errorMsg = Object.values(errors)
-              .map(arr => arr.join(', ')) // cada campo puede tener múltiples errores
-              .join('\n'); // separa errores por salto de línea
-          }
+        error: function (error) {
+          let mensaje = 'Error desconocido del servidor.';
+          let icono = 'error';
+          let titulo = 'Error del servidor';
 
+          if (error.responseJSON?.message) {
+            mensaje = error.responseJSON.message;
+
+            if (error.status === 403) {
+              icono = 'warning';
+              titulo = 'Permiso denegado';
+            } else if ([400, 422].includes(error.status)) {
+              titulo = '¡Ha ocurrido un error!';
+            }
+          }
           Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            html: errorMsg.replace(/\n/g, '<br>'), // para que respete saltos de línea en HTML
+            icon: icono,
+            title: titulo,
+            text: mensaje,
             customClass: {
               confirmButton: 'btn btn-danger'
             }

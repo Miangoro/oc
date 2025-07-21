@@ -1001,7 +1001,6 @@ Route::resource('/bitacoraHologramasCom-list', BitacoraHologramasComercializador
 Route::controller(BitacoraProcesoElaboracionController::class)->middleware(['auth'])->group(function () {
     Route::get('/bitacoraProcesoElaboracion', 'UserManagement')->name('bitacora-proceso-elab');
     Route::get('/bitacoraProcesoElabPDF/{id_bitacora}', 'PDFBitacoraProcesoElab');
-
     Route::get('bitacoraProcesoElab/{id_bitacora}/edit', 'edit');
     Route::get('bitacoraProcesoElab-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
     Route::post('/bitacoraProcesoElabStore', 'store')->name('bitacora.store');

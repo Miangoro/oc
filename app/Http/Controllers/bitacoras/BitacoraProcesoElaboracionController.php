@@ -16,7 +16,9 @@ use App\Models\tipos;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Arr;
 use Barryvdh\DomPDF\Facade\Pdf;
+use TypeError;
 
 class BitacoraProcesoElaboracionController extends Controller
 {
@@ -39,6 +41,7 @@ class BitacoraProcesoElaboracionController extends Controller
   public function index(Request $request)
   {
       $empresaId = $request->input('empresa');
+
       DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
       $columns = [
           1 => 'id',
@@ -68,35 +71,55 @@ class BitacoraProcesoElaboracionController extends Controller
         }
 
         if (!empty($search)) {
+            $lower = strtolower($search);
 
-            // Buscar IDs por nombre o nombre científico
             $idsCoincidentes = tipos::where('nombre', 'LIKE', "%{$search}%")
                 ->orWhere('cientifico', 'LIKE', "%{$search}%")
                 ->pluck('id_tipo')
                 ->toArray();
 
-            $query->where(function ($q) use ($search, $idsCoincidentes) {
-                $q->where('fecha_ingreso', 'LIKE', "%{$search}%")
-                  ->orWhere('lote_granel', 'LIKE', "%{$search}%")
-                  ->orWhere('id_empresa', 'LIKE', "%{$search}%")
-                  ->orWhere('numero_tapada', 'LIKE', "%{$search}%")
-                  ->orWhere('numero_guia', 'LIKE', "%{$search}%")
-                  ->orWhere('numero_pinas', 'LIKE', "%{$search}%")
-                  ->orWhere('kg_maguey', 'LIKE', "%{$search}%")
-                  ->orWhere('observaciones', 'LIKE', "%{$search}%")
-                  ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
-                      $sub->where('razon_social', 'LIKE', "%{$search}%");
-                  });
+            $query->where(function ($q) use ($search, $idsCoincidentes, $lower) {
+                if ($lower === 'firmado') {
+                    $q->where(function ($q2) {
+                        $q2->whereRaw("JSON_EXTRACT(id_firmante, '$.entrada_maguey.id_firmante') > 0")
+                          ->orWhereRaw("JSON_EXTRACT(id_firmante, '$.coccion.id_firmante') > 0")
+                          ->orWhereRaw("JSON_EXTRACT(id_firmante, '$.molienda.id_firmante') > 0")
+                          ->orWhereRaw("JSON_EXTRACT(id_firmante, '$.segunda_destilacion.id_firmante') > 0")
+                          ->orWhereRaw("JSON_EXTRACT(id_firmante, '$.producto_terminado.id_firmante') > 0");
+                    });
+                } elseif ($lower === 'sin firmar' || $lower === 'sin firmado') {
+                    $q->where(function ($q2) {
+                        $q2->whereRaw("IFNULL(JSON_EXTRACT(id_firmante, '$.entrada_maguey.id_firmante'), 0) = 0")
+                          ->whereRaw("IFNULL(JSON_EXTRACT(id_firmante, '$.coccion.id_firmante'), 0) = 0")
+                          ->whereRaw("IFNULL(JSON_EXTRACT(id_firmante, '$.molienda.id_firmante'), 0) = 0")
+                          ->whereRaw("IFNULL(JSON_EXTRACT(id_firmante, '$.segunda_destilacion.id_firmante'), 0) = 0")
+                          ->whereRaw("IFNULL(JSON_EXTRACT(id_firmante, '$.producto_terminado.id_firmante'), 0) = 0");
+                    });
+                } else {
+                    // El resto de búsquedas normales
+                    $q->where('fecha_ingreso', 'LIKE', "%{$search}%")
+                      ->orWhere('lote_granel', 'LIKE', "%{$search}%")
+                      ->orWhere('id_empresa', 'LIKE', "%{$search}%")
+                      ->orWhere('numero_tapada', 'LIKE', "%{$search}%")
+                      ->orWhere('numero_guia', 'LIKE', "%{$search}%")
+                      ->orWhere('numero_pinas', 'LIKE', "%{$search}%")
+                      ->orWhere('kg_maguey', 'LIKE', "%{$search}%")
+                      ->orWhere('observaciones', 'LIKE', "%{$search}%")
+                      ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
+                          $sub->where('razon_social', 'LIKE', "%{$search}%");
+                      });
 
-                if (!empty($idsCoincidentes)) {
-                    foreach ($idsCoincidentes as $tipoId) {
-                        $q->orWhereRaw("JSON_CONTAINS(id_tipo_maguey, '\"{$tipoId}\"')");
+                    if (!empty($idsCoincidentes)) {
+                        foreach ($idsCoincidentes as $tipoId) {
+                            $q->orWhereRaw("JSON_CONTAINS(id_tipo_maguey, '\"{$tipoId}\"')");
+                        }
                     }
                 }
             });
 
             $totalFiltered = $query->count();
         }
+
 
 
         $users = $query->offset($start)
@@ -168,7 +191,6 @@ class BitacoraProcesoElaboracionController extends Controller
               $nestedData['id_firmante'] = $bitacora->id_firmante ?? 'N/A';
               $nestedData['numero_guia'] = $bitacora->numero_guia ?? 'N/A';
               $nestedData['tipo_maguey'] = $bitacora->tipo_maguey ?? 'N/A';
-
               $nestedData['numero_pinas'] = $bitacora->numero_pinas ?? 'N/A';
               $nestedData['kg_maguey'] = $bitacora->kg_maguey ?? 'N/A';
               $nestedData['observaciones'] = $bitacora->observaciones ?? 'N/A';
@@ -384,22 +406,53 @@ class BitacoraProcesoElaboracionController extends Controller
         ]);
     }
 
-      public function firmarBitacora($id_bitacora)
-      {
-        try {
-          $bitacora = BitacoraMezcal::findOrFail($id_bitacora);
-          // Solo usuarios tipo 2 pueden firmar
-          if (auth()->user()->tipo === 2) {
-              $bitacora->id_firmante = auth()->id();
-              $bitacora->save();
-              return response()->json(['message' => 'Bitácora firmada correctamente.']);
-          }
-          return response()->json(['message' => 'No tienes permiso para firmar esta bitácora.'], 403);
-          }catch (\Exception $e) {
-            Log::error($e->getMessage());
-            return response()->json(['message' => 'Error al firmar la bitácora.'], 500);
-          }
-      }
+          public function firmarBitacora(Request $request, $id_bitacora)
+        {
+            try {
+                $bitacora = BitacoraProcesoElaboracion::findOrFail($id_bitacora);
+
+                if (auth()->user()->tipo === 2) {
+                    $etapasSeleccionadas = $request->input('etapa_proceso', []); // array
+
+                    // Forzar que sea array aunque venga vacío
+                    if (!is_array($etapasSeleccionadas)) {
+                        $etapasSeleccionadas = [$etapasSeleccionadas];
+                    }
+
+                    $etapasBitacora = $bitacora->id_firmante ? json_decode($bitacora->id_firmante, true) : [];
+
+                    $etapasDefinidas = ['entrada_maguey', 'coccion', 'molienda', 'segunda_destilacion', 'producto_terminado'];
+                    // Inicializar claves si no existen
+                    foreach ($etapasDefinidas as $etapa) {
+                        if (!isset($etapasBitacora[$etapa])) {
+                            $etapasBitacora[$etapa] = ['id_firmante' => 0];
+                        }
+                    }
+
+                    // Marcar firmadas las etapas seleccionadas
+                    foreach ($etapasSeleccionadas as $etapa) {
+                        if (in_array($etapa, $etapasDefinidas)) {
+                            $etapasBitacora[$etapa]['id_firmante'] = auth()->id();
+                        }
+                    }
+
+                    // Guardar como JSON
+                    $bitacora->id_firmante = json_encode($etapasBitacora);
+                    $bitacora->save();
+
+                    return response()->json(['message' => 'Etapa(s) firmada(s) correctamente.']);
+                }
+
+                return response()->json(['message' => 'No tienes permiso para firmar esta bitácora.'], 403);
+            } catch (\Exception $e) {
+                Log::error($e->getMessage());
+                return response()->json(['message' => $e->getMessage()], 500);
+            }
+        }
+
+
+
+
 
       public function update(Request $request, $id_bitacora)
       {
