@@ -1237,10 +1237,12 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
 
 Route::controller(Certificado_ExportacionController::class)->group(function () {
     //Mostrar
-
      Route::get('/api/certificados_exportacion', [Certificado_ExportacionController::class, 'api']);
+});
 
-
+Route::controller(Certificado_InstalacionesController::class)->group(function () {
+    //Mostrar
+     Route::get('/api/certificados_instalaciones', [Certificado_InstalacionesController::class, 'api']);
 });
 
 //-------------------CERTIFICADO VENTA NACIONAL-------------------

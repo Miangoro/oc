@@ -1407,6 +1407,24 @@ public function borrarCertificadofirmado($id)
 }
 
 
+    public function api()
+    {
+        $certificados = Certificados::with([
+            'dictamen.inspeccione.solicitud.empresa',
+            'dictamen.inspeccione',
+            'dictamen.inspeccione.solicitud.direccion_destino'
+        ])
+    // ->where('fecha_emision', '>=', '2025-07-01')
+        ->orderByDesc('fecha_emision')
+        ->get();
+
+
+        return response()->json([
+            'success' => true,
+            'data' => $certificados
+        ]);
+    }
+
 
 
 
