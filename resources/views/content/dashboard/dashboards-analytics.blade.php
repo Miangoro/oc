@@ -294,12 +294,12 @@
                             <h6 class="mb-0 fw-normal">Certificados de instalaciones por vencer</h6>
                             <hr>
                             <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
-                                data-bs-target="#modalCertificadosSinEscaner">
+                                data-bs-target="#modalCertificadosInstalacionesSinEscaner">
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-warning"><i
                                             class="ri-file-list-fill ri-24px"></i></span>
                                 </div>
-                                <h4 class="mb-0">{{ $certificadoGranelSinEscaneado->count() }}</h4>
+                                <h4 class="mb-0">{{ $certificadoInstalacionesSinEscaneado->count() }}</h4>
                             </div>
                             <h6 class="mb-0 fw-normal">Certificados de instalaciones sin escaneado</h6>
                             <hr>

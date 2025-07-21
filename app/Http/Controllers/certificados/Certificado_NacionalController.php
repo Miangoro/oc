@@ -25,7 +25,10 @@ class Certificado_NacionalController extends Controller
 {
 
     public function UserManagement()
-    {
+    {   
+        $certificados = Certificado_Nacional::where('estatus', '!=', 1)
+            ->orderBy('id_certificado', 'desc')
+            ->get();
         $solicitud = solicitudesModel::where('id_tipo',13)
             ->orderBy('id_solicitud', 'desc')
             ->get();
@@ -34,7 +37,7 @@ class Certificado_NacionalController extends Controller
         //$revisores = Revisor::all();
         $hologramas = activarHologramasModelo::all();
 
-        return view('certificados.find_certificados_nacional', compact('solicitud', 'users', 'empresa', 'hologramas'));
+        return view('certificados.find_certificados_nacional', compact('certificados','solicitud', 'users', 'empresa', 'hologramas'));
     }
 
 public function index(Request $request)
