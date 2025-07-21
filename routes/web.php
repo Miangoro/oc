@@ -212,6 +212,7 @@ use App\Http\Controllers\bitacoras\BitacoraProcesoElaboracionController;
 use App\Http\Controllers\bitacoras\BitacoraProductoTerminadoController;
 use App\Http\Controllers\bitacoras\BitacoraHologramasController;
 use App\Http\Controllers\bitacoras\BitacoraHologramasComercializadorController;
+use App\Http\Controllers\bitacoras\BitacoraPTComController;
 use App\Http\Controllers\catalogo\EtiquetasController;
 use App\Http\Controllers\certificados\Certificado_ExportacionController;
 use App\Http\Controllers\certificados\Certificado_NacionalController;
@@ -999,7 +1000,7 @@ Route::controller(BitacoraHologramasComercializadorController::class)->middlewar
 Route::resource('/bitacoraHologramasCom-list', BitacoraHologramasComercializadorController::class)->middleware(['auth']);
 //bitacora proceso de elaboracion
 Route::controller(BitacoraProcesoElaboracionController::class)->middleware(['auth'])->group(function () {
-    Route::get('/bitacoraProcesoElaboracion', 'UserManagement')->name('bitacora-proceso-elab');
+    Route::get('/bitacoraProcesoElaboracion', 'UserManagement')->name('bitacora-proceso-elaboracion');
     Route::get('/bitacoraProcesoElabPDF/{id_bitacora}', 'PDFBitacoraProcesoElab');
     Route::get('bitacoraProcesoElab/{id_bitacora}/edit', 'edit');
     Route::get('bitacoraProcesoElab-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
@@ -1007,25 +1008,35 @@ Route::controller(BitacoraProcesoElaboracionController::class)->middleware(['aut
     Route::post('/bitacoraProcesoElabUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
     Route::post('/FirmaProcesoElab/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
 });
-Route::resource('/bitacoraProcesoElab-list', BitacoraHologramasComercializadorController::class)->middleware(['auth']);
+Route::resource('/bitacoraProcesoElaboracion-list', BitacoraProcesoElaboracionController::class)->middleware(['auth']);
+
+
+Route::controller(BitacoraPTComController::class)->middleware(['auth'])->group(function () {
+    Route::get('/bitacoraProductoTerminado', 'UserManagement')->name('bitacora-producto-terminado');
+    Route::get('/bitacoraPTComPDF/{id_bitacora}', 'PDFBitacoraPTCom');
+    Route::get('bitacoraPTCom/{id_bitacora}/edit', 'edit');
+    Route::get('bitacoraPTCom-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::post('/bitacoraPTComStore', 'store')->name('bitacora.store');
+    Route::post('/bitacoraPTComUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaProcesoPTCom/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+});
+Route::resource('/bitacoraPTCom-list', BitacoraPTComController::class)->middleware(['auth']);
+
 
 
 Route::middleware(['auth'])->group(function () {
     // BitacoraMaduracion
-    Route::get('/bitacoraProductoMaduracion', [BitacoraProductoMaduracionController::class, 'UserManagement'])->name('bitacoraProductoMaduracion');
-    Route::resource('/bitacoraProductoMaduracion-list', BitacoraProductoMaduracionController::class);
-
+/*     Route::get('/bitacoraProductoMaduracion', [BitacoraProductoMaduracionController::class, 'UserManagement'])->name('bitacoraProductoMaduracion');
+    Route::resource('/bitacoraProductoMaduracion-list', BitacoraProductoMaduracionController::class); */
     // BitacoraProcesoElaboracion
-    Route::get('/bitacoraProcesoElaboracion', [BitacoraProcesoElaboracionController::class, 'UserManagement'])->name('bitacoraProcesoElaboracion');
-    Route::resource('/bitacoraProcesoElaboracion-list', BitacoraProcesoElaboracionController::class);
-
+/*     Route::get('/bitacoraProcesoElaboracion', [BitacoraProcesoElaboracionController::class, 'UserManagement'])->name('bitacoraProcesoElaboracion');
+    Route::resource('/bitacoraProcesoElaboracion-list', BitacoraProcesoElaboracionController::class); */
     // BitacorProductoTerminado
-    Route::get('/bitacoraProductoTerminado', [BitacoraProductoTerminadoController::class, 'UserManagement'])->name('bitacoraProductoTerminado');
-    Route::resource('/bitacoraProductoTerminado-list', BitacoraProductoTerminadoController::class);
-
+/*     Route::get('/bitacoraProductoTerminado', [BitacoraProductoTerminadoController::class, 'UserManagement'])->name('bitacoraProductoTerminado');
+    Route::resource('/bitacoraProductoTerminado-list', BitacoraProductoTerminadoController::class); */
     // BitacorHologramas
-    Route::get('/bitacoraHologramas', [BitacoraHologramasController::class, 'UserManagement'])->name('bitacoraHologramas');
-    Route::resource('/bitacoraHologramas-list', BitacoraHologramasController::class);
+/*     Route::get('/bitacoraHologramas', [BitacoraHologramasController::class, 'UserManagement'])->name('bitacoraHologramas');
+    Route::resource('/bitacoraHologramas-list', BitacoraHologramasController::class); */
 });
 
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');

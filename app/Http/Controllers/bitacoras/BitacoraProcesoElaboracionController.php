@@ -43,11 +43,19 @@ class BitacoraProcesoElaboracionController extends Controller
       $empresaId = $request->input('empresa');
 
       DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
-      $columns = [
-          1 => 'id',
-          2 => 'fecha_ingreso',
-          3 => 'lote_granel'
-      ];
+        $columns = [                     // id oculto o de control
+            1 => 'id',
+            2 => 'fecha_ingreso',
+            3 => 'numero_tapada',
+            4 => 'lote_granel',
+            5 => 'numero_guia',
+            6 => 'id_tipo_maguey',          // es JSON, NO debes ordenarlo
+            7 => 'numero_pinas',
+            8 => 'kg_maguey',
+            9 => 'observaciones',
+            10 => 'id_firmante',
+        ];
+
         $empresaIdAut = null;
           if (Auth::check() && Auth::user()->tipo == 3) {
               $empresaIdAut = Auth::user()->empresa?->id_empresa;
@@ -227,12 +235,10 @@ class BitacoraProcesoElaboracionController extends Controller
           $bitacora = BitacoraProcesoElaboracion::with([
             'empresaBitacora.empresaNumClientes',
               'firmante',])->find($id_bitacora);
-
          if (!$bitacora) {
             return response()->json(['message' => 'Bitácora no encontrada'], 404);
           }
-
-          $pdf = Pdf::loadView('pdfs.Bitacora_Productor', compact('bitacora'))
+          $pdf = Pdf::loadView('pdfs.Bitacora_Productor_Proceso', compact('bitacora'))
                     ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
 
           return $pdf->stream('Bitácora PROCESO DE ELABORACIÓN DE MEZCAL.pdf');

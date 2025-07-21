@@ -29,7 +29,7 @@ $(function () {
       serverSide: true,
       ajax: {
         url: baseUrl + 'bitacoraProcesoElaboracion-list',
-          data: function (d) {
+        data: function (d) {
           d.empresa = $('#filtroEmpresa').val();
         }
       },
@@ -58,23 +58,24 @@ $(function () {
         },
         {
           data: 'id_firmante',
-          render: function(data, type, full) {
-          if (!data) return `<span class="badge bg-warning rounded-pill">Sin firmar</span>`;
+          searchable: false,
+          orderable: false,
+          render: function (data, type, full) {
+            if (!data) return `<span class="badge bg-warning rounded-pill">Sin firmar</span>`;
 
-          try {
-            const etapas = JSON.parse(data);
-            const firmadas = Object.values(etapas).some(e => e.id_firmante && e.id_firmante != 0);
+            try {
+              const etapas = JSON.parse(data);
+              const firmadas = Object.values(etapas).some(e => e.id_firmante && e.id_firmante != 0);
 
-            if (firmadas) {
-              return `<span class="badge bg-success rounded-pill">Firmado</span>`;
-            } else {
-              return `<span class="badge bg-warning rounded-pill">Sin firmar</span>`;
+              if (firmadas) {
+                return `<span class="badge bg-success rounded-pill">Firmado</span>`;
+              } else {
+                return `<span class="badge bg-warning rounded-pill">Sin firmar</span>`;
+              }
+            } catch {
+              return `<span class="badge bg-secondary rounded-pill">Error</span>`;
             }
-          } catch {
-            return `<span class="badge bg-secondary rounded-pill">Error</span>`;
           }
-        }
-
         },
         { data: 'action', title: 'Acciones' }
       ],
@@ -179,7 +180,7 @@ $(function () {
               : opcionesEmpresas;
 
             $(node).html(`
-                      <select id="filtroEmpresa" class="form-select select2" style="min-width: 280px;">
+                      <select id="filtroEmpresa" class="form-select select2" style="min-width: 300px;">
                         ${htmlOpciones}
                       </select>
                     `);
@@ -246,7 +247,6 @@ $(function () {
     });
   }
 
-
   function initializeSelect2($elements) {
     $elements.each(function () {
       var $this = $(this);
@@ -285,18 +285,17 @@ $(function () {
     initializeSelect2($('.select2'));
   });
 
-/*
+  /*
   initializeSelect2($('.select2'));
  */
 
-/*   $(document).on('select2:select', '#filtroEmpresa', function (e) {
+  /*   $(document).on('select2:select', '#filtroEmpresa', function (e) {
     const selectedText = $(this).find('option:selected').text();
     $('#filtroEmpresa').next('.select2-container').find('.select2-selection__rendered').attr('title', selectedText);
   }); */
-/*     $('#filtroEmpresa').on('change', function () {
+  /*     $('#filtroEmpresa').on('change', function () {
     $('.datatables-users').DataTable().ajax.reload();
   }); */
-
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   /*   $(document).on('click', '.verBitacoraBtn', function () {
@@ -401,7 +400,7 @@ $(function () {
     $('#bitacora_id_firma').val(bitacoraID);
   });
 
-/*   $(document).ready(function () {
+  /*   $(document).ready(function () {
     $('.select2').select2({
       dropdownParent: $('#offcanvasAddFirma'), // o el contenedor correspondiente si no es un offcanvas
       width: '100%'
