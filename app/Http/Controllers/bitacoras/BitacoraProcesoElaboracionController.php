@@ -50,7 +50,7 @@ class BitacoraProcesoElaboracionController extends Controller
               $empresaIdAut = Auth::user()->empresa?->id_empresa;
           }
 
-      $search = [];
+      $search = $request->input('search.value'); // <-- aquí viene el valor del campo de búsqueda de DataTables
       $totalData = BitacoraProcesoElaboracion::count(); // Cambiado por el modelo correcto
       $totalFiltered = $totalData;
 
@@ -67,45 +67,108 @@ class BitacoraProcesoElaboracionController extends Controller
             $query->where('id_empresa', $empresaId);
         }
 
-      if (empty($request->input('search.value'))) {
-          $users = BitacoraProcesoElaboracion::offset($start)
-              ->limit($limit)
-              ->orderBy($order, $dir)
-              ->get();
-      } else {
-          $search = $request->input('search.value');
+        if (!empty($search)) {
 
-          $users = $query->where(function ($q) use ($search) {
-              $q->where('id', 'LIKE', "%{$search}%")
-                ->orWhere('fecha_ingreso', 'LIKE', "%{$search}%");
-          })
-          ->offset($start)
-          ->limit($limit)
-          ->orderBy($order, $dir)
-          ->get();
+            // Buscar IDs por nombre o nombre científico
+            $idsCoincidentes = tipos::where('nombre', 'LIKE', "%{$search}%")
+                ->orWhere('cientifico', 'LIKE', "%{$search}%")
+                ->pluck('id_tipo')
+                ->toArray();
 
-          $totalFiltered = $query->where(function ($q) use ($search) {
-          $q->where('id', 'LIKE', "%{$search}%")
-            ->orWhere('fecha_ingreso', 'LIKE', "%{$search}%");
-      })->count();
-      }
+            $query->where(function ($q) use ($search, $idsCoincidentes) {
+                $q->where('fecha_ingreso', 'LIKE', "%{$search}%")
+                  ->orWhere('lote_granel', 'LIKE', "%{$search}%")
+                  ->orWhere('id_empresa', 'LIKE', "%{$search}%")
+                  ->orWhere('numero_tapada', 'LIKE', "%{$search}%")
+                  ->orWhere('numero_guia', 'LIKE', "%{$search}%")
+                  ->orWhere('numero_pinas', 'LIKE', "%{$search}%")
+                  ->orWhere('kg_maguey', 'LIKE', "%{$search}%")
+                  ->orWhere('observaciones', 'LIKE', "%{$search}%")
+                  ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
+                      $sub->where('razon_social', 'LIKE', "%{$search}%");
+                  });
+
+                if (!empty($idsCoincidentes)) {
+                    foreach ($idsCoincidentes as $tipoId) {
+                        $q->orWhereRaw("JSON_CONTAINS(id_tipo_maguey, '\"{$tipoId}\"')");
+                    }
+                }
+            });
+
+            $totalFiltered = $query->count();
+        }
+
+
+        $users = $query->offset($start)
+        ->limit($limit)
+        ->orderBy($order, $dir)
+        ->get();
+
 
       $data = [];
 
       if (!empty($users)) {
+        $tipos = tipos::all();
+        $tiposNombres = tipos::all()
+        ->mapWithKeys(fn($tipo) => [
+            (int) $tipo->id_tipo => [
+                'nombre' => $tipo->nombre,
+                'cientifico' => $tipo->cientifico, // asegúrate de que este campo exista
+            ]
+        ])
+        ->toArray();
           $ids = $start;
           foreach ($users as $bitacora) {
+          $razonSocial = $bitacora->empresaBitacora->razon_social ?? 'Sin razón social';
+           $numeroCliente = null;
+                if ($bitacora->empresaBitacora && $bitacora->empresaBitacora->empresaNumClientes) {
+                    $clientes = $bitacora->empresaBitacora->empresaNumClientes;
+                    foreach ([0, 1, 2] as $index) {
+                        if (isset($clientes[$index]) && !empty($clientes[$index]->numero_cliente)) {
+                            $numeroCliente = $clientes[$index]->numero_cliente;
+                            break;
+                        }
+                    }
+                }
+                $numeroCliente = $numeroCliente ?? 'Sin número cliente';
+
               $nestedData = [];
               $nestedData['id'] = $bitacora->id ?? 'N/A';
               $nestedData['fake_id'] = ++$ids; // ← ¡Aquí está tu índice visible!
+                if ($bitacora->id_tipo_maguey && $bitacora->id_tipo_maguey !== 'N/A') {
+                  $idTipo = json_decode($bitacora->id_tipo_maguey, true);
+                  if (is_array($idTipo)) {
+                      $nombresTipos = array_map(function($tipoId) use ($tiposNombres) {
+                      $tipoId = (int) $tipoId; // 🔧 fuerza a entero
+                      if (isset($tiposNombres[$tipoId])) {
+
+                              $nombre = $tiposNombres[$tipoId]['nombre'] ?? 'Desconocido';
+                              $cientifico = $tiposNombres[$tipoId]['cientifico'] ?? '';
+                             return $cientifico
+                    ? "$nombre <em>(" . strtolower($cientifico) . ")</em>"
+                    : $nombre;
+                          }
+                          return 'Desconocido';
+                      }, $idTipo);
+                      $nestedData['id_tipo_maguey'] = implode(', ', $nombresTipos);
+                  } else {
+                      $nestedData['id_tipo_maguey'] = 'Desconocido';
+                  }
+              } else {
+                  $nestedData['id_tipo_maguey'] = 'N/A';
+              }
+
+
               $nestedData['fecha_ingreso'] = Helpers::formatearFecha($bitacora->fecha_ingreso);
               $nestedData['nombre_cliente'] = $bitacora->empresaBitacora->razon_social ?? 'Sin razón social';
+              $nestedData['cliente'] = '<b>' . $numeroCliente . '</b><br>' . $razonSocial ?? 'N/A';
               $nestedData['id_empresa'] = $bitacora->id_empresa ?? 'N/A';
               $nestedData['numero_tapada'] = $bitacora->numero_tapada ?? 'N/A';
               $nestedData['lote_granel'] = $bitacora->lote_granel ?? 'N/A';
               $nestedData['id_firmante'] = $bitacora->id_firmante ?? 'N/A';
               $nestedData['numero_guia'] = $bitacora->numero_guia ?? 'N/A';
               $nestedData['tipo_maguey'] = $bitacora->tipo_maguey ?? 'N/A';
+
               $nestedData['numero_pinas'] = $bitacora->numero_pinas ?? 'N/A';
               $nestedData['kg_maguey'] = $bitacora->kg_maguey ?? 'N/A';
               $nestedData['observaciones'] = $bitacora->observaciones ?? 'N/A';
@@ -127,6 +190,9 @@ class BitacoraProcesoElaboracionController extends Controller
       } else {
           return response()->json([
               'message' => 'Internal Server Error',
+              /* 'draw' => intval($request->input('draw')), */
+              /* 'recordsTotal' => intval($totalData), */
+              'recordsFiltered' => 0,
               'code' => 500,
               'data' => [],
           ]);
@@ -134,29 +200,18 @@ class BitacoraProcesoElaboracionController extends Controller
   }
 
 
-      public function PDFBitacoraProcesoElab(Request $request)
+      public function PDFBitacoraProcesoElab(Request $request, $id_bitacora)
       {
-          $empresaId = $request->query('empresa');
-          $title = 'PRODUCTOR';
+          $bitacora = BitacoraProcesoElaboracion::with([
+            'empresaBitacora.empresaNumClientes',
+              'firmante',])->find($id_bitacora);
 
-          $bitacoras = BitacoraProcesoElaboracion::with([
-              'empresaBitacora.empresaNumClientes',
-              'firmante',
-          ])
-          ->when($empresaId, function ($query) use ($empresaId) {
-              $query->where('id_empresa', $empresaId);
-          })
-          ->orderBy('fecha_ingreso', 'desc')
-          ->get();
-
-          if ($bitacoras->isEmpty()) {
-              return response()->json([
-                  'message' => 'No hay registros de bitácora para los filtros seleccionados.'
-              ], 404);
+         if (!$bitacora) {
+            return response()->json(['message' => 'Bitácora no encontrada'], 404);
           }
 
-          $pdf = Pdf::loadView('pdfs.Bitacora_Productor', compact('bitacoras', 'title'))
-              ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
+          $pdf = Pdf::loadView('pdfs.Bitacora_Productor', compact('bitacora'))
+                    ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
 
           return $pdf->stream('Bitácora PROCESO DE ELABORACIÓN DE MEZCAL.pdf');
       }
