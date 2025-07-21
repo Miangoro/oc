@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\LotesGranel;
 use App\Models\BitacoraMezcal;
+use App\Models\User;
+use App\Models\BitacoraProductoTerminado;
 use App\Models\empresa;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
@@ -18,7 +20,7 @@ class BitacoraPTComController extends Controller
 {
      public function UserManagement()
     {
-        $bitacora = BitacoraMezcal::all();
+        $bitacora = BitacoraProductoTerminado::all();
 /*         $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); */
             if (Auth::check() && Auth::user()->tipo == 3) {
         $empresaIdA = Auth::user()->empresa?->id_empresa;
@@ -36,7 +38,7 @@ class BitacoraPTComController extends Controller
     public function index(Request $request)
     {
       $empresaId = $request->input('empresa');
-      $instalacionId = $request->input('instalacion');
+
       DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
 
         $columns = [
@@ -51,7 +53,7 @@ class BitacoraPTComController extends Controller
           }
 
         $search = $request->input('search.value');
-        $totalData = BitacoraMezcal::count();
+        $totalData = BitacoraProductoTerminado::count();
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -59,16 +61,13 @@ class BitacoraPTComController extends Controller
         $order = $columns[$request->input('order.0.column')] ?? 'fecha';
         $dir = $request->input('order.0.dir');
 
-        $query = BitacoraMezcal::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
+        $query = BitacoraProductoTerminado::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
                   $query->where('id_empresa', $empresaIdAut);
-              })->where('tipo', 1);
+              })->where('tipo', 3);
 
         if ($empresaId) {
             $query->where('id_empresa', $empresaId);
 
-            if ($instalacionId) {
-                $query->where('id_instalacion', $instalacionId);
-            }
         }
           if (!empty($search)) {
               $query->where(function ($q) use ($search) {
@@ -141,29 +140,42 @@ class BitacoraPTComController extends Controller
                 'numero_cliente' => $numeroCliente,
                 'cliente' => '<b>' . $numeroCliente . '</b><br>' . $razonSocial,
                 //
-                'nombre_lote' => $bitacora->loteBitacora->nombre_lote ?? 'N/A',
-                'folio_fq' => $bitacora->loteBitacora->folio_fq ?? 'N/A',
-                'folio_certificado' => $bitacora->loteBitacora->folio_certificado ?? 'N/A',
-/*                 'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
-                'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A', */
+                  // Datos generales
+                'tipo_operacion' => $bitacora->tipo_operacion ?? 'N/A',
+                'tipo' => $bitacora->tipo ?? 'N/A',
+                'lote_granel' => $bitacora->lote_granel ?? 'N/A',
+                'lote_envasado' => $bitacora->lote_envasado ?? 'N/A',
+                'proforma_predio' => $bitacora->proforma_predio ?? 'N/A',
+                'folio_fq' => $bitacora->folio_fq ?? 'N/A',
+                'alc_vol' => $bitacora->alc_vol ?? 'N/A',
+                'sku' => $bitacora->sku ?? 'N/A',
+                'cantidad_botellas_cajas' => $bitacora->cantidad_botellas_cajas ?? 'N/A',
+                'ingredientes' => $bitacora->ingredientes ?? 'N/A',
+                'edad' => $bitacora->edad ?? 'N/A',
 
-                //Entradas
+                // Inventario inicial
+                'cant_cajas_inicial' => $bitacora->cant_cajas_inicial ?? 'N/A',
+                'cant_bot_inicial' => $bitacora->cant_bot_inicial ?? 'N/A',
+
+                // Entradas
                 'procedencia_entrada' => $bitacora->procedencia_entrada ?? 'N/A',
-                'volumen_entrada' => $bitacora->volumen_entrada ?? 'N/A',
-                'alcohol_entrada' => $bitacora->alcohol_entrada ?? 'N/A',
-                'agua_entrada' => $bitacora->agua_entrada ?? 'N/A',
-                'id_firmante' => $bitacora->id_firmante ?? 'N/A',
+                'cant_cajas_entrada' => $bitacora->cant_cajas_entrada ?? 'N/A',
+                'cant_bot_entrada' => $bitacora->cant_bot_entrada ?? 'N/A',
+
                 // Salidas
-                'volumen_salidas' => $bitacora->volumen_salidas ?? 'N/A',
-                'alcohol_salidas' => $bitacora->alcohol_salidas ?? 'N/A',
                 'destino_salidas' => $bitacora->destino_salidas ?? 'N/A',
+                'cant_cajas_salidas' => $bitacora->cant_cajas_salidas ?? 'N/A',
+                'cant_bot_salidas' => $bitacora->cant_bot_salidas ?? 'N/A',
 
                 // Inventario final
-                'volumen_final' => $bitacora->volumen_final ?? 'N/A',
-                'alcohol_final' => $bitacora->alcohol_final ?? 'N/A',
+                'cant_cajas_final' => $bitacora->cant_cajas_final ?? 'N/A',
+                'cant_bot_final' => $bitacora->cant_bot_final ?? 'N/A',
 
+                // Extras
                 'observaciones' => $bitacora->observaciones ?? 'N/A',
-                'firma_ui' => $bitacora->firma_ui ?? 'N/A',
+                'id_firmante' => $bitacora->id_firmante ?? 'N/A',
+
+
             ];
             $data[] = $nestedData;
         }
@@ -182,10 +194,10 @@ class BitacoraPTComController extends Controller
         $empresaId = $request->query('empresa');
         $instalacionId = $request->query('instalacion');
         $title = 'PRODUCTOR'; // Cambia a 'Envasador' si es necesario
-        $bitacoras = BitacoraMezcal::with([
+        $bitacoras = BitacoraProductoTerminado::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
-        ])->where('tipo', 1)
+        ])->where('tipo', 3)
         ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
             $query->where('id_empresa', $empresaId);
             if ($instalacionId) {
@@ -231,7 +243,7 @@ class BitacoraPTComController extends Controller
         ]);
 
         try {
-            $bitacora = new BitacoraMezcal();
+            $bitacora = new BitacoraProductoTerminado();
             $bitacora->fecha = $request->fecha;
             $bitacora->id_empresa = $request->id_empresa;
             $bitacora->id_instalacion = $request->id_instalacion;
@@ -264,7 +276,7 @@ class BitacoraPTComController extends Controller
     }
     public function destroy($id_bitacora)
     {
-        $bitacora = BitacoraMezcal::find($id_bitacora);
+        $bitacora = BitacoraProductoTerminado::find($id_bitacora);
 
         if (!$bitacora) {
             return response()->json([
@@ -282,7 +294,7 @@ class BitacoraPTComController extends Controller
     public function edit($id_bitacora)
     {
         try {
-            $bitacora = BitacoraMezcal::findOrFail($id_bitacora);
+            $bitacora = BitacoraProductoTerminado::findOrFail($id_bitacora);
             $fecha_formateada = Carbon::parse($bitacora->fecha)->format('Y-m-d');
             return response()->json([
                 'success' => true,
@@ -340,7 +352,7 @@ class BitacoraPTComController extends Controller
               'observaciones'    => 'nullable|string',
           ]);
 
-          $bitacora = BitacoraMezcal::findOrFail($id_bitacora);
+          $bitacora = BitacoraProductoTerminado::findOrFail($id_bitacora);
 
           $bitacora->update([
               'id_empresa'       => $request->id_empresa,
@@ -370,7 +382,7 @@ class BitacoraPTComController extends Controller
       public function firmarBitacora($id_bitacora)
       {
         try {
-          $bitacora = BitacoraMezcal::findOrFail($id_bitacora);
+          $bitacora = BitacoraProductoTerminado::findOrFail($id_bitacora);
           // Solo usuarios tipo 2 pueden firmar
           if (auth()->user()->tipo === 2) {
               $bitacora->id_firmante = auth()->id();

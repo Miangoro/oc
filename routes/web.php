@@ -1020,7 +1020,7 @@ Route::controller(BitacoraPTComController::class)->middleware(['auth'])->group(f
     Route::post('/bitacoraPTComUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
     Route::post('/FirmaProcesoPTCom/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
 });
-Route::resource('/bitacoraPTCom-list', BitacoraPTComController::class)->middleware(['auth']);
+Route::resource('/bitacoraProductoTerminado-list', BitacoraPTComController::class)->middleware(['auth']);
 
 
 
