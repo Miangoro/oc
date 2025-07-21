@@ -52,7 +52,7 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             return `<i class="ri-file-pdf-2-fill text-danger ri-48px verBitacoraBtn cursor-pointer"
-                      data-id="${full['id']}" data-empresa="${full['nombre_cliente']}"
+                      data-id="${full['id']}" data-empresa="${full['cliente']}"
                       data-bs-toggle="modal" data-bs-target="#mostrarPdf"></i>`;
           }
         },
