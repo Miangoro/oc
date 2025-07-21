@@ -316,15 +316,23 @@ $(function () {
         url: '/getDatos/' + empresa,
         method: 'GET',
         success: function (response) {
-          console.log(response);
+          console.log('ver que manda:', response);
           datosEmpresa = response;
 
           let contenido = '';
           if (response.predios.length > 0) {
             contenido += '<option value="" disabled>Selecciona un predio</option>';
             response.predios.forEach(predio => {
-              contenido += `<option value="${predio.id_predio}">${predio.nombre_predio}</option>`;
+              //contenido += `<option value="${predio.id_predio}">Nombre: ${predio.nombre_predio} | No.: ${predio.num_predio}</option>`;
+            if (predio.num_predio !== 'Sin asignar') {//sin folio asignado
+                contenido += `<option value="${predio.id_predio}">Nombre: ${predio.nombre_predio} | No.: ${predio.num_predio}</option>`;
+              }
             });
+
+            // Si no hay predios válidos después del filtro
+            if (contenido === '<option value="" disabled>Selecciona un predio</option>') {
+              contenido = '<option value="" disabled>Sin predios asignados</option>';
+            }
           } else {
             contenido = '<option value="" disabled>Sin predios registrados</option>';
           }

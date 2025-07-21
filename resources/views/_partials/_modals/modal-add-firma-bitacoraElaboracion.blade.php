@@ -10,8 +10,8 @@
             <input type="hidden" id="bitacora_id_firma">
 
             <div class="form-floating form-floating-outline mb-4">
-               <label for="etapa_proceso" class="form-label">Etapa del proceso</label>
-                <select id="etapa_proceso" name="etapa_proceso" class="select2 form-select mb-4" multiple aria-placeholder="Selecciona la etapa del proceso">
+
+                <select id="etapa_proceso" name="etapa_proceso[]" class="select2 form-select" multiple aria-placeholder="Selecciona la etapa del proceso">
                     {{-- <option disabled selected value="">Selecciona la etapa</option> --}}
                     <option value="entrada_maguey">Entrada de maguey</option>
                     <option value="coccion">Cocción del maguey</option>
@@ -19,6 +19,7 @@
                     <option value="segunda_destilacion">Segunda destilación</option>
                     <option value="producto_terminado">Producto terminado</option>
                 </select>{{-- </span> --}}
+                 <label for="etapa_proceso" class="form-label">Etapa del proceso</label>
             </div>
 
             {{--             <div class="form-floating form-floating-outline mb-6">
@@ -31,7 +32,7 @@
                     Registrando...
                 </button>
                 <button type="submit" class="btn btn-primary me-sm-3 data-submit"><i
-                        class="ri-add-line me-1"></i>Registrar</button>
+                        class="ri-ball-pen-line me-1"></i>Firmar</button>
                 <button type="reset" class="btn btn-danger" data-bs-dismiss="offcanvas"><i
                         class="ri-close-line me-1"></i>Cancelar</button>
             </div>
