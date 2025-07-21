@@ -33,7 +33,7 @@ class BitacoraProcesoElaboracionController extends Controller
           }
       $tipos = tipos::all(); // Obtén todos los tipos de agave
       $tipo_usuario =  Auth::user()->tipo;
-      return view('Bitacoras.BitacoraProcesoElaboracion_view', compact('bitacora', 'empresas', 'tipo_usuario', 'tipos'));
+      return view('bitacoras.BitacoraProcesoElaboracion_view', compact('bitacora', 'empresas', 'tipo_usuario', 'tipos'));
   }
 
   public function index(Request $request)

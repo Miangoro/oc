@@ -281,15 +281,11 @@ $(function () {
       });
       return;
     }
-
     let urlPDF = `/bitacoraProcesoElabPDF?empresa=${empresaId}`;
-
     if (id) {
       urlPDF += `&id=${id}`;
     }
-
     urlPDF += `&t=${new Date().getTime()}`; // evita caché
-
     $('#cargando').show();
     $('#pdfViewer').hide().attr('src', '');
     $('#NewPestana').hide();
