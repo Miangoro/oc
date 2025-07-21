@@ -291,8 +291,8 @@
                         <td>{{$cajas}}</td>
                     </tr>
                     <tr>
-                        <td style="font-size: 15px; padding-bottom: 10px; padding-top: 10px; width: 90px"><b>No. de Certificado</b></td>
-                        <td style="font-size: 15px;">--</td>
+                        <td colspan="2" style="font-size: 15px; padding-bottom: 10px; padding-top: 10px; width: 90px;"><b>No. de Certificado</b></td>
+                        <td colspan="4" style="font-size: 15px;"></td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px;"><b>Lote de <br>Envasado</b></td>
@@ -307,8 +307,8 @@
                         <td>{{ $lote->lotesGranel->first()->folio_fq ?? "No encontrada" }}</td>
                         <td style="font-size: 15px;"><b>% Alc. Vol. <br>(No. análisis)</b></td>
                         <td>{{ $lote->lotesGranel->first()->cont_alc ?? "No encontrada" }}% Alc. Vol.</td>
-                        <td style="font-size: 15px;" rowspan="2"><b>Especie de agave o maguey</b></td>
-                        <td style="font-size: 12px;" rowspan="2">
+                        <td style="font-size: 15px;" ><b>Especie de agave o maguey</b></td>
+                        <td style="font-size: 12px;" >
                             {{ $lote->lotesGranel->first()->tiposRelacionados->pluck('nombre')->implode(', ') ?? 'No encontrado' }}
                         </td>
                     </tr>
