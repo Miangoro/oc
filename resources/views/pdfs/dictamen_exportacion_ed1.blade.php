@@ -82,7 +82,7 @@
         }
 
         .titulos {
-            font-size: 20px;
+            font-size: 18px;
             line-height: 0.9;
             padding: 10px;
             text-align: center;
@@ -177,15 +177,15 @@
         <div class="titulos">DICTAMEN DE CUMPLIMIENTO PARA<br>
             PRODUCTO DE EXPORTACION</div>
         <table style="width: 100%; font-size: 14px; margin-bottom: 5px;">
-    <tr>
-        <td class="negrita" style="text-align: left;">
-            PRODUCTO: <strong>{{ $producto }}</strong>
-        </td>
-        <td class="negrita" style="text-align: right;">
-            Número de dictamen: <strong>{{ $no_dictamen }}</strong>
-        </td>
-    </tr>
-</table>
+            <tr>
+                <td class="negrita" style="text-align: left;">
+                    PRODUCTO: <strong>{{ $producto }}</strong>
+                </td>
+                <td class="negrita" style="text-align: right;">
+                    Número de dictamen: <strong>{{ $no_dictamen }}</strong>
+                </td>
+            </tr>
+        </table>
 
 
 
@@ -236,13 +236,15 @@
                     <td style="font-size: 15px; padding-bottom: 10px; padding-top: 10px; width: 110px"><b>Importador</b>
                     </td>
                     <td style="width: 90px; font-size: 15px">{{$importador}}</td>
-                    <td style="font-size: 15px; padding-bottom: 10px; padding-top: 10px; width: 110px"><b>Dirección</b></td>
+                    <td style="font-size: 15px; padding-bottom: 10px; padding-top: 10px; width: 110px"><b>Dirección</b>
+                    </td>
                     <td style="width: 90px; font-size: 14.3px">{{$direccion}}</td>
                 </tr>
                 <tr>
                     <td style="font-size: 15px"><b>País de destino</b></td>
-                    <td  style="width: 90px;font-size: 15px">{{$pais}}</td>
-                    <td style="font-size: 15px; padding-bottom: 10px; padding-top: 10px; width: 110px"><b>Aduana de salida</b></td>
+                    <td style="width: 90px;font-size: 15px">{{$pais}}</td>
+                    <td style="font-size: 15px; padding-bottom: 10px; padding-top: 10px; width: 110px"><b>Aduana de
+                            salida</b></td>
                     <td style="font-size: 15px; width: 90px">{{$aduana}}</td>
                 </tr>
                 <tr>
@@ -291,8 +293,9 @@
                         <td>{{$cajas}}</td>
                     </tr>
                     <tr>
-                        <td style="font-size: 15px; padding-bottom: 10px; padding-top: 10px; width: 90px"><b>No. de Certificado</b></td>
-                        <td style="font-size: 15px;">--</td>
+                        <td colspan="2" style="font-size: 15px; padding-bottom: 10px; padding-top: 10px; width: 90px;">
+                            <b>No. de Certificado</b></td>
+                        <td colspan="4" style="font-size: 15px;"></td>
                     </tr>
                     <tr>
                         <td style="font-size: 15px;"><b>Lote de <br>Envasado</b></td>
@@ -307,8 +310,8 @@
                         <td>{{ $lote->lotesGranel->first()->folio_fq ?? "No encontrada" }}</td>
                         <td style="font-size: 15px;"><b>% Alc. Vol. <br>(No. análisis)</b></td>
                         <td>{{ $lote->lotesGranel->first()->cont_alc ?? "No encontrada" }}% Alc. Vol.</td>
-                        <td style="font-size: 15px;" rowspan="2"><b>Especie de agave o maguey</b></td>
-                        <td style="font-size: 12px;" rowspan="2">
+                        <td style="font-size: 15px;"><b>Especie de agave o maguey</b></td>
+                        <td style="font-size: 12px;">
                             {{ $lote->lotesGranel->first()->tiposRelacionados->pluck('nombre')->implode(', ') ?? 'No encontrado' }}
                         </td>
                     </tr>
@@ -325,48 +328,15 @@
             @if($loop->last)<!--AL FINAL DE LA TABLA-->
                 <div style="height: 15px"></div>
                 <div>OBSERVACIONES:</div>
+                <div style="text-align: center;">
+                    <p style="font-size: 18px;">Gerente sustituto de la Unidad de Inspección</p>
+                </div>
+
 
                 <div style="height: 40%"></div><!--espacio alto-->
-                <!--FIRMA DIGITAL-->
-                {{-- <div style="margin-left: -20px;">
-                    <p class="sello">Sello de Unidad de Inspección</p>
-                    <div class="images-container">
-                        <img src="{{ $qrCodeBase64 }}" alt="QR" width="90px">
-                        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Logo UI" class="image-right">
-                    </div>
-                    <p class="textx" style="font-size: 9px; margin-bottom:-8px; margin-top:-2px; position: relative;">
-                        <strong>AUTORIZÓ</strong>
-                        <span style="margin-left: 53px; display: inline-block; text-align: center; position: relative;">
 
-                            @php
-                            use Illuminate\Support\Facades\Storage;
-                            $firma = $data->firmante->firma ?? null;
-                            $firmaPath = $firma ? 'firmas/' . $firma : null;
-                            @endphp
-                            @if ($firma && Storage::disk('public')->exists($firmaPath))
-                            <img style="position: absolute; top: -45px; left: 170; right: 0; margin: 0 auto;" height="60px"
-                                src="{{ asset('storage/' . $firmaPath) }}">
-                            @endif
 
-                            <strong>{{ $data->firmante->puesto ?? '' }} | {{ $data->firmante->name ?? '' }}</strong>
-                        </span>
-                    </p>
 
-                    <p class="textx" style="font-size: 9px; margin-bottom:-8px">
-                        <strong>CADENA ORIGINAL</strong>
-                        <span style="margin-left: 14px;">
-                            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
-                        </span>
-                    </p>
-
-                    <p class="textx" style="font-size: 9px; margin-bottom:1px">
-                        <strong>SELLO DIGITAL</strong>
-                    </p>
-
-                    <p class="textsello" style="width: 85%; word-wrap: break-word; white-space: normal;">
-                        {{ $firmaDigital['firma'] }}
-                    </p>
-                </div> --}}
 
             @endif
 

@@ -124,8 +124,9 @@ margin-bottom: 0;
  /* Tabla de datos */
     table {
       width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
+      border-collapse: separate;
+      font-size: 15px;
+      border: 2px solid #000
     }
      /* Definición de anchos por columna */
     table col:nth-child(1) { width: 15%; }
@@ -140,10 +141,11 @@ margin-bottom: 0;
       border: 1px solid #000;
       padding: 4px;
       vertical-align: middle;
+      border: 2px solid #000;
     }
     .celda-azul {
       font-weight: bold;
-      color: #003399;
+      color: #001f5e;
       text-align: center;
     }
     .celda-normal {
@@ -153,6 +155,17 @@ margin-bottom: 0;
     .centrado {
       text-align: center;
     }
+    .bloque-autorizacion {
+  margin-top: 30px;
+  line-height: 1.5;
+}
+
+.autorizado {
+  font-size: 9px;
+  font-weight: bold;
+  font-family: 'Calibri', sans-serif;
+  color: #000000;
+}
     </style>
 </head>
 
@@ -230,13 +243,14 @@ margin-bottom: 0;
           <strong>Domicilio de Instalaciones:</strong> <br>
           Paraje Salina Grande, S/N,<br> Tlacolula de Matamoros, Oaxaca. <br> C.P. 70400
         </td>
-        <td class="celda-azul">RFC</td>
+        <td  class="celda-azul">RFC</td>
         <td colspan="3" class="celda-normal">AME1906138K7</td>
+        
       </tr>
 
       <!-- Fila 3 -->
       <tr>
-        <td rowspan="2" class="celda-azul">Representante legal</td>
+        <td rowspan="2" class="celda-azul">Representante <br>legal</td>
         <td colspan="3" rowspan="2" class="celda-normal">Francisco Arrañaga Patrón</td>
       </tr>
 
@@ -247,23 +261,23 @@ margin-bottom: 0;
       <tr>
         <td class="celda-azul">No. de servicio</td>
         <td  class="celda-normal">UMS-0811/2025</td>
-        <td class="celda-azul">Número de dictamen</td>
+        <td class="celda-azul">Número de <br>dictamen</td>
         <td colspan="3" class="celda-normal">UMG-153/2025</td>
       </tr>
 
       <!-- Fila 6 -->
       <tr>
-        <td class="celda-azul">Nombre del inspector</td>
+        <td class="celda-azul">Nombre del <br> inspector</td>
         <td class="celda-normal">Idalia González Zárate</td>
-        <td class="celda-azul">Fecha de servicio</td>
+        <td class="celda-azul">Fecha de <br>servicio</td>
         <td colspan="3" class="celda-normal">02/Julio/2025</td>
       </tr>
 
       <!-- Fila 7 -->
       <tr>
-        <td class="celda-azul">Fecha de emisión</td>
+        <td class="celda-azul">Fecha de <br>emisión</td>
         <td  class="celda-normal">03/Julio/2025</td>
-        <td class="celda-azul">Fecha de vencimiento</td>
+        <td class="celda-azul">Fecha de <br>vencimiento</td>
         <td colspan="3" class="celda-normal">03/Julio/2026</td>
       </tr>
     </table>
@@ -275,18 +289,18 @@ margin-bottom: 0;
 </tr>
 
 <tr>
-    <td class="celda-azul"> Categoría y Clase</td>
+    <td class="celda-azul"> Categoría y <br>Clase</td>
 <td  class="celda-normal">Mezcal Artesanal clase <br> Blanco o Joven</td>
-    <td class="celda-azul"> No de lote a granel</td>
+    <td class="celda-azul"> No de lote a <br>granel</td>
 <td  class="celda-normal">2507ESVCAM</td>
-    <td class="celda-azul"> No. de análisis</td>
+    <td class="celda-azul"> No. de <br>análisis</td>
     <td  class="celda-normal">NNMZ-51195</td>
 </tr>
 
 <tr>
     <td class="celda-azul">Ingredientes</td>
 <td  class="celda-normal">---</td>
-    <td class="celda-azul">  Volumen de lote</td>
+    <td class="celda-azul">  Volumen de <br> lote</td>
 <td  class="celda-normal">151837 L</td>
     <td class="celda-azul">  Contenido <br> Alcohólico</td>
     <td  class="celda-normal">48.96% Alc.Vol.</td>
@@ -301,7 +315,14 @@ margin-bottom: 0;
 
 </table>
 
+<div class="bloque-autorizacion">
+  <div class="autorizado">AUTORIZÓ</div>
+  <div class="autorizado">Cadena Original</div>
+  <div class="autorizado">Sello Digital</div>
+</div>
 
+<p> C.c.p Dirección General de Normas, DGN.</p>
+<p>C.c.p Gerente del Organismo Certificador del CIDAM A.C. </p>
 
 </div>
 
