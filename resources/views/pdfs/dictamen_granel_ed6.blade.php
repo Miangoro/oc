@@ -124,8 +124,9 @@ margin-bottom: 0;
  /* Tabla de datos */
     table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
       font-size: 15px;
+      border: 2px solid #000
     }
      /* Definición de anchos por columna */
     table col:nth-child(1) { width: 15%; }
@@ -140,6 +141,7 @@ margin-bottom: 0;
       border: 1px solid #000;
       padding: 4px;
       vertical-align: middle;
+      border: 2px solid #000;
     }
     .celda-azul {
       font-weight: bold;
@@ -153,6 +155,17 @@ margin-bottom: 0;
     .centrado {
       text-align: center;
     }
+    .bloque-autorizacion {
+  margin-top: 30px;
+  line-height: 1.5;
+}
+
+.autorizado {
+  font-size: 9px;
+  font-weight: bold;
+  font-family: 'Calibri', sans-serif;
+  color: #000000;
+}
     </style>
 </head>
 
@@ -230,8 +243,9 @@ margin-bottom: 0;
           <strong>Domicilio de Instalaciones:</strong> <br>
           Paraje Salina Grande, S/N,<br> Tlacolula de Matamoros, Oaxaca. <br> C.P. 70400
         </td>
-        <td class="celda-azul">RFC</td>
+        <td  class="celda-azul">RFC</td>
         <td colspan="3" class="celda-normal">AME1906138K7</td>
+        
       </tr>
 
       <!-- Fila 3 -->
@@ -301,7 +315,14 @@ margin-bottom: 0;
 
 </table>
 
+<div class="bloque-autorizacion">
+  <div class="autorizado">AUTORIZÓ</div>
+  <div class="autorizado">Cadena Original</div>
+  <div class="autorizado">Sello Digital</div>
+</div>
 
+<p> C.c.p Dirección General de Normas, DGN.</p>
+<p>C.c.p Gerente del Organismo Certificador del CIDAM A.C. </p>
 
 </div>
 
