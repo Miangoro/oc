@@ -599,7 +599,7 @@ $(function () {
             }
           }
         },
-/*         id_marca: {
+        /*         id_marca: {
           validators: {
             notEmpty: {
               message: 'Por favor seleccione la marca'
@@ -764,7 +764,6 @@ $(function () {
     $('#id_empresa, #fecha, #id_categoria, #id_clase, #id_tipo').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
-
   });
 
   $(document).on('click', '.edit-record', function () {
@@ -874,7 +873,7 @@ $(function () {
     const form = document.getElementById('editInventarioForm');
     const fv = FormValidation.formValidation(form, {
       fields: {
-         id_empresa: {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Por favor seleccione el cliente'
@@ -909,7 +908,7 @@ $(function () {
             }
           }
         },
-/*         id_marca: {
+        /*         id_marca: {
           validators: {
             notEmpty: {
               message: 'Por favor seleccione la marca'
@@ -1067,35 +1066,60 @@ $(function () {
   });
 
   $(document).ready(function () {
-    function calcular() {
-      let volumenInicial = parseFloat($('#volumen_inicial').val()) || 0;
-      let alcoholInicial = parseFloat($('#alcohol_inicial').val()) || 0;
+    function calcularCajasBotellasFinales() {
+      let cajasInicial = parseInt($('#cant_cajas_inicial').val()) || 0;
+      let botellasInicial = parseInt($('#cant_bot_inicial').val()) || 0;
 
-      let volumenEntrada = parseFloat($('#volumen_entrada').val()) || 0;
-      let alcoholEntrada = parseFloat($('#alcohol_entrada').val()) || 0;
-      let aguaEntrada = parseFloat($('#agua_entrada').val()) || 0;
+      let cajasEntrada = parseInt($('#cant_cajas_entrada').val()) || 0;
+      let botellasEntrada = parseInt($('#cant_bot_entrada').val()) || 0;
 
-      let volumenSalida = parseFloat($('#volumen_salida').val()) || 0;
-      let alcoholSalida = parseFloat($('#alc_vol_salida').val()) || 0;
+      let cajasSalida = parseInt($('#cant_cajas_salidas').val()) || 0;
+      let botellasSalida = parseInt($('#cant_bot_salidas').val()) || 0;
 
-      // Cálculo con agua incluida
-      let volumenFinal = volumenInicial + volumenEntrada + aguaEntrada - volumenSalida;
-      let alcoholFinal = 0;
+      let cajasFinal = cajasInicial + cajasEntrada - cajasSalida;
+      let botellasFinal = botellasInicial + botellasEntrada - botellasSalida;
 
-      if (volumenFinal > 0) {
-        let alcoholTotal =
-          volumenInicial * alcoholInicial + volumenEntrada * alcoholEntrada - volumenSalida * alcoholSalida;
+      // Evitar valores negativos
+      cajasFinal = Math.max(0, cajasFinal);
+      botellasFinal = Math.max(0, botellasFinal);
 
-        alcoholFinal = alcoholTotal / volumenFinal;
-      }
-
-      $('#volumen_final').val(volumenFinal.toFixed(2));
-      $('#alc_vol_final').val(alcoholFinal.toFixed(2));
+      $('#cant_cajas_final').val(cajasFinal);
+      $('#cant_bot_final').val(botellasFinal);
     }
 
+    // Disparar cálculo cuando cualquiera de los campos cambia
     $(
-      '#volumen_inicial, #alcohol_inicial, #volumen_entrada, #alcohol_entrada, #agua_entrada, #volumen_salida, #alc_vol_salida'
-    ).on('input', calcular);
+      '#cant_cajas_inicial, #cant_bot_inicial, #cant_cajas_entrada, #cant_bot_entrada, #cant_cajas_salidas, #cant_bot_salidas'
+    ).on('input', calcularCajasBotellasFinales);
+  });
+
+  //para editar
+  $(document).ready(function () {
+    function calcularCajasBotellasFinalesEdit() {
+      let cajasInicial = parseInt($('#edit_cant_cajas_inicial').val()) || 0;
+      let botellasInicial = parseInt($('#edit_cant_bot_inicial').val()) || 0;
+
+      let cajasEntrada = parseInt($('#edit_cant_cajas_entrada').val()) || 0;
+      let botellasEntrada = parseInt($('#edit_cant_bot_entrada').val()) || 0;
+
+      let cajasSalida = parseInt($('#edit_cant_cajas_salidas').val()) || 0;
+      let botellasSalida = parseInt($('#edit_cant_bot_salidas').val()) || 0;
+
+      let cajasFinal = cajasInicial + cajasEntrada - cajasSalida;
+      let botellasFinal = botellasInicial + botellasEntrada - botellasSalida;
+
+      // Evitar negativos
+      cajasFinal = Math.max(0, cajasFinal);
+      botellasFinal = Math.max(0, botellasFinal);
+
+      $('#edit_cant_cajas_final').val(cajasFinal);
+      $('#edit_cant_bot_final').val(botellasFinal);
+    }
+
+    // Disparar cuando cambian campos del modal de edición
+    $(
+      '#edit_cant_cajas_inicial, #edit_cant_bot_inicial, #edit_cant_cajas_entrada, #edit_cant_bot_entrada, #edit_cant_cajas_salidas, #edit_cant_bot_salidas'
+    ).on('input', calcularCajasBotellasFinalesEdit);
   });
 
   $(document).ready(function () {
