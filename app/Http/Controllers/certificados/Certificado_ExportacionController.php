@@ -894,12 +894,14 @@ public function MostrarCertificadoExportacion($id_certificado)
         //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
     }
 
-    //$fecha = Helpers::formatearFecha($data->fecha_emision);
-    //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
-    $fecha_emision = !empty($data->fecha_emision) ? Carbon::parse($data->fecha_emision)->translatedFormat('d/m/Y')
-    : '--------';
-    $fecha_vigencia = !empty($data->fecha_vigencia) ? Carbon::parse($data->fecha_vigencia)->translatedFormat('d/m/Y')
-    : '--------';
+    //$fecha = Helpers::formatearFecha($data->fecha_emision);//dia del mes del año
+    //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision); //formato unico
+    $fecha_emision = !empty($data->fecha_emision) 
+        ? Carbon::parse($data->fecha_emision)->translatedFormat('d/m/Y') //formato moldeable con fecha y hora
+        : '--------';
+    $fecha_vigencia = !empty($data->fecha_vigencia) 
+        ? Carbon::parse($data->fecha_vigencia)->translatedFormat('d/m/Y')
+        : '--------';
     $empresa = $data->dictamen->inspeccione->solicitud->empresa ?? null;
     $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
         ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa

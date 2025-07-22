@@ -223,8 +223,8 @@
 
     <body>
         <div style="text-align: right; font-size: 12px; padding-bottom: 10px">
-            <span class="negrita">Plan de Auditoria.</span> No: SOL-12306 <br>
-            <span class="negrita">Fecha de liberación del plan: </span>02 de Septiembre del 2024
+            <span class="negrita">Plan de Auditoría. No: </span>{{$datos->solicitud->folio ?? 'No encontrado'}}<br>
+            <span class="negrita">Fecha de liberacióndel plan: FALTA</span> 
         </div>
         <table>
             <tr>
@@ -232,30 +232,27 @@
             </tr>
             <tr>
                 <td class="letra-fondo" style="width: 150px">Nombre / Razón Social:</td>
-                <td class="leftLetter" style="width: 240px">RMH ENSAMBLES, S.A. DE C.V.</td>
+                <td class="leftLetter" style="width: 240px">{{$datos->solicitud->empresa->razon_social ?? 'No encontrado'}}</td>
                 <td class="letra-fondo" style="width: 110px">No. De <br>
                     Cliente:</td>
-                <td class="leftLetter">RMH ENSAMBLES, S.A. <br>
-                    DE C.V</td>
+                <td class="leftLetter">{{$num_cliente}}</td>
             </tr>
             <tr>
                 <td class="letra-fondo">Dirección:</td>
-                <td colspan="3" class="no-padding-up-down" style="font-size: 11px">Boulevard Fray Antonio de San
-                    Miguel No. 519, Int. Lote
-                    13, Col. Fray Antonio de San
-                    Miguel, <br>
-                    Morelia, Michoacán, C.P. 58277.</td>
+                <td colspan="3" class="no-padding-up-down" style="font-size: 11px">
+                    {{$datos->solicitud->empresa->domicilio_fiscal ?? 'No encontrado'}}
+                </td>
             </tr>
             <tr>
                 <td class="letra-fondo" rowspan="2">Persona de contacto:</td>
-                <td class="leftLetter" rowspan="2">PRISCILIANO MARTÍNEZ</td>
+                <td class="leftLetter" rowspan="2">{{$datos->solicitud->empresa->representante ?? 'No encontrado'}}</td>
                 <td class="letra-fondo no-padding-up-down">Correo: </td>
-                <td class="leftLetter no-padding-up-down">prisciliano_mtz@hotmail <br>.com
+                <td class="leftLetter no-padding-up-down">{{$datos->solicitud->empresa->correo ?? 'No encontrado'}}
                 </td>
             </tr>
             <tr>
                 <td class="letra-fondo">Teléfono:</td>
-                <td class="leftLetter">4432732647</td>
+                <td class="leftLetter">{{$datos->solicitud->empresa->telefono ?? 'No encontrado'}}</td>
             </tr>
         </table>
         <br>
@@ -266,18 +263,15 @@
             </tr>
             <tr>
                 <td class="letra-fondo" style="width: 150px">Servicio:</td>
-                <td class="leftLetter" style="width: 240px">Dictamen de instalaciones</td>
+                <td class="leftLetter" style="width: 240px">{{$datos->solicitud->tipo_solicitud->tipo ?? 'No encontrado'}}</td>
                 <td class="letra-fondo">Tipo de auditoría:</td>
-                <td class="leftLetter">Certificación</td>
+                <td class="leftLetter">FALTA</td>
             </tr>
             <tr>
                 <td class="letra-fondo" style="width: 150px">Información adicional:</td>
-                <td  style="width: 220px; color: red">- -</td>
-                <td class="letra-fondo">Fecha de la <br>
-                    auditoría:</td>
-                <td class="leftLetter">02 de Septiembre del <br>
-                    2024
-                </td>
+                <td  style="width: 220px; color: red">FALTA</td>
+                <td class="letra-fondo">Fecha de la <br>auditoría:</td>
+                <td class="leftLetter"> {{ $fecha_inspeccion1}}</td>
             </tr>
         </table>
         <table>
@@ -286,11 +280,11 @@
             </tr>
             <tr>
                 <td class="letra-fondo" style="width: 250px">Producto(s): </td>
-                <td class="leftLetter">No aplica</td>
+                <td class="leftLetter"> FALTA </td>
             </tr>
             <tr>
                 <td class="letra-fondo">País destino del producto:</td>
-                <td style="color: red">- -</td>
+                <td style="color: red">{{ $datos->solicitud->direccion_destino->direccion ?? 'NA'}}</td>
             </tr>
 
         </table>
@@ -302,21 +296,19 @@
             </tr>
             <tr>
                 <td class="letra-fondo" style="width: 200px">Objetivo:</td>
-                <td class="leftLetter">Evaluar el cumplimiento de infraestructura y requisitos documentales de la Norma
-                    NOM-070-SCFI-2016 y aplicación de las buenas prácticas de higiene y manufactura bajo</td>
+                <td class="leftLetter"> FALTA </td>
             </tr>
             <tr>
                 <td class="letra-fondo">Alcance:</td>
-                <td class="leftLetter">Revisión documental in situ e inspección de instalaciones.</td>
+                <td class="leftLetter"> FALTA </td>
             </tr>
             <tr>
                 <td class="letra-fondo no-padding-up-down">Criterios de evaluación:</td>
-                <td class="leftLetter no-padding-up-down">NORMA OFICIAL MEXICANA NOM-070-SCFI-2016 <br>
-                    NORMA OFICIAL MEXICANA NOM-251-SSA1-2009</td>
+                <td class="leftLetter no-padding-up-down"> FALTA </td>
             </tr>
             <tr>
                 <td class="letra-fondo">Otros (indique):</td>
-                <td style="color: red">&nbsp;</td>
+                <td style="color: red">&nbsp;  FALTA  </td>
             </tr>
         </table>
         <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img" >
@@ -324,8 +316,10 @@
             Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
             puede <br>            
             ser distribuido externamente sin la autorización escrita del Director Ejecutivo
-
         </footer>
+
+
+        {{------ PAGINA 2 ------}}
         <div class="page-break"></div>
         <div class="img-background"></div>
 
@@ -336,11 +330,11 @@
                 <br>_______________________________________________________________________________________
             </div>
         </div>
+
         <div style="height: 40px"></div>
         <table>
             <tr>
-                <td class="letra-fondo" style="font-size: 14px" colspan="3">5. DATOS DEL GRUPO EVALUADOR
-                </td>
+                <td class="letra-fondo" style="font-size: 14px" colspan="3">5. DATOS DEL GRUPO EVALUADOR</td>
             </tr>
             <tr>
                 <td class="letra-fondo">Designación:</td>
@@ -349,8 +343,8 @@
             </tr>
             <tr>
                 <td >Inspector</td>
-                <td >Erik Antonio Mejía Vaca</td>
-                <td>4521971634, emejia@erpcidam.com</td>
+                <td >{{ $datos->inspector->name ?? 'No encontrado' }}</td>
+                <td>{{ $datos->inspector->telefono ?? 'No encontrado' }} , {{ $datos->inspector->email ?? 'No encontrado' }}</td>
             </tr>
             <tr>
                 <td>Auditor</td>
@@ -358,29 +352,25 @@
                 <td></td>
             </tr>
         </table>
+
         <br>
         <table>
             <tr>
-                <td class="letra-fondo" style="font-size: 14px" colspan="5">6. DESCRIPCIÓN DE ACTIVIDADES DE
-                    AUDITORÍA
-                </td>
+                <td class="letra-fondo" style="font-size: 14px" colspan="5">6. DESCRIPCIÓN DE ACTIVIDADES DE AUDITORÍA</td>
             </tr>
             <tr>
                 <td class="letra-fondo no-padding">Fecha:</td>
-                <td class="letra-fondo no-padding">Inspector/ <br>
-                    Auditor:</td>
+                <td class="letra-fondo no-padding">Inspector/ <br>Auditor:</td>
                 <td class="letra-fondo" style="width: 370px">Actividad:</td>
                 <td class="letra-fondo no-padding">Horario:</td>
-                <td class="letra-fondo no-padding">Aplica <br>
-                    (Auditados)</td>
+                <td class="letra-fondo no-padding">Aplica <br>(Auditados)</td>
             </tr>
             <tr>
-                <td class="no-padding">2024-09-02</td>
-                <td class="no-padding">Erik Antonio <br>
-                    Mejía Vaca</td>
-                <td class="no-padding">Reunión de apertura</td>
-                <td class="no-padding"></td>
-                <td class="no-padding">Aplica</td>
+                <td class="no-padding">{{ $fecha_inspeccion2 }}</td>
+                <td class="no-padding">{{ $datos->inspector->name ?? 'No encontrado' }}</td>
+                <td class="no-padding"> FALTA </td>
+                <td class="no-padding"> FALTA </td>
+                <td class="no-padding"> FALTA </td>
             </tr>
         </table>
         <br>
@@ -392,19 +382,13 @@
             </tr>
             <tr>
                 <td class="letra-fondo no-padding-up-down">Nombre del Inspector:</td>
-                <td class="no-padding-up-down" colspan="3">Erik Antonio Mejía Vaca
-                </td>
+                <td class="no-padding-up-down" colspan="3">{{ $datos->inspector->name ?? 'No encontrado' }}</td>
             </tr>
             <tr>
-                <td class="letra-fondo no-padding-r-l">Acepta o rechaza el plan de <br>
-                    auditoría:</td>
-                <td style="width: 140px">Aprobado</td>
-                <td class="letra-fondo no-padding-r-l">Nombre del cliente o persona <br>
-                    autorizada que acepta o rechaza <br>
-                    el plan
-                </td>
-                <td style="width: 140px">PRISCILIANO <br>
-                    MARTÍNEZ</td>
+                <td class="letra-fondo no-padding-r-l">Acepta o rechaza el plan de <br>auditoría:</td>
+                <td style="width: 140px"> FALTA </td>
+                <td class="letra-fondo no-padding-r-l">Nombre del cliente o persona <br>autorizada que acepta o rechaza <br>el plan</td>
+                <td style="width: 140px"> {{ $datos->solicitud->empresa->razon_social ?? 'No encontrado' }} </td>
             </tr>
             <tr>
                 <td class="letra-fondo">Políticas:</td>

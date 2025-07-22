@@ -6,6 +6,12 @@ use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Services\PdfModifier;
 use Illuminate\Http\Request;
+use App\Helpers\Helpers;
+use Carbon\Carbon;
+//
+use App\Models\inspecciones;
+
+
 
 class CartaAsignacionController extends Controller
 {
@@ -231,10 +237,25 @@ class CartaAsignacionController extends Controller
     } */
 
     //Plan de auditoria
-    public function PlanDeAuditoria()//070
-    {
-        $pdf = Pdf::loadView('pdfs.PlanDeAuditoria');
-        return $pdf->stream('Plan de auditoría de esquema de certificación F7.1-01-13.pdf');
+    public function PlanDeAuditoria($id_inspeccion)//070
+    {   
+        $datos = inspecciones::find($id_inspeccion);
+        $empresa = $datos->solicitud->empresa ?? null;
+        $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+        ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
+
+        $fecha_inspeccion1 = Helpers::formatearFecha($datos->fecha_servicio);//dia de mes del año
+        $fecha_inspeccion2 = Carbon::parse($datos->fecha_servicio)->translatedFormat('Y/m/d');
+   
+
+        $pdf = Pdf::loadView('pdfs.PlanDeAuditoria', [
+            'datos' => $datos,
+            'num_cliente' => $numero_cliente,
+            'fecha_inspeccion1' => $fecha_inspeccion1 ?? 'No encontrado',
+            'fecha_inspeccion2' => $fecha_inspeccion2 ?? 'No encontrado',
+        ]);
+        return $pdf->stream('F7.1-01-13 Plan de auditoría de esquema de certificación NOM-070-SCFI-2016 Ed2.pdf');
     }
 
 /*     public function PreCertificado()

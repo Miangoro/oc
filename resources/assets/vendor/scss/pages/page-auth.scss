@@ -8,6 +8,7 @@
 $authentication-1-inner-max-width: 450px !default;
 
 .authentication-wrapper {
+  font-family: 'Inter', sans-serif;
   display: flex;
   flex-basis: 100%;
   min-height: 100vh;
@@ -127,4 +128,20 @@ $authentication-1-inner-max-width: 450px !default;
       }
     }
   }
+}
+.auth-side-full-bg {
+  background-image: url('/assets/img/fondo_oc_cidam.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+
+  
+  .auth-cover-illustration,
+  .authentication-image {
+    display: none;
+  }
+}
+.logo-up {
+  margin-top: -15rem;
 }
