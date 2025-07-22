@@ -138,7 +138,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="cont_alc" name="cont_alc"
                                         class="form-control" placeholder="Contenido Alcohólico" autocomplete="off"
@@ -146,7 +146,15 @@
                                     <label for="cont_alc">Contenido Alcohólico</label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="number" step="0.01" class="form-control" id="agua_entrada"
+                                        name="agua_entrada" placeholder="Agua agregada (L)"
+                                        aria-label="Agua entrada">
+                                    <label for="agua_entrada">Agua agregada (L)</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="id_categoria" name="id_categoria" class=" form-select">
                                         <option value="" disabled selected
@@ -302,10 +310,10 @@
                                                 autocomplete="off">
                                         </td>
                                         <td>
-                                            <input class="form-control form-control-sm" type="file"
-                                                id="file-58" name="documentos[1][url]">
-                                            <input value="58" class="form-control"
-                                                type="hidden" name="documentos[1][id_documento]">
+                                            <input class="form-control form-control-sm" type="file" id="file-58"
+                                                name="documentos[1][url]">
+                                            <input value="58" class="form-control" type="hidden"
+                                                name="documentos[1][id_documento]">
                                             <input value="{{ $documento->nombre }}" class="form-control"
                                                 type="hidden" name="documentos[1][nombre_documento]">
                                         </td>
@@ -325,10 +333,10 @@
                                                 autocomplete="off">
                                         </td>
                                         <td>
-                                            <input class="form-control form-control-sm" type="file"
-                                                id="file-134" name="documentos[2][url]">
-                                            <input value="134" class="form-control"
-                                                type="hidden" name="documentos[2][id_documento]">
+                                            <input class="form-control form-control-sm" type="file" id="file-134"
+                                                name="documentos[2][url]">
+                                            <input value="134" class="form-control" type="hidden"
+                                                name="documentos[2][id_documento]">
                                             <input value="{{ $documento->nombre }}" class="form-control"
                                                 type="hidden" name="documentos[2][nombre_documento]">
                                         </td>
@@ -342,9 +350,10 @@
 
                     <!-- Botones -->
                     <div class="d-flex justify-content-center mt-3">
-                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line me-1"></i> Registrar</button>
-                        <button type="reset" class="btn btn-danger"
-                            data-bs-dismiss="modal"><i class="ri-close-line me-1"></i> Cancelar</button>
+                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line me-1"></i>
+                            Registrar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"><i
+                                class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
                 </form>
             </div>

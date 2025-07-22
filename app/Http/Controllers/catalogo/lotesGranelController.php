@@ -10,6 +10,7 @@ use App\Models\categorias;
 use App\Models\clases;
 use App\Models\Documentacion;
 use App\Models\Documentacion_url;
+use App\Models\BitacoraMezcal;
 use App\Models\tipos;
 use App\Models\organismos;
 use App\Models\Guias;
@@ -398,6 +399,7 @@ class lotesGranelController extends Controller
             'cont_alc' => 'required|numeric',
             'id_categoria' => 'required|integer|exists:catalogo_categorias,id_categoria',
             'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
+            'agua_entrada' => 'nullable|numeric',
             'id_tipo' => 'required|array',
             'id_tipo.*' => 'integer|exists:catalogo_tipo_agave,id_tipo',
             'ingredientes' => 'nullable|string|max:100',
@@ -432,6 +434,7 @@ class lotesGranelController extends Controller
         $lote->volumen_restante = $validatedData['volumen'];
         $lote->cont_alc = $validatedData['cont_alc'];
         $lote->id_categoria = $validatedData['id_categoria'];
+        $lote->agua_entrada = $validatedData['agua_entrada'] ?? 0;
         $lote->id_clase = $validatedData['id_clase'];
         $lote->id_tipo = json_encode($validatedData['id_tipo']);
 
@@ -476,29 +479,67 @@ class lotesGranelController extends Controller
       ]);
 
       // Procesar cada lote original y restar el volumen parcial
-      foreach ($idLotes as $index => $loteId) {
-          $volumenParcial = $volumenesParciales[$index];
-          $loteOriginal = LotesGranel::find($loteId);
+        foreach ($idLotes as $index => $loteId) {
+            $volumenParcial = $volumenesParciales[$index];
+            $loteOriginal = LotesGranel::find($loteId);
 
-          if ($loteOriginal) {
-              if ($volumenParcial !== null) {
-                  // Restar volumen parcial si es válido
-                  $loteOriginal->volumen_restante -= $volumenParcial;
+            if ($loteOriginal) {
+                $nombresLotes[] = $loteOriginal->nombre_lote ?? 'Sin nombre';
+                if ($volumenParcial !== null) {
+                    // Restar volumen parcial si es válido
+                    $loteOriginal->volumen_restante -= $volumenParcial;
 
-                  // Verificar que el volumen no sea negativo
-                  if ($loteOriginal->volumen_restante < 0) {
-                      return response()->json([
-                          'success' => false,
-                          'message' => 'El volumen del lote original no puede ser negativo.'
-                      ], 400);
-                  }
+                    // Verificar que el volumen no sea negativo
+                    if ($loteOriginal->volumen_restante < 0) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'El volumen del lote original no puede ser negativo.'
+                        ], 400);
+                    }
+                }
+
+                // Guardar el lote original actualizado
+                $loteOriginal->save();
+            }
+        }/* fin del foreach de volumenes */
+
+           // 🔥 Registrar bitácoras de salida
+          foreach ($idLotes as $index => $loteId) {
+              $volumenParcial = $volumenesParciales[$index] ?? 0;
+              $loteOriginal = LotesGranel::find($loteId);
+
+              if ($loteOriginal) {
+                  BitacoraMezcal::create([
+                      'fecha' => now()->toDateString(),
+                      'id_tanque' => $loteOriginal->id_tanque ?? 0,
+                      'id_empresa' => $loteOriginal->id_empresa,
+                      'id_lote_granel' => $loteOriginal->id_lote_granel,
+                      'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+                      'tipo_operacion' => 'Salidas',
+                      'tipo' => 1,
+                      'procedencia_entrada' => 'salida por creación de lote nuevo',
+                      'operacion_adicional' => null,
+                      'volumen_incial' => $loteOriginal->volumen_restante ?? 0,
+                      'alcohol_incial' => $loteOriginal->cont_alc ?? 0,
+
+                      'volumen_entrada' => 0,
+                      'alcohol_entrada' => 0,
+                      'agua_entrada' => $loteOriginal->agua_entrada ?? 0,
+                      'volumen_salidas' => $volumenParcial,
+                      'alcohol_salidas' => $loteOriginal->cont_alc,
+                      'destino_salidas' => $lote->nombre_lote,
+                      'volumen_final' => $loteOriginal->volumen_restante,
+                      'alcohol_final' => $loteOriginal->cont_alc,
+                      'observaciones' => 'Salida por creación del lote ' . $lote->nombre_lote,
+                      'id_firmante' => 0,
+                  ]);
               }
-
-              // Guardar el lote original actualizado
-              $loteOriginal->save();
           }
-      }
-  }
+
+    }
+
+
+
 
         // Verificar si ambos campos son espacios o vacíos
         if (trim($folio_fq_Completo) === '' && trim($folio_fq_ajuste) === '') {
@@ -514,7 +555,38 @@ class lotesGranelController extends Controller
 
         // Guardar el nuevo lote en la base de datos
         $lote->save();
+            //Bitácora de ENTRADA del nuevo lote (SIEMPRE)
+            if ($validatedData['es_creado_a_partir'] === 'si') {
+                $procedencia = 'Creado a partir de: ' . implode(', ', $nombresLotes);
+            } else {
+                $procedencia = 'Nuevo lote';
+            }
 
+            BitacoraMezcal::create([
+                'fecha' => now()->toDateString(),
+                'id_tanque' => $lote->id_tanque ?? 0,
+                'id_empresa' => $lote->id_empresa,
+                'id_lote_granel' => $lote->id_lote_granel,
+                'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+                'tipo_operacion' => 'Entradas',
+                'tipo' => 1,
+                'procedencia_entrada' => $procedencia,
+                'operacion_adicional' => null,
+                'volumen_incial' => $lote->volumen ?? 0,
+                'alcohol_incial' => $lote->cont_alc ?? 0,
+
+                'volumen_entrada' => $lote->volumen,
+                'alcohol_entrada' => $lote->cont_alc,
+                'agua_entrada' => $lote->agua_entrada ?? 0,
+
+                'volumen_salidas' => 0,
+                'alcohol_salidas' => 0,
+                'destino_salidas' => 0,
+                'volumen_final' => $lote->volumen,
+                'alcohol_final' => $lote->cont_alc,
+                'observaciones' => 'Registro automático por nuevo lote',
+                'id_firmante' => 0,
+            ]);
 
         // Almacenar las guías en la tabla intermedia usando el modelo LotesGranelGuia
         if (isset($validatedData['id_guia'])) {
@@ -720,6 +792,7 @@ if ($request->has('documentos')) {
                 'id_guia.*' => 'integer|exists:guias,id_guia',
                 'volumen' => 'required|numeric',
                 'cont_alc' => 'required|numeric',
+                'agua_entrada' => 'nullable|numeric',
                 'id_categoria' => 'required|integer|exists:catalogo_categorias,id_categoria',
                 'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
                 'id_tipo' => 'required|array', // Acepta un array de `id_tipo`
@@ -750,6 +823,7 @@ if ($request->has('documentos')) {
               'tipo_lote' => $validated['tipo_lote'],
               'cont_alc' => $validated['cont_alc'],
               'id_categoria' => $validated['id_categoria'],
+              'agua_entrada' => $validated['agua_entrada'] ?? 0,
               'id_clase' => $validated['id_clase'],
               'id_tipo' => json_encode($validated['id_tipo']),
               'ingredientes' => $validated['ingredientes'],

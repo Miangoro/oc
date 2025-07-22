@@ -116,14 +116,22 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="edit_cont_alc" name="cont_alc"
                                         class="form-control" placeholder="Contenido Alcohólico" autocomplete="off" />
                                     <label for="cont_alc">Contenido Alcohólico</label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" step="0.01" class="form-control"
+                                                id="agua_entrada" name="agua_entrada" placeholder="Agua agregada (L)"
+                                                aria-label="Agua entrada">
+                                            <label for="agua_entrada">Agua agregada (L)</label>
+                                        </div>
+                                    </div>
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="edit_id_categoria" name="id_categoria" class="form-select">
                                         <option value="" disabled selected>Selecciona la categoría de agave
