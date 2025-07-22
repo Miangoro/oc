@@ -39,6 +39,9 @@ class BitacoraProductoTerminado extends Model
           'cant_cajas_final',
           'cant_bot_final',
           'observaciones',
+          'id_solicitante',
+          'capacidad',
+          'mermas',
           'id_firmante',
       ];
 

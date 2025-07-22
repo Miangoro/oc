@@ -202,7 +202,7 @@ $(function () {
               acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
             }
             if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
+              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacora" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
             }
             if (window.puedeEliminarElUsuario) {
               acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
@@ -688,24 +688,62 @@ $(function () {
           $('#edit_bitacora_id').val(bitacora.id);
           $('#edit_id_empresa').val(bitacora.id_empresa).trigger('change');
           $('#edit_fecha').val(bitacora.fecha);
-          $('#edit_id_lote_granel').data('selected', bitacora.id_lote_granel).trigger('change');
-          $('#edit_id_instalacion').data('selected', bitacora.id_instalacion).trigger('change');
-          $('#edit_operacion_adicional').val(bitacora.operacion_adicional);
-          $('#edit_volumen_inicial').val(bitacora.volumen_inicial);
-          $('#edit_alcohol_inicial').val(bitacora.alcohol_inicial);
-          /*  */
           $('#edit_tipo_op').val(bitacora.tipo_operacion).trigger('change');
+          $('#edit_tipo').val(bitacora.tipo);
+
+          $('#edit_lote_granel').val(bitacora.lote_granel);
+          $('#edit_lote_envasado').val(bitacora.lote_envasado);
+
+          $('#edit_id_marca').val(bitacora.id_marca).trigger('change');
+          $('#edit_id_categoria').val(bitacora.id_categoria).trigger('change');
+          $('#edit_id_clase').val(bitacora.id_clase).trigger('change');
+
+          $('#edit_proforma_predio').val(bitacora.proforma_predio);
+          $('#edit_folio_fq').val(bitacora.folio_fq);
+          $('#edit_id_tipo').val(bitacora.id_tipo).trigger('change');
+
+          $('#edit_alc_vol').val(bitacora.alc_vol);
+          $('#edit_sku').val(bitacora.sku);
+          $('#edit_cantidad_botellas_cajas').val(bitacora.cantidad_botellas_cajas);
+          $('#edit_ingredientes').val(bitacora.ingredientes);
+          $('#edit_edad').val(bitacora.edad);
+
+          $('#edit_cant_cajas_inicial').val(bitacora.cant_cajas_inicial);
+          $('#edit_cant_bot_inicial').val(bitacora.cant_bot_inicial);
 
           $('#edit_procedencia_entrada').val(bitacora.procedencia_entrada);
+          $('#edit_cant_cajas_entrada').val(bitacora.cant_cajas_entrada);
+          $('#edit_cant_bot_entrada').val(bitacora.cant_bot_entrada);
+
+          $('#edit_destino_salidas').val(bitacora.destino_salidas);
+          $('#edit_cant_cajas_salidas').val(bitacora.cant_cajas_salidas);
+          $('#edit_cant_bot_salidas').val(bitacora.cant_bot_salidas);
+
+          $('#edit_mermas').val(bitacora.mermas);
+
+          $('#edit_id_solicitante').val(bitacora.id_solicitante);
+
+          $('#edit_volumen_inicial').val(bitacora.volumen_inicial);
+          $('#edit_alcohol_inicial').val(bitacora.alcohol_inicial);
+
           $('#edit_volumen_entrada').val(bitacora.volumen_entrada);
           $('#edit_alcohol_entrada').val(bitacora.alcohol_entrada);
           $('#edit_agua_entrada').val(bitacora.agua_entrada);
+
           $('#edit_volumen_salida').val(bitacora.volumen_salida);
           $('#edit_alc_vol_salida').val(bitacora.alc_vol_salida);
-          $('#edit_destino').val(bitacora.destino);
+
           $('#edit_volumen_final').val(bitacora.volumen_final);
           $('#edit_alc_vol_final').val(bitacora.alc_vol_final);
+
+          $('#edit_cant_cajas_final').val(bitacora.cant_cajas_final);
+          $('#edit_cant_bot_final').val(bitacora.cant_bot_final);
+
+          $('#edit_id_solicitante').val(bitacora.id_solicitante);
+          $('#edit_capacidad').val(bitacora.capacidad);
+
           $('#edit_observaciones').val(bitacora.observaciones);
+
           $('#editarBitacoraMezcal').modal('show');
         } else {
           Swal.fire({
@@ -816,7 +854,7 @@ $(function () {
         success: function (response) {
           $('#loadingEdit').addClass('d-none');
           $('#btnEdit').removeClass('d-none');
-          $('#editarBitacoraMezcal').modal('hide');
+          $('#editarBitacora').modal('hide');
           $('#editInventarioForm')[0].reset();
           $('.datatables-users').DataTable().ajax.reload();
           Swal.fire({
@@ -837,6 +875,8 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+           $('#loadingEdit').addClass('d-none');
+          $('#btnEdit').removeClass('d-none');
         }
       });
     });

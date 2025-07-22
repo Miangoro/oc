@@ -754,6 +754,8 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#loadingEdit').addClass('d-none');
+          $('#btnEdit').removeClass('d-none');
         }
       });
     });
