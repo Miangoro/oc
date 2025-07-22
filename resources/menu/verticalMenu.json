@@ -344,10 +344,10 @@
               "can": "Visualizar bitácoras maduración"
             },
             {
-              "url": "/bitacoraProductoTerminado",
+              "url": "/bitacoraProductoEnvasado",
               "name": "Producto terminado",
-              "slug": "bitacoraProductoTerminado",
-              "can": "Visualizar bitácoras maduración"
+              "slug": "bitacora-producto-envasado",
+              "can": "Visualizar bitácoras"
             },
             {
               "url": "/bitacoraHologramasEnvasador",

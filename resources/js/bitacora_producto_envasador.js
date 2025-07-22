@@ -34,7 +34,7 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'bitacoraProductoTerminado-list',
+        url: baseUrl + 'bitacoraProductoEnvasado-list',
         data: function (d) {
           d.empresa = $('#filtroEmpresa').val();
           d.instalacion = $('#filtroInstalacion').val();
@@ -435,7 +435,7 @@ $(function () {
       return;
     }
 
-    let urlPDF = `/bitacoraPTComPDF?empresa=${empresaId}`;
+    let urlPDF = `/bitacoraProductoEnvasadoPDF?empresa=${empresaId}`;
 
     urlPDF += `&t=${new Date().getTime()}`;
 
@@ -509,7 +509,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}bitacoraPTCom-delete/${id_bitacora}`,
+          url: `${baseUrl}bitacoraProductoEnvasado-delete/${id_bitacora}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -721,7 +721,7 @@ $(function () {
       var formData = $(form).serialize();
 
       $.ajax({
-        url: '/bitacoraPTComStore',
+        url: '/bitacoraProductoEnvasadoStore',
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -770,7 +770,7 @@ $(function () {
     var bitacoraID = $(this).data('id');
     $('#edit_bitacora_id').val(bitacoraID);
     $.ajax({
-      url: '/bitacoraPTCom/' + bitacoraID + '/edit',
+      url: '/bitacoraProductoEnvasado/' + bitacoraID + '/edit',
       method: 'GET',
       success: function (data) {
         if (data.success) {
@@ -1031,7 +1031,7 @@ $(function () {
       const id = $('#edit_bitacora_id').val();
 
       $.ajax({
-        url: '/bitacoraPTComUpdate/' + id,
+        url: '/bitacoraProductoEnvasadoUpdate/' + id,
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -1277,7 +1277,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'POST',
-          url: `/FirmaProcesoPTCom/${id_bitacora_firma}`,
+          url: `/FirmaProductoEnvasado/${id_bitacora_firma}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
