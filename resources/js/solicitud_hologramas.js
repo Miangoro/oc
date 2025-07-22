@@ -135,12 +135,19 @@ $(function () {
           }
         },
         {
-          // email verify
+          //estatus
           targets: 10,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $verified = full['estatus'];
             var $colorRegimen;
+
+            if ( full['estatus_activado'] == 1 ) {
+              var $color_estatus = '<span class="badge rounded-pill bg-label-primary">Hologramas activados</span>';
+            } else  {
+              var $color_estatus = '<span class="badge rounded-pill bg-label-danger">Hologramas no activados</span>';
+            }
+
 
             if ($verified == 'Enviado') {
               $colorRegimen = 'info';
@@ -157,14 +164,15 @@ $(function () {
             }
 
             return `${
-              $verified
-                ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-            }`;
+                    $verified
+                      ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                      : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                  }` +
+                  $color_estatus;
           }
         },
         {
-          // email verify
+          //PDF
           targets: 11,
           className: 'text-center',
           render: function (data, type, full, meta) {
@@ -179,6 +187,10 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
+            let textoEstatus = full['estatus_activado'] == 1 
+              ? 'Cambiar estatus <span class="text-danger">desactivado</span>'
+              : 'Cambiar estatus <span class="text-primary">activado</span>';
+
             return (
               '<div class="d-flex align-items-center gap-50">' +
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
@@ -190,6 +202,11 @@ $(function () {
              /* `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#asignarHolograma" href="javascript:;" class="dropdown-item edit-signar"><i class="ri-qr-scan-fill ri-20px text-dark"></i> Asignar hologramas</a>` +*/
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addPago" href="javascript:;" class="dropdown-item edit-pay"><i class="ri-bank-card-line ri-20px text-warning"></i> Adjuntar comprobante de pago</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#editHologramas" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar solicitud</a>` +
+              
+              `<a data-id="${full['id_solicitud']}" data-estatus="${full['estatus_activado']}" class="dropdown-item waves-effect text-dark activar-hologramas">
+                <i class="ri-refresh-line ri-20px"></i> ${textoEstatus}
+              </a>`  +
+
               `<a data-id="${full['id_solicitud']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar solicitud</a>` +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
@@ -1803,6 +1820,44 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
           }
       });
   });
+
+
+
+///ESTATUS ACTUVAR HOLOGRAMAS
+$(document).on('click', '.activar-hologramas', function () {
+  var id_solicitud = $(this).data('id');
+  var estatusActual = $(this).data('estatus');
+  var nuevoEstatus = estatusActual == 1 ? 0 : 1;
+
+  // Actualizar el estatus sin preguntar
+  $.ajax({
+    type: 'POST',
+    url: `${baseUrl}activar-hologramas/${id_solicitud}`,
+    data: {
+      estatus_activado: nuevoEstatus,
+      _token: $('meta[name="csrf-token"]').attr('content')
+    },
+    success: (response) => {
+      dt_user.draw();
+
+      // Opcional: actualizar el texto y data-estatus del enlace en la tabla para reflejar el cambio inmediato
+      $(this).data('estatus', nuevoEstatus);
+      let nuevoTexto = nuevoEstatus == 1 ? 'Cambiar estatus desactivado' : 'Cambiar estatus activado';
+      $(this).html(`<i class="ri-refresh-bin-7-line ri-20px text-info"></i> ${nuevoTexto}`);
+    },
+    error: (err) => {
+      console.error(err);
+      // Aquí puedes mostrar mensaje de error si quieres
+    }
+  });
+});
+
+
+
+
+
+
+
 
 
 });
