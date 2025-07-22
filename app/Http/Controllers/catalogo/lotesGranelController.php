@@ -575,8 +575,8 @@ class lotesGranelController extends Controller
                 'tipo' => 1, //
                 'procedencia_entrada' => $procedencia,
                 'operacion_adicional' => null,
-                'volumen_inicial' => $lote->volumen ?? 0,
-                'alcohol_inicial' => $lote->cont_alc ?? 0,
+                'volumen_inicial' =>  0,
+                'alcohol_inicial' => 0,
 
                 'volumen_entrada' => $lote->volumen,
                 'alcohol_entrada' => $lote->cont_alc,
