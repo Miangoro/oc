@@ -373,7 +373,7 @@
               "url": "/bitacoraProductoTerminado",
               "name": "Producto terminado",
               "slug": "bitacora-producto-terminado",
-              "can": "Visualizar bitácoras maduración"
+              "can": "Visualizar bitácoras"
             },
             {
               "url": "/bitacoraHologramasCom",
