@@ -487,6 +487,7 @@ Route::get('/Registro_exitoso', [solicitudClienteController::class, 'RegistroExi
 //Enviar Correo
 Route::get('/enviar-correo', [EnviarCorreoController::class, 'enviarCorreo']);
 
+
 //Solicitud PDFs
 Route::middleware('auth')->controller(CartaAsignacionController::class)->group(function () {
     Route::get('/carta_asignacion', 'index')->name('carta_asignacion');
@@ -497,7 +498,7 @@ Route::middleware('auth')->controller(CartaAsignacionController::class)->group(f
     Route::get('/inspeccion_geo_referenciacion', 'InspeccionGeoReferenciacion')->name('inspeccion_geo_referenciacion');
     Route::get('/dictamen_cumplimiento_mezcal_granel', 'dictamenDeCumplimientoGranel')->name('dictamen-cumplimiento-granel');
     Route::get('/bitacora_revision_SCFI2016', 'bitacora_revision_SCFI2016')->name('bitacora_revision_SCFI2016');
-    Route::get('/plan_de_auditoria', 'PlanDeAuditoria')->name('PlanDeAuditoria');
+    Route::get('/plan_de_auditoria/{id_inspeccion}', 'PlanDeAuditoria')->name('PlanDeAuditoria');///070
     Route::get('/certificado_de_conformidad', 'CertificadoConformidad199')->name('CertificadoConformidad199');
     Route::get('/certificado_como_productor', 'CertificadoComoProductor')->name('CertificadoComoProductor');
     Route::get('/certificado_como_comercializador', 'CertificadoComoComercializador')->name('CertificadoComoComercializador');
@@ -507,35 +508,47 @@ Route::middleware('auth')->controller(CartaAsignacionController::class)->group(f
     Route::get('/carta_asignacion', 'Contancia_trabajo')->name('Contancia_trabajo');
     Route::get('/informe_inspeccion_etiqueta', 'InformeInspeccionEtiqueta')->name('InformeInspeccionEtiqueta');
     Route::get('/informe_resultados', 'informeresulta')->name('informeresultados');
+
+    Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico')->middleware(['auth']);
+    Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema')->middleware(['auth']);///052
+    /*
+    Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado')->middleware(['auth']);
+    Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema')->middleware(['auth']);
+    */
+    Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico')->middleware(['auth']);
+    Route::get('/Solicitud-Especificaciones', [CartaAsignacionController::class, 'SolicitudEspecificaciones'])->name('Solicitud-Especificaciones')->middleware(['auth']);
+    Route::get('/Oreden-Trabajo', [CartaAsignacionController::class, 'OrdenTrabajo'])->name('Oreden-Trabajo')->middleware(['auth']);
+    Route::get('/Solicitud-Servicio-UNIIC', [CartaAsignacionController::class, 'SolicitudUNIIC'])->name('Solicitud-Servicio-UNIIC')->middleware(['auth']);
+
+    /* orden-trabajo-inspeccion-etiquetas */
+    Route::get('/orden_trabajo_inspeccion_etiquetas', [CartaAsignacionController::class, 'OrdenTrabajoInspeccionEtiquetas'])->name('OrdenTrabajoInspeccionEtiquetas')->middleware(['auth']);
+    /* lista_verificacion_nom051-mod20200327_solrev005 */
+    Route::get('/lista_verificacion_nom051-mod20200327_solrev005', [CartaAsignacionController::class, 'ListaVerificacionNom051Mod20200327Solrev005'])->name('ListaVerificacionNom051Mod20200327Solrev005')->middleware(['auth']);
+
+    //Etiquetas Etiqueta_Barrica
+    Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'])->name('Etiqueta-2401ESPTOB')->middleware(['auth']);
+    Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_muestra'])->name('Etiqueta-Muestra')->middleware(['auth']);
+    Route::get('/Etiqueta-Barrica', [CartaAsignacionController::class, 'Etiqueta_Barrica'])->name('Etiqueta-Barrica')->middleware(['auth']);
+
+    Route::get('/Etiqueta_lotes_mezcal_granel', [CartaAsignacionController::class, 'Etiqueta_Granel'])->middleware(['auth']);
+
+    Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion')->middleware(['auth']);
+
+    //Certificados de instalaciones
+    Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador')->middleware(['auth']);
+    Route::get('/certificado_envasador_mezcal', [CartaAsignacionController::class, 'certificadoenv'])->name('certificado_envasador_mezcal')->middleware(['auth']);
+    Route::get('/certificado_productor_mezcal', [CartaAsignacionController::class, 'certificadoprod'])->name('certificado_productor_mezcal')->middleware(['auth']);
 });
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/solicitudinfo_cliente/{id}', [clientesProspectoController::class, 'info'])->name('solicitud_cliente');
     Route::get('/prestacion_servicio_fisica/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaFisica070'])->name('prestacion_servicio_fisica');
     Route::get('/prestacion_servicio_moral/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaMoral070'])->name('prestacion_servicio_moral');
-
 });
 Route::get('/generate-pdf', [PdfController::class, 'generatePdf'])->name('generate-pdf')->middleware(['auth']);
 
 
-/* orden-trabajo-inspeccion-etiquetas */
-Route::get('/orden_trabajo_inspeccion_etiquetas', [CartaAsignacionController::class, 'OrdenTrabajoInspeccionEtiquetas'])->name('OrdenTrabajoInspeccionEtiquetas')->middleware(['auth']);
-/* lista_verificacion_nom051-mod20200327_solrev005 */
-Route::get('/lista_verificacion_nom051-mod20200327_solrev005', [CartaAsignacionController::class, 'ListaVerificacionNom051Mod20200327Solrev005'])->name('ListaVerificacionNom051Mod20200327Solrev005')->middleware(['auth']);
-
-//Etiquetas Etiqueta_Barrica
-Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'])->name('Etiqueta-2401ESPTOB')->middleware(['auth']);
-Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_muestra'])->name('Etiqueta-Muestra')->middleware(['auth']);
-Route::get('/Etiqueta-Barrica', [CartaAsignacionController::class, 'Etiqueta_Barrica'])->name('Etiqueta-Barrica')->middleware(['auth']);
-
-Route::get('/Etiqueta_lotes_mezcal_granel', [CartaAsignacionController::class, 'Etiqueta_Granel'])->middleware(['auth']);
-
-Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion')->middleware(['auth']);
-
-//Certificados de instalaciones
-Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador')->middleware(['auth']);
-Route::get('/certificado_envasador_mezcal', [CartaAsignacionController::class, 'certificadoenv'])->name('certificado_envasador_mezcal')->middleware(['auth']);
-Route::get('/certificado_productor_mezcal', [CartaAsignacionController::class, 'certificadoprod'])->name('certificado_productor_mezcal')->middleware(['auth']);
 
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto')->middleware(['auth']);
@@ -558,6 +571,17 @@ Route::get('/clientes/confirmados', [clientesConfirmadosController::class, 'User
 Route::resource('/clientes-list', clientesConfirmadosController::class)->middleware(['auth']);
 Route::get('/carta_asignacion/{id}', [clientesConfirmadosController::class, 'pdfCartaAsignacion'])->name('carta_asignacion')->middleware(['auth']);
 Route::get('/carta_asignacion052/{id}', [clientesConfirmadosController::class, 'pdfCartaAsignacion052'])->name('carta_asignacion052')->middleware(['auth']);
+
+Route::get('/empresa_contrato/{id_empresa}', [clientesConfirmadosController::class, 'obtenerContratosPorEmpresa'])->middleware(['auth']);
+Route::get('/edit_cliente_confirmado/{id_empresa}', [clientesConfirmadosController::class, 'edit_cliente_confirmado'])->middleware(['auth']);
+Route::get('/empresa_num_cliente/{id_empresa}', [clientesConfirmadosController::class, 'obtenerNumeroCliente'])->middleware(['auth']);
+Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'actualizarRegistros'])->middleware(['auth']);
+Route::post('/editar_cliente_confirmado', [clientesConfirmadosController::class, 'editar_cliente_confirmado'])->middleware(['auth']);
+Route::delete('clientes-list/{id_empresa}', [clientesConfirmadosController::class, 'destroy'])->name('')->middleware(['auth']);
+Route::post('/registrar-clientes', [ClientesConfirmadosController::class, 'registrarClientes'])->name('clientes.registrar')->middleware(['auth']);
+
+
+
 
 //Marcas y catalogo
 Route::get('/catalogo/marcas', [marcasCatalogoController::class, 'UserManagement'])->name('catalogo-marcas')->middleware(['auth']);
@@ -817,29 +841,12 @@ Route::post('/notificacion-leida/{id}', [NotificacionController::class, 'marcarN
 Route::post('/notificaciones/marcar-todas-leidas', [NotificacionController::class, 'marcarTodasComoLeidas'])
     ->name('notificaciones.marcarTodasLeidas')
     ->middleware('auth');
+
 //-------------------TRAZABILIDAD-------------------
 Route::middleware(['auth'])->controller(TrazabilidadController::class)->group(function () {
     Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])->name('mostrarLogs');
     Route::get('/trazabilidad-certificados/{id}', [TrazabilidadController::class, 'TrackingCertificados'])->name('trazabilidad de certificados');
 });
-
-Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema')->middleware(['auth']);
-Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico')->middleware(['auth']);
-Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado')->middleware(['auth']);
-Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema')->middleware(['auth']);
-Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico')->middleware(['auth']);
-Route::get('/Solicitud-Especificaciones', [CartaAsignacionController::class, 'SolicitudEspecificaciones'])->name('Solicitud-Especificaciones')->middleware(['auth']);
-Route::get('/Oreden-Trabajo', [CartaAsignacionController::class, 'OrdenTrabajo'])->name('Oreden-Trabajo')->middleware(['auth']);
-Route::get('/Solicitud-Servicio-UNIIC', [CartaAsignacionController::class, 'SolicitudUNIIC'])->name('Solicitud-Servicio-UNIIC')->middleware(['auth']);
-
-Route::get('/empresa_contrato/{id_empresa}', [clientesConfirmadosController::class, 'obtenerContratosPorEmpresa'])->middleware(['auth']);
-Route::get('/edit_cliente_confirmado/{id_empresa}', [clientesConfirmadosController::class, 'edit_cliente_confirmado'])->middleware(['auth']);
-Route::get('/empresa_num_cliente/{id_empresa}', [clientesConfirmadosController::class, 'obtenerNumeroCliente'])->middleware(['auth']);
-Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'actualizarRegistros'])->middleware(['auth']);
-Route::post('/editar_cliente_confirmado', [clientesConfirmadosController::class, 'editar_cliente_confirmado'])->middleware(['auth']);
-Route::delete('clientes-list/{id_empresa}', [clientesConfirmadosController::class, 'destroy'])->name('')->middleware(['auth']);
-Route::post('/registrar-clientes', [ClientesConfirmadosController::class, 'registrarClientes'])->name('clientes.registrar')->middleware(['auth']);
-
 
 //-------------------MODULO DE SOLICITUDES-------------------
 Route::middleware(['auth'])->controller(solicitudesController::class)->group(function () {

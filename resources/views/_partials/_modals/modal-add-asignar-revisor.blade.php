@@ -47,7 +47,6 @@
             <textarea class="form-control" id="observaciones" name="observaciones" rows="3"></textarea>
           </div>
 
-          
 
           <!-- Nombre Documento -->
           <div class="form-floating form-floating-outline mb-3">
@@ -72,11 +71,9 @@
           </div>
 
 
-
           <!-- Documento existente (se inserta dinámicamente desde JS) -->
           <div id="documentoRevision" class="mt-2"></div>
-
-          <input type="hidden" name="id_documento" value="133">
+          {{-- <input type="hidden" name="id_documento" value="133"> --}}
           <input type="hidden" name="id_certificado" id="id_certificado">
 
 
@@ -85,6 +82,7 @@
             <button type="submit" class="btn btn-primary"><i class="ri-user-add-line"></i> Asignar revisor</button>
             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
           </div>
+
         </form>
       </div>
     </div>

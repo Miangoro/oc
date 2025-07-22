@@ -52,6 +52,8 @@ yarn-error.log
 /storage/app/public/uploads/*
 /public/storage/app/public/uploads/*
 /public/storage
+/storage/app/public/revisiones/*
+
 
 *.zip
 

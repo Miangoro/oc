@@ -310,7 +310,7 @@
             {
               "url": "/bitacoraProcesoElaboracion",
               "name": "Proceso de elaboración",
-              "slug": "bitacora-proceso-elaboracion"
+              "slug": "bitacora-proceso-elab"
             },
             {
               "url": "/bitacoraMezcalProductor",
@@ -338,9 +338,9 @@
               "can": "Visualizar bitácoras"
             },
             {
-              "url": "/bitacoraProductoTerminados",
+              "url": "/bitacoraProductoTerminado",
               "name": "Producto y etiqueta",
-              "slug": "bitacoraProductoTerminados",
+              "slug": "bitacoraProductoTerminado",
               "can": "Visualizar bitácoras maduración"
             },
             {
@@ -373,7 +373,7 @@
               "url": "/bitacoraProductoTerminado",
               "name": "Producto terminado",
               "slug": "bitacora-producto-terminado",
-              "can": "Visualizar bitácoras maduración"
+              "can": "Visualizar bitácoras"
             },
             {
               "url": "/bitacoraHologramasCom",

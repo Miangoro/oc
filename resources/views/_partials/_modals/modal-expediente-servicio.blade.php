@@ -40,6 +40,11 @@
                   <td><i class="ri-shield-user-line ri-22px text-info me-4"></i><span class="fw-medium">3. Orden de servicio</span></td>
                   <td><a id="link_orden_servicio" target="_blank" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
                 </tr>
+                <tr class="table-info auditoria">
+                  <td><i class="ri-file-list-3-line ri-22px text-primary me-4"></i><span class="fw-medium auditoria_texto"></span></td>
+                  <td><a  id="link_plan_auditoria"  target="_Blank" href="#"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                </tr>
+
                 <tr class="table-light etiquetasNA">
                   <td><i class="ri-angularjs-line ri-22px text-danger me-4"></i><span class="fw-medium etiqueta_name"></span></td>
                   <td><a  id="links_etiquetas" target="_blank" href="#">
