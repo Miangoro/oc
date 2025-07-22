@@ -53,7 +53,7 @@ class BitacoraMezcalEnvasadorController extends Controller
 
         $search = $request->input('search.value');
         /* $totalData = BitacoraMezcal::count(); */
-        $totalData = BitacoraMezcal::where('tipo', [2, 3])->count();
+        $totalData = BitacoraMezcal::whereIn('tipo', [2, 3])->count();
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -63,7 +63,7 @@ class BitacoraMezcalEnvasadorController extends Controller
 
         $query = BitacoraMezcal::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
                   $query->where('id_empresa', $empresaIdAut);
-              })->where('tipo', [2, 3]);
+              })->whereIn('tipo', [2, 3]);
 
         /* if ($empresaId) {
             $query->where('id_empresa', $empresaId);
@@ -212,7 +212,7 @@ class BitacoraMezcalEnvasadorController extends Controller
         $bitacoras = BitacoraMezcal::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
-        ])->where('tipo', [2, 3])
+        ])->whereIn('tipo', [2, 3])
         ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
             $query->where('id_empresa', $empresaId);
             if ($instalacionId) {
