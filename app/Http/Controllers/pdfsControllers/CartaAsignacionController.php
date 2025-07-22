@@ -231,7 +231,7 @@ class CartaAsignacionController extends Controller
     } */
 
     //Plan de auditoria
-    public function PlanDeAuditoria()
+    public function PlanDeAuditoria()//070
     {
         $pdf = Pdf::loadView('pdfs.PlanDeAuditoria');
         return $pdf->stream('Plan de auditoría de esquema de certificación F7.1-01-13.pdf');
@@ -280,7 +280,7 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('F7.1-04-09 Certificado como Envasador NMX-V-052-NORMEX-2016 Ed. 1 Vigente.pdf');
     }
 
-    public function PlanAuditoria ()
+    public function PlanAuditoria ()//052
     {
         $pdf = Pdf::loadView('pdfs.Plan_auditoria_esquema');
         return $pdf->stream('F7.1-04-15 Plan de auditoría de esquema de cert NMX-V-052 Ed 0, VIG.pdf');
