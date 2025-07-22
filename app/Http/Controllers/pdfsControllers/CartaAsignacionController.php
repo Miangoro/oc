@@ -243,11 +243,11 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Pre-certificado CIDAM C-GRA-210 2024.pdf');
     } */
 
-    public function DictamenMezcalEnvasado()
+    /*public function DictamenMezcalEnvasado()
     {
         $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_mezcal-envasado');
         return $pdf->stream('F-UV-04-17 Ver 6. Dictamen de Cumplimiento NOM de Mezcal Envasado.pdf');
-    }
+    }*/
 
     //Plan de auditoria
     public function CertificadoConformidad199()
