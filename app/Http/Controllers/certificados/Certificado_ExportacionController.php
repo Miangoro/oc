@@ -838,22 +838,22 @@ public function storeRevisor(Request $request)
                         ->first();
 
                     if ($revis) {
+                        // Solo sincronizar observaciones
                         $revis->observaciones = $validated['observaciones'] ?? '';
-                        $revis->es_correccion = $validated['esCorreccion'] ?? 'no';
                         $revis->save();
                     } else {
+                        // Crear nueva revisión (solo observaciones)
                         $revis = new Revisor();
                         $revis->id_certificado = $idRelacionado;
                         $revis->tipo_revision = $tipoRev;
                         $revis->tipo_certificado = 3;
                         $revis->observaciones = $validated['observaciones'] ?? '';
-                        $revis->es_correccion = $validated['esCorreccion'] ?? 'no';
                         $revis->save();
                     }
 
-                    // Documento (si tipo 1 y hay archivo)
+                    // Subir documento solo si es tipo 1 y hay archivo
                     if ($tipoRev === 1 && $nombreArchivo) {
-                        // Eliminar documento anterior si existe
+                        // Eliminar anterior si existe
                         $docAnterior = Documentacion_url::where('id_relacion', $revis->id_revision)
                             ->where('id_documento', 133)
                             ->first();
@@ -862,7 +862,6 @@ public function storeRevisor(Request $request)
                             $docAnterior->delete();
                         }
 
-                        // Crear nuevo documento
                         Documentacion_url::create([
                             'id_relacion' => $revis->id_revision,
                             'id_documento' => 133,
@@ -873,7 +872,6 @@ public function storeRevisor(Request $request)
                     }
                 }
             }
-
         }
 
 
@@ -896,12 +894,14 @@ public function MostrarCertificadoExportacion($id_certificado)
         //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
     }
 
-    //$fecha = Helpers::formatearFecha($data->fecha_emision);
-    //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision);//fecha y hora
-    $fecha_emision = !empty($data->fecha_emision) ? Carbon::parse($data->fecha_emision)->translatedFormat('d/m/Y')
-    : '--------';
-    $fecha_vigencia = !empty($data->fecha_vigencia) ? Carbon::parse($data->fecha_vigencia)->translatedFormat('d/m/Y')
-    : '--------';
+    //$fecha = Helpers::formatearFecha($data->fecha_emision);//dia del mes del año
+    //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision); //formato unico
+    $fecha_emision = !empty($data->fecha_emision) 
+        ? Carbon::parse($data->fecha_emision)->translatedFormat('d/m/Y') //formato moldeable con fecha y hora
+        : '--------';
+    $fecha_vigencia = !empty($data->fecha_vigencia) 
+        ? Carbon::parse($data->fecha_vigencia)->translatedFormat('d/m/Y')
+        : '--------';
     $empresa = $data->dictamen->inspeccione->solicitud->empresa ?? null;
     $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
         ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa

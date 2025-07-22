@@ -114,16 +114,39 @@
                                     <label for="volumen">Volumen de Lote Inicial (litros)</label>
                                 </div>
                             </div>
+
                         </div>
+                        {{-- solo para los adminsitradores --}}
+                        @can('Modificar volumen restante a granel')
+                          <div class="row">
+                              <div class="col-md-6" id="edit_volumen_in">
+                                  <div class="form-floating form-floating-outline mb-4">
+                                      <input type="number" step="0.01" id="edit_volumen_restante" name="volumen_restante"
+                                          class="form-control" placeholder="Volumen restante del Lote (litros)"
+                                          autocomplete="off" />
+                                      <label for="volumen">Volumen restante del Lote (litros)</label>
+                                  </div>
+                              </div>
+                          </div>
+                      @endcan
+
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="edit_cont_alc" name="cont_alc"
                                         class="form-control" placeholder="Contenido Alcohólico" autocomplete="off" />
                                     <label for="cont_alc">Contenido Alcohólico</label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" step="0.01" class="form-control"
+                                                id="agua_entrada" name="agua_entrada" placeholder="Agua agregada (L)"
+                                                aria-label="Agua entrada">
+                                            <label for="agua_entrada">Agua agregada (L)</label>
+                                        </div>
+                                    </div>
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="edit_id_categoria" name="id_categoria" class="form-select">
                                         <option value="" disabled selected>Selecciona la categoría de agave
@@ -328,7 +351,11 @@
                         </table>
 
                     <div class="d-flex justify-content-center mt-3">
-                        <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill me-1"></i> Editar</button>
+                      <button disabled class="btn btn-primary d-none me-2" type="button" id="btnSpinnerEdit">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Actualizando...
+                        </button>
+                        <button type="submit" class="btn btn-primary me-2" id="btnEdit"><i class="ri-pencil-fill me-1"></i> Editar</button>
                         <button type="reset" class="btn btn-danger"
                             data-bs-dismiss="modal"><i class="ri-close-line me-1"></i>Cancelar</button>
                     </div>

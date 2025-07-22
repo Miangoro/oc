@@ -346,7 +346,11 @@ $(function () {
       iframe.show();
     });
   });
-  
+
+  if (!window.puedeVerElUsuario) {
+    $('#edit_volumen_in').closest('.row').hide(); // oculta toda la fila
+}
+
   // Reciben los datos del PDF
   $(document).on('click', '.pdf', function () {
     var id = $(this).data('id'); //Obtén el ID desde el atributo "data-id" en PDF
@@ -370,7 +374,7 @@ $(function () {
   });
 
 
-  
+
   // Delete Record
   $(document).on('click', '.delete-record', function () {
     var id_lote = $(this).data('id'); // Obtener el ID de la clase
@@ -713,6 +717,8 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function (e) {
+      $('#btnAdd').addClass('d-none'); // Ocultar el botón de envío
+      $('#btnSpinner').removeClass('d-none'); // Mostrar el spinner de carga
       // e.preventDefault();
       var formData = new FormData(addNewLote);
       // Depurar los datos del formulario
@@ -729,6 +735,8 @@ $(function () {
           $('#id_guia').val('').trigger('change');
           $('#id_organismo').val('').trigger('change');
           $('#tipo_agave').val('').trigger('change');
+          $('#btnSpinner').addClass('d-none'); // Ocultar el botón de envío
+          $('#btnAdd').removeClass('d-none'); // Mostrar el spinner de carga
           $('#offcanvasAddLote').modal('hide');
           $('.datatables-users').DataTable().ajax.reload(null, false);
 
@@ -752,6 +760,8 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#btnSpinner').addClass('d-none'); // Ocultar el botón de envío
+          $('#btnAdd').removeClass('d-none'); // Mostrar el spinner de carga
         }
       });
     });
@@ -760,6 +770,7 @@ $(function () {
       fv.revalidateField($(this).attr('name'));
     });
   });
+
 
   $(document).ready(function () {
     const edit_tipoLoteSelect = document.getElementById('edit_tipo_lote');
@@ -887,6 +898,9 @@ $(function () {
             });
             $('#edit_id_guia').val(guiasIds).trigger('change');
             $('#edit_volumen').val(lote.volumen);
+            if (window.puedeVerElUsuario && $('#edit_volumen_restante').length > 0) {
+              $('#edit_volumen_restante').val(lote.volumen_restante);
+            }
             $('#edit_cont_alc').val(lote.cont_alc);
             $('#edit_id_categoria').val(lote.id_categoria).trigger('change');
             $('#edit_clase_agave').val(lote.id_clase).trigger('change');
@@ -1267,6 +1281,8 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
+      $('#btnEdit').addClass('d-none'); // Ocultar el botón de envío
+      $('#btnSpinnerEdit').removeClass('d-none'); // Mostrar el spinner de carga
       var formData = new FormData(editLoteForm);
       var loteId = $('#edit_lote_id').val();
 
@@ -1282,6 +1298,8 @@ $(function () {
         success: function (response) {
           $('#edit_certificado_lote').val('');
           $('input[type="file"][name="url[]"]').val('');
+          $('#btnSpinnerEdit').addClass('d-none'); // Ocultar el spinner de carga
+          $('#btnEdit').removeClass('d-none'); // Mostrar el botón de envío
           dt_user.ajax.reload(null, false);
           $('#offcanvasEditLote').modal('hide');
           Swal.fire({
@@ -1320,6 +1338,8 @@ $(function () {
               }
             });
           }
+          $('#btnSpinnerEdit').addClass('d-none'); // Ocultar el spinner de carga
+          $('#btnEdit').removeClass('d-none'); // Mostrar el botón de envío
         }
       });
     });

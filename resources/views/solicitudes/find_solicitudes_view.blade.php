@@ -276,6 +276,11 @@
                 href: '{{ url('orden_de_servicio') }}/' + id_inspeccion
             },
             {
+                id: '#link_plan_auditoria',
+                href: '{{ url('plan_de_auditoria') }}/' + id_inspeccion
+            },
+
+            {
                 id: '#links_etiquetas',
                 href: ''
             }
@@ -298,6 +303,20 @@
                     .addClass('text-danger');
             }
         });
+
+
+        ///PLAN DE AUDITORIA
+        let audiHref = '{{ url('plan_de_auditoria') }}/' + id_inspeccion;
+        let auditoria_texto = 'Plan de auditoría';
+    
+        if (inspectorName != 'Sin inspector') {
+            $('#link_plan_auditoria').attr('href', audiHref);
+            $('.auditoria_texto').text(auditoria_texto);
+            $('.auditoria').show(); // mostrar el tr
+        } else {
+            $('.auditoria').hide(); // ocultar el tr
+        }
+
 
         // Etiquetas específicas según tipo
         let etiquetaHref = '';

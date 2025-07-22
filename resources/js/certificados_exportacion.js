@@ -1461,12 +1461,11 @@ function cargarRevisores() {
     });
   });
 }
-
 $(document).ready(function () {
   cargarRevisores();
 });
 
-/// Cargar datos de revisión automáticamente al abrir el modal
+///CARGAR DATOS DE REVISIÓN AL ABRIR EL MODAL
 $('#asignarRevisorModal').on('show.bs.modal', function (event) {
   const button = $(event.relatedTarget);
   const idCertificado = button.data('id');
