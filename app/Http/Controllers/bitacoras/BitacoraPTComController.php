@@ -62,7 +62,8 @@ class BitacoraPTComController extends Controller
           }
 
         $search = $request->input('search.value');
-        $totalData = BitacoraProductoTerminado::count();
+        /* $totalData = BitacoraProductoTerminado::count(); */
+        $totalData = BitacoraProductoTerminado::where('tipo', 3)->count();
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');

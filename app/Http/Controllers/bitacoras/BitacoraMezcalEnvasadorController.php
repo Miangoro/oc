@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\LotesGranel;
 use App\Models\BitacoraMezcal;
 use App\Models\empresa;
+use App\Models\maquiladores_model;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Log;
@@ -51,7 +52,8 @@ class BitacoraMezcalEnvasadorController extends Controller
           }
 
         $search = $request->input('search.value');
-        $totalData = BitacoraMezcal::count();
+        /* $totalData = BitacoraMezcal::count(); */
+        $totalData = BitacoraMezcal::where('tipo', 2)->count();
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -63,13 +65,38 @@ class BitacoraMezcalEnvasadorController extends Controller
                   $query->where('id_empresa', $empresaIdAut);
               })->where('tipo', 2);
 
-        if ($empresaId) {
+        /* if ($empresaId) {
             $query->where('id_empresa', $empresaId);
 
             if ($instalacionId) {
                 $query->where('id_instalacion', $instalacionId);
             }
-        }
+        } */
+        if ($empresaId) {
+              $empresa = empresa::find($empresaId);
+
+              if ($empresa) {
+                  // Buscar maquiladores hijos en la tabla intermedia
+                 $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
+                  ->pluck('id_maquilador')
+                  ->toArray();
+
+
+                  // Si tiene hijos, se asume maquiladora
+                  if (count($idsMaquiladores)) {
+                      $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
+                  } else {
+                      // Sin hijos, solo su propio ID
+                      $idsEmpresas = [$empresaId];
+                  }
+
+                  $query->whereIn('id_empresa', $idsEmpresas);
+
+                  if ($instalacionId) {
+                      $query->where('id_instalacion', $instalacionId);
+                  }
+              }
+          }
           if (!empty($search)) {
               $query->where(function ($q) use ($search) {
                   $lower = strtolower($search);

@@ -52,7 +52,8 @@ class BitacoraHologramasController extends Controller
           }
 
         $search = $request->input('search.value');
-        $totalData = BitacoraHologramas::count();
+        /* $totalData = BitacoraHologramas::count(); */
+        $totalData = BitacoraHologramas::where('tipo', 2)->count();
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
