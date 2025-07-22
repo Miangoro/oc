@@ -10,6 +10,7 @@ use App\Helpers\Helpers;
 use Carbon\Carbon;
 //
 use App\Models\inspecciones;
+use App\Models\User;
 
 
 
@@ -247,13 +248,17 @@ class CartaAsignacionController extends Controller
 
         $fecha_inspeccion1 = Helpers::formatearFecha($datos->fecha_servicio);//dia de mes del año
         $fecha_inspeccion2 = Carbon::parse($datos->fecha_servicio)->translatedFormat('Y/m/d');
-   
+        
+        $contacto_oc = User::find($datos->solicitud->empresa->id_contacto);
 
         $pdf = Pdf::loadView('pdfs.PlanDeAuditoria', [
             'datos' => $datos,
             'num_cliente' => $numero_cliente,
             'fecha_inspeccion1' => $fecha_inspeccion1 ?? 'No encontrado',
             'fecha_inspeccion2' => $fecha_inspeccion2 ?? 'No encontrado',
+            'auditor' => $contacto_oc->name ?? 'No encontrado',
+            'auditor_telefono' => $contacto_oc->telefono ?? 'No encontrado',
+            'auditor_email' => $contacto_oc->email ?? 'No encontrado',
         ]);
         return $pdf->stream('F7.1-01-13 Plan de auditoría de esquema de certificación NOM-070-SCFI-2016 Ed2.pdf');
     }

@@ -196,21 +196,29 @@
             page-break-before: always;
         }
 
-        /* Estilo para la imagen flotante a la derecha */
-                /* Estilo para el texto de fondo */
-                .background-img {
-            position: absolute;
-            top: 930px;
-            left: 510px;
-            z-index: -1;
-            width: 180px;
-            height: 75px;
-            
+    
+        .footer {
+            position: fixed;
+            bottom: 20%;
+            width: 100%;
+            color: #71777c;
+            font-size: 8px;
         }
     </style>
 </head>
 
 <body>
+
+   <div class="footer">
+        <p style="text-align: center; width: 80%; position: relative; padding-left: 7%;">
+            Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no<br>
+            puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
+        </p>
+        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM"
+            style="position: absolute; top: -2%; right: -7%; height: 70px;">
+    </div>
+
+
     <div class="img-background"></div>
 
     <div class="header">
@@ -224,7 +232,7 @@
     <body>
         <div style="text-align: right; font-size: 12px; padding-bottom: 10px">
             <span class="negrita">Plan de Auditoría. No: </span>{{$datos->solicitud->folio ?? 'No encontrado'}}<br>
-            <span class="negrita">Fecha de liberacióndel plan: FALTA</span> 
+            <span class="negrita">Fecha de liberacióndel plan: </span> 
         </div>
         <table>
             <tr>
@@ -265,11 +273,11 @@
                 <td class="letra-fondo" style="width: 150px">Servicio:</td>
                 <td class="leftLetter" style="width: 240px">{{$datos->solicitud->tipo_solicitud->tipo ?? 'No encontrado'}}</td>
                 <td class="letra-fondo">Tipo de auditoría:</td>
-                <td class="leftLetter">FALTA</td>
+                <td class="leftLetter"> </td>
             </tr>
             <tr>
                 <td class="letra-fondo" style="width: 150px">Información adicional:</td>
-                <td  style="width: 220px; color: red">FALTA</td>
+                <td  style="width: 220px; color: red"> </td>
                 <td class="letra-fondo">Fecha de la <br>auditoría:</td>
                 <td class="leftLetter"> {{ $fecha_inspeccion1}}</td>
             </tr>
@@ -280,7 +288,7 @@
             </tr>
             <tr>
                 <td class="letra-fondo" style="width: 250px">Producto(s): </td>
-                <td class="leftLetter"> FALTA </td>
+                <td class="leftLetter">   </td>
             </tr>
             <tr>
                 <td class="letra-fondo">País destino del producto:</td>
@@ -296,27 +304,21 @@
             </tr>
             <tr>
                 <td class="letra-fondo" style="width: 200px">Objetivo:</td>
-                <td class="leftLetter"> FALTA </td>
+                <td class="leftLetter">   </td>
             </tr>
             <tr>
                 <td class="letra-fondo">Alcance:</td>
-                <td class="leftLetter"> FALTA </td>
+                <td class="leftLetter">   </td>
             </tr>
             <tr>
                 <td class="letra-fondo no-padding-up-down">Criterios de evaluación:</td>
-                <td class="leftLetter no-padding-up-down"> FALTA </td>
+                <td class="leftLetter no-padding-up-down">   </td>
             </tr>
             <tr>
                 <td class="letra-fondo">Otros (indique):</td>
-                <td style="color: red">&nbsp;  FALTA  </td>
+                <td style="color: red">&nbsp;     </td>
             </tr>
         </table>
-        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img" >
-        <footer style="text-align: center; font-size: 7px; margin-top: 175px; color: #71777c; margin-right: 50px">
-            Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-            puede <br>            
-            ser distribuido externamente sin la autorización escrita del Director Ejecutivo
-        </footer>
 
 
         {{------ PAGINA 2 ------}}
@@ -348,8 +350,8 @@
             </tr>
             <tr>
                 <td>Auditor</td>
-                <td></td>
-                <td></td>
+                <td>{{ $auditor }}</td>
+                <td>{{ $auditor_telefono }} , {{ $auditor_email }}</td>
             </tr>
         </table>
 
@@ -368,9 +370,9 @@
             <tr>
                 <td class="no-padding">{{ $fecha_inspeccion2 }}</td>
                 <td class="no-padding">{{ $datos->inspector->name ?? 'No encontrado' }}</td>
-                <td class="no-padding"> FALTA </td>
-                <td class="no-padding"> FALTA </td>
-                <td class="no-padding"> FALTA </td>
+                <td class="no-padding">   </td>
+                <td class="no-padding">   </td>
+                <td class="no-padding">   </td>
             </tr>
         </table>
         <br>
@@ -386,7 +388,7 @@
             </tr>
             <tr>
                 <td class="letra-fondo no-padding-r-l">Acepta o rechaza el plan de <br>auditoría:</td>
-                <td style="width: 140px"> FALTA </td>
+                <td style="width: 140px">   </td>
                 <td class="letra-fondo no-padding-r-l">Nombre del cliente o persona <br>autorizada que acepta o rechaza <br>el plan</td>
                 <td style="width: 140px"> {{ $datos->solicitud->empresa->razon_social ?? 'No encontrado' }} </td>
             </tr>
@@ -404,14 +406,7 @@
                     pruebas.</td>
             </tr>
         </table>
-        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img" style="position: absolute">
-        <footer style="text-align: center; font-size: 7px; margin-top: 315px; color: #71777c; margin-right: 50px">
-            Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-            puede <br>            
-            ser distribuido externamente sin la autorización escrita del Director Ejecutivo
 
-        </footer>
+
     </body>
-
-
 </html>
