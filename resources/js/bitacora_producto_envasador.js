@@ -721,7 +721,7 @@ $(function () {
       var formData = $(form).serialize();
 
       $.ajax({
-        url: '/bitacoraPTComStore',
+        url: '/bitacoraProductoEnvasadoStore',
         type: 'POST',
         data: formData,
         success: function (response) {
