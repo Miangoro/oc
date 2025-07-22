@@ -125,17 +125,9 @@ margin-bottom: 0;
     table {
       width: 100%;
       border-collapse: separate;
-      font-size: 15px;
+      font-size: 12px;
       border: 2px solid #000
     }
-     /* Definición de anchos por columna */
-    table col:nth-child(1) { width: 15%; }
-    table col:nth-child(2) { width: 6%; }
-    table col:nth-child(3) { width: 6%; }
-    table col:nth-child(4) { width: 25%; }
-    table col:nth-child(5) { width: 24%; }
-    table col:nth-child(6) { width: 24%; }
-
 
     table td {
       border: 1px solid #000;
@@ -144,9 +136,10 @@ margin-bottom: 0;
       border: 2px solid #000;
     }
     .celda-azul {
-      font-weight: bold;
-      color: #001f5e;
+      color: #17365D;
       text-align: center;
+      font-weight: bold;
+      line-height: 1.5;
     }
     .celda-normal {
       text-align: center;
@@ -154,6 +147,8 @@ margin-bottom: 0;
     }
     .centrado {
       text-align: center;
+      font-size: 14px;
+      line-height: .8;
     }
     .bloque-autorizacion {
   margin-top: 30px;
@@ -166,6 +161,35 @@ margin-bottom: 0;
   font-family: 'Calibri', sans-serif;
   color: #000000;
 }
+.ccp{
+   line-height: 1;
+   font-size: 11px;
+}
+ .negrita{
+            font-family: 'fuenteNegrita';
+            font-size: 14px;
+        }
+         /* Estilo para la tabla */
+        table.datos_empresa {
+            text-align: center;
+            border-collapse: separate;
+           
+            width: 100%;
+            /* Opcional: hace que la tabla ocupe todo el ancho disponible */
+        }
+
+        /* Estilo para las celdas de la tabla */
+        table.datos_empresa td {
+            border: 2px solid black;
+            /* Ajusta el color y grosor del borde */
+            padding: 2px;
+            /* Opcional: agrega espacio dentro de las celdas */
+        }
+
+  .prueba{
+    text-align: center;
+           
+  }
     </style>
 </head>
 
@@ -217,75 +241,67 @@ margin-bottom: 0;
  <p class="titulop2">MEZCAL A GRANEL</p>
 
 
-<h3 style=" font-weight: bold; font-size: 15px;">I. Datos de la empresa</h3>
+<h3 style=" font-weight: bold; font-size: 15px; margin-bottom: 0; margin-left: 25px;">I. Datos de la empresa</h3>
 
-
-      <table>
-      <colgroup>
-        <col><col><col><col><col><col>
-      </colgroup>
-
-      <!-- Fila 1 -->
+<table class="datos_empresa">
+            <tr>
+  <td colspan="4">
+    <table style="width: 100%; border: none; border-collapse: collapse;">
       <tr>
-        <td colspan="2" class="celda-azul">Nombre de la Empresa</td>
-        <td colspan="4" class="celda-normal">AMANTES DEL MEZCAL, S.A. DE C.V.</td>
-      </tr>
+        <td class="negrita" style="padding-top: 10px; padding-bottom: 10px; text-align: center; color: #17365D; width: 25%; border-top: none; border-left: none; border-bottom: none; border-right: 4px double black;">
+  Nombre de la empresa 
+</td>
 
-      <!-- Fila 2 -->
-      <tr>
-        <td rowspan="3" class="celda-azul">Dirección</td>
-        <td colspan="1" rowspan="3" class="centrado">
-          <strong>Domicilio Fiscal:</strong> Av. Ferrocarril
- <br>Número exterior 69, Número
- <br>interior Bis. San Sebastián Tutla,
- <br>Oaxaca De Juárez, Oaxaca. C.P.
- <br>71320.<br>
-          <strong>Domicilio de Instalaciones:</strong> <br>
-          Paraje Salina Grande, S/N,<br> Tlacolula de Matamoros, Oaxaca. <br> C.P. 70400
-        </td>
-        <td  class="celda-azul">RFC</td>
-        <td colspan="3" class="celda-normal">AME1906138K7</td>
-        
-      </tr>
-
-      <!-- Fila 3 -->
-      <tr>
-        <td rowspan="2" class="celda-azul">Representante <br>legal</td>
-        <td colspan="3" rowspan="2" class="celda-normal">Francisco Arrañaga Patrón</td>
-      </tr>
-
-      <!-- Fila 4 (vacía, consumida por rowspan) -->
-      <tr></tr>
-
-      <!-- Fila 5 -->
-      <tr>
-        <td class="celda-azul">No. de servicio</td>
-        <td  class="celda-normal">UMS-0811/2025</td>
-        <td class="celda-azul">Número de <br>dictamen</td>
-        <td colspan="3" class="celda-normal">UMG-153/2025</td>
-      </tr>
-
-      <!-- Fila 6 -->
-      <tr>
-        <td class="celda-azul">Nombre del <br> inspector</td>
-        <td class="celda-normal">Idalia González Zárate</td>
-        <td class="celda-azul">Fecha de <br>servicio</td>
-        <td colspan="3" class="celda-normal">02/Julio/2025</td>
-      </tr>
-
-      <!-- Fila 7 -->
-      <tr>
-        <td class="celda-azul">Fecha de <br>emisión</td>
-        <td  class="celda-normal">03/Julio/2025</td>
-        <td class="celda-azul">Fecha de <br>vencimiento</td>
-        <td colspan="3" class="celda-normal">03/Julio/2026</td>
+<td style="padding-top: 10px; padding-bottom: 10px; text-align: center; width: 75%; font-size: 16px; font-weight: bold; border-top: none; border-right: none; border-bottom: none; border-left: 4px doubled black;">
+  {{ $data->inspeccione->solicitud->empresa->razon_social ?? '' }}
+</td>
       </tr>
     </table>
+  </td>
+</tr>
+            <tr>
+                <td class="negrita" style="color: #17365D;" rowspan="2">Dirección</td>
+                <td rowspan="2" style="width: 25%; font-size: 13px; vertical-align: top;" >
+                   <span class="negrita">Domicilio fiscal:</span>  {{ $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? ''}}<br>
 
-<h3 style=" font-weight: bold; font-size: 15px;">I. Datos de la empresa</h3>
+                   <span class="negrita">Domicilio de instalaciones:</span> {{ $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'NA' }}
+
+                </td>
+                <td class="negrita" style="color: #17365D; width: 17%; height: 20px; vertical-align: middle;">RFC</td>
+                <td class="celda-normal" style="width: 25%; height: 20px; vertical-align: middle;">{{  $data->inspeccione->solicitud->empresa->rfc }}</td>
+            </tr>
+            <tr>
+                <td class="negrita" style="color: #17365D;">
+                    Representante legal
+                </td>
+                <td class="celda-normal">{{ $data->inspeccione->solicitud->empresa->representante }}
+                </td>
+            </tr>
+            <tr>
+                <td class="negrita" style="color: #17365D; width: 11%;">No. de servicio</td>
+                <td class="celda-normal">{{ $data->inspeccione->num_servicio }}</td>
+                <td class="negrita" style="color: #17365D;">Número de <br>dictamen</td>
+                <td class="celda-normal">{{ $data->num_dictamen }}</td>
+            </tr>
+            <tr>
+                <td class="negrita" style="color: #17365D; width: 11%;">Nombre del Inspector</td>
+                <td class="celda-normal">{{ $data->inspeccione->inspector->name }}</td>
+                <td class="negrita" style="color: #17365D;">Fecha de <br>servicio</td>
+                <td class="celda-normal">{{ $fecha_servicio }}</td>
+            </tr>
+            <tr>
+                <td class="negrita" style="color: #17365D; width: 11%;">Fecha de emisión</td>
+                <td class="celda-normal">{{ $fecha_emision }}</td>
+                <td class="negrita" style="color: #17365D;">Fecha de <br> vencimiento</td>
+                <td class="celda-normal">{{ $fecha_vigencia }}</td>
+            </tr>
+        </table>
+
+<h3 style=" font-weight: bold; font-size: 15px; margin-bottom: 0; margin-left: 25px;"> II. Descripcioón del producto</h3>
 <table>
 <tr>
-  <td colspan="6" class="celda-normal">PRODUCTO MEZCAL ARTESANAL <br> ORIGEN OAXACA</td>         
+  <td colspan="6" class="celda-normal"><p>PRODUCTO {{ $data->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'NA' }}</p>
+                    <p>ORIGEN {{ $estado }}</p></td>         
 </tr>
 
 <tr>
@@ -321,8 +337,8 @@ margin-bottom: 0;
   <div class="autorizado">Sello Digital</div>
 </div>
 
-<p> C.c.p Dirección General de Normas, DGN.</p>
-<p>C.c.p Gerente del Organismo Certificador del CIDAM A.C. </p>
+<p class="ccp"> C.c.p Dirección General de Normas, DGN. <br>
+C.c.p Gerente del Organismo Certificador del CIDAM A.C. </p>
 
 </div>
 
