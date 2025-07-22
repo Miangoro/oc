@@ -478,12 +478,15 @@ class lotesGranelController extends Controller
           'volumenes' => $volumenesParciales,
       ]);
 
+
+        $bitacoras = [];
       // Procesar cada lote original y restar el volumen parcial
         foreach ($idLotes as $index => $loteId) {
             $volumenParcial = $volumenesParciales[$index];
             $loteOriginal = LotesGranel::find($loteId);
 
             if ($loteOriginal) {
+                $volumenInicial = $loteOriginal->volumen_restante ?? 0;
                 $nombresLotes[] = $loteOriginal->nombre_lote ?? 'Sin nombre';
                 if ($volumenParcial !== null) {
                     // Restar volumen parcial si es válido
@@ -500,41 +503,41 @@ class lotesGranelController extends Controller
 
                 // Guardar el lote original actualizado
                 $loteOriginal->save();
+                $bitacoras[] = [
+                  'lote' => $loteOriginal,
+                  'volumen_inicial' => $volumenInicial,
+                  'volumen_parcial' => $volumenParcial
+              ];
             }
         }/* fin del foreach de volumenes */
 
            // 🔥 Registrar bitácoras de salida
-          foreach ($idLotes as $index => $loteId) {
-              $volumenParcial = $volumenesParciales[$index] ?? 0;
-              $loteOriginal = LotesGranel::find($loteId);
+          foreach ($bitacoras as $info) {
+            BitacoraMezcal::create([
+                'fecha' => now()->toDateString(),
+                'id_tanque' => $info['lote']->id_tanque ?? 0,
+                'id_empresa' => $info['lote']->id_empresa,
+                'id_lote_granel' => $info['lote']->id_lote_granel,
+                'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+                'tipo_operacion' => 'Salidas',
+                'tipo' => 1,
+                'procedencia_entrada' => 'Salida por creación de lote nuevo',
+                'operacion_adicional' => null,
+                'volumen_inicial' => $info['volumen_inicial'],
+                'alcohol_inicial' => $info['lote']->cont_alc,
+                'volumen_entrada' => 0,
+                'alcohol_entrada' => 0,
+                'agua_entrada' => $info['lote']->agua_entrada ?? 0,
+                'volumen_salidas' => $info['volumen_parcial'],
+                'alcohol_salidas' => $info['lote']->cont_alc,
+                'destino_salidas' => $lote->nombre_lote,
+                'volumen_final' => $info['lote']->volumen_restante,
+                'alcohol_final' => $info['lote']->cont_alc,
+                'observaciones' => 'Salida por creación del lote ' . $lote->nombre_lote,
+                'id_firmante' => 0,
+            ]);
+        }
 
-              if ($loteOriginal) {
-                  BitacoraMezcal::create([
-                      'fecha' => now()->toDateString(),
-                      'id_tanque' => $loteOriginal->id_tanque ?? 0,
-                      'id_empresa' => $loteOriginal->id_empresa,
-                      'id_lote_granel' => $loteOriginal->id_lote_granel,
-                      'id_instalacion' => auth()->user()->id_instalacion ?? 0,
-                      'tipo_operacion' => 'Salidas',
-                      'tipo' => 1,
-                      'procedencia_entrada' => 'salida por creación de lote nuevo',
-                      'operacion_adicional' => null,
-                      'volumen_incial' => $loteOriginal->volumen_restante ?? 0,
-                      'alcohol_incial' => $loteOriginal->cont_alc ?? 0,
-
-                      'volumen_entrada' => 0,
-                      'alcohol_entrada' => 0,
-                      'agua_entrada' => $loteOriginal->agua_entrada ?? 0,
-                      'volumen_salidas' => $volumenParcial,
-                      'alcohol_salidas' => $loteOriginal->cont_alc,
-                      'destino_salidas' => $lote->nombre_lote,
-                      'volumen_final' => $loteOriginal->volumen_restante,
-                      'alcohol_final' => $loteOriginal->cont_alc,
-                      'observaciones' => 'Salida por creación del lote ' . $lote->nombre_lote,
-                      'id_firmante' => 0,
-                  ]);
-              }
-          }
 
     }
 
@@ -572,8 +575,8 @@ class lotesGranelController extends Controller
                 'tipo' => 1, //
                 'procedencia_entrada' => $procedencia,
                 'operacion_adicional' => null,
-                'volumen_incial' => $lote->volumen ?? 0,
-                'alcohol_incial' => $lote->cont_alc ?? 0,
+                'volumen_inicial' => $lote->volumen ?? 0,
+                'alcohol_inicial' => $lote->cont_alc ?? 0,
 
                 'volumen_entrada' => $lote->volumen,
                 'alcohol_entrada' => $lote->cont_alc,
