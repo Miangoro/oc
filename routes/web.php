@@ -497,7 +497,7 @@ Route::middleware('auth')->controller(CartaAsignacionController::class)->group(f
     Route::get('/inspeccion_geo_referenciacion', 'InspeccionGeoReferenciacion')->name('inspeccion_geo_referenciacion');
     Route::get('/dictamen_cumplimiento_mezcal_granel', 'dictamenDeCumplimientoGranel')->name('dictamen-cumplimiento-granel');
     Route::get('/bitacora_revision_SCFI2016', 'bitacora_revision_SCFI2016')->name('bitacora_revision_SCFI2016');
-    Route::get('/plan_de_auditoria', 'PlanDeAuditoria')->name('PlanDeAuditoria');
+    Route::get('/plan_de_auditoria', 'PlanDeAuditoria')->name('PlanDeAuditoria');///070
     Route::get('/certificado_de_conformidad', 'CertificadoConformidad199')->name('CertificadoConformidad199');
     Route::get('/certificado_como_productor', 'CertificadoComoProductor')->name('CertificadoComoProductor');
     Route::get('/certificado_como_comercializador', 'CertificadoComoComercializador')->name('CertificadoComoComercializador');
@@ -823,10 +823,12 @@ Route::middleware(['auth'])->controller(TrazabilidadController::class)->group(fu
     Route::get('/trazabilidad-certificados/{id}', [TrazabilidadController::class, 'TrackingCertificados'])->name('trazabilidad de certificados');
 });
 
-Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema')->middleware(['auth']);
 Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico')->middleware(['auth']);
+Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema')->middleware(['auth']);///052
+/*
 Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado')->middleware(['auth']);
 Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema')->middleware(['auth']);
+*/
 Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico')->middleware(['auth']);
 Route::get('/Solicitud-Especificaciones', [CartaAsignacionController::class, 'SolicitudEspecificaciones'])->name('Solicitud-Especificaciones')->middleware(['auth']);
 Route::get('/Oreden-Trabajo', [CartaAsignacionController::class, 'OrdenTrabajo'])->name('Oreden-Trabajo')->middleware(['auth']);
