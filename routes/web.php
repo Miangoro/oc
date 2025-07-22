@@ -812,9 +812,11 @@ Route::middleware(['auth'])->controller(solicitudHolograma::class)->group(functi
 
     Route::get('/solicitud_holograma/editActivos/{id}', [solicitudHolograma::class, 'editActivos']);
     Route::get('/solicitud_holograma/editActivados/{id}', [solicitudHolograma::class, 'editActivados']);
-
     //solicitud hologrammas
     Route::post('/solicitud_holograma/update/updateActivar', [solicitudHolograma::class, 'updateActivar']);
+    //estatus de activar hologramas
+    Route::post('/activar-hologramas/{id}', 'cambiarEstatus')->name('activar hologramas solo de vista xd');
+
 });
 
 //-------------------ACTIVACION DE HOLOGRAMAS-------------------
