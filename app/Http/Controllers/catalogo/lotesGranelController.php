@@ -520,7 +520,7 @@ class lotesGranelController extends Controller
                 'id_lote_granel' => $info['lote']->id_lote_granel,
                 'id_instalacion' => auth()->user()->id_instalacion ?? 0,
                 'tipo_operacion' => 'Salidas',
-                'tipo' => 1,
+                'tipo' => 3,
                 'procedencia_entrada' => 'Salida por creación de lote nuevo',
                 'operacion_adicional' => null,
                 'volumen_inicial' => $info['volumen_inicial'],
@@ -572,7 +572,7 @@ class lotesGranelController extends Controller
                 'id_lote_granel' => $lote->id_lote_granel,
                 'id_instalacion' => auth()->user()->id_instalacion ?? 0,
                 'tipo_operacion' => 'Entradas',
-                'tipo' => 1, //
+                'tipo' => 3, //
                 'procedencia_entrada' => $procedencia,
                 'operacion_adicional' => null,
                 'volumen_inicial' =>  0,

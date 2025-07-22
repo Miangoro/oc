@@ -1030,6 +1030,17 @@ Route::controller(BitacoraPTComController::class)->middleware(['auth'])->group(f
 Route::resource('/bitacoraProductoTerminado-list', BitacoraPTComController::class)->middleware(['auth']);
 
 
+Route::controller(BitacoraProductoTerminadoController::class)->middleware(['auth'])->group(function () {
+    Route::get('/bitacoraProductoEnvasado', 'UserManagement')->name('bitacora-producto-envasado');
+    Route::get('/bitacoraProductoEnvasadoPDF/{id_bitacora}', 'PDFBitacoraProductoEnvasado');
+    Route::get('bitacoraProductoEnvasado/{id_bitacora}/edit', 'edit');
+    Route::delete('bitacoraProductoEnvasado-delete/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::post('/bitacoraProductoEnvasadoStore', 'store')->name('bitacora.store');
+    Route::post('/bitacoraProductoEnvasadoUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaProductoEnvasado/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+});
+Route::resource('/bitacoraProductoEnvasado-list', BitacoraProductoTerminadoController::class)->middleware(['auth']);
+
 
 Route::middleware(['auth'])->group(function () {
     // BitacoraMaduracion
