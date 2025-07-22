@@ -114,7 +114,22 @@
                                     <label for="volumen">Volumen de Lote Inicial (litros)</label>
                                 </div>
                             </div>
+
                         </div>
+                        {{-- solo para los adminsitradores --}}
+                        @can('Modificar volumen restante a granel')
+                          <div class="row">
+                              <div class="col-md-6" id="edit_volumen_in">
+                                  <div class="form-floating form-floating-outline mb-4">
+                                      <input type="number" step="0.01" id="edit_volumen_restante" name="volumen_restante"
+                                          class="form-control" placeholder="Volumen restante del Lote (litros)"
+                                          autocomplete="off" />
+                                      <label for="volumen">Volumen restante del Lote (litros)</label>
+                                  </div>
+                              </div>
+                          </div>
+                      @endcan
+
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">

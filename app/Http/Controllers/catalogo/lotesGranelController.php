@@ -799,6 +799,7 @@ if ($request->has('documentos')) {
                 'id_tipo.*' => 'integer|exists:catalogo_tipo_agave,id_tipo',
                 'ingredientes' => 'nullable|string',
                 'edad' => 'nullable|string',
+                'volumen_restante' => 'nullable|numeric',
                 'folio_certificado' => 'nullable|string',
                 'id_organismo' => 'nullable|integer|exists:catalogo_organismos,id_organismo',
                 'fecha_emision' => 'nullable|date',

@@ -347,6 +347,10 @@ $(function () {
     });
   });
 
+  if (!window.puedeVerElUsuario) {
+    $('#edit_volumen_in').closest('.row').hide(); // oculta toda la fila
+}
+
   // Reciben los datos del PDF
   $(document).on('click', '.pdf', function () {
     var id = $(this).data('id'); //Obtén el ID desde el atributo "data-id" en PDF
@@ -767,6 +771,7 @@ $(function () {
     });
   });
 
+
   $(document).ready(function () {
     const edit_tipoLoteSelect = document.getElementById('edit_tipo_lote');
     const edit_ocCidamFields = document.getElementById('edit_oc_cidam_fields');
@@ -893,6 +898,9 @@ $(function () {
             });
             $('#edit_id_guia').val(guiasIds).trigger('change');
             $('#edit_volumen').val(lote.volumen);
+            if (window.puedeVerElUsuario && $('#edit_volumen_restante').length > 0) {
+              $('#edit_volumen_restante').val(lote.volumen_restante);
+            }
             $('#edit_cont_alc').val(lote.cont_alc);
             $('#edit_id_categoria').val(lote.id_categoria).trigger('change');
             $('#edit_clase_agave').val(lote.id_clase).trigger('change');
