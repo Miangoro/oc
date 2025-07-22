@@ -350,7 +350,11 @@
 
                     <!-- Botones -->
                     <div class="d-flex justify-content-center mt-3">
-                        <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line me-1"></i>
+                      <button disabled class="btn btn-primary d-none me-2" type="button" id="btnSpinner">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Registrando...
+                        </button>
+                        <button type="submit" class="btn btn-primary me-2" id="btnAdd"><i class="ri-add-line me-1"></i>
                             Registrar</button>
                         <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"><i
                                 class="ri-close-line me-1"></i> Cancelar</button>

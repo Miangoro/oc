@@ -336,7 +336,11 @@
                         </table>
 
                     <div class="d-flex justify-content-center mt-3">
-                        <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill me-1"></i> Editar</button>
+                      <button disabled class="btn btn-primary d-none me-2" type="button" id="btnSpinnerEdit">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Actualizando...
+                        </button>
+                        <button type="submit" class="btn btn-primary me-2" id="btnEdit"><i class="ri-pencil-fill me-1"></i> Editar</button>
                         <button type="reset" class="btn btn-danger"
                             data-bs-dismiss="modal"><i class="ri-close-line me-1"></i>Cancelar</button>
                     </div>
