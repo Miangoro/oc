@@ -42,7 +42,7 @@
                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control datepicker" id="edit_fecha"
-                                                name="fecha" aria-label="Fecha">
+                                                name="fecha" aria-label="Fecha"  placeholder="aaaa-mm-dd">
                                             <label for="edit_fecha">Fecha</label>
                                         </div>
                                     </div>
@@ -129,8 +129,8 @@
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="edit_folio_fq"
-                                                name="folio_fq" placeholder="Folio FQ">
-                                            <label for="folio_fq">Folio FQ</label>
+                                                name="folio_fq" placeholder="Análisis Fisicoquímicos">
+                                            <label for="folio_fq">Análisis Fisicoquímicos</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
@@ -144,6 +144,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>{{-- </span> --}}
+                                            <label for="edit_id_tipo" class="form-label">Tipos de agave</label>
                                         </div>
                                     </div>
 

@@ -509,7 +509,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}bitacoraPTCom-list-list/${id_bitacora}`,
+          url: `${baseUrl}bitacoraPTCom-delete/${id_bitacora}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -581,35 +581,126 @@ $(function () {
         tipo_operacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un tipo de operación'
+              message: 'Por favor seleccione el tipo de operación'
             }
           }
         },
-        id_lote_granel: {
+        lote_granel: {
           validators: {
             notEmpty: {
-              message: 'Por favor seleccione el lote'
+              message: 'Por favor ingrese el lote a granel'
             }
           }
         },
-        id_instalacion: {
+        lote_envasado: {
           validators: {
             notEmpty: {
-              message: 'Por favor seleccione la instalación'
+              message: 'Por favor ingrese el lote de envasado'
             }
           }
         },
-        volumen_final: {
+/*         id_marca: {
           validators: {
             notEmpty: {
-              message: 'Por favor ingrese el volumen final'
+              message: 'Por favor seleccione la marca'
+            }
+          }
+        }, */
+        id_categoria: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la categoría'
             }
           }
         },
-        alc_vol_final: {
+        id_clase: {
           validators: {
             notEmpty: {
-              message: 'Por favor ingrese el contenido alcohólico final'
+              message: 'Por favor seleccione la clase'
+            }
+          }
+        },
+        proforma_predio: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la proforma/predio'
+            }
+          }
+        },
+        'id_tipo[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione al menos un tipo de agave'
+            }
+          }
+        },
+        alc_vol: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el % de alcohol volumen'
+            }
+          }
+        },
+        sku: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el SKU'
+            }
+          }
+        },
+        cantidad_botellas_cajas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad de botellas por caja'
+            }
+          }
+        },
+        cant_cajas_inicial: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad inicial de cajas'
+            }
+          }
+        },
+        cant_bot_inicial: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad inicial de botellas'
+            }
+          }
+        },
+        cant_cajas_final: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad final de cajas'
+            }
+          }
+        },
+        cant_bot_final: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad final de botellas'
+            }
+          }
+        },
+        id_solicitante: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el nombre del solicitante'
+            }
+          }
+        },
+        capacidad: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la capacidad'
+            }
+          }
+        },
+        mermas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el valor de mermas'
             }
           }
         }
@@ -670,9 +761,10 @@ $(function () {
     });
 
     // Inicializar select2 y revalidar el campo cuando cambie
-    $('#id_empresa, #id_lote_granel, #fecha').on('change', function () {
+    $('#id_empresa, #fecha, #id_categoria, #id_clase, #id_tipo').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
+
   });
 
   $(document).on('click', '.edit-record', function () {
@@ -782,51 +874,143 @@ $(function () {
     const form = document.getElementById('editInventarioForm');
     const fv = FormValidation.formValidation(form, {
       fields: {
-        id_empresa: {
+         id_empresa: {
           validators: {
             notEmpty: {
-              message: 'Selecciona una empresa.'
+              message: 'Por favor seleccione el cliente'
             }
           }
         },
-        id_lote_granel: {
+        fecha: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un lote a granel.'
+              message: 'Por favor ingrese la fecha'
             }
           }
         },
         tipo_operacion: {
           validators: {
             notEmpty: {
-              message: 'Selecciona un tipo de operación'
+              message: 'Por favor seleccione el tipo de operación'
             }
           }
         },
-        destino: {
+        lote_granel: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el destino.'
+              message: 'Por favor ingrese el lote a granel'
             }
           }
         },
-        volumen_final: {
+        lote_envasado: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el volumen final.'
-            },
-            numeric: {
-              message: 'Debe ser un número.'
+              message: 'Por favor ingrese el lote de envasado'
             }
           }
         },
-        alc_vol_final: {
+/*         id_marca: {
           validators: {
             notEmpty: {
-              message: 'Ingresa el % Alc. Vol. final.'
-            },
-            numeric: {
-              message: 'Debe ser un número decimal.'
+              message: 'Por favor seleccione la marca'
+            }
+          }
+        }, */
+        id_categoria: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la categoría'
+            }
+          }
+        },
+        id_clase: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la clase'
+            }
+          }
+        },
+        proforma_predio: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la proforma/predio'
+            }
+          }
+        },
+        'id_tipo[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione al menos un tipo de agave'
+            }
+          }
+        },
+        alc_vol: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el % de alcohol volumen'
+            }
+          }
+        },
+        sku: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el SKU'
+            }
+          }
+        },
+        cantidad_botellas_cajas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad de botellas por caja'
+            }
+          }
+        },
+        cant_cajas_inicial: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad inicial de cajas'
+            }
+          }
+        },
+        cant_bot_inicial: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad inicial de botellas'
+            }
+          }
+        },
+        cant_cajas_final: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad final de cajas'
+            }
+          }
+        },
+        cant_bot_final: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad final de botellas'
+            }
+          }
+        },
+        id_solicitante: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el nombre del solicitante'
+            }
+          }
+        },
+        capacidad: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la capacidad'
+            }
+          }
+        },
+        mermas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el valor de mermas'
             }
           }
         }
@@ -875,7 +1059,7 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
-           $('#loadingEdit').addClass('d-none');
+          $('#loadingEdit').addClass('d-none');
           $('#btnEdit').removeClass('d-none');
         }
       });

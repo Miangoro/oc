@@ -41,7 +41,7 @@
                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control datepicker" id="fecha"
-                                                name="fecha" aria-label="Fecha">
+                                                name="fecha"  placeholder="aaaa-mm-dd">
                                             <label for="fecha">Fecha</label>
                                         </div>
                                     </div>
@@ -130,14 +130,14 @@
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="folio_fq"
-                                                name="folio_fq" placeholder="Folio FQ">
-                                            <label for="folio_fq">Folio FQ</label>
+                                                name="folio_fq" placeholder="Análisis Fisicoquímicos">
+                                            <label for="folio_fq">Análisis Fisicoquímicos</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select id="id_tipo" name="id_tipo[]" class="select2 form-select mb-4"
-                                                multiple>
+                                                multiple >
                                                 @foreach ($tipos as $tipo)
                                                     <option value="{{ $tipo->id_tipo }}">
                                                         {{ $tipo->nombre }}
@@ -145,6 +145,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>{{-- </span> --}}
+                                            <label for="id_tipo" class="form-label">Tipos de agave</label>
                                         </div>
                                     </div>
                                 </div>

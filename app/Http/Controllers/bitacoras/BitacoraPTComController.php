@@ -291,7 +291,7 @@ public function store(Request $request)
         $bitacora->cant_cajas_inicial = $request->cant_cajas_inicial ?? 0;
         $bitacora->cant_bot_inicial = $request->cant_bot_inicial ?? 0;
 
-        $bitacora->procedencia_entrada = $request->procedencia_entrada;
+        $bitacora->procedencia_entrada = $request->procedencia_entrada ?? 0;
         $bitacora->cant_cajas_entrada = $request->cant_cajas_entrada ?? 0;
         $bitacora->cant_bot_entrada = $request->cant_bot_entrada ?? 0;
 
@@ -454,7 +454,7 @@ public function store(Request $request)
             'cant_cajas_inicial' => $request->cant_cajas_inicial ?? 0,
             'cant_bot_inicial' => $request->cant_bot_inicial ?? 0,
 
-            'procedencia_entrada' => $request->procedencia_entrada,
+            'procedencia_entrada' => $request->procedencia_entrada ?? 0,
             'cant_cajas_entrada' => $request->cant_cajas_entrada ?? 0,
             'cant_bot_entrada' => $request->cant_bot_entrada ?? 0,
 

@@ -1015,7 +1015,7 @@ Route::controller(BitacoraPTComController::class)->middleware(['auth'])->group(f
     Route::get('/bitacoraProductoTerminado', 'UserManagement')->name('bitacora-producto-terminado');
     Route::get('/bitacoraPTComPDF/{id_bitacora}', 'PDFBitacoraPTCom');
     Route::get('bitacoraPTCom/{id_bitacora}/edit', 'edit');
-    Route::get('bitacoraPTCom-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::delete('bitacoraPTCom-delete/{id_bitacora}', 'destroy')->name('bitacora.delete');
     Route::post('/bitacoraPTComStore', 'store')->name('bitacora.store');
     Route::post('/bitacoraPTComUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
     Route::post('/FirmaProcesoPTCom/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
