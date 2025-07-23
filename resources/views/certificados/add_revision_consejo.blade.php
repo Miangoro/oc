@@ -113,10 +113,11 @@
                     </div>
                     <div>
                         <p class="text-muted mb-1">Revisor</p>
-                        <h5 class="fw-semibold mb-0"> <div class="avatar flex-shrink-0 me-4">
+                        <div class="avatar flex-shrink-0 me-4">
                                             <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
                                                 alt="Foto de {{ $datos->user->name ?? 'N/A' }}" class="rounded-3" width="50">
-                                        </div> {{ $datos->user->name ?? 'N/A' }}</h5>
+                                        </div> {{ $datos->user->name ?? 'N/A' }}
+                        <h5 class="fw-semibold mb-0"> </h5>
                     </div>
                     <div>
                         <p class="text-muted mb-1">Certificado</p>
