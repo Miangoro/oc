@@ -126,9 +126,28 @@
                         <h5 class="fw-semibold mb-2">
                             {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</h5>
                     </div>
-                    <div>
-                        <p class="text-muted mb-1">Revisor</p>
-                        <h5 class="fw-semibold mb-0">{{ $datos->user->name ?? 'N/A' }}</h5>
+                    <!-- Consejo -->
+                    <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
+                        <img src="{{ asset('storage/' . $revisor_consejo->user->profile_photo_path) }}"
+                            alt="Foto personal"
+                            class="rounded-circle me-3 border border-white shadow-sm"
+                            width="50" height="50" style="object-fit: cover;">
+                        <div>
+                            <p class="text-muted mb-0 small">Consejo</p>
+                            <h6 class="mb-0 fw-semibold">{{ $revisor_consejo->user->name ?? 'N/A' }}</h6>
+                        </div>
+                    </div>
+
+                    <!-- Revisor -->
+                    <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
+                        <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
+                            alt="Foto revisor"
+                            class="rounded-circle me-3 border border-white shadow-sm"
+                            width="50" height="50" style="object-fit: cover;">
+                        <div>
+                            <p class="text-muted mb-0 small">Revisor</p>
+                            <h6 class="mb-0 fw-semibold">{{ $datos->user->name ?? 'N/A' }}</h6>
+                        </div>
                     </div>
                     <div>
                         <p class="text-muted mb-1">Certificado</p>
