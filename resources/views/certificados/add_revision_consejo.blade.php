@@ -132,6 +132,18 @@
                 <!-- Personal y Revisor -->
                 <div class="col-md-4 d-flex flex-column gap-3">
 
+                     <!-- Revisor -->
+                    <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-primary">
+                        <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
+                            alt="Foto revisor"
+                            class="rounded-circle me-3 border border-white shadow-sm"
+                            width="50" height="50" style="object-fit: cover;">
+                        <div>
+                            <p class="text-muted mb-0 small">Revisor</p>
+                            <h6 class="mb-0 fw-semibold">{{ $datos->user->name ?? 'N/A' }}</h6>
+                        </div>
+                    </div>
+
                     <!-- Personal -->
                     <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
                         <img src="{{ asset('storage/' . $revisor_personal->user->profile_photo_path) }}"
@@ -144,17 +156,7 @@
                         </div>
                     </div>
 
-                    <!-- Revisor -->
-                    <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
-                        <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
-                            alt="Foto revisor"
-                            class="rounded-circle me-3 border border-white shadow-sm"
-                            width="50" height="50" style="object-fit: cover;">
-                        <div>
-                            <p class="text-muted mb-0 small">Revisor</p>
-                            <h6 class="mb-0 fw-semibold">{{ $datos->user->name ?? 'N/A' }}</h6>
-                        </div>
-                    </div>
+                   
 
                     <!-- Certificado PDF -->
                     <div class="mt-1">
