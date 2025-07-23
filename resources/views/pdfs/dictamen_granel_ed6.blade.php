@@ -262,7 +262,7 @@ margin-bottom: 0;
             <tr>
                 <td class="negrita" style="color: #17365D;" rowspan="2">Dirección</td>
                 <td rowspan="2" style="width: 25%; font-size: 13px; vertical-align: top;" >
-                   <span class="negrita">Domicilio fiscal:</span>  {{ $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? ''}}<br>
+                   <span class="negrita">Domicilio fiscal:</span> {{ $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? ''}} C.P.{{ $data->inspeccione->solicitud->empresa->cp ?? ''}}<br>
 
                    <span class="negrita">Domicilio de instalaciones:</span> {{ $data->inspeccione->solicitud->instalacion->direccion_completa ?? 'NA' }}
 
