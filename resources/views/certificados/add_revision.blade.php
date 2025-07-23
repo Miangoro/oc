@@ -33,134 +33,131 @@
 </style>
 @section('content')
 
-<div class="container">
-    <div class="card white z-depth-2">
-        <div class="card-content">
-            <h5 class="center-align blue-text text-darken-2">
-                Revisión de certificado personal
-                <br>
-                <span class="new badge yellow black-text" data-badge-caption="">{{ $datos->certificado->num_certificado ?? 'N/A' }}</span>
-            </h5>
-            <div class="row">
-                <div class="col s12 m6">
-                    <p class="grey-text">Tipo de certificado</p>
-                    <h6 class="black-text">{{ $tipo }}</h6>
+    <div class="container mt-3 mb-3">
+        <div class="card shadow-sm border-0 rounded-3" style="max-width: 100%; margin: auto;">
+            <div class="card-header bg-primary  text-center py-2">
+                <h5 class="mb-0 text-white">Revisión de certificado personal <br><span class="badge bg-warning text-dark text-dark">{{ $datos->certificado->num_certificado ?? 'N/A' }}</span></h5>
+            </div>
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="text-muted mb-1">Tipo de certificado</p>
+                        <h5 class="fw-semibold mb-2">{{ $tipo }}</h5>
+                         @php
+                            $caracteristicas = json_decode( $datos->certificado->dictamen->inspeccione->solicitud->caracteristicas);
+                             $tipo_certificado = $tipo;
+                              $combinado = 'No';
+                        @endphp
+                        @if (isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
+                            <span class="badge bg-info">Combinado</span>
+                            @php $combinado = 'Si'; @endphp
+                        @endif
+                        @if ($datos->es_correccion === 'si')
+                            <span class="badge bg-danger">Es corrección</span>
+                        @endif
 
-                    @php
-                        $caracteristicas = json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas);
-                        $tipo_certificado = $tipo;
-                        $combinado = 'No';
-                    @endphp
+                         @php
+                                $nuevoId = $datos->certificado->certificadoReexpedido()?->id_certificado;
+                                $urlConNuevoId = $nuevoId ? preg_replace('/\d+$/', $nuevoId, $url) : null;
+                                 $solicitud =
+                                                    $datos->certificado->dictamen->inspeccione->solicitud ?? null;
+                                                $loteGranel = $solicitud->lote_granel ?? null;
+                                                $loteEnvasado = $solicitud->lote_envasado ?? null;
+                                                $empresa = $loteGranel?->empresa ?? null;
 
-                    @if (isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
-                        <span class="new badge light-blue" data-badge-caption="Combinado"></span>
-                        @php $combinado = 'Si'; @endphp
-                    @endif
+                                                $numero_cliente =
+                                                    $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                                                        ? $empresa->empresaNumClientes->first(
+                                                                fn($item) => $item->empresa_id === $empresa->id &&
+                                                                    !empty($item->numero_cliente),
+                                                            )?->numero_cliente ?? null
+                                                        : null;
 
-                    @if ($datos->es_correccion === 'si')
-                        <span class="new badge red" data-badge-caption="Es corrección"></span>
-                    @endif
+                            @endphp
 
-                    @php
-                        $nuevoId = $datos->certificado->certificadoReexpedido()?->id_certificado;
-                        $urlConNuevoId = $nuevoId ? preg_replace('/\d+$/', $nuevoId, $url) : null;
-                        $solicitud = $datos->certificado->dictamen->inspeccione->solicitud ?? null;
-                        $loteGranel = $solicitud->lote_granel ?? null;
-                        $empresa = $loteGranel?->empresa ?? null;
 
-                        $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                            ? $empresa->empresaNumClientes->first(fn($item) =>
-                                $item->empresa_id === $empresa->id &&
-                                !empty($item->numero_cliente)
-                            )?->numero_cliente ?? null
-                            : null;
-                    @endphp
+                        @if ($datos->certificado->certificadoReexpedido())
+                           
 
-                    @if ($datos->certificado->certificadoReexpedido())
-                        <p>
-                            Este certificado sustituye al certificado 
-                            <a href="{{ '/files/' . $numero_cliente . '/certificados_granel/' . $certificadoEscaneado }}" target="_blank">
-                                {{ $datos->certificado->certificadoReexpedido()->num_certificado }}
-                            </a>
-                        </p>
+                            <p>Este certificado sustituye al certificado <a target="_blank"
+                                    href="{{ '/files/' . $numero_cliente . '/certificados_granel/' . $certificadoEscaneado }}">{{ $datos->certificado->certificadoReexpedido()->num_certificado }}</a>
+                                @php
+                                    $obs = json_decode($datos->certificado->certificadoReexpedido()?->observaciones);
+                                @endphp
 
-                        @php
-                            $obs = json_decode($datos->certificado->certificadoReexpedido()?->observaciones);
+                                @if (!empty($obs?->observaciones))
+                                    <p><strong>Motivo:</strong> {{ $obs->observaciones }}</p>
+                                @endif
+
+
+
+                            </p>
+                        @endif
+                       @php
+                            $observaciones = $datos->observaciones ?? '';
+
+                            // Buscar y convertir todas las URLs en enlaces <a>
+                            $observacionesConEnlaces = preg_replace(
+                                '~(https?://[^\s]+)~',
+                                '<a href="$1" target="_blank">$1</a>',
+                                e($observaciones) // escapamos antes de aplicar HTML
+                            );
+                                $contieneEnlace = preg_match('~https?://[^\s]+~', $observaciones);
                         @endphp
 
-                        @if (!empty($obs?->observaciones))
-                            <p><strong>Motivo:</strong> {{ $obs->observaciones }}</p>
+                       @if (!empty($observaciones) && !$contieneEnlace)
+                            <p><strong>Observaciones:</strong> {{ $observaciones }}</p>
                         @endif
-                    @endif
 
-                    @php
-                        $observaciones = $datos->observaciones ?? '';
-                        $observacionesConEnlaces = preg_replace(
-                            '~(https?://[^\s]+)~',
-                            '<a href="$1" target="_blank">$1</a>',
-                            e($observaciones)
-                        );
-                        $contieneEnlace = preg_match('~https?://[^\s]+~', $observaciones);
-                    @endphp
+                        @if (!empty($datos->evidencias) && count($datos->evidencias) > 0)
+                            @foreach ($datos->evidencias as $evidencia)
+                                @if (!empty($evidencia))
+                                    <b>{{ $evidencia->nombre_documento }}</b>
+                                    <a target="_blank" href="/storage/revisiones/{{ $evidencia->url }}">
+                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                    </a>
+                                @endif
+                            @endforeach
+                        @endif
 
-                    @if (!empty($observaciones) && !$contieneEnlace)
-                        <p><strong>Observaciones:</strong> {{ $observaciones }}</p>
-                    @endif
-
-                    @if (!empty($datos->evidencias) && count($datos->evidencias) > 0)
-                        @foreach ($datos->evidencias as $evidencia)
-                            @if (!empty($evidencia))
-                                <b>{{ $evidencia->nombre_documento }}</b>
-                                <a target="_blank" href="/storage/revisiones/{{ $evidencia->url }}">
-                                    <i class="material-icons red-text large">picture_as_pdf</i>
-                                </a><br>
-                            @endif
-                        @endforeach
-                    @endif
-                </div>
-
-                <!-- Cliente -->
-                <div class="col s12 m6">
-                    <p class="grey-text">Cliente</p>
-                    <h6 class="black-text">{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</h6>
-
+                    </div>
+                    <div>
+                        <p class="text-muted mb-1">Cliente</p>
+                        <h5 class="fw-semibold mb-2">
+                            {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</h5>
+                    </div>
                     <!-- Consejo -->
-                    <div class="card-panel z-depth-1 grey lighten-5 d-flex">
-                        <div class="valign-wrapper">
-                            <img src="{{ asset('storage/' . $revisor_consejo->user->profile_photo_path) }}"
-                                 alt="Foto consejo"
-                                 class="circle responsive-img" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px;">
-                            <span>
-                                <span class="grey-text text-darken-1">Consejo</span><br>
-                                <strong>{{ $revisor_consejo->user->name ?? 'N/A' }}</strong>
-                            </span>
+                    <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
+                        <img src="{{ asset('storage/' . $revisor_consejo->user->profile_photo_path) }}"
+                            alt="Foto consejo"
+                            class="rounded-circle me-3 border border-white shadow-sm"
+                            width="50" height="50" style="object-fit: cover;">
+                        <div>
+                            <p class="text-muted mb-0 small">Consejo</p>
+                            <h6 class="mb-0 fw-semibold">{{ $revisor_consejo->user->name ?? 'N/A' }}</h6>
                         </div>
                     </div>
 
                     <!-- Revisor -->
-                    <div class="card-panel z-depth-1 grey lighten-5 d-flex">
-                        <div class="valign-wrapper">
-                            <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
-                                 alt="Foto revisor"
-                                 class="circle responsive-img" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px;">
-                            <span>
-                                <span class="grey-text text-darken-1">Revisor</span><br>
-                                <strong>{{ $datos->user->name ?? 'N/A' }}</strong>
-                            </span>
+                    <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
+                        <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
+                            alt="Foto revisor"
+                            class="rounded-circle me-3 border border-white shadow-sm"
+                            width="50" height="50" style="object-fit: cover;">
+                        <div>
+                            <p class="text-muted mb-0 small">Revisor</p>
+                            <h6 class="mb-0 fw-semibold">{{ $datos->user->name ?? 'N/A' }}</h6>
                         </div>
                     </div>
-
-                    <!-- Enlace certificado -->
-                    <p class="grey-text">Certificado</p>
-                    <a href="{{ $url ?? '#' }}" target="_blank">
-                        <i class="material-icons red-text large">picture_as_pdf</i>
-                    </a>
+                    <div>
+                        <p class="text-muted mb-1">Certificado</p>
+                        <a target="_blank" href="{{ $url ?? 'N/A' }}"><i
+                                class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
 
 
     <!-- DataTable with Buttons -->
