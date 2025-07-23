@@ -862,7 +862,7 @@ public function CertificadoGranel($id_certificado, $conMarca = true)
             }
     }
 
-    if ($certificado->estatus == 1) {
+    if ($certificado->estatus == 2) {
         $volumen = $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen_restante ?? 'No encontrado';
     }else{
         $volumen = $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen ?? 'No encontrado';
