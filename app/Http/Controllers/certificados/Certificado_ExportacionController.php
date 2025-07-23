@@ -747,8 +747,19 @@ public function storeRevisor(Request $request)
         $revisor->decision = 'Pendiente';
         $revisor->save();
 
+
         // Documento (solo si tipo = 1 y subido)
         if ($conDocumento && $nombreArchivo) {
+            // Eliminar documento anterior si existe
+            $docAnterior = Documentacion_url::where('id_relacion', $revisor->id_revision)
+                ->where('id_documento', 133)
+                ->first();
+            if ($docAnterior) {
+                Storage::disk('public')->delete('revisiones/' . $docAnterior->url);
+                $docAnterior->delete();
+            }
+
+            // Crear nuevo documento
             Documentacion_url::create([
                 'id_relacion' => $revisor->id_revision,
                 'id_documento' => 133,
