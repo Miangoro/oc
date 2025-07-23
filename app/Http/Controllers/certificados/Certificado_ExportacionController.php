@@ -18,7 +18,6 @@ use App\Models\Dictamen_Envasado;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CertificadosExport;
 use App\Mail\CorreoCertificado;
-use App\Models\CertificadosGranel;
 use App\Notifications\GeneralNotification;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
@@ -362,9 +361,9 @@ public function index(Request $request)
                 }
             }
             $nestedData['url_acta'] = !empty($actas) ? $actas : [];
-
-            $nestedData['id_hologramas'] = $certificado->id_hologramas ?: null; //?:(no vacío, no null, no false)
-            $nestedData['old_hologramas'] = $certificado->old_hologramas ?: null;
+            $nestedData['estatus_activado'] = $lotes_env->first()->dictamenEnvasado->inspeccion->solicitud->estatus_activado ?? null;
+            /*$nestedData['id_hologramas'] = $certificado->id_hologramas ?: null; //?:(no vacío, no null, no false)
+            $nestedData['old_hologramas'] = $certificado->old_hologramas ?: null;*/
             //visto bueno
             $nestedData['vobo'] = $certificado->vobo ? json_decode($certificado->vobo, true) : null;
             //Certificado Firmado

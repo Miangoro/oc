@@ -22,7 +22,7 @@
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <select {{-- onchange="obtenerGraneless(this.value);" --}} id="edit_id_empresa"
+                                            <select id="edit_id_empresa"
                                                 name="id_empresa" class="select2 form-select"
                                                 data-error-message="por favor selecciona la empresa">
                                                 @if ($tipo_usuario != 3)
@@ -81,7 +81,7 @@
                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select id="edit_id_marca" name="id_marca" class="select2 form-select">
-                                                <option value="" disabled selected>Selecciona una marca</option>
+                                                <option value="" disabled selected>Seleccione una marca</option>
                                                 <!-- Opciones dinámicas -->
                                             </select>
                                             <label for="id_marca">Marca</label>
@@ -377,63 +377,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    function obtenerGranelesEdit(empresa) {
-        if (empresa !== "" && empresa !== null && empresa !== undefined) {
-            $.ajax({
-                url: '/getDatos/' + empresa,
-                method: 'GET',
-                success: function(response) {
-                    var contenido = "";
-                    for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                            response
-                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
-                    }
-                    if (response.lotes_granel.length == 0) {
-                        contenido = '<option value="">Sin lotes registrados</option>';
-                    } else {
-
-                    }
-
-                    $('#edit_id_lote_granel').html(contenido);
-                    const idlote = $('#edit_id_lote_granel').data('selected');
-                    if (idlote) {
-                        $('#edit_id_lote_granel').val(idlote).trigger('change');
-                    }
-
-                    var contenidoI = "";
-                    for (let index = 0; index < response.instalaciones.length; index++) {
-                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-
-                        contenidoI = '<option value="' + response.instalaciones[index].id_instalacion +
-                            '">' +
-                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                            '</option>' +
-                            contenidoI;
-                    }
-                    if (response.instalaciones.length == 0) {
-                        contenidoI = '<option value="">Sin instalaciones registradas</option>';
-                    }
-                    $('#edit_id_instalacion').html(contenidoI);
-                    const idInst = $('#edit_id_instalacion').data('selected');
-                    if (idInst) {
-                        $('#edit_id_instalacion').val(idInst).trigger('change');
-                    }
-
-                },
-                error: function() {}
-            });
-        }
-    }
-
-    function limpiarTipo(tipo) {
-        try {
-            let tipoArray = JSON.parse(tipo);
-            return tipoArray.join(', ');
-        } catch (error) {
-            return tipo;
-        }
-    }
-</script>

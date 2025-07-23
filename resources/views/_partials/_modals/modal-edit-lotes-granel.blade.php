@@ -141,7 +141,7 @@
                             <div class="col-md-4">
                                         <div class="form-floating form-floating-outline">
                                             <input type="number" step="0.01" class="form-control"
-                                                id="agua_entrada" name="agua_entrada" placeholder="Agua agregada (L)"
+                                                id="edit_agua_entrada" name="agua_entrada" placeholder="Agua agregada (L)"
                                                 aria-label="Agua entrada">
                                             <label for="agua_entrada">Agua agregada (L)</label>
                                         </div>

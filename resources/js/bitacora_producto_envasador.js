@@ -775,7 +775,8 @@ $(function () {
       success: function (data) {
         if (data.success) {
           var bitacora = data.bitacora;
-
+          // Asignar al select múltiple correctamente
+          var tipos = JSON.parse(bitacora.id_tipo);
           $('#edit_bitacora_id').val(bitacora.id);
           $('#edit_id_empresa').val(bitacora.id_empresa).trigger('change');
           $('#edit_fecha').val(bitacora.fecha);
@@ -785,13 +786,13 @@ $(function () {
           $('#edit_lote_granel').val(bitacora.lote_granel);
           $('#edit_lote_envasado').val(bitacora.lote_envasado);
 
-          $('#edit_id_marca').val(bitacora.id_marca).trigger('change');
+          $('#edit_id_marca').data('selected', bitacora.id_marca).trigger('change');
           $('#edit_id_categoria').val(bitacora.id_categoria).trigger('change');
           $('#edit_id_clase').val(bitacora.id_clase).trigger('change');
 
           $('#edit_proforma_predio').val(bitacora.proforma_predio);
           $('#edit_folio_fq').val(bitacora.folio_fq);
-          $('#edit_id_tipo').val(bitacora.id_tipo).trigger('change');
+          $('#edit_id_tipo').val(tipos).trigger('change');
 
           $('#edit_alc_vol').val(bitacora.alc_vol);
           $('#edit_sku').val(bitacora.sku);
@@ -1334,20 +1335,77 @@ $(function () {
 
   $(document).ready(function () {
     // Al abrir modal, disparas la carga inicial para el cliente seleccionado
-    $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
-      var empresaSeleccionada = $('#id_empresa').val();
-      if (empresaSeleccionada) {
-        obtenerGraneles(empresaSeleccionada);
-      } else {
-        obtenerDatosGraneles();
-      }
-    });
+    $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {});
+  });
+  // También cuando cambia el select
+  $('#id_empresa').on('change', function () {
+    cargarMarcas();
+  });
 
-    // También cuando cambia el select
-    $('#id_empresa').on('change', function () {
-      var empresa = $(this).val();
-      obtenerGraneles(empresa);
+  function cargarMarcas() {
+    var empresa = $('#id_empresa').val();
+    if (!empresa) {
+      return; // No hace la petición
+    }
+    $.ajax({
+      url: '/getDatos/' + empresa,
+      method: 'GET',
+      success: function (response) {
+        /* contenido marcas */
+        var Macontenido = '<option value="" disabled selected>Seleccione una marca</option>';
+        for (let index = 0; index < response.marcas.length; index++) {
+          Macontenido +=
+            '<option value="' + response.marcas[index].id_marca + '">' + response.marcas[index].marca + '</option>';
+        }
+        if (response.marcas.length == 0) {
+          Macontenido = '<option value="" disabled selected>Sin marcas registradas</option>';
+        }
+        $('#id_marca').html(Macontenido);
+      },
+      error: function () {}
     });
+  }
+
+  $('#edit_id_empresa').on('change', function () {
+    EditcargarMarcas();
+  });
+
+  function EditcargarMarcas() {
+    var empresa = $('#edit_id_empresa').val();
+    if (!empresa) {
+      return; // No hace la petición
+    }
+    $.ajax({
+      url: '/getDatos/' + empresa,
+      method: 'GET',
+      success: function (response) {
+        /* contenido marcas */
+        var Macontenido = '<option value="" disabled selected>Seleccione una marca</option>';
+        for (let index = 0; index < response.marcas.length; index++) {
+          Macontenido +=
+            '<option value="' + response.marcas[index].id_marca + '">' + response.marcas[index].marca + '</option>';
+        }
+        if (response.marcas.length == 0) {
+          Macontenido = '<option value="" disabled selected>Sin marcas registradas</option>';
+        }
+        $('#edit_id_marca').html(Macontenido);
+
+        const idss = $('#edit_id_marca').data('selected');
+        if (idss) {
+          $('#edit_id_marca').val(idss).trigger('change');
+        } else if (response.marcas.length == 0) {
+          $('#edit_id_marca').val('').trigger('change');
+        }
+      },
+      error: function () {}
+    });
+  }
+
+  // Mover el último seleccionado al final visualmente
+  $('#id_tipo').on('select2:select', function (e) {
+    const selectedElement = $(e.params.data.element);
+    selectedElement.detach();
+    $(this).append(selectedElement).trigger('change.select2');
   });
 
   //end

@@ -111,10 +111,31 @@
                         <h5 class="fw-semibold mb-2">
                             {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</h5>
                     </div>
-                    <div>
-                        <p class="text-muted mb-1">Revisor</p>
-                        <h5 class="fw-semibold mb-0">{{ $datos->user->name ?? 'N/A' }}</h5>
+                    <div class="d-flex align-items-center border rounded-3 p-3 shadow-sm bg-light">
+                        <div class="flex-shrink-0 me-3">
+                            <img src="{{ asset('storage/' . $revisor_personal->user->profile_photo_path) }}"
+                                alt="Foto de {{ $revisor_personal->user->name ?? 'N/A' }}"
+                                class="rounded-circle border border-2 border-white shadow-sm"
+                                width="60" height="60" style="object-fit: cover;">
+                        </div>
+                        <div>
+                            <p class="text-muted mb-1 small">Personal</p>
+                            <h6 class="mb-0 fw-semibold text-dark">{{ $revisor_personal->user->name ?? 'N/A' }}</h6>
+                        </div>
                     </div>
+                    <div class="d-flex align-items-center border rounded-3 p-3 shadow-sm bg-light">
+                        <div class="flex-shrink-0 me-3">
+                            <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
+                                alt="Foto de {{ $datos->user->name ?? 'N/A' }}"
+                                class="rounded-circle border border-2 border-white shadow-sm"
+                                width="60" height="60" style="object-fit: cover;">
+                        </div>
+                        <div>
+                            <p class="text-muted mb-1 small">Revisor</p>
+                            <h6 class="mb-0 fw-semibold text-dark">{{ $datos->user->name ?? 'N/A' }}</h6>
+                        </div>
+                    </div>
+
                     <div>
                         <p class="text-muted mb-1">Certificado</p>
                         <a target="_blank" href="{{ $url ?? 'N/A' }}"><i
@@ -221,39 +242,61 @@
                                                         ->id_empresa,
                                                 );
                                             @endphp
-                                            <td>
-                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
-                                                <br>
-                                                @if ($cliente && $documento)
-                                                    <a target="_blank"
-                                                        href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                    </a>
-                                                @else
-                                                    <span class="text-muted">Sin carta de asignación</span>
-                                                @endif Carta de asignación
-                                                <br>
-                                                @if ($cliente && $documento2)
-                                                    <a target="_blank"
-                                                        href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento2 }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                    </a>
-                                                @else
-                                                    <span class="text-muted">Sin contrato subido</span>
-                                                @endif Contrato
-                                                <br>
-                                                @if ($datos->certificado->dictamen->inspeccione->solicitud?->id_solicitud)
-                                                    <a target="_blank"
-                                                        href="/solicitud_de_servicio/{{ $datos->certificado->dictamen->inspeccione->solicitud->id_solicitud }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                    </a>
-                                                @else
-                                                    <span class="text-muted">Sin solicitud</span>
-                                                @endif Solicitud
-                                            </td>
+                                            <td class="align-top p-3 text-start text-secondary">
+    <div class="mb-3">
+        <strong class="text-dark">Empresa:</strong><br>
+        {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+    </div>
+
+    <div class="mb-2 d-flex align-items-center">
+        @if ($cliente && $documento)
+            <a target="_blank"
+               href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}"
+               class="text-decoration-none text-danger d-flex align-items-center">
+                <i class="ri-file-pdf-2-fill me-1" style="font-size: 1.2rem;"></i>
+                <span>Carta de asignación</span>
+            </a>
+        @else
+            <span class="text-muted d-flex align-items-center">
+                <i class="ri-close-circle-line me-1" style="font-size: 1.1rem;"></i>
+                Sin carta de asignación
+            </span>
+        @endif
+    </div>
+
+    <div class="mb-2 d-flex align-items-center">
+        @if ($cliente && $documento2)
+            <a target="_blank"
+               href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento2 }}"
+               class="text-decoration-none text-danger d-flex align-items-center">
+                <i class="ri-file-pdf-2-fill me-1" style="font-size: 1.2rem;"></i>
+                <span>Contrato</span>
+            </a>
+        @else
+            <span class="text-muted d-flex align-items-center">
+                <i class="ri-close-circle-line me-1" style="font-size: 1.1rem;"></i>
+                Sin contrato subido
+            </span>
+        @endif
+    </div>
+
+    <div class="d-flex align-items-center">
+        @if ($datos->certificado->dictamen->inspeccione->solicitud?->id_solicitud)
+            <a target="_blank"
+               href="/solicitud_de_servicio/{{ $datos->certificado->dictamen->inspeccione->solicitud->id_solicitud }}"
+               class="text-decoration-none text-danger d-flex align-items-center">
+                <i class="ri-file-pdf-2-fill me-1" style="font-size: 1.2rem;"></i>
+                <span>Solicitud</span>
+            </a>
+        @else
+            <span class="text-muted d-flex align-items-center">
+                <i class="ri-close-circle-line me-1" style="font-size: 1.1rem;"></i>
+                Sin solicitud
+            </span>
+        @endif
+    </div>
+</td>
+
                                         @elseif($pregunta->filtro == 'representante_legal')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'N/A' }}
                                             </td>
@@ -280,14 +323,13 @@
                                             <td>
                                                 {{-- Mostrar documento solo si es la constancia fiscal --}}
 
-                                                @if ($cliente && $documento)
+                                                @if ($cliente && $documento && $tipo_certificado != 'Granel')
                                                     <a target="_blank"
                                                         href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
                                                         <i
                                                             class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
-                                                @else
-                                                    <span class="text-muted">Sin documento</span>
+                                                
                                                 @endif
                                                 {{-- Mostrar dirección fiscal siempre --}}
                                                 {{ $empresa->domicilio_fiscal ?? 'N/A' }}
@@ -553,6 +595,14 @@
                                         @elseif($pregunta->filtro == 'fechas')
                                             <td>
                                                 {{ $datos?->certificado?->fecha_emision ? Helpers::formatearFecha($datos->certificado->fecha_emision) : 'NA' }}<br>
+                                                {{ $datos?->certificado?->fecha_vigencia ? Helpers::formatearFecha($datos->certificado->fecha_vigencia) : 'NA' }}
+                                            </td>
+                                        @elseif($pregunta->filtro == 'fecha_emision')
+                                            <td>
+                                                {{ $datos?->certificado?->fecha_emision ? Helpers::formatearFecha($datos->certificado->fecha_emision) : 'NA' }}
+                                            </td>
+                                        @elseif($pregunta->filtro == 'fecha_vigencia')
+                                            <td>
                                                 {{ $datos?->certificado?->fecha_vigencia ? Helpers::formatearFecha($datos->certificado->fecha_vigencia) : 'NA' }}
                                             </td>
                                         @elseif($pregunta->filtro == 'num_dictamen')
@@ -848,11 +898,15 @@
                                                             }
                                             @endphp
 
-                                                   {{--   @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
+                                                   @if($lotes_graneles)
+
+                                                     @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
                                                         {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
                                                     @empty
                                                         N/A
-                                                    @endforelse --}}
+                                                    @endforelse 
+
+                                            @endif
 
                                                     @foreach($lotes_graneles as $lotess)
                                                    @forelse ($lotess->tiposRelacionados as $tipo)

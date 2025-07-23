@@ -40,7 +40,7 @@
         text-align: center;
         margin-top: -50px;
         font-family: 'calibri-bold';
-        font-size: 18px;
+        font-size: 20px;
     }
 
     tr.text-title td,
@@ -80,8 +80,30 @@
     </div>
 
     <div>
-    <p class="text">INVENTARIO DE PRODUCTO TERMINADO {{ $title }}</p>
-</div>
+        @php
+            $primerBitacora = $bitacoras->first();
+            $razon = $primerBitacora->empresaBitacora->razon_social ?? 'Sin razón social';
+            $numeroCliente = 'Sin número cliente';
+            if (
+                $primerBitacora->empresaBitacora &&
+                $primerBitacora->empresaBitacora->empresaNumClientes->isNotEmpty()
+            ) {
+                foreach ($primerBitacora->empresaBitacora->empresaNumClientes as $cliente) {
+                    if (!empty($cliente->numero_cliente)) {
+                        $numeroCliente = $cliente->numero_cliente;
+                        break;
+                    }
+                }
+            }
+        @endphp
+        <p class="text">INVENTARIO DE PRODUCTO TERMINADO {{ $title }} <br>
+            <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
+        </p>
+
+        {{-- <span style="font-size: 20px; font-family: 'calibri-bold';"> --}}
+
+        {{-- </span> --}}
+    </div>
 
 
     <table>
@@ -137,13 +159,15 @@
                     <td>{{ $bitacora->ingredientes ?? '----' }}</td> {{-- ingrediente --}}
                     <td>{{ $bitacora->edad ?? '----' }}</td>
                     <td>
-                     @foreach ($bitacora->tipos_agave as $tipo)
-                        {{ $tipo->nombre }}
-                        @if ($tipo->cientifico)
-                            <em>({{ $tipo->cientifico }})</em>
-                        @endif
-                        @if (!$loop->last), @endif
-                    @endforeach
+                        @foreach ($bitacora->tipos_agave as $tipo)
+                            {{ $tipo->nombre }}
+                            @if ($tipo->cientifico)
+                                <em>({{ $tipo->cientifico }})</em>
+                            @endif
+                            @if (!$loop->last)
+                                ,
+                            @endif
+                        @endforeach
 
                     </td>
                     <td>{{ $bitacora->capacidad ?? '----' }}</td>
@@ -169,7 +193,7 @@
 
                     <td>{{ $bitacora->mermas ?? '----' }}</td>
                     <td>{{ $bitacora->observaciones ?? '----' }}</td>
-                     <td>
+                    <td>
                         @if ($bitacora->id_firmante != 0 && $bitacora->firmante)
                             @php
                                 $firma = $bitacora->firmante->firma;

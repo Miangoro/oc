@@ -1,6 +1,6 @@
 @extends('layouts.layoutMaster')
 
-@section('title', 'Bitácora Mezcal a Granel')
+@section('title', 'Bitácora Producto Terminado (Envasador)')
 
 @section('vendor-style')
     <style>

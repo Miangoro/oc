@@ -243,8 +243,23 @@ if (dt_user_table.length) {
                 <b>Botellas:</b> ${full['botellas']} <br>
                 <b>Pedido:</b> ${full['n_pedido']} <br>
                 <b>Pais destino:</b> ${full['pais']} <br>
+                ${full['estatus_activado'] == 1
+                  ? `<span style="color:green">Hologramas activados</span>`
+                  : `<span style="color:red">Hologramas no activados</span>`
+                } <br>
 
-                ${//para hologramas
+                <b>Ser. Env:</b> ${
+                  Array.isArray(full['url_acta']) && full['url_acta'].length > 0
+                    ? full['url_acta'].map(acta =>
+                        `<a href="${acta.url}" class="text-primary" target="_blank">${acta.num_servicio}</a>`
+                      ).join(', ')
+                    : `${full['servicio_envasado']}`
+                }
+                  
+
+                ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
+              </div>`;
+          }/*${//para hologramas
                   ( Array.isArray(full['id_hologramas']) && full['id_hologramas'].length > 0 ) ||
                   ( () => {
                     try {
@@ -259,25 +274,7 @@ if (dt_user_table.length) {
                   } ) ()
                     ? `<span style="color:green">Hologramas activados</span> <br>`
                     : `<span style="color:red">Hologramas no activados</span> <br>`
-                }
-
-
-                
-
-                <b>Ser. Env:</b> ${
-                  Array.isArray(full['url_acta']) && full['url_acta'].length > 0
-                    ? full['url_acta'].map(acta =>
-                        `<a href="${acta.url}" class="text-primary" target="_blank">${acta.num_servicio}</a>`
-                      ).join(', ')
-                    : `${full['servicio_envasado']}`
-                }
-                  
-
-                ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
-              </div>`;
-          }/*${ (full['id_hologramas'] || full['old_hologramas']) 
-                  ? `<span style="color:green">Hologramas activados</span> <br>`
-                  : `<span style="color:red">Hologramas no activados</span> <br>` }*/
+                }*/
         },
         {//fechas
           targets: 6,

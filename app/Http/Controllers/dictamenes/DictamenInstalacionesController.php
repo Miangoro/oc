@@ -500,7 +500,7 @@ public function dictamen_productor($id_dictamen)
     if ($datos->fecha_emision < "2020-01-01") {
         $edicion = 'pdfs.dictamen_productor_ed9';
     } else {
-        $edicion = 'pdfs.dictamen_productor_ed10';//actual
+        $edicion = 'pdfs.dictamen_productor_ed10';//actual solo este es ed10
     }
 
     //return $pdf->stream($datos->num_dictamen .' Dictamen de cumplimiento de Instalaciones como productor.pdf');
@@ -555,7 +555,7 @@ public function dictamen_envasador($id_dictamen)
     if ($datos->fecha_emision < "2020-01-01") {
         $edicion = 'pdfs.dictamen_envasador_ed9';
     } else {
-        $edicion = 'pdfs.dictamen_envasador_ed10';//actual
+        $edicion = 'pdfs.dictamen_envasador_ed10';//actual cambiar a ed 5
     }
 
     //return $pdf->stream($datos->num_dictamen.' Dictamen de cumplimiento de Instalaciones como envasador.pdf');
@@ -611,7 +611,7 @@ public function dictamen_comercializador($id_dictamen)
     if ($datos->fecha_emision < "2020-01-01") {
         $edicion = 'pdfs.dictamen_comercializador_ed9';
     } else {
-        $edicion = 'pdfs.dictamen_comercializador_ed10';//actual
+        $edicion = 'pdfs.dictamen_comercializador_ed10';//actual cambiar a ed 5
     }
     
     //return $pdf->stream($datos->num_dictamen . ' Dictamen de cumplimiento de instalaciones como comercializador.pdf');

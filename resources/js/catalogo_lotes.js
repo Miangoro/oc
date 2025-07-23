@@ -892,6 +892,7 @@ $(function () {
             $('#edit_id_empresa').val(lote.id_empresa).trigger('change');
             $('#edit_tipo_lote').val(lote.tipo_lote);
             $('#edit_id_tanque').val(lote.id_tanque);
+            $('#edit_agua_entrada').val(lote.agua_entrada);
             // Asigna los valores seleccionados (solo IDs)
             var guiasIds = guias.map(function (guia) {
               return guia.id;

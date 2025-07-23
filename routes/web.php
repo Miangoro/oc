@@ -814,9 +814,6 @@ Route::middleware(['auth'])->controller(solicitudHolograma::class)->group(functi
     Route::get('/solicitud_holograma/editActivados/{id}', [solicitudHolograma::class, 'editActivados']);
     //solicitud hologrammas
     Route::post('/solicitud_holograma/update/updateActivar', [solicitudHolograma::class, 'updateActivar']);
-    //estatus de activar hologramas
-    Route::post('/activar-hologramas/{id}', 'cambiarEstatus')->name('activar hologramas solo de vista xd');
-
 });
 
 //-------------------ACTIVACION DE HOLOGRAMAS-------------------
@@ -881,6 +878,9 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::get('/obtener_dictamenes_envasado/{empresa}', [getFuncionesController::class, 'getDictamenesEnvasado'])->name('getDictamenesEnvasado');
     Route::get('/obtener_datos_inspeccion_dictamen/{id}', [getFuncionesController::class, 'obtenerDatosInspeccion']);
     Route::get('/getDocumentosSolicitud/{id_solicitud}', [getFuncionesController::class, 'getDocumentosSolicitud']);
+
+    //estatus de activar hologramas
+    Route::post('/activar-hologramas/{id}', 'cambiarEstatus')->name('activar hologramas solo de vista xd');
 });
 
 Route::middleware(['auth'])->controller(solicitudes_eliminadas_controller::class)->group(function () {
@@ -1042,6 +1042,18 @@ Route::controller(BitacoraProductoTerminadoController::class)->middleware(['auth
     Route::post('/FirmaProductoEnvasado/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
 });
 Route::resource('/bitacoraProductoEnvasado-list', BitacoraProductoTerminadoController::class)->middleware(['auth']);
+
+
+Route::controller(BitacoraProductoMaduracionController::class)->middleware(['auth'])->group(function () {
+    Route::get('/BitacoraProductoMaduracion', 'UserManagement')->name('bitacora-producto-maduracion');
+    Route::get('/BitacoraProductoMaduracionPDF', 'PDFProductoMaduracion');
+    Route::get('bitacoraProductoMaduracion/{id_bitacora}/edit', 'edit');
+    Route::delete('bitacoraProductoMaduracion-delete/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::post('/bitacoraProductoMaduracionStore', 'store')->name('bitacora.store');
+    Route::post('/bitacoraProductoMaduracionUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaProductoMaduracion/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+});
+Route::resource('/BitacoraProductoMaduracion-list', BitacoraProductoMaduracionController::class)->middleware(['auth']);
 
 
 Route::middleware(['auth'])->group(function () {

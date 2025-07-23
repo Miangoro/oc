@@ -357,10 +357,10 @@
 
             },
             {
-              "url": "/bitacoraProductoMaduracion",
+              "url": "/BitacoraProductoMaduracion",
               "name": "Maduración en barricas o vidrio",
-              "slug": "bitacoraProductoMaduracion",
-              "can": "Visualizar bitácoras maduración"
+              "slug": "bitacora-producto-maduracion",
+              "can": "Visualizar bitácoras"
             }
           ]
         },

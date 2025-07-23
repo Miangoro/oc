@@ -21,7 +21,7 @@
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <select onchange="obtenerGraneles(this.value);" id="id_empresa"
+                                            <select id="id_empresa"
                                                 name="id_empresa" class="select2 form-select"
                                                 data-error-message="por favor selecciona la empresa">
                                                 @if ($tipo_usuario != 3)
@@ -82,7 +82,7 @@
                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select id="id_marca" name="id_marca" class="select2 form-select">
-                                                <option value="" disabled selected>Selecciona una marca</option>
+                                                <option value="" disabled selected>Seleccione una marca</option>
                                                 <!-- Opciones dinámicas -->
                                             </select>
                                             <label for="id_marca">Marca</label>
@@ -375,73 +375,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    function obtenerGraneles(empresa) {
-        if (empresa !== "" && empresa !== null && empresa !== undefined) {
-            $.ajax({
-                url: '/getDatos/' + empresa,
-                method: 'GET',
-                success: function(response) {
-                    var contenido = "";
-                    for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                            response
-                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
-                    }
-                    if (response.lotes_granel.length == 0) {
-                        contenido = '<option value="">Sin lotes registrados</option>';
-                    } else {}
-                    $('#id_lote_granel').html(contenido);
-
-                    var contenidoI = "";
-                    for (let index = 0; index < response.instalaciones.length; index++) {
-                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-
-                        contenidoI = '<option value="' + response.instalaciones[index].id_instalacion +
-                            '">' +
-                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                            '</option>' +
-                            contenidoI;
-                    }
-                    if (response.instalaciones.length == 0) {
-                        contenidoI = '<option value="">Sin instalaciones registradas</option>';
-                    }
-                    $('#id_instalacion').html(contenidoI);
-                    obtenerDatosGraneles();
-                },
-                error: function() {}
-            });
-        }
-    }
-
-    function limpiarTipo(tipo) {
-        try {
-            let tipoArray = JSON.parse(tipo);
-            return tipoArray.join(', ');
-        } catch (error) {
-            return tipo; // En caso de que no sea un JSON válido, regresamos el texto original
-        }
-    }
-
-    function obtenerDatosGraneles() {
-        var lote_granel_id = $("#id_lote_granel").val();
-        if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
-            $.ajax({
-                url: '/getDatos2/' + lote_granel_id,
-                method: 'GET',
-                success: function(response) {
-                    // Setear valores para los campos individuales
-                    $('#volumen_inicial').val(response.lotes_granel.volumen_restante);
-                    $('#alcohol_inicial').val(response.lotes_granel.cont_alc);
-                },
-                error: function() {
-                    console.error('Error al obtener datos de graneles');
-                }
-            });
-        } else {
-            $('#volumen_inicial').val('');
-            $('#alcohol_inicial').val('');
-        }
-    }
-</script>

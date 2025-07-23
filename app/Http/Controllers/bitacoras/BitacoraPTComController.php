@@ -252,7 +252,7 @@ public function store(Request $request)
         'cantidad_botellas_cajas' => 'nullable|numeric|min:0',
         'edad' => 'nullable|string|max:100',
         'ingredientes' => 'nullable|string',
-
+        'id_marca' => 'nullable|integer',
         'cant_cajas_inicial' => 'nullable|numeric|min:0',
         'cant_bot_inicial' => 'nullable|numeric|min:0',
 
@@ -286,6 +286,7 @@ public function store(Request $request)
         $bitacora->id_clase = $request->id_clase;
         $bitacora->proforma_predio = $request->proforma_predio;
         $bitacora->folio_fq = $request->folio_fq;
+        $bitacora->id_marca = $request->id_marca;
         $bitacora->id_tipo = is_array($request->id_tipo) ? implode(',', $request->id_tipo) : null;
         $bitacora->alc_vol = $request->alc_vol;
         $bitacora->sku = $request->sku;
@@ -404,6 +405,7 @@ public function store(Request $request)
             'lote_envasado' => 'nullable|string',
             'id_categoria' => 'required|integer|exists:catalogo_categorias,id_categoria',
             'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
+            'id_marca' => 'nullable|integer',
             'proforma_predio' => 'nullable|string',
             'folio_fq' => 'nullable|string',
             'id_tipo' => 'nullable|array',
@@ -454,7 +456,7 @@ public function store(Request $request)
             'cantidad_botellas_cajas' => $request->cantidad_botellas_cajas,
             'edad' => $request->edad,
             'ingredientes' => $request->ingredientes,
-
+            'id_marca' => $request->id_marca,
             'cant_cajas_inicial' => $request->cant_cajas_inicial ?? 0,
             'cant_bot_inicial' => $request->cant_bot_inicial ?? 0,
 
