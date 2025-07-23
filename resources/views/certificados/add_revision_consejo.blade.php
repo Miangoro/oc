@@ -112,29 +112,17 @@
                             {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</h5>
                     </div>
                     <div class="d-flex align-items-center border rounded-3 p-3 shadow-sm bg-light">
-    <div class="flex-shrink-0 me-3">
-        <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
-             alt="Foto de {{ $datos->user->name ?? 'N/A' }}"
-             class="rounded-circle border border-2 border-white shadow-sm"
-             width="60" height="60" style="object-fit: cover;">
-    </div>
-    <div>
-        <p class="text-muted mb-1 small">Revisor</p>
-        <h6 class="mb-0 fw-semibold text-dark">{{ $datos->user->name ?? 'N/A' }}</h6>
-    </div>
-</div>
-<div class="d-flex align-items-center border rounded-3 p-3 shadow-sm bg-light">
-    <div class="flex-shrink-0 me-3">
-        <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
-             alt="Foto de {{ $datos->user->name ?? 'N/A' }}"
-             class="rounded-circle border border-2 border-white shadow-sm"
-             width="60" height="60" style="object-fit: cover;">
-    </div>
-    <div>
-        <p class="text-muted mb-1 small">Revisor</p>
-        <h6 class="mb-0 fw-semibold text-dark">{{ $datos->user->name ?? 'N/A' }}</h6>
-    </div>
-</div>
+                        <div class="flex-shrink-0 me-3">
+                            <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
+                                alt="Foto de {{ $datos->user->name ?? 'N/A' }}"
+                                class="rounded-circle border border-2 border-white shadow-sm"
+                                width="60" height="60" style="object-fit: cover;">
+                        </div>
+                        <div>
+                            <p class="text-muted mb-1 small">Revisor</p>
+                            <h6 class="mb-0 fw-semibold text-dark">{{ $datos->user->name ?? 'N/A' }}</h6>
+                        </div>
+                    </div>
 
                     <div>
                         <p class="text-muted mb-1">Certificado</p>
