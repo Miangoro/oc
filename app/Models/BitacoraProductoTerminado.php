@@ -47,10 +47,18 @@ class BitacoraProductoTerminado extends Model
 
        public $timestamps = false;
        // En BitacoraMezcal.php
-/*     public function loteBitacora()
+    public function marca()
     {
-        return $this->belongsTo(LotesGranel::class, 'id_lote_granel', 'id_lote_granel');
-    } */
+        return $this->belongsTo(marcas::class, 'id_marca', 'id_marca');
+    }
+        public function categorias()
+    {
+        return $this->belongsTo(categorias::class, 'id_categoria', 'id_categoria');
+    }
+        public function clases()
+    {
+        return $this->belongsTo(clases::class, 'id_clase', 'id_clase');
+    }
     public function empresaBitacora()
     {
         return $this->belongsTo(empresa::class, 'id_empresa');
@@ -60,6 +68,13 @@ class BitacoraProductoTerminado extends Model
     {
         return $this->belongsTo(User::class, 'id_firmante');
     }
+    public function getTiposAgaveAttribute()
+    {
+        $ids = json_decode($this->id_tipo ?? '[]', true);
+        return tipos::whereIn('id_tipo', $ids)->get();
+    }
+
+
 
 
 }
