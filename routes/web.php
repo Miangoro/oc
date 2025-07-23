@@ -1022,7 +1022,7 @@ Route::resource('/bitacoraProcesoElaboracion-list', BitacoraProcesoElaboracionCo
 
 Route::controller(BitacoraPTComController::class)->middleware(['auth'])->group(function () {
     Route::get('/bitacoraProductoTerminado', 'UserManagement')->name('bitacora-producto-terminado');
-    Route::get('/bitacoraPTComPDF/{id_bitacora}', 'PDFBitacoraPTCom');
+    Route::get('/bitacoraPTComPDF', 'PDFBitacoraPTCom');
     Route::get('bitacoraPTCom/{id_bitacora}/edit', 'edit');
     Route::delete('bitacoraPTCom-delete/{id_bitacora}', 'destroy')->name('bitacora.delete');
     Route::post('/bitacoraPTComStore', 'store')->name('bitacora.store');
@@ -1034,7 +1034,7 @@ Route::resource('/bitacoraProductoTerminado-list', BitacoraPTComController::clas
 
 Route::controller(BitacoraProductoTerminadoController::class)->middleware(['auth'])->group(function () {
     Route::get('/bitacoraProductoEnvasado', 'UserManagement')->name('bitacora-producto-envasado');
-    Route::get('/bitacoraProductoEnvasadoPDF/{id_bitacora}', 'PDFBitacoraProductoEnvasado');
+    Route::get('/bitacoraProductoEnvasadoPDF', 'PDFBitacoraProductoEnvasado');
     Route::get('bitacoraProductoEnvasado/{id_bitacora}/edit', 'edit');
     Route::delete('bitacoraProductoEnvasado-delete/{id_bitacora}', 'destroy')->name('bitacora.delete');
     Route::post('/bitacoraProductoEnvasadoStore', 'store')->name('bitacora.store');

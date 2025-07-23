@@ -199,14 +199,17 @@ class BitacoraProductoTerminadoController extends Controller
         ]);
     }
 
-     public function PDFBitacoraMezcal(Request $request)
+     public function PDFBitacoraProductoEnvasado(Request $request)
     {
         $empresaId = $request->query('empresa');
         $instalacionId = $request->query('instalacion');
-        $title = 'PRODUCTOR'; // Cambia a 'Envasador' si es necesario
+        $title = 'ENVASADOR'; // Cambia a 'Envasador' si es necesario
         $bitacoras = BitacoraProductoTerminado::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
+            'marca',
+            'categorias',
+            'clases',
         ])->where('tipo', 2)
         ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
             $query->where('id_empresa', $empresaId);
@@ -222,12 +225,11 @@ class BitacoraProductoTerminadoController extends Controller
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
               ], 404);
           }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title'))
+        $pdf = Pdf::loadView('pdfs.Bitacora_Terminado', compact('bitacoras', 'title'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
 
-        return $pdf->stream('Bitácora Mezcal a Granel.pdf');
+        return $pdf->stream('Bitácora de inventario de producto terminado.pdf');
     }
-
 
 public function store(Request $request)
 {
