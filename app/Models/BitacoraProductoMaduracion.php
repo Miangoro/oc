@@ -10,11 +10,51 @@ class BitacoraProductoMaduracion extends Model
 
     use HasFactory;
 
-       protected $table = 'bitacora_producto_maduracion';
-       protected $primaryKey = 'id_bitacora_maduracion';
+       protected $table = 'bitacora_maduracion';
+       protected $primaryKey = 'id';
        protected $fillable = [
-      'fecha',
-       'lote_a_granel'
-      ];
+        'id_empresa',
+        'tipo_operacion',
+        'tipo', // 1=Productor, 2=Envasador, 3=Comercializador
+        'fecha',
+        'id_lote_granel',
+        'tipo_recipientes',
+        'tipo_madera',
+        'num_recipientes',
+        'volumen_inicial',
+        'alcohol_inicial',
+        'num_recipientes_entrada',
+        'procedencia_entrada',
+        'volumen_entrada',
+        'alcohol_entrada',
+        'fecha_salida',
+        'num_recipientes_salida',
+        'volumen_salidas',
+        'alcohol_salidas',
+        'destino_salidas',
+        'num_recipientes_final',
+        'volumen_final',
+        'alcohol_final',
+        'observaciones',
+        'id_firmante',
+    ];
+
+    /* public $timestamps = false; */
+       // En BitacoraMezcal.php
+    public function loteBitacora()
+    {
+        return $this->belongsTo(LotesGranel::class, 'id_lote_granel', 'id_lote_granel');
+    }
+    public function empresaBitacora()
+    {
+        return $this->belongsTo(empresa::class, 'id_empresa');
+    }
+    // BitacoraMezcal.php
+    public function firmante()
+    {
+        return $this->belongsTo(User::class, 'id_firmante');
+    }
+
+
 
 }
