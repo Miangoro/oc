@@ -554,6 +554,14 @@
                                                 {{ $datos?->certificado?->fecha_emision ? Helpers::formatearFecha($datos->certificado->fecha_emision) : 'NA' }}<br>
                                                 {{ $datos?->certificado?->fecha_vigencia ? Helpers::formatearFecha($datos->certificado->fecha_vigencia) : 'NA' }}
                                             </td>
+                                        @elseif($pregunta->filtro == 'fecha_emision')
+                                            <td>
+                                                {{ $datos?->certificado?->fecha_emision ? Helpers::formatearFecha($datos->certificado->fecha_emision) : 'NA' }}
+                                            </td>
+                                        @elseif($pregunta->filtro == 'fecha_vigencia')
+                                            <td>
+                                                {{ $datos?->certificado?->fecha_vigencia ? Helpers::formatearFecha($datos->certificado->fecha_vigencia) : 'NA' }}
+                                            </td>
                                         @elseif($pregunta->filtro == 'num_dictamen')
                                             @php
                                                 // Determina tipo y URL del certificado
