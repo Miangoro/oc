@@ -45,6 +45,13 @@
         <div class="card-body p-4">
             <div class="row gy-3">
 
+             
+                        @php
+                            $caracteristicas = json_decode( $datos->certificado->dictamen->inspeccione->solicitud->caracteristicas);
+                            $tipo_certificado = $tipo;
+                            $combinado = 'No';
+                        @endphp
+
                 <!-- Tipo de certificado -->
                 <div class="col-md-4">
                     <p class="text-muted mb-1">Tipo de certificado</p>
