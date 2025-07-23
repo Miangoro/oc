@@ -38,7 +38,6 @@ class BitacoraProductoMaduracionController extends Controller
     public function index(Request $request)
     {
       $empresaId = $request->input('empresa');
-      $instalacionId = $request->input('instalacion');
       DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
 
         $columns = [
@@ -54,7 +53,7 @@ class BitacoraProductoMaduracionController extends Controller
 
         $search = $request->input('search.value');
         /* $totalData = BitacoraMezcal::count(); */
-        $totalData = BitacoraProductoMaduracion::whereIn('tipo', [1, 3])->count();
+        $totalData = BitacoraProductoMaduracion::where('tipo', 2)->count();
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -64,7 +63,7 @@ class BitacoraProductoMaduracionController extends Controller
 
         $query = BitacoraProductoMaduracion::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
                   $query->where('id_empresa', $empresaIdAut);
-              })->whereIn('tipo', [1, 3]);
+              })->where('tipo', 2);
 
         /* if ($empresaId) {
             $query->where('id_empresa', $empresaId);
@@ -92,10 +91,6 @@ class BitacoraProductoMaduracionController extends Controller
                   }
 
                   $query->whereIn('id_empresa', $idsEmpresas);
-
-                  if ($instalacionId) {
-                      $query->where('id_instalacion', $instalacionId);
-                  }
               }
           }
 
@@ -112,20 +107,19 @@ class BitacoraProductoMaduracionController extends Controller
                           $sub->whereNull('id_firmante')->orWhere('id_firmante', 0);
                       });
                   } else {
-
                     $q->where('fecha', 'LIKE', "%{$search}%")
                       ->orWhere('id_lote_granel', 'LIKE', "%{$search}%")
-                      ->orWhere('procedencia_entrada', 'LIKE', "%{$search}%")
-                      ->orWhere('destino_salidas', 'LIKE', "%{$search}%")
-                      ->orWhere('operacion_adicional', 'LIKE', "%{$search}%")
-                      ->orWhere('volumen_inicial', 'LIKE', "%{$search}%")
-                      ->orWhere('alcohol_inicial', 'LIKE', "%{$search}%")
-                      ->orWhere('volumen_entrada', 'LIKE', "%{$search}%")
-                      ->orWhere('alcohol_entrada', 'LIKE', "%{$search}%")
-                      ->orWhere('volumen_salidas', 'LIKE', "%{$search}%")
-                      ->orWhere('alcohol_salidas', 'LIKE', "%{$search}%")
-                      ->orWhere('volumen_final', 'LIKE', "%{$search}%")
-                      ->orWhere('alcohol_final', 'LIKE', "%{$search}%")
+                     ->orWhere('procedencia_entrada', 'LIKE', "%{$search}%")
+                    ->orWhere('destino_salidas', 'LIKE', "%{$search}%")
+                    ->orWhere('volumen_inicial', 'LIKE', "%{$search}%")
+                    ->orWhere('alcohol_inicial', 'LIKE', "%{$search}%")
+                    ->orWhere('volumen_entrada', 'LIKE', "%{$search}%")
+                    ->orWhere('alcohol_entrada', 'LIKE', "%{$search}%")
+                    ->orWhere('volumen_salidas', 'LIKE', "%{$search}%")
+                    ->orWhere('alcohol_salidas', 'LIKE', "%{$search}%")
+                    ->orWhere('volumen_final', 'LIKE', "%{$search}%")
+                    ->orWhere('alcohol_final', 'LIKE', "%{$search}%")
+                    ->orWhere('num_recipientes_final', 'LIKE', "%{$search}%")
                       ->orWhere(function ($date) use ($search) {
                        $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
                       ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
@@ -175,26 +169,33 @@ class BitacoraProductoMaduracionController extends Controller
                 'nombre_lote' => $bitacora->loteBitacora->nombre_lote ?? 'N/A',
                 'folio_fq' => $bitacora->loteBitacora->folio_fq ?? 'N/A',
                 'folio_certificado' => $bitacora->loteBitacora->folio_certificado ?? 'N/A',
-/*                 'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
-                'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A', */
+                'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
+                'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A',
 
-                //Entradas
-                'procedencia_entrada' => $bitacora->procedencia_entrada ?? 'N/A',
-                'volumen_entrada' => $bitacora->volumen_entrada ?? 'N/A',
-                'alcohol_entrada' => $bitacora->alcohol_entrada ?? 'N/A',
-                'agua_entrada' => $bitacora->agua_entrada ?? 'N/A',
-                'id_firmante' => $bitacora->id_firmante ?? 'N/A',
-                // Salidas
-                'volumen_salidas' => $bitacora->volumen_salidas ?? 'N/A',
-                'alcohol_salidas' => $bitacora->alcohol_salidas ?? 'N/A',
-                'destino_salidas' => $bitacora->destino_salidas ?? 'N/A',
+                  'tipo_recipientes' => $bitacora->tipo_recipientes ?? 'N/A',
+                  'tipo_madera' => $bitacora->tipo_madera ?? 'N/A',
+                  'num_recipientes' => $bitacora->num_recipientes ?? 'N/A',
 
-                // Inventario final
-                'volumen_final' => $bitacora->volumen_final ?? 'N/A',
-                'alcohol_final' => $bitacora->alcohol_final ?? 'N/A',
+                  // Entradas
+                  'num_recipientes_entrada' => $bitacora->num_recipientes_entrada ?? 'N/A',
+                  'procedencia_entrada' => $bitacora->procedencia_entrada ?? 'N/A',
+                  'volumen_entrada' => $bitacora->volumen_entrada ?? 'N/A',
+                  'alcohol_entrada' => $bitacora->alcohol_entrada ?? 'N/A',
 
-                'observaciones' => $bitacora->observaciones ?? 'N/A',
-                'firma_ui' => $bitacora->firma_ui ?? 'N/A',
+                  // Salidas
+                  'fecha_salida' => $bitacora->fecha_salida ?? 'N/A',
+                  'num_recipientes_salida' => $bitacora->num_recipientes_salida ?? 'N/A',
+                  'volumen_salidas' => $bitacora->volumen_salidas ?? 'N/A',
+                  'alcohol_salidas' => $bitacora->alcohol_salidas ?? 'N/A',
+                  'destino_salidas' => $bitacora->destino_salidas ?? 'N/A',
+
+                  // Final
+                  'num_recipientes_final' => $bitacora->num_recipientes_final ?? 'N/A',
+                  'volumen_final' => $bitacora->volumen_final ?? 'N/A',
+                  'alcohol_final' => $bitacora->alcohol_final ?? 'N/A',
+
+                  'observaciones' => $bitacora->observaciones ?? 'N/A',
+                  'id_firmante' => $bitacora->id_firmante ?? 'N/A',
             ];
             $data[] = $nestedData;
         }
@@ -216,7 +217,7 @@ class BitacoraProductoMaduracionController extends Controller
         $bitacoras = BitacoraProductoMaduracion::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
-        ])->whereIn('tipo', [1, 3])
+        ])->where('tipo', 2)
         ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
             $query->where('id_empresa', $empresaId);
             if ($instalacionId) {
@@ -268,7 +269,7 @@ class BitacoraProductoMaduracionController extends Controller
             $bitacora->id_instalacion = $request->id_instalacion;
             $bitacora->id_lote_granel = $request->id_lote_granel;
             $bitacora->tipo_operacion = $request->tipo_operacion;
-            $bitacora->tipo = 1;
+            $bitacora->tipo = 2;
             $bitacora->operacion_adicional = $request->operacion_adicional;
             $bitacora->volumen_inicial = $request->volumen_inicial;
             $bitacora->alcohol_inicial = $request->alcohol_inicial;
@@ -379,7 +380,7 @@ class BitacoraProductoMaduracionController extends Controller
               'id_instalacion'   => $request->id_instalacion,
               'fecha'            => $request->fecha,
               'operacion_adicional' => $request->operacion_adicional,
-              'tipo' => 1,
+              'tipo' => 2,
               'tipo_operacion' => $request->tipo_operacion,
               'volumen_inicial' => $request->volumen_inicial,
               'alcohol_inicial' => $request->alcohol_inicial ,
