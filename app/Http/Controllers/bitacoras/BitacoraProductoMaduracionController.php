@@ -183,7 +183,7 @@ class BitacoraProductoMaduracionController extends Controller
                   'alcohol_entrada' => $bitacora->alcohol_entrada ?? 'N/A',
 
                   // Salidas
-                  'fecha_salida' => $bitacora->fecha_salida ?? 'N/A',
+                  'fecha_salida' => Helpers::formatearFecha($bitacora->fecha_salida),
                   'num_recipientes_salida' => $bitacora->num_recipientes_salida ?? 'N/A',
                   'volumen_salidas' => $bitacora->volumen_salidas ?? 'N/A',
                   'alcohol_salidas' => $bitacora->alcohol_salidas ?? 'N/A',
@@ -316,27 +316,40 @@ class BitacoraProductoMaduracionController extends Controller
         try {
             $bitacora = BitacoraProductoMaduracion::findOrFail($id_bitacora);
             $fecha_formateada = Carbon::parse($bitacora->fecha)->format('Y-m-d');
+            $fecha_formateada2 = Carbon::parse($bitacora->fecha_salida)->format('Y-m-d');
             return response()->json([
                 'success' => true,
                 'bitacora' => [
                     'id' => $bitacora->id,
                     'id_empresa' => $bitacora->id_empresa,
-                    'id_instalacion' => $bitacora->id_instalacion,
+
                     'fecha' => $fecha_formateada, // para que el input date lo acepte
                     'id_lote_granel' => $bitacora->id_lote_granel,
-                    'operacion_adicional' => $bitacora->operacion_adicional,
-                    'volumen_inicial'    =>     $bitacora->volumen_inicial,
-                    'alcohol_inicial'   =>     $bitacora->alcohol_inicial,
+
                     'tipo_operacion' => $bitacora->tipo_operacion,
-                    'procedencia_entrada'  =>     $bitacora->procedencia_entrada,
-                    'volumen_entrada'   =>    $bitacora->volumen_entrada,
-                    'alcohol_entrada'  =>     $bitacora->alcohol_entrada,
-                    'agua_entrada' => $bitacora->agua_entrada,
-                    'volumen_salida' => $bitacora->volumen_salidas,
-                    'alc_vol_salida' => $bitacora->alcohol_salidas,
-                    'destino' => $bitacora->destino_salidas,
+                    'tipo' => $bitacora->tipo, // 1=Productor, 2=Envasador, 3=Comercializador
+
+                    'tipo_recipientes' => $bitacora->tipo_recipientes,
+                    'tipo_madera' => $bitacora->tipo_madera,
+                    'num_recipientes' => $bitacora->num_recipientes,
+
+                    'volumen_inicial' => $bitacora->volumen_inicial,
+                    'alcohol_inicial' => $bitacora->alcohol_inicial,
+
+                    'num_recipientes_entrada' => $bitacora->num_recipientes_entrada,
+                    'procedencia_entrada' => $bitacora->procedencia_entrada,
+                    'volumen_entrada' => $bitacora->volumen_entrada,
+                    'alcohol_entrada' => $bitacora->alcohol_entrada,
+
+                    'fecha_salida' => $fecha_formateada2,
+                    'num_recipientes_salida' => $bitacora->num_recipientes_salida,
+                    'volumen_salidas' => $bitacora->volumen_salidas,
+                    'alcohol_salidas' => $bitacora->alcohol_salidas,
+                    'destino_salidas' => $bitacora->destino_salidas,
+
+                    'num_recipientes_final' => $bitacora->num_recipientes_final,
                     'volumen_final' => $bitacora->volumen_final,
-                    'alc_vol_final' => $bitacora->alcohol_final,
+                    'alcohol_final' => $bitacora->alcohol_final,
                     'observaciones' => $bitacora->observaciones,
                     // agrega otros campos que necesites si existen
                 ],

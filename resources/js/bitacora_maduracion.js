@@ -113,7 +113,7 @@ $(function () {
             var $procedencia_entrada = full['procedencia_entrada'] ?? 'N/A';
             var $volumen_entrada = full['volumen_entrada'] ?? 'N/A';
             var $alcohol_entrada = full['alcohol_entrada'] ?? 'N/A';
-            var $agua_entrada = full['agua_entrada'] ?? 'N/A';
+            var $num_recipientes_entrada = full['num_recipientes_entrada'] ?? 'N/A';
 
             return (
               '<span class="fw-bold small">Procedencia: </span>' +
@@ -128,9 +128,9 @@ $(function () {
               '<span class="small">' +
               $alcohol_entrada +
               '</span>' +
-              '<br><span class="fw-bold small">Agua Agregada: </span>' +
+              '<br><span class="fw-bold small">No. recipientes: </span>' +
               '<span class="small">' +
-              $agua_entrada +
+              $num_recipientes_entrada +
               '</span>'
             );
           }
@@ -143,7 +143,7 @@ $(function () {
             var $volumen_salidas = full['volumen_salidas'] ?? 'N/A';
             var $alcohol_salidas = full['alcohol_salidas'] ?? 'N/A';
             var $destino_salidas = full['destino_salidas'] ?? 'N/A';
-
+            var $num_recipientes_salidas = full['num_recipientes_salida'] ?? 'N/A';
             return (
               '<span class="fw-bold small">Volumen de Salidas: </span>' +
               '<span class="small">' +
@@ -156,6 +156,10 @@ $(function () {
               '<br><span class="fw-bold small">Destino de Salidas: </span>' +
               '<span class="small">' +
               $destino_salidas +
+              '</span>' +
+              '<br><span class="fw-bold small">No. recipientes: </span>' +
+              '<span class="small">' +
+              $num_recipientes_salidas +
               '</span>'
             );
           }
@@ -166,6 +170,7 @@ $(function () {
           render: function (data, type, full, meta) {
             var $volumen_final = full['volumen_final'] ?? 'N/A';
             var $alcohol_final = full['alcohol_final'] ?? 'N/A';
+            var $rec_final = full['num_recipientes_final'] ?? 'N/A';
 
             return (
               '<span class="fw-bold small">Volumen Final: </span>' +
@@ -175,6 +180,10 @@ $(function () {
               '<br><span class="fw-bold small">%Alc. Vol. Final: </span>' +
               '<span class="small">' +
               $alcohol_final +
+              '</span>' +
+              '<br><span class="fw-bold small">No. recipientes: </span>' +
+              '<span class="small">' +
+              $rec_final +
               '</span>'
             );
           }
@@ -688,18 +697,24 @@ $(function () {
           $('#edit_operacion_adicional').val(bitacora.operacion_adicional);
           $('#edit_volumen_inicial').val(bitacora.volumen_inicial);
           $('#edit_alcohol_inicial').val(bitacora.alcohol_inicial);
+          $('#edit_num_recipientes').val(bitacora.num_recipientes);
           /*  */
           $('#edit_tipo_op').val(bitacora.tipo_operacion).trigger('change');
 
+          $('#edit_num_recipientes_entrada').val(bitacora.num_recipientes_entrada);
           $('#edit_procedencia_entrada').val(bitacora.procedencia_entrada);
           $('#edit_volumen_entrada').val(bitacora.volumen_entrada);
           $('#edit_alcohol_entrada').val(bitacora.alcohol_entrada);
-          $('#edit_agua_entrada').val(bitacora.agua_entrada);
-          $('#edit_volumen_salida').val(bitacora.volumen_salida);
-          $('#edit_alc_vol_salida').val(bitacora.alc_vol_salida);
-          $('#edit_destino').val(bitacora.destino);
+
+          $('#edit_volumen_salida').val(bitacora.volumen_salidas);
+          $('#edit_alc_vol_salida').val(bitacora.alcohol_salidas);
+          $('#edit_fecha_salida').val(bitacora.fecha_salida);
+          $('#edit_destino_salida').val(bitacora.destino_salidas);
+          $('#edit_num_recipientes_salida').val(bitacora.num_recipientes_salida)
+
           $('#edit_volumen_final').val(bitacora.volumen_final);
-          $('#edit_alc_vol_final').val(bitacora.alc_vol_final);
+          $('#edit_alc_vol_final').val(bitacora.alcohol_final);
+          $('#edit_num_recipientes_final').val(bitacora.num_recipientes_final);
           $('#edit_observaciones').val(bitacora.observaciones);
           $('#editarBitacoraMezcal').modal('show');
         } else {
@@ -1088,8 +1103,6 @@ $(document).ready(function () {
     var empresaSeleccionada = $('#id_empresa').val();
     if (empresaSeleccionada) {
       obtenerGraneles(empresaSeleccionada);
-    } else {
-      obtenerDatosGraneles();
     }
   });
 
