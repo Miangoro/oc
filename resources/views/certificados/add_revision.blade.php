@@ -32,63 +32,63 @@
     }
 </style>
 @section('content')
-<div class="container my-4">
-    <div class="card z-depth-1 rounded-3" style="overflow: hidden;">
-        <div class="card-header text-center white-text py-3" style="background: linear-gradient(90deg, #007bff, #00c6ff);">
-            <h5 class="mb-1 white-text">Revisión de certificado personal</h5>
-            <span class="badge yellow darken-2 black-text">{{ $datos->certificado->num_certificado ?? 'N/A' }}</span>
+
+ 
+ <div class="container mt-4 mb-4">
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-menu-theme text-center py-3">
+            <h5 class="mb-0 text-white">
+                Revisión de Certificado Personal <br>
+                <span class="badge bg-warning text-dark">{{ $datos->certificado->num_certificado ?? 'N/A' }}</span>
+            </h5>
         </div>
 
-        <div class="card-content p-4">
-            <div class="row g-4">
+        <div class="card-body p-4">
+            <div class="row gy-3">
 
-                <!-- Columna izquierda -->
-                <div class="col s12 m7">
-                    <p class="grey-text text-darken-1 mb-0">Tipo de certificado</p>
-                    <h6 class="fw-bold">{{ $tipo }}</h6>
+             
+                        @php
+                            $caracteristicas = json_decode( $datos->certificado->dictamen->inspeccione->solicitud->caracteristicas);
+                            $tipo_certificado = $tipo;
+                            $combinado = 'No';
+                        @endphp
+
+                <!-- Tipo de certificado -->
+                <div class="col-md-4">
+                    <p class="text-muted mb-1">Tipo de certificado</p>
+                    <h5 class="fw-semibold">{{ $tipo }}</h5>
 
                     @php
                         $caracteristicas = json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas);
-                        $tipo_certificado = $tipo;
                         $combinado = 'No';
                     @endphp
 
                     @if (isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
-                        <span class="new badge blue lighten-2" data-badge-caption="Combinado"></span>
+                        <span class="badge bg-info">Combinado</span>
                         @php $combinado = 'Si'; @endphp
                     @endif
 
                     @if ($datos->es_correccion === 'si')
-                        <span class="new badge red lighten-1" data-badge-caption="Es corrección"></span>
+                        <span class="badge bg-danger">Es corrección</span>
                     @endif
 
-                    @php
-                        $nuevoId = $datos->certificado->certificadoReexpedido()?->id_certificado;
-                        $urlConNuevoId = $nuevoId ? preg_replace('/\d+$/', $nuevoId, $url) : null;
-                        $solicitud = $datos->certificado->dictamen->inspeccione->solicitud ?? null;
-                        $loteGranel = $solicitud->lote_granel ?? null;
-                        $empresa = $loteGranel?->empresa ?? null;
-                        $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                            ? $empresa->empresaNumClientes->first(
-                                fn($item) => $item->empresa_id === $empresa->id &&
-                                !empty($item->numero_cliente),
-                              )?->numero_cliente ?? null
-                            : null;
-                    @endphp
-
                     @if ($datos->certificado->certificadoReexpedido())
-                        <p class="mt-3">
-                            <strong>Reexpide:</strong>
-                            <a target="_blank" href="{{ '/files/' . $numero_cliente . '/certificados_granel/' . $certificadoEscaneado }}">
-                                {{ $datos->certificado->certificadoReexpedido()->num_certificado }}
-                            </a>
-                        </p>
                         @php
+                            $nuevoId = $datos->certificado->certificadoReexpedido()?->id_certificado;
+                            $urlConNuevoId = $nuevoId ? preg_replace('/\d+$/', $nuevoId, $url) : null;
                             $obs = json_decode($datos->certificado->certificadoReexpedido()?->observaciones);
                         @endphp
-                        @if (!empty($obs?->observaciones))
-                            <p><strong>Motivo:</strong> {{ $obs->observaciones }}</p>
-                        @endif
+
+                        <div class="mt-2">
+                            <small class="text-muted">Este certificado sustituye al:</small><br>
+                            <a target="_blank" href="{{ $urlConNuevoId ?? '#' }}" class="text-primary fw-bold">
+                                {{ $datos->certificado->certificadoReexpedido()->num_certificado }}
+                            </a>
+
+                            @if (!empty($obs?->observaciones))
+                                <p class="mt-1"><strong>Motivo:</strong> {{ $obs->observaciones }}</p>
+                            @endif
+                        </div>
                     @endif
 
                     @php
@@ -102,18 +102,18 @@
                     @endphp
 
                     @if (!empty($observaciones) && !$contieneEnlace)
-                        <p><strong>Observaciones:</strong> {{ $observaciones }}</p>
+                        <p class="mt-2"><strong>Observaciones:</strong> {{ $observaciones }}</p>
                     @endif
 
                     @if (!empty($datos->evidencias))
                         <div class="mt-3">
-                            <strong>Evidencias:</strong>
+                            <p class="text-muted mb-1">Evidencias:</p>
                             @foreach ($datos->evidencias as $evidencia)
                                 @if (!empty($evidencia))
-                                    <div class="d-flex align-items-center mb-1">
-                                        <span class="me-2">{{ $evidencia->nombre_documento }}</span>
-                                        <a target="_blank" href="/storage/revisiones/{{ $evidencia->url }}">
-                                            <i class="ri-file-pdf-2-fill red-text" style="font-size: 1.5rem;"></i>
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <span>{{ $evidencia->nombre_documento }}</span>
+                                        <a href="/storage/revisiones/{{ $evidencia->url }}" target="_blank">
+                                            <i class="ri-file-pdf-2-fill text-danger ri-24px"></i>
                                         </a>
                                     </div>
                                 @endif
@@ -122,51 +122,60 @@
                     @endif
                 </div>
 
-                <!-- Columna derecha -->
-                <div class="col s12 m5">
-                    <div class="mb-3">
-                        <p class="grey-text text-darken-1 mb-1">Cliente</p>
-                        <h6 class="fw-bold">
-                            {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
-                        </h6>
+                <!-- Cliente -->
+                <div class="col-md-4">
+                    <p class="text-muted mb-1">Cliente</p>
+                    <h5 class="fw-semibold">
+                        {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                    </h5>
+                </div>
+
+                <!-- Consejo y Revisor -->
+                <div class="col-md-4 d-flex flex-column gap-3">
+
+                   <!-- Revisor (destacado) -->
+                <div class="d-flex align-items-center border border-primary rounded-4 p-3 shadow-lg bg-white position-relative" style="background: linear-gradient(135deg, #e3f2fd, #ffffff);">
+                    <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white shadow-sm" style="font-size: 0.75rem;">
+                        <i class="ri-star-fill"></i> Revisor
                     </div>
 
-                    <!-- Revisor -->
-                    <div class="card-panel blue lighten-5 z-depth-0 d-flex align-items-center mb-3">
-                        <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
-                             alt="Foto revisor"
-                             class="circle me-3 z-depth-1"
-                             width="50" height="50"
-                             style="object-fit: cover;">
-                        <div>
-                            <p class="blue-text text-darken-2 mb-0"><strong>{{ $datos->user->name ?? 'N/A' }}</strong></p>
-                            <small class="grey-text">Revisor</small>
-                        </div>
+                    <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
+                        alt="Foto revisor"
+                        class="rounded-circle border border-3 border-white shadow-sm me-3"
+                        width="60" height="60"
+                        style="object-fit: cover;">
+
+                    <div>
+                        <h6 class="mb-0 fw-bold text-primary" style="font-size: 1.1rem;">{{ $datos->user->name ?? 'N/A' }}</h6>
+                        <p class="mb-0 text-muted small">Responsable de esta revisión</p>
                     </div>
+                </div>
+
 
                     <!-- Consejo -->
-                    <div class="card-panel grey lighten-4 z-depth-0 d-flex align-items-center mb-3">
+                    <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
                         <img src="{{ asset('storage/' . $revisor_consejo->user->profile_photo_path) }}"
-                             alt="Foto consejo"
-                             class="circle me-3 z-depth-1"
-                             width="50" height="50"
-                             style="object-fit: cover;">
+                            alt="Foto consejo"
+                            class="rounded-circle me-3 border border-white shadow-sm"
+                            width="50" height="50" style="object-fit: cover;">
                         <div>
-                            <p class="grey-text text-darken-3 mb-0"><strong>{{ $revisor_consejo->user->name ?? 'N/A' }}</strong></p>
-                            <small class="grey-text">Consejo</small>
+                            <p class="text-muted mb-0 small">Consejo</p>
+                            <h6 class="mb-0 fw-semibold">{{ $revisor_consejo->user->name ?? 'N/A' }}</h6>
                         </div>
                     </div>
 
-                    <!-- PDF -->
-                    <div class="text-center mt-2">
+                   
+
+                    <!-- Certificado PDF -->
+                    <div class="mt-1">
                         <p class="text-muted mb-1">Certificado</p>
-                        <a target="_blank" href="{{ $url ?? '#' }}">
-                            <i class="ri-file-pdf-2-fill red-text" style="font-size: 2rem;"></i>
+                        <a href="{{ $url ?? '#' }}" target="_blank">
+                            <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                         </a>
                     </div>
                 </div>
 
-            </div>
+            </div> <!-- /row -->
         </div>
     </div>
 </div>
