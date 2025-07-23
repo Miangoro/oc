@@ -129,7 +129,7 @@
                     <!-- Consejo -->
                     <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
                         <img src="{{ asset('storage/' . $revisor_consejo->user->profile_photo_path) }}"
-                            alt="Foto personal"
+                            alt="Foto consejo"
                             class="rounded-circle me-3 border border-white shadow-sm"
                             width="50" height="50" style="object-fit: cover;">
                         <div>

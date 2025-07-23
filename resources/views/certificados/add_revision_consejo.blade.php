@@ -132,6 +132,25 @@
                 <!-- Personal y Revisor -->
                 <div class="col-md-4 d-flex flex-column gap-3">
 
+                   <!-- Revisor (destacado) -->
+<div class="d-flex align-items-center border border-primary rounded-4 p-3 shadow-lg bg-white position-relative" style="background: linear-gradient(135deg, #e3f2fd, #ffffff);">
+    <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white shadow-sm" style="font-size: 0.75rem;">
+        <i class="ri-star-fill"></i> Revisor
+    </div>
+
+    <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
+         alt="Foto revisor"
+         class="rounded-circle border border-3 border-white shadow-sm me-3"
+         width="60" height="60"
+         style="object-fit: cover;">
+
+    <div>
+        <h6 class="mb-0 fw-bold text-primary" style="font-size: 1.1rem;">{{ $datos->user->name ?? 'N/A' }}</h6>
+        <p class="mb-0 text-muted small">Responsable de esta revisión</p>
+    </div>
+</div>
+
+
                     <!-- Personal -->
                     <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
                         <img src="{{ asset('storage/' . $revisor_personal->user->profile_photo_path) }}"
@@ -144,17 +163,7 @@
                         </div>
                     </div>
 
-                    <!-- Revisor -->
-                    <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
-                        <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
-                            alt="Foto revisor"
-                            class="rounded-circle me-3 border border-white shadow-sm"
-                            width="50" height="50" style="object-fit: cover;">
-                        <div>
-                            <p class="text-muted mb-0 small">Revisor</p>
-                            <h6 class="mb-0 fw-semibold">{{ $datos->user->name ?? 'N/A' }}</h6>
-                        </div>
-                    </div>
+                   
 
                     <!-- Certificado PDF -->
                     <div class="mt-1">
