@@ -133,22 +133,22 @@
                 <div class="col-md-4 d-flex flex-column gap-3">
 
                    <!-- Revisor (destacado) -->
-<div class="d-flex align-items-center border border-primary rounded-4 p-3 shadow-lg bg-white position-relative" style="background: linear-gradient(135deg, #e3f2fd, #ffffff);">
-    <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white shadow-sm" style="font-size: 0.75rem;">
-        <i class="ri-star-fill"></i> Revisor
-    </div>
+                <div class="d-flex align-items-center border border-primary rounded-4 p-3 shadow-lg bg-white position-relative" style="background: linear-gradient(135deg, #e3f2fd, #ffffff);">
+                    <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white shadow-sm" style="font-size: 0.75rem;">
+                        <i class="ri-star-fill"></i> Revisor
+                    </div>
 
-    <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
-         alt="Foto revisor"
-         class="rounded-circle border border-3 border-white shadow-sm me-3"
-         width="60" height="60"
-         style="object-fit: cover;">
+                    <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
+                        alt="Foto revisor"
+                        class="rounded-circle border border-3 border-white shadow-sm me-3"
+                        width="60" height="60"
+                        style="object-fit: cover;">
 
-    <div>
-        <h6 class="mb-0 fw-bold text-primary" style="font-size: 1.1rem;">{{ $datos->user->name ?? 'N/A' }}</h6>
-        <p class="mb-0 text-muted small">Responsable de esta revisión</p>
-    </div>
-</div>
+                    <div>
+                        <h6 class="mb-0 fw-bold text-primary" style="font-size: 1.1rem;">{{ $datos->user->name ?? 'N/A' }}</h6>
+                        <p class="mb-0 text-muted small">Responsable de esta revisión</p>
+                    </div>
+                </div>
 
 
                     <!-- Personal -->
