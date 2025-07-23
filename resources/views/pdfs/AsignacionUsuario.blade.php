@@ -175,7 +175,8 @@
     <div class="Atentamente">
         <p>Atentamente. <br><br><br>
 
-            <u>{{$contacto->name ?? 'No encontrado'}}</u>
+            <u>{{$contacto->name ?? 'No encontrado'}}</u> <br><br>
+            {{$contacto->puesto ?? 'No encontrado'}}
         </p>
         
     </div>

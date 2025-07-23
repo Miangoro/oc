@@ -123,25 +123,34 @@
         <div style="margin-bottom: 40px;">
             <p>Sin otro en particular le envío un cordial saludo.</p>
 
-        </div  >
-
-        
-
+        </div>
     </div>
-    <div class="text_marge text-center">
-        <p>Atentamente.</p>
 
+
+
+    @php
+        use Illuminate\Support\Facades\Storage;
+        $firma = $contacto->firma ?? null;
+        $firmaPath = $firma ? 'firmas/' . $firma : null;
+    @endphp
+
+    @if ($firma && Storage::disk('public')->exists($firmaPath))
+        <img style="position: absolute; left: 37%; margin-top: 4%; " height="60px"
+        src="{{ public_path('storage/' . $firmaPath) }}">
+        <img style="position: absolute; left: 55%;" height="130px" width="180px" src="{{ public_path('img_pdf/Sello oc.png') }}" alt="sello">
+    @endif
+
+    <div style="font-size: 16px; text-align: center; margin-top: 10px;">
+        <p>Atentamente. <br><br><br>
+
+            <u>{{$contacto->name ?? 'No encontrado'}}</u><br><br>
+            {{$contacto->puesto ?? 'No encontrado'}}
+        </p>
     </div>
-    {{-- <div style="margin-bottom: 50px; text-align: center">
-        {{-- <p class="text_al text-center">Q.F.B. MAYRA GUTIÉRREZ ROMERO</p> --}}
-        {{--<img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_Q.F.B._Mayra_Gutiérrez_Romero_1739201715.png') }}">       
-        <img style="position: absolute; left: 190; margin-top: -4%" height="60px" src="{{ storage_path('app/public/firmas/firma_Q.F.B._Mayra_Gutiérrez_Romero_1739201715.png') }}">
-        <p class="text-center">Q.F.B. MAYRA GUTIÉRREZ ROMERO<br>GERENTE TÉCNICO DEL ORGANISMO CERTIFICADOR CIDAM
-    </div> --}}
     
 
     
-    <div style="margin-bottom: 20px;">
+    <div style="margin-top: 20%;">
         <p class="text_al">Carta asignación del número de cliente NOM-070-SCFI-2016 F7.1-01-27</p>
         <p class="text_al">Edición 4 Entrada en vigor: 02-09-2022</p>
     </div>
