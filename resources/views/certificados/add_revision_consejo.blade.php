@@ -280,7 +280,7 @@
                                             <td>
                                                 {{-- Mostrar documento solo si es la constancia fiscal --}}
 
-                                                @if ($cliente && $documento)
+                                                @if ($cliente && $documento && $tipo_certificado != 'Granel')
                                                     <a target="_blank"
                                                         href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
                                                         <i
