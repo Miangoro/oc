@@ -221,39 +221,61 @@
                                                         ->id_empresa,
                                                 );
                                             @endphp
-                                            <td>
-                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
-                                                <br>
-                                                @if ($cliente && $documento)
-                                                    <a target="_blank"
-                                                        href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                    </a>
-                                                @else
-                                                    <span class="text-muted">Sin carta de asignación</span>
-                                                @endif Carta de asignación
-                                                <br>
-                                                @if ($cliente && $documento2)
-                                                    <a target="_blank"
-                                                        href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento2 }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                    </a>
-                                                @else
-                                                    <span class="text-muted">Sin contrato subido</span>
-                                                @endif Contrato
-                                                <br>
-                                                @if ($datos->certificado->dictamen->inspeccione->solicitud?->id_solicitud)
-                                                    <a target="_blank"
-                                                        href="/solicitud_de_servicio/{{ $datos->certificado->dictamen->inspeccione->solicitud->id_solicitud }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                    </a>
-                                                @else
-                                                    <span class="text-muted">Sin solicitud</span>
-                                                @endif Solicitud
-                                            </td>
+                                            <td class="align-top p-3 text-start text-secondary">
+    <div class="mb-3">
+        <strong class="text-dark">Empresa:</strong><br>
+        {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+    </div>
+
+    <div class="mb-2 d-flex align-items-center">
+        @if ($cliente && $documento)
+            <a target="_blank"
+               href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}"
+               class="text-decoration-none text-danger d-flex align-items-center">
+                <i class="ri-file-pdf-2-fill me-1" style="font-size: 1.2rem;"></i>
+                <span>Carta de asignación</span>
+            </a>
+        @else
+            <span class="text-muted d-flex align-items-center">
+                <i class="ri-close-circle-line me-1" style="font-size: 1.1rem;"></i>
+                Sin carta de asignación
+            </span>
+        @endif
+    </div>
+
+    <div class="mb-2 d-flex align-items-center">
+        @if ($cliente && $documento2)
+            <a target="_blank"
+               href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento2 }}"
+               class="text-decoration-none text-danger d-flex align-items-center">
+                <i class="ri-file-pdf-2-fill me-1" style="font-size: 1.2rem;"></i>
+                <span>Contrato</span>
+            </a>
+        @else
+            <span class="text-muted d-flex align-items-center">
+                <i class="ri-close-circle-line me-1" style="font-size: 1.1rem;"></i>
+                Sin contrato subido
+            </span>
+        @endif
+    </div>
+
+    <div class="d-flex align-items-center">
+        @if ($datos->certificado->dictamen->inspeccione->solicitud?->id_solicitud)
+            <a target="_blank"
+               href="/solicitud_de_servicio/{{ $datos->certificado->dictamen->inspeccione->solicitud->id_solicitud }}"
+               class="text-decoration-none text-danger d-flex align-items-center">
+                <i class="ri-file-pdf-2-fill me-1" style="font-size: 1.2rem;"></i>
+                <span>Solicitud</span>
+            </a>
+        @else
+            <span class="text-muted d-flex align-items-center">
+                <i class="ri-close-circle-line me-1" style="font-size: 1.1rem;"></i>
+                Sin solicitud
+            </span>
+        @endif
+    </div>
+</td>
+
                                         @elseif($pregunta->filtro == 'representante_legal')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->representante ?? 'N/A' }}
                                             </td>
