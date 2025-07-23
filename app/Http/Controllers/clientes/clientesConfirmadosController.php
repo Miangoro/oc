@@ -164,10 +164,16 @@ public function pdfCartaAsignacion($id)
     // Formatear el número con ceros
     $codigo_oficio = 'CIDAM/OC/' . str_pad($consecutivo, 3, '0', STR_PAD_LEFT) . '/' . $anio_registro;
 
+    /*$empresa2 = empresa::where('id_empresa', '=', $empresa_id)->get();
+    $contacto = User::find($empresa2->id_contacto);*/
+    $empresa2 = empresa::where('id_empresa', $empresa_id)->first(); // o empresa::find($empresa_id)
+    $contacto = $empresa2 ? User::find($empresa2->id_contacto) : null;
+
     $pdf = Pdf::loadView('pdfs.CartaAsignacion', [
         'datos' => $res,
         'fecha_registro' => $fecha_registro ?? 'No encontrado',
         'codigo_oficio' => $codigo_oficio,
+        'contacto'=>$contacto,
     ]);
     return $pdf->stream('Carta de asignación de número de cliente.pdf');
 }
