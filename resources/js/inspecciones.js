@@ -142,7 +142,7 @@ $(function () {
 
           // ACTA
           if (acta && acta !== 'Sin subir') {
-            html += `<i class="ri-file-pdf-2-fill text-danger ri-30px me-2 pdf cursor-pointer"
+            html += `<i class="ri-file-pdf-2-fill text-success ri-30px me-2 pdf cursor-pointer"
                         title="Ver Acta"
                         data-bs-target="#mostrarPdf"
                         data-bs-toggle="modal"
