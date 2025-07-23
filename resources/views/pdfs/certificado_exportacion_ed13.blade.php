@@ -370,7 +370,7 @@
                 Certificado<br>NOM a<br>Granel:</td>
             <td style="text-align: left; padding-left: 4px;">
                 {{ $lote->lotesGranel->first()?->certificadoGranel?->num_certificado 
-                    ?? $lote_envasado->lotesGranel->first()->folio_certificado
+                    ?? $lote->lotesGranel->first()->folio_certificado
                     ?? 'No encontrado'; }}&nbsp;
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
