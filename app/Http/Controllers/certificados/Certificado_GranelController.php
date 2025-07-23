@@ -862,6 +862,11 @@ public function CertificadoGranel($id_certificado, $conMarca = true)
             }
     }
 
+    if ($certificado->estatus == 1) {
+        $volumen = $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen_restante ?? 'No encontrado';
+    }else{
+        $volumen = $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen ?? 'No encontrado';
+    }
     
     // Datos para el PDF
     $pdfData = [
@@ -886,7 +891,7 @@ public function CertificadoGranel($id_certificado, $conMarca = true)
         'clase' => $certificado->dictamen->inspeccione->solicitud->lote_granel->clase->clase ?? 'No encontrado',
         'nombre_lote' => $certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote?? 'No encontrado',
         'n_analisis' => $certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? 'No encontrado',
-        'volumen' => $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen ?? 'No encontrado',
+        'volumen' => $volumen,
         'cont_alc' => $certificado->dictamen->inspeccione->solicitud->lote_granel->cont_alc?? 'No encontrado',
         'tipo_maguey' => $certificado->dictamen->inspeccione->solicitud->lote_granel ?? 'No encontrado',
         'edad' => $certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? '-----',
