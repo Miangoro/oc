@@ -158,7 +158,6 @@ class solicitudHolograma extends Controller
                     'costo_envio' => $user->costo_envio,
                     'no_guia' => $user->no_guia,
                     'estatus' => $user->estatus,
-                    'estatus_activado' => $user->estatus_activado,
                     'folio_inicial' => '<a target="_blank" href="' . url('/holograma/'.$numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_inicial, 7, '0', STR_PAD_LEFT)) . '">' . $numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_inicial, 7, '0', STR_PAD_LEFT) . '</a>',
 
                     'folio_final' => '<a target="_Blank" href="'.url('/holograma/'.$numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_final, 7, '0', STR_PAD_LEFT)).'">'.$numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_final, 7, '0', STR_PAD_LEFT).'</a>',
@@ -559,15 +558,6 @@ class solicitudHolograma extends Controller
 
 
 
-///ESTATUS ACTUVAR HOLOGRAMAS
-public function cambiarEstatus(Request $request, $id)
-{
-    $solicitud = ModelsSolicitudHolograma::findOrFail($id);
-    $solicitud->estatus_activado = $request->estatus_activado; // 0 o 1
-    $solicitud->save();
-
-    return response()->json(['success' => true]);
-}
 
 
 

@@ -243,6 +243,16 @@ $(function () {
       {
         data: 'estatus',
         render: function (data, type, row) {
+          //estatus hologramas activados
+          var $color_estatus = '';
+          if ([8, 11].includes(row.id_tipo)) {
+              if ( row.estatus_activado == 1 ) {
+                var $color_estatus = '<span class="badge rounded-pill bg-label-primary">Hologramas activados</span>';
+              } else  {
+                var $color_estatus = '<span class="badge rounded-pill bg-label-danger">Hologramas no activados</span>';
+              }
+          }
+
           // Define las etiquetas para cada estado
           let estatus_validado_oc = 'bg-warning';
           let estatus_validado_ui = 'bg-warning';
@@ -259,11 +269,25 @@ $(function () {
           if (row.estatus_validado_ui == 'Rechazada') {
             estatus_validado_ui = 'bg-danger';
           }
+
+          // ACTA
+          const acta = row.url_acta;
+          const razon = row.razon_social;
+          const cliente = row.numero_cliente;
+          let html = '';
+          if (acta && acta !== 'Sin subir') {
+            html += `<a href="/files/${cliente}/actas/${acta}" class="text-success" target="_blank"><u>Ver acta</u></a>`;
+          } else {
+            html += '<span class="badge bg-danger me-1">Sin acta</span>';
+          }
+
           return `<span class="badge bg-warning mb-1">${data}</span><br>
             <span class="badge ${estatus_validado_oc} mb-1">${row.estatus_validado_oc} por oc</span><br>
-            <span class="badge ${estatus_validado_ui}">${row.estatus_validado_ui} por ui</span>`;
+            <span class="badge ${estatus_validado_ui}">${row.estatus_validado_ui} por ui</span> <br>`
+            +html+`<br>`+$color_estatus;
         }
       },
+
       { data: 'action' }
     ],
 
@@ -363,6 +387,17 @@ $(function () {
         searchable: false,
         orderable: false,
         render: function (data, type, full, meta) {
+          ///estatus hologramas activados
+          var $boton = '';
+          let textoEstatus = full['estatus_activado'] == 1 
+              ? 'Cambiar estatus <span class="text-danger">desactivado</span>'
+              : 'Cambiar estatus <span class="text-success">activado</span>';
+          if ([8, 11].includes( full['id_tipo']) ) {
+            var $boton = `<a data-id="${full['id_solicitud']}" data-estatus="${full['estatus_activado']}" class="dropdown-item waves-effect text-dark activar-hologramas">
+                <i class="ri-refresh-line ri-20px"></i> ${textoEstatus}
+              </a>`;
+          }
+
           let dropdown = `
                 <div class="d-flex align-items-center gap-50">
                   <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -407,8 +442,8 @@ $(function () {
                     </a>`;
           }
 
-          dropdown += `
-                  </div>
+          dropdown += $boton +
+                `</div>
                 </div>`;
 
           return dropdown;
@@ -5431,8 +5466,44 @@ $(function () {
       });
     }
   });
+
+
+
+///ESTATUS ACTUVAR HOLOGRAMAS
+$(document).on('click', '.activar-hologramas', function () {
+  var id_solicitud = $(this).data('id');
+  var estatusActual = $(this).data('estatus');
+  var nuevoEstatus = estatusActual == 1 ? 0 : 1;
+
+  // Actualizar el estatus sin preguntar
+  $.ajax({
+    type: 'POST',
+    url: `${baseUrl}activar-hologramas/${id_solicitud}`,
+    data: {
+      estatus_activado: nuevoEstatus,
+      _token: $('meta[name="csrf-token"]').attr('content')
+    },
+    success: (response) => {
+      dt_user.draw();
+
+      // Opcional: actualizar el texto y data-estatus del enlace en la tabla para reflejar el cambio inmediato
+      $(this).data('estatus', nuevoEstatus);
+      let nuevoTexto = nuevoEstatus == 1 ? 'Cambiar estatus desactivado' : 'Cambiar estatus activado';
+      $(this).html(`<i class="ri-refresh-bin-7-line ri-20px text-info"></i> ${nuevoTexto}`);
+    },
+    error: (err) => {
+      console.error(err);
+      // Aquí puedes mostrar mensaje de error si quieres
+    }
+  });
 });
+
+
+
+});//fin function
 
 document.getElementById('addPedidoExportacion').addEventListener('shown.bs.modal', function () {
   cargarDatosCliente();
 });
+
+

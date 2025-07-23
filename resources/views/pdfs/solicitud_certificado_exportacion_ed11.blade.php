@@ -119,7 +119,7 @@
 
 
     <div style="text-align: center; font-weight: bold; font-size: 13px; padding: 9px;" >
-        SOLICITUD DE EMISIÓN DEL CERTIFICADO NOM PARA EXPORTACIÓN   EDICION 11
+        SOLICITUD DE EMISIÓN DEL CERTIFICADO NOM PARA EXPORTACIÓN
     </div>
     <!--PUNTO 1-->
     <table>

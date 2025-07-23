@@ -303,7 +303,19 @@ class solicitudesController extends Controller
                 $nestedData['folio_info'] = $solicitud->folio;
                 $nestedData['num_servicio_info'] = $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
                 $nestedData['inspectorName'] = $solicitud->inspector->name ?? 'Sin inspector';
+
                 $nestedData['id_inspeccion'] = $solicitud->inspeccion->id_inspeccion ?? 'Sin inspeccion';
+                $nestedData['estatus_activado'] = $solicitud->estatus_activado;
+                $urls = $solicitud->documentacion(69)->pluck('url')->toArray();
+                // Comprobamos si $urls está vacío
+                if (empty($urls)) {
+                    // Si está vacío, asignamos la etiqueta de "Sin subir"
+                    $nestedData['url_acta'] = 'Sin subir';
+                } else {
+                    // Si hay URLs, las unimos en una cadena separada por comas
+                    $nestedData['url_acta'] = implode(', ', $urls);
+                }
+
                 $empresa = $solicitud->empresa;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
                     ? $empresa->empresaNumClientes
@@ -2248,4 +2260,21 @@ class solicitudesController extends Controller
         //return $pdf->stream('Validación de solicitud.pdf');
         return view('pdfs.pdf_validar_solicitud', compact('datos', 'fecha'));
     }
+
+
+
+///ESTATUS ACTUVAR HOLOGRAMAS
+public function cambiarEstatus(Request $request, $id)
+{
+    $solicitud = solicitudesModel::findOrFail($id);
+    $solicitud->estatus_activado = $request->estatus_activado; // 0 o 1
+    $solicitud->save();
+
+    return response()->json(['success' => true]);
+}
+
+
+
+
+
 }

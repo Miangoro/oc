@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ $datos->num_dictamen }} Dictamen de cumplimiento de Instalaciones como comercializador</title>
+    <title>Dictamen de cumplimiento de Instalaciones como comercializador</title>
     <style>
 
     @font-face {
@@ -307,10 +307,10 @@
                     <td class="font-lucida-sans-seminegrita">Fecha de emisión de dictamen:</td>
                     <td style="text-align: center; vertical-align: middle;">{{ $fecha_emision }}</td>
                 </tr>
-                <tr>
+                {{-- <tr>
                     <td class="font-lucida-sans-seminegrita">Fecha de vigencia de dictamen:</td>
                     <td style="text-align: center; vertical-align: middle;">{{ $fecha_vigencia }}</td>
-                </tr>
+                </tr> --}}
             </tbody>
         </table>
         <p class="text">
@@ -376,7 +376,7 @@
         Este dictamen sustituye al: {{ $id_sustituye }}
         @endif
         <br>Entrada en vigor: 15-07-2024
-        <br>F-UV-02-04 Ver 10.
+        <br>F-UV-02-12 Ver 5.
     </p>
 
     <div class="footer-bar">
