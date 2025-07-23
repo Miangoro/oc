@@ -286,8 +286,7 @@
                                                         <i
                                                             class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
-                                                @else
-                                                    <span class="text-muted">Sin documento</span>
+                                                
                                                 @endif
                                                 {{-- Mostrar dirección fiscal siempre --}}
                                                 {{ $empresa->domicilio_fiscal ?? 'N/A' }}
