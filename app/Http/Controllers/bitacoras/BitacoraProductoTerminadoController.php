@@ -251,7 +251,7 @@ public function store(Request $request)
         'cantidad_botellas_cajas' => 'nullable|numeric|min:0',
         'edad' => 'nullable|string|max:100',
         'ingredientes' => 'nullable|string',
-
+        'id_marca' => 'nullable|integer', 
         'cant_cajas_inicial' => 'nullable|numeric|min:0',
         'cant_bot_inicial' => 'nullable|numeric|min:0',
 
@@ -283,9 +283,10 @@ public function store(Request $request)
         $bitacora->lote_envasado = $request->lote_envasado;
         $bitacora->id_categoria = $request->id_categoria;
         $bitacora->id_clase = $request->id_clase;
+        $bitacora->id_marca = $request->id_marca; // Asegúrate de que este campo sea nullable en la migración
         $bitacora->proforma_predio = $request->proforma_predio;
         $bitacora->folio_fq = $request->folio_fq;
-        $bitacora->id_tipo = is_array($request->id_tipo) ? implode(',', $request->id_tipo) : null;
+        $bitacora->id_tipo = json_encode($request->id_tipo);
         $bitacora->alc_vol = $request->alc_vol;
         $bitacora->sku = $request->sku;
         $bitacora->cantidad_botellas_cajas = $request->cantidad_botellas_cajas;
@@ -412,7 +413,7 @@ public function store(Request $request)
             'cantidad_botellas_cajas' => 'nullable|numeric|min:0',
             'edad' => 'nullable|string|max:100',
             'ingredientes' => 'nullable|string',
-
+            'id_marca' => 'nullable|integer',
             'cant_cajas_inicial' => 'nullable|numeric|min:0',
             'cant_bot_inicial' => 'nullable|numeric|min:0',
 
@@ -447,13 +448,13 @@ public function store(Request $request)
             'id_clase' => $request->id_clase,
             'proforma_predio' => $request->proforma_predio,
             'folio_fq' => $request->folio_fq,
-            'id_tipo' => is_array($request->id_tipo) ? implode(',', $request->id_tipo) : null,
+            'id_tipo' =>  json_encode($request->id_tipo),
             'alc_vol' => $request->alc_vol,
             'sku' => $request->sku,
             'cantidad_botellas_cajas' => $request->cantidad_botellas_cajas,
             'edad' => $request->edad,
             'ingredientes' => $request->ingredientes,
-
+            'id_marca' => $request->id_marca,
             'cant_cajas_inicial' => $request->cant_cajas_inicial ?? 0,
             'cant_bot_inicial' => $request->cant_bot_inicial ?? 0,
 

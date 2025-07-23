@@ -1,6 +1,6 @@
 @extends('layouts.layoutMaster')
 
-@section('title', 'Bitácora Mezcal a Granel')
+@section('title', 'Bitácora Producto Terminado (Comercializador)')
 
 @section('vendor-style')
     <style>
@@ -33,7 +33,7 @@
                 return "<option value='{$e->id_empresa}'>{$num} | {$e->razon_social}</option>";
             })->implode('') !!}`;
     </script>
-    @vite(['resources/js/bitacora_producto_terminado.js'])
+    @vite(['resources/js/bitacora_producto_envasador.js'])
 @endsection
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">

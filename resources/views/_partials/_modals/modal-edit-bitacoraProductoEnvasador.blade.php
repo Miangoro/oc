@@ -81,7 +81,7 @@
                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select id="edit_id_marca" name="id_marca" class="select2 form-select">
-                                                <option value="" disabled selected>Selecciona una marca</option>
+                                                <option value="" disabled selected>Seleccione una marca</option>
                                                 <!-- Opciones dinámicas -->
                                             </select>
                                             <label for="id_marca">Marca</label>
