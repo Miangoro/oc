@@ -361,7 +361,7 @@ public function index(Request $request)
                 }
             }
             $nestedData['url_acta'] = !empty($actas) ? $actas : [];
-            $nestedData['estatus_activado'] = $certificado->dictamen->inspeccione->solicitud->estatus_activado;
+            $nestedData['estatus_activado'] = $lotes_env->first()->dictamenEnvasado->inspeccion->solicitud->estatus_activado ?? null;
             /*$nestedData['id_hologramas'] = $certificado->id_hologramas ?: null; //?:(no vacío, no null, no false)
             $nestedData['old_hologramas'] = $certificado->old_hologramas ?: null;*/
             //visto bueno

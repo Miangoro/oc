@@ -245,7 +245,7 @@ $(function () {
         render: function (data, type, row) {
           //estatus hologramas activados
           var $color_estatus = '';
-          if ([8, 11].includes(row.id_tipo)) {
+          if ( row.id_tipo == 5 ) {
               if ( row.estatus_activado == 1 ) {
                 var $color_estatus = '<span class="badge rounded-pill bg-label-primary">Hologramas activados</span>';
               } else  {
@@ -330,7 +330,7 @@ $(function () {
         orderable: false
       },
       {
-        // User full name
+        //inspector asignado
         targets: 9,
         render: function (data, type, full, meta) {
           var $name = full['inspector'];
@@ -375,8 +375,8 @@ $(function () {
           return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['folio']}"></i>`;
         }
       },
-      {
-        targets: 13, // o el índice correcto de la columna 'estatus'
+      {///columna 'estatus'
+        targets: 13,
         orderable: false,
         searchable: false
       },
@@ -392,7 +392,7 @@ $(function () {
           let textoEstatus = full['estatus_activado'] == 1 
               ? 'Cambiar estatus <span class="text-danger">desactivado</span>'
               : 'Cambiar estatus <span class="text-success">activado</span>';
-          if ([8, 11].includes( full['id_tipo']) ) {
+          if ( full['id_tipo']== 5 ) {
             var $boton = `<a data-id="${full['id_solicitud']}" data-estatus="${full['estatus_activado']}" class="dropdown-item waves-effect text-dark activar-hologramas">
                 <i class="ri-refresh-line ri-20px"></i> ${textoEstatus}
               </a>`;
@@ -5484,7 +5484,7 @@ $(document).on('click', '.activar-hologramas', function () {
       _token: $('meta[name="csrf-token"]').attr('content')
     },
     success: (response) => {
-      dt_user.draw();
+      dt_instalaciones_table.draw();
 
       // Opcional: actualizar el texto y data-estatus del enlace en la tabla para reflejar el cambio inmediato
       $(this).data('estatus', nuevoEstatus);
