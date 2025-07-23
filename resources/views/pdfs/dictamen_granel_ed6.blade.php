@@ -167,7 +167,7 @@ margin-bottom: 0;
 }
  .negrita{
             font-family: 'fuenteNegrita';
-            font-size: 14px;
+            font-size: 12px;
         }
          /* Estilo para la tabla */
         table.datos_empresa {
@@ -306,27 +306,42 @@ margin-bottom: 0;
 
 <tr>
     <td class="celda-azul"> Categoría y <br>Clase</td>
-<td  class="celda-normal">Mezcal Artesanal clase <br> Blanco o Joven</td>
+<td  class="celda-normal">{{ $data->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'NA' }}<br> {{$data->inspeccione->solicitud->lote_granel->clase->clase ?? 'NA' }}</td>
     <td class="celda-azul"> No de lote a <br>granel</td>
-<td  class="celda-normal">2507ESVCAM</td>
+<td  class="celda-normal">{{ $data->inspeccione->solicitud->lote_granel->nombre_lote ?? '------' }}</td>
     <td class="celda-azul"> No. de <br>análisis</td>
-    <td  class="celda-normal">NNMZ-51195</td>
+    <td  class="celda-normal">{{ $data->inspeccione->solicitud->lote_granel->folio_fq ?? 'NA'}}</td>
 </tr>
 
 <tr>
     <td class="celda-azul">Ingredientes</td>
-<td  class="celda-normal">---</td>
+<td  class="celda-normal">{{ $data->inspeccione->solicitud->lote_granel->ingredientes ?? 'NA' }}</td>
     <td class="celda-azul">  Volumen de <br> lote</td>
-<td  class="celda-normal">151837 L</td>
+<td  class="celda-normal">{{ $data->inspeccione->solicitud->lote_granel->volumen ?? '----' }} L</td>
     <td class="celda-azul">  Contenido <br> Alcohólico</td>
-    <td  class="celda-normal">48.96% Alc.Vol.</td>
+    <td  class="celda-normal">{{ $data->inspeccione->solicitud->lote_granel->cont_alc ?? 'NA' }} % Alc. Vol.</td>
 </tr>
 
 <tr>
     <td class="celda-azul">Edad</td>
-<td  class="celda-normal">---</td>
+<td  class="celda-normal">{{ $data->inspeccione->solicitud->lote_granel->edad ?? 'NA' }}</td>
     <td colspan="2" class="celda-azul">  Tipo de Maguey </td>
-<td colspan="2" class="celda-normal"><br> Maguey Espadín (A. angustifolia)</td>   
+<td colspan="2" class="celda-normal"><br>  @php
+                        $ordenIds = json_decode($data->inspeccione->solicitud->lote_granel->id_tipo ?? '[]');
+                        $tipos = $data->inspeccione->solicitud->lote_granel->tiposRelacionados;
+                        // Reordenar manualmente
+                        $tiposOrdenados = collect($ordenIds)->map(function($id) use ($tipos) {
+                            return $tipos->firstWhere('id_tipo', (int) $id);
+                        })->filter(); // Elimina nulos si faltan IDs
+                    @endphp
+
+                    @if($tiposOrdenados->isNotEmpty())
+                        @foreach($tiposOrdenados as $tipo)
+                            {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>) <br>
+                        @endforeach
+                    @else
+                        ------
+                    @endif</td>   
 </tr>
 
 </table>
