@@ -19,7 +19,7 @@ class LotesGranel extends Model
         'id_empresa', 'id_tanque', 'nombre_lote', 'tipo_lote', 'folio_fq', 'volumen', 'volumen_restante',
         'cont_alc', 'id_categoria', 'id_clase', 'id_tipo', 'ingredientes',
         'edad', 'id_guia', 'folio_certificado', 'id_organismo',
-        'fecha_emision', 'fecha_vigencia', 'estatus', 'lote_original_id', 'id_estado'
+        'fecha_emision', 'fecha_vigencia', 'agua_entrada','estatus', 'lote_original_id', 'id_estado'
     ];
 
     // Método para obtener el nombre del registro que sirve para la trazabilidad
@@ -127,7 +127,7 @@ class LotesGranel extends Model
         return $this->belongsTo(estados::class, 'id_estado', 'id');
     }
 
- 
+
 
 
 }

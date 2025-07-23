@@ -785,6 +785,8 @@ if ($request->has('documentos')) {
 
     public function update(Request $request, $id_lote_granel)
   {
+
+    /* dd($request->all()); */
         try {
             // Validar los datos del formulario
             $validated = $request->validate([
@@ -813,7 +815,6 @@ if ($request->has('documentos')) {
                 'folio_fq_ajuste' => 'nullable|string|max:50',
                 'folio_fq' => 'nullable|string|max:50'
             ]);
-
             $lote = LotesGranel::findOrFail($id_lote_granel);
         // Si `lote_original_id` es nulo, inicializar `$lote_original_data` como un arreglo vacío
         $lote_original_data = $lote->lote_original_id ? json_decode($lote->lote_original_id, true) : ['lotes' => [], 'volumenes' => []];
