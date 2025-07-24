@@ -748,9 +748,8 @@ public function storeRevisor(Request $request)
         $revisor->save();
 
 
-        // Documento (solo si tipo = 1 y subido)
-        if ($conDocumento && $nombreArchivo) {
-            // Eliminar documento anterior si existe
+        // Subir documento si tipo_revisor es 1 y hay archivo
+        if ($tipoRevisor == 1 && $nombreArchivo) {
             $docAnterior = Documentacion_url::where('id_relacion', $revisor->id_revision)
                 ->where('id_documento', 133)
                 ->first();
@@ -759,7 +758,6 @@ public function storeRevisor(Request $request)
                 $docAnterior->delete();
             }
 
-            // Crear nuevo documento
             Documentacion_url::create([
                 'id_relacion' => $revisor->id_revision,
                 'id_documento' => 133,
