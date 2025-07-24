@@ -655,6 +655,12 @@
                                                             ->where('id_documento', 59)
                                                             ->first(['url', 'nombre_documento']); // ✅ Usa first() en lugar de value()
 
+                                                        if(!$documento){
+                                                            $documento = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+                                                            ->where('id_documento', 59)
+                                                            ->first(['url', 'nombre_documento']); // ✅ Usa first() en lugar de value()
+                                                        }
+
                                                         if ($documento) {
                                                             $urls_certificados->push([
                                                                 'url' => $documento->url,
