@@ -344,7 +344,7 @@ class getFuncionesController extends Controller
                 $urls_certificados->push($url);
             }
         }
-        if(!$urls_certificados){
+     
             $url = Documentacion_url::where('id_relacion', $idLote)
                     ->where('id_documento', 59)
                     ->value('url');
@@ -352,7 +352,7 @@ class getFuncionesController extends Controller
                 if ($url) {
                     $urls_certificados->push($url);
                 }
-        }
+ 
 
         $fqs = collect();
 
