@@ -345,7 +345,7 @@ class getFuncionesController extends Controller
             }
         }
 
-        $url = Documentacion_url::where('id_relacion', $idLote->id_lote_granel)
+        $url = Documentacion_url::where('id_relacion', $idLote)
                 ->where('id_documento', 59)
                 ->value('url');
 
