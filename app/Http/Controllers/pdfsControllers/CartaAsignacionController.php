@@ -11,6 +11,7 @@ use Carbon\Carbon;
 //
 use App\Models\inspecciones;
 use App\Models\User;
+use App\Models\BitacoraProductoEtiqueta;
 
 
 
@@ -239,7 +240,7 @@ class CartaAsignacionController extends Controller
 
     //Plan de auditoria
     public function PlanDeAuditoria($id_inspeccion)//070
-    {   
+    {
         $datos = inspecciones::find($id_inspeccion);
         $empresa = $datos->solicitud->empresa ?? null;
         $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
@@ -248,7 +249,7 @@ class CartaAsignacionController extends Controller
 
         $fecha_inspeccion1 = Helpers::formatearFecha($datos->fecha_servicio);//dia de mes del año
         $fecha_inspeccion2 = Carbon::parse($datos->fecha_servicio)->translatedFormat('Y/m/d');
-        
+
         $contacto_oc = User::find($datos->solicitud->empresa->id_contacto);
 
         $pdf = Pdf::loadView('pdfs.PlanDeAuditoria', [
@@ -387,12 +388,8 @@ class CartaAsignacionController extends Controller
     }
 
     public function BitacoraHologramas() {
-        $pdf = Pdf::loadView('pdfs.Bitacora_Hologramas')->setPaper('letter', 'landscape');
+        $pdf = Pdf::loadView('pdfs.Bitacora_Etiquetas')->setPaper('letter', 'landscape');
         return $pdf->stream('Bitácora De Hologramas.pdf');
     }
 
-    public function informeresulta(){
-      $pdf = Pdf::loadView('pdfs.informe_resultados');
-      return $pdf->stream('Registro de muestras y Reportes de resultados plaguicidas 2025.pdf');
-    }
 }
