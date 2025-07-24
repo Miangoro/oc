@@ -407,7 +407,9 @@
                                           $documentos = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs ?? collect();
                                           $doc1 = $documentos->get(0);
                                            $doc2 = $documentos->get(1);
-                                        
+                                         $loteGranel =
+                                                    $datos->certificado->dictamen->inspeccione->solicitud
+                                                        ->lote_granel ?? null;
 
                                            // Obtener documentos
                                                 $documentos = $loteGranel->fqs ?? collect();
@@ -601,7 +603,72 @@
                                                 {{ $dictamen->num_dictamen }}
                                             </td>
                                         @elseif($pregunta->filtro == 'certificado_granel')
-                                            
+                                            @php
+                                                $solicitud =
+                                                    $datos->certificado->dictamen->inspeccione->solicitud ?? null;
+                                                $loteGranel = $solicitud->lote_granel ?? null;
+                                                $loteEnvasado = $solicitud->lote_envasado ?? null;
+                                                $empresa = $loteGranel?->empresa ?? null;
+
+                                                $numero_cliente =
+                                                    $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                                                        ? $empresa->empresaNumClientes->first(
+                                                                fn($item) => $item->empresa_id === $empresa->id &&
+                                                                    !empty($item->numero_cliente),
+                                                            )?->numero_cliente ?? null
+                                                        : null;
+
+                                                $docFirmado = $loteGranel
+                                                    ? \App\Models\documentacion_url::where(
+                                                        'id_relacion',
+                                                        $loteGranel->id_lote_granel,
+                                                    )
+                                                        ->where('id_documento', 59)
+                                                        ->first()
+                                                    : null;
+
+                                                $urlFirmado =
+                                                    $docFirmado &&
+                                                    $docFirmado->url &&
+                                                    $numero_cliente &&
+                                                    str_ends_with(strtolower($docFirmado->url), '.pdf')
+                                                        ? asset(
+                                                            "files/{$numero_cliente}/certificados_granel/{$docFirmado->url}",
+                                                        )
+                                                        : null;
+
+                                                         $ids = $solicitud->id_lote_envasado; // array de IDs
+                                                            $certificados = collect();
+
+                                                            foreach ($ids as $id) {
+                                                                $lote = App\Models\lotes_envasado::find($id);
+                                                                if ($lote) {
+                                                                    foreach ($lote->lotesGranel as $granel) {
+                                                                        if ($granel->certificadoGranel) {
+                                                                            $certificados->push($granel->certificadoGranel);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            $urls_certificados = collect();
+                                                            foreach ($certificados as $certificado) {
+                                                        $documento = App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)->where('id_doc', $certificado->id_certificado)
+                                                            ->where('id_documento', 59)
+                                                            ->first(['url', 'nombre_documento']); // ✅ Usa first() en lugar de value()
+
+                                                       
+
+                                                        if ($documento) {
+                                                            $urls_certificados->push([
+                                                                'url' => $documento->url,
+                                                                'nombre_documento' => $documento->nombre_documento,
+                                                            ]);
+                                                        }
+                                                    }
+
+                                            @endphp
+
                                             <td>
                                                 {{-- 📎 Documentos firmados PDF (si existen) --}}
                                                 @forelse ($urls_certificados as $pdf)
