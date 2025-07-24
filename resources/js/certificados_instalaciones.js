@@ -248,16 +248,26 @@ initializeSelect2(select2Elements);
             var $estatus = full['estatus'];
             var $fecha_actual = full['fecha_actual'];
             var $vigencia = full['vigencia'];
+            var $pdf_firmado  = full['pdf_firmado'];//si hay archivo subido
             let estatus;
-              if ($fecha_actual > $vigencia) {
-                estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
-              } else if ($estatus == 1) {
-                  estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
-              } else if ($estatus == 2) {
-                  estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
-              } else {
-                estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
-              }
+            
+            if ($fecha_actual > $vigencia) {
+              estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
+            } else {
+              let badge = '';
+              let texto = '';
+                  if ($estatus == 1) {
+                    badge = 'bg-danger';
+                    texto = 'Cancelado';
+                  } else if ($estatus == 2) {
+                    badge = 'bg-warning';
+                    texto = 'Reexpedido';
+                  } else {
+                    badge = $pdf_firmado ? 'bg-success' : 'bg-secondary';
+                    texto = $pdf_firmado ? 'Emitido' : 'Pre-certificado';
+                  }
+              estatus = `<span class="badge rounded-pill ${badge}">${texto}</span>`;
+            }
 
             ///revisores PERSONAL
             var $revisor_personal = full['revisor_personal'];

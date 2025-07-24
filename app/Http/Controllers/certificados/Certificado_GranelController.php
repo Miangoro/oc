@@ -457,7 +457,7 @@ public function obtenerRevision($id_certificado)
 ///ELIMINAR DOCUMENTO REVISION
 public function eliminarDocumentoRevision($id_certificado)
 {
-    // Buscar el revisor con tipo_certificado 3 (puedes limitar más si quieres)
+    // Buscar el revisor con tipo_certificado 2 (puedes limitar más si quieres)
     $revisor = Revisor::where('id_certificado', $id_certificado)
         ->where('tipo_certificado', 2)
         ->where('tipo_revision', 1)
