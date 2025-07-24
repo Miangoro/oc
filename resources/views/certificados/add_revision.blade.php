@@ -33,112 +33,162 @@
 </style>
 @section('content')
 
-    <div class="container mt-3 mb-3">
-        <div class="card shadow-sm border-0 rounded-3" style="max-width: 100%; margin: auto;">
-            <div class="card-header bg-primary  text-center py-2">
-                <h5 class="mb-0 text-white">Revisión de certificado personal <br><span class="badge bg-warning text-dark text-dark">{{ $datos->certificado->num_certificado ?? 'N/A' }}</span></h5>
-            </div>
-            <div class="card-body p-3">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted mb-1">Tipo de certificado</p>
-                        <h5 class="fw-semibold mb-2">{{ $tipo }}</h5>
-                         @php
+ 
+ <div class="container mt-4 mb-4">
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-menu-theme text-center py-3">
+            <h5 class="mb-0 text-white">
+                Revisión de Certificado Personal <br>
+                <span class="badge bg-warning text-dark">{{ $datos->certificado->num_certificado ?? 'N/A' }}</span>
+            </h5>
+        </div>
+
+        <div class="card-body p-4">
+            <div class="row gy-3">
+
+             
+                        @php
                             $caracteristicas = json_decode( $datos->certificado->dictamen->inspeccione->solicitud->caracteristicas);
-                             $tipo_certificado = $tipo;
-                              $combinado = 'No';
-                        @endphp
-                        @if (isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
-                            <span class="badge bg-info">Combinado</span>
-                            @php $combinado = 'Si'; @endphp
-                        @endif
-                        @if ($datos->es_correccion === 'si')
-                            <span class="badge bg-danger">Es corrección</span>
-                        @endif
-
-                         @php
-                                $nuevoId = $datos->certificado->certificadoReexpedido()?->id_certificado;
-                                $urlConNuevoId = $nuevoId ? preg_replace('/\d+$/', $nuevoId, $url) : null;
-                                 $solicitud =
-                                                    $datos->certificado->dictamen->inspeccione->solicitud ?? null;
-                                                $loteGranel = $solicitud->lote_granel ?? null;
-                                                $loteEnvasado = $solicitud->lote_envasado ?? null;
-                                                $empresa = $loteGranel?->empresa ?? null;
-
-                                                $numero_cliente =
-                                                    $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                                                        ? $empresa->empresaNumClientes->first(
-                                                                fn($item) => $item->empresa_id === $empresa->id &&
-                                                                    !empty($item->numero_cliente),
-                                                            )?->numero_cliente ?? null
-                                                        : null;
-
-                            @endphp
-
-
-                        @if ($datos->certificado->certificadoReexpedido())
-                           
-
-                            <p>Este certificado sustituye al certificado <a target="_blank"
-                                    href="{{ '/files/' . $numero_cliente . '/certificados_granel/' . $certificadoEscaneado }}">{{ $datos->certificado->certificadoReexpedido()->num_certificado }}</a>
-                                @php
-                                    $obs = json_decode($datos->certificado->certificadoReexpedido()?->observaciones);
-                                @endphp
-
-                                @if (!empty($obs?->observaciones))
-                                    <p><strong>Motivo:</strong> {{ $obs->observaciones }}</p>
-                                @endif
-
-
-
-                            </p>
-                        @endif
-                       @php
-                            $observaciones = $datos->observaciones ?? '';
-
-                            // Buscar y convertir todas las URLs en enlaces <a>
-                            $observacionesConEnlaces = preg_replace(
-                                '~(https?://[^\s]+)~',
-                                '<a href="$1" target="_blank">$1</a>',
-                                e($observaciones) // escapamos antes de aplicar HTML
-                            );
-                                $contieneEnlace = preg_match('~https?://[^\s]+~', $observaciones);
+                            $tipo_certificado = $tipo;
+                            $combinado = 'No';
                         @endphp
 
-                       @if (!empty($observaciones) && !$contieneEnlace)
-                            <p><strong>Observaciones:</strong> {{ $observaciones }}</p>
-                        @endif
+                <!-- Tipo de certificado -->
+                <div class="col-md-4">
+                    <p class="text-muted mb-1">Tipo de certificado</p>
+                    <h5 class="fw-semibold">{{ $tipo }}</h5>
 
-                        @if (!empty($datos->evidencias) && count($datos->evidencias) > 0)
+                    @php
+                        $caracteristicas = json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas);
+                        $combinado = 'No';
+                    @endphp
+
+                    @if (isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2')
+                        <span class="badge bg-info">Combinado</span>
+                        @php $combinado = 'Si'; @endphp
+                    @endif
+
+                    @if ($datos->es_correccion === 'si')
+                        <span class="badge bg-danger">Es corrección</span>
+                    @endif
+
+                    @if ($datos->certificado->certificadoReexpedido())
+                        @php
+                            $nuevoId = $datos->certificado->certificadoReexpedido()?->id_certificado;
+                            $urlConNuevoId = $nuevoId ? preg_replace('/\d+$/', $nuevoId, $url) : null;
+                            $obs = json_decode($datos->certificado->certificadoReexpedido()?->observaciones);
+                        @endphp
+
+                        <div class="mt-2">
+                            <small class="text-muted">Este certificado sustituye al:</small><br>
+                            <a target="_blank" href="{{ $urlConNuevoId ?? '#' }}" class="text-primary fw-bold">
+                                {{ $datos->certificado->certificadoReexpedido()->num_certificado }}
+                            </a>
+
+                            @if (!empty($obs?->observaciones))
+                                <p class="mt-1"><strong>Motivo:</strong> {{ $obs->observaciones }}</p>
+                            @endif
+                        </div>
+                    @endif
+
+                    @php
+                        $observaciones = $datos->observaciones ?? '';
+                        $observacionesConEnlaces = preg_replace(
+                            '~(https?://[^\s]+)~',
+                            '<a href="$1" target="_blank">$1</a>',
+                            e($observaciones)
+                        );
+                        $contieneEnlace = preg_match('~https?://[^\s]+~', $observaciones);
+                    @endphp
+
+                    @if (!empty($observaciones) && !$contieneEnlace)
+                        <p class="mt-2"><strong>Observaciones:</strong> {{ $observaciones }}</p>
+                    @endif
+
+                    @if (!empty($datos->evidencias))
+                        <div class="mt-3">
+                            <p class="text-muted mb-1">Evidencias:</p>
                             @foreach ($datos->evidencias as $evidencia)
                                 @if (!empty($evidencia))
-                                    <b>{{ $evidencia->nombre_documento }}</b>
-                                    <a target="_blank" href="/storage/revisiones/{{ $evidencia->url }}">
-                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                    </a>
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <span>{{ $evidencia->nombre_documento }}</span>
+                                        <a href="/storage/revisiones/{{ $evidencia->url }}" target="_blank">
+                                            <i class="ri-file-pdf-2-fill text-danger ri-24px"></i>
+                                        </a>
+                                    </div>
                                 @endif
                             @endforeach
-                        @endif
+                        </div>
+                    @endif
+                </div>
 
+                <!-- Cliente -->
+                <div class="col-md-4">
+                    <p class="text-muted mb-1">Cliente</p>
+                    <h5 class="fw-semibold">
+                        {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                    </h5>
+                </div>
+
+                <!-- Consejo y Revisor -->
+                <div class="col-md-4 d-flex flex-column gap-3">
+
+                   <!-- Revisor (destacado) -->
+                <div class="d-flex align-items-center border border-primary rounded-4 p-3 shadow-lg bg-white position-relative" style="background: linear-gradient(135deg, #e3f2fd, #ffffff);">
+                    <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white shadow-sm" style="font-size: 0.75rem;">
+                        <i class="ri-star-fill"></i> Revisor
                     </div>
+
+                    <img src="{{ asset('storage/' . $datos->user->profile_photo_path) }}"
+                        alt="Foto revisor"
+                        class="rounded-circle border border-3 border-white shadow-sm me-3"
+                        width="60" height="60"
+                        style="object-fit: cover;">
+
                     <div>
-                        <p class="text-muted mb-1">Cliente</p>
-                        <h5 class="fw-semibold mb-2">
-                            {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</h5>
-                    </div>
-                    <div>
-                        <p class="text-muted mb-1">Revisor</p>
-                        <h5 class="fw-semibold mb-0">{{ $datos->user->name ?? 'N/A' }}</h5>
-                    </div>
-                    <div>
-                        <p class="text-muted mb-1">Certificado</p>
-                        <a target="_blank" href="{{ $url ?? 'N/A' }}"><i
-                                class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i></a>
+                        <h6 class="mb-0 fw-bold text-primary" style="font-size: 1.1rem;">{{ $datos->user->name ?? 'N/A' }}</h6>
+                        <p class="mb-0 text-muted small">Responsable de esta revisión</p>
                     </div>
                 </div>
-            </div>
+
+@if (!empty($revisor_consejo) && !empty($revisor_consejo->user))
+    <!-- Consejo -->
+    <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
+        <img src="{{ asset('storage/' . $revisor_consejo->user->profile_photo_path) }}"
+            alt="Foto consejo"
+            class="rounded-circle me-3 border border-white shadow-sm"
+            width="50" height="50" style="object-fit: cover;">
+        <div>
+            <p class="text-muted mb-0 small">Consejo</p>
+            <h6 class="mb-0 fw-semibold">{{ $revisor_consejo->user->name ?? 'N/A' }}</h6>
         </div>
     </div>
+@else
+    <div class="alert alert-warning d-flex align-items-center gap-2 p-2 rounded-3 shadow-sm">
+        <i class="ri-alert-line text-warning fs-5"></i>
+        <span class="small">No se ha asignado revisor del consejo aún.</span>
+    </div>
+@endif
+
+
+
+
+                   
+
+                    <!-- Certificado PDF -->
+                    <div class="mt-1">
+                        <p class="text-muted mb-1">Certificado</p>
+                        <a href="{{ $url ?? '#' }}" target="_blank">
+                            <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div> <!-- /row -->
+        </div>
+    </div>
+</div>
+
 
 
     <!-- DataTable with Buttons -->
@@ -357,7 +407,9 @@
                                           $documentos = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs ?? collect();
                                           $doc1 = $documentos->get(0);
                                            $doc2 = $documentos->get(1);
-                                        
+                                         $loteGranel =
+                                                    $datos->certificado->dictamen->inspeccione->solicitud
+                                                        ->lote_granel ?? null;
 
                                            // Obtener documentos
                                                 $documentos = $loteGranel->fqs ?? collect();
@@ -605,6 +657,8 @@
                                                             ->where('id_documento', 59)
                                                             ->first(['url', 'nombre_documento']); // ✅ Usa first() en lugar de value()
 
+                                                       
+
                                                         if ($documento) {
                                                             $urls_certificados->push([
                                                                 'url' => $documento->url,
@@ -618,13 +672,22 @@
                                             <td>
                                                 {{-- 📎 Documentos firmados PDF (si existen) --}}
                                                 @forelse ($urls_certificados as $pdf)
-                                                    <a target="_blank" href="/files/{{$numero_cliente}}/certificados_granel/{{ $pdf['url'] }}" class="me-1">
-                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf['url']) }}"></i>
+                                                <a target="_blank" href="/files/{{ $numero_cliente }}/certificados_granel/{{ $pdf['url'] }}" class="me-1">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf['url']) }}"></i>
+                                                </a>
+                                                {{ $pdf['nombre_documento'] }}
+                                            @empty
+                                                @if (!empty($urlFirmado))
+                                                    <a target="_blank" href="{{ $urlFirmado }}" class="me-1">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ $urlFirmado }}"></i>
                                                     </a>
-                                                    {{ $pdf['nombre_documento'] }}
-                                                @empty
+                                                @else
                                                     <span class="text-muted">Sin certificados firmados adjuntos</span>
-                                                @endforelse
+                                                @endif
+                                            @endforelse
+
+
+                                                
 
 
                                                 {{-- 🧪 Granel --}}
@@ -654,6 +717,9 @@
                                                  @php
                                                    
                                                     $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->dictamen->inspeccione->solicitud->empresa ?? null;
+                                                    if(!$empresa){
+                                                     $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa ?? null;
+                                                    }
                                                     $numeroCliente = $empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente ?? null;
                                                     $url = \App\Models\documentacion_url::where('id_empresa', $empresa->id_empresa)
                                                     ->where('id_documento', 83)
@@ -675,6 +741,9 @@
                                                  @php
                                                      
                                                     $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->dictamen->inspeccione->solicitud->empresa ?? null;
+                                                    if(!$empresa){
+                                                     $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa ?? null;
+                                                    }
                                                     $numeroCliente = $empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente ?? null;
                                                     $url = \App\Models\documentacion_url::where('id_empresa', $empresa->id_empresa)
                                                     ->where('id_documento', 82)

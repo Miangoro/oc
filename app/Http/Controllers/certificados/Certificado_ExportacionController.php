@@ -643,7 +643,7 @@ public function reexpedir(Request $request)
 
 
 
-///OBTENER DOCUMENTO  REVISION
+///OBTENER REVISION ASIGNADA
 public function obtenerRevision($id_certificado)
 {
     // Obtener la primera revisión (tipo_revision = 1)
@@ -747,8 +747,19 @@ public function storeRevisor(Request $request)
         $revisor->decision = 'Pendiente';
         $revisor->save();
 
+
         // Documento (solo si tipo = 1 y subido)
         if ($conDocumento && $nombreArchivo) {
+            // Eliminar documento anterior si existe
+            $docAnterior = Documentacion_url::where('id_relacion', $revisor->id_revision)
+                ->where('id_documento', 133)
+                ->first();
+            if ($docAnterior) {
+                Storage::disk('public')->delete('revisiones/' . $docAnterior->url);
+                $docAnterior->delete();
+            }
+
+            // Crear nuevo documento
             Documentacion_url::create([
                 'id_relacion' => $revisor->id_revision,
                 'id_documento' => 133,
@@ -782,22 +793,21 @@ public function storeRevisor(Request $request)
         }
 
 
-        // Sincronizar observaciones y documento si tipo_revision=2 y existe tipo_revision=1
-        if ($tipoRevisor == 2) {
-            $revisionTipo1 = Revisor::where('id_certificado', $certificado->id_certificado)
-                ->where('tipo_certificado', 3)
-                ->where('tipo_revision', 1)
-                ->first();
+        // Siempre sincronizar si existen AMBOS tipos (1 y 2) para el certificado principal
+        $revisiones = Revisor::where('id_certificado', $certificado->id_certificado)
+            ->where('tipo_certificado', 3)
+            ->whereIn('tipo_revision', [1, 2])
+            ->get();
 
-            if ($revisionTipo1) {
-                $revisionTipo1->observaciones = $validated['observaciones'] ?? '';
-                $revisionTipo1->es_correccion = $validated['esCorreccion'] ?? 'no';
-                $revisionTipo1->save();
+        if ($revisiones->count() === 2) {
+            foreach ($revisiones as $rev) {
+                $rev->observaciones = $validated['observaciones'] ?? '';
+                $rev->es_correccion = $validated['esCorreccion'] ?? 'no';
+                $rev->save();
 
-                // Actualizar documento si se subió uno nuevo
-                if ($nombreArchivo) {
-                    // Eliminar documento previo si existe
-                    $docAnterior = Documentacion_url::where('id_relacion', $revisionTipo1->id_revision)
+                // Solo actualizar documento en tipo_revision = 1
+                if ($rev->tipo_revision == 1 && $nombreArchivo) {
+                    $docAnterior = Documentacion_url::where('id_relacion', $rev->id_revision)
                         ->where('id_documento', 133)
                         ->first();
                     if ($docAnterior) {
@@ -805,9 +815,8 @@ public function storeRevisor(Request $request)
                         $docAnterior->delete();
                     }
 
-                    // Crear nuevo documento
                     Documentacion_url::create([
-                        'id_relacion' => $revisionTipo1->id_revision,
+                        'id_relacion' => $rev->id_revision,
                         'id_documento' => 133,
                         'id_empresa' => $empresa->id_empresa,
                         'nombre_documento' => $validated['nombre_documento'],
@@ -1268,7 +1277,10 @@ public function documentos($id)
         }
 
         //$id_lote_granel = $lote_envasado->lotesGranel->first()->id_lote_granel ?? null;
-        $id_lote_granel = $lote_envasado->lotesGranel->first()?->certificadoGranel ?? null;
+        //$id_lote_granel = $lote_envasado->lotesGranel->first()?->certificadoGranel ?? null;
+        $id_lote_granel = $lote_envasado->lotesGranel->first()?->certificadoGranel 
+            ?? $lote_envasado->lotesGranel->first() 
+            ?? null;
         if (!$id_lote_granel) {
             continue;
         }
@@ -1281,9 +1293,21 @@ public function documentos($id)
 
         $dictamenEnvasado = Dictamen_Envasado::where('id_lote_envasado', $id_lote_envasado)->first();
 
-        $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel->id_lote_granel)
+        /*$certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel->id_lote_granel)
             ->where('id_doc', $id_lote_granel->id_certificado)
-            ->where('id_documento', 59)->first();
+            ->where('id_documento', 59)->first();*/
+        if ($lote_envasado->lotesGranel->first()?->certificadoGranel) {
+            // Si vino desde certificadoGranel, incluye id_doc
+            $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel->id_lote_granel)
+                ->where('id_doc', $id_lote_granel->id_certificado)
+                ->where('id_documento', 59)
+                ->first();
+        } else {
+            // Si vino desde folio_certificado, no incluir id_doc
+            $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel->id_lote_granel)
+                ->where('id_documento', 59)
+                ->first();
+        }
 
         $fqs = Documentacion_url::where('id_relacion', $id_lote_granel->id_lote_granel)
             ->where('id_documento', 58)->get()->pluck('url')->toArray();

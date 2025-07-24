@@ -144,19 +144,18 @@ public function editarCliente($id)
 
 
 ///PDF's
-    public function pdfCartaAsignacion($id)
-    {
-        $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, e.created_at, info_procesos, s.fecha_registro,
-        e.correo, e.telefono, p.id_producto, nc.id_norma, a.id_actividad, e.estado
-        FROM empresa e LEFT JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
-        LEFT JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
-        JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa) JOIN catalogo_actividad_cliente ac
-        ON (a.id_actividad = ac.id_actividad) JOIN empresa_num_cliente nc ON (nc.id_empresa = e.id_empresa)
-        WHERE nc.numero_cliente="' . $id . '" GROUP BY nc.numero_cliente');
+public function pdfCartaAsignacion($id)
+{
+    $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, e.created_at, info_procesos, s.fecha_registro,
+    e.correo, e.telefono, p.id_producto, nc.id_norma, a.id_actividad, e.estado
+    FROM empresa e LEFT JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
+    LEFT JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
+    JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa) JOIN catalogo_actividad_cliente ac
+    ON (a.id_actividad = ac.id_actividad) JOIN empresa_num_cliente nc ON (nc.id_empresa = e.id_empresa)
+    WHERE nc.numero_cliente="' . $id . '" GROUP BY nc.numero_cliente');
 
-       $fecha_registro = Carbon::parse($res[0]->created_at)->translatedFormat('j \d\e F \d\e\l Y');
-       
-       // Obtener ID de la empresa
+    $fecha_registro = Carbon::parse($res[0]->created_at)->translatedFormat('j \d\e F \d\e\l Y');
+    // Obtener ID de la empresa
     $empresa_id = DB::table('empresa_num_cliente')->where('numero_cliente', $id)->value('id_empresa');
     // Contar cuántas empresas se registraron antes (puedes ajustar la lógica si lo deseas más estricto)
     $consecutivo = DB::table('empresa')->where('id_empresa', '<=', $empresa_id)->count();
@@ -165,14 +164,20 @@ public function editarCliente($id)
     // Formatear el número con ceros
     $codigo_oficio = 'CIDAM/OC/' . str_pad($consecutivo, 3, '0', STR_PAD_LEFT) . '/' . $anio_registro;
 
+    /*$empresa2 = empresa::where('id_empresa', '=', $empresa_id)->get();
+    $contacto = User::find($empresa2->id_contacto);*/
+    $empresa2 = empresa::where('id_empresa', $empresa_id)->first(); // o empresa::find($empresa_id)
+    $contacto = $empresa2 ? User::find($empresa2->id_contacto) : null;
 
-        $pdf = Pdf::loadView('pdfs.CartaAsignacion', [
-            'datos' => $res,
-            'fecha_registro' => $fecha_registro ?? 'No encontrado',
-            'codigo_oficio' => $codigo_oficio,
-        ]);
-        return $pdf->stream('Carta de asignación de número de cliente.pdf');
-    }
+    $pdf = Pdf::loadView('pdfs.CartaAsignacion', [
+        'datos' => $res,
+        'fecha_registro' => $fecha_registro ?? 'No encontrado',
+        'codigo_oficio' => $codigo_oficio,
+        'contacto'=>$contacto,
+    ]);
+    return $pdf->stream('Carta de asignación de número de cliente.pdf');
+}
+
 
     public function pdfCartaAsignacion052($id)
     {
