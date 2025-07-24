@@ -393,56 +393,7 @@
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote ?? 'N/A' }}
                                             </td>
                                   @elseif($pregunta->filtro == 'nanalisis')
-                                      @php
-                                          $folioFq = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? '';
-
-                                          $folios = collect(explode(',', $folioFq))
-                                              ->map(fn($f) => trim($f))
-                                              ->filter()
-                                              ->values();
-
-                                          $primerFolio = $folios->get(0, 'N/A');
-                                          $segundoFolio = $folios->get(1, 'N/A');
-
-                                          $documentos = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs ?? collect();
-                                          $doc1 = $documentos->get(0);
-                                           $doc2 = $documentos->get(1);
-                                        
-
-                                           // Obtener documentos
-                                                $documentos = $loteGranel->fqs ?? collect();
-                                                $doc1 = $documentos->get(0); // Primer análisis
-                                                $doc2 = $documentos->get(1); // Ajuste
-                                                $numeroCliente =
-                                                    $loteGranel->empresa->empresaNumClientes->firstWhere(
-                                                        'numero_cliente',
-                                                        '!=',
-                                                        null,
-                                                    )->numero_cliente ?? null;
-                                                    if (!empty($certificados)){
-                                                       $fqs = collect();
-
-                                                foreach ($certificados as $certificado) {
-                                                    $documentos2 = \App\Models\Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
-                                                        ->whereIn('id_documento', [58, 134])
-                                                        ->get(['url', 'nombre_documento', 'id_documento']);
-
-                                                    foreach ($documentos2 as $documento) {
-                                                        $fqs->push([
-                                                            'id_documento' => $documento->id_documento,
-                                                            'url' => $documento->url,
-                                                            'nombre_documento' => $documento->nombre_documento
-                                                        ]);
-                                                    }
-                                                }
-
-                                            }
-
-
-
-
-
-                                      @endphp
+                                      
                                       <td>
                       {{-- 📎 Documentos FQ's (si existen) --}}
 
@@ -655,6 +606,8 @@
                                                             ->where('id_documento', 59)
                                                             ->first(['url', 'nombre_documento']); // ✅ Usa first() en lugar de value()
 
+                                                       
+
                                                         if ($documento) {
                                                             $urls_certificados->push([
                                                                 'url' => $documento->url,
@@ -668,13 +621,22 @@
                                             <td>
                                                 {{-- 📎 Documentos firmados PDF (si existen) --}}
                                                 @forelse ($urls_certificados as $pdf)
-                                                    <a target="_blank" href="/files/{{$numero_cliente}}/certificados_granel/{{ $pdf['url'] }}" class="me-1">
-                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf['url']) }}"></i>
+                                                <a target="_blank" href="/files/{{ $numero_cliente }}/certificados_granel/{{ $pdf['url'] }}" class="me-1">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf['url']) }}"></i>
+                                                </a>
+                                                {{ $pdf['nombre_documento'] }}
+                                            @empty
+                                                @if (!empty($urlFirmado))
+                                                    <a target="_blank" href="{{ $urlFirmado }}" class="me-1">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ $urlFirmado }}"></i>
                                                     </a>
-                                                    {{ $pdf['nombre_documento'] }}
-                                                @empty
+                                                @else
                                                     <span class="text-muted">Sin certificados firmados adjuntos</span>
-                                                @endforelse
+                                                @endif
+                                            @endforelse
+
+
+                                                
 
 
                                                 {{-- 🧪 Granel --}}
