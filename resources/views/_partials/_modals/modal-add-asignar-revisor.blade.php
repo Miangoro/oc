@@ -1,3 +1,12 @@
+<style>
+  /* Aplica cuando select2 no tiene opción seleccionada */
+  .select2-container--default.select2-empty .select2-selection--single {
+    background-color: #fff3cd !important; /* fondo amarillo claro */
+    border-color: #ffc107 !important;     /* borde ámbar */
+    color: #856404 !important;            /* texto ámbar oscuro */
+  }
+</style>
+
 <!-- Modal Asignar Revisor -->
 <div class="modal fade" id="asignarRevisorModal" tabindex="-1" aria-labelledby="asignarRevisorModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -22,7 +31,7 @@
           <!-- Personal del OC -->
           <div class="form-floating form-floating-outline mb-3">
             <select class="form-select select2" id="personalOC" name="personalOC">
-              <option value="" disabled selected>Seleccione personal OC</option>
+              {{-- <option value="" disabled selected>Seleccione personal OC</option> --}}
             </select>
             <label for="personalOC">Personal del organismo certificador</label>
           </div>
@@ -30,7 +39,7 @@
           <!-- Miembro del Consejo -->
           <div class="form-floating form-floating-outline mb-3">
             <select class="form-select select2" id="miembroConsejo" name="miembroConsejo">
-              <option value="" disabled selected>Seleccione miembro del consejo</option>
+              {{-- <option value="" disabled selected>Seleccione miembro del consejo</option> --}}
             </select>
             <label for="miembroConsejo">Miembro del consejo</label>
           </div>
