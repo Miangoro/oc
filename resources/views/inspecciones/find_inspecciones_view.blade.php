@@ -311,12 +311,12 @@
                                         <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
                                     </a>`;
                                 
-                            if (doc.id_documento == 69 || doc.id_documento == 70) {
+                            /*if (doc.id_documento == 69 || doc.id_documento == 70) {
                                 html += `
                                     <button type="button" class="btn btn-outline-danger btn-sm px-2 ms-2 eliminar-doc">
                                         <i class="ri-delete-bin-line"></i>
                                     </button>`;
-                            }
+                            }*/
 
                             html +=`
                                 </td>
@@ -406,7 +406,7 @@
                     $('#contenedor-documentos').html(html);
 
                     
-                     $(document).on('click', '.eliminar-doc', function () {
+                    /*$(document).on('click', '.eliminar-doc', function () {
                         const fila = $(this).closest('tr');
                         const idDoc = fila.data('id-doc'); // 69 o 70
                         const id_solicitud = fila.data('id-solicitud');
@@ -453,7 +453,7 @@
                                 });
                             }
                         });
-                    });
+                    });*/
                }
             },
 

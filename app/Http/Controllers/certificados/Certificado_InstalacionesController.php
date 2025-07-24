@@ -636,6 +636,7 @@ public function index(Request $request)
 
 
 
+
 // FUNCION LLENAR SELECT REVISORES
 public function obtenerRevisores(Request $request)
 {
@@ -645,7 +646,7 @@ public function obtenerRevisores(Request $request)
     return response()->json($revisores);
 }
 
-///OBTENER DOCUMENTO REVISION
+///OBTENER REVISION ASIGNADA
 public function obtenerRevision($id_certificado)
 {
     // Obtener la primera revisión (tipo_revision = 1)
@@ -704,98 +705,6 @@ public function eliminarDocumentoRevision($id_certificado)
 ///ASIGNAR REVISION
 public function storeRevisor(Request $request)
 {
-/*
-    $validated = $request->validate([
-        'numeroRevision' => 'required|string|max:50',
-        'personalOC' => 'nullable|integer|exists:users,id',
-        'miembroConsejo' => 'nullable|integer|exists:users,id',
-        'esCorreccion' => 'nullable|in:si,no',
-        'observaciones' => 'nullable|string|max:5000',
-        'id_certificado' => 'required|integer|exists:certificados,id_certificado',
-        'url' => 'nullable|file|mimes:pdf|max:3072',
-        'nombre_documento' => 'nullable|string|max:255',
-    ]);
-
-    $certificado = Certificados::find($validated['id_certificado']);
-    $empresa = $certificado->dictamen->inspeccione->solicitud->empresa;
-    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-
-    // Función para crear o actualizar revisor
-    $guardar = function ($idRevisor, $tipoRevisor, $conDocumento = false) use ($validated, $certificado, $empresa, $request, $numeroCliente) {
-        if (!$idRevisor) return;
-
-        $revisor = Revisor::firstOrNew([
-            'id_certificado' => $certificado->id_certificado,
-            'tipo_certificado' => 1,
-            'tipo_revision' => $tipoRevisor,
-        ]);
-
-        $revisor->id_revisor = $idRevisor;
-        $revisor->numero_revision = $validated['numeroRevision'];
-        $revisor->es_correccion = $validated['esCorreccion'] ?? 'no';
-        $revisor->observaciones = $validated['observaciones'] ?? '';
-        $revisor->decision = 'Pendiente';
-        $revisor->save();
-
-        // Solo si es tipo 1 y se subió documento
-        if ($conDocumento && $request->hasFile('url')) {
-            $docAnterior = Documentacion_url::where('id_relacion', $revisor->id_revision)
-                ->where('id_documento', 133)
-                ->first();
-
-            if ($docAnterior) {
-                Storage::disk('public')->delete('revisiones/' . $docAnterior->url);
-                $docAnterior->delete();
-            }
-
-            $file = $request->file('url');
-            $filename = str_replace('/', '-', $validated['nombre_documento']) . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('revisiones/', $filename, 'public');
-
-            Documentacion_url::create([
-                'id_relacion' => $revisor->id_revision,
-                'id_documento' => 133, // fijo
-                'id_empresa' => $empresa->id_empresa,
-                'nombre_documento' => $validated['nombre_documento'],
-                'url' => $filename,
-            ]);
-        }
-
-        // Notificación
-        $user = User::find($idRevisor);
-        if ($user) {
-            $url_clic = $tipoRevisor == 1 ? "/add_revision/{$revisor->id_revision}" : "/add_revision_consejo/{$revisor->id_revision}";
-
-            $user->notify(new GeneralNotification([
-                'asunto' => 'Revisión de certificado ' . $certificado->num_certificado,
-                'title' => 'Revisión de certificado',
-                'message' => 'Se te ha asignado el certificado ' . $certificado->num_certificado,
-                'url' => $url_clic,
-                'nombreRevisor' => $user->name,
-                'emailRevisor' => $user->email,
-                'num_certificado' => $certificado->num_certificado,
-                'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
-                'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-                'razon_social' => $empresa->razon_social ?? 'Sin asignar',
-                'numero_cliente' => $numeroCliente ?? 'Sin asignar',
-                'tipo_certificado' => 'Certificado de instalaciones',
-                'observaciones' => $revisor->observaciones,
-            ]));
-        }
-    };
-
-    // Guardar primera revisión (personal OC) con documento si hay
-    if ($request->filled('personalOC')) {
-        $guardar($validated['personalOC'], 1, true);
-    }
-
-    // Guardar segunda revisión (miembro consejo) sin documento
-    if ($request->filled('miembroConsejo')) {
-        $guardar($validated['miembroConsejo'], 2, false);
-    }
-
-    return response()->json(['message' => 'Revisor asignado correctamente.']);
-*/
     $validated = $request->validate([
         'numeroRevision' => 'required|string|max:50',
         'personalOC' => 'nullable|integer|exists:users,id',
@@ -843,6 +752,16 @@ public function storeRevisor(Request $request)
 
         // Documento (solo si tipo = 1 y subido)
         if ($conDocumento && $nombreArchivo) {
+            // Eliminar documento anterior si existe
+            $docAnterior = Documentacion_url::where('id_relacion', $revisor->id_revision)
+                ->where('id_documento', 133)
+                ->first();
+            if ($docAnterior) {
+                Storage::disk('public')->delete('revisiones/' . $docAnterior->url);
+                $docAnterior->delete();
+            }
+
+            // Crear nuevo documento
             Documentacion_url::create([
                 'id_relacion' => $revisor->id_revision,
                 'id_documento' => 133,
@@ -876,22 +795,21 @@ public function storeRevisor(Request $request)
         }
 
 
-        // Sincronizar observaciones y documento si tipo_revision=2 y existe tipo_revision=1
-        if ($tipoRevisor == 2) {
-            $revisionTipo1 = Revisor::where('id_certificado', $certificado->id_certificado)
-                ->where('tipo_certificado', 1)
-                ->where('tipo_revision', 1)
-                ->first();
+        // Siempre sincronizar si existen AMBOS tipos (1 y 2) para el certificado principal
+        $revisiones = Revisor::where('id_certificado', $certificado->id_certificado)
+            ->where('tipo_certificado', 1)
+            ->whereIn('tipo_revision', [1, 2])
+            ->get();
 
-            if ($revisionTipo1) {
-                $revisionTipo1->observaciones = $validated['observaciones'] ?? '';
-                $revisionTipo1->es_correccion = $validated['esCorreccion'] ?? 'no';
-                $revisionTipo1->save();
+        if ($revisiones->count() === 2) {
+            foreach ($revisiones as $rev) {
+                $rev->observaciones = $validated['observaciones'] ?? '';
+                $rev->es_correccion = $validated['esCorreccion'] ?? 'no';
+                $rev->save();
 
-                // Actualizar documento si se subió uno nuevo
-                if ($nombreArchivo) {
-                    // Eliminar documento previo si existe
-                    $docAnterior = Documentacion_url::where('id_relacion', $revisionTipo1->id_revision)
+                // Solo actualizar documento en tipo_revision = 1
+                if ($rev->tipo_revision == 1 && $nombreArchivo) {
+                    $docAnterior = Documentacion_url::where('id_relacion', $rev->id_revision)
                         ->where('id_documento', 133)
                         ->first();
                     if ($docAnterior) {
@@ -899,9 +817,8 @@ public function storeRevisor(Request $request)
                         $docAnterior->delete();
                     }
 
-                    // Crear nuevo documento
                     Documentacion_url::create([
-                        'id_relacion' => $revisionTipo1->id_revision,
+                        'id_relacion' => $rev->id_revision,
                         'id_documento' => 133,
                         'id_empresa' => $empresa->id_empresa,
                         'nombre_documento' => $validated['nombre_documento'],
