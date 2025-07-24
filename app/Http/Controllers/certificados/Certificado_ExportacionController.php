@@ -978,11 +978,11 @@ public function MostrarCertificadoExportacion($id_certificado)
         }*/
 
         //dd($lotes[0]->lotesGranel[0]);para ver que imprime
-        $DOM = $lotes[0]->lotesGranel[0]->first()?->certificadoGranel->dictamen->inspeccione->solicitud->empresa->registro_productor
-            ?? $lotes[0]->lotesGranel[0]->first()->empresa->registro_productor
+        $DOM = $lotes[0]->lotesGranel->first()?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa?->registro_productor
+            ?? $lotes[0]->lotesGranel->first()?->empresa?->registro_productor
             ?? 'NA';
-        $convenio = $lotes[0]->lotesGranel[0]->first()?->certificadoGranel->dictamen->inspeccione->solicitud->empresa->convenio_corresp
-            ?? $lotes[0]->lotesGranel[0]->first()->empresa->convenio_corresp
+        $convenio = $lotes[0]->lotesGranel->first()?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa?->convenio_corresp
+            ?? $lotes[0]->lotesGranel->first()?->empresa?->convenio_corresp
             ?? 'NA';
         
         /*
