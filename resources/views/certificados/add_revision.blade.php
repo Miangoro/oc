@@ -670,20 +670,13 @@
                                             <td>
                                                 {{-- 📎 Documentos firmados PDF (si existen) --}}
                                                 @forelse ($urls_certificados as $pdf)
-                                                <a target="_blank" href="/files/{{ $numero_cliente }}/certificados_granel/{{ $pdf['url'] }}" class="me-1">
-                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf['url']) }}"></i>
-                                                </a>
-                                                {{ $pdf['nombre_documento'] }}
-                                            @empty
-                                                @if (!empty($urlFirmado))
-                                                    <a target="_blank" href="{{ $urlFirmado }}" class="me-1">
-                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ $urlFirmado }}"></i>
+                                                    <a target="_blank" href="/files/{{$numero_cliente}}/certificados_granel/{{ $pdf['url'] }}" class="me-1">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf['url']) }}"></i>
                                                     </a>
-                                                @else
+                                                    {{ $pdf['nombre_documento'] }}
+                                                @empty
                                                     <span class="text-muted">Sin certificados firmados adjuntos</span>
-                                                @endif
-                                            @endforelse
-
+                                                @endforelse
 
                                                 
 
