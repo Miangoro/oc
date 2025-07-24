@@ -273,7 +273,7 @@ foreach ($documentos as $indexD => $documento) {
       $mostrarDocumento = '';
   
       foreach ($urls as $urlData) {
-          $mostrarDocumento .= '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $urlData->url . '\')" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i> ';
+          $mostrarDocumento .= '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $urlData->url.  '\','.$urlData->id.')" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i> ';
       }
   }
   
@@ -345,7 +345,7 @@ if ($act_instalacion != 'Produccion de agave') {
             $mostrarDocumento = '';
 
             foreach ($urls as $urlData) {
-                $mostrarDocumento .= '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $urlData->url . '\')" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i> ';
+                $mostrarDocumento .= '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $urlData->url .  '\','.$urlData->id.')" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i> ';
             }
         }
 
@@ -418,7 +418,7 @@ if ($act_instalacion != 'Produccion de agave') {
               $mostrarDocumento = '';
 
               foreach ($urls as $urlData) {
-                  $mostrarDocumento .= '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $urlData->url . '\')" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i> ';
+                  $mostrarDocumento .= '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $urlData->url .  '\','.$urlData->id.')" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i> ';
               }
           }
 
