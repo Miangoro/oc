@@ -771,7 +771,7 @@ public function storeRevisor(Request $request)
 
 
         // Notificación
-        $user = User::find($idRevisor);
+        /*$user = User::find($idRevisor);
         if ($user) {
             $url_clic = $tipoRevisor == 1 ? "/add_revision/{$revisor->id_revision}" : "/add_revision_consejo/{$revisor->id_revision}";
 
@@ -790,7 +790,7 @@ public function storeRevisor(Request $request)
                 'tipo_certificado' => 'Certificado de exportacion',
                 'observaciones' => $revisor->observaciones,
             ]));
-        }
+        }*/
 
 
         // Siempre sincronizar si existen AMBOS tipos (1 y 2) para el certificado principal
