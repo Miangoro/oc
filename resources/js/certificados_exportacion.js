@@ -305,19 +305,22 @@ if (dt_user_table.length) {
             var $pdf_firmado  = full['pdf_firmado'];//si hay archivo subido
             let estatus;
 
-
             if ($fecha_actual > $vigencia) {
               estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
-            } else if ($pdf_firmado) {
-              estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
-            } else if ($estatus == 1) {
-              estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
-            } else if ($estatus == 2) {
-              estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
-            } else if ($estatus == 3) {
-              estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
             } else {
-              estatus = '<span class="badge rounded-pill bg-secondary">Pre-certificado</span>';
+              let badge = '';
+              let texto = '';
+                  if ($estatus == 1) {
+                    badge = 'bg-danger';
+                    texto = 'Cancelado';
+                  } else if ($estatus == 2) {
+                    badge = 'bg-warning';
+                    texto = 'Reexpedido';
+                  } else {
+                    badge = $pdf_firmado ? 'bg-success' : 'bg-secondary';
+                    texto = $pdf_firmado ? 'Emitido' : 'Pre-certificado';
+                  }
+              estatus = `<span class="badge rounded-pill ${badge}">${texto}</span>`;
             }
 
             ///revisores PERSONAL
@@ -1441,25 +1444,45 @@ if (!$select.find(`option[value="${datos.id_dictamen}"]`).length) {
 
 
 
-
 ///OBTENER REVISORES
 function cargarRevisores() {
   $.get('/ruta-para-obtener-revisores', { tipo: 1 }, function (data) {
-    $('#personalOC').empty().append('<option value="">Seleccione personal OC</option>');
+    $('#personalOC').empty().append('<option value="" disabled selected>Seleccione personal OC</option>');
     data.forEach(function (rev) {
       $('#personalOC').append(`<option value="${rev.id}">${rev.name}</option>`);
     });
   });
 
   $.get('/ruta-para-obtener-revisores', { tipo: 4 }, function (data) {
-    $('#miembroConsejo').empty().append('<option value="">Seleccione miembro del consejo</option>');
+    $('#miembroConsejo').empty().append('<option value="" disabled selected>Seleccione miembro del consejo</option>');
     data.forEach(function (rev) {
       $('#miembroConsejo').append(`<option value="${rev.id}">${rev.name}</option>`);
     });
   });
 }
-$(document).ready(function () {
-  cargarRevisores();
+function actualizarEstiloVisualSelects() {///aviso de seleccion
+  ['#personalOC', '#miembroConsejo'].forEach(function (id) {
+    const select2Container = $(id).next('.select2-container');
+    if (!$(id).val()) {
+      select2Container.addClass('select2-empty');
+    } else {
+      select2Container.removeClass('select2-empty');
+    }
+  });
+}
+$(document).ready(function () {//funcion cargar y asignar color
+    // Inicializar Select2
+    $('#personalOC, #miembroConsejo').select2({
+      dropdownParent: $('#asignarRevisorModal') // si están dentro de modal
+    });
+    cargarRevisores();
+
+    // Esperar a que se carguen opciones y aplicar estilo visual
+    setTimeout(actualizarEstiloVisualSelects, 500);
+    // Actualizar estilo cuando cambie selección
+    $('#personalOC, #miembroConsejo').on('change', function () {
+      actualizarEstiloVisualSelects();
+    });
 });
 
 ///CARGAR DATOS DE REVISIÓN AL ABRIR EL MODAL
@@ -1590,7 +1613,6 @@ $('#asignarRevisorForm').on('submit', function (e) {
     }
   });
 });
-
 
 
 
