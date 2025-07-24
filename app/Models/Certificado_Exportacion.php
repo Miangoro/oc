@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\TranslatableActivityLog;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Support\Collection;
 
 class Certificado_Exportacion extends Model
 {
@@ -80,6 +81,22 @@ class Certificado_Exportacion extends Model
         return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_certificado')->where('id_documento', 135);
     }
 
+    
+ public function hologramas(): Collection
+{
+    $hologramasData = json_decode($this->id_hologramas, true);
+
+    if (!$hologramasData || !is_array($hologramasData)) {
+        return collect();
+    }
+
+    $ids = collect($hologramasData)->pluck('id')->filter()->unique()->toArray();
+
+    // 👇 Incluye la relación
+    return activarHologramasModelo::with('solicitudHolograma')
+        ->whereIn('id', $ids)
+        ->get();
+}
 
 
 }

@@ -898,18 +898,7 @@
                                         @elseif($pregunta->filtro == 'ingredientes')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->ingredientes ?? 'N/A' }}
                                             </td>
-                                        @elseif($pregunta->filtro == 'rango_hologramas')
-                                        @php
-                                            $old = json_decode($datos->certificado->old_hologramas);
-                                        @endphp
-                                            <td>@if ($old)
-                                                @foreach ($old as $key => $folio)
-                                                    <div><strong>{{ ucfirst($key) }}:</strong> {{ $folio }}</div>
-                                                @endforeach
-                                            @else
-                                                <div>N/A</div>
-                                            @endif
-                                            </td>
+                                        
 
                                        
                                         @elseif($pregunta->filtro == 'edad')
@@ -1033,7 +1022,70 @@
                                                 @endif
                                             </td>
                                              @elseif($pregunta->filtro == 'datos_holograma')
-                                            <td>{!! $observacionesConEnlaces !!}</td>
+                                            <td>
+                                                {!! $observacionesConEnlaces !!}
+
+                                                @if (empty($observacionesConEnlaces))
+                                                    @php 
+                                                        $hologramas = $datos->certificado->hologramas();
+                                                        $tipoHolograma = 'sin solicitud';
+
+                                                        // Tomar el primer tipo válido si hay varios
+                                                        foreach ($hologramas as $holograma) {
+                                                            $tipoHolograma = $holograma->solicitudHolograma->tipo ?? 'sin solicitud';
+                                                            break;
+                                                        }
+
+                                                        $hologramasData = json_decode($datos->certificado->id_hologramas, true);
+                                                        $rangoFolios = [];
+
+                                                        $numero_cliente = $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes
+                                                            ->filter(fn($cliente) => !empty($cliente->numero_cliente))
+                                                            ->first()?->numero_cliente ?? 'Sin asignar';
+
+                                                        $folioMarca = $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->marca->folio;
+
+                                                        foreach ($hologramasData as $folio => $info) {
+                                                            if (!isset($info['rangos'])) continue;
+
+                                                            foreach ($info['rangos'] as $rango) {
+                                                                $folioInicial = str_pad($rango['inicial'], 7, '0', STR_PAD_LEFT);
+                                                                $folioFinal = str_pad($rango['final'], 7, '0', STR_PAD_LEFT);
+
+                                                                $linkInicio = '<a target="_blank" href="/holograma/' . $numero_cliente . '-' .  $tipoHolograma . $folioMarca . $folioInicial . '">' .
+                                                                            $numero_cliente . '-' .  $tipoHolograma . $folioMarca . $folioInicial . '</a>';
+
+                                                                $linkFinal = '<a target="_blank" href="/holograma/' . $numero_cliente . '-' .  $tipoHolograma . $folioMarca . $folioFinal . '">' .
+                                                                            $numero_cliente . '-' .  $tipoHolograma . $folioMarca . $folioFinal . '</a>';
+
+                                                                $rangoFolios[] = $linkInicio . ' a ' . $linkFinal;
+                                                            }
+                                                        }
+                                                    @endphp
+
+                                                    @foreach ($rangoFolios as $rango)
+                                                        <div>{!! $rango !!}</div>
+                                                    @endforeach
+                                                @endif
+                                            </td>
+                                        @elseif($pregunta->filtro == 'rango_hologramas')
+                                        @php
+                                            $old = json_decode($datos->certificado->old_hologramas);
+                                        @endphp
+                                            <td>@if ($old)
+                                                @foreach ($old as $key => $folio)
+                                                    <div><strong>{{ ucfirst($key) }}:</strong> {{ $folio }}</div>
+                                                @endforeach
+
+                                                @if($rangoFolios)
+                                                @foreach ($rangoFolios as $rango)
+                                                        <div>{!! $rango !!}</div>
+                                                    @endforeach
+                                                @endif
+                                            
+                                            @endif
+                                            </td>
+
                                         @elseif($pregunta->filtro == 'etiqueta')
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;

@@ -942,7 +942,13 @@
                                                 @endif
                                             </td>
                                              @elseif($pregunta->filtro == 'datos_holograma')
-                                            <td>{!! $observacionesConEnlaces !!}</td>
+                                            <td>{!! $observacionesConEnlaces !!} 
+
+                                               
+                                                
+                                            
+                                            
+                                            </td>
                                         @elseif($pregunta->filtro == 'etiqueta')
                                             <td>
                                                 @if ($datos->certificado->dictamen->inspeccione->solicitud->etiqueta())
