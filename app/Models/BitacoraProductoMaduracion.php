@@ -39,7 +39,7 @@ class BitacoraProductoMaduracion extends Model
         'id_firmante',
     ];
 
-    /* public $timestamps = false; */
+    public $timestamps = false;
        // En BitacoraMezcal.php
     public function loteBitacora()
     {

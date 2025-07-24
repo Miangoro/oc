@@ -457,7 +457,7 @@ $(function () {
         const blobUrl = URL.createObjectURL(data);
         $('#pdfViewer').attr('src', blobUrl);
         $('#NewPestana').attr('href', blobUrl);
-        $('#titulo_modal').text('Bitácora Mezcal a Granel Productor');
+        $('#titulo_modal').text('Bitácora Producto en Maduración');
         /* $('#subtitulo_modal').text('Versión Filtrada'); */
         $('#mostrarPdf').modal('show');
 

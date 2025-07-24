@@ -339,7 +339,7 @@
             },
             {
               "url": "/bitacoraProductoTerminado",
-              "name": "Producto y etiqueta",
+              "name": "Producto sin etiqueta",
               "slug": "bitacoraProductoTerminado",
               "can": "Visualizar bitácoras maduración"
             },

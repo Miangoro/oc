@@ -212,19 +212,16 @@ class BitacoraProductoMaduracionController extends Controller
      public function PDFProductoMaduracion(Request $request)
     {
         $empresaId = $request->query('empresa');
-        $instalacionId = $request->query('instalacion');
         $title = 'PRODUCTOR'; // Cambia a 'Envasador' si es necesario
         $bitacoras = BitacoraProductoMaduracion::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
+            'loteBitacora',
         ])->where('tipo', 2)
-        ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
+        ->when($empresaId, function ($query) use ($empresaId) {
             $query->where('id_empresa', $empresaId);
-            if ($instalacionId) {
-                $query->where('id_instalacion', $instalacionId);
-            }
         })
-        ->orderBy('fecha', 'desc')
+        ->orderBy('id', 'desc')
         ->get();
 
           if ($bitacoras->isEmpty()) {
@@ -232,59 +229,72 @@ class BitacoraProductoMaduracionController extends Controller
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
               ], 404);
           }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title'))
+        $pdf = Pdf::loadView('pdfs.Bitacora_Maduracion', compact('bitacoras', 'title'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
-
-        return $pdf->stream('Bitácora Mezcal a Granel.pdf');
+        return $pdf->stream('Bitácora Producto en Maduración.pdf');
     }
 
 
     public function store(Request $request)
     {
         $request->validate([
-            'fecha' => 'required|date',
-            'id_empresa' => 'required|integer|exists:empresa,id_empresa',
-            'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
-            'id_instalacion' => 'required|integer',
-            'operacion_adicional' => 'nullable|string',
-            'tipo_operacion' => 'required|string',
-            'volumen_inicial' => 'nullable|numeric|min:0',
-            'alcohol_inicial' => 'nullable|numeric|min:0',
-            'procedencia_entrada' => 'nullable|string',
-            'volumen_entrada'=> 'nullable|numeric|min:0',
-            'alcohol_entrada' => 'nullable|numeric|min:0',
-            'agua_entrada' => 'nullable|numeric|min:0',
-            'volumen_salida' => 'nullable|numeric|min:0' ,
-            'alc_vol_salida' => 'nullable|numeric|min:0',
-            'destino' => 'nullable|string|max:255',
-            'volumen_final' => 'required|numeric|',
-            'alc_vol_final' => 'required|numeric|',
-            'observaciones' => 'nullable|string|',
-        ]);
+          'fecha' => 'required|date',
+          'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+          'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
+          'tipo_recipientes' => 'nullable|string|max:255',
+          'tipo_madera' => 'nullable|string|max:255',
+          'num_recipientes' => 'nullable|integer|min:0',
+          'num_recipientes_entrada' => 'nullable|integer|min:0',
+          'fecha_salida' => 'nullable|date',
+          'num_recipientes_salida' => 'nullable|integer|min:0',
+          'num_recipientes_final' => 'nullable|integer|min:0',
+          'tipo_operacion' => 'required|string',
+          'volumen_inicial' => 'nullable|numeric|min:0',
+          'alcohol_inicial' => 'nullable|numeric|min:0',
+          'procedencia_entrada' => 'nullable|string',
+          'volumen_entrada'=> 'nullable|numeric|min:0',
+          'alcohol_entrada' => 'nullable|numeric|min:0',
+          'volumen_salida' => 'nullable|numeric|min:0',
+          'alc_vol_salida' => 'nullable|numeric|min:0',
+          'destino' => 'nullable|string|max:255',
+          'volumen_final' => 'required|numeric',
+          'alc_vol_final' => 'required|numeric',
+          'observaciones' => 'nullable|string',
+      ]);
 
-        try {
-            $bitacora = new BitacoraProductoMaduracion();
-            $bitacora->fecha = $request->fecha;
-            $bitacora->id_empresa = $request->id_empresa;
-            $bitacora->id_instalacion = $request->id_instalacion;
-            $bitacora->id_lote_granel = $request->id_lote_granel;
-            $bitacora->tipo_operacion = $request->tipo_operacion;
-            $bitacora->tipo = 2;
-            $bitacora->operacion_adicional = $request->operacion_adicional;
-            $bitacora->volumen_inicial = $request->volumen_inicial;
-            $bitacora->alcohol_inicial = $request->alcohol_inicial;
-            $bitacora->procedencia_entrada  = $request->procedencia_entrada ?? 0;
-            $bitacora->volumen_entrada  = $request->volumen_entrada ?? 0;
-            $bitacora->alcohol_entrada  = $request->alcohol_entrada ?? 0;
-            $bitacora->agua_entrada  = $request->agua_entrada ?? 0;
-            $bitacora->volumen_salidas = $request->volumen_salida ?? 0;
-            $bitacora->alcohol_salidas = $request->alc_vol_salida ?? 0;
-            $bitacora->destino_salidas = $request->destino ?? 0;
-            $bitacora->volumen_final = $request->volumen_final;
-            $bitacora->alcohol_final = $request->alc_vol_final;
-            $bitacora->observaciones = $request->observaciones;
 
-            $bitacora->save();
+       try {
+          $bitacora = new BitacoraProductoMaduracion();
+          $bitacora->fecha = $request->fecha;
+          $bitacora->id_empresa = $request->id_empresa;
+          $bitacora->id_lote_granel = $request->id_lote_granel;
+
+          $bitacora->tipo_recipientes = $request->tipo_recipientes;
+          $bitacora->tipo_madera = $request->tipo_madera;
+          $bitacora->num_recipientes = $request->num_recipientes;
+          $bitacora->num_recipientes_entrada = $request->num_recipientes_entrada;
+          $bitacora->fecha_salida = $request->fecha_salida;
+          $bitacora->num_recipientes_salida = $request->num_recipientes_salida;
+          $bitacora->num_recipientes_final = $request->num_recipientes_final;
+
+          $bitacora->tipo_operacion = $request->tipo_operacion;
+          $bitacora->tipo = 2;
+
+          $bitacora->volumen_inicial = $request->volumen_inicial;
+          $bitacora->alcohol_inicial = $request->alcohol_inicial;
+          $bitacora->procedencia_entrada = $request->procedencia_entrada;
+          $bitacora->volumen_entrada = $request->volumen_entrada;
+          $bitacora->alcohol_entrada = $request->alcohol_entrada;
+
+          $bitacora->volumen_salidas = $request->volumen_salida;
+          $bitacora->alcohol_salidas = $request->alc_vol_salida;
+          $bitacora->destino_salidas = $request->destino;
+
+          $bitacora->volumen_final = $request->volumen_final;
+          $bitacora->alcohol_final = $request->alc_vol_final;
+          $bitacora->observaciones = $request->observaciones;
+
+    $bitacora->save();
 
             return response()->json(['success' => 'Bitácora registrada correctamente']);
         } catch (\Exception $e) {
@@ -294,6 +304,8 @@ class BitacoraProductoMaduracionController extends Controller
 
         }
     }
+
+
     public function destroy($id_bitacora)
     {
         $bitacora = BitacoraProductoMaduracion::find($id_bitacora);
@@ -368,11 +380,13 @@ class BitacoraProductoMaduracionController extends Controller
               'edit_bitacora_id' => 'required|exists:bitacora_mezcal,id',
               'id_empresa'       => 'required|exists:empresa,id_empresa',
               'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
-              'id_instalacion' => 'required|integer',
               'operacion_adicional' => 'nullable|string',
               'tipo_operacion' => 'required|string',
               'volumen_inicial' => 'nullable|numeric|min:0',
               'alcohol_inicial' => 'nullable|numeric|min:0',
+              'num_recipientes_entrada' => 'nullable|numeric|min:0',
+              'num_recipientes' => 'nullable|numeric|min:0',
+              'num_recipientes_salida' => 'nullable|numeric|min:0',
               'procedencia_entrada' => 'nullable|string',
               'volumen_entrada'=> 'nullable|numeric|min:0',
               'alcohol_entrada' => 'nullable|numeric|min:0',
@@ -390,13 +404,15 @@ class BitacoraProductoMaduracionController extends Controller
           $bitacora->update([
               'id_empresa'       => $request->id_empresa,
               'id_lote_granel'   => $request->id_lote_granel,
-              'id_instalacion'   => $request->id_instalacion,
               'fecha'            => $request->fecha,
               'operacion_adicional' => $request->operacion_adicional,
               'tipo' => 2,
               'tipo_operacion' => $request->tipo_operacion,
               'volumen_inicial' => $request->volumen_inicial,
               'alcohol_inicial' => $request->alcohol_inicial ,
+              'num_recipientes' => $request->num_recipientes,
+              'num_recipientes_entrada' => $request->num_recipientes_entrada ?? 0,
+              'num_recipientes_salida' => $request->num_recipientes_salida ?? 0,
               'procedencia_entrada' => $request->procedencia_entrada ?? 0,
               'volumen_entrada'=> $request->volumen_entrada ?? 0,
               'alcohol_entrada' => $request->alcohol_entrada ?? 0,
@@ -406,6 +422,7 @@ class BitacoraProductoMaduracionController extends Controller
               'destino_salidas'  => $request->destino ?? 0,
               'volumen_final'    => $request->volumen_final,
               'alcohol_final'    => $request->alc_vol_final,
+              'num_recipientes_final'=> $request->num_recipientes_final ?? 0,
               'observaciones'    => $request->observaciones,
           ]);
 

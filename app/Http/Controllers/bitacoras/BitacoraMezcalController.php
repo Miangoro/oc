@@ -222,7 +222,7 @@ class BitacoraMezcalController extends Controller
                 $query->where('id_instalacion', $instalacionId);
             }
         })
-        ->orderBy('fecha', 'desc')
+        ->orderBy('id', 'desc')
         ->get();
 
           if ($bitacoras->isEmpty()) {
