@@ -310,7 +310,7 @@
             {
               "url": "/bitacoraProcesoElaboracion",
               "name": "Proceso de elaboración",
-              "slug": "bitacora-proceso-elab"
+              "slug": "bitacora-proceso-elaboracion"
             },
             {
               "url": "/bitacoraMezcalProductor",
@@ -379,7 +379,6 @@
         }
       ]
     },
-
     {
       "name": "Trámites IMPI",
       "url": "tramiteIMPI",

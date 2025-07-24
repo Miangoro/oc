@@ -1,5 +1,6 @@
 @php
 use Illuminate\Support\Facades\Route;
+use App\Helpers\MenuHelper;
 $configData = Helper::appClasses();
 @endphp
 
@@ -40,7 +41,7 @@ $configData = Helper::appClasses();
     @endphp
      @if ((isset($menu->can) && optional(auth()->user())->can($menu->can)) || $tienePermisoSubmenu || $menu->slug == 'dashboard')
 
-    
+
       {{-- adding active and open class if child is active --}}
 
       {{-- menu headers --}}
@@ -73,6 +74,10 @@ $configData = Helper::appClasses();
         }
       }
       @endphp
+      {{-- @php
+    $activeClass = MenuHelper::isActiveMenu($menu) ? 'active open' : '';
+    @endphp --}}
+
 
       {{-- main menu --}}
       <li class="menu-item {{$activeClass}}">
@@ -90,6 +95,31 @@ $configData = Helper::appClasses();
         @isset($menu->submenu)
           @include('layouts.sections.menu.submenu',['menu' => $menu->submenu])
         @endisset
+
+        {{-- submenu --}}
+        {{-- @isset($menu->submenu)
+          <ul class="menu-sub">
+            @foreach ($menu->submenu as $submenu)
+              @php
+                  $activeClass = MenuHelper::isActiveMenu($submenu) ? 'active open' : '';
+              @endphp
+              <li class="menu-item {{ $activeClass }}">
+                <a href="{{ isset($submenu->url) ? url($submenu->url) : 'javascript:void(0);' }}"
+                  class="{{ isset($submenu->submenu) ? 'menu-link menu-toggle' : 'menu-link' }}">
+                  @isset($submenu->icon)
+                    <i class="{{ $submenu->icon }}"></i>
+                  @endisset
+                  <div>{{ $submenu->name }}</div>
+                </a>
+
+                @isset($submenu->submenu)
+                  @include('layouts.sections.menu.submenu', ['menu' => $submenu->submenu])
+                @endisset
+              </li>
+            @endforeach
+          </ul>
+        @endisset --}}
+
       </li>
       @endif
       @endif

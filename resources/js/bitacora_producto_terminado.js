@@ -1332,14 +1332,17 @@ $(function () {
     });
   });
 
-  $(document).ready(function () {
-    // Al abrir modal, disparas la carga inicial para el cliente seleccionado
-    $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {});
+$(document).ready(function () {
+  // Al abrir el modal, cargar marcas para el cliente seleccionado
+  $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
+    cargarMarcas();
   });
-  // También cuando cambia el select
+
+  // Al cambiar la empresa, recargar marcas
   $('#id_empresa').on('change', function () {
     cargarMarcas();
   });
+});
 
   function cargarMarcas() {
     var empresa = $('#id_empresa').val();
