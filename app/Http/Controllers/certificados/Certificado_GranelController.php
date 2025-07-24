@@ -674,7 +674,6 @@ public function storeRevisor(Request $request)
 
 
 
-
 ///FUNCION REEXPEDIR
 public function reexpedir(Request $request)
 {

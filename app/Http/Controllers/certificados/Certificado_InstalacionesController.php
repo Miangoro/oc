@@ -641,7 +641,9 @@ public function index(Request $request)
 public function obtenerRevisores(Request $request)
 {
     $tipo = $request->get('tipo');
-    $revisores = User::where('tipo', $tipo)->get(['id', 'name']);
+    $revisores = User::where('tipo', $tipo)
+        ->where('id', '!=', 1)
+        ->get(['id', 'name']);
 
     return response()->json($revisores);
 }
@@ -887,9 +889,6 @@ public function storeRevisor(Request $request)
 
     return response()->json(['message' => 'Revisor asignado correctamente.']);
 }
-
-
-
 
 
 

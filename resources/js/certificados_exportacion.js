@@ -1441,7 +1441,6 @@ if (!$select.find(`option[value="${datos.id_dictamen}"]`).length) {
 
 
 
-
 ///OBTENER REVISORES
 function cargarRevisores() {
   $.get('/ruta-para-obtener-revisores', { tipo: 1 }, function (data) {
@@ -1611,7 +1610,6 @@ $('#asignarRevisorForm').on('submit', function (e) {
     }
   });
 });
-
 
 
 
