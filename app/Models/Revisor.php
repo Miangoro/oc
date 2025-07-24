@@ -93,10 +93,10 @@ class Revisor extends Model
         return $documento ? $documento->url : null; // Devuelve solo el atributo `url` o `null` si no hay documento
     }
 
-     public function evidencias()
-    {
-        return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_revision')->where('id_documento',133);
-    }
+        public function evidencias()
+        {
+            return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_revision')->where('id_documento',133)->where('tipo_revisor',1);
+        }
     public function certificado()
     {
         // Por defecto busca en certificadoNormal (ajusta si quieres otro comportamiento)
