@@ -978,9 +978,17 @@ public function MostrarCertificadoExportacion($id_certificado)
         }*/
 
         //dd($lotes[0]->lotesGranel[0]);para ver que imprime
+        $DOM = $lotes[0]->lotesGranel[0]->first()?->certificadoGranel->dictamen->inspeccione->solicitud->empresa->registro_productor
+            ?? $lotes[0]->lotesGranel[0]->first()->empresa->registro_productor
+            ?? 'NA';
+        $convenio = $lotes[0]->lotesGranel[0]->first()?->certificadoGranel->dictamen->inspeccione->solicitud->empresa->convenio_corresp
+            ?? $lotes[0]->lotesGranel[0]->first()->empresa->convenio_corresp
+            ?? 'NA';
+        
+        /*
         $DOM = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA';
         $convenio = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA';
-
+        */
     //return response()->json(['message' => 'No se encontraron características.', $data], 404)
 
     //$pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
