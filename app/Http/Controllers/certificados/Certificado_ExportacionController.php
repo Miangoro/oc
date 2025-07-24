@@ -985,10 +985,6 @@ public function MostrarCertificadoExportacion($id_certificado)
             ?? $lotes[0]->lotesGranel->first()?->empresa?->convenio_corresp
             ?? 'NA';
         
-        /*
-        $DOM = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA';
-        $convenio = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA';
-        */
     //return response()->json(['message' => 'No se encontraron características.', $data], 404)
 
     //$pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF

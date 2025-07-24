@@ -1445,42 +1445,21 @@ if (!$select.find(`option[value="${datos.id_dictamen}"]`).length) {
 ///OBTENER REVISORES
 function cargarRevisores() {
   $.get('/ruta-para-obtener-revisores', { tipo: 1 }, function (data) {
-    $('#personalOC').empty().append('<option value="" disabled selected>Seleccione personal OC</option>');
+    $('#personalOC').empty().append('<option value="">Seleccione personal OC</option>');
     data.forEach(function (rev) {
       $('#personalOC').append(`<option value="${rev.id}">${rev.name}</option>`);
     });
   });
 
   $.get('/ruta-para-obtener-revisores', { tipo: 4 }, function (data) {
-    $('#miembroConsejo').empty().append('<option value="" disabled selected>Seleccione miembro del consejo</option>');
+    $('#miembroConsejo').empty().append('<option value="">Seleccione miembro del consejo</option>');
     data.forEach(function (rev) {
       $('#miembroConsejo').append(`<option value="${rev.id}">${rev.name}</option>`);
     });
   });
 }
-function actualizarEstiloVisualSelects() {///aviso de seleccion
-  ['#personalOC', '#miembroConsejo'].forEach(function (id) {
-    const select2Container = $(id).next('.select2-container');
-    if (!$(id).val()) {
-      select2Container.addClass('select2-empty');
-    } else {
-      select2Container.removeClass('select2-empty');
-    }
-  });
-}
-$(document).ready(function () {//funcion cargar y asignar color
-    // Inicializar Select2
-    $('#personalOC, #miembroConsejo').select2({
-      dropdownParent: $('#asignarRevisorModal') // si están dentro de modal
-    });
-    cargarRevisores();
-
-    // Esperar a que se carguen opciones y aplicar estilo visual
-    setTimeout(actualizarEstiloVisualSelects, 500);
-    // Actualizar estilo cuando cambie selección
-    $('#personalOC, #miembroConsejo').on('change', function () {
-      actualizarEstiloVisualSelects();
-    });
+$(document).ready(function () {
+  cargarRevisores();
 });
 
 ///CARGAR DATOS DE REVISIÓN AL ABRIR EL MODAL

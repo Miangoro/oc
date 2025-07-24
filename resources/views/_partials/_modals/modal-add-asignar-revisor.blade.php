@@ -1,9 +1,8 @@
 <style>
   /* Aplica cuando select2 no tiene opción seleccionada */
   .select2-container--default.select2-empty .select2-selection--single {
-    background-color: #fff3cd !important; /* fondo amarillo claro */
-    border-color: #ffc107 !important;     /* borde ámbar */
-    color: #856404 !important;            /* texto ámbar oscuro */
+    background-color: #fff3cd52 !important; /* fondo amarillo claro */
+    border-color: #ffc107 !important; /* borde ámbar */
   }
 </style>
 
@@ -18,6 +17,8 @@
       <div class="modal-body">
         <form id="asignarRevisorForm">
 
+          <input type="hidden" name="id_certificado" id="id_certificado">
+
           <!-- Número de revisión -->
           <div class="form-floating form-floating-outline mb-3">
             <select class="form-select" id="numeroRevision" name="numeroRevision" required>
@@ -31,7 +32,6 @@
           <!-- Personal del OC -->
           <div class="form-floating form-floating-outline mb-3">
             <select class="form-select select2" id="personalOC" name="personalOC">
-              {{-- <option value="" disabled selected>Seleccione personal OC</option> --}}
             </select>
             <label for="personalOC">Personal del organismo certificador</label>
           </div>
@@ -39,7 +39,6 @@
           <!-- Miembro del Consejo -->
           <div class="form-floating form-floating-outline mb-3">
             <select class="form-select select2" id="miembroConsejo" name="miembroConsejo">
-              {{-- <option value="" disabled selected>Seleccione miembro del consejo</option> --}}
             </select>
             <label for="miembroConsejo">Miembro del consejo</label>
           </div>
@@ -69,7 +68,7 @@
             <label for="archivo_documento">Archivo</label>
           </div>
 
-          <!-- Agregar a mas CERTIFICADOS -->
+          <!-- Agregar mas CERTIFICADOS -->
           <div class="form-floating form-floating-outline mb-3 select2-primary">
               <select name="certificados[]" multiple class="form-control select2">
                 @foreach ($certificados as $cert)
@@ -79,12 +78,9 @@
             <label>Asignar a certificados</label>
           </div>
 
-
           <!-- Documento existente (se inserta dinámicamente desde JS) -->
           <div id="documentoRevision" class="mt-2"></div>
-          {{-- <input type="hidden" name="id_documento" value="133"> --}}
-          <input type="hidden" name="id_certificado" id="id_certificado">
-
+        
 
           <!-- Botones -->
           <div class="modal-footer">

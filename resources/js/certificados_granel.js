@@ -131,7 +131,7 @@ $(function () {
 
             if ($pdf_firmado) {
               var icono = `<a href="${$pdf_firmado}" target="_blank" title="Ver PDF firmado">
-            <i class="ri-file-pdf-2-fill text-success ri-28px cursor-pointer"></i> </a>`;
+                <i class="ri-file-pdf-2-fill text-success ri-28px cursor-pointer"></i> </a>`;
             } else {
               var icono = `<i data-id="${$id}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-toggle="modal" data-bs-target="#mostrarPdf"></i>`;
             }
@@ -232,7 +232,7 @@ $(function () {
             </div> `;
           }
         },
-        {
+        {//estatus
           targets: 6,
           searchable: false,
           orderable: true,
@@ -242,15 +242,25 @@ $(function () {
             var $estatus = full['estatus'];
             var $fecha_actual = full['fecha_actual'];
             var $vigencia = full['vigencia'];
+            var $pdf_firmado  = full['pdf_firmado'];//si hay archivo subido
             let estatus;
+            
             if ($fecha_actual > $vigencia) {
               estatus = '<span class="badge rounded-pill bg-danger">Vencido</span>';
-            } else if ($estatus == 1) {
-              estatus = '<span class="badge rounded-pill bg-danger">Cancelado</span>';
-            } else if ($estatus == 2) {
-              estatus = '<span class="badge rounded-pill bg-warning">Reexpedido</span>';
             } else {
-              estatus = '<span class="badge rounded-pill bg-success">Emitido</span>';
+              let badge = '';
+              let texto = '';
+                  if ($estatus == 1) {
+                    badge = 'bg-danger';
+                    texto = 'Cancelado';
+                  } else if ($estatus == 2) {
+                    badge = 'bg-warning';
+                    texto = 'Reexpedido';
+                  } else {
+                    badge = $pdf_firmado ? 'bg-success' : 'bg-secondary';
+                    texto = $pdf_firmado ? 'Emitido' : 'Pre-certificado';
+                  }
+              estatus = `<span class="badge rounded-pill ${badge}">${texto}</span>`;
             }
 
             ///revisores PERSONAL
@@ -811,34 +821,49 @@ $(function () {
 
 
 
-
-
-
-
-
   
 ///OBTENER REVISORES
 function cargarRevisores() {
   $.get('/ruta-para-obtener-revisores', { tipo: 1 }, function (data) {
-    $('#personalOC').empty().append('<option value="">Seleccione personal OC</option>');
+    $('#personalOC').empty().append('<option value="" disabled selected>Seleccione personal OC</option>');
     data.forEach(function (rev) {
       $('#personalOC').append(`<option value="${rev.id}">${rev.name}</option>`);
     });
   });
 
   $.get('/ruta-para-obtener-revisores', { tipo: 4 }, function (data) {
-    $('#miembroConsejo').empty().append('<option value="">Seleccione miembro del consejo</option>');
+    $('#miembroConsejo').empty().append('<option value="" disabled selected>Seleccione miembro del consejo</option>');
     data.forEach(function (rev) {
       $('#miembroConsejo').append(`<option value="${rev.id}">${rev.name}</option>`);
     });
   });
 }
+function actualizarEstiloVisualSelects() {///aviso de seleccion
+  ['#personalOC', '#miembroConsejo'].forEach(function (id) {
+    const select2Container = $(id).next('.select2-container');
+    if (!$(id).val()) {
+      select2Container.addClass('select2-empty');
+    } else {
+      select2Container.removeClass('select2-empty');
+    }
+  });
+}
+$(document).ready(function () {//funcion cargar y asignar color
+    // Inicializar Select2
+    $('#personalOC, #miembroConsejo').select2({
+      dropdownParent: $('#asignarRevisorModal') // si están dentro de modal
+    });
+    cargarRevisores();
 
-$(document).ready(function () {
-  cargarRevisores();
+    // Esperar a que se carguen opciones y aplicar estilo visual
+    setTimeout(actualizarEstiloVisualSelects, 500);
+    // Actualizar estilo cuando cambie selección
+    $('#personalOC, #miembroConsejo').on('change', function () {
+      actualizarEstiloVisualSelects();
+    });
 });
 
-/// Cargar datos de revisión automáticamente al abrir el modal
+///CARGAR DATOS DE REVISIÓN AL ABRIR EL MODAL
 $('#asignarRevisorModal').on('show.bs.modal', function (event) {
   const button = $(event.relatedTarget);
   const idCertificado = button.data('id');
@@ -966,8 +991,6 @@ $('#asignarRevisorForm').on('submit', function (e) {
     }
   });
 });
-
-
 
 
 

@@ -104,10 +104,10 @@
                         <p class="mt-2"><strong>Observaciones:</strong> {{ $observaciones }}</p>
                     @endif
 
-                    @if (!empty($datos->evidencias))
+                    @if (!empty($revisor_personal->evidencias))
                         <div class="mt-3">
                             <p class="text-muted mb-1">Evidencias:</p>
-                            @foreach ($datos->evidencias as $evidencia)
+                            @foreach ($revisor_personal->evidencias as $evidencia)
                                 @if (!empty($evidencia))
                                     <div class="d-flex align-items-center gap-2 mb-1">
                                         <span>{{ $evidencia->nombre_documento }}</span>

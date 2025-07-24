@@ -641,7 +641,9 @@ public function index(Request $request)
 public function obtenerRevisores(Request $request)
 {
     $tipo = $request->get('tipo');
-    $revisores = User::where('tipo', $tipo)->get(['id', 'name']);
+    $revisores = User::where('tipo', $tipo)
+        ->where('id', '!=', 1)
+        ->get(['id', 'name']);
 
     return response()->json($revisores);
 }
@@ -676,7 +678,7 @@ public function obtenerRevision($id_certificado)
 ///ELIMINAR DOCUMENTO REVISION
 public function eliminarDocumentoRevision($id_certificado)
 {
-    // Buscar el revisor con tipo_certificado 3 (puedes limitar más si quieres)
+    // Buscar el revisor con tipo_certificado 1 (puedes limitar más si quieres)
     $revisor = Revisor::where('id_certificado', $id_certificado)
         ->where('tipo_certificado', 1)
         ->where('tipo_revision', 1)
@@ -887,9 +889,6 @@ public function storeRevisor(Request $request)
 
     return response()->json(['message' => 'Revisor asignado correctamente.']);
 }
-
-
-
 
 
 
