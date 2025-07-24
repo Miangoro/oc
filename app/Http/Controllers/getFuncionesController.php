@@ -369,7 +369,7 @@ class getFuncionesController extends Controller
             }
         }
 
-         if(!$urls_certificados){
+         if(!$fqs){
             $documentos2 = Documentacion_url::where('id_relacion', $idLote)
                 ->whereIn('id_documento', [58, 134])
                 ->get(['url', 'nombre_documento']);
