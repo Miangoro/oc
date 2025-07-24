@@ -655,11 +655,7 @@
                                                             ->where('id_documento', 59)
                                                             ->first(['url', 'nombre_documento']); // ✅ Usa first() en lugar de value()
 
-                                                        if(!$documento){
-                                                            $documento = App\Models\Documentacion_url::where('id_relacion', $loteGranel->id_lote_granel)
-                                                            ->where('id_documento', 59)
-                                                            ->first(['url', 'nombre_documento']); // ✅ Usa first() en lugar de value()
-                                                        }
+                                                       
 
                                                         if ($documento) {
                                                             $urls_certificados->push([
@@ -681,6 +677,10 @@
                                                 @empty
                                                     <span class="text-muted">Sin certificados firmados adjuntos</span>
                                                 @endforelse
+
+                                                 <a target="_blank" href="{{$urlFirmado}}" class="me-1">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ $urlFirmado }}"></i>
+                                                    </a>
 
 
                                                 {{-- 🧪 Granel --}}
