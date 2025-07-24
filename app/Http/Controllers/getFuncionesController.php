@@ -344,7 +344,7 @@ class getFuncionesController extends Controller
                 $urls_certificados->push($url);
             }
         }
-     
+        if(empty($urls_certificados)){
             $url = Documentacion_url::where('id_relacion', $idLote)
                     ->where('id_documento', 59)
                     ->value('url');
@@ -352,7 +352,7 @@ class getFuncionesController extends Controller
                 if ($url) {
                     $urls_certificados->push($url);
                 }
- 
+        }
 
         $fqs = collect();
 
@@ -369,6 +369,18 @@ class getFuncionesController extends Controller
             }
         }
 
+         if(!$fqs){
+            $documentos2 = Documentacion_url::where('id_relacion', $idLote)
+                ->whereIn('id_documento', [58, 134])
+                ->get(['url', 'nombre_documento']);
+
+            foreach ($documentos2 as $documento) {
+                $fqs->push([
+                    'url' => $documento->url,
+                    'nombre_documento' => $documento->nombre_documento
+                ]);
+            }
+        }
 
         return response()->json([
             'success' => true,
