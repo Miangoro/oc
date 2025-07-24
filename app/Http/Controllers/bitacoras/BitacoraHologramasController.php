@@ -179,7 +179,7 @@ class BitacoraHologramasController extends Controller
         ->when($empresaId, function ($query) use ($empresaId) {
             $query->where('id_empresa', $empresaId);
         })
-        ->orderBy('fecha', 'desc')
+        ->orderBy('id', 'desc')
         ->get();
 
           if ($bitacoras->isEmpty()) {

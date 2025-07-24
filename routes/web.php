@@ -1055,7 +1055,6 @@ Route::controller(BitacoraProductoMaduracionController::class)->middleware(['aut
 });
 Route::resource('/BitacoraProductoMaduracion-list', BitacoraProductoMaduracionController::class)->middleware(['auth']);
 
-
 Route::middleware(['auth'])->group(function () {
     // BitacoraMaduracion
 /*     Route::get('/bitacoraProductoMaduracion', [BitacoraProductoMaduracionController::class, 'UserManagement'])->name('bitacoraProductoMaduracion');
@@ -1273,16 +1272,12 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     //Obtener N° de lotes para hologramas en certificado
     Route::get('/certificados/contar-lotes/{id}', [Certificado_ExportacionController::class, 'contarLotes']);
 
-
-
-
 });
 
 Route::controller(Certificado_ExportacionController::class)->group(function () {
     //Mostrar
      Route::get('/api/certificados_exportacion', [Certificado_ExportacionController::class, 'api']);
 });
-
 Route::controller(Certificado_InstalacionesController::class)->group(function () {
     //Mostrar
      Route::get('/api/certificados_instalaciones', [Certificado_InstalacionesController::class, 'api']);
@@ -1297,11 +1292,12 @@ Route::middleware(['auth'])->controller(Certificado_NacionalController::class)->
     Route::get('editar/{id_certificado}/edit', 'edit')->name('obtener-cer-nac');
     Route::put('actualizar/{id_certificado}', 'update')->name('actualizar-cer-nac');
     Route::get('/certificado_venta_nacional/{id}', 'certificado')->name('PDF-cer-nac');
-
     //Reexpedir
     Route::post('reexpedir', 'reexpedir')->name('reexpedir-cer-nac');
-    //Asignar revisor
-    Route::post('asignar_revisor_nacional', 'storeRevisor')->name('asignarRevisor-cer-nac');
+    //revisiones
+    Route::post('/asignar-revisor/nacional', [Certificado_NacionalController::class, 'storeRevisor'])->name('asignarRevisor-nacional');
+    Route::get('/obtener-revision-nacional/{id_certificado}', [Certificado_NacionalController::class, 'obtenerRevision']);
+    Route::delete('/eliminar-doc-revision-nacional/{id_certificado}', [Certificado_NacionalController::class, 'eliminarDocumentoRevision']);
 });
 
 //-------------------TRAMITE IMPI-------------------

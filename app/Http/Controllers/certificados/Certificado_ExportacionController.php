@@ -643,7 +643,7 @@ public function reexpedir(Request $request)
 
 
 
-///OBTENER DOCUMENTO  REVISION
+///OBTENER REVISION ASIGNADA
 public function obtenerRevision($id_certificado)
 {
     // Obtener la primera revisión (tipo_revision = 1)
@@ -793,22 +793,21 @@ public function storeRevisor(Request $request)
         }
 
 
-        // Sincronizar observaciones y documento si tipo_revision=2 y existe tipo_revision=1
-        if ($tipoRevisor == 2) {
-            $revisionTipo1 = Revisor::where('id_certificado', $certificado->id_certificado)
-                ->where('tipo_certificado', 3)
-                ->where('tipo_revision', 1)
-                ->first();
+        // Siempre sincronizar si existen AMBOS tipos (1 y 2) para el certificado principal
+        $revisiones = Revisor::where('id_certificado', $certificado->id_certificado)
+            ->where('tipo_certificado', 3)
+            ->whereIn('tipo_revision', [1, 2])
+            ->get();
 
-            if ($revisionTipo1) {
-                $revisionTipo1->observaciones = $validated['observaciones'] ?? '';
-                $revisionTipo1->es_correccion = $validated['esCorreccion'] ?? 'no';
-                $revisionTipo1->save();
+        if ($revisiones->count() === 2) {
+            foreach ($revisiones as $rev) {
+                $rev->observaciones = $validated['observaciones'] ?? '';
+                $rev->es_correccion = $validated['esCorreccion'] ?? 'no';
+                $rev->save();
 
-                // Actualizar documento si se subió uno nuevo
-                if ($nombreArchivo) {
-                    // Eliminar documento previo si existe
-                    $docAnterior = Documentacion_url::where('id_relacion', $revisionTipo1->id_revision)
+                // Solo actualizar documento en tipo_revision = 1
+                if ($rev->tipo_revision == 1 && $nombreArchivo) {
+                    $docAnterior = Documentacion_url::where('id_relacion', $rev->id_revision)
                         ->where('id_documento', 133)
                         ->first();
                     if ($docAnterior) {
@@ -816,9 +815,8 @@ public function storeRevisor(Request $request)
                         $docAnterior->delete();
                     }
 
-                    // Crear nuevo documento
                     Documentacion_url::create([
-                        'id_relacion' => $revisionTipo1->id_revision,
+                        'id_relacion' => $rev->id_revision,
                         'id_documento' => 133,
                         'id_empresa' => $empresa->id_empresa,
                         'nombre_documento' => $validated['nombre_documento'],
@@ -980,9 +978,13 @@ public function MostrarCertificadoExportacion($id_certificado)
         }*/
 
         //dd($lotes[0]->lotesGranel[0]);para ver que imprime
-        $DOM = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA';
-        $convenio = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA';
-
+        $DOM = $lotes[0]->lotesGranel->first()?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa?->registro_productor
+            ?? $lotes[0]->lotesGranel->first()?->empresa?->registro_productor
+            ?? 'NA';
+        $convenio = $lotes[0]->lotesGranel->first()?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa?->convenio_corresp
+            ?? $lotes[0]->lotesGranel->first()?->empresa?->convenio_corresp
+            ?? 'NA';
+        
     //return response()->json(['message' => 'No se encontraron características.', $data], 404)
 
     //$pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF

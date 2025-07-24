@@ -407,7 +407,9 @@
                                           $documentos = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->fqs ?? collect();
                                           $doc1 = $documentos->get(0);
                                            $doc2 = $documentos->get(1);
-                                        
+                                         $loteGranel =
+                                                    $datos->certificado->dictamen->inspeccione->solicitud
+                                                        ->lote_granel ?? null;
 
                                            // Obtener documentos
                                                 $documentos = $loteGranel->fqs ?? collect();
@@ -655,6 +657,8 @@
                                                             ->where('id_documento', 59)
                                                             ->first(['url', 'nombre_documento']); // ✅ Usa first() en lugar de value()
 
+                                                       
+
                                                         if ($documento) {
                                                             $urls_certificados->push([
                                                                 'url' => $documento->url,
@@ -668,13 +672,22 @@
                                             <td>
                                                 {{-- 📎 Documentos firmados PDF (si existen) --}}
                                                 @forelse ($urls_certificados as $pdf)
-                                                    <a target="_blank" href="/files/{{$numero_cliente}}/certificados_granel/{{ $pdf['url'] }}" class="me-1">
-                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf['url']) }}"></i>
+                                                <a target="_blank" href="/files/{{ $numero_cliente }}/certificados_granel/{{ $pdf['url'] }}" class="me-1">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ basename($pdf['url']) }}"></i>
+                                                </a>
+                                                {{ $pdf['nombre_documento'] }}
+                                            @empty
+                                                @if (!empty($urlFirmado))
+                                                    <a target="_blank" href="{{ $urlFirmado }}" class="me-1">
+                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer" title="{{ $urlFirmado }}"></i>
                                                     </a>
-                                                    {{ $pdf['nombre_documento'] }}
-                                                @empty
+                                                @else
                                                     <span class="text-muted">Sin certificados firmados adjuntos</span>
-                                                @endforelse
+                                                @endif
+                                            @endforelse
+
+
+                                                
 
 
                                                 {{-- 🧪 Granel --}}

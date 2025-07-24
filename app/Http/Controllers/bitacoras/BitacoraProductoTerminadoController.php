@@ -217,7 +217,7 @@ class BitacoraProductoTerminadoController extends Controller
                 $query->where('id_instalacion', $instalacionId);
             }
         })
-        ->orderBy('fecha', 'desc')
+        ->orderBy('id', 'desc')
         ->get();
 
           if ($bitacoras->isEmpty()) {
@@ -251,7 +251,7 @@ public function store(Request $request)
         'cantidad_botellas_cajas' => 'nullable|numeric|min:0',
         'edad' => 'nullable|string|max:100',
         'ingredientes' => 'nullable|string',
-        'id_marca' => 'nullable|integer', 
+        'id_marca' => 'nullable|integer',
         'cant_cajas_inicial' => 'nullable|numeric|min:0',
         'cant_bot_inicial' => 'nullable|numeric|min:0',
 

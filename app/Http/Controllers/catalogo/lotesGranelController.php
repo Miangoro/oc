@@ -836,7 +836,7 @@ if ($request->has('documentos')) {
               'edad' => $validated['edad'],
               'id_organismo' => $validated['id_organismo'] ?? null,
               'volumen' => $validated['volumen'],
-              'volumen_restante' => $validated['volumen_restante'],
+              'volumen_restante' => $validated['volumen_restante'] ?? null,
           ];
 
           // Solo agregamos estos campos si **no** vienen nulos (o están presentes con valor)
