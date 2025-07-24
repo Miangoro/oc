@@ -1307,12 +1307,17 @@ Route::middleware(['auth'])->controller(Certificado_NacionalController::class)->
     Route::get('editar/{id_certificado}/edit', 'edit')->name('obtener-cer-nac');
     Route::put('actualizar/{id_certificado}', 'update')->name('actualizar-cer-nac');
     Route::get('/certificado_venta_nacional/{id}', 'certificado')->name('PDF-cer-nac');
+
     //Reexpedir
     Route::post('reexpedir', 'reexpedir')->name('reexpedir-cer-nac');
+    //Asignar revisor
+    Route::post('asignar_revisor_nacional', 'storeRevisor')->name('asignarRevisor-cer-nac');
+
     //revisiones
-    Route::post('/asignar-revisor/nacional', [Certificado_NacionalController::class, 'storeRevisor'])->name('asignarRevisor-nacional');
+    /*Route::post('/asignar-revisor/nacional', [Certificado_NacionalController::class, 'storeRevisor'])->name('asignarRevisor-nacional');
     Route::get('/obtener-revision-nacional/{id_certificado}', [Certificado_NacionalController::class, 'obtenerRevision']);
     Route::delete('/eliminar-doc-revision-nacional/{id_certificado}', [Certificado_NacionalController::class, 'eliminarDocumentoRevision']);
+    */
 });
 
 //-------------------TRAMITE IMPI-------------------

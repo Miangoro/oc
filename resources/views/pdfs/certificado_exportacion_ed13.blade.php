@@ -309,13 +309,31 @@
     $oldHologramas = json_decode($data->old_hologramas, true);
     $contador = 0;
 
+    ///SOLICITUD Y ACTIVACION HOLOGRAMAS
+    use App\Models\activarHologramasModelo;
+    use App\Models\solicitudHolograma;
+    $id_activacion = $idHologramas['folio1']['id'] ?? null;//id de la tabla activar_hologamas
+    $activacion = activarHologramasModelo::find($id_activacion);
+
+    $solic = null;
+    if ($activacion) {
+        $solic = solicitudHolograma::find($activacion->id_solicitud);
+    }
+
+    $empresa_hol = $solic->empresa ?? null;
+    $num_clien_hol = $empresa_hol && $empresa_hol->empresaNumClientes->isNotEmpty()
+        ? $empresa_hol->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa_hol
+        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
+    $no_cliente = explode('070-', $num_clien_hol)[1] ?? null;
+
+
     $foliosPorLote = [];
 
     foreach ($lotes as $lote) {
         $clave = 'folio' . ($contador + 1);
         $contenido = '';
 
-        if (!empty($idHologramas[$clave])) {
+        /* if (!empty($idHologramas[$clave])) {
             $grupo = $idHologramas[$clave];
             $rangoTexto = [];
 
@@ -324,8 +342,28 @@
             }
 
             $contenido .= implode('<br>', $rangoTexto);
+        } */
+       // Solo modificar esta parte para id_hologramas
+        if (!empty($idHologramas[$clave])) {
+            $grupo = $idHologramas[$clave];
+            $rangoTexto = [];
+
+            foreach ($grupo['rangos'] ?? [] as $rango) {
+                $folioInicial = str_pad($rango['inicial'] ?? '', 7, '0', STR_PAD_LEFT);
+                $folioFinal = str_pad($rango['final'] ?? '', 7, '0', STR_PAD_LEFT);
+
+                $enlaceInicial = '<a style="color: black; text-decoration: none; target="_blank" href="/holograma/' . $num_clien_hol . '-' . $solic->tipo.$solic->marcas->folio . $folioInicial . '">' .
+                    $no_cliente . '-' . $solic->tipo.$solic->marcas->folio . $folioInicial . '</a>';
+                $enlaceFinal = '<a style="color: black; text-decoration: none; target="_blank" href="/holograma/' . $num_clien_hol . '-' . $solic->tipo.$solic->marcas->folio . $folioFinal . '">' .
+                    $no_cliente . '-' . $solic->tipo.$solic->marcas->folio . $folioFinal  . '</a>';
+
+                $rangoTexto[] = $enlaceInicial . ' - ' . $enlaceFinal;
+            }
+
+            $contenido .= implode('<br>', $rangoTexto);
         }
 
+        // old_hologramas
         if (!empty($oldHologramas[$clave])) {
             $lineaConSaltos = str_replace(',', '<br>', $oldHologramas[$clave]);
             $contenido .= ($contenido ? '<br>' : '') . $lineaConSaltos;
@@ -537,14 +575,14 @@
     <p class="textx">
         <strong>CADENA ORIGINAL</strong>
         <span style="margin-left: 14px;">
-            <strong>{{ $firmaDigital['cadena_original'] }}</strong>
+            <strong>{{ $firmaDigital['cadena_original'] ?? '' }}</strong>
         </span>
     </p>
     <p class="textx">
         <strong>SELLO DIGITAL</strong>
     </p>
     <p class="textsello">
-        {{ $firmaDigital['firma'] }}
+        {{ $firmaDigital['firma'] ?? ''}}
     </p>
 </div>
 
