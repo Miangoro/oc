@@ -149,7 +149,7 @@ $(document).ready(function() {
 
 function abrirModal(url,idDocumento) { 
 
-    
+    alert(idDocumento);
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
     var modalHeader = $("#encabezado_modal"); // Selecciona la cabecera del modal
