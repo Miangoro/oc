@@ -95,7 +95,7 @@ class Revisor extends Model
 
         public function evidencias()
         {
-            return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_revision')->where('id_documento',133)->where('tipo_revisor',1);
+            return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_revision')->where('id_documento',133);
         }
     public function certificado()
     {
