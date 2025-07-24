@@ -1055,7 +1055,6 @@ Route::controller(BitacoraProductoMaduracionController::class)->middleware(['aut
 });
 Route::resource('/BitacoraProductoMaduracion-list', BitacoraProductoMaduracionController::class)->middleware(['auth']);
 
-
 Route::middleware(['auth'])->group(function () {
     // BitacoraMaduracion
 /*     Route::get('/bitacoraProductoMaduracion', [BitacoraProductoMaduracionController::class, 'UserManagement'])->name('bitacoraProductoMaduracion');

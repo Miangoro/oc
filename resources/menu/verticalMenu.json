@@ -319,10 +319,10 @@
               "can": "Visualizar bitácoras"
             },
             {
-              "url": "/bitacoraProductoMaduracion",
+              "url": "/BitacoraProductoMaduracion",
               "name": "Maduración en barricas o vidrio",
-              "slug": "bitacoraProductoMaduracion",
-              "can": "Visualizar bitácoras maduración"
+              "slug": "bitacora-producto-maduracion",
+              "can": "Visualizar bitácoras"
             }
           ]
         },
@@ -355,12 +355,6 @@
               "slug": "bitacora-hologramas-envasador",
               "can": "Visualizar bitácoras"
 
-            },
-            {
-              "url": "/BitacoraProductoMaduracion",
-              "name": "Maduración en barricas o vidrio",
-              "slug": "bitacora-producto-maduracion",
-              "can": "Visualizar bitácoras"
             }
           ]
         },
