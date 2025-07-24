@@ -369,18 +369,6 @@ class getFuncionesController extends Controller
             }
         }
 
-         if(!$fqs){
-            $documentos2 = Documentacion_url::where('id_relacion', $idLote)
-                ->whereIn('id_documento', [58, 134])
-                ->get(['url', 'nombre_documento']);
-
-            foreach ($documentos2 as $documento) {
-                $fqs->push([
-                    'url' => $documento->url,
-                    'nombre_documento' => $documento->nombre_documento
-                ]);
-            }
-        }
 
         return response()->json([
             'success' => true,
