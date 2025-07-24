@@ -314,7 +314,11 @@
     use App\Models\solicitudHolograma;
     $id_activacion = $idHologramas['folio1']['id'] ?? null;//id de la tabla activar_hologamas
     $activacion = activarHologramasModelo::find($id_activacion);
-    $solic = solicitudHolograma::find($activacion->id_solicitud);
+
+    $solic = null;
+    if ($activacion) {
+        $solic = solicitudHolograma::find($activacion->id_solicitud);
+    }
 
     $empresa_hol = $solic->empresa ?? null;
     $num_clien_hol = $empresa_hol && $empresa_hol->empresaNumClientes->isNotEmpty()
