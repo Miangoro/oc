@@ -213,6 +213,8 @@ use App\Http\Controllers\bitacoras\BitacoraProductoTerminadoController;
 use App\Http\Controllers\bitacoras\BitacoraHologramasController;
 use App\Http\Controllers\bitacoras\BitacoraHologramasComercializadorController;
 use App\Http\Controllers\bitacoras\BitacoraPTComController;
+use App\Http\Controllers\bitacoras\BitacoraProductoEtiquetaController;
+
 use App\Http\Controllers\catalogo\EtiquetasController;
 use App\Http\Controllers\certificados\Certificado_ExportacionController;
 use App\Http\Controllers\certificados\Certificado_NacionalController;
@@ -958,7 +960,8 @@ Route::controller(CartaAsignacionController::class)->middleware(['auth'])->group
     Route::get('/bitacora_maduracion', 'BitacoraMaduracion')->name('bitacora_maduracion');
     Route::get('/bitacora_productor', 'BitacoraProductor')->name('bitacora_productor');
     Route::get('/bitacora_terminado', 'BitacoraTerminado')->name('bitacora_terminado');
-    Route::get('/bitacora_hologramas', 'BitacoraHologramas')->name('bitacora_hologramas');
+    /* Route::get('/bitacora_hologramas', 'BitacoraHologramas')->name('bitacora_hologramas'); */
+    Route::get('/bitacora_etiqueta', 'BitacoraHologramas')->name('bitacora_hologramas');
 });
 
 // BitacoraMezcal
@@ -1054,6 +1057,18 @@ Route::controller(BitacoraProductoMaduracionController::class)->middleware(['aut
     Route::post('/FirmaProductoMaduracion/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
 });
 Route::resource('/BitacoraProductoMaduracion-list', BitacoraProductoMaduracionController::class)->middleware(['auth']);
+
+Route::controller(BitacoraProductoEtiquetaController::class)->middleware(['auth'])->group(function () {
+    Route::get('/BitacoraProductoEtiqueta', 'UserManagement')->name('bitacora-producto-etiqueta');
+    Route::get('/BitacoraProductoEtiquetaPDF', 'PDFProductoEtiqueta');
+    Route::get('bitacoraProductoEtiqueta/{id_bitacora}/edit', 'edit');
+    Route::delete('bitacoraProductoEtiqueta-delete/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::post('/bitacoraProductoEtiquetaStore', 'store')->name('bitacora.store');
+    Route::post('/bitacoraProductoEtiquetaUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaProductoEtiqueta/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+});
+Route::resource('/BitacoraProductoEtiqueta-list', BitacoraProductoEtiquetaController::class)->middleware(['auth']);
+
 
 Route::middleware(['auth'])->group(function () {
     // BitacoraMaduracion

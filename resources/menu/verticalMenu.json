@@ -314,7 +314,7 @@
             },
             {
               "url": "/bitacoraMezcalProductor",
-              "name": "Graneles (Inventario)",
+              "name": "Graneles",
               "slug": "bitacora-mezcal",
               "can": "Visualizar bitácoras"
             },
@@ -333,15 +333,15 @@
           "submenu": [
             {
               "url": "/bitacoraMezcalEnvasador",
-              "name": "Mezcal a granel (Inventario)",
+              "name": "Graneles",
               "slug": "bitacora-mezcal-envasador",
               "can": "Visualizar bitácoras"
             },
             {
-              "url": "/bitacoraProductoTerminado",
+              "url": "/BitacoraProductoEtiqueta",
               "name": "Producto sin etiqueta",
-              "slug": "bitacoraProductoTerminado",
-              "can": "Visualizar bitácoras maduración"
+              "slug": "bitacora-producto-etiqueta",
+              "can": "Visualizar bitácoras"
             },
             {
               "url": "/bitacoraProductoEnvasado",
