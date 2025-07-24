@@ -344,20 +344,33 @@ class getFuncionesController extends Controller
                 $urls_certificados->push($url);
             }
         }
-    if(!$urls_certificados){
-        $url = Documentacion_url::where('id_relacion', $idLote)
-                ->where('id_documento', 59)
-                ->value('url');
+        if(!$urls_certificados){
+            $url = Documentacion_url::where('id_relacion', $idLote)
+                    ->where('id_documento', 59)
+                    ->value('url');
 
-            if ($url) {
-                $urls_certificados->push($url);
-            }
-    }
+                if ($url) {
+                    $urls_certificados->push($url);
+                }
+        }
 
         $fqs = collect();
 
         foreach ($certificados as $certificado) {
             $documentos2 = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+                ->whereIn('id_documento', [58, 134])
+                ->get(['url', 'nombre_documento']);
+
+            foreach ($documentos2 as $documento) {
+                $fqs->push([
+                    'url' => $documento->url,
+                    'nombre_documento' => $documento->nombre_documento
+                ]);
+            }
+        }
+
+         if(!$urls_certificados){
+            $documentos2 = Documentacion_url::where('id_relacion', $idLote)
                 ->whereIn('id_documento', [58, 134])
                 ->get(['url', 'nombre_documento']);
 
