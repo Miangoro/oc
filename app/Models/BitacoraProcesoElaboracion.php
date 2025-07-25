@@ -54,5 +54,13 @@ class BitacoraProcesoElaboracion extends Model
         return $this->hasMany(BitacoraProcesoSegundaDestilacion::class, 'id_bitacora');
     }
 
+    protected static function booted()
+    {
+        static::deleting(function ($bitacora) {
+            $bitacora->molienda()->delete();
+            $bitacora->segundaDestilacion()->delete();
+        });
+    }
+
 
 }
