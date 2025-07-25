@@ -886,90 +886,7 @@ public function eliminarDocumentoRevision($id_certificado)
     return response()->json(['message' => 'Revisor asignado correctamente.']);
 }
 */
-/*public function storeRevisor(Request $request)   SEGUNDO CASI FUNCIONAL
-{
-    $validated = $request->validate([
-        'numeroRevision'   => 'required|string|max:50',
-        'personalOC'       => 'nullable|integer|exists:users,id',
-        'miembroConsejo'   => 'nullable|integer|exists:users,id',
-        'esCorreccion'     => 'nullable|in:si,no',
-        'observaciones'    => 'nullable|string|max:5000',
-        'id_certificado'   => 'required|integer|exists:certificados_exportacion,id_certificado',
-        'url'              => 'nullable|file|mimes:pdf|max:3072',
-        'nombre_documento' => 'nullable|string|max:255',
-        
-        'certificados'     => 'nullable|array',
-        'certificados.*'   => 'integer|exists:certificados_exportacion,id_certificado',
-    ]);
 
-    /* ---------- 2. PREPARAR DATOS GENERALES ---------- 
-    $certificadosIds = array_unique(
-        array_merge([$validated['id_certificado']], $validated['certificados'] ?? [])
-    );
-
-    // Subir archivo (una sola vez)
-    $nombreArchivo = null;
-    if ($request->hasFile('url')) {
-        $file          = $request->file('url');
-        $nombreArchivo = str_replace('/', '-', $validated['nombre_documento'] ?? 'documento') .
-                         '_' . time() . '.' . $file->getClientOriginalExtension();
-        $file->storeAs('revisiones/', $nombreArchivo, 'public');
-    }
-
-    DB::transaction(function () use ($validated, $certificadosIds, $nombreArchivo) {
-
-        foreach ($certificadosIds as $idCert) {
-            $esPrincipal = $idCert == $validated['id_certificado'];
-
-            foreach ([1, 2] as $tipoRev) {
-                $revision = Revisor::firstOrNew([
-                    'id_certificado'   => $idCert,
-                    'tipo_certificado' => 3,
-                    'tipo_revision'    => $tipoRev,
-                ]);
-
-                // Solo si es principal se actualiza el revisor
-                if ($esPrincipal) {
-                    $idRevisor = $tipoRev == 1 ? ($validated['personalOC'] ?? null)
-                                            : ($validated['miembroConsejo'] ?? null);
-
-                    if (!is_null($idRevisor)) {
-                        $revision->id_revisor = $idRevisor;
-                    }
-                }
-
-                // Siempre se actualizan estos campos
-                $revision->numero_revision = $validated['numeroRevision'];
-                $revision->es_correccion   = $validated['esCorreccion'] ?? 'no';
-                $revision->observaciones   = $validated['observaciones'] ?? '';
-                $revision->decision        = $revision->decision ?? 'Pendiente';
-                $revision->save();
-            }
-
-            // Documento: aplica para todos los certificados si se cargó archivo
-            if ($nombreArchivo) {
-                if ($docAnterior = Documentacion_url::where('id_relacion', $idCert)
-                    ->where('id_documento', 133)->first()) {
-
-                    Storage::disk('public')->delete('revisiones/' . $docAnterior->url);
-                    $docAnterior->delete();
-                }
-
-                Documentacion_url::create([
-                    'id_relacion'      => $idCert,
-                    'id_documento'     => 133,
-                    'id_empresa'       => Certificado_Exportacion::find($idCert)
-                        ->dictamen->inspeccione->solicitud->empresa->id_empresa ?? null,
-                    'nombre_documento' => $validated['nombre_documento'] ?? 'Documento de revisión',
-                    'url'              => $nombreArchivo,
-                ]);
-            }
-        }
-    });
-
-
-    return response()->json(['message' => 'Revisión(es) registrada(s) correctamente.']);
-}*/
 public function storeRevisor(Request $request)
 {
     $validated = $request->validate([
@@ -1000,17 +917,74 @@ public function storeRevisor(Request $request)
 
     DB::transaction(function () use ($validated, $certificadosIds, $nombreArchivo) {
         foreach ($certificadosIds as $idCert) {
-            foreach ([1, 2] as $tipoRev) {
+
+            foreach ([1, 2] as $tipoRev) {  //siempre inserta datos
                 $revision = Revisor::firstOrNew([
                     'id_certificado'   => $idCert,
                     'tipo_certificado' => 3,
                     'tipo_revision'    => $tipoRev,
                 ]);
 
-                // Solo se actualizan observaciones
-                $revision->observaciones = $validated['observaciones'] ?? '';
-                $revision->decision      = $revision->decision ?? 'Pendiente';
+
+                $esPrincipal = $idCert == $validated['id_certificado'];
+
+                // Verificamos si debemos actualizar esta revisión en función del tipo y si viene revisor
+                $actualizarRevision = false;
+                if ($esPrincipal) {
+                    if ($tipoRev == 1 && !empty($validated['personalOC'])) {
+                        $revision->id_revisor = $validated['personalOC'];
+                        $actualizarRevision = true;
+                    } elseif ($tipoRev == 2 && !empty($validated['miembroConsejo'])) {
+                        $revision->id_revisor = $validated['miembroConsejo'];
+                        $actualizarRevision = true;
+                    }
+                }
+
+                // Siempre se actualizan observaciones y decision
+                $revision->observaciones  = $validated['observaciones'] ?? '';
+                $revision->decision       = $revision->decision ?? 'Pendiente';
+                $revision->es_correccion  = $validated['esCorreccion'] ?? 'no';
+
+                // Solo si se indicó el tipo, se actualiza numero_revision
+                if ($actualizarRevision) {
+                    $revision->numero_revision = $validated['numeroRevision'];
+                }
+
                 $revision->save();
+
+
+
+                // Notificación solo si es principal y hay revisor
+                /*if ($esPrincipal && $actualizarRevision) {
+                    $idRevisor = $revision->id_revisor;
+                    $user = User::find($idRevisor);
+                    if ($user) {
+                        $certificado = Certificado_Exportacion::with(['dictamen.inspeccione.solicitud.empresa'])
+                            ->find($validated['id_certificado']);
+
+                        $empresa = $certificado->dictamen->inspeccione->solicitud->empresa ?? null;
+                        $numeroCliente = $certificado->dictamen->inspeccione->solicitud->empresa->numero_cliente ?? null;
+
+                        $url_clic = $tipoRev == 1 ? "/add_revision/{$revision->id_revision}" : "/add_revision_consejo/{$revision->id_revision}";
+
+                        $user->notify(new GeneralNotification([
+                            'asunto'         => 'Revisión de certificado ' . $certificado->num_certificado,
+                            'title'          => 'Revisión de certificado',
+                            'message'        => 'Se te ha asignado el certificado ' . $certificado->num_certificado,
+                            'url'            => $url_clic,
+                            'nombreRevisor'  => $user->name,
+                            'emailRevisor'   => $user->email,
+                            'num_certificado'=> $certificado->num_certificado,
+                            'fecha_emision'  => Helpers::formatearFecha($certificado->fecha_emision),
+                            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+                            'razon_social'   => $empresa->razon_social ?? 'Sin asignar',
+                            'numero_cliente' => $numeroCliente ?? 'Sin asignar',
+                            'tipo_certificado'=> 'Certificado de exportacion',
+                            'observaciones'  => $revision->observaciones,
+                        ]));
+                    }
+                }*/
+
             }
 
             // Documento (opcional)
@@ -1032,9 +1006,11 @@ public function storeRevisor(Request $request)
                 ]);
             }
         }
+
     });
 
-    return response()->json(['message' => 'Observaciones y documento actualizados correctamente.']);
+
+    return response()->json(['message' => 'Revisor asignado correctamente.']);
 }
 
 
