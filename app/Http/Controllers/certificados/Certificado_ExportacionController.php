@@ -748,9 +748,8 @@ public function storeRevisor(Request $request)
         $revisor->save();
 
 
-        // Documento (solo si tipo = 1 y subido)
-        if ($conDocumento && $nombreArchivo) {
-            // Eliminar documento anterior si existe
+        // Subir documento si tipo_revisor es 1 y hay archivo
+        if ($tipoRevisor == 1 && $nombreArchivo) {
             $docAnterior = Documentacion_url::where('id_relacion', $revisor->id_revision)
                 ->where('id_documento', 133)
                 ->first();
@@ -759,7 +758,6 @@ public function storeRevisor(Request $request)
                 $docAnterior->delete();
             }
 
-            // Crear nuevo documento
             Documentacion_url::create([
                 'id_relacion' => $revisor->id_revision,
                 'id_documento' => 133,
@@ -771,7 +769,7 @@ public function storeRevisor(Request $request)
 
 
         // Notificación
-        $user = User::find($idRevisor);
+        /*$user = User::find($idRevisor);
         if ($user) {
             $url_clic = $tipoRevisor == 1 ? "/add_revision/{$revisor->id_revision}" : "/add_revision_consejo/{$revisor->id_revision}";
 
@@ -790,7 +788,7 @@ public function storeRevisor(Request $request)
                 'tipo_certificado' => 'Certificado de exportacion',
                 'observaciones' => $revisor->observaciones,
             ]));
-        }
+        }*/
 
 
         // Siempre sincronizar si existen AMBOS tipos (1 y 2) para el certificado principal
