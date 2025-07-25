@@ -973,7 +973,7 @@
                                                     @endphp
 
                                                     @foreach ($rangoFolios as $rango)
-                                                        <div>{!! $rango !!}</div>dfsdfsdf
+                                                        <div>{!! $rango !!}</div>
                                                     @endforeach
                                                 @endif
                                             </td>
@@ -984,7 +984,7 @@
                                         <td>
                                             @if (isset($old['folio1']))
                                                 {{-- Mostramos rangoFolios solo si old no contiene folio1 --}}
-                                                @if (!empty($rangoFolios)) entro1
+                                                @if (!empty($rangoFolios))
                                                     @foreach ($rangoFolios as $rango)
                                                         <div>{!! $rango !!}</div>
                                                     @endforeach
@@ -995,7 +995,7 @@
                                                 @foreach ($old as $key => $folio)
                                                     <div><strong>{{ ucfirst($key) }}:</strong> {{ $folio }}</div>
                                                 @endforeach
-                                                entro2
+                                                
                                             @endif
                                         </td>
                                         @elseif($pregunta->filtro == 'etiqueta')
