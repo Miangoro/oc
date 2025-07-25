@@ -981,7 +981,7 @@
                                         @php
                                             $old = json_decode($datos->certificado->old_hologramas, true);
                                         @endphp
-                                        <td>dfsdfd
+                                        <td>
                                             @if (isset($old['folio1']))
                                                 {{-- Mostramos rangoFolios solo si old no contiene folio1 --}}
                                                 @if (!empty($rangoFolios))
@@ -989,11 +989,13 @@
                                                         <div>{!! $rango !!}</div>
                                                     @endforeach
                                                 @endif
+                                                entro1
                                             @else
                                                 {{-- Mostramos los old_hologramas --}}
                                                 @foreach ($old as $key => $folio)
                                                     <div><strong>{{ ucfirst($key) }}:</strong> {{ $folio }}</div>
                                                 @endforeach
+                                                entro2
                                             @endif
                                         </td>
                                         @elseif($pregunta->filtro == 'etiqueta')
