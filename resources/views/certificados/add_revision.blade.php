@@ -982,7 +982,7 @@
                                             $old = json_decode($datos->certificado->old_hologramas, true);
                                         @endphp
                                         <td>
-                                            @if (isset($old['folio1']))
+                                            @if (!isset($old['folio1']))
                                                 {{-- Mostramos rangoFolios solo si old no contiene folio1 --}}
                                                 @if (!empty($rangoFolios))
                                                     @foreach ($rangoFolios as $rango)
