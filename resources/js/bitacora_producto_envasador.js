@@ -420,7 +420,7 @@ $(function () {
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   $(document).on('click', '#verBitacoraBtn', function () {
     const empresaId = $('#filtroEmpresa').val();
-    const instalacionId = $('#filtroInstalacion').val();
+
 
     if (!empresaId) {
       Swal.fire({

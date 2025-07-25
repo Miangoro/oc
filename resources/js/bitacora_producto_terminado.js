@@ -347,7 +347,7 @@ $(function () {
         });
 
         // Opcional: recargar tabla al cambiar filtros
-        $('#filtroEmpresa, #filtroInstalacion').on('change', function () {
+        $('#filtroEmpresa').on('change', function () {
           dt_user.ajax.reload();
         });
       }
@@ -420,7 +420,6 @@ $(function () {
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   $(document).on('click', '#verBitacoraBtn', function () {
     const empresaId = $('#filtroEmpresa').val();
-    const instalacionId = $('#filtroInstalacion').val();
 
     if (!empresaId) {
       Swal.fire({
@@ -435,7 +434,7 @@ $(function () {
       return;
     }
 
-    let urlPDF = `/bitacoraPTComPDF?empresa=${empresaId}`;
+    let urlPDF = `/bitacoraPTComerPDF?empresa=${empresaId}`;
 
     urlPDF += `&t=${new Date().getTime()}`;
 
@@ -509,7 +508,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}bitacoraPTCom-delete/${id_bitacora}`,
+          url: `${baseUrl}bitacoraPTComer-delete/${id_bitacora}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -721,7 +720,7 @@ $(function () {
       var formData = $(form).serialize();
 
       $.ajax({
-        url: '/bitacoraPTComStore',
+        url: '/bitacoraPTComerStore',
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -770,7 +769,7 @@ $(function () {
     var bitacoraID = $(this).data('id');
     $('#edit_bitacora_id').val(bitacoraID);
     $.ajax({
-      url: '/bitacoraPTCom/' + bitacoraID + '/edit',
+      url: '/bitacoraPTComer/' + bitacoraID + '/edit',
       method: 'GET',
       success: function (data) {
         if (data.success) {
@@ -1031,7 +1030,7 @@ $(function () {
       const id = $('#edit_bitacora_id').val();
 
       $.ajax({
-        url: '/bitacoraPTComUpdate/' + id,
+        url: '/bitacoraPTComerUpdate/' + id,
         type: 'POST',
         data: formData,
         success: function (response) {
@@ -1277,7 +1276,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'POST',
-          url: `/FirmaProcesoPTCom/${id_bitacora_firma}`,
+          url: `/FirmaProcesoPTComer/${id_bitacora_firma}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },

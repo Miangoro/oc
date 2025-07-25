@@ -287,7 +287,7 @@ public function store(Request $request)
         $bitacora->proforma_predio = $request->proforma_predio;
         $bitacora->folio_fq = $request->folio_fq;
         $bitacora->id_marca = $request->id_marca;
-        $bitacora->id_tipo = is_array($request->id_tipo) ? implode(',', $request->id_tipo) : null;
+        $bitacora->id_tipo = json_encode($request->id_tipo);
         $bitacora->alc_vol = $request->alc_vol;
         $bitacora->sku = $request->sku;
         $bitacora->cantidad_botellas_cajas = $request->cantidad_botellas_cajas;
@@ -450,7 +450,7 @@ public function store(Request $request)
             'id_clase' => $request->id_clase,
             'proforma_predio' => $request->proforma_predio,
             'folio_fq' => $request->folio_fq,
-            'id_tipo' => is_array($request->id_tipo) ? implode(',', $request->id_tipo) : null,
+            'id_tipo' => $request->id_tipo ?? [],
             'alc_vol' => $request->alc_vol,
             'sku' => $request->sku,
             'cantidad_botellas_cajas' => $request->cantidad_botellas_cajas,

@@ -1025,12 +1025,12 @@ Route::resource('/bitacoraProcesoElaboracion-list', BitacoraProcesoElaboracionCo
 
 Route::controller(BitacoraPTComController::class)->middleware(['auth'])->group(function () {
     Route::get('/bitacoraProductoTerminado', 'UserManagement')->name('bitacora-producto-terminado');
-    Route::get('/bitacoraPTComPDF', 'PDFBitacoraPTCom');
-    Route::get('bitacoraPTCom/{id_bitacora}/edit', 'edit');
-    Route::delete('bitacoraPTCom-delete/{id_bitacora}', 'destroy')->name('bitacora.delete');
-    Route::post('/bitacoraPTComStore', 'store')->name('bitacora.store');
-    Route::post('/bitacoraPTComUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
-    Route::post('/FirmaProcesoPTCom/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+    Route::get('/bitacoraPTComerPDF', 'PDFBitacoraPTCom');
+    Route::get('bitacoraPTComer/{id_bitacora}/edit', 'edit');
+    Route::delete('bitacoraPTComer-delete/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::post('/bitacoraPTComerStore', 'store')->name('bitacora.store');
+    Route::post('/bitacoraPTComerUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaProcesoPTComer/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
 });
 Route::resource('/bitacoraProductoTerminado-list', BitacoraPTComController::class)->middleware(['auth']);
 

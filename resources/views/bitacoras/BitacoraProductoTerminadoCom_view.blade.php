@@ -33,7 +33,7 @@
                 return "<option value='{$e->id_empresa}'>{$num} | {$e->razon_social}</option>";
             })->implode('') !!}`;
     </script>
-    @vite(['resources/js/bitacora_producto_envasador.js'])
+    @vite(['resources/js/bitacora_producto_terminado.js'])
 @endsection
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
