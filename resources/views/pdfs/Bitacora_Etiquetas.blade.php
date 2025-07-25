@@ -109,6 +109,8 @@
     <table>
         <tbody>
             <tr class="text-title">
+              <td rowspan="2">#
+              </td>
                 <td rowspan="2">FECHA</td>
                 <td rowspan="2">BOT/ CAJA</td>
                 <td rowspan="2">MARCA</td>
@@ -145,6 +147,7 @@
             </tr>
             @foreach ($bitacoras as $bitacora)
                 <tr>
+                  <td>{{ $loop->iteration }}</td>
                     <td>{{ $bitacora->fecha ?? '----' }}</td>
                     <td>{{ $bitacora->cantidad_botellas_cajas ?? '' }}</td> {{-- botellas_por_caja --}}
                     <td>{{ $bitacora->marca->marca ?? '----' }}</td>

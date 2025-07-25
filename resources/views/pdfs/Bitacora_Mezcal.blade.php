@@ -56,12 +56,12 @@
     }
 
     .pie {
-        text-align: left;
+        text-align: right;
         font-size: 12px;
         line-height: 1;
         position: fixed;
-        bottom: -40px;
-        left: 200px;
+        bottom: 0px;
+        left: 0;
         right: 0;
         width: calc(100% - 40px);
         height: 45px;
@@ -128,6 +128,7 @@
     <table>
         <tbody>
             <tr class="text-title">
+                <td rowspan="2">#</td>
                 <td rowspan="2">FECHA</td>
                 <td rowspan="2">ID DE TANQUE</td>
                 <td rowspan="2">LOTE A GRANEL</td>
@@ -161,6 +162,7 @@
             </tr>
             @forelse($bitacoras as $bitacora)
                 <tr class="bitacora-row">
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $bitacora->fecha ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora?->id_tanque ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora?->nombre_lote ?? '----' }}</td>
@@ -223,8 +225,10 @@
     </table>
 
     <div class="pie">
-        <p>PROHIBIDA SU REPRODUCCIÓN TOTAL O PARCIAL. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          SECCIÓN II | Página 1 de 1</p>
+        <p>Página 1 de 1 <br>
+        F7.1-01-60 Bitácora Inventario de Mezcal a Granel <br>
+        Ed. 0 Entrada en vigor: 21-07-2025
+        </p>
     </div>
 
 </body>

@@ -110,6 +110,8 @@ $(function () {
             row.id_clase +
             '</span><br><span class="fw-bold text-dark small">Tipo:</span><span class="small"> ' +
             row.id_tipo +
+            '</span><br><span class="fw-bold text-dark small">Tanque:</span><span class="small"> ' +
+            row.id_tanque +
             '</span>' +
             ingredientes +
             edad +

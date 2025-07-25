@@ -172,6 +172,7 @@ class lotesGranelController extends Controller
                     $nestedData['tipo_lote'] = $lote->tipo_lote ?? 'N/A';
                     $nestedData['folio_fq'] = $lote->folio_fq ?? 'N/A';
                     $nestedData['volumen'] = $lote->volumen ?? 'N/A';
+                    $nestedData['id_tanque'] = $lote->id_tanque ?? 'N/A';
                     $nestedData['volumen_restante'] = $lote->volumen_restante ?? 'N/A';
                     $nestedData['cont_alc'] = $lote->cont_alc.'% Alc. Vol.' ?? 'N/A';
                     $nestedData['id_categoria'] = $lote->categoria->categoria ?? 'N/A';

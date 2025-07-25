@@ -61,7 +61,7 @@
         font-size: 12px;
         line-height: 1;
         position: fixed;
-        bottom: -40px;
+        bottom: 0;
         left: 0;
         right: 0;
         width: calc(100% - 40px);
@@ -70,7 +70,7 @@
         padding: 10px 0;
         font-family: 'Lucida Sans Unicode';
         z-index: 1;
-        color: #A6A6A6;
+        color: #000000;
     }
 </style>
 
@@ -109,6 +109,7 @@
     <table>
         <tbody>
             <tr class="text-title">
+                <td rowspan="2">#</td>
                 <td rowspan="2">FECHA</td>
                 <td rowspan="2">BOT/ CAJA</td>
                 <td rowspan="2">MARCA</td>
@@ -146,6 +147,7 @@
             </tr>
             @foreach ($bitacoras as $bitacora)
                 <tr>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $bitacora->fecha ?? '----' }}</td>
                     <td>{{ $bitacora->cantidad_botellas_cajas ?? '' }}</td> {{-- botellas_por_caja --}}
                     <td>{{ $bitacora->marca->marca ?? '----' }}</td>
@@ -219,7 +221,10 @@
     </table>
 
     <div class="pie">
-        <p>Página 1 de 1</p>
+        <p>Página 1 de 1 <br>
+            F7.1-01-59 Bitácora Inventario de Producto Terminado <br>
+            Ed. 0 Entrada en vigor: 21-07-2025
+        </p>
     </div>
 </body>
 

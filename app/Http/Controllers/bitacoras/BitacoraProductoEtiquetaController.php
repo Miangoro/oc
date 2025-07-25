@@ -283,8 +283,8 @@ public function store(Request $request)
         'cant_cajas_final' => 'required|numeric|min:0',
         'cant_bot_final' => 'required|numeric|min:0',
 
-        'capacidad' => 'required|string|max:100',
-        'mermas' => 'required|string|max:100',
+        'capacidad' => 'required|string',
+        'mermas' => 'nullable|string',
 
         'observaciones' => 'nullable|string',
     ]);
@@ -324,7 +324,7 @@ public function store(Request $request)
         $bitacora->cant_bot_final = $request->cant_bot_final;
 
         $bitacora->capacidad = $request->capacidad;
-        $bitacora->mermas = $request->mermas;
+        $bitacora->mermas = $request->mermas ?? null;
 
         $bitacora->observaciones = $request->observaciones;
 
@@ -443,8 +443,8 @@ public function store(Request $request)
             'cant_cajas_final' => 'required|numeric|min:0',
             'cant_bot_final' => 'required|numeric|min:0',
 
-            'capacidad' => 'required|string|max:100',
-            'mermas' => 'required|string|max:100',
+            'capacidad' => 'required|string',
+            'mermas' => 'nullable|string',
 
             'observaciones' => 'nullable|string',
         ]);
@@ -484,7 +484,7 @@ public function store(Request $request)
             'cant_bot_final' => $request->cant_bot_final,
 
             'capacidad' => $request->capacidad,
-            'mermas' => $request->mermas,
+            'mermas' => $request->mermas ?? null,
 
             'observaciones' => $request->observaciones,
 

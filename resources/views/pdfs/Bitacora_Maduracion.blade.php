@@ -101,6 +101,7 @@
     <table>
         <tbody>
             <tr class="text-title">
+              <td rowspan="2">#</td>
                 <td rowspan="2">FECHA DE INGRESO</td>
                 <td rowspan="2">LOTE A GRANEL</td>
                 <td rowspan="2">CATEGORÍA</td>
@@ -137,7 +138,7 @@
             </tr>
             @foreach ($bitacoras as $bitacora)
                 <tr>
-                    {{-- Datos generales --}}
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $bitacora->fecha ?? '' }}</td>
                     <td>{{ $bitacora->loteBitacora->nombre_lote ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora->categoria->categoria ?? '----' }}</td>

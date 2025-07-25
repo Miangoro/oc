@@ -57,12 +57,12 @@
     }
 
     .pie {
-        text-align: left;
+        text-align: right;
         font-size: 13px;
         line-height: 1;
         position: fixed;
-        bottom: -40px;
-        left: 200px;
+        bottom: 0;
+        left: 0;
         right: 0;
         width: calc(100% - 40px);
         height: 45px;
@@ -75,6 +75,7 @@
 </style>
 
 <body>
+
     <table width="100%" style="border: none;">
         <tr>
             {{-- Logo Unidad de Inspección --}}
@@ -117,6 +118,7 @@
     <table>
         <tbody>
             <tr class="text-title">
+                <td rowspan="2">#</td>
                 <td rowspan="2">FECHA</td>
                 <td rowspan="2">MARCA</td>
                 <td rowspan="2">LOTE DE ENVASADO</td>
@@ -146,8 +148,8 @@
             </tr>
             @forelse($bitacoras as $bitacora)
                 <tr class="bitacora-row">
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $bitacora->fecha ?? '----' }}</td>
-
                     {{-- Marca (puedes cambiar esto por nombre de marca si hay relación) --}}
                     <td>{{ $bitacora->loteBitacora->marca->marca ?? '----' }}</td>
                     {{-- Lote de envasado --}}
@@ -215,9 +217,11 @@
     </table>
 
     <div class="pie">
+        <p>Página 1 de 1 <br>
+            F7.2-01-07 Bitácora para Control de Hologramas <br>
+            Ed. 0 Entrada en vigor: 21-07-2025<br>
 
-        <p>PROHIBIDA SU REPRODUCCIÓN TOTAL O PARCIAL. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-           SECCIÓN VI | Página 1 de 1</p>
+        </p>
     </div>
 
 </body>
