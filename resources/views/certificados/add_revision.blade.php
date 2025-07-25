@@ -973,7 +973,7 @@
                                                     @endphp
 
                                                     @foreach ($rangoFolios as $rango)
-                                                        <div>{!! $rango !!}</div>
+                                                        <div>{!! $rango !!}</div>dfsdfsdf
                                                     @endforeach
                                                 @endif
                                             </td>
