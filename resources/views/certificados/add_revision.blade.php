@@ -932,7 +932,7 @@
                                             </td>
                                              @elseif($pregunta->filtro == 'datos_holograma')
                                             <td>
-                                                {!! $observacionesConEnlaces !!}
+                                             
 
                                                 @if (empty($observacionesConEnlaces))
                                                     @php 
