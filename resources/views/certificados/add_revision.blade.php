@@ -932,7 +932,7 @@
                                             </td>
                                              @elseif($pregunta->filtro == 'datos_holograma')
                                             <td>
-                                             
+                                                {!! $observacionesConEnlaces !!}
 
                                                 @if (empty($observacionesConEnlaces))
                                                     @php 
@@ -989,13 +989,11 @@
                                                         <div>{!! $rango !!}</div>
                                                     @endforeach
                                                 @endif
-                                                entro1
                                             @else
                                                 {{-- Mostramos los old_hologramas --}}
                                                 @foreach ($old as $key => $folio)
                                                     <div><strong>{{ ucfirst($key) }}:</strong> {{ $folio }}</div>
                                                 @endforeach
-                                                entro 2
                                             @endif
                                         </td>
                                         @elseif($pregunta->filtro == 'etiqueta')
