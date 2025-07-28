@@ -1728,8 +1728,8 @@ $(document).on('click', '.pdfSolicitud', function () {
 
 
 
-
-  $(function () {
+///REGISTRAR DE PREDIO
+$(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
       headers: {
@@ -1896,8 +1896,7 @@ $(document).on('click', '.pdfSolicitud', function () {
     });
 
     updateDatepickerValidation(fv);
-
-  });
+});
 
   // Función para agregar 5 años a la fecha de emisión y actualizar la fecha de vigencia
   function updateDatepickerValidation(fv) {
@@ -2131,7 +2130,9 @@ $(document).on('click', '.pdfSolicitud', function () {
 
 
 
-  $(function () {
+
+///EDITAR REGISTRO DE PREDIO
+$(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
       headers: {
@@ -2233,10 +2234,9 @@ $(document).on('click', '.pdfSolicitud', function () {
     });
 
     updateDatepickerValidationEdit(fv);
+});
 
-  });
-
-  // Manejar el clic en el botón de editar
+  // Manejar el clic del botón EDITAR REGISTRO
   $(document).on('click', '.edit_registro-record', function () {
     var predioId = $(this).data('id'); // Obtener el ID del predio a editar
     $('#edit_id_predio_registro').val(predioId); // Establecer el ID en el input correspondiente

@@ -34,16 +34,17 @@
                                    <label for="fecha_vigencia">Fecha de vigencia</label>
                                </div>
                            </div>
+
                            <div class="mb-3">
                                <label for="fuv2103" class="form-label mt-1">
                                    Adjuntar registro de predios de maguey o agave
                                </label>
                                <input class="form-control" type="file" id="fuv2103" name="fuv2103">
                            </div>
-
                             <div id="documentoPreview" class="mb-3"></div>
 
                        </div>
+
 
 
                        <div class="d-flex justify-content-center mt-3">
