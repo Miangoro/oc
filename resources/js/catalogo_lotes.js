@@ -873,7 +873,7 @@ $(function () {
                       </select>
                     </td>
                     <td>
-                      <input type="text" class="form-control form-control-sm volumen-parcial" name="edit_volumenes[${rowIndex}][volumen_parcial]" id="edit_volumen_parcial_${rowIndex}" value="${volumen}">
+                      <input type="text" class="form-control form-control-sm volumen-parcial-edit" name="edit_volumenes[${rowIndex}][volumen_parcial]" id="edit_volumen_parcial_${rowIndex}" value="${volumen}">
                     </td>
                   </tr>`;
 
@@ -1128,7 +1128,7 @@ $(function () {
     // Función para agregar una nueva fila en la tabla de lotes de edición
     function agregarFilaLotesEdit() {
       // Inicializa el índice solo si es necesario
-      inicializarRowIndex(); // Asegúrate de que el índice se calcule bien
+      /* inicializarRowIndex(); */ // Asegúrate de que el índice se calcule bien
 
       var newRow = `
         <tr>
@@ -1150,8 +1150,11 @@ $(function () {
       $('#contenidoGranelesEdit').append(newRow);
 
       // Actualiza los lotes en los selects
-      cargarLotesEnSelectEdit();
-      initializeSelect2($(`#edit_id_lote_granel_${rowIndex}`));
+      /* cargarLotesEnSelectEdit();
+      initializeSelect2($(`#edit_id_lote_granel_${rowIndex}`)); */
+      const selectId = `edit_id_lote_granel_${rowIndex}`;
+      cargarLotesEnSelectEdit(selectId);
+      initializeSelect2($(`#${selectId}`));
 
       // Incrementar rowIndex después de agregar la fila
       rowIndex++; // Incrementar el índice después de agregar la fila
@@ -1187,7 +1190,7 @@ $(function () {
 
     // Cargar lotes en los selects dentro de filas en modo edición
     // Cargar lotes en los selects dentro de filas en modo edición
-    function cargarLotesEnSelectEdit() {
+   /*  function cargarLotesEnSelectEdit() {
       $('.id_lote_granel').each(function () {
         var $select = $(this);
         var valorSeleccionado = $select.val();
@@ -1203,7 +1206,45 @@ $(function () {
           $select.append('<option value="" disabled selected>Sin lotes registrados</option>');
         }
       });
+    } */
+    function cargarLotesEnSelectEdit(idSelect) {
+  const $select = $(`#${idSelect}`);
+  const valorSeleccionado = $select.val();
+
+  $select.empty();
+
+  if (lotesDisponiblesEdit.length > 0) {
+    $select.append('<option value="">Seleccione un lote</option>');
+    lotesDisponiblesEdit.forEach(function (lote) {
+      $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote}</option>`);
+    });
+    if (valorSeleccionado) {
+      $select.val(valorSeleccionado);
     }
+  } else {
+    $select.append('<option value="" disabled selected>Sin lotes registrados</option>');
+  }
+}
+
+$(document).on('input', '.volumen-parcial-edit', function () {
+  actualizarVolumenTotalEdit();
+});
+
+
+function actualizarVolumenTotalEdit() {
+  let total = 0;
+
+  $('.volumen-parcial-edit').each(function () {
+    const val = parseFloat($(this).val());
+    if (!isNaN(val)) {
+      total += val;
+    }
+  });
+
+  $('#edit_volumen').val(total.toFixed(2)); // Reemplaza con el ID correcto del campo total
+}
+
+
 
     const editLoteForm = document.getElementById('loteFormEdit');
 
