@@ -1043,7 +1043,7 @@ public function registroPredio(Request $request, $id_predio)
 
   public function editRegistroPredio(Request $request, $id_predio)
   {
-      try {
+      //try {
           // Validar los datos principales
           $validated = $request->validate([
               'num_predio' => 'required|string',
@@ -1054,6 +1054,10 @@ public function registroPredio(Request $request, $id_predio)
 
           $predio = Predios::findOrFail($id_predio);
           $id_empresa = $predio->id_empresa;
+            // Buscar el número de cliente a través de la empresa
+            /*$empresa = empresa::find($predio->id_empresa);
+            $numeroCliente = $empresa?->empresaNumClientes()->pluck('numero_cliente')->first();*/
+
 
           // Actualizar datos del predio
           $predio->update([
@@ -1069,17 +1073,7 @@ public function registroPredio(Request $request, $id_predio)
                   ->where('id_relacion', $predio->id_predio)
                   ->first();
 
-              // Eliminar el archivo anterior si existe
-              if ($documentoAnterior) {
-                  $rutaAnterior = 'public/uploads/' . $documentoAnterior->id_empresa . '/' . $documentoAnterior->url;
-                  if (Storage::exists($rutaAnterior)) {
-                      Storage::delete($rutaAnterior);
-                  }
-
-                  // Eliminar el registro de la base de datos
-                  $documentoAnterior->delete();
-              }
-
+              
               // Obtener número de cliente desde la tabla intermedia
               $numeroCliente = DB::table('empresa_num_cliente')
                   ->where('id_empresa', $id_empresa)
@@ -1091,6 +1085,18 @@ public function registroPredio(Request $request, $id_predio)
                       'success' => false,
                       'message' => 'Número de cliente no encontrado.',
                   ], 404);
+              }
+
+
+            // Eliminar el archivo anterior si existe
+              if ($documentoAnterior) {
+                  $rutaAnterior = 'public/uploads/' . $numeroCliente . '/' . $documentoAnterior->url;
+                  if (Storage::exists($rutaAnterior)) {
+                      Storage::delete($rutaAnterior);
+                  }
+
+                  // Eliminar el registro de la base de datos
+                  $documentoAnterior->delete();
               }
 
               // Obtener nombre del documento
@@ -1119,12 +1125,12 @@ public function registroPredio(Request $request, $id_predio)
               'message' => 'Predio actualizado correctamente.',
           ]);
 
-      } catch (\Exception $e) {
+      /*} catch (\Exception $e) {
           return response()->json([
               'success' => false,
               'message' => $e->getMessage(),
           ], 500);
-      }
+      }*/
   }
 
 
