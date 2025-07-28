@@ -223,8 +223,18 @@ class BitacoraProductoTerminadoController extends Controller
      public function PDFBitacoraProductoEnvasado(Request $request)
     {
         $empresaId = $request->query('empresa');
-        $instalacionId = $request->query('instalacion');
+       /*  $instalacionId = $request->query('instalacion'); */
         $title = 'ENVASADOR'; // Cambia a 'Envasador' si es necesario
+        $idsEmpresas = [$empresaId];
+        if ($empresaId) {
+            $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
+                ->pluck('id_maquilador')
+                ->toArray();
+
+            if (count($idsMaquiladores)) {
+                $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
+            }
+        }
         $bitacoras = BitacoraProductoTerminado::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
@@ -232,21 +242,42 @@ class BitacoraProductoTerminadoController extends Controller
             'categorias',
             'clases',
         ])->where('tipo', 2)
-        ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
+        /* inicio */
+        ->when($empresaId, function ($query) use ($idsEmpresas) {
+              $query->whereIn('id_empresa', $idsEmpresas);
+          })
+          /* fin */
+        /* ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
             $query->where('id_empresa', $empresaId);
             if ($instalacionId) {
                 $query->where('id_instalacion', $instalacionId);
             }
-        })
+        }) */
         ->orderBy('id', 'desc')
         ->get();
+        // Obtener la empresa principal (padre/maquiladora) para el encabezado
+        $empresaPadre = null;
+        if ($empresaId) {
+            // Ver si la empresa enviada es una maquiladora
+            $esMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)->exists();
 
+            if ($esMaquiladora) {
+                // Buscar su empresa padre
+                $idMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)
+                    ->value('id_maquiladora');
+
+                $empresaPadre = empresa::with('empresaNumClientes')->find($idMaquiladora);
+            } else {
+                // Es empresa padre
+                $empresaPadre = empresa::with('empresaNumClientes')->find($empresaId);
+            }
+        }
           if ($bitacoras->isEmpty()) {
               return response()->json([
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
               ], 404);
           }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Terminado', compact('bitacoras', 'title'))
+        $pdf = Pdf::loadView('pdfs.Bitacora_Terminado', compact('bitacoras', 'title', 'empresaPadre'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
 
         return $pdf->stream('Bitácora de inventario de producto terminado.pdf');

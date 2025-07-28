@@ -727,7 +727,7 @@ $(function () {
       const id = $('#edit_bitacora_id').val();
 
       $.ajax({
-        url: '/bitacorasHologramasCom/' + id,
+        url: '/bitacorasHologramasComUpdate/' + id,
         type: 'POST',
         data: formData,
         success: function (response) {

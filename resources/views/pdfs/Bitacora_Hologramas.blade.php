@@ -88,22 +88,18 @@
                 <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
                     CONTROL DE HOLOGRAMAS {{ $title ? "($title)" : '' }}
                 </p>
-                @php
-                    $primerBitacora = $bitacoras->first();
-                    $razon = $primerBitacora->empresaBitacora->razon_social ?? 'Sin razón social';
-                    $numeroCliente = 'Sin número cliente';
-                    if (
-                        $primerBitacora->empresaBitacora &&
-                        $primerBitacora->empresaBitacora->empresaNumClientes->isNotEmpty()
-                    ) {
-                        foreach ($primerBitacora->empresaBitacora->empresaNumClientes as $cliente) {
-                            if (!empty($cliente->numero_cliente)) {
-                                $numeroCliente = $cliente->numero_cliente;
-                                break;
-                            }
-                        }
-                    }
-                @endphp
+                 @php
+                      $razon = $empresaPadre->razon_social ?? 'Sin razón social';
+                      $numeroCliente = 'Sin número cliente';
+                      if ($empresaPadre && $empresaPadre->empresaNumClientes->isNotEmpty()) {
+                          foreach ($empresaPadre->empresaNumClientes as $cliente) {
+                              if (!empty($cliente->numero_cliente)) {
+                                  $numeroCliente = $cliente->numero_cliente;
+                                  break;
+                              }
+                          }
+                      }
+                  @endphp
                 <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
                     <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
                 </p>

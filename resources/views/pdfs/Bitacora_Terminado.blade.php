@@ -81,14 +81,10 @@
 
     <div>
         @php
-            $primerBitacora = $bitacoras->first();
-            $razon = $primerBitacora->empresaBitacora->razon_social ?? 'Sin razón social';
+            $razon = $empresaPadre->razon_social ?? 'Sin razón social';
             $numeroCliente = 'Sin número cliente';
-            if (
-                $primerBitacora->empresaBitacora &&
-                $primerBitacora->empresaBitacora->empresaNumClientes->isNotEmpty()
-            ) {
-                foreach ($primerBitacora->empresaBitacora->empresaNumClientes as $cliente) {
+            if ($empresaPadre && $empresaPadre->empresaNumClientes->isNotEmpty()) {
+                foreach ($empresaPadre->empresaNumClientes as $cliente) {
                     if (!empty($cliente->numero_cliente)) {
                         $numeroCliente = $cliente->numero_cliente;
                         break;
@@ -96,6 +92,7 @@
                 }
             }
         @endphp
+
         <p class="text">INVENTARIO DE PRODUCTO TERMINADO {{ $title }} <br>
             <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
         </p>
