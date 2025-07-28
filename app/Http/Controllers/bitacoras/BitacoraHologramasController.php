@@ -23,18 +23,53 @@ class BitacoraHologramasController extends Controller
     {
         $bitacora = BitacoraHologramas::all();
 /*         $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); */
-            if (Auth::check() && Auth::user()->tipo == 3) {
+/*             if (Auth::check() && Auth::user()->tipo == 3) {
         $empresaIdA = Auth::user()->empresa?->id_empresa;
         $empresas = empresa::with('empresaNumClientes')->where('id_empresa', $empresaIdA)->get();
           } else {
               $empresas = empresa::with('empresaNumClientes')
                   ->where('tipo', 2)
                   ->get();
-          }
+          } */
+         $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
+        ? Auth::user()->empresa?->id_empresa
+        : null;
+          if ($empresaIdAut) {
+                  // 👇 Usa la función que ya tienes
+                  $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, null);
+
+                  $empresas = empresa::with('empresaNumClientes')
+                      ->whereIn('id_empresa', $idsEmpresas)
+                      ->get();
+              } else {
+                  $empresas = empresa::with('empresaNumClientes')
+                      ->where('tipo', 2)
+                      ->get();
+              }
       $tipo_usuario =  Auth::user()->tipo;
         return view('bitacoras.BitacoraHologramas_view', compact('bitacora', 'empresas', 'tipo_usuario'));
     }
 
+      private function obtenerEmpresasVisibles($empresaIdAut, $empresaId)
+      {
+          $idsEmpresas = [];
+
+          if ($empresaIdAut) {
+              $idsEmpresas[] = $empresaIdAut;
+              $idsEmpresas = array_merge($idsEmpresas,
+                  maquiladores_model::where('id_maquiladora', $empresaIdAut)->pluck('id_maquilador')->toArray()
+              );
+          }
+
+          if ($empresaId) {
+              $idsEmpresas[] = $empresaId;
+              $idsEmpresas = array_merge($idsEmpresas,
+                  maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+              );
+          }
+
+          return array_unique($idsEmpresas);
+      }
     public function index(Request $request)
     {
       $empresaId = $request->input('empresa');
@@ -62,14 +97,19 @@ class BitacoraHologramasController extends Controller
         $order = $columns[$request->input('order.0.column')] ?? 'fecha';
         $dir = $request->input('order.0.dir');
 
-        $query = BitacoraHologramas::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
+        $query = BitacoraHologramas::query()->where('tipo', 2);
+        $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, $empresaId);
+            if (count($idsEmpresas)) {
+                $query->whereIn('id_empresa', $idsEmpresas);
+            }
+       /*  $query = BitacoraHologramas::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
                   $query->where('id_empresa', $empresaIdAut);
               })->where('tipo', 2);
-
+ */
         /* if ($empresaId) {
             $query->where('id_empresa', $empresaId);
         } */
-       if ($empresaId) {
+       /* if ($empresaId) {
               $empresa = empresa::find($empresaId);
               if ($empresa) {
                   // Buscar maquiladores hijos en la tabla intermedia
@@ -85,7 +125,7 @@ class BitacoraHologramasController extends Controller
                   }
                   $query->whereIn('id_empresa', $idsEmpresas);
               }
-          }
+          } */
           if (!empty($search)) {
               $query->where(function ($q) use ($search) {
                   $lower = strtolower($search);
@@ -186,6 +226,16 @@ class BitacoraHologramasController extends Controller
     {
         $empresaId = $request->query('empresa');
         $title = 'ENVASADOR'; // Cambia a 'Envasador' si es necesario
+        $idsEmpresas = [$empresaId];
+        if ($empresaId) {
+            $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
+                ->pluck('id_maquilador')
+                ->toArray();
+
+            if (count($idsMaquiladores)) {
+                $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
+            }
+        }
         $bitacoras = BitacoraHologramas::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
@@ -194,18 +244,33 @@ class BitacoraHologramasController extends Controller
             'loteBitacora.lotes_envasado_granel.loteGranel.clase',             // <-- asegúrate de esto
         ])
         ->where('tipo', 2)
-        ->when($empresaId, function ($query) use ($empresaId) {
-            $query->where('id_empresa', $empresaId);
-        })
+         ->when($empresaId, function ($query) use ($idsEmpresas) {
+              $query->whereIn('id_empresa', $idsEmpresas);
+          })
         ->orderBy('id', 'desc')
         ->get();
+        $empresaPadre = null;
+        if ($empresaId) {
+            // Ver si la empresa enviada es una maquiladora
+            $esMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)->exists();
 
+            if ($esMaquiladora) {
+                // Buscar su empresa padre
+                $idMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)
+                    ->value('id_maquiladora');
+
+                $empresaPadre = empresa::with('empresaNumClientes')->find($idMaquiladora);
+            } else {
+                // Es empresa padre
+                $empresaPadre = empresa::with('empresaNumClientes')->find($empresaId);
+            }
+        }
           if ($bitacoras->isEmpty()) {
               return response()->json([
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
               ], 404);
           }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Hologramas', compact('bitacoras', 'title'))
+        $pdf = Pdf::loadView('pdfs.Bitacora_Hologramas', compact('bitacoras', 'title', 'empresaPadre'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
         return $pdf->stream('Bitácora de control de hologramas de envasador.pdf');
     }

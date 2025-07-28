@@ -27,7 +27,7 @@ class BitacoraPTComController extends Controller
     {
         $bitacora = BitacoraProductoTerminado::all();
 /*         $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); */
-            if (Auth::check() && Auth::user()->tipo == 3) {
+            /* if (Auth::check() && Auth::user()->tipo == 3) {
         $empresaIdA = Auth::user()->empresa?->id_empresa;
 
         $empresas = empresa::with('empresaNumClientes')->where('id_empresa', $empresaIdA)->get();
@@ -35,7 +35,22 @@ class BitacoraPTComController extends Controller
               $empresas = empresa::with('empresaNumClientes')
                   ->where('tipo', 2)
                   ->get();
-          }
+          } */
+         $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
+        ? Auth::user()->empresa?->id_empresa
+        : null;
+          if ($empresaIdAut) {
+                  // 👇 Usa la función que ya tienes
+                  $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, null);
+
+                  $empresas = empresa::with('empresaNumClientes')
+                      ->whereIn('id_empresa', $idsEmpresas)
+                      ->get();
+              } else {
+                  $empresas = empresa::with('empresaNumClientes')
+                      ->where('tipo', 2)
+                      ->get();
+              }
       $tipo_usuario =  Auth::user()->tipo;
         $tipos = tipos::all();
         $clases = clases::all();
@@ -44,6 +59,27 @@ class BitacoraPTComController extends Controller
         return view('bitacoras.BitacoraProductoTerminadoCom_view', compact('bitacora', 'empresas', 'tipo_usuario', 'tipos', 'clases', 'marcas', 'categorias'));
 
     }
+
+    private function obtenerEmpresasVisibles($empresaIdAut, $empresaId)
+      {
+          $idsEmpresas = [];
+
+          if ($empresaIdAut) {
+              $idsEmpresas[] = $empresaIdAut;
+              $idsEmpresas = array_merge($idsEmpresas,
+                  maquiladores_model::where('id_maquiladora', $empresaIdAut)->pluck('id_maquilador')->toArray()
+              );
+          }
+
+          if ($empresaId) {
+              $idsEmpresas[] = $empresaId;
+              $idsEmpresas = array_merge($idsEmpresas,
+                  maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+              );
+          }
+
+          return array_unique($idsEmpresas);
+      }
 
     public function index(Request $request)
     {
@@ -72,15 +108,22 @@ class BitacoraPTComController extends Controller
         $order = $columns[$request->input('order.0.column')] ?? 'fecha';
         $dir = $request->input('order.0.dir');
 
-        $query = BitacoraProductoTerminado::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
+        $query = BitacoraProductoTerminado::query()->where('tipo', 3);
+
+        $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, $empresaId);
+            if (count($idsEmpresas)) {
+                $query->whereIn('id_empresa', $idsEmpresas);
+            }
+
+/*         $query = BitacoraProductoTerminado::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
                   $query->where('id_empresa', $empresaIdAut);
               })->where('tipo', 3);
-
+ */
         /* if ($empresaId) {
             $query->where('id_empresa', $empresaId);
 
         } */
-        if ($empresaId) {
+        /* if ($empresaId) {
               $empresa = empresa::find($empresaId);
 
               if ($empresa) {
@@ -100,7 +143,7 @@ class BitacoraPTComController extends Controller
 
                   $query->whereIn('id_empresa', $idsEmpresas);
               }
-          }
+          } */
 
           if (!empty($search)) {
               $query->where(function ($q) use ($search) {
