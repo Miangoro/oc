@@ -10,6 +10,7 @@ use App\Models\LotesGranel;
 use App\Models\empresa;
 use App\Models\BitacoraProcesoMoliendaDestilacion;
 use App\Models\BitacoraProcesoSegundaDestilacion;
+use App\Models\maquiladores_model;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
 use App\Models\tipos;
@@ -74,9 +75,26 @@ class BitacoraProcesoElaboracionController extends Controller
                   $query->where('id_empresa', $empresaIdAut);
               });
 
-        if ($empresaId) {
+        /* if ($empresaId) {
             $query->where('id_empresa', $empresaId);
-        }
+        } */
+         if ($empresaId) {
+              $empresa = empresa::find($empresaId);
+              if ($empresa) {
+                  // Buscar maquiladores hijos en la tabla intermedia
+                  $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
+                  ->pluck('id_maquilador')
+                  ->toArray();
+                  // Si tiene hijos, se asume maquiladora
+                  if (count($idsMaquiladores)) {
+                      $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
+                  } else {
+                      // Sin hijos, solo su propio ID
+                      $idsEmpresas = [$empresaId];
+                  }
+                  $query->whereIn('id_empresa', $idsEmpresas);
+              }
+          }
 
         if (!empty($search)) {
             $lower = strtolower($search);
