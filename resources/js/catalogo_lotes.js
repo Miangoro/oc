@@ -350,7 +350,7 @@ $(function () {
   });
 
   if (!window.puedeVerElUsuario) {
-    $('#edit_volumen_in').closest('.row').hide(); // oculta toda la fila
+    $('#edit_volumen_res').closest('.row').hide(); // oculta toda la fila
 }
 
   // Reciben los datos del PDF

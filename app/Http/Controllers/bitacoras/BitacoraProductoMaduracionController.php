@@ -272,9 +272,9 @@ class BitacoraProductoMaduracionController extends Controller
           $bitacora->tipo_recipientes = $request->tipo_recipientes;
           $bitacora->tipo_madera = $request->tipo_madera;
           $bitacora->num_recipientes = $request->num_recipientes;
-          $bitacora->num_recipientes_entrada = $request->num_recipientes_entrada;
-          $bitacora->fecha_salida = $request->fecha_salida;
-          $bitacora->num_recipientes_salida = $request->num_recipientes_salida;
+          $bitacora->num_recipientes_entrada = $request->num_recipientes_entrada ?? 0;
+          $bitacora->fecha_salida = $request->fecha_salida ?? 0;
+          $bitacora->num_recipientes_salida = $request->num_recipientes_salida ?? 0;
           $bitacora->num_recipientes_final = $request->num_recipientes_final;
 
           $bitacora->tipo_operacion = $request->tipo_operacion;
@@ -282,13 +282,13 @@ class BitacoraProductoMaduracionController extends Controller
 
           $bitacora->volumen_inicial = $request->volumen_inicial;
           $bitacora->alcohol_inicial = $request->alcohol_inicial;
-          $bitacora->procedencia_entrada = $request->procedencia_entrada;
-          $bitacora->volumen_entrada = $request->volumen_entrada;
-          $bitacora->alcohol_entrada = $request->alcohol_entrada;
+          $bitacora->procedencia_entrada = $request->procedencia_entrada ?? 0;
+          $bitacora->volumen_entrada = $request->volumen_entrada ?? 0;
+          $bitacora->alcohol_entrada = $request->alcohol_entrada ?? 0;
 
-          $bitacora->volumen_salidas = $request->volumen_salida;
-          $bitacora->alcohol_salidas = $request->alc_vol_salida;
-          $bitacora->destino_salidas = $request->destino;
+          $bitacora->volumen_salidas = $request->volumen_salida ?? 0;
+          $bitacora->alcohol_salidas = $request->alc_vol_salida ?? 0;
+          $bitacora->destino_salidas = $request->destino ?? 0;
 
           $bitacora->volumen_final = $request->volumen_final;
           $bitacora->alcohol_final = $request->alc_vol_final;
