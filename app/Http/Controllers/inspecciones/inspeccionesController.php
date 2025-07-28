@@ -766,7 +766,7 @@ public function eliminarActa($id_solicitud, $id_documento, $id)
     }
 
      // Buscar el número de cliente a través de la empresa
-    $empresa = Empresa::find($documento->id_empresa);
+    $empresa = empresa::find($documento->id_empresa);
     $numeroCliente = $empresa?->empresaNumClientes()->pluck('numero_cliente')->first();
 
     if (!$numeroCliente) {
@@ -774,10 +774,12 @@ public function eliminarActa($id_solicitud, $id_documento, $id)
     }
 
     // Eliminar archivo físico
-    $ruta = public_path("files/{$numeroCliente}/actas/{$documento->url}");
-    if (file_exists($ruta)) {
-        unlink($ruta); // Eliminar archivo físico
-    }
+    $ruta = "uploads/{$numeroCliente}/actas/{$documento->url}";
+        if (Storage::disk('public')->exists($ruta)) {
+            Storage::disk('public')->delete($ruta);
+        } else {
+            return response()->json(['message' => 'Archivo físico no encontrado en: ' .$ruta], 404);
+        }
 
     // Eliminar de base de datos
     $documento->delete();
