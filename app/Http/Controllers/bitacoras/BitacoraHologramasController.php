@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BitacoraHologramas;
 use App\Models\lotes_envasado;
+use App\Models\maquiladores_model;
 use App\Models\User;
 use App\Models\empresa;
 use Carbon\Carbon;
@@ -65,9 +66,26 @@ class BitacoraHologramasController extends Controller
                   $query->where('id_empresa', $empresaIdAut);
               })->where('tipo', 2);
 
-        if ($empresaId) {
+        /* if ($empresaId) {
             $query->where('id_empresa', $empresaId);
-        }
+        } */
+       if ($empresaId) {
+              $empresa = empresa::find($empresaId);
+              if ($empresa) {
+                  // Buscar maquiladores hijos en la tabla intermedia
+                  $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
+                  ->pluck('id_maquilador')
+                  ->toArray();
+                  // Si tiene hijos, se asume maquiladora
+                  if (count($idsMaquiladores)) {
+                      $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
+                  } else {
+                      // Sin hijos, solo su propio ID
+                      $idsEmpresas = [$empresaId];
+                  }
+                  $query->whereIn('id_empresa', $idsEmpresas);
+              }
+          }
           if (!empty($search)) {
               $query->where(function ($q) use ($search) {
                   $lower = strtolower($search);
