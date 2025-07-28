@@ -74,7 +74,7 @@ class RevisionPersonalController extends Controller
 
 
         // Filtrar por usuario si no es admin (ID 8)
-        if ($userId != 1 AND $userId !=2  AND $userId !=3  AND $userId !=4) {
+        if ($userId != 1 AND $userId !=2  AND $userId !=3  AND $userId !=4 AND $userId !=320) {
             $queryRevisor->where('id_revisor', $userId);
         }
         if ($tipoCertificado) {
