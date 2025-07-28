@@ -298,7 +298,7 @@ class BitacoraHologramasController extends Controller
       {
        /*  dd($request); */
           $request->validate([
-              'edit_bitacora_id' => 'required|exists:bitacora_mezcal,id',
+              'edit_bitacora_id' => 'required|exists:bitacora_hologramas,id',
               'id_empresa'       => 'required|exists:empresa,id_empresa',
               'id_lote_envasado' => 'required|integer|exists:lotes_envasado,id_lote_envasado',
               /* 'id_instalacion' => 'required|integer', */

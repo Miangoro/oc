@@ -377,7 +377,7 @@ class BitacoraProductoMaduracionController extends Controller
       {
        /*  dd($request); */
           $request->validate([
-              'edit_bitacora_id' => 'required|exists:bitacora_mezcal,id',
+              'edit_bitacora_id' => 'required|exists:bitacora_maduracion,id',
               'id_empresa'       => 'required|exists:empresa,id_empresa',
               'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
               'operacion_adicional' => 'nullable|string',

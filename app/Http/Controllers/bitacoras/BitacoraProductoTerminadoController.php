@@ -395,7 +395,7 @@ public function store(Request $request)
     public function update(Request $request, $id_bitacora)
     {
         $request->validate([
-            'edit_bitacora_id' => 'required|exists:bitacora_mezcal,id',
+            'edit_bitacora_id' => 'required|exists:bitacora_producto_terminado,id',
             'fecha' => 'required|date',
             'id_empresa' => 'required|integer|exists:empresa,id_empresa',
             'tipo_operacion' => 'required|string',
