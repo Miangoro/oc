@@ -241,7 +241,7 @@
         }
         
 
-        // Etiquetas específicas según tipo
+        //ETIQUETAS ESPECÍFICAS SEGÚN TIPO Etiquetas específicas según tipo
         let etiquetaHref = '';
         let etiquetaTexto = 'Etiquetas';
 
@@ -279,6 +279,7 @@
             type: 'GET', // O puede ser 'GET'
             dataType: 'json', // Puede ser 'html', 'text', 'json', etc.
             success: function(response) {
+                console.log(response);
                 if (response.success) {
 
                     const documentos = response.data;
@@ -304,19 +305,19 @@
                                 carpeta = 'actas/';
                             }
                             html += `
-                             <tr data-id-doc="${doc.id_documento}" data-id-solicitud="${id_solicitud}">
+                             <tr data-id-doc="${doc.id_documento}" data-id-solicitud="${id_solicitud}" data-id-tabla="${doc.id}">
                                 <td>${doc.nombre}</td>
                                 <td>
                                     <a href="/files/${response.numero_cliente}/${carpeta}${doc.url}" target="_blank">
                                         <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
                                     </a>`;
                                 
-                            /*if (doc.id_documento == 69 || doc.id_documento == 70) {
+                            if (doc.id_documento == 69 || doc.id_documento == 70) {//boton eliminar(acta/evidencia)
                                 html += `
                                     <button type="button" class="btn btn-outline-danger btn-sm px-2 ms-2 eliminar-doc">
                                         <i class="ri-delete-bin-line"></i>
                                     </button>`;
-                            }*/
+                            }
 
                             html +=`
                                 </td>
@@ -406,54 +407,56 @@
                     $('#contenedor-documentos').html(html);
 
                     
-                    /*$(document).on('click', '.eliminar-doc', function () {
-                        const fila = $(this).closest('tr');
-                        const idDoc = fila.data('id-doc'); // 69 o 70
-                        const id_solicitud = fila.data('id-solicitud');
-                        console.log(idDoc, id_solicitud);
-                        Swal.fire({
-                            title: '¿Eliminar documento?',
-                            text: 'Esta acción no se puede deshacer.',
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
-                            cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
-                            customClass: {
-                                confirmButton: 'btn btn-primary me-2',
-                                cancelButton: 'btn btn-danger'
-                            },
-                            buttonsStyling: false
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                $.ajax({
-                                    url: `/eliminar-acta/${id_solicitud}/${idDoc}`,
-                                    method: 'DELETE',
-                                    success: function (res) {
-                                        Swal.fire({
-                                        icon: 'success',
-                                        title: '¡Exito!',
-                                        text: res.message,
-                                        customClass: {
-                                            confirmButton: 'btn btn-primary'
+                        $(document).on('click', '.eliminar-doc', function () {
+                            const fila = $(this).closest('tr');
+                            const idDoc = fila.data('id-doc'); // 69 o 70
+                            const id_solicitud = fila.data('id-solicitud');
+                            const id_tabla = fila.data('id-tabla');
+                            console.log(idDoc, id_solicitud, id_tabla);
+                            Swal.fire({
+                                title: '¿Eliminar documento?',
+                                text: 'Esta acción no se puede deshacer.',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+                                cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary me-2',
+                                    cancelButton: 'btn btn-danger'
+                                },
+                                buttonsStyling: false
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    $.ajax({
+                                        url: `/eliminar-acta/${id_solicitud}/${idDoc}/${id_tabla}`,
+                                        method: 'DELETE',
+                                        success: function (res) {
+                                            Swal.fire({
+                                            icon: 'success',
+                                            title: '¡Exito!',
+                                            text: res.message,
+                                            customClass: {
+                                                confirmButton: 'btn btn-primary'
+                                            }
+                                            });
+                                            fila.remove(); // elimina visualmente la fila sin recargar todo
+                                        },
+                                    error: function (error) {
+                                            Swal.fire({
+                                            icon: 'error',
+                                            title: '¡Error!',
+                                            text: 'Error al eliminar.',
+                                            //footer: `<pre>${error.responseText}</pre>`,
+                                            customClass: {
+                                                confirmButton: 'btn btn-danger'
+                                            }
+                                            });
                                         }
-                                        });
-                                        fila.remove(); // elimina visualmente la fila sin recargar todo
-                                    },
-                                   error: function (error) {
-                                        Swal.fire({
-                                        icon: 'error',
-                                        title: '¡Error!',
-                                        text: 'Error al eliminar.',
-                                        //footer: `<pre>${error.responseText}</pre>`,
-                                        customClass: {
-                                            confirmButton: 'btn btn-danger'
-                                        }
-                                        });
-                                    }
-                                });
-                            }
+                                    });
+                                }
+                            });
                         });
-                    });*/
+
                }
             },
 

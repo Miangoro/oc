@@ -748,8 +748,9 @@ public function asignarInspector(Request $request)
     }
 
 
+
 //FUNCION ELIMINAR DOCUMENTOS 69 Y 70
-public function eliminarActa($id_solicitud, $id_documento)
+public function eliminarActa($id_solicitud, $id_documento, $id)
 {
     if (!in_array($id_documento, [69, 70])) {
         return response()->json(['message' => 'Documento no permitido.'], 400);
@@ -757,6 +758,7 @@ public function eliminarActa($id_solicitud, $id_documento)
 
     $documento = Documentacion_url::where('id_relacion', $id_solicitud)
         ->where('id_documento', $id_documento)
+        ->where('id', $id)
         ->first();
 
     if (!$documento) {

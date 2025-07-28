@@ -270,7 +270,7 @@ class getFuncionesController extends Controller
 
         // Obtener documentos relacionados
         $documentos = Documentacion_url::where('id_relacion', $id_solicitud)
-            ->get(['nombre_documento as nombre', 'url', 'id_documento']);
+            ->get(['id','nombre_documento as nombre', 'url', 'id_documento']);
 
 
         $caracteristicas = is_string($solicitud->caracteristicas)
