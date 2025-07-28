@@ -431,6 +431,29 @@
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
 
         </tr>
+
+<!--NUEVO CAMPO ED11-->
+@if ($datos->fecha_solicitud > '2025-07-16') {
+        <tr>
+            <td class="td-margins letra_td" colspan="3" style="font-weight: bold;padding-top: 0;padding-bottom: 0;">
+                Designación contraseña oficial NOM
+            </td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;">
+                ------------
+            </td>
+            <td colspan="2" class="td-no-margins letra_td" style="font-weight: bold;padding-top: 0;padding-bottom: 0;">
+
+            </td>
+            <td colspan="7">
+                <span style="font-size: 14px" class="con-negra">------------------------</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+        </tr>
+}
+@endif
+
         <tr>
             <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Dictaminación de instalaciones:
             </td>
@@ -738,8 +761,9 @@
             <td colspan="3" style="text-align: right; font-size: 8.5px !important;">Solicitud de servicios
                 NOM-070-SCFI-2016
                 F7.1-01-32 <br>
-                Edición 10 Entrada en vigor:
-                20/06/2024
+                Edición {{ ($datos->fecha_solicitud) > '2025-07-16' 
+                    ? '11 Entrada en vigor: 16-07-2025' 
+                    : '10 Entrada en vigor: 20/06/2024' }}
             </td>
         </tr>
         <tr>
@@ -773,8 +797,9 @@
             <td colspan="3" style="text-align: right; font-size: 8.5px !important;">Solicitud de servicios
                 NOM-070-SCFI-2016
                 F7.1-01-32 <br>
-                Edición 10 Entrada en vigor:
-                20/06/2024
+                Edición {{ ($datos->fecha_solicitud) > '2025-07-16' 
+                    ? '11 Entrada en vigor: 16-07-2025' 
+                    : '10 Entrada en vigor: 20/06/2024' }}
             </td>
         </tr>
         <tr>
