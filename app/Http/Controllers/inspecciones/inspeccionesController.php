@@ -24,6 +24,7 @@ use App\Models\equipos;
 use App\Models\solicitudTipo;
 use App\Models\guias;
 use App\Models\LotesGranel;
+use App\Models\lotes_envasado;
 use App\Models\clases;
 use App\Models\categorias;
 
@@ -264,7 +265,9 @@ class inspeccionesController extends Controller
                 }
 
 
-                ///CAMPO DE CARACTERISTICAS
+
+
+        ///CAMPO DE CARACTERISTICAS
                 $caracteristicas = json_decode($solicitud->caracteristicas, true);
                 //GUIAS
                 $idLoguiass = $caracteristicas['id_guia'] ?? null;
@@ -285,7 +288,6 @@ class inspeccionesController extends Controller
                 $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
                 $nestedData['etapa'] = $caracteristicas['etapa'] ?? 'N/A';
                 $nestedData['fecha_corte'] = isset($caracteristicas['fecha_corte']) ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i') : 'N/A';
-
                 ///TIPO MAGUEY
                 $idTipoMagueyMuestreo = $caracteristicas['id_tipo_maguey'] ?? null;
                 if ($idTipoMagueyMuestreo) {
@@ -313,33 +315,47 @@ class inspeccionesController extends Controller
                 $nestedData['id_vol_actual'] = $caracteristicas['id_vol_actual'] ?? 'N/A';
                 $nestedData['id_vol_res'] = $caracteristicas['id_vol_res'] ?? 'N/A';
                 $nestedData['analisis_traslado'] = $caracteristicas['analisis_traslado'] ?? 'N/A';
-
                 //LOTE ENVASADO
+                if (isset($caracteristicas['id_lote_envasado'])) {
+                    $idLoteEnvasado = $caracteristicas['id_lote_envasado'];
+                } elseif (isset($caracteristicas['detalles']) && is_array($caracteristicas['detalles']) && isset($caracteristicas['detalles'][0]['id_lote_envasado'])) {
+                    $idLoteEnvasado = $caracteristicas['detalles'][0]['id_lote_envasado'];
+                    $cajas = $caracteristicas['detalles'][0]['cantidad_cajas'];
+                    $botellas = $caracteristicas['detalles'][0]['cantidad_botellas'];
+                    $presentacion = $caracteristicas['detalles'][0]['presentacion'];
+                } else {
+                    $idLoteEnvasado = null;
+                }
+                $loteEnvasado = lotes_envasado::with('marca')->find($idLoteEnvasado); // Busca el lote envasado
 
-                
-/*
-                $nestedData['id_categoria_inspeccion'] = $caracteristicas['id_categoria_inspeccion'] ?? 'N/A';
-                $nestedData['id_clase_inspeccion'] = $caracteristicas['id_clase_inspeccion'] ?? 'N/A';
-                $nestedData['id_tipo_maguey_inspeccion'] = $caracteristicas['id_tipo_maguey_inspeccion'] ?? 'N/A';
-                $nestedData['id_marca'] = $caracteristicas['id_marca'] ?? 'N/A';
-                $nestedData['volumen_inspeccion'] = $caracteristicas['volumen_inspeccion'] ?? 'N/A';
-                $nestedData['analisis_inspeccion'] = $caracteristicas['analisis_inspeccion'] ?? 'N/A';
-                $nestedData['id_categoria_barricada'] = $caracteristicas['id_categoria'] ?? 'N/A';
-                $nestedData['id_clase_barricada'] = $caracteristicas['id_clase'] ?? 'N/A';
-                $nestedData['id_tipo_maguey_barricada'] = $caracteristicas['id_tipo_maguey'] ?? 'N/A';
+                if ($loteEnvasado && $loteEnvasado->marca) {
+                    $marca = $loteEnvasado->marca->marca;
+                } else {
+                    $marca = null; // O un valor por defecto
+                }
+                $nestedData['id_lote_envasado'] = $loteEnvasado ? $loteEnvasado->nombre : 'N/A';
+                $primerLote = $loteEnvasado?->lotesGranel->first();
+                $nestedData['lote_granel'] = $primerLote ? $primerLote->nombre_lote : 'N/A';
+
+
+                $nestedData['info_adicional'] = $solicitud->info_adicional ?? 'Vacío';
                 $nestedData['analisis_barricada'] = $caracteristicas['analisis'] ?? 'N/A';
                 $nestedData['tipo_lote'] = $caracteristicas['tipoIngreso'] ?? 'N/A';
                 $nestedData['fecha_inicio'] = isset($caracteristicas['fecha_inicio']) ? Carbon::parse($caracteristicas['fecha_inicio'])->format('d/m/Y') : 'N/A';
                 $nestedData['fecha_termino'] = isset($caracteristicas['fecha_termino']) ? Carbon::parse($caracteristicas['fecha_termino'])->format('d/m/Y') : 'N/A';
+                $nestedData['volumen_ingresado'] = $caracteristicas['volumen_ingresado'] ?? 'N/A';
                 $nestedData['tipo_lote_lib'] = $caracteristicas['tipoLiberacion'] ?? 'N/A';
                 $nestedData['punto_reunion'] = $caracteristicas['punto_reunion'] ?? 'N/A';
-                $nestedData['renovacion'] = $caracteristicas['renovacion'] ?? 'N/A';
-                $nestedData['volumen_ingresado'] = $caracteristicas['volumen_ingresado'] ?? 'N/A';
+                $nestedData['marca'] = $marca ?? 'N/A';
+                $nestedData['presentacion'] = $presentacion ?? 'N/A';
+                $nestedData['cajas'] = $cajas ?? 'N/A';
+                $nestedData['botellas'] = $botellas ?? 'N/A';
+                $nestedData['no_pedido'] = $caracteristicas['no_pedido'] ?? 'N/A';
                 $nestedData['certificado_exportacion'] = $solicitud->certificadoExportacion()?->num_certificado ?? '';
-                */
-
-
-
+                $nestedData['combinado'] = ($caracteristicas['tipo_solicitud'] ?? null) == 2
+                    ? '<span class="badge rounded-pill bg-info"><b>Combinado</b></span>'
+                    : '';
+                $nestedData['renovacion'] = $caracteristicas['renovacion'] ?? 'N/A';
 
 
 
