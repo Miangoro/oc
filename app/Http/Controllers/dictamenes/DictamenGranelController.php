@@ -615,7 +615,9 @@ public function MostrarDictamenGranel($id_dictamen)
     $id_sustituye = json_decode($data->observaciones, true)['id_sustituye'] ?? null;
     $nombre_id_sustituye = $id_sustituye ? Dictamen_Granel::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
     //origen
-    if ( empty($data->inspeccione->solicitud->lote_granel->lote_original_id) ){
+    if ($data->id == 1159) {
+        $estado = 'JALISCO';
+    } else if ( empty($data->inspeccione->solicitud->lote_granel->lote_original_id) ){
         $estado = $data->inspeccione->solicitud->instalacion->estados->nombre ?? 'NA';
     }else{
         //$estado = $certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id->lotes;
@@ -628,10 +630,11 @@ public function MostrarDictamenGranel($id_dictamen)
             if ($certificadoGranel) {
                 $estado = $certificadoGranel->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'JALISCO';
             } else {
-                $estado = "JALISCO";
+                $estado = "OAXACA";
                 //return response()->json([ 'message' => 'No se encontró Certificado Granel con ese lote granel.' ]);
             }
     }
+ 
 
     $pdf = [
         'data' => $data,
