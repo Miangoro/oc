@@ -528,7 +528,7 @@ class lotesGranelController extends Controller
                 'alcohol_inicial' => $info['lote']->cont_alc,
                 'volumen_entrada' => 0,
                 'alcohol_entrada' => 0,
-                'agua_entrada' => $info['lote']->agua_entrada ?? 0,
+                'agua_entrada' => 0,
                 'volumen_salidas' => $info['volumen_parcial'],
                 'alcohol_salidas' => $info['lote']->cont_alc,
                 'destino_salidas' => $lote->nombre_lote,
