@@ -766,7 +766,13 @@
                 <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->id_tanque ?? 'N/A' }}</strong>
                 </td>
                 <td colspan="2" class="header-cell" style="font-size: 10px;">No. de certificado NOM:</td>
-                <td colspan="2" style="font-size: 10px;"><strong>{{$datos->solicitud->lote_granel->certificadoGranel->num_certificado}}</strong></td>
+                <td colspan="2" style="font-size: 10px;">
+                    <strong>
+                        {{$datos->solicitud?->lote_granel?->certificadoGranel?->num_certificado 
+                            ?? $datos->solicitud?->lote_granel?->folio_certificado
+                            ?? 'No encontrado'}}
+                    </strong>
+                </td>
             </tr>
             <tr>
                 <td colspan="1" class="header-cell" style="font-size: 10px; text-align: left;">Nombre y firma del
@@ -842,7 +848,13 @@
                 <td style="font-size: 10px;">
                     <strong>{{ $datos->solicitud->lote_granel->id_tanque ?? 'N/A' }}</strong></td>
                 <td colspan="2" class="header-cell" style="font-size: 10px;">No. de certificado NOM:</td>
-                <td colspan="2" style="font-size: 10px;"><strong>{{$datos->solicitud->lote_granel->certificadoGranel->num_certificado}}</strong></td>
+                <td colspan="2" style="font-size: 10px;">
+                    <strong>
+                        {{$datos->solicitud?->lote_granel?->certificadoGranel?->num_certificado 
+                            ?? $datos->solicitud?->lote_granel?->folio_certificado
+                            ?? 'No encontrado'}}
+                    </strong>
+                </td>
             </tr>
             <tr>
                 <td colspan="1" class="header-cell" style="font-size: 10px; text-align: left;">Nombre y firma del
@@ -919,7 +931,13 @@
                 <td style="font-size: 10px;">
                     <strong>{{ $datos->solicitud->lote_granel->id_tanque ?? 'N/A' }}</strong></td>
                 <td colspan="2" class="header-cell" style="font-size: 10px;">No. de certificado NOM:</td>
-                <td colspan="2" style="font-size: 10px;"><strong>{{$datos->solicitud->lote_granel->certificadoGranel->num_certificado}}</strong></td>
+                <td colspan="2" style="font-size: 10px;">
+                    <strong>
+                        {{$datos->solicitud?->lote_granel?->certificadoGranel?->num_certificado 
+                            ?? $datos->solicitud?->lote_granel?->folio_certificado
+                            ?? 'No encontrado'}}
+                    </strong>
+                </td>
             </tr>
             <tr>
                 <td colspan="1" class="header-cell" style="font-size: 10px; text-align: left;">Nombre y firma del
