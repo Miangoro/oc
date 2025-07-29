@@ -100,7 +100,7 @@ $(function () {
       },
       { data: 'fecha_visita' },
       { data: 'inspector' },
-      {
+      {///caracteristicas
         data: null,
         render: function (data) {
           switch (data.id_tipo) {
