@@ -615,7 +615,7 @@ public function MostrarDictamenGranel($id_dictamen)
     $id_sustituye = json_decode($data->observaciones, true)['id_sustituye'] ?? null;
     $nombre_id_sustituye = $id_sustituye ? Dictamen_Granel::find($id_sustituye)->num_dictamen ?? 'No encontrado' : '';
     //origen
-    if ($data->id == 1159) {
+    if ($data->id_dictamen == 1159) {
         $estado = 'JALISCO';
     } else if ( empty($data->inspeccione->solicitud->lote_granel->lote_original_id) ){
         $estado = $data->inspeccione->solicitud->instalacion->estados->nombre ?? 'NA';
