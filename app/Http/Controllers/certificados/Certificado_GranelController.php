@@ -769,7 +769,7 @@ public function CertificadoGranel($id_certificado, $conMarca = true)
         $certificadoGranel = CertificadosGranel::where('id_lote_granel', $ultimoId)->first();
 
             if ($certificadoGranel) {
-                $estado = $certificadoGranel->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado';
+                $estado = $certificadoGranel->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'OAXACA';
             } else {
                 $estado = "OAXACA";
                 //return response()->json([ 'message' => 'No se encontró Certificado Granel con ese lote granel.' ]);
