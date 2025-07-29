@@ -46,18 +46,51 @@ $('#edit_fecha_emision').on('change', function() {
 
 
  $(function () {
-    let buttons = [];
+  let buttons = [];
 
-  // Si tiene permiso, agregas el botón
   if (puedeRegistrarCertificado) {
+    // Botón para agregar certificado
     buttons.push({
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo certificado</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'modal',
-            'data-bs-dismiss': 'modal',
-            'data-bs-target': '#ModalAgregar'
+      text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo certificado</span>',
+      className: 'add-new btn btn-primary waves-effect waves-light me-2', // ← Agregamos me-2 para dar espacio
+      attr: {
+        'data-bs-toggle': 'modal',
+        'data-bs-dismiss': 'modal',
+        'data-bs-target': '#ModalAgregar'
+      }
+    });
+
+    // Botón para exportar directorio
+    buttons.push({
+      text: '<i class="ri-download-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar directorio</span>',
+      className: 'btn btn-success waves-effect waves-light',
+      action: function (e, dt, node, config) {
+        const selectedEmpresa = $('#empresaSelect').val(); // Ajusta los IDs si varían en esta página
+        const selectedAnio = $('#anioSelect').val();
+        const selectedMes = $('#mesSelect').val();
+        const selectedEstatus = $('#estatusSelect').val();
+
+        const params = new URLSearchParams({
+          id_empresa: selectedEmpresa,
+          anio: selectedAnio,
+          mes: selectedMes,
+          estatus: selectedEstatus
+        }).toString();
+
+        const totalFiltrados = dt.rows({ search: 'applied' }).count();
+        Swal.fire({
+          title: '¿Exportar directorio?',
+          text: `Se exportarán ${totalFiltrados} registros.`,
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Sí, exportar',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/descargar_reporte_directorio?' + params;
           }
+        });
+      }
     });
   }
 

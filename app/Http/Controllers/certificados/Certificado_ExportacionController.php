@@ -17,7 +17,9 @@ use App\Models\Dictamen_Envasado;
 //Clase de exportacion
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CertificadosExport;
+use App\Exports\DirectorioExport;
 use App\Mail\CorreoCertificado;
+use App\Models\Certificado;
 use App\Notifications\GeneralNotification;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
@@ -385,6 +387,14 @@ public function index(Request $request)
         'code' => 200,
         'data' => $data,
     ]);
+}
+
+public function exportarExcel(Request $request)
+{
+    $filtros = $request->only(['id_empresa', 'anio', 'mes', 'estatus']);
+
+    $nombreArchivo = 'Directorio_certificados_' . date('Y_m_d_His') . '.xlsx';
+    return Excel::download(new DirectorioExport($filtros), $nombreArchivo);
 }
 
 

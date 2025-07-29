@@ -1296,7 +1296,14 @@ Route::controller(Certificado_ExportacionController::class)->group(function () {
 Route::controller(Certificado_InstalacionesController::class)->group(function () {
     //Mostrar
      Route::get('/api/certificados_instalaciones', [Certificado_InstalacionesController::class, 'api']);
+    
 });
+//Exportar directorio
+Route::get('/descargar_reporte_directorio', [Certificado_ExportacionController::class, 'exportarDirectorio'])->name('certificados.exportarDirectorio');
+
+// Ruta para exportar con filtros desde el botón
+Route::get('/descargar_reporte_directorio', [Certificado_ExportacionController::class, 'exportarExcel'])->name('descargar_reporte_directorio');
+
 
 //-------------------CERTIFICADO VENTA NACIONAL-------------------
 Route::middleware(['auth'])->controller(Certificado_NacionalController::class)->group(function () {
