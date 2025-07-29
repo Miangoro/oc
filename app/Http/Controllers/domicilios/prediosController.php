@@ -104,8 +104,8 @@ public function UserManagement() {
 
         $limit = $request->input('length');
         $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')] ?? 'num_predio';
-        $dir = $request->input('order.0.dir') ?? 'desc';
+        $order = $columns[$request->input('order.0.column')] ?? 'id_predio';
+        $dir = $request->input('order.0.dir') ?? 'asc';
 
         if (empty($request->input('search.value'))) {
             $predios = Predios::with('empresa') // Carga la relación
@@ -117,7 +117,7 @@ public function UserManagement() {
                 })
                 ->offset($start)
                 ->limit($limit)
-                ->orderByDesc('num_predio')
+                ->orderByDesc('id_predio')
 
                 ->get();
         } else {
@@ -152,7 +152,7 @@ public function UserManagement() {
                 })
                 ->offset($start)
                 ->limit($limit)
-                ->orderByDesc('num_predio')
+                ->orderByDesc('id_predio')
 
                 ->get();
 
