@@ -55,16 +55,16 @@
         padding: 3px 5px;
         text-align: center;
         vertical-align: middle;
-        /* word-wrap: break-word; */
+        word-wrap: break-word;
     }
-    table {
-    page-break-inside: auto;
-}
+    /*     table {
+        page-break-inside: auto;
+    }
 
-tr {
-    page-break-inside: avoid;
-    page-break-after: auto;
-}
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    } */
     .pie {
         text-align: right;
         font-size: 12px;
@@ -82,7 +82,7 @@ tr {
     }
 
    @page {
-        margin: 150px 50px 120px 50px;
+        margin: 150px 50px 130px 50px;
     }
 </style>
 

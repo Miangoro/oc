@@ -19,7 +19,7 @@
         border: 1px solid;
         padding: 8px;
         text-align: center;
-        font-size: 10px;
+        font-size: 13px;
         word-wrap: break-word;
         width: auto;
         height: 25px;
@@ -47,7 +47,7 @@
     tr.text-title th {
         padding: 2px;
         text-align: center;
-        font-size: 5px;
+        font-size: 13px;
         word-break: break-word;
         height: auto;
         width: auto;
@@ -72,10 +72,13 @@
         z-index: 1;
         color: #000000;
     }
+     @page {
+        margin: 150px 50px 130px 50px;
+    }
 </style>
 
 <body>
-    <div class="img">
+{{--     <div class="img">
         <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" class="logo-small">
     </div>
 
@@ -96,10 +99,41 @@
         <p class="text">INVENTARIO DE PRODUCTO TERMINADO {{ $title }} <br>
             <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
         </p>
+    </div> --}}
 
-        {{-- <span style="font-size: 20px; font-family: 'calibri-bold';"> --}}
+    <div style="width: 100%; position: fixed; overflow: hidden; margin-top: -130px;">
+        {{-- Logo Unidad de Inspección --}}
+        <div style="width: 25%; float: left; text-align: left;">
+            <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Unidad de Inspección" style="height: 100px; width: auto;">
+        </div>
+        {{-- Título y Cliente --}}
+        <div style="width: 50%; float: left; text-align: center;">
+            <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
+                INVENTARIO DE PRODUCTO TERMINADO {{ $title }}
+            </p>
+            @php
+                $razon = $empresaPadre->razon_social ?? 'Sin razón social';
+                $numeroCliente = 'Sin número cliente';
+                if ($empresaPadre && $empresaPadre->empresaNumClientes->isNotEmpty()) {
+                    foreach ($empresaPadre->empresaNumClientes as $cliente) {
+                        if (!empty($cliente->numero_cliente)) {
+                            $numeroCliente = $cliente->numero_cliente;
+                            break;
+                        }
+                    }
+                }
+            @endphp
+            <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
+                <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
+            </p>
+        </div>
+        {{-- Logo OC (comentado) --}}
+        <div style="width: 25%; float: left; text-align: right;">
+            {{-- <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo OC" style="height: 100px; width:auto;"> --}}
+        </div>
+        {{-- Limpiar floats --}}
+        <div style="clear: both;"></div>
 
-        {{-- </span> --}}
     </div>
 
 
@@ -192,23 +226,24 @@
 
                     <td>{{ $bitacora->mermas ?? '----' }}</td>
                     <td>{{ $bitacora->observaciones ?? '----' }}</td>
-                    <td>
-                        @if ($bitacora->id_firmante != 0 && $bitacora->firmante)
-                            @php
-                                $firma = $bitacora->firmante->firma;
-                                $rutaFirma = public_path('storage/firmas/' . $firma);
-                            @endphp
+                    <td style="padding: 0; text-align: center;">
+                    @if ($bitacora->id_firmante != 0 && $bitacora->firmante)
+                        @php
+                            $firma = $bitacora->firmante->firma;
+                            $rutaFirma = public_path('storage/firmas/' . $firma);
+                        @endphp
 
-                            @if (!empty($firma) && file_exists($rutaFirma))
-                                <img src="{{ $rutaFirma }}" alt="Firma" height="100"><br>
-                                <small>{{ $bitacora->firmante->name }}</small>
-                            @else
-                                <span class="text-muted">Firma no encontrada</span>
-                            @endif
+                        @if (!empty($firma) && file_exists($rutaFirma))
+                            <img src="{{ $rutaFirma }}" alt="Firma" style="max-width: 100%; height: auto;">
+                            <br>
+                            <small>{{ $bitacora->firmante->name }}</small>
                         @else
-                            <span>Sin firma</span>
+                            <span class="text-muted">Firma no encontrada</span>
                         @endif
-                    </td>
+                    @else
+                        <span>Sin firma</span>
+                    @endif
+                </td>
                 </tr>
             @endforeach
 
@@ -217,12 +252,22 @@
         </tbody>
     </table>
 
-    <div class="pie">
-        <p>Página 1 de 1 <br>
+{{--     <div class="pie">
+        <p>Página 1 de 1<br>
             F7.1-01-59 Bitácora Inventario de Producto Terminado <br>
             Ed. 0 Entrada en vigor: 21-07-2025
         </p>
-    </div>
+    </div> --}}
+    <script type="text/php">
+      if(isset($pdf)){
+        $pdf->page_script('
+        $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
+        $pdf->text(1580, 1090, "Página $PAGE_NUM de $PAGE_COUNT", $font, 11);
+        $pdf->text(1395, 1105, "F7.1-01-59 Bitácora Inventario de Producto Terminado", $font, 11);
+        $pdf->text(1485, 1120, "Ed. 0 Entrada en vigor: 21-07-2025", $font, 11);
+        ');
+      }
+    </script>
 </body>
 
 </html>
