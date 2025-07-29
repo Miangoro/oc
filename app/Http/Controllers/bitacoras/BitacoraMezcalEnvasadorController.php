@@ -22,18 +22,50 @@ class BitacoraMezcalEnvasadorController extends Controller
     {
         $bitacora = BitacoraMezcal::all();
 /*         $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); */
-            if (Auth::check() && Auth::user()->tipo == 3) {
+            /* if (Auth::check() && Auth::user()->tipo == 3) {
         $empresaIdA = Auth::user()->empresa?->id_empresa;
         $empresas = empresa::with('empresaNumClientes')->where('id_empresa', $empresaIdA)->get();
           } else {
               $empresas = empresa::with('empresaNumClientes')
                   ->where('tipo', 2)
                   ->get();
-          }
+          } */
+         $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
+        ? Auth::user()->empresa?->id_empresa
+        : null;
+          if ($empresaIdAut) {
+                  // 👇 Usa la función que ya tienes
+                  $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, null);
+
+                  $empresas = empresa::with('empresaNumClientes')
+                      ->whereIn('id_empresa', $idsEmpresas)
+                      ->get();
+              } else {
+                  $empresas = empresa::with('empresaNumClientes')
+                      ->where('tipo', 2)
+                      ->get();
+              }
       $tipo_usuario =  Auth::user()->tipo;
         return view('bitacoras.find_BitacoraMezcalEnvasador_view', compact('bitacora', 'empresas', 'tipo_usuario'));
     }
 
+    private function obtenerEmpresasVisibles($empresaIdAut, $empresaId)
+      {
+          $idsEmpresas = [];
+          if ($empresaIdAut) {
+              $idsEmpresas[] = $empresaIdAut;
+              $idsEmpresas = array_merge($idsEmpresas,
+                  maquiladores_model::where('id_maquiladora', $empresaIdAut)->pluck('id_maquilador')->toArray()
+              );
+          }
+          if ($empresaId) {
+              $idsEmpresas[] = $empresaId;
+              $idsEmpresas = array_merge($idsEmpresas,
+                  maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+              );
+          }
+          return array_unique($idsEmpresas);
+      }
     public function index(Request $request)
     {
       $empresaId = $request->input('empresa');
@@ -61,9 +93,14 @@ class BitacoraMezcalEnvasadorController extends Controller
         $order = $columns[$request->input('order.0.column')] ?? 'fecha';
         $dir = $request->input('order.0.dir');
 
-        $query = BitacoraMezcal::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
+        $query = BitacoraMezcal::query()->whereIn('tipo', [2, 3]);
+        $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, $empresaId);
+                      if (count($idsEmpresas)) {
+                          $query->whereIn('id_empresa', $idsEmpresas);
+                      }
+        /* $query = BitacoraMezcal::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
                   $query->where('id_empresa', $empresaIdAut);
-              })->whereIn('tipo', [2, 3]);
+              })->whereIn('tipo', [2, 3]); */
 
         /* if ($empresaId) {
             $query->where('id_empresa', $empresaId);
@@ -72,7 +109,7 @@ class BitacoraMezcalEnvasadorController extends Controller
                 $query->where('id_instalacion', $instalacionId);
             }
         } */
-        if ($empresaId) {
+        /* if ($empresaId) {
               $empresa = empresa::find($empresaId);
 
               if ($empresa) {
@@ -96,7 +133,58 @@ class BitacoraMezcalEnvasadorController extends Controller
                       $query->where('id_instalacion', $instalacionId);
                   }
               }
-          }
+          } */
+         $filteredQuery = clone $query;
+        if (!empty($search)) {
+            $filteredQuery->where(function ($q) use ($search) {
+                $lower = strtolower($search);
+
+                if ($lower === 'firmado') {
+                    $q->whereNotNull('id_firmante')->where('id_firmante', '<>', 0);
+                } elseif ($lower === 'sin firmar') {
+                    $q->where(function ($sub) {
+                        $sub->whereNull('id_firmante')->orWhere('id_firmante', 0);
+                    });
+                } else {
+                    $q->where('fecha', 'LIKE', "%{$search}%")
+                      ->orWhere('id_lote_granel', 'LIKE', "%{$search}%")
+                      ->orWhere('procedencia_entrada', 'LIKE', "%{$search}%")
+                      ->orWhere('destino_salidas', 'LIKE', "%{$search}%")
+                      ->orWhere('operacion_adicional', 'LIKE', "%{$search}%")
+                      ->orWhere('volumen_inicial', 'LIKE', "%{$search}%")
+                      ->orWhere('alcohol_inicial', 'LIKE', "%{$search}%")
+                      ->orWhere('volumen_entrada', 'LIKE', "%{$search}%")
+                      ->orWhere('alcohol_entrada', 'LIKE', "%{$search}%")
+                      ->orWhere('volumen_salidas', 'LIKE', "%{$search}%")
+                      ->orWhere('alcohol_salidas', 'LIKE', "%{$search}%")
+                      ->orWhere('volumen_final', 'LIKE', "%{$search}%")
+                      ->orWhere('alcohol_final', 'LIKE', "%{$search}%")
+                      ->orWhere(function ($date) use ($search) {
+                          $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+                      })
+                      ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
+                          $sub->where('razon_social', 'LIKE', "%{$search}%");
+                      })
+                      ->orWhereHas('loteBitacora', function ($sub) use ($search) {
+                          $sub->where('nombre_lote', 'LIKE', "%{$search}%")
+                              ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+                              ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
+                      });
+                }
+            });
+
+            $totalFiltered = $filteredQuery->count(); // ✅ aquí sí usas el clon con filtros
+        } else {
+            $totalFiltered = $filteredQuery->count(); // sin filtros
+        }
+
+        $bitacoras = $filteredQuery
+            ->offset($start)
+            ->limit($limit)
+            ->orderBy($order, $dir)
+            ->get();
+
+         /*
           if (!empty($search)) {
               $query->where(function ($q) use ($search) {
                   $lower = strtolower($search);
@@ -141,7 +229,7 @@ class BitacoraMezcalEnvasadorController extends Controller
         $bitacoras = $query->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
-            ->get();
+            ->get(); */
 
         $data = [];
         $counter = $start + 1;
@@ -209,25 +297,53 @@ class BitacoraMezcalEnvasadorController extends Controller
         $empresaId = $request->query('empresa');
         $instalacionId = $request->query('instalacion');
         $title = 'ENVASADOR'; // Cambia a 'Envasador' si es necesario
+        $idsEmpresas = [$empresaId];
+        if ($empresaId) {
+            $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
+                ->pluck('id_maquilador')
+                ->toArray();
+
+            if (count($idsMaquiladores)) {
+                $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
+            }
+        }
         $bitacoras = BitacoraMezcal::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
         ])->whereIn('tipo', [2, 3])
-        ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
+        ->when($empresaId, function ($query) use ($idsEmpresas) {
+              $query->whereIn('id_empresa', $idsEmpresas);
+          })
+       /*  ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
             $query->where('id_empresa', $empresaId);
             if ($instalacionId) {
                 $query->where('id_instalacion', $instalacionId);
             }
-        })
+        }) */
         ->orderBy('id', 'desc')
         ->get();
+        $empresaPadre = null;
+        if ($empresaId) {
+            // Ver si la empresa enviada es una maquiladora
+            $esMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)->exists();
 
+            if ($esMaquiladora) {
+                // Buscar su empresa padre
+                $idMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)
+                    ->value('id_maquiladora');
+
+                $empresaPadre = empresa::with('empresaNumClientes')->find($idMaquiladora);
+            } else {
+                // Es empresa padre
+                $empresaPadre = empresa::with('empresaNumClientes')->find($empresaId);
+            }
+        }
           if ($bitacoras->isEmpty()) {
               return response()->json([
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
               ], 404);
           }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title'))
+        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaPadre'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
 
         return $pdf->stream('Bitácora Mezcal a Granel.pdf');

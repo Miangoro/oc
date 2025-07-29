@@ -140,8 +140,9 @@ class BitacoraProductoTerminadoController extends Controller
                   $query->whereIn('id_empresa', $idsEmpresas);
               }
           } */
+          $filteredQuery = clone $query;
           if (!empty($search)) {
-              $query->where(function ($q) use ($search) {
+              $filteredQuery->where(function ($q) use ($search) {
                   $lower = strtolower($search);
 
                   if ($lower === 'firmado') {
@@ -153,35 +154,39 @@ class BitacoraProductoTerminadoController extends Controller
                   } else {
 
                     $q->where('fecha', 'LIKE', "%{$search}%")
-                      ->orWhere('id_lote_granel', 'LIKE', "%{$search}%")
+                      ->orWhere('lote_granel', 'LIKE', "%{$search}%")
                       ->orWhere('procedencia_entrada', 'LIKE', "%{$search}%")
                       ->orWhere('destino_salidas', 'LIKE', "%{$search}%")
-                      ->orWhere('operacion_adicional', 'LIKE', "%{$search}%")
-                      ->orWhere('volumen_inicial', 'LIKE', "%{$search}%")
-                      ->orWhere('alcohol_inicial', 'LIKE', "%{$search}%")
-                      ->orWhere('volumen_entrada', 'LIKE', "%{$search}%")
-                      ->orWhere('alcohol_entrada', 'LIKE', "%{$search}%")
-                      ->orWhere('volumen_salidas', 'LIKE', "%{$search}%")
-                      ->orWhere('alcohol_salidas', 'LIKE', "%{$search}%")
-                      ->orWhere('volumen_final', 'LIKE', "%{$search}%")
-                      ->orWhere('alcohol_final', 'LIKE', "%{$search}%")
+                      ->orWhere('procedencia_entrada', 'LIKE', "%{$search}%")
+
+                      ->orWhere('cant_cajas_inicial', 'LIKE', "%{$search}%")
+                      ->orWhere('cant_cajas_entrada', 'LIKE', "%{$search}%")
+                      ->orWhere('cant_bot_entrada', 'LIKE', "%{$search}%")
+
+                      ->orWhere('cant_cajas_salidas', 'LIKE', "%{$search}%")
+                      ->orWhere('cant_bot_salidas', 'LIKE', "%{$search}%")
+
+                      ->orWhere('cant_cajas_final', 'LIKE', "%{$search}%")
+                      ->orWhere('cant_bot_final', 'LIKE', "%{$search}%")
                       ->orWhere(function ($date) use ($search) {
                        $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
                       ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
                           $sub->where('razon_social', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('loteBitacora', function ($sub) use ($search) {
+                      });
+                     /*  ->orWhereHas('loteBitacora', function ($sub) use ($search) {
                           $sub->where('nombre_lote', 'LIKE', "%{$search}%")
                               ->orWhere('folio_fq', 'LIKE', "%{$search}%")
                               ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
-                      });
+                      }); */
                   }
               });
 
-              $totalFiltered = $query->count();
+              $totalFiltered = $filteredQuery->count();
+          } else{
+            $totalFiltered = $filteredQuery->count();
           }
 
-        $bitacoras = $query->offset($start)
+        $bitacoras = $filteredQuery->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
             ->get();

@@ -135,8 +135,9 @@ class BitacoraProductoEtiquetaController extends Controller
                   $query->whereIn('id_empresa', $idsEmpresas);
               }
           } */
+         $filteredQuery = clone $query;
           if (!empty($search)) {
-              $query->where(function ($q) use ($search) {
+              $filteredQuery->where(function ($q) use ($search) {
                   $lower = strtolower($search);
 
                   if ($lower === 'firmado') {
@@ -178,10 +179,13 @@ class BitacoraProductoEtiquetaController extends Controller
                   }
               });
 
-              $totalFiltered = $query->count();
+               $totalFiltered = $filteredQuery->count();
+          } else
+          {
+             $totalFiltered = $filteredQuery->count();
           }
 
-        $bitacoras = $query->offset($start)
+        $bitacoras = $filteredQuery->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
             ->get();

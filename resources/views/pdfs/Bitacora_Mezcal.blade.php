@@ -8,6 +8,9 @@
     <title>Bitácora Mezcal a Granel</title>
 </head>
 <style>
+  body{
+
+  }
     table {
         width: 100%;
         border-collapse: collapse;
@@ -32,16 +35,6 @@
         /* Gris claro */
     }
 
-/*     img {
-        display: flex;
-        margin-bottom: 10px;
-    }
- */
-/*     .img .logo-small {
-        height: 80px;
-
-    } */
-
     tr.text-title td,
     tr.text-title th {
         padding: 2px;
@@ -55,23 +48,6 @@
         font-family: 'calibri-bold';
     }
 
-    .pie {
-        text-align: right;
-        font-size: 12px;
-        line-height: 1;
-        position: fixed;
-        bottom: 0px;
-        left: 0;
-        right: 0;
-        width: calc(100% - 40px);
-        height: 45px;
-        margin-right: 30px;
-        padding: 10px 0;
-        font-family: 'Lucida Sans Unicode';
-        z-index: 1;
-        /* color: #A6A6A6; */
-    }
-
     tr.bitacora-row td,
     tr.bitacora-row th {
         font-size: 14px;
@@ -79,31 +55,54 @@
         padding: 3px 5px;
         text-align: center;
         vertical-align: middle;
-        word-wrap: break-word;
+        /* word-wrap: break-word; */
+    }
+    table {
+    page-break-inside: auto;
+}
+
+tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+}
+    .pie {
+        text-align: right;
+        font-size: 12px;
+        /* line-height: 1; */
+        position: relative;
+        bottom: -100px;
+        left: 0;
+        right: 0;
+        width: calc(100% - 40px);
+        height: 45px;
+        margin-right: 30px;
+        padding: 10px 0;
+        font-family: 'Lucida Sans Unicode';
+       /*  z-index: 1; */
+    }
+
+   @page {
+        margin: 150px 50px 120px 50px;
     }
 </style>
 
 <body>
-<table width="100%" style="border: none;">
-    <tr>
+
+    <div style="width: 100%; position: fixed; overflow: hidden; margin-top: -130px;">
         {{-- Logo Unidad de Inspección --}}
-        <td style="width: 25%; text-align: left; vertical-align: top; padding-left: 0; border:none; ">
-            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" style="height: 80px; padding-top: 10px;">
-        </td>
+        <div style="width: 25%; float: left; text-align: left;">
+            <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Unidad de Inspección" style="height: 100px; width: auto;">
+        </div>
         {{-- Título y Cliente --}}
-        <td style="width: 50%; text-align: center; border:none;">
+        <div style="width: 50%; float: left; text-align: center;">
             <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
                 INVENTARIO DE MEZCAL A GRANEL {{ $title ? "($title)" : '' }}
             </p>
             @php
-                $primerBitacora = $bitacoras->first();
-                $razon = $primerBitacora->empresaBitacora->razon_social ?? 'Sin razón social';
+                $razon = $empresaPadre->razon_social ?? 'Sin razón social';
                 $numeroCliente = 'Sin número cliente';
-                if (
-                    $primerBitacora->empresaBitacora &&
-                    $primerBitacora->empresaBitacora->empresaNumClientes->isNotEmpty()
-                ) {
-                    foreach ($primerBitacora->empresaBitacora->empresaNumClientes as $cliente) {
+                if ($empresaPadre && $empresaPadre->empresaNumClientes->isNotEmpty()) {
+                    foreach ($empresaPadre->empresaNumClientes as $cliente) {
                         if (!empty($cliente->numero_cliente)) {
                             $numeroCliente = $cliente->numero_cliente;
                             break;
@@ -112,15 +111,17 @@
                 }
             @endphp
             <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
-               <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
+                <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
             </p>
-        </td>
-        {{-- Logo OC --}}
-        <td style="width: 25%; text-align: right; vertical-align: top; padding-right: 0; border:none;">
-            <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo OC" style="height: 100px; width:auto;">
-        </td>
-    </tr>
-</table>
+        </div>
+        {{-- Logo OC (comentado) --}}
+        <div style="width: 25%; float: left; text-align: right;">
+            {{-- <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo OC" style="height: 100px; width:auto;"> --}}
+        </div>
+        {{-- Limpiar floats --}}
+        <div style="clear: both;"></div>
+
+    </div>
 
 
 
@@ -223,13 +224,23 @@
 
         </tbody>
     </table>
-
-    <div class="pie">
-        <p>Página 1 de 1 <br>
+{{--     <div class="pie">
+        <p>Página 1 de 1<br>
         F7.1-01-60 Bitácora Inventario de Mezcal a Granel <br>
         Ed. 0 Entrada en vigor: 21-07-2025
         </p>
-    </div>
+    </div> --}}
+    {{-- pie de pagina --}}
+    <script type="text/php">
+      if(isset($pdf)){
+        $pdf->page_script('
+        $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
+        $pdf->text(1580, 1090, "Página $PAGE_NUM de $PAGE_COUNT", $font, 11);
+        $pdf->text(1416, 1105, "F7.1-01-60 Bitácora Inventario de Mezcal a Granel", $font, 11);
+        $pdf->text(1485, 1120, "Ed. 0 Entrada en vigor: 21-07-2025", $font, 11);
+        ');
+      }
+    </script>
 
 </body>
 

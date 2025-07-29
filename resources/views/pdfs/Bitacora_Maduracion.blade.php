@@ -79,19 +79,18 @@
         <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" class="logo-small">
     </div>
 
-    <div> @php
-        $primerBitacora = $bitacoras->first();
-        $razon = $primerBitacora->empresaBitacora->razon_social ?? 'Sin razón social';
-        $numeroCliente = 'Sin número cliente';
-        if ($primerBitacora->empresaBitacora && $primerBitacora->empresaBitacora->empresaNumClientes->isNotEmpty()) {
-            foreach ($primerBitacora->empresaBitacora->empresaNumClientes as $cliente) {
-                if (!empty($cliente->numero_cliente)) {
-                    $numeroCliente = $cliente->numero_cliente;
-                    break;
+    <div>  @php
+            $razon = $empresaPadre->razon_social ?? 'Sin razón social';
+            $numeroCliente = 'Sin número cliente';
+            if ($empresaPadre && $empresaPadre->empresaNumClientes->isNotEmpty()) {
+                foreach ($empresaPadre->empresaNumClientes as $cliente) {
+                    if (!empty($cliente->numero_cliente)) {
+                        $numeroCliente = $cliente->numero_cliente;
+                        break;
+                    }
                 }
             }
-        }
-    @endphp
+        @endphp
         <p class="text">INVENTARIO DE PRODUCTO EN MADURACIÓN <br>
             <span style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold'; color: red;">&nbsp;
                 {{ $numeroCliente }} - {{ $razon }} </span>

@@ -57,7 +57,7 @@ return array(
          */
         "font_cache" => storage_path('fonts/'),
 
-        
+
 
 
         'fonts' => [
@@ -75,7 +75,7 @@ return array(
             ],
 
             'Arial Negrita' => [
-                'R'  => 'arial-negrita.ttf', 
+                'R'  => 'arial-negrita.ttf',
             ]
         ],
 
@@ -257,7 +257,7 @@ return array(
          *
          * @var bool
          */
-        "enable_php" => false,
+        "enable_php" => true,
 
         /**
          * Enable inline Javascript
