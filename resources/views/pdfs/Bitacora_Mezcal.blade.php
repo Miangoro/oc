@@ -196,24 +196,25 @@ tr {
                     <td>{{ $bitacora->volumen_final ?? '----' }}</td>
                     <td>{{ $bitacora->alcohol_final ?? '----' }}</td>
                     <td>{{ $bitacora->observaciones ?? '----' }}</td>
-                    <td>
-                        @if ($bitacora->id_firmante != 0 && $bitacora->firmante)
-                            @php
-                                $firma = $bitacora->firmante->firma;
-                                $rutaFirma = public_path('storage/firmas/' . $firma);
-                            @endphp
+                  <td style="padding: 0; text-align: center;">
+                    @if ($bitacora->id_firmante != 0 && $bitacora->firmante)
+                        @php
+                            $firma = $bitacora->firmante->firma;
+                            $rutaFirma = public_path('storage/firmas/' . $firma);
+                        @endphp
 
-                            @if (!empty($firma) && file_exists($rutaFirma))
-                                <img src="{{ $rutaFirma }}" alt="Firma" height="100">
-                                <br>
-                                <small>{{ $bitacora->firmante->name }}</small>
-                            @else
-                                <span class="text-muted">Firma no encontrada</span>
-                            @endif
+                        @if (!empty($firma) && file_exists($rutaFirma))
+                            <img src="{{ $rutaFirma }}" alt="Firma" style="max-width: 100%; height: auto;">
+                            <br>
+                            <small>{{ $bitacora->firmante->name }}</small>
                         @else
-                            <span>Sin firma</span>
+                            <span class="text-muted">Firma no encontrada</span>
                         @endif
-                    </td>
+                    @else
+                        <span>Sin firma</span>
+                    @endif
+                </td>
+
 
                 </tr>
             @empty
