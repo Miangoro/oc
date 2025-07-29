@@ -29,8 +29,9 @@ use Illuminate\Support\Facades\Auth;//Permiso empresa
 
 
 class PrediosController extends Controller
-{public function UserManagement()
 {
+    
+public function UserManagement() {
     //Permiso de empresa
     $empresaId = null;
     if (Auth::check() && Auth::user()->tipo == 3) {
