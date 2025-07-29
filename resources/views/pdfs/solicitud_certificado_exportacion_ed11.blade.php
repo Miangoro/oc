@@ -109,7 +109,10 @@
             Cancela y sustituye al certificado con clave: {{ $id_sustituye }}
         @endif
         <br>Solicitud de emisión de Certificado para Exportación NOM-070-SCFI-2016 F7.1-01-21<br>
-        Edición 11 Entrada en vigor: 01-07-2025
+        Edición 
+        {{ ($data->fecha_emision) > '2025-07-28' 
+                    ? '12 Entrada en vigor: 29-07-2025' 
+                    : '11 Entrada en vigor: 01-07-2025' }}
     </p>
     <div class="img-footer">
             <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina" width="705">
@@ -180,7 +183,9 @@
             <td style="width: 13%; border:none"></td>
             <td colspan="2" style="text-align: left; width: 16%; border-top:none; border-bottom:none; border-left:none;">
                 El certificado se emitirá una vez verificado el producto, que
-                cuente con hologramas y la UV emita el dictamen
+                cuente con hologramas y la {{ ($data->fecha_emision) > '2025-07-28' 
+                    ? 'UI' 
+                    : 'UV' }} emita el dictamen
                 correspondiente de acuerdo a la NOM que aplique.
             </td>
         </tr>
@@ -412,7 +417,10 @@
             <td style="width: 13%; border-top:none; border-bottom:none; border-right:none;"></td>
             <td style="width: 13%; padding:14px;">X</td>
             <td style="text-align: left; border-top:none; border-bottom:none; border-left:none;">
-                Constancia de cumplimiento de la etiqueta emitida por UV acreditada en información comercial
+                Constancia de cumplimiento de la etiqueta emitida por 
+                {{ ($data->fecha_emision) > '2025-07-28' 
+                    ? 'UI' 
+                    : 'UV' }} acreditada en información comercial
             </td>
         </tr>
         <tr><td colspan="3" style="height: 5px; border-top:none; border-bottom:none"></td></tr><!--SALTO-->
@@ -446,7 +454,10 @@
     <table>
         <tr>
             <td style="padding:3px; text-align: justify; border-bottom: none" colspan="3">
-                La empresa se da por enterada que: la Unidad de Verificación establecerá una vigilancia de cumplimiento con la NOM
+                La empresa se da por enterada que: la Unidad de 
+                {{ ($data->fecha_emision) > '2025-07-28' 
+                    ? 'Inspección' 
+                    : 'Verificación' }} establecerá una vigilancia de cumplimiento con la NOM
                 permanente a sus instalaciones una vez que el Certificado NOM sea emitido. Para validar la información el OC podrá solicitar
                 los documentos originales para su cotejo respectivo.
             </td>

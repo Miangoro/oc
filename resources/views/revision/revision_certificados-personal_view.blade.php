@@ -171,8 +171,8 @@
         <table class="datatables-users table">
             <thead class="table-dark">
                 <tr>
+                    <th></th>
                     <th>#</th>
-                    <th>ID</th>
                     <th>Tipo</th>
                     <th>Certificado</th>
                     <th>Revisor</th>

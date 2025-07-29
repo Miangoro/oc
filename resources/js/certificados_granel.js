@@ -41,17 +41,50 @@ $('#edit_fecha_emision').on('change', function () {
 });
 
 $(function () {
-  // Datatable (jquery)
   let buttons = [];
-  // Si tiene permiso, agregas el botón
+
+  // Botón para agregar certificado
   if (puedeRegistrarCertificadoGranel) {
     buttons.push({
       text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Certificado</span>',
-      className: 'add-new btn btn-primary waves-effect waves-light',
+      className: 'add-new btn btn-primary waves-effect waves-light me-2',
       attr: {
         'data-bs-toggle': 'modal',
         'data-bs-dismiss': 'modal',
         'data-bs-target': '#ModalAgregar'
+      }
+    });
+
+    // Botón para exportar directorio
+    buttons.push({
+      text: '<i class="ri-download-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar directorio</span>',
+      className: 'btn btn-success waves-effect waves-light me-2',
+      action: function (e, dt, node, config) {
+        const selectedEmpresa = $('#empresaGranelSelect').val(); // Ajusta IDs si son distintos
+        const selectedAnio = $('#anioGranelSelect').val();
+        const selectedMes = $('#mesGranelSelect').val();
+        const selectedEstatus = $('#estatusGranelSelect').val();
+
+        const params = new URLSearchParams({
+          id_empresa: selectedEmpresa,
+          anio: selectedAnio,
+          mes: selectedMes,
+          estatus: selectedEstatus
+        }).toString();
+
+        const totalFiltrados = dt.rows({ search: 'applied' }).count();
+        Swal.fire({
+          title: '¿Exportar directorio?',
+          text: `Se exportarán ${totalFiltrados} registros.`,
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Sí, exportar',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/descargar_reporte_directorio?' + params;
+          }
+        });
       }
     });
   }

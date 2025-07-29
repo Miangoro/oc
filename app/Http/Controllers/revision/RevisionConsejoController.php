@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Log;
 
 class RevisionConsejoController extends Controller
 {
-        public function userManagement()
+    public function userManagement()
     {
         //$userId = auth()->id();
         $userId = Auth::id();
@@ -48,28 +48,31 @@ class RevisionConsejoController extends Controller
         return view('revision.revision_certificados_consejo_view', compact('revisor', 'preguntasRevisor', 'preguntasRevisorGranel', 'EstadisticasInstalaciones', 'EstadisticasGranel', 'users', 'noCertificados', 'EstadisticasExportacion'));
     }
 
-        public function index(Request $request)
+
+    public function index(Request $request)
     {
         $columns = [
             1 => 'id_revision',
-            2 => 'decision',
-            3 => 'observaciones',
+            2 => 'tipo',
+            3 => 'num_certificado',
             4 => 'tipo_revision',
+
             5 => 'id_certificado',
-            6 => 'num_certificado',
+            6 => 'observaciones',
             7 => 'created_at',
             8 => 'decision'
         ];
 
         $search = $request->input('search.value');
         $userId = Auth::id();
+
         $tipoCertificado = $request->input('tipo_certificado');
         // Inicializar la consulta para Revisor y RevisorGranel
         $queryRevisor = Revisor::with([
-            'certificadoNormal.dictamen',
-            'certificadoGranel.dictamen',
-            'certificadoExportacion.dictamen'
-        ])->where('tipo_revision', 2); // Solo revisiones de miembro
+            'certificadoNormal',
+            'certificadoGranel',
+            'certificadoExportacion'
+        ])->where('tipo_revision', 2); // Solo revisiones de consejo
 
 
         // Filtrar por usuario si no es admin (ID 8)
@@ -81,30 +84,22 @@ class RevisionConsejoController extends Controller
         }
 
         // Filtros de búsqueda
-       if ($search) {
-      $queryRevisor->where(function ($q) use ($search, $tipoCertificado) {
-          $q->orWhereHas('user', function ($q) use ($search) {
-              $q->where('name', 'LIKE', "%{$search}%");
-          })
-          ->orWhere('observaciones', 'LIKE', "%{$search}%")
-          ->orWhere('tipo_revision', 'LIKE', "%{$search}%");
-
-          // Solo busca en el certificado correspondiente al tipo
-          if ($tipoCertificado == 1) {
-              $q->orWhereHas('certificadoNormal', function ($q) use ($search) {
-                  $q->where('num_certificado', 'LIKE', "%{$search}%");
-              });
-          } elseif ($tipoCertificado == 2) {
-              $q->orWhereHas('certificadoGranel', function ($q) use ($search) {
-                  $q->where('num_certificado', 'LIKE', "%{$search}%");
-              });
-          } elseif ($tipoCertificado == 3) {
-              $q->orWhereHas('certificadoExportacion', function ($q) use ($search) {
-                  $q->where('num_certificado', 'LIKE', "%{$search}%");
-              });
-          }
-      });
-  }
+        if ($search) {
+            $queryRevisor->where(function ($q) use ($search) {
+                $q->orWhereHas('user', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('certificadoNormal', function ($sub) use ($search) {
+                    $sub->where('num_certificado', 'like', "%{$search}%");
+                })
+                ->orWhereHas('certificadoGranel', function ($sub) use ($search) {
+                    $sub->where('num_certificado', 'like', "%{$search}%");
+                })
+                ->orWhereHas('certificadoExportacion', function ($sub) use ($search) {
+                    $sub->where('num_certificado', 'like', "%{$search}%");
+                });
+            });
+        }
 
         // Paginación y ordenación
         $limit = $request->input('length');
@@ -160,13 +155,10 @@ class RevisionConsejoController extends Controller
 
             $numDictamen = $revisor->certificado && $revisor->certificado->dictamen ? $revisor->certificado->dictamen->num_dictamen : null;
             $fechaVigencia = $revisor->certificado ? $revisor->certificado->fecha_vigencia : null;
-            $fechaVencimiento = $revisor->certificado ? $revisor->certificado->fecha_vencimiento : null;
-            $fechaCreacion = $revisor->created_at;
-            $fechaActualizacion = $revisor->updated_at;
 
             return [
-                'id_revision' => $revisor->id_revision,
                 'fake_id' => ++$start,
+                'id_revision' => $revisor->id_revision,
                 'id_revisor' => $nameRevisor,
                 'id_revisor2' => $revisor->id_revisor2,
                 'observaciones' => $revisor->observaciones,
@@ -175,8 +167,6 @@ class RevisionConsejoController extends Controller
                 'tipo_dictamen' => $tipoDictamen,
                 'num_dictamen' => $numDictamen,
                 'fecha_vigencia' => Helpers::formatearFecha($fechaVigencia),
-                'fecha_vencimiento' => Helpers::formatearFecha($fechaVencimiento),
-                'fecha_creacion' => Helpers::formatearFecha($fechaCreacion),
                 'created_at' => Helpers::formatearFechaHora($revisor->created_at),
                 'updated_at' => Helpers::formatearFechaHora($revisor->updated_at),
                 'decision' => $revisor->decision,

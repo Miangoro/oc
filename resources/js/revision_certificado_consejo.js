@@ -41,8 +41,10 @@ $(function () {
             return `<span>${full.fake_id}</span>`;
           }
         },
-        {
+        {//tipo certificado
           targets: 2,
+          searchable: true,
+          orderable: false,
           render: function (data, type, row) {
             var tipoRevision = row['tipo_revision'];
             var icono = '';
@@ -65,9 +67,11 @@ $(function () {
             return icono;
           }
         },  
-        {
-        targets: 3,
-        render: function (data, type, full, meta) {
+        {///num_certificado
+          targets: 3,
+          searchable: true,
+          orderable: false,
+          render: function (data, type, full, meta) {
           const $num_certificado = full['num_certificado'];
           const reexpedido = full['reexpedido'];
             const combinado = full['combinado'];
@@ -93,8 +97,10 @@ $(function () {
         }
       },
 
-        {
+        {//Revisor
           targets: 4,
+          searchable: true,
+          orderable: false,
           render: function (data, type, full, meta) {
             var $id_revisor = full['id_revisor'];
             return '<span class="user-email">' + $id_revisor + '</span>';
@@ -103,6 +109,8 @@ $(function () {
 
         {
           targets: 5,
+          searchable: false,
+          orderable: false,
           render: function (data, type, full, meta) {
             var $created_at = full['created_at'];
             return '<span class="user-email">' + $created_at + '</span>';
@@ -110,6 +118,8 @@ $(function () {
         },
         {
           targets: 6,
+          searchable: false,
+          orderable: false,
           render: function (data, type, full, meta) {
             var $updated_at = full['updated_at'];
             return '<span class="user-email">' + $updated_at + '</span>';
@@ -176,6 +186,8 @@ $(function () {
         {
           // Actions
           targets: 9,
+          searchable: false,
+          orderable: false,
           title: 'Acciones',
           render: function (data, type, full, meta) {
             const puedeRegistrar  = window.puedeAgregarElUsuario;

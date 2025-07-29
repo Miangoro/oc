@@ -35,10 +35,8 @@ class RevisionPersonalController extends Controller
         $revisor = $revisorQuery->first();
 
 
-
         //EXPORTACION
         $EstadisticasExportacion = $this->calcularCertificados($userId, 3);
-
 
         $users = User::where('tipo', 1)->get(); // Select Aprobacion
         $preguntasRevisor = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 1)->get(); // Preguntas Instalaciones
@@ -48,15 +46,17 @@ class RevisionPersonalController extends Controller
         return view('revision.revision_certificados-personal_view', compact('revisor', 'preguntasRevisor', 'preguntasRevisorGranel', 'EstadisticasInstalaciones', 'EstadisticasGranel', 'users', 'noCertificados', 'EstadisticasExportacion'));
     }
 
+
     public function index(Request $request)
     {
         $columns = [
             1 => 'id_revision',
-            2 => 'decision',
-            3 => 'observaciones',
+            2 => 'tipo',
+            3 => 'num_certificado',
             4 => 'tipo_revision',
+
             5 => 'id_certificado',
-            6 => 'num_certificado',
+            6 => 'observaciones',
             7 => 'created_at',
             8 => 'decision'
         ];
@@ -66,11 +66,16 @@ class RevisionPersonalController extends Controller
 
         $tipoCertificado = $request->input('tipo_certificado');
         // Inicializar la consulta para Revisor y RevisorGranel
-        $queryRevisor = Revisor::with([
+        /*$queryRevisor = Revisor::with([
             'certificadoNormal.dictamen',
             'certificadoGranel.dictamen',
             'certificadoExportacion.dictamen'
-        ])->where('tipo_revision', 1); // Tipo Revisor
+        ])->where('tipo_revision', 1);*/
+        $queryRevisor = Revisor::with([
+            'certificadoNormal',
+            'certificadoGranel',
+            'certificadoExportacion'
+        ])->where('tipo_revision', 1); // Solo revisiones de OC
 
 
         // Filtrar por usuario si no es admin (ID 8)
@@ -82,39 +87,31 @@ class RevisionPersonalController extends Controller
         }
 
         // Filtros de búsqueda
-       if ($search) {
-      $queryRevisor->where(function ($q) use ($search, $tipoCertificado) {
-          $q->orWhereHas('user', function ($q) use ($search) {
-              $q->where('name', 'LIKE', "%{$search}%");
-          })
-          ->orWhere('observaciones', 'LIKE', "%{$search}%")
-          ->orWhere('tipo_revision', 'LIKE', "%{$search}%");
-
-          // Solo busca en el certificado correspondiente al tipo
-          if ($tipoCertificado == 1) {
-              $q->orWhereHas('certificadoNormal', function ($q) use ($search) {
-                  $q->where('num_certificado', 'LIKE', "%{$search}%");
-              });
-          } elseif ($tipoCertificado == 2) {
-              $q->orWhereHas('certificadoGranel', function ($q) use ($search) {
-                  $q->where('num_certificado', 'LIKE', "%{$search}%");
-              });
-          } elseif ($tipoCertificado == 3) {
-              $q->orWhereHas('certificadoExportacion', function ($q) use ($search) {
-                  $q->where('num_certificado', 'LIKE', "%{$search}%");
-              });
-          }
-      });
-  }
+        if ($search) {
+            $queryRevisor->where(function ($q) use ($search) {
+                $q->orWhereHas('user', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('certificadoNormal', function ($sub) use ($search) {
+                    $sub->where('num_certificado', 'like', "%{$search}%");
+                })
+                ->orWhereHas('certificadoGranel', function ($sub) use ($search) {
+                    $sub->where('num_certificado', 'like', "%{$search}%");
+                })
+                ->orWhereHas('certificadoExportacion', function ($sub) use ($search) {
+                    $sub->where('num_certificado', 'like', "%{$search}%");
+                });
+            });
+        }
 
         // Paginación y ordenación
         $limit = $request->input('length');
         $start = $request->input('start');
         $orderIndex = $request->input('order.0.column');
         $orderDir = $request->input('order.0.dir');
-
         $order = $columns[$orderIndex] ?? 'id_revision';
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
+        
 
         // Obtener los totales de registros por separado
         $totalDataRevisor = $queryRevisor->count();
@@ -161,13 +158,12 @@ class RevisionPersonalController extends Controller
 
             $numDictamen = $revisor->certificado && $revisor->certificado->dictamen ? $revisor->certificado->dictamen->num_dictamen : null;
             $fechaVigencia = $revisor->certificado ? $revisor->certificado->fecha_vigencia : null;
-            $fechaVencimiento = $revisor->certificado ? $revisor->certificado->fecha_vencimiento : null;
+            /*$fechaVencimiento = $revisor->certificado ? $revisor->certificado->fecha_vencimiento : null;
             $fechaCreacion = $revisor->created_at;
-            $fechaActualizacion = $revisor->updated_at;
-
+            $fechaActualizacion = $revisor->updated_at;*/
             return [
-                'id_revision' => $revisor->id_revision,
                 'fake_id' => ++$start,
+                'id_revision' => $revisor->id_revision,
                 'id_revisor' => $nameRevisor,
                 'id_revisor2' => $revisor->id_revisor2,
                 'observaciones' => $revisor->observaciones,
@@ -176,8 +172,8 @@ class RevisionPersonalController extends Controller
                 'tipo_dictamen' => $tipoDictamen,
                 'num_dictamen' => $numDictamen,
                 'fecha_vigencia' => Helpers::formatearFecha($fechaVigencia),
-                'fecha_vencimiento' => Helpers::formatearFecha($fechaVencimiento),
-                'fecha_creacion' => Helpers::formatearFecha($fechaCreacion),
+                //'fecha_vencimiento' => Helpers::formatearFecha($fechaVencimiento),
+                //'fecha_creacion' => Helpers::formatearFecha($fechaCreacion),
                 'created_at' => Helpers::formatearFechaHora($revisor->created_at),
                 'updated_at' => Helpers::formatearFechaHora($revisor->updated_at),
                 'decision' => $revisor->decision,
