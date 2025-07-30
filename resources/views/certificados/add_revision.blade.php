@@ -732,11 +732,9 @@
                                                     $urlDom = '/files/'.$numeroCliente."/".$url;*/
                                                     $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa
                                                         ?? $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->empresa;
-
                                                     $empresa2 = $empresa; // Ya está null si no existe, no hace falta if
 
                                                     $numeroCliente = $empresa2?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
-
                                                     $url = null;
                                                     if ($empresa2 && $empresa2->id_empresa) {
                                                         $url = \App\Models\documentacion_url::where('id_empresa', $empresa2->id_empresa)
@@ -758,8 +756,7 @@
                                              @elseif($pregunta->filtro == 'convenio_corresponsabilidad')
                                             <td>
                                                  @php
-                                                     
-                                                    $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->dictamen->inspeccione->solicitud->empresa ?? null;
+                                                    /*$empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->dictamen->inspeccione->solicitud->empresa ?? null;
                                                     if(!$empresa){
                                                      $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa ?? null;
                                                     }
@@ -768,8 +765,21 @@
                                                     ->where('id_documento', 82)
                                                     ->value('url');
 
+                                                    $urlDom = '/files/'.$numeroCliente."/".$url;*/
+                                                    $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa
+                                                        ?? $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->empresa;
+                                                    $empresa2 = $empresa; // Ya está null si no existe, no hace falta if
 
-                                                    $urlDom = '/files/'.$numeroCliente."/".$url;
+                                                    $numeroCliente = $empresa2?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
+                                                    $url = null;
+                                                    if ($empresa2 && $empresa2->id_empresa) {
+                                                        $url = \App\Models\documentacion_url::where('id_empresa', $empresa2->id_empresa)
+                                                            ->where('id_documento', 82)
+                                                            ->value('url');
+                                                    }
+
+                                                    $urlDom = $numeroCliente && $url ? '/files/' .$numeroCliente. "/" . $url : null;
+
                                                 @endphp
                                              
                                                 @if ($url && !in_array($empresa->convenio_corresp, ['NA', 'N/A', ''])) 
@@ -777,7 +787,7 @@
                                                         <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
                                                 @else
-                                                    <span class="text-muted">Sin documento {{ $empresa->convenio_corresp }}</span>
+                                                    <span class="text-muted">Sin documento {{ $empresa2->convenio_corresp }}</span>
                                                 @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'categoria')
