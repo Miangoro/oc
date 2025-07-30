@@ -211,6 +211,7 @@ class BitacoraHologramasComercializadorController extends Controller
      public function PDFBitacoraHologramas(Request $request)
     {
         $empresaId = $request->query('empresa');
+        $empresaSeleccionada = empresa::with('empresaNumClientes')->find($empresaId);
         $title = 'COMERCIALIZADOR'; // Cambia a 'Envasador' si es necesario
         $idsEmpresas = [$empresaId];
         if ($empresaId) {
@@ -241,7 +242,7 @@ class BitacoraHologramasComercializadorController extends Controller
         }) */
         ->orderBy('id', 'desc')
         ->get();
-        $empresaPadre = null;
+        /* $empresaPadre = null;
         if ($empresaId) {
             // Ver si la empresa enviada es una maquiladora
             $esMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)->exists();
@@ -256,13 +257,13 @@ class BitacoraHologramasComercializadorController extends Controller
                 // Es empresa padre
                 $empresaPadre = empresa::with('empresaNumClientes')->find($empresaId);
             }
-        }
+        } */
           if ($bitacoras->isEmpty()) {
               return response()->json([
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
               ], 404);
           }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Hologramas', compact('bitacoras', 'title', 'empresaPadre'))
+        $pdf = Pdf::loadView('pdfs.Bitacora_Hologramas', compact('bitacoras', 'title', 'empresaSeleccionada'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
         return $pdf->stream('Bitácora de control de hologramas de comercializador.pdf');
     }

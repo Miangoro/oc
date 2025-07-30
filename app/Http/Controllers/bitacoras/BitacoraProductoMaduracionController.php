@@ -252,6 +252,7 @@ class BitacoraProductoMaduracionController extends Controller
      public function PDFProductoMaduracion(Request $request)
     {
         $empresaId = $request->query('empresa');
+        $empresaSeleccionada = empresa::with('empresaNumClientes')->find($empresaId);
         $title = 'PRODUCTOR'; // Cambia a 'Envasador' si es necesario
         $idsEmpresas = [$empresaId];
         if ($empresaId) {
@@ -276,7 +277,7 @@ class BitacoraProductoMaduracionController extends Controller
         }) */
         ->orderBy('id', 'desc')
         ->get();
-        $empresaPadre = null;
+       /*  $empresaPadre = null;
         if ($empresaId) {
             // Ver si la empresa enviada es una maquiladora
             $esMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)->exists();
@@ -291,13 +292,13 @@ class BitacoraProductoMaduracionController extends Controller
                 // Es empresa padre
                 $empresaPadre = empresa::with('empresaNumClientes')->find($empresaId);
             }
-        }
+        } */
           if ($bitacoras->isEmpty()) {
               return response()->json([
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
               ], 404);
           }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Maduracion', compact('bitacoras', 'title', 'empresaPadre'))
+        $pdf = Pdf::loadView('pdfs.Bitacora_Maduracion', compact('bitacoras', 'title', 'empresaSeleccionada'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
         return $pdf->stream('Bitácora Producto en Maduración.pdf');
     }

@@ -282,6 +282,7 @@ class BitacoraProductoEtiquetaController extends Controller
      public function PDFProductoEtiqueta(Request $request)
     {
         $empresaId = $request->query('empresa');
+        $empresaSeleccionada = empresa::with('empresaNumClientes')->find($empresaId);
         $idsEmpresas = [$empresaId];
         if ($empresaId) {
             $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
@@ -306,7 +307,7 @@ class BitacoraProductoEtiquetaController extends Controller
           })
         ->orderBy('id', 'desc')
         ->get();
-        $empresaPadre = null;
+       /*  $empresaPadre = null;
         if ($empresaId) {
             // Ver si la empresa enviada es una maquiladora
             $esMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)->exists();
@@ -321,13 +322,13 @@ class BitacoraProductoEtiquetaController extends Controller
                 // Es empresa padre
                 $empresaPadre = empresa::with('empresaNumClientes')->find($empresaId);
             }
-        }
+        } */
           if ($bitacoras->isEmpty()) {
               return response()->json([
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
               ], 404);
           }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Etiquetas', compact('bitacoras', 'empresaPadre'))
+        $pdf = Pdf::loadView('pdfs.Bitacora_Etiquetas', compact('bitacoras', 'empresaSeleccionada'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
         return $pdf->stream('Bitácora de inventario de producto terminado.pdf');
     }

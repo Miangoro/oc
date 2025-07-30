@@ -111,10 +111,11 @@
                 INVENTARIO DE PRODUCTO ENVASADO (SIN ETIQUETA)
             </p>
             @php
-                $razon = $empresaPadre->razon_social ?? 'Sin razón social';
+                $razon = $empresaSeleccionada->razon_social ?? 'Sin razón social';
                 $numeroCliente = 'Sin número cliente';
-                if ($empresaPadre && $empresaPadre->empresaNumClientes->isNotEmpty()) {
-                    foreach ($empresaPadre->empresaNumClientes as $cliente) {
+
+                if ($empresaSeleccionada && $empresaSeleccionada->empresaNumClientes->isNotEmpty()) {
+                    foreach ($empresaSeleccionada->empresaNumClientes as $cliente) {
                         if (!empty($cliente->numero_cliente)) {
                             $numeroCliente = $cliente->numero_cliente;
                             break;
