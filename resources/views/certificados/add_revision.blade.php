@@ -714,18 +714,37 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'dom')
                                             <td>
-                                                 @php
+                                                 @php  
+                                                 /* $DOM = $lotes[0]->lotesGranel->first()?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa?->registro_productor
+                                                    ?? $lotes[0]->lotesGranel->first()?->empresa?->registro_productor
+                                                    ?? 'NA'; */
                                                    
-                                                    $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->dictamen->inspeccione->solicitud->empresa ?? null;
+                                                    /*$empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->dictamen->inspeccione->solicitud->empresa ?? null;
                                                     if(!$empresa){
                                                      $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa ?? null;
                                                     }
+                                                    
                                                     $numeroCliente = $empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente ?? null;
                                                     $url = \App\Models\documentacion_url::where('id_empresa', $empresa->id_empresa)
                                                     ->where('id_documento', 83)
                                                     ->value('url');
 
-                                                    $urlDom = '/files/'.$numeroCliente."/".$url;
+                                                    $urlDom = '/files/'.$numeroCliente."/".$url;*/
+                                                    $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa
+                                                        ?? $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->empresa;
+
+                                                    $empresa2 = $empresa; // Ya está null si no existe, no hace falta if
+
+                                                    $numeroCliente = $empresa2?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
+
+                                                    $url = null;
+                                                    if ($empresa2 && $empresa2->id_empresa) {
+                                                        $url = \App\Models\documentacion_url::where('id_empresa', $empresa2->id_empresa)
+                                                            ->where('id_documento', 83)
+                                                            ->value('url');
+                                                    }
+
+                                                    $urlDom = $numeroCliente && $url ? '/files/' .$numeroCliente. "/" . $url : null;
                                                 @endphp
                                              
                                                 @if ($url)
