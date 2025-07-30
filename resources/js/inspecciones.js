@@ -27,7 +27,17 @@ $(function () {
     },
     columns: [
       { data: '' },
-      { data: 'folio' },
+      { //data: 'folio'
+        render: function (data, type, full, meta) { 
+          var $folio = full['folio'];
+          var $id = full['id_solicitud'];
+
+          return `<b class="text-primary">${$folio}</b> <br>
+            <i data-id="${$id}" data-folio="${$folio}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>
+            `;
+        }
+       },
+
       {
         data: 'num_servicio',
         render: function (data, type, row) {
@@ -568,6 +578,37 @@ $(function () {
     });
   }
   initializeSelect2(select2Elements);
+
+
+
+///FORMATO PDF SOLICITUD SERVICIOS
+$(document).on('click', '.pdfSolicitud', function () {
+  var id = $(this).data('id');
+  var folio = $(this).data('folio');
+  var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+
+  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+  spinner.show();
+  iframe.hide();
+
+  //Cargar el PDF con el ID
+  iframe.attr('src', pdfUrl);
+  //Configurar el botón para abrir el PDF en una nueva pestaña
+  $("#NewPestana").attr('href', pdfUrl).show();
+
+  $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
+  $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
+  //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+  iframe.on('load', function () {
+    spinner.hide();
+    iframe.show();
+  });
+});
+
+
+
 
   // Configuración CSRF para Laravel
   $.ajaxSetup({
@@ -2319,5 +2360,9 @@ $(function () {
       }
     });
   });
-  //end
-});
+
+
+
+
+  
+});//end function

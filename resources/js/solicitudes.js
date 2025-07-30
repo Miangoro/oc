@@ -67,9 +67,13 @@ $(function () {
       { data: '' },
       { data: 'fake_id' },
       {
-        data: 'folio',
-        render: function (data, type, row) {
-          return `<span style="font-weight: bold; font-size: 1.1em;">${data}</span>`;
+        //data: 'folio',
+        render: function (data, type, full, meta) { 
+          var $folio = full['folio'];
+          var $id = full['id_solicitud'];
+          return `<span style="font-weight: bold; font-size: 1.1em;">${$folio}</span>
+            <i data-id="${$id}" data-folio="${$folio}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>
+          `;
         }
       },
       { data: 'num_servicio' },
@@ -239,7 +243,6 @@ $(function () {
         }
       },
       { data: 'fecha_servicio' },
-      { data: '' },
       {
         data: 'estatus',
         render: function (data, type, row) {
@@ -361,12 +364,12 @@ $(function () {
           return $row_output;
         }
       },
-      {
+      {//caracteristicas
         targets: 10,
         searchable: false,
         orderable: false
       },
-      {
+      /*{
         targets: 12,
         className: 'text-center',
         searchable: false,
@@ -374,7 +377,7 @@ $(function () {
         render: function (data, type, full, meta) {
           return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['folio']}"></i>`;
         }
-      },
+      },*/
       {///columna 'estatus'
         targets: 13,
         orderable: false,
@@ -567,6 +570,36 @@ $(function () {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
   });
+
+
+
+///FORMATO PDF SOLICITUD SERVICIOS
+$(document).on('click', '.pdfSolicitud', function () {
+  var id = $(this).data('id');
+  var folio = $(this).data('folio');
+  var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+
+  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+  spinner.show();
+  iframe.hide();
+
+  //Cargar el PDF con el ID
+  iframe.attr('src', pdfUrl);
+  //Configurar el botón para abrir el PDF en una nueva pestaña
+  $("#NewPestana").attr('href', pdfUrl).show();
+
+  $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
+  $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
+  //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+  iframe.on('load', function () {
+    spinner.hide();
+    iframe.show();
+  });
+});
+
+
 
   // Eliminar registro
   $(document).on('click', '.delete-recordes', function () {

@@ -191,7 +191,7 @@ class inspeccionesController extends Controller
                 $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
                 $nestedData['id_acta'] = $solicitud->inspeccion->actas_inspeccion->id_acta ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids  ?? 'N/A';
-                $nestedData['folio'] = '<b class="text-primary">' . $solicitud->folio . '</b>';
+                $nestedData['folio'] = $solicitud->folio ?? '';
                 $nestedData['folio_info'] = $solicitud->folio;
                 $nestedData['num_servicio_info'] = $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
                 $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
