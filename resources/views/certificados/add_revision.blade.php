@@ -774,11 +774,18 @@
                                                     $url = null;
                                                     if ($empresa2 && $empresa2->id_empresa) {
                                                         $url = \App\Models\documentacion_url::where('id_empresa', $empresa2->id_empresa)
-                                                            ->where('id_documento', 41)///convenio corres MFM
+                                                            ->where('id_documento', 82) // Convenio correspondiente MFM
                                                             ->value('url');
+
+                                                        // Si no encontró el documento con id 82, intenta con id 41
+                                                        if (!$url) {
+                                                            $url = \App\Models\documentacion_url::where('id_empresa', $empresa2->id_empresa)
+                                                                ->where('id_documento', 41)
+                                                                ->value('url');
+                                                        }
                                                     }
 
-                                                    $urlDom = $numeroCliente && $url ? '/files/' .$numeroCliente. "/" . $url : null;
+                                                    $urlDom = $numeroCliente && $url ? '/files/' . $numeroCliente . "/" . $url : null;
 
                                                 @endphp
                                              
