@@ -782,7 +782,7 @@
 
                                                 @endphp
                                              
-                                                @if ($url && !in_array($empresa->convenio_corresp, ['NA', 'N/A', ''])) 
+                                                @if ($url && !in_array($empresa2->convenio_corresp, ['NA', 'N/A', ''])) 
                                                     <a target="_blank" href="{{ $urlDom }}">
                                                         <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
