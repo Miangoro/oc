@@ -145,6 +145,7 @@
                         <th>Domicilio de inspección</th>
                         <th>Fecha y hora de visita estimada</th>
                         <th>Inspector asignado</th>
+                        <th>Características</th>
                         <th>Fecha y hora de inspección</th>
                         <th>Acta</th>
                         <th>Acciones</th>

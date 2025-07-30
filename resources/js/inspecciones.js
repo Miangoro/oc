@@ -27,7 +27,17 @@ $(function () {
     },
     columns: [
       { data: '' },
-      { data: 'folio' },
+      { //data: 'folio'
+        render: function (data, type, full, meta) { 
+          var $folio = full['folio'];
+          var $id = full['id_solicitud'];
+
+          return `<b class="text-primary">${$folio}</b> <br>
+            <i data-id="${$id}" data-folio="${$folio}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>
+            `;
+        }
+       },
+
       {
         data: 'num_servicio',
         render: function (data, type, row) {
@@ -91,7 +101,147 @@ $(function () {
           return $row_output;
         }
       },
-      { data: 'fecha_servicio' },
+
+      {///caracteristicas
+        data: null,
+        render: function (data) {
+          switch (data.id_tipo) {
+            case 1: //Muestreo de agave
+              return `
+            <br>
+            <span class="fw-bold small">Guías de agave:</span>
+            <span class="small"> ${data.guias || 'N/A'}</span>
+          `;
+
+            case 2: //Vigilancia en producción de lote
+              return `<br><span class="fw-bold small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold small">Nombre del predio:</span><span class="small"> ${data.nombre_predio || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold small">Art:</span><span class="small"> ${data.art || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Etapa:</span><span class="small"> ${data.etapa || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Fecha de Corte:</span>
+                      <span class="small">${data.fecha_corte || 'N/A'}</span>
+                      `;
+            case 3:
+              return `<br><span class="fw-bold  small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Tipo:</span><span class="small">${data.id_tipo_maguey || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Certificado de lote:</span><span class="small"> ${data.id_certificado_muestreo || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
+                      `;
+            case 4:
+              return `<br><span class="fw-bold  small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria_traslado || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase_traslado || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_traslado || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Volumen actual:</span><span class="small"> ${data.id_vol_actual || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Volumen restante:</span><span class="small"> ${data.id_vol_res || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis_traslado || 'N/A'}</span>
+                      `;
+            case 5:
+              return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
+                      <br><span class="fw-bold  small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
+            case 7:
+              return `<br><span class="fw-bold  small">Granel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis_barricada || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.tipo_lote || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
+                       <br>
+                      <span class="fw-bold  small">Volumen ingresado:</span><span class="small"> ${data.volumen_ingresado || 'N/A'}</span>
+                      `;
+            case 8:
+              return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
+                      `;
+            case 9:
+              return `<br><span class="fw-bold  small">Granel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.tipo_lote_lib || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
+                      `;
+            case 10:
+              return `<br><span class="fw-bold small">Punto de reunión:</span><span class="small"> ${data.punto_reunion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
+            case 11:
+              return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Granel:</span><span class="small"> ${data.lote_granel || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Marca:</span><span class="small"> ${data.marca || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Cont. Neto.:</span><span class="small"> ${data.presentacion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Cajas:</span><span class="small"> ${data.cajas || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold  small">Botellas:</span><span class="small"> ${data.botellas || 'N/A'}</span>
+                       <br>
+                       <span class="fw-bold  small">Proforma:</span><span class="small"> ${data.no_pedido || 'N/A'}</span>
+                       <br>
+                      <span class="fw-bold  small">Certificado:</span><span class="small"> ${data.certificado_exportacion || 'N/A'}</span>
+                       ${data.combinado}`;
+            case 14:
+              return `<span class="fw-bold  small">
+                  ${data.renovacion === 'si' ? 'Es renovación' : 'No es renovación'}
+              </span>`;
+
+            default:
+              return `<br><span class="fw-bold text-dark small">Información no disponible</span>`;
+          }
+        }
+      },
+
+      { data: 'fecha_servicio' },///9
       { data: '' },
       { data: 'action' }
     ],
@@ -128,9 +278,19 @@ $(function () {
          }
          }
        },*/
-
-      {
+       {///caracteristicas
+        targets: 8,
+        searchable: false,
+        orderable: false
+      },
+      {///fecha_inspeccion
         targets: 9,
+        searchable: false,
+        orderable: false
+      },
+
+      {///acta
+        targets: 10,
         className: 'text-center',
         render: function (data, type, full, meta) {
           const acta = full['url_acta'];
@@ -418,6 +578,37 @@ $(function () {
     });
   }
   initializeSelect2(select2Elements);
+
+
+
+///FORMATO PDF SOLICITUD SERVICIOS
+$(document).on('click', '.pdfSolicitud', function () {
+  var id = $(this).data('id');
+  var folio = $(this).data('folio');
+  var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+
+  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+  spinner.show();
+  iframe.hide();
+
+  //Cargar el PDF con el ID
+  iframe.attr('src', pdfUrl);
+  //Configurar el botón para abrir el PDF en una nueva pestaña
+  $("#NewPestana").attr('href', pdfUrl).show();
+
+  $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
+  $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
+  //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+  iframe.on('load', function () {
+    spinner.hide();
+    iframe.show();
+  });
+});
+
+
+
 
   // Configuración CSRF para Laravel
   $.ajaxSetup({
@@ -2169,5 +2360,9 @@ $(function () {
       }
     });
   });
-  //end
-});
+
+
+
+
+  
+});//end function
