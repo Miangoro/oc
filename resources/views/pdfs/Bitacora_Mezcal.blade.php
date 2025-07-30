@@ -98,18 +98,20 @@
             <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
                 INVENTARIO DE MEZCAL A GRANEL {{ $title ? "($title)" : '' }}
             </p>
-            @php
-                $razon = $empresaPadre->razon_social ?? 'Sin razón social';
-                $numeroCliente = 'Sin número cliente';
-                if ($empresaPadre && $empresaPadre->empresaNumClientes->isNotEmpty()) {
-                    foreach ($empresaPadre->empresaNumClientes as $cliente) {
-                        if (!empty($cliente->numero_cliente)) {
-                            $numeroCliente = $cliente->numero_cliente;
-                            break;
-                        }
-                    }
-                }
-            @endphp
+          @php
+    $first = $bitacoras->first(); // primera bitácora para obtener datos de empresa
+    $razon = $first->empresaBitacora->razon_social ?? 'Sin razón social';
+    $numeroCliente = 'Sin número cliente';
+
+    if ($first->empresaBitacora && $first->empresaBitacora->empresaNumClientes->isNotEmpty()) {
+        foreach ($first->empresaBitacora->empresaNumClientes as $cliente) {
+            if (!empty($cliente->numero_cliente)) {
+                $numeroCliente = $cliente->numero_cliente;
+                break;
+            }
+        }
+    }
+@endphp
             <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
                 <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
             </p>

@@ -253,8 +253,7 @@ class BitacoraMezcalController extends Controller
         $empresaId = $request->query('empresa');
         $instalacionId = $request->query('instalacion');
         $title = 'PRODUCTOR'; // Cambia a 'Envasador' si es necesario
-        $idsEmpresas = [$empresaId];
-        if ($empresaId) {
+       /*  if ($empresaId) {
             $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
                 ->pluck('id_maquilador')
                 ->toArray();
@@ -262,14 +261,15 @@ class BitacoraMezcalController extends Controller
             if (count($idsMaquiladores)) {
                 $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
             }
-        }
+        } */
         $bitacoras = BitacoraMezcal::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
         ])->whereIn('tipo', [1, 3])
-        ->when($empresaId, function ($query) use ($idsEmpresas) {
-              $query->whereIn('id_empresa', $idsEmpresas);
+        ->when($empresaId, function ($query) use ($empresaId) {
+              $query->where('id_empresa', $empresaId);
           })
+
         /* ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
             $query->where('id_empresa', $empresaId);
             if ($instalacionId) {
@@ -278,35 +278,17 @@ class BitacoraMezcalController extends Controller
         }) */
         ->orderBy('id', 'desc')
         ->get();
-        $empresaPadre = null;
-        if ($empresaId) {
-            // Ver si la empresa enviada es una maquiladora
-            $esMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)->exists();
-
-            if ($esMaquiladora) {
-                // Buscar su empresa padre
-                $idMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)
-                    ->value('id_maquiladora');
-
-                $empresaPadre = empresa::with('empresaNumClientes')->find($idMaquiladora);
-            } else {
-                // Es empresa padre
-                $empresaPadre = empresa::with('empresaNumClientes')->find($empresaId);
-            }
-        }
           if ($bitacoras->isEmpty()) {
               return response()->json([
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
               ], 404);
           }
 
-        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaPadre'))
+        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title'))
         ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
 
 
         return $pdf->stream('Bitácora Mezcal a Granel.pdf');
-
-
     }
 
 
