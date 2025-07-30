@@ -175,10 +175,21 @@ class solicitudesController extends Controller
             $solicitudes = $query->offset($start)
                 ->limit($limit)
                 ->get();
+
                         } else {
-                            // Consulta con búsqueda
+                            //COLSULTA EL BUSCADOR
                             $search = $request->input('search.value');
 
+/*
+talvez de caratc. soli
+volumen restante
+volumen total
+
+
+viene de caracteristicas soli
+botellas
+presentacion
+*/
 //Buscar lote envasado -> granel
 $loteIds = DB::table('lotes_envasado')
 ->select('id_lote_envasado')
@@ -195,16 +206,20 @@ $loteIds = DB::table('lotes_envasado')
 //Buscar lote envasado
 $loteEnvIds = DB::table('lotes_envasado')
 ->select('id_lote_envasado')
-->where('nombre', 'LIKE', "%{$search}%")
+->where(function ($query) use ($search) {
+    $query->where('nombre', 'LIKE', "%{$search}%")
+        ->orWhere('id_marca', 'LIKE', "%{$search}%");
+    })
 ->pluck('id_lote_envasado')
 ->toArray();
 
-// Buscar por lote granel
+// Buscar lote granel
 $loteGranelIds = DB::table('lotes_granel')
 ->select('id_lote_granel')
 ->where(function ($query) use ($search) {
     $query->where('nombre_lote', 'LIKE', "%{$search}%")
         ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+        ->orWhere('cont_alc', 'LIKE', "%{$search}%")
         ->orWhere('volumen', 'LIKE', "%{$search}%")
         ->orWhere('volumen_restante', 'LIKE', "%{$search}%")
         ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
@@ -212,7 +227,7 @@ $loteGranelIds = DB::table('lotes_granel')
 ->pluck('id_lote_granel')
 ->toArray();
 
-                            $solicitudes = solicitudesModel::with([
+                    $solicitudes = solicitudesModel::with([
                         'tipo_solicitud',
                         'empresa',
                         'instalacion',
@@ -249,18 +264,17 @@ $loteGranelIds = DB::table('lotes_granel')
                         foreach ($loteIds as $idLote) {
                             $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
                         }
-
                         //Buscar lote envasado
                         foreach ($loteEnvIds as $idLoteEnv) {
                             $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLoteEnv . '"%');
                         }
-
                         //Buscar lote granel
                         foreach ($loteGranelIds as $idLoteGran) {
                             $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
                         }
 
                     });
+
 
                 if ($empresaId) {
                     $solicitudes->where('id_empresa', $empresaId);
@@ -297,7 +311,10 @@ $loteIds = DB::table('lotes_envasado')
 //Buscar lote envasado
 $loteEnvIds = DB::table('lotes_envasado')
 ->select('id_lote_envasado')
-->where('nombre', 'LIKE', "%{$search}%")
+->where(function ($query) use ($search) {
+    $query->where('nombre', 'LIKE', "%{$search}%")
+        ->orWhere('id_marca', 'LIKE', "%{$search}%");
+    })
 ->pluck('id_lote_envasado')
 ->toArray();
 
@@ -307,6 +324,7 @@ $loteGranelIds = DB::table('lotes_granel')
 ->where(function ($query) use ($search) {
     $query->where('nombre_lote', 'LIKE', "%{$search}%")
         ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+        ->orWhere('cont_alc', 'LIKE', "%{$search}%")
         ->orWhere('volumen', 'LIKE', "%{$search}%")
         ->orWhere('volumen_restante', 'LIKE', "%{$search}%")
         ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
@@ -314,7 +332,7 @@ $loteGranelIds = DB::table('lotes_granel')
 ->pluck('id_lote_granel')
 ->toArray();
 
-                            $totalFilteredQuery = solicitudesModel::with('tipo_solicitud',
+                    $totalFilteredQuery = solicitudesModel::with('tipo_solicitud',
                         'empresa',
                         'instalacion',
                         'inspeccion.inspector',
@@ -322,6 +340,7 @@ $loteGranelIds = DB::table('lotes_granel')
                         'ultima_validacion_ui')->where('habilitado', 1)
                             ->where('id_tipo', '!=', 12)
                     ->where(function ($query) use ($search, $loteIds, $loteEnvIds, $loteGranelIds) {
+
                         $query->where(function ($q) use ($search) {
                             $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
                                 ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
@@ -347,18 +366,15 @@ $loteGranelIds = DB::table('lotes_granel')
                         foreach ($loteIds as $idLote) {
                             $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
                         }
-
                         //Buscar lote envasado
                         foreach ($loteEnvIds as $idLoteEnv) {
                             $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLoteEnv . '"%');
                         }
-
                         //Buscar lote granel
                         foreach ($loteGranelIds as $idLoteGran) {
                             $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
                         }
                         
-
                     });
 
                     
