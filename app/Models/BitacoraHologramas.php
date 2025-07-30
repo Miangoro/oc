@@ -32,7 +32,7 @@ class BitacoraHologramas extends Model
         'serie_final',
         'num_sellos_final',
         'serie_merma',
-        'num_sellos_mermas',
+        'num_sellos_merma',
         'id_firmante',
         'observaciones',
     ];
