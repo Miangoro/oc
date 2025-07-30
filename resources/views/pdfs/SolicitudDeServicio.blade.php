@@ -584,7 +584,12 @@
             <td colspan="3">{{ $datos->lote_granel->nombre_lote ?? '---------------' }}</td>
             <td class="con-negra" colspan="4" style="text-align: left">6) No. de certificado NOM de Mezcal <br> a
                 granel vigente:</td>
-            <td colspan="4">@if($muestreo_granel == 'X') {{ $datos->lote_granel->certificadoGranel->num_certificado ?? '---------------' }} @else --------------- @endif</td>
+            <td colspan="4">
+               {{--  @if($muestreo_granel == 'X') {{ $datos->lote_granel->certificadoGranel->num_certificado ?? '---------------' }} @else --------------- @endif --}}
+               @if($muestreo_granel == 'X' || $exportacion == 'X' )
+                    {{ $datos->lote_granel->certificadoGranel->num_certificado ?? '---------------' }}
+                @else --------------- @endif
+            </td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">2) Categoria:</td>
@@ -614,7 +619,12 @@
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">3) No. de análisis de
                 laboratorio:</td>
-            <td colspan="3">@if($muestreo_granel == 'X') {{ $datos->lote_granel->folio_fq ?? '---------------' }} @else --------------- @endif</td>
+            <td colspan="3">
+                {{-- @if($muestreo_granel == 'X') {{ $datos->lote_granel->folio_fq ?? '---------------' }} @else --------------- @endif --}}
+                @if($muestreo_granel == 'X' || $exportacion == 'X' )
+                    {{ $datos->lote_granel->folio_fq ?? '---------------' }}
+                @else --------------- @endif
+            </td>
             <td class="con-negra" colspan="4" style="text-align: left">8) Contenido Alcohólico:</td>
             <td colspan="4">
                 @if ($inspeccion_envasado == 'X')
@@ -683,7 +693,10 @@
             <td class="con-negra" colspan="4" style="text-align: left">6) No. de certificado NOM de Mezcal <br> a
                 granel vigente:</td>
             <td colspan="4">
-                @if($muestreo_granel != 'X') {{ $lote->lotesGranel->first()->folio_certificado ?? '---------------' }} @else --------------- @endif
+                {{-- @if($muestreo_granel != 'X') {{ $lote->lotesGranel->first()->folio_certificado ?? '---------------' }} @else --------------- @endif --}}
+                @if($muestreo_granel == 'X' || $exportacion == 'X' )
+                    {{ $lote->lotesGranel->first()->folio_certificado ?? '---------------' }} 
+                @else --------------- @endif
             </td>
         </tr>
         <tr>
@@ -709,7 +722,12 @@
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">3) No. de análisis de
                 laboratorio:</td>
-            <td colspan="3">@if($muestreo_granel != 'X') {{ $lote->lotesGranel->first()->folio_fq ?? '---------------' }} @else --------------- @endif</td>
+            <td colspan="3">
+                {{-- @if($muestreo_granel != 'X') {{ $lote->lotesGranel->first()->folio_fq ?? '---------------' }} @else --------------- @endif --}}
+                @if($muestreo_granel == 'X' || $exportacion == 'X' )
+                    {{ $lote->lotesGranel->first()->folio_fq ?? '---------------' }} 
+                @else --------------- @endif
+            </td>
             <td class="con-negra" colspan="4" style="text-align: left">8) Contenido Alcohólico:</td>
             <td colspan="4">@if($muestreo_granel != 'X') {{ $lote->cont_alc_envasado ?? '---------------' }} @else --------------- @endif</td>
         </tr>
