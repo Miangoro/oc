@@ -275,7 +275,9 @@
                                                     class="text-danger">{{ $datos->certificado->num_certificado ?? 'N/A' }}</b>
                                             </td>
                                         @elseif($pregunta->filtro == 'direccion_fiscal')
-                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }}
+                                            <td>
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }} 
+                                                 C.P. {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
                                             </td>
                                         @elseif($pregunta->filtro == 'solicitud_exportacion')
                                             <td>
