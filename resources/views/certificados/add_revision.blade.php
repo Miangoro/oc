@@ -844,7 +844,7 @@
                                                             
                                             @endphp
 
-                                             @if($lotes_graneles)
+                                            {{--  @if($lotes_graneles)
 
                                                      @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
                                                         {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
@@ -852,9 +852,9 @@
                                                         N/A
                                                     @endforelse 
 
-                                            @endif
+                                            @endif --}}
 
-                                                    @foreach($lotes_graneles as $lotess)
+                                                @foreach($lotes_graneles as $lotess)
                                                    @forelse ($lotess->tiposRelacionados as $tipo)
                                                         {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
                                                     @empty
