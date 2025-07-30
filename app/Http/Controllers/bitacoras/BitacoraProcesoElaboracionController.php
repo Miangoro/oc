@@ -68,8 +68,8 @@ class BitacoraProcesoElaboracionController extends Controller
 
       $limit = $request->input('length');
       $start = $request->input('start');
-      $order = $columns[$request->input('order.0.column')];
-      $dir = $request->input('order.0.dir');
+      $order = $columns[$request->input('order.0.column')] ?? 'id';
+      $dir = $request->input('order.0.dir') ?? 'desc';
 
         $query = BitacoraProcesoElaboracion::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
                   $query->where('id_empresa', $empresaIdAut);
@@ -150,7 +150,7 @@ class BitacoraProcesoElaboracionController extends Controller
 
         $users = $query->offset($start)
         ->limit($limit)
-        ->orderBy($order, $dir)
+        ->orderBy('id', 'desc')
         ->get();
 
 

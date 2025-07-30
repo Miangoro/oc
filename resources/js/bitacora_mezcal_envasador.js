@@ -204,32 +204,59 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             let acciones = '';
-            if (window.puedeFirmarElUsuario) {
-              acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
+
+            const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
+
+            if (!estaFirmado) {
+              if (window.puedeFirmarElUsuario) {
+                acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
+              }
+              if (window.puedeEditarElUsuario) {
+                acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
+              }
+              if (window.puedeEliminarElUsuario) {
+                acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
+              }
             }
-            if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
+            if (acciones.trim()) {
+              return `
+              <div class="d-flex align-items-center gap-50">
+                <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end m-0">
+                  ${acciones}
+                </div>
+              </div>
+            `;
             }
-            if (window.puedeEliminarElUsuario) {
-              acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
-            }
+
+            // Si la bitácora ya está firmada, mostrar botón visualmente deshabilitado
+            return `
+            <div class="d-flex align-items-center gap-50">
+              <button class="btn btn-sm btn-secondary disabled" style="opacity: 0.6; cursor: not-allowed;" disabled>
+                <i class="ri-settings-5-fill ri-20px me-1"></i> Opciones
+              </button>
+            </div>
+          `;
+
             // Si no hay acciones, no retornar el dropdown
-            if (!acciones.trim()) {
+            /* if (!acciones.trim()) {
               return `
                 <button class="btn btn-sm btn-secondary" disabled>
                   <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
                 </button>
               `;
-            }
+            } */
             // Si hay acciones, construir el dropdown
-            const dropdown = `<div class="d-flex align-items-center gap-50">
+            /*  const dropdown = `<div class="d-flex align-items-center gap-50">
               <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button><div class="dropdown-menu dropdown-menu-end m-0">
 
                   ${acciones}
                 </div>
               </div>
             `;
-            return dropdown;
+            return dropdown; */
           }
         }
       ],
@@ -285,7 +312,7 @@ $(function () {
             $(node).find('select').select2();
           }
         },
-      /*   {
+        /*   {
           className: 'dt-custom-select p-0 me-2 btn-outline-dark form-select-sm',
           text: '',
           init: function (api, node) {
@@ -313,7 +340,7 @@ $(function () {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de la bitácora '/*  + data['nombre_lote'] */;
+              return 'Detalles de la bitácora ' /*  + data['nombre_lote'] */;
             }
           }),
           type: 'column',
@@ -461,7 +488,7 @@ $(function () {
         $('#pdfViewer').attr('src', blobUrl);
         $('#NewPestana').attr('href', blobUrl);
         $('#titulo_modal').text('Bitácora Mezcal a Granel Envasador');
-       /*  $('#subtitulo_modal').text('Versión Filtrada'); */
+        /*  $('#subtitulo_modal').text('Versión Filtrada'); */
         $('#mostrarPdf').modal('show');
 
         $('#pdfViewer').on('load', function () {
@@ -923,11 +950,10 @@ $(function () {
           $(this).css('display', 'none');
           $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
-      }else if (tipo == 'Entradas y salidas') {
+      } else if (tipo == 'Entradas y salidas') {
         $('#editDisplayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 300);
         $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 400);
-      }
-       else {
+      } else {
         $('#editDisplayEntradas, #editDisplaySalidas').fadeOut(200);
       }
     });
@@ -940,7 +966,7 @@ $(function () {
       $('#bitacora_id_firma').val(bitacoraID);
     });
  */
-/*   $(function () {
+  /*   $(function () {
     // Configurar CSRF para Laravel
     $.ajaxSetup({
       headers: {
@@ -1094,23 +1120,23 @@ $(function () {
     });
   });
 
-$(document).ready(function () {
-  // Al abrir modal, disparas la carga inicial para el cliente seleccionado
-  $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
-    var empresaSeleccionada = $('#id_empresa').val();
-    if (empresaSeleccionada) {
-      obtenerGraneles(empresaSeleccionada);
-    } else {
-      obtenerDatosGraneles();
-    }
-  });
+  $(document).ready(function () {
+    // Al abrir modal, disparas la carga inicial para el cliente seleccionado
+    $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
+      var empresaSeleccionada = $('#id_empresa').val();
+      if (empresaSeleccionada) {
+        obtenerGraneles(empresaSeleccionada);
+      } else {
+        obtenerDatosGraneles();
+      }
+    });
 
-  // También cuando cambia el select
-  $('#id_empresa').on('change', function () {
-    var empresa = $(this).val();
-    obtenerGraneles(empresa);
+    // También cuando cambia el select
+    $('#id_empresa').on('change', function () {
+      var empresa = $(this).val();
+      obtenerGraneles(empresa);
+    });
   });
-});
 
   //end
 });

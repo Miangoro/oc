@@ -203,7 +203,11 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            let acciones = '';
+          let acciones = '';
+
+          const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
+
+          if (!estaFirmado) {
             if (window.puedeFirmarElUsuario) {
               acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
             }
@@ -213,28 +217,36 @@ $(function () {
             if (window.puedeEliminarElUsuario) {
               acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
             }
-            // Si no hay acciones, no retornar el dropdown
-            if (!acciones.trim()) {
-              return `
-                <button class="btn btn-sm btn-secondary" disabled>
-                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
-                </button>
-              `;
-            }
-            // Si hay acciones, construir el dropdown
-            const dropdown = `<div class="d-flex align-items-center gap-50">
-              <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button><div class="dropdown-menu dropdown-menu-end m-0">
+          }
 
+          // Si hay acciones (bitácora NO firmada)
+          if (acciones.trim()) {
+            return `
+              <div class="d-flex align-items-center gap-50">
+                <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end m-0">
                   ${acciones}
                 </div>
               </div>
             `;
-            return dropdown;
           }
+
+          // Si la bitácora ya está firmada, mostrar botón visualmente deshabilitado
+          return `
+            <div class="d-flex align-items-center gap-50">
+              <button class="btn btn-sm btn-secondary disabled" style="opacity: 0.6; cursor: not-allowed;" disabled>
+                <i class="ri-settings-5-fill ri-20px me-1"></i> Opciones
+              </button>
+            </div>
+          `;
+        }
+
         }
       ],
 
-      order: [[2, 'desc']],
+      order: [[1, 'desc']],
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' +

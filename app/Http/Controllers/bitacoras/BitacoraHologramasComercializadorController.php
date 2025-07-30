@@ -95,8 +95,8 @@ class BitacoraHologramasComercializadorController extends Controller
 
         $limit = $request->input('length');
         $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')] ?? 'fecha';
-        $dir = $request->input('order.0.dir');
+        $order = $columns[$request->input('order.0.column')] ?? 'id';
+        $dir = $request->input('order.0.dir') ?? 'desc';
         /* $query = BitacoraHologramas::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
                   $query->where('id_empresa', $empresaIdAut);
               })->where('tipo', 3); */

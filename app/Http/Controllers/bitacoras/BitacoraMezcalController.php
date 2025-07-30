@@ -90,8 +90,8 @@ class BitacoraMezcalController extends Controller
 
         $limit = $request->input('length');
         $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')] ?? 'fecha';
-        $dir = $request->input('order.0.dir');
+        $order = $columns[$request->input('order.0.column')] ?? 'id';
+        $dir = $request->input('order.0.dir')?? 'desc';
 
         $query = BitacoraMezcal::query()->whereIn('tipo', [1, 3]);
         $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, $empresaId);
