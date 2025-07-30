@@ -867,11 +867,11 @@
                                                             ->value('url');
 
                                                         // Si no encontró el documento con id 82, intenta con id 41
-                                                        if (!$url) {
+                                                        /*if (!$url) {
                                                             $url = \App\Models\documentacion_url::where('id_empresa', $empresa2->id_empresa)
                                                                 ->where('id_documento', 41)
                                                                 ->value('url');
-                                                        }
+                                                        }*/
                                                     }
 
                                                     $urlDom = $numeroCliente && $url ? '/files/' . $numeroCliente . "/" . $url : null;
