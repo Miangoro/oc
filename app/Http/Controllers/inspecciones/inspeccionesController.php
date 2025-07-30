@@ -38,6 +38,7 @@ use App\Models\solicitudesModel;
 use App\Models\User;
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 /* clases de exportacion */
 use Maatwebsite\Excel\Facades\Excel;
@@ -104,7 +105,35 @@ class inspeccionesController extends Controller
             ->where('id_tipo', '!=', 12);
 
         if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
+
+//Buscar lote envasado -> granel
+$loteIds = DB::table('lotes_envasado')
+->select('id_lote_envasado')
+->where('nombre', 'LIKE', "%{$search}%")
+->union(
+    DB::table('lotes_envasado_granel')
+    ->join('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'lotes_envasado_granel.id_lote_granel')
+    ->select('lotes_envasado_granel.id_lote_envasado')
+    ->where('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
+    )
+->pluck('id_lote_envasado')
+->toArray();
+
+//Buscar lote envasado
+$loteEnvIds = DB::table('lotes_envasado')
+->select('id_lote_envasado')
+->where('nombre', 'LIKE', "%{$search}%")
+->pluck('id_lote_envasado')
+->toArray();
+
+// Buscar por lote granel
+$loteGranelIds = DB::table('lotes_granel')
+->select('id_lote_granel')
+->where('nombre_lote', 'LIKE', "%{$search}%")
+->pluck('id_lote_granel')
+->toArray();
+
+            $query->where(function ($q) use ($search, $loteIds, $loteEnvIds, $loteGranelIds) {
                 $q->where('id_solicitud', 'LIKE', "%{$search}%")
                     ->orWhere('folio', 'LIKE', "%{$search}%")
                     ->orWhereHas('empresa', function ($q) use ($search) {
@@ -129,6 +158,21 @@ class inspeccionesController extends Controller
                     ->orWhereHas('inspector', function ($q) use ($search) {
                         $q->where('name', 'LIKE', "%{$search}%");
                     });
+
+                    //Buscar lote envasado -> granel
+                    foreach ($loteIds as $idLote) {
+                        $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
+                    }
+
+                    //Buscar lote envasado
+                    foreach ($loteEnvIds as $idLoteEnv) {
+                        $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLoteEnv . '"%');
+                    }
+
+                    //Buscar lote granel
+                    foreach ($loteGranelIds as $idLoteGran) {
+                        $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
+                    }
             });
         }
 
