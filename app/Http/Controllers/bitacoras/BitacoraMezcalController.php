@@ -251,9 +251,11 @@ class BitacoraMezcalController extends Controller
      public function PDFBitacoraMezcal(Request $request)
     {
         $empresaId = $request->query('empresa');
+        $empresaSeleccionada = empresa::with('empresaNumClientes')->find($empresaId);
         $instalacionId = $request->query('instalacion');
         $title = 'PRODUCTOR'; // Cambia a 'Envasador' si es necesario
-       /*  if ($empresaId) {
+        $idsEmpresas = [$empresaId];
+        if ($empresaId) {
             $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
                 ->pluck('id_maquilador')
                 ->toArray();
@@ -261,15 +263,14 @@ class BitacoraMezcalController extends Controller
             if (count($idsMaquiladores)) {
                 $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
             }
-        } */
+        }
         $bitacoras = BitacoraMezcal::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
         ])->whereIn('tipo', [1, 3])
-        ->when($empresaId, function ($query) use ($empresaId) {
-              $query->where('id_empresa', $empresaId);
-          })
-
+        ->when($empresaId, function ($query) use ($idsEmpresas) {
+            $query->whereIn('id_empresa', $idsEmpresas);
+        })
         /* ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
             $query->where('id_empresa', $empresaId);
             if ($instalacionId) {
@@ -283,11 +284,8 @@ class BitacoraMezcalController extends Controller
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
               ], 404);
           }
-
-        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title'))
+        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaSeleccionada'))
         ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
-
-
         return $pdf->stream('Bitácora Mezcal a Granel.pdf');
     }
 

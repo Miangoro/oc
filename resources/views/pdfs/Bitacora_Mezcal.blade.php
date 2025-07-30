@@ -8,9 +8,8 @@
     <title>Bitácora Mezcal a Granel</title>
 </head>
 <style>
-  body{
+    body {}
 
-  }
     table {
         width: 100%;
         border-collapse: collapse;
@@ -57,6 +56,7 @@
         vertical-align: middle;
         word-wrap: break-word;
     }
+
     /*     table {
         page-break-inside: auto;
     }
@@ -78,10 +78,10 @@
         margin-right: 30px;
         padding: 10px 0;
         font-family: 'Lucida Sans Unicode';
-       /*  z-index: 1; */
+        /*  z-index: 1; */
     }
 
-   @page {
+    @page {
         margin: 150px 50px 130px 50px;
     }
 </style>
@@ -91,27 +91,27 @@
     <div style="width: 100%; position: fixed; overflow: hidden; margin-top: -130px;">
         {{-- Logo Unidad de Inspección --}}
         <div style="width: 25%; float: left; text-align: left;">
-            <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Unidad de Inspección" style="height: 100px; width: auto;">
+            <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Unidad de Inspección"
+                style="height: 100px; width: auto;">
         </div>
         {{-- Título y Cliente --}}
         <div style="width: 50%; float: left; text-align: center;">
             <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
                 INVENTARIO DE MEZCAL A GRANEL {{ $title ? "($title)" : '' }}
             </p>
-          @php
-    $first = $bitacoras->first(); // primera bitácora para obtener datos de empresa
-    $razon = $first->empresaBitacora->razon_social ?? 'Sin razón social';
-    $numeroCliente = 'Sin número cliente';
+            @php
+                $razon = $empresaSeleccionada->razon_social ?? 'Sin razón social';
+                $numeroCliente = 'Sin número cliente';
 
-    if ($first->empresaBitacora && $first->empresaBitacora->empresaNumClientes->isNotEmpty()) {
-        foreach ($first->empresaBitacora->empresaNumClientes as $cliente) {
-            if (!empty($cliente->numero_cliente)) {
-                $numeroCliente = $cliente->numero_cliente;
-                break;
-            }
-        }
-    }
-@endphp
+                if ($empresaSeleccionada && $empresaSeleccionada->empresaNumClientes->isNotEmpty()) {
+                    foreach ($empresaSeleccionada->empresaNumClientes as $cliente) {
+                        if (!empty($cliente->numero_cliente)) {
+                            $numeroCliente = $cliente->numero_cliente;
+                            break;
+                        }
+                    }
+                }
+            @endphp
             <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
                 <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
             </p>
@@ -198,24 +198,24 @@
                     <td>{{ $bitacora->volumen_final ?? '----' }}</td>
                     <td>{{ $bitacora->alcohol_final ?? '----' }}</td>
                     <td>{{ $bitacora->observaciones ?? '----' }}</td>
-                  <td style="padding: 0; text-align: center;">
-                    @if ($bitacora->id_firmante != 0 && $bitacora->firmante)
-                        @php
-                            $firma = $bitacora->firmante->firma;
-                            $rutaFirma = public_path('storage/firmas/' . $firma);
-                        @endphp
+                    <td style="padding: 0; text-align: center;">
+                        @if ($bitacora->id_firmante != 0 && $bitacora->firmante)
+                            @php
+                                $firma = $bitacora->firmante->firma;
+                                $rutaFirma = public_path('storage/firmas/' . $firma);
+                            @endphp
 
-                        @if (!empty($firma) && file_exists($rutaFirma))
-                            <img src="{{ $rutaFirma }}" alt="Firma" style="max-width: 100%; height: auto;">
-                            <br>
-                            <small>{{ $bitacora->firmante->name }}</small>
+                            @if (!empty($firma) && file_exists($rutaFirma))
+                                <img src="{{ $rutaFirma }}" alt="Firma" style="max-width: 100%; height: auto;">
+                                <br>
+                                <small>{{ $bitacora->firmante->name }}</small>
+                            @else
+                                <span class="text-muted">Firma no encontrada</span>
+                            @endif
                         @else
-                            <span class="text-muted">Firma no encontrada</span>
+                            <span>Sin firma</span>
                         @endif
-                    @else
-                        <span>Sin firma</span>
-                    @endif
-                </td>
+                    </td>
 
 
                 </tr>
@@ -227,7 +227,7 @@
 
         </tbody>
     </table>
-{{--     <div class="pie">
+    {{--     <div class="pie">
         <p>Página 1 de 1<br>
         F7.1-01-60 Bitácora Inventario de Mezcal a Granel <br>
         Ed. 0 Entrada en vigor: 21-07-2025

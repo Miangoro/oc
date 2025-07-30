@@ -295,6 +295,7 @@ class BitacoraMezcalEnvasadorController extends Controller
      public function PDFBitacoraMezcal(Request $request)
     {
         $empresaId = $request->query('empresa');
+        $empresaSeleccionada = empresa::with('empresaNumClientes')->find($empresaId);
         $instalacionId = $request->query('instalacion');
         $title = 'ENVASADOR'; // Cambia a 'Envasador' si es necesario
         $idsEmpresas = [$empresaId];
@@ -312,8 +313,9 @@ class BitacoraMezcalEnvasadorController extends Controller
             'firmante',
         ])->whereIn('tipo', [2, 3])
         ->when($empresaId, function ($query) use ($idsEmpresas) {
-              $query->whereIn('id_empresa', $idsEmpresas);
-          })
+            $query->whereIn('id_empresa', $idsEmpresas);
+        })
+
        /*  ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
             $query->where('id_empresa', $empresaId);
             if ($instalacionId) {
@@ -322,7 +324,7 @@ class BitacoraMezcalEnvasadorController extends Controller
         }) */
         ->orderBy('id', 'desc')
         ->get();
-        $empresaPadre = null;
+        /* $empresaPadre = null;
         if ($empresaId) {
             // Ver si la empresa enviada es una maquiladora
             $esMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)->exists();
@@ -337,15 +339,14 @@ class BitacoraMezcalEnvasadorController extends Controller
                 // Es empresa padre
                 $empresaPadre = empresa::with('empresaNumClientes')->find($empresaId);
             }
-        }
+        } */
           if ($bitacoras->isEmpty()) {
               return response()->json([
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
               ], 404);
           }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaPadre'))
+        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaSeleccionada'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
-
         return $pdf->stream('Bitácora Mezcal a Granel.pdf');
     }
 
