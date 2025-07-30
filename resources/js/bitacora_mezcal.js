@@ -86,7 +86,10 @@ $(function () {
             var $id_lote_granel = full['nombre_lote'] ?? 'N/A';
             var $folio_fq = full['folio_fq'] ?? 'N/A';
             var $certificado = full['folio_certificado'] ?? 'N/A';
-            return (
+            var $operacion_adicional = (full['operacion_adicional'] || '').trim();
+            var $obs = (full['observaciones'] || '').trim();
+
+            let html =
               '<span class="fw-bold small">Fecha: </span>' +
               '<span class="small">' +
               $fecha +
@@ -102,8 +105,22 @@ $(function () {
               '<br><span class="fw-bold small">Certificado: </span>' +
               '<span class="small">' +
               $certificado +
-              '</span>'
-            );
+              '</span>';
+
+            if ($operacion_adicional && $operacion_adicional.toUpperCase() !== 'N/A') {
+              html +=
+                '<br><span class="fw-bold small">Operación adicional: </span>' +
+                '<span class="small">' +
+                $operacion_adicional +
+                '</span>';
+            }
+
+            if ($obs && $obs.toUpperCase() !== 'N/A') {
+              html +=
+                '<br><span class="fw-bold small">Observaciones: </span>' + '<span class="small">' + $obs + '</span>';
+            }
+
+            return html;
           }
         },
         {
@@ -203,25 +220,25 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-          let acciones = '';
+            let acciones = '';
 
-          const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
+            const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
 
-          if (!estaFirmado) {
-            if (window.puedeFirmarElUsuario) {
-              acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
+            if (!estaFirmado) {
+              if (window.puedeFirmarElUsuario) {
+                acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
+              }
+              if (window.puedeEditarElUsuario) {
+                acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
+              }
+              if (window.puedeEliminarElUsuario) {
+                acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
+              }
             }
-            if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
-            }
-            if (window.puedeEliminarElUsuario) {
-              acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
-            }
-          }
 
-          // Si hay acciones (bitácora NO firmada)
-          if (acciones.trim()) {
-            return `
+            // Si hay acciones (bitácora NO firmada)
+            if (acciones.trim()) {
+              return `
               <div class="d-flex align-items-center gap-50">
                 <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                   <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
@@ -231,18 +248,17 @@ $(function () {
                 </div>
               </div>
             `;
-          }
+            }
 
-          // Si la bitácora ya está firmada, mostrar botón visualmente deshabilitado
-          return `
+            // Si la bitácora ya está firmada, mostrar botón visualmente deshabilitado
+            return `
             <div class="d-flex align-items-center gap-50">
               <button class="btn btn-sm btn-secondary disabled" style="opacity: 0.6; cursor: not-allowed;" disabled>
                 <i class="ri-settings-5-fill ri-20px me-1"></i> Opciones
               </button>
             </div>
           `;
-        }
-
+          }
         }
       ],
 
@@ -936,11 +952,10 @@ $(function () {
           $(this).css('display', 'none');
           $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
-      }else if (tipo == 'Entradas y salidas') {
+      } else if (tipo == 'Entradas y salidas') {
         $('#editDisplayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 300);
         $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 400);
-      }
-       else {
+      } else {
         $('#editDisplayEntradas, #editDisplaySalidas').fadeOut(200);
       }
     });
@@ -953,7 +968,7 @@ $(function () {
       $('#bitacora_id_firma').val(bitacoraID);
     });
  */
-/*   $(function () {
+  /*   $(function () {
     // Configurar CSRF para Laravel
     $.ajaxSetup({
       headers: {
@@ -1107,23 +1122,23 @@ $(function () {
     });
   });
 
-$(document).ready(function () {
-  // Al abrir modal, disparas la carga inicial para el cliente seleccionado
-  $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
-    var empresaSeleccionada = $('#id_empresa').val();
-    if (empresaSeleccionada) {
-      obtenerGraneles(empresaSeleccionada);
-    } else {
-      obtenerDatosGraneles();
-    }
-  });
+  $(document).ready(function () {
+    // Al abrir modal, disparas la carga inicial para el cliente seleccionado
+    $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
+      var empresaSeleccionada = $('#id_empresa').val();
+      if (empresaSeleccionada) {
+        obtenerGraneles(empresaSeleccionada);
+      } else {
+        obtenerDatosGraneles();
+      }
+    });
 
-  // También cuando cambia el select
-  $('#id_empresa').on('change', function () {
-    var empresa = $(this).val();
-    obtenerGraneles(empresa);
+    // También cuando cambia el select
+    $('#id_empresa').on('change', function () {
+      var empresa = $(this).val();
+      obtenerGraneles(empresa);
+    });
   });
-});
 
   //end
 });

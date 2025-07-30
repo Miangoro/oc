@@ -205,7 +205,7 @@ class BitacoraHologramasController extends Controller
                 // Salidas
                 'serie_salidas' => $bitacora->serie_salidas ?? 'N/A',
                 'num_sellos_salidas' => $bitacora->num_sellos_salidas ?? 'N/A',
-
+                'tipo_operacion' => $bitacora->tipo_operacion ?? 'N/A',
                 // Inventario final
                 'serie_final' => $bitacora->serie_final ?? 'N/A',
                 'num_sellos_final' => $bitacora->num_sellos_final ?? 'N/A',

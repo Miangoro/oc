@@ -228,7 +228,7 @@ class BitacoraMezcalController extends Controller
                 'volumen_salidas' => $bitacora->volumen_salidas ?? 'N/A',
                 'alcohol_salidas' => $bitacora->alcohol_salidas ?? 'N/A',
                 'destino_salidas' => $bitacora->destino_salidas ?? 'N/A',
-
+ 'operacion_adicional' => $bitacora->operacion_adicional ?? 'N/A',
                 // Inventario final
                 'volumen_final' => $bitacora->volumen_final ?? 'N/A',
                 'alcohol_final' => $bitacora->alcohol_final ?? 'N/A',

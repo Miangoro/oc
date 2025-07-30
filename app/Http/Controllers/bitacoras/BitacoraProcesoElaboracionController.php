@@ -256,8 +256,10 @@ class BitacoraProcesoElaboracionController extends Controller
          if (!$bitacora) {
             return response()->json(['message' => 'Bitácora no encontrada'], 404);
           }
-          $pdf = Pdf::loadView('pdfs.Bitacora_Productor_Proceso', compact('bitacora'))
-                    ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
+        $pdf = Pdf::loadView('pdfs.Bitacora_Productor_procesoEd0_2025', compact('bitacora'))
+          ->setPaper([0, 0, 1005.25, 612.3]); // 355 x 216 mm (horizontal)
+
+
 
           return $pdf->stream('Bitácora PROCESO DE ELABORACIÓN DE MEZCAL.pdf');
       }

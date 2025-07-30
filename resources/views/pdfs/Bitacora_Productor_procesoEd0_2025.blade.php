@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Bitácora de Productor</title>
+    <title>F-7.1-01-57 Bitácora para proceso de elaboración de Mezcal Ed 0, vigente.</title>
 </head>
 <style>
     table {
@@ -52,12 +52,12 @@
     }
 
     .num {
-        text-align: right;
-        margin-top: -30px;
+        /* text-align: right;
+        margin-top: -30px; */
         font-family: 'calibri-bold';
         font-size: 18px;
     }
-
+/*
     .numero {
         text-align: right;
         margin-top: -30px;
@@ -67,7 +67,7 @@
         right: 0;
         top: 80px;
         right: 70px;
-    }
+    } */
 
     .subtitle {
         text-align: center;
@@ -199,7 +199,7 @@
             color: #A6A6A6;
      }
 @page {
-        margin: 150px 50px 130px 50px;
+        margin: 150px 105px 130px 105px;
     }
 </style>
 <body>
@@ -242,16 +242,14 @@
         {{-- Logo OC (comentado) --}}
         <div style="width: 25%; float: left; text-align: right;">
             {{-- <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo OC" style="height: 100px; width:auto;"> --}}
+        <p class="num">NÚM. TAPADA: ________________</p>
         </div>
         {{-- Limpiar floats --}}
         <div style="clear: both;"></div>
 
     </div>
 
-    <div>
-        <p class="num">NÚM. TAPADA: ________________</p>
-        <p class="numero">2</p>
-    </div>
+
 
     <div>
         <p class="subtitle">INGRESO E IDENTIFICACIÓN DEL AGAVE</p>
@@ -313,10 +311,10 @@
         <tbody>
             <tr class="text-title">
                 <td class="no-border"></td>
-                <td>FECHA DE INGRESO</td>
-                <td>NÚM. DE GUÍA</td>
+                <td>Kg A COCCIÓN </td>
                 <td>TIPO DE MAGUEY</td>
-                <td>NÚM. PIÑAS</td>
+                <td>FECHA DE INICIO</td>
+                <td>FECHA DE TÉRMINO</td>
             </tr>
             <tr>
                 <td class="no-border">1</td>
@@ -772,7 +770,7 @@
                     <td colspan="2">MEZCAL</td>
                     <td colspan="2">COLAS</td>
                 </tr>
-                <tr>
+                <tr class="text-title">
                     <td class="no-border"></td>
                     <td>Volumen</td>
                     <td>%Alc.Vol.</td>

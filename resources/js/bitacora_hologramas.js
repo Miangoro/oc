@@ -81,29 +81,29 @@ $(function () {
         {
           targets: 3,
           responsivePriority: 1,
-          render: function (data, type, full, meta) {
+         render: function (data, type, full, meta) {
             var $fecha = full['fecha'] ?? 'N/A';
             var $id_lote_envasado = full['nombre_lote'] ?? 'N/A';
-            var $folio_fq = full['folio_fq'] ?? 'N/A';
-            var $certificado = full['folio_certificado'] ?? 'N/A';
-            return (
+            var $obs = (full['observaciones'] || '').trim();
+            var $tipo_operacion = (full['tipo_operacion'] || '').trim();
+
+            let html =
               '<span class="fw-bold small">Fecha: </span>' +
-              '<span class="small">' +
-              $fecha +
-              '</span>' +
+              '<span class="small">' + $fecha + '</span>' +
               '<br><span class="fw-bold small">Lote envasado: </span>' +
-              '<span class="small">' +
-              $id_lote_envasado +
-              '</span>' /* +
-              '<br><span class="fw-bold small">Folio FQ: </span>' +
-              '<span class="small">' +
-              $folio_fq +
-              '</span>' +
-              '<br><span class="fw-bold small">Certificado: </span>' +
-              '<span class="small">' +
-              $certificado +
-              '</span>' */
-            );
+              '<span class="small">' + $id_lote_envasado + '</span>';
+
+            if ($obs && $obs.toUpperCase() !== 'N/A') {
+              html += '<br><span class="fw-bold small">Observaciones: </span>' +
+                      '<span class="small">' + $obs + '</span>';
+            }
+
+            if ($tipo_operacion && $tipo_operacion.toUpperCase() !== 'N/A') {
+              html += '<br><span class="fw-bold small">Actividad: </span>' +
+                      '<span class="small">' + $tipo_operacion + '</span>';
+            }
+
+            return html;
           }
         },
         {

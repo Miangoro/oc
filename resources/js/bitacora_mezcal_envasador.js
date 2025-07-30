@@ -86,7 +86,10 @@ $(function () {
             var $id_lote_granel = full['nombre_lote'] ?? 'N/A';
             var $folio_fq = full['folio_fq'] ?? 'N/A';
             var $certificado = full['folio_certificado'] ?? 'N/A';
-            return (
+            var $operacion_adicional = (full['operacion_adicional'] || '').trim();
+            var $obs = (full['observaciones'] || '').trim();
+
+            let html =
               '<span class="fw-bold small">Fecha: </span>' +
               '<span class="small">' +
               $fecha +
@@ -102,8 +105,22 @@ $(function () {
               '<br><span class="fw-bold small">Certificado: </span>' +
               '<span class="small">' +
               $certificado +
-              '</span>'
-            );
+              '</span>';
+
+            if ($operacion_adicional && $operacion_adicional.toUpperCase() !== 'N/A') {
+              html +=
+                '<br><span class="fw-bold small">Operación adicional: </span>' +
+                '<span class="small">' +
+                $operacion_adicional +
+                '</span>';
+            }
+
+            if ($obs && $obs.toUpperCase() !== 'N/A') {
+              html +=
+                '<br><span class="fw-bold small">Observaciones: </span>' + '<span class="small">' + $obs + '</span>';
+            }
+
+            return html;
           }
         },
         {
