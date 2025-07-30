@@ -115,24 +115,19 @@ $(function () {
               }`;
           }
         },
-        {
-          targets: 5,  // Aquí es donde se mostrará la información de las normas
+       {
+          targets: 5,
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            var normas = full['normas'] || []; // Accedemos al array de normas
-
-            // Verificar si no hay normas
-            if (normas.length === 0) {
-              return '<span class="no-normas">N/A</span>'; // Si no hay normas, mostrar N/A o un icono
+            var normas = full['normas'] || [];
+            if (!Array.isArray(normas) || normas.length === 0) {
+              return '<span class="text-muted">N/A</span>';
             }
 
-            // Si hay normas, crear una cadena con las normas asociadas (sin el ID)
-            var normasHtml = normas.map(function (norma) {
-              return '<div>' + norma.norma + '</div>'; // Solo mostrar el nombre de la norma
+            return normas.map(function(norma) {
+              return '<div class="badge bg-secondary me-1">' + norma.norma + '</div>';
             }).join('');
-
-            return normasHtml; // Devolvemos las normas para mostrarlas en la tabla
           }
         },
         {
@@ -148,9 +143,9 @@ $(function () {
               }
               var tieneNorma4 = normas.some(norma => norma.id_norma == 4);
               if (tieneNorma4) {
-                  return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${idEmpresa}" data-registro="${full['razon_social']}"></i>`;
+                  return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${idEmpresa}" data-registro="${full['razon_social']}"></i>`;
               } else {
-                  return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${idEmpresa}" data-registro="${full['razon_social']}"></i>`;
+                  return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${idEmpresa}" data-registro="${full['razon_social']}"></i>`;
               }
           }
       },
@@ -471,22 +466,22 @@ $(function () {
   $(document).on('click', '.pdf', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
-    var iframe = $('#pdfViewerDictamen');
+    var iframe = $('#pdfViewer');
     // Mostrar el spinner y ocultar el iframe
-    $('#loading-spinner').show();
+    $('#cargando').show();
     iframe.hide();
 
     iframe.attr('src', '../solicitudinfo_cliente/' + id);
 
 
-    $("#titulo_modal_Dictamen").text("Solicitud de información del cliente");
-    $("#subtitulo_modal_Dictamen").text(registro);
-    $('#mostrarPdfDictamen').modal('show');
+    $("#titulo_modal").text("Solicitud de información del cliente");
+    $("#subtitulo_modal").text(registro);
+    $('#mostrarPdf').modal('show');
   });
 
   // Ocultar el spinner cuando el PDF esté completamente cargado
-  $('#pdfViewerDictamen').on('load', function () {
-    $('#loading-spinner').hide(); // Ocultar el spinner
+  $('#pdfViewer').on('load', function () {
+    $('#cargando').hide(); // Ocultar el spinner
     $(this).show(); // Mostrar el iframe con el PDF
   });
 
@@ -495,21 +490,21 @@ $(function () {
   $(document).on('click', '.pdf2', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
-    var iframe = $('#pdfViewerDictamen');
+    var iframe = $('#pdfViewer');
     // Mostrar el spinner y ocultar el iframe
-    $('#loading-spinner').show();
+    $('#cargando').show();
     iframe.hide();
 
     iframe.attr('src', '../solicitudInfoClienteNOM-199/' + id);
 
-    $("#titulo_modal_Dictamen").text("Solicitud de información del cliente");
-    $("#subtitulo_modal_Dictamen").text(registro);
-    $('#mostrarPdfDictamen').modal('show');
+    $("#titulo_modal").text("Solicitud de información del cliente");
+    $("#subtitulo_modal").text(registro);
+    $('#mostrarPdf').modal('show');
   });
 
   // Ocultar el spinner cuando el PDF esté completamente cargado
-  $('#pdfViewerDictamen').on('load', function () {
-    $('#loading-spinner').hide(); // Ocultar el spinner
+  $('#pdfViewer').on('load', function () {
+    $('#cargando').hide(); // Ocultar el spinner
     $(this).show(); // Mostrar el iframe con el PDF
   });
 

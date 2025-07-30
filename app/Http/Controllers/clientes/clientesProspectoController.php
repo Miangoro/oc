@@ -74,13 +74,38 @@ class clientesProspectoController extends Controller
 
 
   public function info($id) {
-    $res = DB::select('SELECT p.id_producto, n.id_norma, a.id_actividad, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono
+    /* $res = DB::select('SELECT p.id_producto, n.id_norma, a.id_actividad, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono
     FROM empresa e
     JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
     JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
     JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
     JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
-    WHERE e.id_empresa='.$id);
+    WHERE e.id_empresa='.$id); */
+  $res = DB::select('
+    SELECT
+        p.id_producto,
+        nc.id_norma,
+        a.id_actividad,
+        s.medios,
+        s.competencia,
+        s.capacidad,
+        s.comentarios,
+        e.representante,
+        e.razon_social,
+        s.fecha_registro,
+        s.info_procesos,
+        e.correo,
+        e.telefono
+    FROM empresa e
+    LEFT JOIN solicitud_informacion s ON e.id_empresa = s.id_empresa
+    LEFT JOIN empresa_producto_certificar p ON p.id_empresa = e.id_empresa
+    LEFT JOIN empresa_num_cliente nc ON nc.id_empresa = e.id_empresa
+    LEFT JOIN catalogo_norma_certificar n ON n.id_norma = nc.id_norma
+    LEFT JOIN empresa_actividad_cliente a ON a.id_empresa = e.id_empresa
+    WHERE e.id_empresa = ?
+', [$id]);
+
+
     $pdf = Pdf::loadView('pdfs.SolicitudInfoCliente',['datos'=>$res]);
   return $pdf->stream('F7.1-01-02  Solicitud de Información del Cliente NOM-070-SCFI-2016 y NMX-V-052-NORMEX-2016 Ed.pdf');
   }
@@ -163,7 +188,12 @@ class clientesProspectoController extends Controller
         $nestedData['razon_social'] = $user->razon_social;
         $nestedData['domicilio_fiscal'] = $user->domicilio_fiscal;
         $nestedData['regimen'] = $user->regimen;
-        $nestedData['normas'] = $user->normas; // Agrega las normas a los datos
+       /*  $nestedData['normas'] = $user->normas; */ // Agrega las normas a los datos
+      $nestedData['normas'] = $user->normas->map(function ($norma) {
+    return ['norma' => $norma->norma];
+})->values();
+
+
 
         $data[] = $nestedData;
       }
@@ -225,7 +255,7 @@ class clientesProspectoController extends Controller
     return $pdf->stream('solicitud_Info_ClienteNOM-199.pdf');
   }
 
-  
+
 
 
 }

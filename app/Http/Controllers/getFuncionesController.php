@@ -47,11 +47,26 @@ class getFuncionesController extends Controller
         return response()->json($data);
     }
 
-    public function find_clientes_prospecto($id)
+   /*  public function find_clientes_prospecto($id)
     {
         $id_empresa = $id;
         return $this->renderVista('_partials._modals.modal-add-aceptar-cliente', $id_empresa);
-    }
+    } */
+   public function find_clientes_prospecto($id)
+{
+    $normas = DB::table('empresa_num_cliente as n')
+        ->join('catalogo_norma_certificar as c', 'n.id_norma', '=', 'c.id_norma')
+        ->where('n.id_empresa', $id)
+        ->where('c.id_norma', '!=', 2)
+        ->select('c.norma', 'c.id_norma')
+        ->get();
+
+    return response()->json([
+        'normas' => $normas,
+        'id_empresa' => $id
+    ]);
+}
+
 
     public function usuariosInspectores()
     {

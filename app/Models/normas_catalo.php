@@ -16,7 +16,7 @@ class normas_catalo extends Model
 
     public function empresas()
     {
-        return $this->belongsToMany(empresa::class, 'empresa_norma_certificar',  'id_norma', 'id_empresa');
+        return $this->belongsToMany(empresa::class, 'empresa_num_cliente',  'id_norma', 'id_empresa');
     }
 
 }
