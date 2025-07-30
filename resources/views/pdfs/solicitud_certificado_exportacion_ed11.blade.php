@@ -229,7 +229,9 @@
                 &nbsp;&nbsp;2) Certificado NOM a &nbsp;&nbsp;Granel:
             </td>
             <td style="font-weight: bold; width: 30%;"> 
-                {{ $lote->lotesGranel->first()->folio_certificado ?? "No encontrado" }}
+                {{ $lote->lotesGranel->first()?->certificadoGranel?->num_certificado 
+                    ?? $lote->lotesGranel->first()->folio_certificado
+                    ?? 'No encontrado'; }}
             </td>
             <td style="text-align: left;  width: 20%;" colspan="3">
                 &nbsp;&nbsp;8) Edad:
