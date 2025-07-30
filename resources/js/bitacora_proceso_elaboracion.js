@@ -679,7 +679,7 @@ $(function () {
             }
           }
         },
-        volumen_total_formulado: {
+        /* volumen_total_formulado: {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese el volumen total formulado'
@@ -688,8 +688,8 @@ $(function () {
               message: 'Debe ser un número válido'
             }
           }
-        },
-        puntas_alcohol: {
+        }, */
+      /*   puntas_alcohol: {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese el porcentaje de alcohol en puntas'
@@ -698,8 +698,8 @@ $(function () {
               message: 'Debe ser un número válido'
             }
           }
-        },
-        puntas_volumen: {
+        }, */
+      /*   puntas_volumen: {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese el volumen de puntas'
@@ -748,7 +748,7 @@ $(function () {
               message: 'Debe ser un número válido'
             }
           }
-        }
+        } */
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -778,7 +778,6 @@ $(function () {
           $('#RegistrarBitacora').modal('hide');
           $('#loading').addClass('d-none');
           $('#btnRegistrar').removeClass('d-none');
-          $('#id_empresa').empty().trigger('change');
           $('#registroInventarioForm')[0].reset();
           $('#registroInventarioForm select').val(null).trigger('change');
           $('.datatables-users').DataTable().ajax.reload();
@@ -954,10 +953,10 @@ $(function () {
       function () {
         calcularTotales();
         // Revalidar campos calculados
-        fv.revalidateField('volumen_total_formulado');
+        /* fv.revalidateField('volumen_total_formulado');
         fv.revalidateField('puntas_volumen');
         fv.revalidateField('mezcal_volumen');
-        fv.revalidateField('colas_volumen');
+        fv.revalidateField('colas_volumen'); */
       }
     );
 
@@ -1273,7 +1272,7 @@ $(function () {
             }
           }
         },
-        volumen_total_formulado: {
+       /*  volumen_total_formulado: {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese el volumen total formulado'
@@ -1342,7 +1341,7 @@ $(function () {
               message: 'Debe ser un número válido'
             }
           }
-        }
+        } */
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
