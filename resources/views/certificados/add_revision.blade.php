@@ -774,7 +774,7 @@
                                                     $url = null;
                                                     if ($empresa2 && $empresa2->id_empresa) {
                                                         $url = \App\Models\documentacion_url::where('id_empresa', $empresa2->id_empresa)
-                                                            ->where('id_documento', 41)
+                                                            ->where('id_documento', 41)///convenio corres MFM
                                                             ->value('url');
                                                     }
 
@@ -873,7 +873,7 @@
                                                             
                                             @endphp
 
-                                            {{--  @if($lotes_graneles)
+                                            {{-- @if($lotes_graneles)
 
                                                      @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
                                                         {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
@@ -881,7 +881,7 @@
                                                         N/A
                                                     @endforelse 
 
-                                            @endif --}}
+                                            @endif
 
                                                 @foreach($lotes_graneles as $lotess)
                                                    @forelse ($lotess->tiposRelacionados as $tipo)
@@ -891,7 +891,26 @@
                                                     @endforelse 
                                                     <br>
 
+                                                @endforeach --}}
+                                            @if($lotes_graneles)
+
+                                                     @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
+                                                        {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
+                                                    @empty
+                                                        N/A
+                                                    @endforelse 
+
+                                            @else
+
+                                                @foreach($lotes_graneles as $lotess)
+                                                   @forelse ($lotess->tiposRelacionados as $tipo)
+                                                        {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
+                                                    @empty
+                                                        N/A
+                                                    @endforelse 
+                                                    <br>
                                                 @endforeach
+                                            @endif
 
                                             </td>
                                         @elseif($pregunta->filtro == 'responsable')
