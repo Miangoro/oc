@@ -203,8 +203,11 @@ $loteEnvIds = DB::table('lotes_envasado')
 $loteGranelIds = DB::table('lotes_granel')
 ->select('id_lote_granel')
 ->where(function ($query) use ($search) {
-        $query->where('nombre_lote', 'LIKE', "%{$search}%")
-              ->orWhere('folio_fq', 'LIKE', "%{$search}%");
+    $query->where('nombre_lote', 'LIKE', "%{$search}%")
+        ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+        ->orWhere('volumen', 'LIKE', "%{$search}%")
+        ->orWhere('volumen_restante', 'LIKE', "%{$search}%")
+        ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
     })
 ->pluck('id_lote_granel')
 ->toArray();
@@ -302,8 +305,11 @@ $loteEnvIds = DB::table('lotes_envasado')
 $loteGranelIds = DB::table('lotes_granel')
 ->select('id_lote_granel')
 ->where(function ($query) use ($search) {
-        $query->where('nombre_lote', 'LIKE', "%{$search}%")
-              ->orWhere('folio_fq', 'LIKE', "%{$search}%");
+    $query->where('nombre_lote', 'LIKE', "%{$search}%")
+        ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+        ->orWhere('volumen', 'LIKE', "%{$search}%")
+        ->orWhere('volumen_restante', 'LIKE', "%{$search}%")
+        ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
     })
 ->pluck('id_lote_granel')
 ->toArray();
