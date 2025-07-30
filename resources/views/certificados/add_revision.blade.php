@@ -774,7 +774,7 @@
                                                     $url = null;
                                                     if ($empresa2 && $empresa2->id_empresa) {
                                                         $url = \App\Models\documentacion_url::where('id_empresa', $empresa2->id_empresa)
-                                                            ->where('id_documento', 82)
+                                                            ->where('id_documento', 41)
                                                             ->value('url');
                                                     }
 
