@@ -202,7 +202,10 @@ $loteEnvIds = DB::table('lotes_envasado')
 // Buscar por lote granel
 $loteGranelIds = DB::table('lotes_granel')
 ->select('id_lote_granel')
-->where('nombre_lote', 'LIKE', "%{$search}%")
+->where(function ($query) use ($search) {
+        $query->where('nombre_lote', 'LIKE', "%{$search}%")
+              ->orWhere('folio_fq', 'LIKE', "%{$search}%");
+    })
 ->pluck('id_lote_granel')
 ->toArray();
 
@@ -298,7 +301,10 @@ $loteEnvIds = DB::table('lotes_envasado')
 // Buscar lote granel
 $loteGranelIds = DB::table('lotes_granel')
 ->select('id_lote_granel')
-->where('nombre_lote', 'LIKE', "%{$search}%")
+->where(function ($query) use ($search) {
+        $query->where('nombre_lote', 'LIKE', "%{$search}%")
+              ->orWhere('folio_fq', 'LIKE', "%{$search}%");
+    })
 ->pluck('id_lote_granel')
 ->toArray();
 

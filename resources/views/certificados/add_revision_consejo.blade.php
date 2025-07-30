@@ -809,9 +809,7 @@
                                             @elseif($pregunta->filtro == 'dom')
                                             <td>
                                                  @php
-
-                                                   
-                                                    $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->dictamen->inspeccione->solicitud->empresa ?? null;
+                                                    /*$empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->dictamen->inspeccione->solicitud->empresa ?? null;
                                                     if(!$empresa){
                                                      $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa ?? null;
                                                     }
@@ -820,8 +818,20 @@
                                                     ->where('id_documento', 83)
                                                     ->value('url');
 
+                                                    $urlDom = '/files/'.$numeroCliente."/".$url;*/
+                                                    $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa
+                                                        ?? $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->empresa;
+                                                    $empresa2 = $empresa; // Ya está null si no existe, no hace falta if
 
-                                                    $urlDom = '/files/'.$numeroCliente."/".$url;
+                                                    $numeroCliente = $empresa2?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
+                                                    $url = null;
+                                                    if ($empresa2 && $empresa2->id_empresa) {
+                                                        $url = \App\Models\documentacion_url::where('id_empresa', $empresa2->id_empresa)
+                                                            ->where('id_documento', 83)
+                                                            ->value('url');
+                                                    }
+
+                                                    $urlDom = $numeroCliente && $url ? '/files/' .$numeroCliente. "/" . $url : null;
                                                 @endphp
                                              
                                                 @if ($url)
@@ -835,8 +845,7 @@
                                              @elseif($pregunta->filtro == 'convenio_corresponsabilidad')
                                             <td>
                                                  @php
-                                                     
-                                                    $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->dictamen->inspeccione->solicitud->empresa ?? null;
+                                                    /*$empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->certificadoGranel->dictamen->inspeccione->solicitud->empresa ?? null;
                                                     if(!$empresa){
                                                      $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa ?? null;
                                                     }
@@ -845,11 +854,30 @@
                                                     ->where('id_documento', 82)
                                                     ->value('url');
 
+                                                    $urlDom = '/files/'.$numeroCliente."/".$url;*/
+                                                    $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa
+                                                        ?? $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->empresa;
+                                                    $empresa2 = $empresa; // Ya está null si no existe, no hace falta if
 
-                                                    $urlDom = '/files/'.$numeroCliente."/".$url;
+                                                    $numeroCliente = $empresa2?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
+                                                    $url = null;
+                                                    if ($empresa2 && $empresa2->id_empresa) {
+                                                        $url = \App\Models\documentacion_url::where('id_empresa', $empresa2->id_empresa)
+                                                            ->where('id_documento', 82) // Convenio correspondiente MFM
+                                                            ->value('url');
+
+                                                        // Si no encontró el documento con id 82, intenta con id 41
+                                                        if (!$url) {
+                                                            $url = \App\Models\documentacion_url::where('id_empresa', $empresa2->id_empresa)
+                                                                ->where('id_documento', 41)
+                                                                ->value('url');
+                                                        }
+                                                    }
+
+                                                    $urlDom = $numeroCliente && $url ? '/files/' . $numeroCliente . "/" . $url : null;
                                                 @endphp
                                              
-                                                @if ($url && !in_array($empresa->convenio_corresp, ['NA', 'N/A', ''])) 
+                                                @if ($url) 
                                                     <a target="_blank" href="{{ $urlDom }}">
                                                         <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
@@ -933,7 +961,7 @@
                                                             }
                                             @endphp
 
-                                                   @if($lotes_graneles)
+                                                {{-- @if($lotes_graneles)
 
                                                      @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
                                                         {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
@@ -941,9 +969,28 @@
                                                         N/A
                                                     @endforelse 
 
-                                            @endif
+                                                @endif
 
-                                                    @foreach($lotes_graneles as $lotess)
+                                                @foreach($lotes_graneles as $lotess)
+                                                   @forelse ($lotess->tiposRelacionados as $tipo)
+                                                        {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
+                                                    @empty
+                                                        N/A
+                                                    @endforelse 
+                                                    <br>
+
+                                                @endforeach --}}
+                                            @if($lotes_graneles)
+
+                                                     @forelse ($datos->certificado->dictamen->inspeccione->solicitud->lote_granel->tiposRelacionados as $tipo)
+                                                        {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
+                                                    @empty
+                                                        N/A
+                                                    @endforelse 
+
+                                            @else
+
+                                                @foreach($lotes_graneles as $lotess)
                                                    @forelse ($lotess->tiposRelacionados as $tipo)
                                                         {{ $tipo->nombre }} (<i>{{ $tipo->cientifico }}</i>),
                                                     @empty
@@ -952,6 +999,7 @@
                                                     <br>
 
                                                 @endforeach
+                                            @endif
 
                                             </td>
                                         @elseif($pregunta->filtro == 'responsable')
