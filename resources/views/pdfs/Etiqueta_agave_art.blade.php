@@ -189,7 +189,7 @@
     <br>
 
 
-    <table class="etiqueta-table">
+    {{-- <table class="etiqueta-table">
         <tbody>
             <tr>
                 <td colspan="2" rowspan="3" class="border-green-custom image-cell">
@@ -260,7 +260,9 @@
                 <td colspan="3">Lidia Isabel Cabrera Vásquez</td>
             </tr>
         </tbody>
-    </table>
+    </table> --}}
+
+
     <div class="footer-bar">
         <p>F-UV-04-04 <br> Edición 16, 15/07/2024</p>
     </div>

@@ -85,6 +85,7 @@ $(function () {
           var $fecha = full['fecha'] ?? 'N/A';
           var $id_lote_envasado = full['nombre_lote'] ?? 'N/A';
           var $obs = full['observaciones'];
+          var $mermas = full['mermas'];
           var $tipo_operacion = full['tipo_operacion'];
 
           let html = `
@@ -94,12 +95,18 @@ $(function () {
             <span class="small">${$id_lote_envasado}</span>
           `;
 
-          if ($obs && $obs !== 'N/A') {
+          //if ($obs && $obs !== 'N/A') {
+          if ($obs !== 'N/A') {
             html += `
               <br><span class="fw-bold small">Observaciones: </span>
               <span class="small">${$obs}</span>
             `;
           }
+
+          if ($mermas) {
+              html += '<br><span class="fw-bold small">Mermas: </span>' +
+                      '<span class="small">' + $mermas + '</span>';
+            }
 
           if ($tipo_operacion && $tipo_operacion !== 'N/A') {
             html += `

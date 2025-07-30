@@ -85,6 +85,7 @@ $(function () {
             var $fecha = full['fecha'] ?? 'N/A';
             var $id_lote_envasado = full['nombre_lote'] ?? 'N/A';
             var $obs = (full['observaciones'] || '').trim();
+            var $mermas = full['mermas'];
             var $tipo_operacion = (full['tipo_operacion'] || '').trim();
 
             let html =
@@ -96,6 +97,11 @@ $(function () {
             if ($obs && $obs.toUpperCase() !== 'N/A') {
               html += '<br><span class="fw-bold small">Observaciones: </span>' +
                       '<span class="small">' + $obs + '</span>';
+            }
+
+            if ($mermas) {
+              html += '<br><span class="fw-bold small">Mermas: </span>' +
+                      '<span class="small">' + $mermas + '</span>';
             }
 
             if ($tipo_operacion && $tipo_operacion.toUpperCase() !== 'N/A') {
