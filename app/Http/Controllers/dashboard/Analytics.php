@@ -31,10 +31,12 @@ class Analytics extends Controller
     /* $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')->where('fecha_solicitud','>','2024-12-31')->count(); */
     $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')
     ->where('fecha_solicitud', '>', '2024-12-31')
+    ->where('habilitado', 1)
     ->whereNotIn('id_tipo', [12, 13, 15])
     ->get();
     $solicitudesSinActa = solicitudesModel::whereNotIn('id_tipo', [12, 13, 15])
     ->where('fecha_solicitud', '>', '2024-12-31')
+    ->where('habilitado', 1)
     ->where(function ($query) {
         $query->doesntHave('documentacion_completa')
               ->orWhereDoesntHave('documentacion_completa', function ($q) {
@@ -44,6 +46,7 @@ class Analytics extends Controller
     ->get();
 
 $solicitudesSinDictamen = solicitudesModel::where('fecha_solicitud', '>', '2024-12-31')
+ ->where('habilitado', 1)
     ->where(function ($query) {
         $query
             ->where(function ($q) {
@@ -122,7 +125,7 @@ $certificadosPorVencer = $certificadosInstalacion;
     $certificadoExportacionSinEscaneado = Certificado_Exportacion::whereDoesntHave('certificadoEscaneado')->orderByDesc('fecha_emision')->get();
     $certificadoInstalacionesSinEscaneado = Certificados::whereDoesntHave('certificadoEscaneado')->orderByDesc('fecha_emision')->get();
 
-    
+
 
     $empresaId = Auth::user()?->empresa?->id_empresa;
 
