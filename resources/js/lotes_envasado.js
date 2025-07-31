@@ -422,6 +422,12 @@ $(function () {
               response.lotes_granel[index].id_lote_granel +
               '">' +
               response.lotes_granel[index].nombre_lote +
+              ' (' +
+              response.lotes_granel[index].cont_alc +
+              '% Alc. Vol.)' +
+              ' (' +
+              response.lotes_granel[index].volumen_restante +
+              ' L)' +
               '</option>' +
               contenido;
           }
@@ -852,7 +858,7 @@ $(function () {
           </th>
           <td>
             <select class="form-control select2 edit_lote_granel" name="id_lote_granel[]" id="id_lote_granel${index}">
-              <option value="${lote.id_lote_granel}" selected>${lote.nombre_lote}</option>
+              <option value="${lote.id_lote_granel}" selected>${lote.nombre_lote} (${lote.cont_alc}% Alc. Vol.) (${lote.volumen_restante} L)</option>
             </select>
           </td>
           <td>
