@@ -442,6 +442,7 @@ class RevisionPersonalController extends Controller
         return view('certificados.add_revision', compact('datos', 'preguntas', 'url', 'tipo','certificadoEscaneado','revisor_consejo'));
     }
 
+    
 
     public function registrar_revision(Request $request)
     {
