@@ -766,12 +766,12 @@ public function storeRevisor(Request $request)
 
                 // Siempre se actualizan observaciones y decision
                 $revision->observaciones  = $validated['observaciones'] ?? '';
-                $revision->decision       = $revision->decision ?? 'Pendiente';
                 $revision->es_correccion  = $validated['esCorreccion'] ?? 'no';
 
                 // Solo si se indicó el tipo, se actualiza numero_revision
                 if ($actualizarRevision) {
                     $revision->numero_revision = $validated['numeroRevision'];
+                    $revision->decision = 'Pendiente';
                 }
 
                 $revision->save();
