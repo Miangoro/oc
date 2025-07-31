@@ -561,7 +561,7 @@ $(function () {
         if (lotesDisponibles.length > 0) {
           lotesDisponibles.forEach(function (lote) {
             // Usar backticks para agregar la opción correctamente
-            $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote}</option>`);
+            $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote} (${lote.cont_alc}% Alc. Vol.) (${lote.volumen_restante} L)</option>`);
           });
           if (valorSeleccionado) {
             $select.val(valorSeleccionado); // Seleccionar el valor si ya está definido
