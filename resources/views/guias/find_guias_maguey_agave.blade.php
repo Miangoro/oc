@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Guias magey/agave')
+@section('title', 'Guias maguey/agave')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
