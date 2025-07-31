@@ -81,36 +81,43 @@ $(function () {
         {
           targets: 3,
           responsivePriority: 1,
-         render: function (data, type, full, meta) {
-          var $fecha = full['fecha'] ?? 'N/A';
-          var $id_lote_envasado = full['nombre_lote'] ?? 'N/A';
-          var $obs = full['observaciones'];
-          var $tipo_operacion = full['tipo_operacion'];
+          render: function (data, type, full, meta) {
+            var $fecha = full['fecha'] ?? 'N/A';
+            var $id_lote_envasado = full['nombre_lote'] ?? 'N/A';
+            var $obs = full['observaciones'];
+            var $tipo_operacion = full['tipo_operacion'];
+            var $serie_inicial = (full['serie_inicial'] ?? '').trim();
 
-          let html = `
-            <span class="fw-bold small">Fecha: </span>
-            <span class="small">${$fecha}</span><br>
-            <span class="fw-bold small">Lote envasado: </span>
-            <span class="small">${$id_lote_envasado}</span>
-          `;
+            let html = `
+      <span class="fw-bold small">Fecha: </span>
+      <span class="small">${$fecha}</span><br>
+      <span class="fw-bold small">Lote envasado: </span>
+      <span class="small">${$id_lote_envasado}</span>
+    `;
 
-          if ($obs && $obs !== 'N/A') {
-            html += `
-              <br><span class="fw-bold small">Observaciones: </span>
-              <span class="small">${$obs}</span>
-            `;
+            if ($tipo_operacion && $tipo_operacion !== 'N/A') {
+              html += `
+        <br><span class="fw-bold small">Actividad: </span>
+        <span class="small">${$tipo_operacion}</span>
+      `;
+            }
+
+            if ($serie_inicial && $serie_inicial !== 'N/A' && $serie_inicial !== '0' && $serie_inicial !== 0) {
+              html += `
+        <br><span class="fw-bold small">Serie Inicial: </span>
+        <span class="small">${$serie_inicial}</span>
+      `;
+            }
+
+            if ($obs && $obs !== 'N/A' && $obs !== '0' && $obs !== 0) {
+              html += `
+        <br><span class="fw-bold small">Observaciones: </span>
+        <span class="small">${$obs}</span>
+      `;
+            }
+
+            return html;
           }
-
-          if ($tipo_operacion && $tipo_operacion !== 'N/A') {
-            html += `
-              <br><span class="fw-bold small">Actividad: </span>
-              <span class="small">${$tipo_operacion}</span>
-            `;
-          }
-
-          return html;
-        }
-
         },
         {
           targets: 4,
@@ -153,10 +160,11 @@ $(function () {
           targets: 6,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
-            var $serie_final = full['serie_final'] ?? 'N/A';
-            var $num_sellos_final = full['num_sellos_final'] ?? 'N/A';
+            var $serie_mermas = (full['serie_merma'] || '').trim();
+            var $serie_final = (full['serie_final'] ?? 'N/A').trim();
+            var $num_sellos_final = (full['num_sellos_final'] ?? 'N/A').trim();
 
-            return (
+            let html =
               '<span class="fw-bold small">Serie Final: </span>' +
               '<span class="small">' +
               $serie_final +
@@ -164,8 +172,18 @@ $(function () {
               '<br><span class="fw-bold small">N° de sellos Final: </span>' +
               '<span class="small">' +
               $num_sellos_final +
-              '</span>'
-            );
+              '</span>';
+
+            // Mostrar mermas solo si hay contenido
+            if ($serie_mermas !== '') {
+              html +=
+                '<br><span class="fw-bold small">Serie mermas: </span>' +
+                '<span class="small">' +
+                $serie_mermas +
+                '</span>';
+            }
+
+            return html;
           }
         },
         {
@@ -705,7 +723,7 @@ $(function () {
           validators: {
             notEmpty: {
               message: 'Ingresa la serie final.'
-            },
+            }
           }
         },
         num_sellos_final: {
@@ -767,7 +785,7 @@ $(function () {
     });
   });
 
-/*   $(document).ready(function () {
+  /*   $(document).ready(function () {
     function calcular() {
       let volumenInicial = parseFloat($('#volumen_inicial').val()) || 0;
       let alcoholInicial = parseFloat($('#alcohol_inicial').val()) || 0;
@@ -839,11 +857,10 @@ $(function () {
           $(this).css('display', 'none');
           $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
-      }else if (tipo == 'Entradas y salidas') {
+      } else if (tipo == 'Entradas y salidas') {
         $('#editDisplayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 300);
         $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 400);
-      }
-       else {
+      } else {
         $('#editDisplayEntradas, #editDisplaySalidas').fadeOut(200);
       }
     });
@@ -856,7 +873,7 @@ $(function () {
       $('#bitacora_id_firma').val(bitacoraID);
     });
  */
-/*   $(function () {
+  /*   $(function () {
     // Configurar CSRF para Laravel
     $.ajaxSetup({
       headers: {
@@ -1010,23 +1027,23 @@ $(function () {
     });
   });
 
-$(document).ready(function () {
-  // Al abrir modal, disparas la carga inicial para el cliente seleccionado
-  $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
-    var empresaSeleccionada = $('#id_empresa').val();
-    if (empresaSeleccionada) {
-      obtenerGraneles(empresaSeleccionada);
-    } else {
-      /* obtenerDatosGraneles(); */
-    }
-  });
+  $(document).ready(function () {
+    // Al abrir modal, disparas la carga inicial para el cliente seleccionado
+    $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
+      var empresaSeleccionada = $('#id_empresa').val();
+      if (empresaSeleccionada) {
+        obtenerGraneles(empresaSeleccionada);
+      } else {
+        /* obtenerDatosGraneles(); */
+      }
+    });
 
-  // También cuando cambia el select
-  $('#id_empresa').on('change', function () {
-    var empresa = $(this).val();
-    obtenerGraneles(empresa);
+    // También cuando cambia el select
+    $('#id_empresa').on('change', function () {
+      var empresa = $(this).val();
+      obtenerGraneles(empresa);
+    });
   });
-});
 
   //end
 });
