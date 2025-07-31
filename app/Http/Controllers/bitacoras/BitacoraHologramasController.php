@@ -213,6 +213,7 @@ class BitacoraHologramasController extends Controller
                  'serie_merma' => $bitacora->serie_merma,
                 'observaciones' => $bitacora->observaciones ?? 'N/A',
                 'firma_ui' => $bitacora->firma_ui ?? 'N/A',
+                'mermas' => $bitacora->num_sellos_merma ?? 'N/A',
             ];
             $data[] = $nestedData;
         }

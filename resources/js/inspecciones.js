@@ -297,6 +297,7 @@ $(function () {
           const dictamen = full['url_dictamen'];
           const razon = full['razon_social'];
           const cliente = full['numero_cliente'];
+          const tiposValidos = [5, 3, 8, 11, 14];
 
           let html = '';
 
@@ -315,17 +316,19 @@ $(function () {
           }
 
           // DICTAMEN
-          if (dictamen && dictamen !== 'Sin subir') {
-            html += `<i class="ri-file-pdf-2-fill text-primary ri-30px pdf cursor-pointer"
-                        title="Ver Dictamen"
-                        data-bs-target="#mostrarPdf"
-                        data-bs-toggle="modal"
-                        data-bs-dismiss="modal"
-                        data-id="../${dictamen}"
-                        data-registro="${razon}">
-                     </i>`;
-          } else {
-            html += '<span class="badge bg-warning">Sin dictamen</span>';
+          if (tiposValidos.includes(Number(full['id_tipo']))) {
+                if (dictamen && dictamen !== 'Sin subir') {
+                  html += `<i class="ri-file-pdf-2-fill text-primary ri-30px pdf cursor-pointer"
+                              title="Ver Dictamen"
+                              data-bs-target="#mostrarPdf"
+                              data-bs-toggle="modal"
+                              data-bs-dismiss="modal"
+                              data-id="../${dictamen}"
+                              data-registro="${razon}">
+                          </i>`;
+                } else {
+                  html += '<span class="badge bg-warning">Sin dictamen</span>';
+                }
           }
 
           return html;

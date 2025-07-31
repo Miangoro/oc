@@ -191,6 +191,7 @@ botellas
 presentacion
 */
 //Buscar lote envasado -> granel
+/*1
 $loteIds = DB::table('lotes_envasado')
 ->select('id_lote_envasado')
 ->where('nombre', 'LIKE', "%{$search}%")
@@ -201,19 +202,36 @@ $loteIds = DB::table('lotes_envasado')
     ->where('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
     )
 ->pluck('id_lote_envasado')
+->toArray();*/
+//2 envasado->granel
+$loteIds = DB::table('lotes_envasado')
+    ->join('marcas', 'lotes_envasado.id_marca', '=', 'marcas.id_marca')
+    ->select('lotes_envasado.id_lote_envasado')
+    ->where(function ($query) use ($search) {
+        $query->where('lotes_envasado.nombre', 'LIKE', "%{$search}%")
+              ->orWhere('marcas.marca', 'LIKE', "%{$search}%");
+    })
+    ->union(
+        DB::table('lotes_envasado_granel')
+            ->join('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'lotes_envasado_granel.id_lote_granel')
+            ->select('lotes_envasado_granel.id_lote_envasado')
+            ->where('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
+    )
+->get()
+->pluck('id_lote_envasado')
 ->toArray();
 
 //Buscar lote envasado
 $loteEnvIds = DB::table('lotes_envasado')
 ->select('id_lote_envasado')
 ->where(function ($query) use ($search) {
-    $query->where('nombre', 'LIKE', "%{$search}%")
-        ->orWhere('id_marca', 'LIKE', "%{$search}%");
+    $query->where('nombre', 'LIKE', "%{$search}%");
     })
 ->pluck('id_lote_envasado')
 ->toArray();
 
 // Buscar lote granel
+/*1
 $loteGranelIds = DB::table('lotes_granel')
 ->select('id_lote_granel')
 ->where(function ($query) use ($search) {
@@ -223,6 +241,29 @@ $loteGranelIds = DB::table('lotes_granel')
         ->orWhere('volumen', 'LIKE', "%{$search}%")
         ->orWhere('volumen_restante', 'LIKE', "%{$search}%")
         ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
+    })
+->pluck('id_lote_granel')
+->toArray();*/
+//2 solo granel
+// Paso 1: obtener IDs del catálogo que coincidan con el search
+$tipoAgaveIds = DB::table('catalogo_tipo_agave')
+    ->where('nombre', 'LIKE', "%{$search}%")
+    ->orWhere('cientifico', 'LIKE', "%{$search}%")
+    ->pluck('id_tipo')
+    ->toArray();
+// Paso 2: buscar lotes_granel que contengan esos tipos
+$loteGranelIds = DB::table('lotes_granel')
+    ->select('id_lote_granel')
+    ->where(function ($query) use ($search, $tipoAgaveIds) {
+        $query->where('nombre_lote', 'LIKE', "%{$search}%")
+              ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+              ->orWhere('cont_alc', 'LIKE', "%{$search}%")
+              ->orWhere('volumen', 'LIKE', "%{$search}%")
+              ->orWhere('volumen_restante', 'LIKE', "%{$search}%");
+        // buscar por coincidencias en el array JSON
+        foreach ($tipoAgaveIds as $idTipo) {
+            $query->orWhere('id_tipo', 'LIKE', '%"'.$idTipo.'"%');
+        }
     })
 ->pluck('id_lote_granel')
 ->toArray();
@@ -242,6 +283,7 @@ $loteGranelIds = DB::table('lotes_granel')
                             $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
                                 ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
                                 ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
+                                ->orWhere('solicitudes.info_adicional', 'LIKE', "%{$search}%")
                                 ->orWhereHas('empresa', function ($q) use ($search) {
                                     $q->where('razon_social', 'LIKE', "%{$search}%");
                                 })
@@ -297,14 +339,19 @@ $loteGranelIds = DB::table('lotes_granel')
 
 //Buscar lote envasado -> granel
 $loteIds = DB::table('lotes_envasado')
-->select('id_lote_envasado')
-->where('nombre', 'LIKE', "%{$search}%")
-->union(
-    DB::table('lotes_envasado_granel')
-    ->join('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'lotes_envasado_granel.id_lote_granel')
-    ->select('lotes_envasado_granel.id_lote_envasado')
-    ->where('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
+    ->join('marcas', 'lotes_envasado.id_marca', '=', 'marcas.id_marca')
+    ->select('lotes_envasado.id_lote_envasado')
+    ->where(function ($query) use ($search) {
+        $query->where('lotes_envasado.nombre', 'LIKE', "%{$search}%")
+              ->orWhere('marcas.marca', 'LIKE', "%{$search}%");
+    })
+    ->union(
+        DB::table('lotes_envasado_granel')
+            ->join('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'lotes_envasado_granel.id_lote_granel')
+            ->select('lotes_envasado_granel.id_lote_envasado')
+            ->where('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
     )
+->get()
 ->pluck('id_lote_envasado')
 ->toArray();
 
@@ -312,22 +359,30 @@ $loteIds = DB::table('lotes_envasado')
 $loteEnvIds = DB::table('lotes_envasado')
 ->select('id_lote_envasado')
 ->where(function ($query) use ($search) {
-    $query->where('nombre', 'LIKE', "%{$search}%")
-        ->orWhere('id_marca', 'LIKE', "%{$search}%");
+    $query->where('nombre', 'LIKE', "%{$search}%");
     })
 ->pluck('id_lote_envasado')
 ->toArray();
 
 // Buscar lote granel
+$tipoAgaveIds = DB::table('catalogo_tipo_agave')
+    ->where('nombre', 'LIKE', "%{$search}%")
+    ->orWhere('cientifico', 'LIKE', "%{$search}%")
+    ->pluck('id_tipo')
+    ->toArray();
+// Paso 2: buscar lotes_granel que contengan esos tipos
 $loteGranelIds = DB::table('lotes_granel')
-->select('id_lote_granel')
-->where(function ($query) use ($search) {
-    $query->where('nombre_lote', 'LIKE', "%{$search}%")
-        ->orWhere('folio_fq', 'LIKE', "%{$search}%")
-        ->orWhere('cont_alc', 'LIKE', "%{$search}%")
-        ->orWhere('volumen', 'LIKE', "%{$search}%")
-        ->orWhere('volumen_restante', 'LIKE', "%{$search}%")
-        ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
+    ->select('id_lote_granel')
+    ->where(function ($query) use ($search, $tipoAgaveIds) {
+        $query->where('nombre_lote', 'LIKE', "%{$search}%")
+              ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+              ->orWhere('cont_alc', 'LIKE', "%{$search}%")
+              ->orWhere('volumen', 'LIKE', "%{$search}%")
+              ->orWhere('volumen_restante', 'LIKE', "%{$search}%");
+        // buscar por coincidencias en el array JSON
+        foreach ($tipoAgaveIds as $idTipo) {
+            $query->orWhere('id_tipo', 'LIKE', '%"'.$idTipo.'"%');
+        }
     })
 ->pluck('id_lote_granel')
 ->toArray();
@@ -345,6 +400,7 @@ $loteGranelIds = DB::table('lotes_granel')
                             $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
                                 ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
                                 ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
+                                ->orWhere('solicitudes.info_adicional', 'LIKE', "%{$search}%")
                                 ->orWhereHas('empresa', function ($q) use ($search) {
                                     $q->where('razon_social', 'LIKE', "%{$search}%");
                                 })
