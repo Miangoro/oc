@@ -159,6 +159,7 @@ $loteGranelIds = DB::table('lotes_granel')
                 $q->where('id_solicitud', 'LIKE', "%{$search}%")
                     ->orWhere('folio', 'LIKE', "%{$search}%")
                     ->orWhere('info_adicional', 'LIKE', "%{$search}%")
+                    ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
                     ->orWhereHas('empresa', function ($q) use ($search) {
                         $q->where('razon_social', 'LIKE', "%{$search}%");
                     })

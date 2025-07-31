@@ -383,16 +383,12 @@ class RevisionConsejoController extends Controller
 
     public function add_revision_consejo($id_revision)
     {
-
         $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
         $preguntas = preguntas_revision::where('tipo_revisor', 2)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->get();
 
         $revisor_personal = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where('id_certificado',$datos->id_certificado)->where('tipo_revision',1)->where('tipo_certificado', $datos->tipo_certificado)->first();
 
         $id_dictamen = $datos->certificado->dictamen->tipo_dictamen ?? '';
-
-
-
 
         if ($datos->tipo_certificado == 1) { //Instalaciones
 
@@ -430,6 +426,9 @@ class RevisionConsejoController extends Controller
         }
         return view('certificados.add_revision_consejo', compact('datos', 'preguntas', 'url', 'tipo','revisor_personal'));
     }
+
+
+    
     public function registrar_revision_consejo(Request $request)
     {
         try {
