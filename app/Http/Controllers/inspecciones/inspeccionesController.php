@@ -864,13 +864,24 @@ public function asignarInspector(Request $request)
         $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion', compact('datos', 'hora_llenado', 'fecha_llenado', 'fecha_llenado_fin', 'hora_llenado_fin'));
         return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
     }
+
+
+
     public function etiqueta_muestra($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
-        $pdf = Pdf::loadView('pdfs.Etiqueta_agave_art', ['datos' => $datos]);
+
+        $fecha_muestreo = Carbon::parse($datos->fecha_servicio)->translatedFormat('d/m/Y'); //formato moldeable con fecha y hora
+
+        $pdf = Pdf::loadView('pdfs.Etiqueta_agave_art', 
+            ['datos' => $datos,
+            'fecha_muestreo' => $fecha_muestreo ?? 'No encontrado',
+            ]);
         return $pdf->stream('Etiqueta para agave (%ART).pdf');
     }
 
+
+    
     public function etiqueta_granel($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
