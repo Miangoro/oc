@@ -1,5 +1,21 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+    var dt_user_table = $('.datatables-users'),
+    select2Elements = $('.select2'),
+    userView = baseUrl + 'app/user/view/account';
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+
+  initializeSelect2(select2Elements);
+
   const mezcalCheckbox = document.getElementById('customRadioIcon1');
   const bebidaCheckbox = document.getElementById('customRadioIcon2');
   const coctelCheckbox = document.getElementById('customRadioIcon3');

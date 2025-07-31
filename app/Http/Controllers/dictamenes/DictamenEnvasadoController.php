@@ -14,6 +14,7 @@ use App\Models\marcas;
 use App\Models\LotesGranel;
 use App\Models\solicitudesModel;
 use App\Models\Documentacion_url;
+use App\Models\maquiladores_model;
 ///Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -50,6 +51,22 @@ class DictamenEnvasadoController extends Controller
         // Pasar los datos a la vista
         return view('dictamenes.find_dictamen_envasado', compact('inspecciones', 'empresas', 'envasado', 'inspectores',  'marcas', 'lotes_granel'));
     }
+
+
+    private function obtenerEmpresasVisibles($empresaId)
+{
+    $idsEmpresas = [];
+
+    if ($empresaId) {
+        $idsEmpresas[] = $empresaId;
+        $idsEmpresas = array_merge(
+            $idsEmpresas,
+            maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+        );
+    }
+
+    return array_unique($idsEmpresas);
+}
 
 
 public function index(Request $request)
@@ -89,13 +106,17 @@ public function index(Request $request)
         ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'lotes_envasado_granel.id_lote_granel')
         ->select('dictamenes_envasado.*', 'empresa.razon_social');
 
-    if ($empresaId) {
+    /* if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
+    } */
+     if ($empresaId) {
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
+        $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
     }
+
+
     $baseQuery = clone $query;
     $totalData = $baseQuery->count();// totalData (sin búsqueda)
-
-
     // Búsqueda Global
     if (!empty($search)) {
         $query->where(function ($q) use ($search) {
