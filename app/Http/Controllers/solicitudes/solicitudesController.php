@@ -284,6 +284,7 @@ $loteGranelIds = DB::table('lotes_granel')
                                 ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
                                 ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
                                 ->orWhere('solicitudes.info_adicional', 'LIKE', "%{$search}%")
+                                ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
                                 ->orWhereHas('empresa', function ($q) use ($search) {
                                     $q->where('razon_social', 'LIKE', "%{$search}%");
                                 })
@@ -401,6 +402,7 @@ $loteGranelIds = DB::table('lotes_granel')
                                 ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
                                 ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
                                 ->orWhere('solicitudes.info_adicional', 'LIKE', "%{$search}%")
+                                ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
                                 ->orWhereHas('empresa', function ($q) use ($search) {
                                     $q->where('razon_social', 'LIKE', "%{$search}%");
                                 })
