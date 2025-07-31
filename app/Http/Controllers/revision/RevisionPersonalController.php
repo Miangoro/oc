@@ -385,9 +385,6 @@ class RevisionPersonalController extends Controller
 
 
 
-
-
-
     public function add_revision($id_revision)
     {
         $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
@@ -442,7 +439,7 @@ class RevisionPersonalController extends Controller
         return view('certificados.add_revision', compact('datos', 'preguntas', 'url', 'tipo','certificadoEscaneado','revisor_consejo'));
     }
 
-    
+
 
     public function registrar_revision(Request $request)
     {
