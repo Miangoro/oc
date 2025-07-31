@@ -789,6 +789,20 @@ $(function () {
             message: 'Por favor introduzca el idCIF del Servicio deAdministración Tributaria.'
           }
         }
+      },
+      sociedad_mercantil: {
+        validators: {
+          notEmpty: {
+
+          }
+        }
+      },
+      num_instrumento: {
+        validators: {
+          notEmpty: {
+
+          }
+        }
       }
     },
     plugins: {
@@ -814,7 +828,7 @@ $(function () {
       type: 'POST',
       success: function (status) {
         dt_user.draw();
-        offCanvasForm.offcanvas('hide');
+        offCanvasForm.modal('hide');
 
         // sweetalert
         Swal.fire({
@@ -828,7 +842,7 @@ $(function () {
       },
       error: function (err) {
 
-        offCanvasForm.offcanvas('hide');
+        offCanvasForm.modal('hide');
         Swal.fire({
           title: 'Duplicate Entry!',
           text: 'Your email should be unique.',
@@ -842,7 +856,7 @@ $(function () {
   });
 
   // clearing form data when offcanvas hidden
-  offCanvasForm.on('hidden.bs.offcanvas', function () {
+  offCanvasForm.on('hidden.bs.modal', function () {
     fv2.resetForm(true);
   });
 

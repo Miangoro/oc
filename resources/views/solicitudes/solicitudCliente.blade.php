@@ -257,7 +257,7 @@
                                         <span class="custom-option-body">
                                             <small>NOM-251-SSA1-2009</small>
                                         </span>
-                                        <input name="norma[]" class="form-check-input" type="checkbox" value="2"
+                                        <input name="norma[]" class="form-check-input" type="checkbox" value="3"
                                             id="customRadioIcon6" />
                                     </label>
                                 </div>
@@ -268,7 +268,7 @@
                                         <span class="custom-option-body">
                                             <small>NMX-V-052-NORMEX-2016</small>
                                         </span>
-                                        <input name="norma[]" class="form-check-input" type="checkbox" value="3"
+                                        <input name="norma[]" class="form-check-input" type="checkbox" value="2"
                                             id="customRadioIcon7" />
                                     </label>
                                 </div>
@@ -1044,121 +1044,6 @@
                         </div>
                         <hr>
                         {{-- se generan las direcciones --}}
-
-                        <div id="domiProductAgace" style="display: none;">
-                            <div class="content-header mb-4">
-                                <h6 class="mb-0">Domicilio de Productor de Agave:</h6>
-                            </div>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="localidad2" name="localidad2"
-                                            placeholder=" ">
-                                        <label for="localidad2">Domicilio completo</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado2" id="estado2">
-                                            <option disabled selected>selecciona un estado</option>
-                                            @foreach ($estados as $estado)
-                                                <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
-                                            @endforeach
-                                        </select>
-                                        <label for="estado2">Estado</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-
-
-                        <div id="domiEnvasaMezcal" style="display: none;">
-                            <div class="content-header mb-4">
-                                <h6 class="mb-0">Domicilio de Envasador de Mezcal:</h6>
-                            </div>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="localidad3"
-                                            name="domicilio_envasadora" placeholder=" ">
-                                        <label for="localidad3">Domicilio completo</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado_envasadora"
-                                            id="estado3">
-                                            <option disabled selected>selecciona un estado</option>
-                                            @foreach ($estados as $estado)
-                                                <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
-                                            @endforeach
-                                        </select>
-                                        <label for="estado3">Estado</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-
-
-                        <div id="domiProductMezcal" style="display: none;">
-                            <div class="content-header mb-4">
-                                <h6 class="mb-0">Domicilio de Productor de Mezcal:</h6>
-                            </div>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="localidad4"
-                                            name="domicilio_productora" placeholder=" ">
-                                        <label for="localidad4">Domicilio completo</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado_productora"
-                                            id="estado4">
-                                            <option disabled selected>selecciona un estado</option>
-                                            @foreach ($estados as $estado)
-                                                <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
-                                            @endforeach
-                                        </select>
-                                        <label for="estado4">Estado</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-
-                        <div id="domiComerMezcal" style="display: none;">
-                            <div class="content-header mb-4">
-                                <h6 class="mb-0">Domicilio de Comercializador de Mezcal:</h6>
-                            </div>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="localidad5"
-                                            name="domicilio_comercializadora" placeholder=" ">
-                                        <label for="localidad5">Domicilio completo</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado_comercializadora"
-                                            id="estado5">
-                                            <option disabled selected>selecciona un estado</option>
-                                            @foreach ($estados as $estado)
-                                                <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
-                                            @endforeach
-                                        </select>
-                                        <label for="estado5">Estado</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-
-
                         {{--  --}}
 
                         <div class="col-12 d-flex justify-content-between mt-3">
