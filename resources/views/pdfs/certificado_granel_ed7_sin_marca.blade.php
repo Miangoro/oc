@@ -320,7 +320,7 @@
 			<td class="columna">Ingredientes</td>
 			<td class="columna-norm">{{ $ingredientes }}</td>
 			<td class="columna" style="white-space: nowrap;">Volumen de lote</td>
-			<td class="columna-norm">{{ number_format($volumen) }} L</td>
+			<td class="columna-norm"> {{ $volumen }} L</td>
 			<td class="columna">Contenido Alcohólico</td>
 			<td class="columna-norm" style="white-space: nowrap;">{{ $cont_alc }}% Alc. Vol.</td>
 		</tr>
