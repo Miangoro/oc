@@ -68,7 +68,7 @@ $(function () {
       { data: 'fake_id' },
       {
         //data: 'folio',
-        render: function (data, type, full, meta) { 
+        render: function (data, type, full, meta) {
           var $folio = full['folio'];
           var $id = full['id_solicitud'];
           return `<span style="font-weight: bold; font-size: 1.1em;">${$folio}</span>
@@ -392,7 +392,7 @@ $(function () {
         render: function (data, type, full, meta) {
           ///estatus hologramas activados
           var $boton = '';
-          let textoEstatus = full['estatus_activado'] == 1 
+          let textoEstatus = full['estatus_activado'] == 1
               ? 'Cambiar estatus <span class="text-danger">desactivado</span>'
               : 'Cambiar estatus <span class="text-success">activado</span>';
           if ( full['id_tipo']== 5 ) {
@@ -4809,6 +4809,8 @@ $(document).on('click', '.pdfSolicitud', function () {
       dataType: 'json',
       success: function (response) {
         if (response.success) {
+
+
           $('#solicitud_id').val(id_solicitud);
           $('.razonSocial').html(response?.data?.empresa?.razon_social || 'No disponible');
           $('.id_empresa').html(response?.data?.empresa?.id_empresa || 'No disponible');
@@ -5112,6 +5114,19 @@ $(document).on('click', '.pdfSolicitud', function () {
               $(config.targetClass).text(config.noDocMessage);
             }
           });
+
+          $('select:visible').each(function () {
+                if ($(this).find('option[value="si"]').length) {
+                  $(this).val('si');
+                }
+              });
+
+               /*  $('.form-control').each(function () {
+            if ($(this).find('option[value="si"]').length) {
+              $(this).val('si');
+            }
+          }); */
+
         } else {
           console.warn('No se encontró información para la solicitud.');
         }
