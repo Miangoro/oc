@@ -84,10 +84,13 @@ $(function () {
           render: function (data, type, full, meta) {
             var $fecha = full['fecha'] ?? 'N/A';
             var $id_lote_envasado = full['nombre_lote'] ?? 'N/A';
-            var $obs = (full['observaciones'] || '').trim();
-            var $tipo_operacion = (full['tipo_operacion'] || '').trim();
+            var $obs = full['observaciones'];
+            var $tipo_operacion = full['tipo_operacion'];
+            var $serie_inicial = (full['serie_inicial'] ?? '').trim();
 
             let html = `
+      <span class="fw-bold small">Serie Inicial: </span>
+      <span class="small">${$serie_inicial || 'N/A'}</span><br>
       <span class="fw-bold small">Fecha: </span>
       <span class="small">${$fecha}</span><br>
       <span class="fw-bold small">Lote envasado: </span>
@@ -98,18 +101,6 @@ $(function () {
               html += `
         <br><span class="fw-bold small">Actividad: </span>
         <span class="small">${$tipo_operacion}</span>
-      `;
-            }
-
-            if ($mermas) {
-              html += '<br><span class="fw-bold small">Mermas: </span>' +
-                      '<span class="small">' + $mermas + '</span>';
-            }
-
-            if ($serie_inicial && $serie_inicial !== 'N/A' && $serie_inicial !== '0' && $serie_inicial !== 0) {
-              html += `
-        <br><span class="fw-bold small">Serie Inicial: </span>
-        <span class="small">${$serie_inicial}</span>
       `;
             }
 

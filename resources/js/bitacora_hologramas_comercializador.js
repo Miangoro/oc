@@ -86,25 +86,21 @@ $(function () {
             var $id_lote_envasado = full['nombre_lote'] ?? 'N/A';
             var $obs = full['observaciones'];
             var $tipo_operacion = full['tipo_operacion'];
+            var $serie_inicial = (full['serie_inicial'] ?? '').trim();
 
             let html = `
-      <span class="fw-bold small">Fecha: </span>
-      <span class="small">${$fecha}</span><br>
-      <span class="fw-bold small">Lote envasado: </span>
-      <span class="small">${$id_lote_envasado}</span>
-    `;
-
-            if ($obs && $obs !== 'N/A') {
-              html += `
-              <br><span class="fw-bold small">Observaciones: </span>
-              <span class="small">${$obs}</span>
+              <span class="fw-bold small">Serie Inicial: </span>
+              <span class="small">${$serie_inicial || 'N/A'}</span><br>
+              <span class="fw-bold small">Fecha: </span>
+              <span class="small">${$fecha}</span><br>
+              <span class="fw-bold small">Lote envasado: </span>
+              <span class="small">${$id_lote_envasado}</span>
             `;
-            }
 
-            if ($serie_inicial && $serie_inicial !== 'N/A' && $serie_inicial !== '0' && $serie_inicial !== 0) {
+            if ($tipo_operacion && $tipo_operacion !== 'N/A') {
               html += `
-        <br><span class="fw-bold small">Serie Inicial: </span>
-        <span class="small">${$serie_inicial}</span>
+        <br><span class="fw-bold small">Actividad: </span>
+        <span class="small">${$tipo_operacion}</span>
       `;
             }
 
