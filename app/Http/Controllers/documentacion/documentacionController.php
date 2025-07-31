@@ -12,6 +12,9 @@ use App\Models\Predios;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\RequisitoEvaluar;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class documentacionController extends Controller
 {
@@ -564,12 +567,15 @@ if ($act_instalacion != 'Produccion de agave') {
   }
 
 
+
   /* public function getNormas(Request $request)
     {
         $id_empresa = $request->input('cliente_id');
         $normas = DB::select("SELECT n.id_norma,norma FROM catalogo_norma_certificar n JOIN empresa_norma_certificar e ON (n.id_norma = e.id_norma) WHERE id_empresa = ?",[$id_empresa]);
         return response()->json($normas);
     }*/
+
+
 
   public function getActividades(Request $request)
   {
@@ -591,12 +597,10 @@ if ($act_instalacion != 'Produccion de agave') {
     return response()->json($actividades);
   }
 
+
+
   public function upload(Request $request)
   {
-
- 
-  
-
     if ($request->hasFile('url')) {
       $numeroCliente = $request->numCliente;
       $i = 0;
@@ -623,9 +627,10 @@ if ($act_instalacion != 'Produccion de agave') {
       }
     }
 
-
     return response()->json(['success' => $request, 'files' => $uploadedFiles,'id_documento' => $documento_id,'id'=>$id, 'folder'=>$numeroCliente]);
   }
+
+
 
   public function eliminarDocumento($id)
     {
@@ -648,4 +653,25 @@ if ($act_instalacion != 'Produccion de agave') {
         // Si no se encuentra el documento, retornar un error
         return response()->json(['success' => false, 'message' => 'Documento no encontrado.'], 404);
     }
+
+
+
+///PDF DICTAMEN
+public function mostrarRequisitosEvaluar($id)
+{
+  $data = RequisitoEvaluar::find($id);
+
+  $pdf = Pdf::loadView('pdfs.requisitos_evaluar_ed7', 
+    [//formato del PDF
+        'data' => $data,
+    ]);
+    //nombre al descarga
+    return $pdf->stream('F7.1-01-09 Requisitos a evaluar NOM-070-SCFI-2016 Ed7.pdf');
 }
+
+
+
+
+
+
+}//END
