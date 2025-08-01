@@ -17,6 +17,7 @@ use App\Http\Controllers\solicitudes\solicitudesController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;//Autentificar
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 
@@ -51,6 +52,7 @@ class RevisionConsejoController extends Controller
 
     public function index(Request $request)
     {
+       DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
         $columns = [
             1 => 'id_revision',
             2 => 'tipo',
@@ -86,9 +88,29 @@ class RevisionConsejoController extends Controller
         // Filtros de búsqueda
         if ($search) {
             $queryRevisor->where(function ($q) use ($search) {
+
+               // Traducir búsqueda textual a tipo_certificado
+        $tipoCertificado = null;
+        $searchLower = strtolower($search);
+        if (str_contains($searchLower, 'granel')) {
+            $tipoCertificado = 2;
+        } elseif (str_contains($searchLower, 'exportacion') || str_contains($searchLower, 'exportación')) {
+            $tipoCertificado = 3;
+        } elseif (
+            str_contains($searchLower, 'instalacion') || str_contains($searchLower, 'instalación') ||
+            str_contains($searchLower, 'productor') || str_contains($searchLower, 'envasador') ||
+            str_contains($searchLower, 'comercializador') || str_contains($searchLower, 'bodega') ||
+            str_contains($searchLower, 'maduracion') || str_contains($searchLower, 'maduración')
+        ) {
+            $tipoCertificado = 1;
+        }
+
                 $q->orWhereHas('user', function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%");
-                })
+                })->orWhere(function ($date) use ($search) {
+                       $date->whereRaw("DATE_FORMAT(created_at, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
+                       ->orWhere(function ($date2) use ($search) {
+                       $date2->whereRaw("DATE_FORMAT(updated_at, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
                 ->orWhereHas('certificadoNormal', function ($sub) use ($search) {
                     $sub->where('num_certificado', 'like', "%{$search}%");
                 })
@@ -97,7 +119,11 @@ class RevisionConsejoController extends Controller
                 })
                 ->orWhereHas('certificadoExportacion', function ($sub) use ($search) {
                     $sub->where('num_certificado', 'like', "%{$search}%");
-                });
+                })
+                 ->orWhere('tipo_certificado', 'LIKE', "%{$search}%");
+                  if (!is_null($tipoCertificado)) {
+            $q->orWhere('tipo_certificado', $tipoCertificado);
+        }
             });
         }
 
@@ -428,7 +454,7 @@ class RevisionConsejoController extends Controller
     }
 
 
-    
+
     public function registrar_revision_consejo(Request $request)
     {
         try {
@@ -766,15 +792,15 @@ class RevisionConsejoController extends Controller
         ->firstWhere('numero_cliente', '!=', null)
         ->numero_cliente ?? 'Sin asignar';
 
-        
+
             $reexpedido = '';
           if($revisor->certificado->certificadoReexpedido()){
             $reexpedido = 'Reexpedido';
           }
 
          $caracteristicas = json_decode( $revisor->certificado->dictamen->inspeccione->solicitud->caracteristicas);
-                         
-            
+
+
             $combinado = '';
           if(isset($caracteristicas->tipo_solicitud) && $caracteristicas->tipo_solicitud === '2'){
             $combinado = 'Combinado';
