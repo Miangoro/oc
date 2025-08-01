@@ -423,6 +423,71 @@ public function update(Request $request, $id_certificado)
 
 
 
+///FUNCION REEXPEDIR
+public function reexpedir(Request $request)
+{
+    try {
+        $request->validate([
+            'accion_reexpedir' => 'required|in:1,2',
+            'observaciones' => 'nullable|string',
+        ]);
+
+        if ($request->accion_reexpedir == '2') {
+            $request->validate([
+            'id_firmante' => 'required|integer',
+            'id_dictamen' => 'required|integer',
+            'num_certificado' => 'required|string|min:19',
+            'fecha_emision' => 'required|date',
+            'fecha_vigencia' => 'required|date',
+            'observaciones' => 'nullable|string',
+            ]);
+        }
+
+        $reexpedir = CertificadosGranel::findOrFail($request->id_certificado);
+
+        $dictamen = Dictamen_Granel::with('inspeccione.solicitud')->find($request['id_dictamen']);
+        $idLoteGranel = $dictamen->inspeccione->solicitud->id_lote_granel ?? null;
+
+
+        if ($request->accion_reexpedir == '1') {
+            $reexpedir->estatus = 1;
+            $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales);
+            $reexpedir->save();
+            return response()->json(['message' => 'Cancelado correctamente.']);
+
+        } elseif ($request->accion_reexpedir == '2') {
+            $reexpedir->estatus = 1;
+                $observacionesActuales = json_decode($reexpedir->observaciones, true);
+                $observacionesActuales['observaciones'] = $request->observaciones;
+            $reexpedir->observaciones = json_encode($observacionesActuales);
+            $reexpedir->save();
+
+            // Crear un nuevo registro de certificado (reexpedición)
+            $new = new CertificadosGranel();
+            $new->id_dictamen = $request->id_dictamen;
+            $new->num_certificado = $request->num_certificado;
+            $new->fecha_emision = $request->fecha_emision;
+            $new->fecha_vigencia = $request->fecha_vigencia;
+            $new->id_firmante = $request->id_firmante;
+            $new->estatus = 2;
+            $new->observaciones = json_encode(['id_sustituye' => $request->id_certificado]);
+            // Guarda el nuevo certificado
+            $new->save();
+
+            return response()->json(['message' => 'Registrado correctamente.']);
+        }
+
+        return response()->json(['message' => 'Procesado correctamente.']);
+    } catch (\Exception $e) {
+        Log::error('Error al reexpedir', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['error' => 'Error al procesar.'], 500);
+    }
+}
 
 
 
@@ -671,70 +736,6 @@ public function storeRevisor(Request $request)
 
 
 
-
-
-
-///FUNCION REEXPEDIR
-public function reexpedir(Request $request)
-{
-    try {
-        $request->validate([
-            'accion_reexpedir' => 'required|in:1,2',
-            'observaciones' => 'nullable|string',
-        ]);
-
-        if ($request->accion_reexpedir == '2') {
-            $request->validate([
-            'id_firmante' => 'required|integer',
-            'id_dictamen' => 'required|integer',
-            'num_certificado' => 'required|string|min:19',
-            'fecha_emision' => 'required|date',
-            'fecha_vigencia' => 'required|date',
-            'observaciones' => 'nullable|string',
-            ]);
-        }
-
-        $reexpedir = CertificadosGranel::findOrFail($request->id_certificado);
-
-        if ($request->accion_reexpedir == '1') {
-            $reexpedir->estatus = 1;
-            $observacionesActuales = json_decode($reexpedir->observaciones, true);
-                $observacionesActuales['observaciones'] = $request->observaciones;
-            $reexpedir->observaciones = json_encode($observacionesActuales);
-            $reexpedir->save();
-            return response()->json(['message' => 'Cancelado correctamente.']);
-
-        } elseif ($request->accion_reexpedir == '2') {
-            $reexpedir->estatus = 1;
-                $observacionesActuales = json_decode($reexpedir->observaciones, true);
-                $observacionesActuales['observaciones'] = $request->observaciones;
-            $reexpedir->observaciones = json_encode($observacionesActuales);
-            $reexpedir->save();
-
-            // Crear un nuevo registro de certificado (reexpedición)
-            $new = new CertificadosGranel();
-            $new->id_dictamen = $request->id_dictamen;
-            $new->num_certificado = $request->num_certificado;
-            $new->fecha_emision = $request->fecha_emision;
-            $new->fecha_vigencia = $request->fecha_vigencia;
-            $new->id_firmante = $request->id_firmante;
-            $new->estatus = 2;
-            $new->observaciones = json_encode(['id_sustituye' => $request->id_certificado]);
-            // Guarda el nuevo certificado
-            $new->save();
-
-            return response()->json(['message' => 'Registrado correctamente.']);
-        }
-
-        return response()->json(['message' => 'Procesado correctamente.']);
-    } catch (\Exception $e) {
-        Log::error('Error al reexpedir', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        return response()->json(['error' => 'Error al procesar.'], 500);
-    }
-}
 
 
 

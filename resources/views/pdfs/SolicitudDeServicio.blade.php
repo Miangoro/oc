@@ -586,7 +586,7 @@
                 granel vigente:</td>
             <td colspan="4">
                {{--  @if($muestreo_granel == 'X') {{ $datos->lote_granel->certificadoGranel->num_certificado ?? '---------------' }} @else --------------- @endif --}}
-               @if($muestreo_granel == 'X' || $exportacion == 'X' )
+               @if($muestreo_granel != 'X')
                     {{ $datos->lote_granel->certificadoGranel->num_certificado ?? '---------------' }}
                 @else --------------- @endif
             </td>
@@ -621,7 +621,7 @@
                 laboratorio:</td>
             <td colspan="3">
                 {{-- @if($muestreo_granel == 'X') {{ $datos->lote_granel->folio_fq ?? '---------------' }} @else --------------- @endif --}}
-                @if($muestreo_granel == 'X' || $exportacion == 'X' )
+                @if($muestreo_granel != 'X')
                     {{ $datos->lote_granel->folio_fq ?? '---------------' }}
                 @else --------------- @endif
             </td>
