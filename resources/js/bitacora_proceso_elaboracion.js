@@ -444,6 +444,9 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
+       $('#btnFirma').addClass('d-none');
+      $('#btnSpinner').removeClass('d-none');
+
       const formData = $(form).serialize();
       const id = $('#bitacora_id_firma').val();
 
@@ -455,6 +458,8 @@ $(function () {
           $('#offcanvasAddFirma').offcanvas('hide');
           $('#addFirma')[0].reset();
           $('.datatables-users').DataTable().ajax.reload();
+          $('#btnSpinner').addClass('d-none');
+          $('#btnFirma').removeClass('d-none');
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -487,6 +492,8 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+          $('#btnSpinner').addClass('d-none');
+          $('#btnFirma').removeClass('d-none');
         }
       });
     });

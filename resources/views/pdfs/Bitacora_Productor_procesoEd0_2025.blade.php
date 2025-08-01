@@ -120,25 +120,26 @@
         margin-left: auto;
 
     } */
-.segunda {
-    width:50%;
-    float: left;
-    border-collapse: collapse;
-}
+    .segunda {
+        width: 50%;
+        float: left;
+        border-collapse: collapse;
+    }
 
-.tercera {
-    width: 50%;
-    float: right;
-    border-collapse: collapse;
-}
-.contenedor-tablas::after {
-    content: "";
-    display: table;
-    clear: both;
-}
+    .tercera {
+        width: 50%;
+        float: right;
+        border-collapse: collapse;
+    }
+
+    .contenedor-tablas::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
 
 
-/* .contenedor-tablas {
+    /* .contenedor-tablas {
     overflow: hidden;
 }
  */
@@ -168,30 +169,25 @@
         margin-bottom: 10px;
     }
 
-    .observaciones-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-left: 0;
-    }
-
     .observaciones-table td {
-        padding: 0;
+        padding: 0 4px; /* un poco de padding horizontal para que no quede pegado al borde */
         text-align: left;
         font-size: 12px;
         word-break: break-word;
-        height: 15px;
-        vertical-align: top;
-        background: white;
-        font-family: 'calibri';
+        height: 24px; /* para que la altura sea fija y consistente con min-height */
+        vertical-align: bottom; /* para que la línea quede justo debajo del texto */
+        font-family: 'Calibri', sans-serif;
         border: none;
     }
+.linea {
+    text-decoration: underline;
+    padding-bottom: 6px; /* opcional para algo de espacio */
+    min-height: 24px;
+    font-family: 'calibri';
+    font-size: 12px;
+}
 
-    .line td {
-        border-bottom: 1px solid black;
-        height: 17px;
-    }
-
-      .text-title-destilacion {
+    .text-title-destilacion {
         border: none;
         padding: 0;
         /* font-family: 'calibri'; */
@@ -263,7 +259,7 @@
     <div>
         <p class="subtitle">INGRESO E IDENTIFICACIÓN DEL AGAVE</p>
     </div>
-
+    @php use Carbon\Carbon; @endphp
     <table>
         <tbody>
             <tr class="text-title">
@@ -276,6 +272,30 @@
                 <td>% DE ART</td>
             </tr>
             <tr>
+                <td class="no-border">1</td>
+                <td>{{ Carbon::parse($bitacora->fecha_ingreso)->translatedFormat('d \d\e F \d\e Y') }}</td>
+
+                <td>{{ $bitacora->numero_guia ?? '' }}</td>
+                @php
+                    use App\Models\Tipos;
+
+                    $tipos = Tipos::whereIn('id_tipo', $bitacora->id_tipo_maguey_array)->get();
+                @endphp
+
+                <td>
+                    @foreach ($tipos as $tipo)
+                        {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)@if (!$loop->last)
+                            ,
+                        @endif
+                    @endforeach
+                </td>
+
+                {{-- <td>{{ $bitacora->id_tipo_maguey ?? '' }}</td> --}}
+                <td>{{ $bitacora->numero_pinas ?? '' }}</td>
+                <td>{{ $bitacora->kg_maguey ?? '' }}</td>
+                <td>{{ $bitacora->porcentaje_azucar ?? '' }}</td>
+            </tr>
+            {{-- <tr>
                 <td class="no-border">1</td>
                 <td></td>
                 <td></td>
@@ -301,14 +321,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
-            </tr>
+            </tr> --}}
         </tbody>
     </table>
 
-   {{--  <div> --}}
-        {{-- <p class="datos"></p> --}}
-        <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
-            ____________________________________________________________________</p>
+    {{--  <div> --}}
+    {{-- <p class="datos"></p> --}}
+    <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
+        ____________________________________________________________________</p>
     {{-- </div> --}}
 
     <br>
@@ -328,12 +348,19 @@
             </tr>
             <tr>
                 <td class="no-border">1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ $bitacora->kg_coccion ?? '' }}</td>
+
+                <td>
+                    @foreach ($tipos as $tipo)
+                        {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)@if (!$loop->last)
+                            ,
+                        @endif
+                    @endforeach
+                </td>
+                <td>{{ Carbon::parse($bitacora->fecha_inicio_coccion)->translatedFormat('d \d\e F \d\e Y') }}</td>
+                <td>{{ Carbon::parse($bitacora->fecha_fin_coccion)->translatedFormat('d \d\e F \d\e Y') }}</td>
             </tr>
-            <tr>
+            {{--  <tr>
                 <td class="no-border">2</td>
                 <td></td>
                 <td></td>
@@ -346,16 +373,16 @@
                 <td></td>
                 <td></td>
                 <td></td>
-            </tr>
+            </tr> --}}
         </tbody>
     </table>
 
 
     {{-- <div> --}}
-        {{-- <p class="datos"></p> --}}
-        <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
-            ____________________________________________________________________</p>
-  {{--   </div> --}}
+    {{-- <p class="datos"></p> --}}
+    <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
+        ____________________________________________________________________</p>
+    {{--   </div> --}}
     <br>
     <div>
         <p class="subtitle">MOLIENDA, FORMULACIÓN Y PRIMERA DESTILACIÓN</p>
@@ -383,263 +410,85 @@
                 <td>Volumen</td>
                 <td>%Alc.Vol.</td>
             </tr>
-            <tr>
-                <td class="no-border">1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">2</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">3</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">4</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">5</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">6</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">7</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">8</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">9</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">10</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">11</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">12</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">13</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">14</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">15</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">16</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            @php
+                $total_puntas_volumen = 0;
+                $total_mezcal_volumen = 0;
+                $total_colas_volumen = 0;
 
+                $total_puntas_porcentaje = 0;
+                $total_mezcal_porcentaje = 0;
+                $total_colas_porcentaje = 0;
+            @endphp
+
+            @foreach ($bitacora->molienda as $index => $molienda)
+                @php
+                    $total_puntas_volumen += $molienda->puntas_volumen ?? 0;
+                    $total_mezcal_volumen += $molienda->mezcal_volumen ?? 0;
+                    $total_colas_volumen += $molienda->colas_volumen ?? 0;
+
+                    $total_puntas_porcentaje += $molienda->puntas_porcentaje ?? 0;
+                    $total_mezcal_porcentaje += $molienda->mezcal_porcentaje ?? 0;
+                    $total_colas_porcentaje += $molienda->colas_porcentaje ?? 0;
+                @endphp
+                <tr>
+                    <td class="no-border">{{ $index + 1 }}</td>
+                    <td>
+                        {{ $molienda->fecha_molienda ? \Carbon\Carbon::parse($molienda->fecha_molienda)->translatedFormat('d \d\e F \d\e Y') : '' }}
+                    </td>
+                    <td>{{ $molienda->numero_tina ?? '' }}</td>
+                    <td>
+                        {{ $molienda->fecha_formulacion ? \Carbon\Carbon::parse($molienda->fecha_formulacion)->translatedFormat('d \d\e F \d\e Y') : '' }}
+                    </td>
+                    <td>{{ $molienda->volumen_formulacion !== null ? number_format($molienda->volumen_formulacion, 2) : '' }}
+                    </td>
+                    <td>
+                        {{ $molienda->fecha_destilacion ? \Carbon\Carbon::parse($molienda->fecha_destilacion)->translatedFormat('d \d\e F \d\e Y') : '' }}
+                    </td>
+                    <td>{{ $molienda->puntas_volumen !== null ? number_format($molienda->puntas_volumen, 2) : '' }}
+                    </td>
+                    <td>{{ $molienda->puntas_porcentaje !== null ? number_format($molienda->puntas_porcentaje, 2) . '%' : '' }}
+                    </td>
+                    <td>{{ $molienda->mezcal_volumen !== null ? number_format($molienda->mezcal_volumen, 2) : '' }}
+                    </td>
+                    <td>{{ $molienda->mezcal_porcentaje !== null ? number_format($molienda->mezcal_porcentaje, 2) . '%' : '' }}
+                    </td>
+                    <td>{{ $molienda->colas_volumen !== null ? number_format($molienda->colas_volumen, 2) : '' }}</td>
+                    <td>{{ $molienda->colas_porcentaje !== null ? number_format($molienda->colas_porcentaje, 2) . '%' : '' }}
+                    </td>
+                </tr>
+            @endforeach
 
             <tr>
                 <td class="no-border"></td>
                 <td class="no-border"></td>
                 <td class="no-border"></td>
                 <td>VOLUMEN TOTAL</td>
-                <td></td>
+                <td>{{ $bitacora->molienda_total_formulado }}</td>
                 <td>VOLUMEN TOTAL</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ number_format($total_puntas_volumen, 2) }}</td>
+                <td>{{ number_format($total_puntas_porcentaje, 2) . '%' }}</td>
+                <td>{{ number_format($total_mezcal_volumen, 2) }}</td>
+                <td>{{ number_format($total_mezcal_porcentaje, 2) . '%' }}</td>
+                <td>{{ number_format($total_colas_volumen, 2) }}</td>
+                <td>{{ number_format($total_colas_porcentaje, 2) . '%' }}</td>
             </tr>
         </tbody>
     </table>
 
-  {{--   <div> --}}
-        {{-- <p class="datos"></p> --}}
-        <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
-            ____________________________________________________________________</p>
-  {{--   </div> --}}
+    {{--   <div> --}}
+    {{-- <p class="datos"></p> --}}
+    <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
+        ____________________________________________________________________</p>
+    {{--   </div> --}}
 
 
 
     <div class="contenedor-tablas">
         <table class="segunda">
             <tbody>
-              <tr>
-              <td class="text-title-destilacion"  {{-- style="vertical-align: bottom; font-weight: bold; font-family: 'calibri-bold'; " --}} colspan="8">SEGUNDA DESTILACIÓN</td>
-              </tr>
+                <tr>
+                    <td class="text-title-destilacion" {{-- style="vertical-align: bottom; font-weight: bold; font-family: 'calibri-bold'; " --}} colspan="8">SEGUNDA DESTILACIÓN</td>
+                </tr>
 
                 <tr class="text-title">
                     <td class="no-border"></td>
@@ -657,71 +506,42 @@
                     <td>Volumen</td>
                     <td>%Alc.Vol.</td>
                 </tr>
-                <tr>
-                    <td class="no-border">1</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="no-border">2</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="no-border">3</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="no-border">4</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="no-border">5</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                @foreach ($bitacora->segundaDestilacion as $index => $destilacion)
+                    <tr>
+                        <td class="no-border">{{ $index + 1 }}</td>
+                        <td>{{ $destilacion->fecha_destilacion ? \Carbon\Carbon::parse($destilacion->fecha_destilacion)->translatedFormat('d \d\e F \d\e Y') : '' }}
+                        </td>
+                        <td>{{ $destilacion->puntas_volumen !== null ? number_format($destilacion->puntas_volumen, 2) : '' }}
+                        </td>
+                        <td>{{ $destilacion->puntas_porcentaje !== null ? number_format($destilacion->puntas_porcentaje, 2) . '%' : '' }}
+                        </td>
+                        <td>{{ $destilacion->mezcal_volumen !== null ? number_format($destilacion->mezcal_volumen, 2) : '' }}
+                        </td>
+                        <td>{{ $destilacion->mezcal_porcentaje !== null ? number_format($destilacion->mezcal_porcentaje, 2) . '%' : '' }}
+                        </td>
+                        <td>{{ $destilacion->colas_volumen !== null ? number_format($destilacion->colas_volumen, 2) : '' }}
+                        </td>
+                        <td>{{ $destilacion->colas_porcentaje !== null ? number_format($destilacion->colas_porcentaje, 2) . '%' : '' }}
+                        </td>
+                    </tr>
+                @endforeach
                 <tr>
                     <td class="no-border"></td>
                     <td>VOLUMEN TOTAL</td>
+                    <td>{{$bitacora->total_puntas_volumen}}</td>
                     <td></td>
+                    <td>{{$bitacora->total_mezcal_volumen}}</td>
                     <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{{$bitacora->total_colas_volumen}}</td>
                     <td></td>
                 </tr>
             </tbody>
         </table>
         <table class="tercera">
             <tbody>
-              <tr><td class="text-title-destilacion" {{--  style="vertical-align: bottom; font-weight: bold; font-family: 'calibri-bold'; " --}}  colspan="8">TERCERA DESTILACIÓN</td></tr>
+                <tr>
+                    <td class="text-title-destilacion" {{--  style="vertical-align: bottom; font-weight: bold; font-family: 'calibri-bold'; " --}} colspan="8">TERCERA DESTILACIÓN</td>
+                </tr>
 
                 <tr class="text-title">
                     <td class="no-border"></td>
@@ -804,21 +624,37 @@
     </div>
 
 
-  {{--   <div> --}}
-        {{-- <p class="datos"></p> --}}
-        <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
-            ____________________________________________________________________</p>
- {{--    </div> --}}
+    {{--   <div> --}}
+    {{-- <p class="datos"></p> --}}
+    <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
+        ____________________________________________________________________</p>
+    {{--    </div> --}}
 
-  {{--   <br> --}}
+    {{--   <br> --}}
 
-    <table class="observaciones-table2">
-        <tr>
-            <td>OBSERVACIONES</td>
-        </tr>
-    </table>
+<table class="observaciones-table2">
+    <tr>
+        <td>OBSERVACIONES</td>
+    </tr>
+</table>
+
+    @php
+        $lines = preg_split('/\r\n|\r|\n/', $bitacora->observaciones ?? '');
+        $max_lines = 5;
+    @endphp
 
     <table class="observaciones-table">
+        @for ($i = 0; $i < $max_lines; $i++)
+            <tr class="line">
+                <td class="linea">
+                    {{ $lines[$i] ?? '' }}
+                </td>
+            </tr>
+        @endfor
+    </table>
+
+
+   {{--  <table class="observaciones-table">
         <!-- Líneas para escribir -->
         <tr class="line">
             <td class="linea"></td>
@@ -835,7 +671,7 @@
         <tr class="line">
             <td class="linea"></td>
         </tr>
-    </table>
+    </table> --}}
 
     <script type="text/php">
     if (isset($pdf)) {

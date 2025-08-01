@@ -252,7 +252,10 @@ class BitacoraProcesoElaboracionController extends Controller
       {
           $bitacora = BitacoraProcesoElaboracion::with([
             'empresaBitacora.empresaNumClientes',
-              'firmante',])->find($id_bitacora);
+            'firmante',
+            'molienda',              // Agrega molienda para tenerla disponible
+            'segundaDestilacion'     // y también segunda destilación
+        ])->find($id_bitacora);
          if (!$bitacora) {
             return response()->json(['message' => 'Bitácora no encontrada'], 404);
           }
