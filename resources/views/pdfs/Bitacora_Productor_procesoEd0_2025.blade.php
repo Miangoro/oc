@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,9 +13,10 @@
         border-collapse: collapse;
     }
 
-    th, td {
+    th,
+    td {
         border: 1px solid;
-        padding: 8px;
+        padding: 0;
         text-align: center;
         font-size: 10px;
         word-wrap: break-word;
@@ -39,7 +41,8 @@
         font-size: 18px;
     }
 
-    tr.text-title td, tr.text-title th {
+    tr.text-title td,
+    tr.text-title th {
         padding: 0px;
         text-align: center;
         font-size: 12px;
@@ -57,7 +60,8 @@
         font-family: 'calibri-bold';
         font-size: 18px;
     }
-/*
+
+    /*
     .numero {
         text-align: right;
         margin-top: -30px;
@@ -89,33 +93,55 @@
         background: white;
     }
 
-    .inspector{
+    .inspector {
         font-family: 'calibri';
         margin-left: 20%;
+        margin-top: 2;
+        /* margin-bottom: -10px; */
     }
 
-    .datos {
+    /* .inspector {
         text-align: right;
         font-family: 'calibri-bold';
         font-size: 15px;
         right: 70px;
         margin-bottom: -40px;
         margin-right: 170px;
-    }
+    } */
 
-    .segunda {
+    /* .segunda {
         width: 50%;
         border-collapse: collapse;
-        margin-left: -5;
     }
 
     .tercera {
-    width: 50%;
+        width: 50%;
+        border-collapse: collapse;
+        margin-left: auto;
+
+    } */
+.segunda {
+    width:50%;
+    float: left;
     border-collapse: collapse;
-    margin-left: auto;
-    margin-right: -5;
-    margin-top: -220px;
-    }
+}
+
+.tercera {
+    width: 50%;
+    float: right;
+    border-collapse: collapse;
+}
+.contenedor-tablas::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+/* .contenedor-tablas {
+    overflow: hidden;
+}
+ */
 
     .observaciones-table2 {
         width: 30%;
@@ -153,7 +179,7 @@
         text-align: left;
         font-size: 12px;
         word-break: break-word;
-        height: 20px;
+        height: 15px;
         vertical-align: top;
         background: white;
         font-family: 'calibri';
@@ -162,48 +188,30 @@
 
     .line td {
         border-bottom: 1px solid black;
-        height: 20px;
+        height: 17px;
     }
 
-    .pie1 {
-            text-align: right;
-            font-size: 12px;
-            line-height: 1;
-            position: absolute;
-            bottom: -40px;
-            left: 0;
-            right: 0;
-            width: calc(100% - 40px);
-            height: 45px;
-            margin-right: 30px;
-            padding: 10px 0;
-            font-family: 'Lucida Sans Unicode';
-            z-index: 1;
-            color: #A6A6A6;
-     }
+      .text-title-destilacion {
+        border: none;
+        padding: 0;
+        /* font-family: 'calibri'; */
+        /* font-size: 14px; */
+        background: white;
+        text-align: center;
+        /* margin-top: -50px; */
+        font-size: 14px;
+        font-family: 'calibri-bold';
+    }
 
-    .pie {
-            text-align: right;
-            font-size: 12px;
-            line-height: 1;
-            position: fixed;
-            bottom: -40px;
-            left: 0;
-            right: 0;
-            width: calc(100% - 40px);
-            height: 45px;
-            margin-right: 30px;
-            padding: 10px 0;
-            font-family: 'Lucida Sans Unicode';
-            z-index: 1;
-            color: #A6A6A6;
-     }
-@page {
-        margin: 150px 105px 130px 105px;
+    @page {
+        margin: 145px 105px 80px 105px;
     }
 </style>
+
 <body>
-{{--     <div class="img">
+
+
+    {{--     <div class="img">
         <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Unidad de Inspección" class="logo-small">
     </div>
 
@@ -212,17 +220,18 @@
     </div>
  --}}
 
-        <div style="width: 100%; position: fixed; overflow: hidden; margin-top: -130px;">
+    <div style="width: 100%; position: fixed; overflow: hidden; margin-top: -130px;">
         {{-- Logo Unidad de Inspección --}}
         <div style="width: 25%; float: left; text-align: left;">
-            <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Unidad de Inspección" style="height: 100px; width: auto;">
+            <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Unidad de Inspección"
+                style="height: 100px; width: auto;">
         </div>
         {{-- Título y Cliente --}}
-        <div style="width: 50%; float: left; text-align: center;">
-            <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
+        <div style="width: 45%; float: left; text-align: center;">
+            <p style="font-size: 30px; margin: 0; font-family: 'calibri-bold';">
                 PROCESO DE ELABORACIÓN DE MEZCAL {{-- {{ $title }} --}}
             </p>
-         {{--   @php
+            {{--   @php
                 $razon = $empresaSeleccionada->razon_social ?? 'Sin razón social';
                 $numeroCliente = 'Sin número cliente';
 
@@ -240,9 +249,9 @@
             </p>
         </div>
         {{-- Logo OC (comentado) --}}
-        <div style="width: 25%; float: left; text-align: right;">
+        <div style="width: 25%; float: right; text-align: right;">
             {{-- <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo OC" style="height: 100px; width:auto;"> --}}
-        <p class="num">NÚM. TAPADA: ________________</p>
+            <p class="num">NÚM. TAPADA: ________________</p>
         </div>
         {{-- Limpiar floats --}}
         <div style="clear: both;"></div>
@@ -296,10 +305,11 @@
         </tbody>
     </table>
 
-    <div>
-        <p class="datos"></p>
-        <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR ____________________________________________________________________</p>
-    </div>
+   {{--  <div> --}}
+        {{-- <p class="datos"></p> --}}
+        <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
+            ____________________________________________________________________</p>
+    {{-- </div> --}}
 
     <br>
 
@@ -341,13 +351,14 @@
     </table>
 
 
+    {{-- <div> --}}
+        {{-- <p class="datos"></p> --}}
+        <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
+            ____________________________________________________________________</p>
+  {{--   </div> --}}
+    <br>
     <div>
-        <p class="datos"></p>
-        <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR ____________________________________________________________________</p>
-    </div>
-
-    <div class="pie1">
-        <p>Página 1 de 2</p>
+        <p class="subtitle">MOLIENDA, FORMULACIÓN Y PRIMERA DESTILACIÓN</p>
     </div>
 
     <table>
@@ -596,62 +607,8 @@
                 <td></td>
                 <td></td>
             </tr>
-            <tr>
-                <td class="no-border">17</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">18</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">19</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="no-border">20</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+
+
             <tr>
                 <td class="no-border"></td>
                 <td class="no-border"></td>
@@ -669,19 +626,21 @@
         </tbody>
     </table>
 
-    <div class="pie">
-        <p>Página 2 de 2</p>
-    </div>
+  {{--   <div> --}}
+        {{-- <p class="datos"></p> --}}
+        <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
+            ____________________________________________________________________</p>
+  {{--   </div> --}}
 
-    <div>
-        <p class="datos"></p>
-        <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR ____________________________________________________________________</p>
-    </div>
 
-    <br>
 
-    <table class="segunda">
+    <div class="contenedor-tablas">
+        <table class="segunda">
             <tbody>
+              <tr>
+              <td class="text-title-destilacion"  {{-- style="vertical-align: bottom; font-weight: bold; font-family: 'calibri-bold'; " --}} colspan="8">SEGUNDA DESTILACIÓN</td>
+              </tr>
+
                 <tr class="text-title">
                     <td class="no-border"></td>
                     <td rowspan="2">FECHA DE DESTILACIÓN</td>
@@ -689,7 +648,7 @@
                     <td colspan="2">MEZCAL</td>
                     <td colspan="2">COLAS</td>
                 </tr>
-                <tr>
+                <tr class="text-title">
                     <td class="no-border"></td>
                     <td>Volumen</td>
                     <td>%Alc.Vol.</td>
@@ -760,9 +719,10 @@
                 </tr>
             </tbody>
         </table>
-
         <table class="tercera">
             <tbody>
+              <tr><td class="text-title-destilacion" {{--  style="vertical-align: bottom; font-weight: bold; font-family: 'calibri-bold'; " --}}  colspan="8">TERCERA DESTILACIÓN</td></tr>
+
                 <tr class="text-title">
                     <td class="no-border"></td>
                     <td rowspan="2">FECHA DE DESTILACIÓN</td>
@@ -841,15 +801,18 @@
                 </tr>
             </tbody>
         </table>
+    </div>
 
-        <div>
-            <p class="datos"></p>
-            <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR ____________________________________________________________________</p>
-        </div>
 
-        <br>
+  {{--   <div> --}}
+        {{-- <p class="datos"></p> --}}
+        <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
+            ____________________________________________________________________</p>
+ {{--    </div> --}}
 
-        <table class="observaciones-table2">
+  {{--   <br> --}}
+
+    <table class="observaciones-table2">
         <tr>
             <td>OBSERVACIONES</td>
         </tr>
@@ -874,5 +837,43 @@
         </tr>
     </table>
 
+    <script type="text/php">
+    if (isset($pdf)) {
+        $pdf->page_script('
+
+ $font = $fontMetrics->get_font("Calibri", "normal");
+            $width = $pdf->get_width();
+            $size = 11;
+
+            $text1 = "Página $PAGE_NUM de $PAGE_COUNT";
+            $text2 = "F-7.1-01-57 Bitácora para proceso de elaboración de Mezcal";
+            $text3 = "Ed. 0 Entrada en vigor: 21-07-2025";
+
+            $textWidth1 = $fontMetrics->getTextWidth($text1, $font, $size);
+            $textWidth2 = $fontMetrics->getTextWidth($text2, $font, $size);
+            $textWidth3 = $fontMetrics->getTextWidth($text3, $font, $size);
+
+            // 🠗 Posición vertical
+            $y = 550;
+
+            // 🠔 Más a la izquierda
+            $rightMargin = 100;
+
+            $x1 = $width - $textWidth1 - $rightMargin;
+            $x2 = $width - $textWidth2 - $rightMargin;
+            $x3 = $width - $textWidth3 - $rightMargin;
+
+            $pdf->text($x1, $y, $text1, $font, $size);
+            $pdf->text($x2, $y + 15, $text2, $font, $size);
+            $pdf->text($x3, $y + 30, $text3, $font, $size);
+        ');
+    }
+    </script>
+
+
+
+
+
 </body>
+
 </html>
