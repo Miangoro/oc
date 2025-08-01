@@ -790,20 +790,20 @@ $(function () {
           }
         }
       },
-      sociedad_mercantil: {
+     /*  sociedad_mercantil: {
         validators: {
           notEmpty: {
 
           }
         }
-      },
-      num_instrumento: {
+      }, */
+     /*  num_instrumento: {
         validators: {
           notEmpty: {
 
           }
         }
-      }
+      } */
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -829,7 +829,7 @@ $(function () {
       success: function (status) {
         dt_user.draw();
         offCanvasForm.modal('hide');
-
+        $('#aceptarCliente').modal('hide');
         // sweetalert
         Swal.fire({
           icon: 'success',
@@ -843,6 +843,7 @@ $(function () {
       error: function (err) {
 
         offCanvasForm.modal('hide');
+        $('#aceptarCliente').modal('hide');
         Swal.fire({
           title: 'Duplicate Entry!',
           text: 'Your email should be unique.',

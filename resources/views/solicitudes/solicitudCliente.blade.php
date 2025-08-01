@@ -1029,7 +1029,7 @@
                             </div>
                         </div>
 
-                        <div class="row g-3">
+                        {{-- <div class="row g-3">
                             <div class="col-md-6 offset-md-6 d-flex justify-content-end align-items-center flex-column">
                                 <div class="text-light small fw-medium mb-2">Seleccionar</div>
                                 <label class="switch">
@@ -1041,7 +1041,7 @@
                                     <span class="switch-label">Usar la misma dirección fiscal</span>
                                 </label>
                             </div>
-                        </div>
+                        </div> --}}
                         <hr>
                         {{-- se generan las direcciones --}}
                         {{--  --}}
