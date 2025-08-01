@@ -24,6 +24,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DirectorioGranel;
 
 
 class Certificado_GranelController extends Controller
@@ -51,7 +53,10 @@ class Certificado_GranelController extends Controller
             ->get();
         $users = User::where('tipo',1)->get();
         $revisores = Revisor::all();
-        return view('certificados.find_certificados_granel', compact('certificados' , 'dictamenes' , 'users', 'revisores'));
+
+        $empresa = empresa::where('tipo', 2)->get();
+
+        return view('certificados.find_certificados_granel', compact('certificados' , 'dictamenes' , 'users', 'revisores', 'empresa'));
     }
 
 
@@ -257,6 +262,15 @@ public function index(Request $request)
 
 
 
+///FUNCION EXPORTAR DIRECTORIO
+public function exportarDirectorio(Request $request)
+{
+    $filtros = $request->only(['id_empresa', 'anio', 'mes', 'estatus']);
+    return Excel::download(new DirectorioGranel($filtros), '.xlsx');
+}
+
+
+
 ///FUNCION REGISTRAR
 public function store(Request $request)
 {
@@ -444,7 +458,10 @@ public function reexpedir(Request $request)
         }
 
         $reexpedir = CertificadosGranel::findOrFail($request->id_certificado);
-
+        //obtener solicitud de emision
+        $solicitud_emision = solicitudesModel::where('id_predio', $request->id_certificado)
+            ->where('id_tipo', 12)
+            ->first();
         $dictamen = Dictamen_Granel::with('inspeccione.solicitud')->find($request['id_dictamen']);
         $idLoteGranel = $dictamen->inspeccione->solicitud->id_lote_granel ?? null;
 
@@ -473,8 +490,13 @@ public function reexpedir(Request $request)
             $new->id_firmante = $request->id_firmante;
             $new->estatus = 2;
             $new->observaciones = json_encode(['id_sustituye' => $request->id_certificado]);
+            $new->id_lote_granel = $idLoteGranel;
             // Guarda el nuevo certificado
             $new->save();
+
+            $solicitud_emision->update([
+                'id_predio' => $new->id_certificado,
+            ]);
 
             return response()->json(['message' => 'Registrado correctamente.']);
         }

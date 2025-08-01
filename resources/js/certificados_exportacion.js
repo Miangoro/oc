@@ -583,15 +583,21 @@ $(function () {
           attr: {
             'data-bs-toggle': 'modal',
             'data-bs-dismiss': 'modal',
-            'data-bs-target': '#exportarExcelCertificados'
+            'data-bs-target': '#exportarExcelCertificados',
+            'data-export': 'certificados',
           }
 
         },
-        //Boton para exportar directorio
-        {
+        {//EXPORTAR DIRECTORIO
           text: '<i class="ri-download-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar directorio</span>',
           className: 'btn btn-success waves-effect waves-light me-2',
-          action: function (e, dt, node, config) {
+          attr: {
+            'data-bs-toggle': 'modal',
+            'data-bs-dismiss': 'modal',
+            'data-bs-target': '#exportarExcelCertificados',
+            'data-export': 'directorio',
+          }
+          /*action: function (e, dt, node, config) {
             const selectedEmpresa = $('#empresaSelect').val();
             const selectedAnio = $('#anioSelect').val();
             const selectedMes = $('#mesSelect').val();
@@ -614,25 +620,25 @@ $(function () {
             });
 
             window.location.href = '/descargar_reporte_directorio?' + params;
-          }
+          }*/
 
         }, buttons2, buttons,
-        /*         {//FIRMAR DOCUSIGN
-                  text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Firmar Docusign</span>',
-                  className: 'btn btn-info waves-effect waves-light me-2',
-                  action: function (e, dt, node, config) {
-                    window.location.href = '/add_firmar_docusign';
-                  }
-                }, */
-        /*         {//BOTON AGREGAR
-                  text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Certificado</span>',
-                  className: 'add-new btn btn-primary waves-effect waves-light',
-                  attr: {
-                    'data-bs-toggle': 'modal',
-                    'data-bs-dismiss': 'modal',
-                    'data-bs-target': '#ModalAgregar'
-                  }
-                } */
+            /*{//FIRMAR DOCUSIGN
+              text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Firmar Docusign</span>',
+              className: 'btn btn-info waves-effect waves-light me-2',
+              action: function (e, dt, node, config) {
+                window.location.href = '/add_firmar_docusign';
+              }
+            }, 
+            {//BOTON AGREGAR
+              text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Certificado</span>',
+              className: 'add-new btn btn-primary waves-effect waves-light',
+              attr: {
+                'data-bs-toggle': 'modal',
+                'data-bs-dismiss': 'modal',
+                'data-bs-target': '#ModalAgregar'
+              }
+            }*/
       ],
 
       ///PAGINA RESPONSIVA
@@ -676,7 +682,7 @@ $(function () {
 
 
   ///EXPORTAR EXCEL
-  $(document).ready(function () {
+/*$(document).ready(function () {
     $('#reporteForm').on('submit', function (e) {
       e.preventDefault(); // Prevenir el envío tradicional del formulario
       const exportUrl = $(this).attr('action'); // Obtener la URL del formulario
@@ -736,14 +742,103 @@ $(function () {
       });
     });
   });
-
   $(document).ready(function () {
     $('#restablecerFiltros').on('click', function () {
       $('#reporteForm')[0].reset();
       $('.select2').val('').trigger('change');
       console.log('Filtros restablecidos.');
     });
+  });*/
+$(document).ready(function () {
+
+  let exportarModo = 'certificados';
+  
+  // Detectar qué botón abre el modal y con qué tipo de exportación
+  $(document).on('click', '[data-bs-target="#exportarExcelCertificados"]', function () {
+    exportarModo = $(this).data('export') || 'certificados';
+    console.log('Modo de exportación:', exportarModo);
   });
+
+  // Botón "Generar"
+  $('#generarReporte').on('click', function () {
+    const form = $('#reporteForm');
+    const formData = form.serialize();
+    let exportUrl = rutasExportacion.certificados;
+
+    if (exportarModo === 'directorio') {
+      exportUrl = rutasExportacion.directorio;
+    }
+
+    Swal.fire({
+      icon: 'info',
+      title: 'Generando Reporte...',
+      text: 'Por favor espera mientras se genera el reporte.',
+      didOpen: () => Swal.showLoading(),
+      customClass: {
+        confirmButton: false
+      }
+    });
+
+    $.ajax({
+      url: exportUrl,
+      type: 'GET',
+      data: formData,
+      xhrFields: {
+        responseType: 'blob'
+      },
+      success: function (response) {
+          const today = new Date();
+          const yyyy = today.getFullYear();
+          const mm = String(today.getMonth() + 1).padStart(2, '0');
+          const dd = String(today.getDate()).padStart(2, '0');
+          const fecha = `${yyyy}_${mm}_${dd}`;
+
+
+          const link = document.createElement('a');
+          const url = window.URL.createObjectURL(response);
+          link.href = url;
+          link.download = exportarModo === 'directorio'
+              ? `directorio_certificados_exportacion_${fecha}.xlsx`
+              : 'reporte_certificados_exportacion.xlsx';
+          link.click();
+          window.URL.revokeObjectURL(url);
+
+          $('#exportarExcelCertificados').modal('hide');
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'El reporte se generó exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+          });
+      },
+      error: function (xhr, status, error) {
+          console.error('Error al generar el reporte:', error);
+          $('#exportarExcelCertificados').modal('hide');
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Ocurrió un error al generar el reporte.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+      }
+    });
+  });
+
+  // Reset filtros
+  $('#restablecerFiltros').on('click', function () {
+    $('#reporteForm')[0].reset();
+    $('.select2').val('').trigger('change');
+    console.log('Filtros restablecidos.');
+  });
+  
+});
+
+
 
 
 

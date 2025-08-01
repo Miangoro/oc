@@ -8,7 +8,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="reporteForm" action="{{ route('certificados.exportar') }}" method="GET">
+                <form id="reporteForm"  method="GET">
                     @csrf
                     <div class="mb-4">
                         <p class="text-start text-muted"><i class="ri-filter-fill"></i> Filtrar Datos </p>
@@ -95,7 +95,7 @@
 
                         <!-- Botones Generar Reporte y Cancelar -->
                         <div class="d-flex flex-wrap justify-content-end gap-3 order-2">
-                            <button type="submit" id="generarReporte" class="btn btn-primary">
+                            <button type="button" id="generarReporte" class="btn btn-primary">
                                 <i class="ri-file-excel-2-fill"></i> Generar
                             </button>
                             <button type="button" class="btn btn-outline-secondary"
@@ -108,5 +108,15 @@
         </div>
     </div>
 </div>
+
+
+
 <script>
+  const rutasExportacion = {
+    certificados: "{{ route('exportar.excel.exportacion') }}",
+    directorio: "{{ route('directorio-exportacion') }}",
+
+    certificadoGranel: "{{ route('directorio-granel') }}",
+    certificadoInstalacion: "{{ route('directorio-instalaciones') }}"
+  };
 </script>

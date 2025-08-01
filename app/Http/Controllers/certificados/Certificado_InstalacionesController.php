@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DirectorioInstalacion;
 
 
 class Certificado_InstalacionesController extends Controller
@@ -40,7 +42,10 @@ class Certificado_InstalacionesController extends Controller
             ->get();
         $users = User::where('tipo', 1)->get();
         $revisores = Revisor::all();
-        return view('certificados.find_certificados_instalaciones', compact('certificados','dictamenes', 'users', 'revisores'));
+
+        $empresa = empresa::where('tipo', 2)->get();
+
+        return view('certificados.find_certificados_instalaciones', compact('certificados','dictamenes', 'users', 'revisores', 'empresa'));
     }
 
 
@@ -306,6 +311,15 @@ public function index(Request $request)
             'code' => 200,
             'data' => $data,
         ]);
+}
+
+
+
+///FUNCION EXPORTAR DIRECTORIO
+public function exportarDirectorio(Request $request)
+{
+    $filtros = $request->only(['id_empresa', 'anio', 'mes', 'estatus']);
+    return Excel::download(new DirectorioInstalacion($filtros), '.xlsx');
 }
 
 
