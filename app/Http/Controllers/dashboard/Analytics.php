@@ -149,7 +149,11 @@ $TotalCertificadosExportacionPorMes = Certificado_Exportacion::with('dictamen.in
             'certificado_reexpedido' => $group->where('certificado_reexpedido', true)->count() > 0,
         ];
     })
+    ->sortBy(function ($item) { 
+        return \Carbon\Carbon::createFromFormat('Y-m', $item->mes); // 🔑 Ordena como fecha real
+    })
     ->values();
+
 
 
 
