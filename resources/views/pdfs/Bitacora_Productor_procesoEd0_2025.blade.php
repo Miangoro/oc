@@ -55,23 +55,14 @@
     }
 
     .num {
-        /* text-align: right;
-        margin-top: -30px; */
+        margin-top: 3rem;
+        text-align: right;
+        margin-right: 50px;
         font-family: 'calibri-bold';
         font-size: 18px;
     }
 
-    /*
-    .numero {
-        text-align: right;
-        margin-top: -30px;
-        font-family: 'calibri-bold';
-        font-size: 18px;
-        position: absolute;
-        right: 0;
-        top: 80px;
-        right: 70px;
-    } */
+
 
     .subtitle {
         text-align: center;
@@ -120,7 +111,7 @@
         margin-left: auto;
 
     } */
-    .segunda {
+/*     .segunda {
         width: 50%;
         float: left;
         border-collapse: collapse;
@@ -130,20 +121,22 @@
         width: 50%;
         float: right;
         border-collapse: collapse;
-    }
+    } */
 
     .contenedor-tablas::after {
         content: "";
         display: table;
         clear: both;
     }
+   /*  .contenedor-tablas {
+        display: flex;
+        vertical-align: top;
+    }
 
-
-    /* .contenedor-tablas {
-    overflow: hidden;
-}
- */
-
+    .contenedor-tablas table {
+        width: 49%;
+        border-collapse: collapse;
+    } */
     .observaciones-table2 {
         width: 30%;
         border-collapse: collapse;
@@ -170,22 +163,27 @@
     }
 
     .observaciones-table td {
-        padding: 0 4px; /* un poco de padding horizontal para que no quede pegado al borde */
+        padding: 0 4px;
+        /* un poco de padding horizontal para que no quede pegado al borde */
         text-align: left;
         font-size: 12px;
         word-break: break-word;
-        height: 24px; /* para que la altura sea fija y consistente con min-height */
-        vertical-align: bottom; /* para que la línea quede justo debajo del texto */
+        height: 24px;
+        /* para que la altura sea fija y consistente con min-height */
+        vertical-align: bottom;
+        /* para que la línea quede justo debajo del texto */
         font-family: 'Calibri', sans-serif;
         border: none;
     }
-.linea {
-    text-decoration: underline;
-    padding-bottom: 6px; /* opcional para algo de espacio */
-    min-height: 24px;
-    font-family: 'calibri';
-    font-size: 12px;
-}
+
+    .linea {
+        text-decoration: underline;
+        padding-bottom: 6px;
+        /* opcional para algo de espacio */
+        min-height: 24px;
+        font-family: 'calibri';
+        font-size: 12px;
+    }
 
     .text-title-destilacion {
         border: none;
@@ -247,7 +245,23 @@
         {{-- Logo OC (comentado) --}}
         <div style="width: 25%; float: right; text-align: right;">
             {{-- <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo OC" style="height: 100px; width:auto;"> --}}
-            <p class="num">NÚM. TAPADA: ________________</p>
+              {{--  <p class="num">NÚM. TAPADA: {{ $bitacora->numero_tapada ?? '____________' }}</p> --}}
+              <p class="num">
+                NÚM. TAPADA:
+                <span style="
+                    font-family: 'calibri-bold';
+                    display: inline-block;
+                    font-size: 20px;
+                    color: red;
+                    border-bottom: 1.5px solid black;
+                    min-width: 100px;
+                    padding-bottom: 1px;
+                    text-align: center;">
+                    {{ $bitacora->numero_tapada ?? '____________' }}
+                </span>
+            </p>
+
+
         </div>
         {{-- Limpiar floats --}}
         <div style="clear: both;"></div>
@@ -324,11 +338,39 @@
             </tr> --}}
         </tbody>
     </table>
+<p class="inspector" style="font-family: 'calibri';">
+        NOMBRE Y FIRMA DEL INSPECTOR&nbsp;&nbsp;
 
+        @if ($userEntradaMaguey && $userEntradaMaguey->firma)
+            @php
+                $firma = $userEntradaMaguey->firma;
+                $rutaFirma = public_path('storage/firmas/' . $firma);
+            @endphp
+
+            @if (!empty($firma) && file_exists($rutaFirma))
+                <span style="display: inline-block; text-align: center; min-width: 150px;">
+                    <img src="{{ $rutaFirma }}" alt="Firma" style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
+                    <br>
+                    <span
+                        style="border-bottom: 1.2px solid #000; display: inline-block; min-width: 405px; margin-top:18px;">
+                        {{ $userEntradaMaguey->name }}
+                    </span>
+                </span>
+            @else
+                <span style="border-bottom: 1.5px solid #000; min-width: 300px; display: inline-block;">
+                    Firma no encontrada
+                </span>
+            @endif
+        @else
+            <span style="border-bottom: 1.5px solid #000; min-width: 300px; display: inline-block;">
+                Sin firma
+            </span>
+        @endif
+    </p>
     {{--  <div> --}}
     {{-- <p class="datos"></p> --}}
-    <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
-        ____________________________________________________________________</p>
+    {{-- <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
+        ____________________________________________________________________</p> --}}
     {{-- </div> --}}
 
     <br>
@@ -377,12 +419,44 @@
         </tbody>
     </table>
 
+    {{-- font-family: 'calibri';
+        margin-left: 20%;
+        margin-top: 2; --}}
 
-    {{-- <div> --}}
-    {{-- <p class="datos"></p> --}}
-    <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
-        ____________________________________________________________________</p>
-    {{--   </div> --}}
+
+    {{--
+    <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR  ____________________________________________________</p>
+ --}}
+ <p class="inspector" style="font-family: 'calibri';">
+        NOMBRE Y FIRMA DEL INSPECTOR&nbsp;&nbsp;
+
+        @if ($userCoccion && $userCoccion->firma)
+            @php
+                $firmaC = $userCoccion->firma;
+                $rutaFirmaC = public_path('storage/firmas/' . $firmaC);
+            @endphp
+
+            @if (!empty($firmaC) && file_exists($rutaFirmaC))
+                <span style="display: inline-block; text-align: center; min-width: 150px;">
+                   <img src="{{ $rutaFirmaC }}" alt="Firma" style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
+                    <br>
+                    <span
+                        style="border-bottom: 1.2px solid #000; display: inline-block; min-width: 405px; margin-top:20px;">
+                        {{ $userCoccion->name }}
+                    </span>
+                </span>
+            @else
+                <span style="border-bottom: 1.5px solid #000; min-width: 300px; display: inline-block;">
+                    Firma no encontrada
+                </span>
+            @endif
+        @else
+            <span style="border-bottom: 1.5px solid #000; min-width: 300px; display: inline-block;">
+                Sin firma
+            </span>
+        @endif
+    </p>
+
     <br>
     <div>
         <p class="subtitle">MOLIENDA, FORMULACIÓN Y PRIMERA DESTILACIÓN</p>
@@ -474,18 +548,47 @@
             </tr>
         </tbody>
     </table>
+<p class="inspector" style="font-family: 'calibri';">
+        NOMBRE Y FIRMA DEL INSPECTOR&nbsp;&nbsp;
 
+        @if ($userMolienda && $userMolienda->firma)
+            @php
+                $firmaM = $userMolienda->firma;
+                $rutaFirmaM = public_path('storage/firmas/' . $firmaM);
+            @endphp
+
+            @if (!empty($firmaM) && file_exists($rutaFirmaM))
+                <span style="display: inline-block; text-align: center; min-width: 150px;">
+                    <img src="{{ $rutaFirmaM }}" alt="Firma" style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
+                    <br>
+                    <span
+                        style="border-bottom: 1.2px solid #000; display: inline-block; min-width: 405px; margin-top:18px;">
+                        {{ $userMolienda->name }}
+                    </span>
+                </span>
+            @else
+                <span style="border-bottom: 1.5px solid #000; min-width: 300px; display: inline-block;">
+                    Firma no encontrada
+                </span>
+            @endif
+        @else
+            <span style="border-bottom: 1.5px solid #000; min-width: 300px; display: inline-block;">
+                Sin firma
+            </span>
+        @endif
+    </p>
     {{--   <div> --}}
     {{-- <p class="datos"></p> --}}
-    <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
-        ____________________________________________________________________</p>
+   {{--  <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
+        ____________________________________________________________________</p> --}}
     {{--   </div> --}}
 
-
-
-    <div class="contenedor-tablas">
-        <table class="segunda">
-            <tbody>
+<table width="100%" style="border: none;">
+    <tr style="border: none;">
+        <td style="vertical-align: top; width: 50%; border: none;">
+            <table class="segunda" style="width: 100%;">
+                <!-- tabla de segunda destilación -->
+                <tbody>
                 <tr>
                     <td class="text-title-destilacion" {{-- style="vertical-align: bottom; font-weight: bold; font-family: 'calibri-bold'; " --}} colspan="8">SEGUNDA DESTILACIÓN</td>
                 </tr>
@@ -528,17 +631,21 @@
                 <tr>
                     <td class="no-border"></td>
                     <td>VOLUMEN TOTAL</td>
-                    <td>{{$bitacora->total_puntas_volumen}}</td>
+                    <td>{{ $bitacora->total_puntas_volumen }}</td>
                     <td></td>
-                    <td>{{$bitacora->total_mezcal_volumen}}</td>
+                    <td>{{ $bitacora->total_mezcal_volumen }}</td>
                     <td></td>
-                    <td>{{$bitacora->total_colas_volumen}}</td>
+                    <td>{{ $bitacora->total_colas_volumen }}</td>
                     <td></td>
                 </tr>
             </tbody>
-        </table>
-        <table class="tercera">
-            <tbody>
+            </table>
+        </td>
+        <td style="vertical-align: top; width: 50%; border: none;">
+            <table class="tercera" style="width: 100%;">
+                <!-- tabla de tercera destilación -->
+
+                 <tbody>
                 <tr>
                     <td class="text-title-destilacion" {{--  style="vertical-align: bottom; font-weight: bold; font-family: 'calibri-bold'; " --}} colspan="8">TERCERA DESTILACIÓN</td>
                 </tr>
@@ -569,7 +676,7 @@
                     <td></td>
                     <td></td>
                 </tr>
-                <tr>
+                 <tr>
                     <td class="no-border">2</td>
                     <td></td>
                     <td></td>
@@ -579,28 +686,8 @@
                     <td></td>
                     <td></td>
                 </tr>
-                <tr>
+                 <tr>
                     <td class="no-border">3</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="no-border">4</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="no-border">5</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -620,23 +707,83 @@
                     <td></td>
                 </tr>
             </tbody>
-        </table>
-    </div>
+            </table>
+        </td>
+    </tr>
+</table>
 
+    <p class="inspector" style="font-family: 'calibri';">
+        NOMBRE Y FIRMA DEL INSPECTOR&nbsp;&nbsp;
 
+        @if ($userSegundaDestilacion && $userSegundaDestilacion->firma)
+            @php
+                $firmaS = $userSegundaDestilacion->firma;
+                $rutaFirmaS = public_path('storage/firmas/' . $firmaS);
+            @endphp
+
+            @if (!empty($firmaS) && file_exists($rutaFirmaS))
+                <span style="display: inline-block; text-align: center; min-width: 150px;">
+                    <img src="{{ $rutaFirmaS }}" alt="Firma" style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
+                    <br>
+                    <span
+                        style="border-bottom: 1.2px solid #000; display: inline-block; min-width: 405px; margin-top:18px;">
+                        {{ $userSegundaDestilacion->name }}
+                    </span>
+                </span>
+            @else
+                <span style="border-bottom: 1.5px solid #000; min-width: 300px; display: inline-block;">
+                    Firma no encontrada
+                </span>
+            @endif
+        @else
+            <span style="border-bottom: 1.5px solid #000; min-width: 300px; display: inline-block;">
+                Sin firma
+            </span>
+        @endif
+    </p>
+
+        <p class="inspector" style="font-family: 'calibri';">
+        NOMBRE Y FIRMA DEL INSPECTOR&nbsp;&nbsp;
+
+        @if ($userProductoTerminado && $userProductoTerminado->firma)
+            @php
+                $firmaP = $userProductoTerminado->firma;
+                $rutaFirmaP = public_path('storage/firmas/' . $firmaP);
+            @endphp
+
+            @if (!empty($firmaP) && file_exists($rutaFirmaP))
+                <span style="display: inline-block; text-align: center; min-width: 150px;">
+                    <img src="{{ $rutaFirmaP }}" alt="Firma" style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
+                    <br>
+                    <span
+                        style="border-bottom: 1.2px solid #000; display: inline-block; min-width: 405px; margin-top:18px;">
+                        {{ $userProductoTerminado->name }}
+                    </span>
+                </span>
+            @else
+                <span style="border-bottom: 1.5px solid #000; min-width: 300px; display: inline-block;">
+                    Firma no encontrada
+                </span>
+            @endif
+        @else
+            <span style="border-bottom: 1.5px solid #000; min-width: 300px; display: inline-block;">
+                Sin firma
+            </span>
+        @endif
+    </p>
     {{--   <div> --}}
     {{-- <p class="datos"></p> --}}
-    <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
-        ____________________________________________________________________</p>
+{{--     <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
+        ____________________________________________________________________</p> --}}
     {{--    </div> --}}
 
     {{--   <br> --}}
 
-<table class="observaciones-table2">
-    <tr>
-        <td>OBSERVACIONES</td>
-    </tr>
-</table>
+    <table class="observaciones-table2">
+        <tr>
+            <td>OBSERVACIONES</td>
+        </tr>
+    </table>
 
     @php
         $lines = preg_split('/\r\n|\r|\n/', $bitacora->observaciones ?? '');
@@ -654,7 +801,7 @@
     </table>
 
 
-   {{--  <table class="observaciones-table">
+    {{--  <table class="observaciones-table">
         <!-- Líneas para escribir -->
         <tr class="line">
             <td class="linea"></td>
@@ -677,7 +824,7 @@
     if (isset($pdf)) {
         $pdf->page_script('
 
- $font = $fontMetrics->get_font("Calibri", "normal");
+            $font = $fontMetrics->get_font("Calibri", "normal");
             $width = $pdf->get_width();
             $size = 11;
 

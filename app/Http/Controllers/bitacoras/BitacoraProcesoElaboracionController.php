@@ -14,6 +14,7 @@ use App\Models\maquiladores_model;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
 use App\Models\tipos;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -259,8 +260,27 @@ class BitacoraProcesoElaboracionController extends Controller
          if (!$bitacora) {
             return response()->json(['message' => 'Bitácora no encontrada'], 404);
           }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Productor_procesoEd0_2025', compact('bitacora'))
-          ->setPaper([0, 0, 1005.25, 612.3]); // 355 x 216 mm (horizontal)
+            $firmantes = json_decode($bitacora->id_firmante, true);
+
+            $entrada_maguey        = $firmantes['entrada_maguey']['id_firmante'] ?? null;
+            $coccion               = $firmantes['coccion']['id_firmante'] ?? null;
+            $molienda              = $firmantes['molienda']['id_firmante'] ?? null;
+            $segunda_destilacion   = $firmantes['segunda_destilacion']['id_firmante'] ?? null;
+            $producto_terminado    = $firmantes['producto_terminado']['id_firmante'] ?? null;
+
+            // Si quieres cargar los modelos User (opcional)
+            $userEntradaMaguey      = $entrada_maguey ? User::find($entrada_maguey) : null;
+            $userCoccion            = $coccion ? User::find($coccion) : null;
+            $userMolienda           = $molienda ? User::find($molienda) : null;
+            $userSegundaDestilacion = $segunda_destilacion ? User::find($segunda_destilacion) : null;
+            $userProductoTerminado  = $producto_terminado ? User::find($producto_terminado) : null;
+
+            $pdf = Pdf::loadView('pdfs.Bitacora_Productor_procesoEd0_2025', compact('bitacora','userEntradaMaguey',
+            'userCoccion',
+            'userMolienda',
+            'userSegundaDestilacion',
+            'userProductoTerminado'))
+              ->setPaper([0, 0, 1005.25, 612.3]); // 355 x 216 mm (horizontal)
 
 
 
