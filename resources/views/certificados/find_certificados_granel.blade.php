@@ -89,6 +89,8 @@
 @include('_partials/_modals/modal-trazabilidad-certificados')
 @include('_partials/_modals/modal-reexpedir-certificado-granel')
 @include('_partials/_modals/modal-add-certificado-firmado')
+
+@include('_partials/_modals/modal-export-excel-certificados-exportacion')
 <!-- /Modal -->
 
 @endsection

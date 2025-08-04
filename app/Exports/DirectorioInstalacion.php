@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Exports;
-use App\Models\Certificado_Exportacion;
+use App\Models\Certificados;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Carbon\Carbon;
 
 
-class DirectorioExport implements FromCollection, WithMapping, WithHeadings, WithEvents
+class DirectorioInstalacion implements FromCollection, WithMapping, WithHeadings, WithEvents
 {
     protected $filtros;
 
@@ -23,9 +23,9 @@ class DirectorioExport implements FromCollection, WithMapping, WithHeadings, Wit
 
     public function collection()
     {
-        $query = Certificado_Exportacion::query()
-            ->leftJoin('dictamenes_exportacion', 'dictamenes_exportacion.id_dictamen', '=', 'certificados_exportacion.id_dictamen')
-            ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
+        $query = Certificados::query()
+            ->leftJoin('dictamenes_instalaciones', 'dictamenes_instalaciones.id_dictamen', '=', 'certificados.id_dictamen')
+            ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_instalaciones.id_inspeccion')
             ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
             ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa');
         //->select('empresa.razon_social', 'certificados_exportacion.num_certificado', 'certificados_exportacion.fecha_emision', 'certificados_exportacion.fecha_vigencia', 'certificados_exportacion.estatus');
@@ -36,26 +36,26 @@ class DirectorioExport implements FromCollection, WithMapping, WithHeadings, Wit
         }
 
         if (!empty($this->filtros['anio'])) {
-            $query->whereYear('certificados_exportacion.fecha_emision', $this->filtros['anio']);
+            $query->whereYear('certificados.fecha_emision', $this->filtros['anio']);
         }
 
         if (!empty($this->filtros['mes'])) {
-            $query->whereMonth('certificados_exportacion.fecha_emision', $this->filtros['mes']);
+            $query->whereMonth('certificados.fecha_emision', $this->filtros['mes']);
         }
 
         if (!empty($this->filtros['estatus'])) {
-            $query->where('certificados_exportacion.estatus', $this->filtros['estatus']);
+            $query->where('certificados.estatus', $this->filtros['estatus']);
         }
 
         // Ordenar por empresa
-        return $query->orderBy('certificados_exportacion.fecha_emision', 'asc')->get();
+        return $query->orderBy('certificados.fecha_emision', 'asc')->get();
     }
 
 
     public function headings(): array
     {
         return [
-            ['Directorio de Certificados de Exportación'],
+            ['Directorio de Certificados de Instalaciones'],
             ['Fecha expedición / vigencia', 'Indicación del producto', 'Documentos a certificar', 'Identificación del cliente', 'Marca', 'Evaluador', 'No. de Certificación', 'Vigencia de certificación', 'Vigencia modificada']
         ];
     }
@@ -68,7 +68,7 @@ class DirectorioExport implements FromCollection, WithMapping, WithHeadings, Wit
         $fechas = "{$fechaEmision} al {$fechaVigencia}";
         //Lote envasado
         $lotes_env = $certificado->dictamen?->inspeccione?->solicitud?->lotesEnvasadoDesdeJson();//obtener todos los lotes
-        $marca = $lotes_env?->first()?->marca->marca ?? 'No encontrado';
+        $marca = $lotes_env?->first()?->marca->marca ?? ' ';
         /*$documentos = implode(', ', array_filter([
             $certificado->solicitud_numero ?? null,
             $certificado->opinion_codigo ?? null,
@@ -77,13 +77,13 @@ class DirectorioExport implements FromCollection, WithMapping, WithHeadings, Wit
 
         return [
             $fechas,
-            'Mezcal',
+            'Instalacion',
             'NOM-070-SCFI-2016',
             $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
             $marca,
             'Consejo para la  decisión de la Certificacion',
             $certificado->num_certificado ?? 'Sin folio',
-            '90 días naturales',
+            '365 días naturales',
             '',
         ];
     }

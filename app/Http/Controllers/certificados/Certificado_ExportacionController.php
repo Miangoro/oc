@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Auth;//Permiso empresa
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
-use function PHPUnit\Framework\isNull;
+
 
 class Certificado_ExportacionController extends Controller
 {
@@ -390,25 +390,21 @@ public function index(Request $request)
     ]);
 }
 
-public function exportarExcel(Request $request)
+
+
+///FUNCION EXPORTAR DIRECTORIO
+public function exportarDirectorio(Request $request)
 {
     $filtros = $request->only(['id_empresa', 'anio', 'mes', 'estatus']);
-
-    $nombreArchivo = 'Directorio_certificados_' . date('Y_m_d_His') . '.xlsx';
-    return Excel::download(new DirectorioExport($filtros), $nombreArchivo);
+    //$nombreArchivo = 'Directorio_certificados_' . date('Y_m_d') . '.xlsx';
+    return Excel::download(new DirectorioExport($filtros), '.xlsx');
 }
-
 
 ///FUNCION EXPORTAR EXCEL
 public function exportar(Request $request)
 {
-    //try {
-        $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes']);
-        return Excel::download(new CertificadosExport($filtros), 'reporte_certificados.xlsx');
-    /*} catch (\Exception $e) {
-        Log::error('Error al generar el reporte: ' . $e->getMessage());
-        return response()->json(['message' => 'Error al generar el reporte. Verifica los filtros e intenta nuevamente.', 'code' => 500]);
-    }*/
+    $filtros = $request->only(['id_empresa', 'anio', 'mes', 'estatus']);
+    return Excel::download(new CertificadosExport($filtros), '.xlsx');
 }
 
 
