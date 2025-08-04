@@ -357,7 +357,7 @@
                 </div>
             @endcan
             @can('Estadísticas ui')
-                <div class="col-md-6 col-xxl-3">
+                <div class="col-md-6 col-xxl-4">
                     <div class="card h-100">
                         <div class="card-header d-flex align-items-center justify-content-between">
                             <h5 class="card-title m-0 me-2">Inspecciones por inspector 2025</h5>
@@ -401,7 +401,7 @@
             @endcan
             @can('Estadísticas oc')
                 <!-- Line Chart -->
-                <div class="col-6 mb-6">
+                <div class="col-8 mb-8">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <div>
@@ -422,7 +422,7 @@
                     </div>
                 </div>
             @endcan
-            <div class="row">
+          
                 @can('Estadísticas ui')
                     <!-- Line Chart 
                     <div class="col-6 mb-6">
@@ -541,8 +541,7 @@
 
                 @endcanany
 
-            </div>
-
+    
 
 
 
