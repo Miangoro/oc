@@ -1030,6 +1030,7 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>Folio</th>
+                                            <th>Servicio</th>
                                             <th>Tipo</th>
                                             <th>Cliente</th>
                                             <th>Fecha</th>
