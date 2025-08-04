@@ -129,17 +129,27 @@ $certificadosPorVencer = $certificadosInstalacion;
 
     $empresaId = Auth::user()?->empresa?->id_empresa;
 
-$TotalCertificadosExportacionPorMes = Certificado_Exportacion::select(
-        DB::raw("DATE_FORMAT(fecha_emision, '%Y-%m') as mes"),
-        DB::raw("COUNT(*) as total")
-    )
+$TotalCertificadosExportacionPorMes = Certificado_Exportacion::with('dictamen.inspeccione.solicitud')
     ->whereHas('dictamen.inspeccione.solicitud.empresa', function ($query) use ($empresaId) {
         $query->where('id_empresa', $empresaId);
     })
-    ->where('fecha_emision','>','2024-12-31')
-    ->groupBy('mes')
-    ->orderBy('mes')
-    ->get();
+    ->whereHas('dictamen.inspeccione.solicitud', function ($query) {
+        $query->where('fecha_visita', '>', '2024-12-31');
+    })
+    ->get()
+    ->groupBy(function ($item) {
+        return \Carbon\Carbon::parse($item->dictamen->inspeccione->solicitud->fecha_visita)->format('Y-m');
+    })
+    ->map(function ($group) {
+        return [
+            'mes' => $group->first()->dictamen->inspeccione->solicitud->fecha_visita 
+                        ? \Carbon\Carbon::parse($group->first()->dictamen->inspeccione->solicitud->fecha_visita)->format('Y-m')
+                        : null,
+            'total' => $group->count(),
+        ];
+    })
+    ->values();
+
 
 
 
