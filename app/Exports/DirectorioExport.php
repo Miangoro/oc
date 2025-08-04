@@ -94,7 +94,7 @@ public function registerEvents(): array
     return [
         AfterSheet::class => function (AfterSheet $event) {
             $sheet = $event->sheet->getDelegate();
-
+            /*
             // Título
             $sheet->mergeCells('A1:I1');
             $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
@@ -111,6 +111,46 @@ public function registerEvents(): array
             }
 
             // Bordes
+            $sheet->getStyle('A2:I' . $sheet->getHighestRow())
+                ->getBorders()->getAllBorders()
+                ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+            */
+            // Insertar imagen a la izquierda (en la celda A1)
+            $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+            $drawing->setName('Logo CIDAM');
+            $drawing->setDescription('Logo CIDAM');
+            $drawing->setPath(public_path('img_pdf/logo_oc_3d.png')); // ruta absoluta a la imagen
+            $drawing->setHeight(50); // altura en píxeles, ajusta a tu gusto
+            $drawing->setCoordinates('A1');
+            $drawing->setOffsetX(10); // desplazamiento horizontal en px
+            $drawing->setWorksheet($sheet);
+
+            // Escribir título principal centrado
+            $sheet->mergeCells('B1:H1'); // celdas centrales, ajusta columnas si quieres
+            $sheet->setCellValue('B1', 'Directorio de Certificados de Exportación');
+            $sheet->getStyle('B1')->getFont()->setBold(true)->setSize(14);
+            $sheet->getStyle('B1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+            // Escribir texto de vigencia a la derecha (por ejemplo en I1)
+            $textoVigencia = "Directorio de Certificados de Exportación NOM-070-SCFI-2016 F7.1-01-20\nEdición 2 Entrada en vigor: 02/09/2022";
+            $sheet->setCellValue('I1', $textoVigencia);
+            $sheet->getStyle('I1')->getAlignment()->setWrapText(true);
+            $sheet->getStyle('I1')->getFont()->setSize(10);
+            $sheet->getStyle('I1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+            $sheet->getRowDimension(1)->setRowHeight(50); // para que alcance la altura de la imagen
+
+            // Opcional: estilos para toda la fila 1
+            $sheet->getStyle('A1:I1')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+            // El resto de tu código para encabezados, bordes, autoajuste...
+            $sheet->getStyle('A2:I2')->getFont()->setBold(true)->getColor()->setARGB('000000');
+            $sheet->getStyle('A2:I2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                ->getStartColor()->setRGB('8eaadc');
+
+            foreach (range('A', 'I') as $col) {
+                $sheet->getColumnDimension($col)->setAutoSize(true);
+            }
+
             $sheet->getStyle('A2:I' . $sheet->getHighestRow())
                 ->getBorders()->getAllBorders()
                 ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);

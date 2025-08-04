@@ -547,6 +547,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/solicitudinfo_cliente/{id}', [clientesProspectoController::class, 'info'])->name('solicitud_cliente');
     Route::get('/prestacion_servicio_fisica/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaFisica070'])->name('prestacion_servicio_fisica');
     Route::get('/prestacion_servicio_moral/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaMoral070'])->name('prestacion_servicio_moral');
+
+    Route::get('/requisitos_evaluar/{id}', [clientesConfirmadosController::class, 'mostrarRequisitosEvaluar'])->name('PDF-requisitos-evaluar-documentos');
 });
 Route::get('/generate-pdf', [PdfController::class, 'generatePdf'])->name('generate-pdf')->middleware(['auth']);
 
@@ -724,9 +726,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/documentacion/getActividades', [documentacionController::class, 'getActividades'])->name('documentacion.getActividades');
     Route::post('/upload', [documentacionController::class, 'upload'])->name('upload');
     Route::delete('/eliminar-documento/{id}', [documentacionController::class, 'eliminarDocumento'])->name('eliminarDocumento');
-
-    Route::get('/requisitos_evaluar/{id}', [documentacionController::class, 'mostrarRequisitosEvaluar'])->name('PDF-requisitos-evaluar-documentos');
-    Route::get('/documentos/requisitos-pdf', [documentacionController::class, 'generarRequisitosPDF'])->name('requisitos.pdf');
 });
 
 //-------------------TIPOS DE MAGUEY/AGAVE-------------------

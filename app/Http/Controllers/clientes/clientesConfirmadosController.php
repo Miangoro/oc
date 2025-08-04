@@ -16,11 +16,13 @@ use App\Models\User;
 use App\Models\catalogo_actividad_cliente;
 use App\Models\empresa_actividad;
 use App\Models\maquiladores_model;
+use App\Models\RequisitoEvaluar;
 use App\Notifications\GeneralNotification;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+
 
 class clientesConfirmadosController extends Controller
 {
@@ -664,5 +666,22 @@ public function actualizarRegistros(Request $request)
             'message' => 'Cliente registrado exitosamente',
         ]);
     }
+
+
+
+///PDF REQUISITOS A EVALUAR
+public function mostrarRequisitosEvaluar($id)
+{
+  $data = RequisitoEvaluar::all();
+
+  $pdf = Pdf::loadView('pdfs.requisitos_evaluar_ed7', 
+    [
+        'data' => $data,
+    ]);
+    
+    //nombre al descarga
+    return $pdf->stream('F7.1-01-09 Requisitos a evaluar NOM-070-SCFI-2016 Ed7.pdf');
+}
+
 
 }

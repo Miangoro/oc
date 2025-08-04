@@ -368,11 +368,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr style="background-color: #ffffff;">
+        @foreach ($data->where('tipo', 1) as $pregunta)
+            <tr>
                 <td class="colum-n"></td>
-                <td class="colum-x"></td>
+                <td class="colum-x">{{ $pregunta->pregunta }}</td>
                 <td class="colum-n"></td>
             </tr>
+        @endforeach
         </tbody>
     </table>
     <div style="width: 90%; margin: 20px auto; font-family: 'Arial', sans-serif; font-size: 12px;">
@@ -407,11 +409,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr style="background-color: #ffffff;">
-                <td class="colum-n"></td>
-                <td class="colum-x"></td>
-                <td class="colum-n"></td>
-            </tr>
+            @foreach ($data->where('tipo', 2) as $pregunta)
+                <tr style="background-color: #ffffff;">
+                    <td class="colum-n"></td>
+                    <td class="colum-x">{{ $pregunta->pregunta }}</td>
+                    <td class="colum-n"></td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
     

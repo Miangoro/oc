@@ -12,7 +12,6 @@ use App\Models\Predios;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\RequisitoEvaluar;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 
@@ -655,20 +654,6 @@ if ($act_instalacion != 'Produccion de agave') {
     }
 
 
-
-///PDF DICTAMEN
-public function mostrarRequisitosEvaluar($id)
-{
-  $data = RequisitoEvaluar::find($id);
-
-  $pdf = Pdf::loadView('pdfs.requisitos_evaluar_ed7', 
-    [//formato del PDF
-        'data' => $data,
-    ]);
-    
-    //nombre al descarga
-    return $pdf->stream('F7.1-01-09 Requisitos a evaluar NOM-070-SCFI-2016 Ed7.pdf');
-}
 
 
 
