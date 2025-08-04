@@ -665,6 +665,7 @@ public function mostrarRequisitosEvaluar($id)
     [//formato del PDF
         'data' => $data,
     ]);
+    
     //nombre al descarga
     return $pdf->stream('F7.1-01-09 Requisitos a evaluar NOM-070-SCFI-2016 Ed7.pdf');
 }

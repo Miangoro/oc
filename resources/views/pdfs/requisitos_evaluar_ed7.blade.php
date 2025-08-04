@@ -196,7 +196,7 @@
         .colum-n {
             vertical-align: middle;
             text-align: center;
-            
+
         }
 
         .colum-p {
@@ -321,21 +321,21 @@
     <table>
         <tbody>
             <tr>
-                <td class="colum-n" style="background-color: #8aaef7ff;">Cliente:</td>
+                <td class="colum-n" style="background-color: #80a1e4ff;">Cliente:</td>
                 <td colspan="3" class="colum-n"></td>
             </tr>
             <tr>
-                <td class="colum-n" style="background-color: #8aaef7ff;">Numero del cliente:</td>
+                <td class="colum-n" style="background-color: #80a1e4ff;">Numero del cliente:</td>
                 <td class="colum-p"></td>
-                <td class="colum-n" style="background-color: #8aaef7ff;">Fecha de revisión de
+                <td class="colum-n" style="background-color: #80a1e4ff;">Fecha de revisión de
                     expediente:</td>
                 <td class="colum-n"></td>
             </tr>
             <tr>
-                <td class="colum-n" style="background-color: #8aaef7ff;">Nombre de quien realiza la revisión del
+                <td class="colum-n" style="background-color: #80a1e4ff;">Nombre de quien realiza la revisión del
                     expediente:</td>
                 <td class="colum-n"></td>
-                <td class="colum-n" style="background-color: #8aaef7ff;">Firma de quien realiza la
+                <td class="colum-n" style="background-color: #80a1e4ff;">Firma de quien realiza la
                     revisión del expediente:</td>
                 <td class="colum-n"></td>
             </tr>
@@ -345,27 +345,471 @@
     <p class="title2">
         <strong><u>I. REQUISITOS PRODUCTOR DE MAGUEY</u></strong>
     </p>
-<br>
-<br>
-<br>
+
+    <br><br><br>
+
     <table>
         <tbody>
             <tr>
-                <td class="colum-n" style="background-color: #8aaef7ff;">Cliente:</td>
-                <td colspan="3" class="colum-n"></td>
+                <td class="colum-n" style="width: 35%; background-color: #8aaef7;">Dirección de instalación:</td>
+                <td class="colum-n" style="width: 65%;"></td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+
+
+    <table>
+        <thead>
+            <tr style="background-color: #ffffffff;">
+                <th class="colum-n" style="width: 10%;">C/NC</th>
+                <th class="colum-n" style="width: 70%;">Requisito documental</th>
+                <th class="colum-n" style="width: 20%;">Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="background-color: #ffffff;">
+                <td class="colum-n"></td>
+                <td class="colum-x"></td>
+                <td class="colum-n"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div style="width: 90%; margin: 20px auto; font-family: 'Arial', sans-serif; font-size: 12px;">
+        <p style="font-weight: bold; text-decoration: underline; margin-bottom: 10px;">
+            Nota: No requiere infraestructura ni equipamiento
+        </p>
+    </div>
+
+
+    <p class="title2">
+        <strong><u>II. REQUISITOS PRODUCTOR DE MEZCAL</u></strong>
+    </p>
+
+    <br><br><br>
+
+    <table>
+        <tbody>
+            <tr>
+                <td class="colum-n" style="width: 35%; background-color: #8aaef7;">Dirección de instalación:</td>
+                <td class="colum-n" style="width: 65%;"></td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+
+    <table>
+        <thead>
+            <tr style="background-color: #ffffffff;">
+                <th class="colum-n" style="width: 10%;">C/NC</th>
+                <th class="colum-n" style="width: 70%;">Requisito documental</th>
+                <th class="colum-n" style="width: 20%;">Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="background-color: #ffffff;">
+                <td class="colum-n"></td>
+                <td class="colum-x"></td>
+                <td class="colum-n"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="footer">
+        <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y
+            no puede ser distribuido
+            externamente sin la autorización escrita del Director Ejecutivo
+        </div>
+        
+    </div>
+
+    <div style="page-break-after: always;"></div>
+    <div class="content">
+        <p class="title">NOM-070-SCFI-2016</p>
+    </div>
+
+    <table>
+        <tbody>
+            <tr>
+                <td class="colum-n" style="width: 35%; background-color: #8aaef7;">Cliente:</td>
+                <td class="colum-n" style="width: 65%;"></td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- ░ REPRESENTANTE O RESPONSABLE DE TRÁMITES ░ -->
+    <table
+        style="width: 90%; margin: auto; border-collapse: collapse; font-size: 10px; font-family: 'Arial', sans-serif;">
+        <tbody>
+            <tr style="background-color: #ffffff;">
+                <td colspan="3" class="colum-s" style="font-weight: bold; text-align: center;">
+                    En caso de nombrar a un representante o responsable de trámites, anexar:
+                </td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+                <td style="width: 10%;"></td>
+                <td style="width: 80%;">Copia de identificación oficial vigente de la persona autorizada.</td>
+                <td style="width: 10%;"></td>
+            </tr>
+            <tr style="background-color: #e8e8e8ff;">
+                <td></td>
+                <td>Carta de designación de persona autorizada para realizar los trámites ante el Organismo Certificador
+                    CIDAM.</td>
+                <td></td>
             </tr>
         </tbody>
     </table>
 
 
 
-        <div class="footer">
-            <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y
-                no puede ser distribuido
-                externamente sin la autorización escrita del Director Ejecutivo
-            </div>
-            <div class="page-number">Página <strong>1</strong> de <strong>1</strong></div>
+    <!-- ░ BLOQUE INFRAESTRUCTURA Y EQUIPO ░ -->
+    <table
+        style="width: 90%; margin: auto; border-collapse: collapse; font-size: 10px; font-family: 'Arial', sans-serif;">
+        <tbody>
+            <!-- INFRAESTRUCTURA -->
+            <tr style="background-color: #ffffff;">
+                <td colspan="1" class="colum-s"
+                    style="font-weight: bold; text-align: center; text-decoration: underline; font-size: 11px;">
+                    I N F R A E S T R U C T U R A
+                </td>
+            </tr>
+            @php
+                $infraestructura = [
+                    'Área de recepción de Materia Prima' => 'Espacio para recibir el Maguey que se someterá a proceso, no es necesario que sea techado ni piso firme.',
+                    'Área de Pesado' => 'Espacio donde se pesarán las piñas del Maguey debiendo tener una báscula de al menos 500 kg., no es necesario que sea techado ni piso firme.',
+                    'Área de Cocción' => 'Horno de piso, horno de mampostería o autoclave para el cocimiento del Maguey. No es necesario que sea techado ni piso firme.',
+                    'Área de Maguey Cocido' => 'Espacio donde se colocará el Maguey cocido que se someterá a molienda, no es necesario que sea techado ni piso firme.',
+                    'Área de Molienda' => 'Espacio donde se realiza la maceración del Maguey cocido con mazo, tahona, desgarradora, tren de molinos o difusor. No es necesario que sea techado ni piso firme.',
+                    'Área de Fermentación' => 'Espacio donde se encuentran las tinas o tanques para llevar a cabo la fermentación, no es necesario que sea techado ni piso firme.',
+                    'Área de Destilación' => 'Espacio donde se realiza la destilación de los jugos fermentados en alambiques de caldera de cobre u olla de barro o columnas, no es necesario que sea techado ni piso firme.',
+                    'Almacén de Graneles' => 'Espacio donde se encuentran los recipientes del mezcal, es necesario que esté techado y con paredes de acuerdo a los materiales utilizados en la región, no es necesario piso firme.'
+                ];
+            @endphp
+
+            @foreach($infraestructura as $area => $detalle)
+                <tr style="background-color: {{ $loop->index % 2 == 0 ? '#ffffff' : '#e8e8e8ff' }};">
+                    <td
+                        style="border-left: 1px solid #cccccc; border-right: 1px solid #cccccc; border-top: none; border-bottom: none; padding: 3.5px;">
+                        <strong>{{ $area }}:</strong> {{ $detalle }}
+                    </td>
+                </tr>
+            @endforeach
+
+
+            <!-- EQUIPO -->
+            <tr style="background-color: #ffffff;">
+                <td class="colum-s" style="font-weight: bold; text-align: center; text-decoration: underline;">
+                    E Q U I P O
+                </td>
+            </tr>
+            @php
+                $equipo = [
+                    'Báscula 500 kg.',
+                    'Tanques de almacenamiento de plástico grado alimenticio o acero inoxidable.',
+                    'Juego de Alcoholímetros graduados a 20ºC: 0-100, 20-40, 40-60, 60-80 % Alc. Vol.',
+                    'Termómetro: -10-120 ºC.',
+                    'Probeta de plástico: 500 ml.',
+                    'Tabla de correcciones para grado alcohólico por temperatura a 20ºC.',
+                    'Bitácoras de producción',
+                    'Bitácoras de producto a granel',
+                    'Resultados de laboratorio: Resultados de laboratorio dentro de los parámetros marcados por la NOM-070-SCFI-2016',
+                    '',
+                    'Resultados de Unidad de verificación: Dictamen de cumplimiento con la NOM-070-SCFI-2016.'
+                ];
+            @endphp
+
+            @foreach($equipo as $index => $item)
+                <tr style="background-color: {{ $index % 2 == 0 ? '#ffffff' : '#e8e8e8ff' }};">
+                    <td
+                        style="border-left: 1px solid #cccccc; border-right: 1px solid #cccccc; border-top: none; border-bottom: solid #cccccc; padding: 3.5px; font-weight: bold">
+                        {{ $item }}
+                    </td>
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+    <p
+        style="width: 90%; margin: 10px auto; text-align: justify; font-family: 'Arial', sans-serif; font-size: 11px; line-height: 1.5;">
+        INFRAESTRUCTURA MÍNIMA: El espacio de producción no tiene un mínimo de metros cuadrados, sin embargo, es
+        deseable que se encuentre delimitado. Además, es necesario considerar que deben mantenerse la limpieza y las
+        buenas prácticas de manufactura, mantener alejados a los animales de granja y fuentes de producción.
+    </p>
+    <p class="title2">
+        <strong><u>III. REQUISITOS PARA ENVASADORES</u></strong>
+    </p>
+
+    <br><br><br>
+
+    <table>
+        <tbody>
+            <tr>
+                <td class="colum-n" style="width: 35%; background-color: #8aaef7;">Dirección de instalación:</td>
+                <td class="colum-n" style="width: 65%;"></td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table>
+        <thead>
+            <tr style="background-color: #ffffffff;">
+                <th class="colum-n" style="width: 10%;">C/NC</th>
+                <th class="colum-n" style="width: 70%;">Requisito documental</th>
+                <th class="colum-n" style="width: 20%;">Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="background-color: #ffffff;">
+                <td class="colum-n"></td>
+                <td class="colum-x"></td>
+                <td class="colum-n"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y
+            no puede ser distribuido
+            externamente sin la autorización escrita del Director Ejecutivo
         </div>
+        
+    </div>
+
+    <div style="page-break-after: always;"></div>
+
+
+    <div class="content">
+        <p class="title">NOM-070-SCFI-2016</p>
+    </div>
+    <table>
+        <tbody>
+            <tr>
+                <td class="colum-n" style="width: 35%; background-color: #8aaef7;">Cliente:</td>
+                <td class="colum-n" style="width: 65%;"></td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- ░ BLOQUE INFRAESTRUCTURA Y EQUIPO ░ -->
+    <table
+        style="width: 90%; margin: auto; border-collapse: collapse; font-size: 11px; font-family: 'Arial', sans-serif;">
+        <tbody>
+            <!-- INFRAESTRUCTURA -->
+            <tr style="background-color: #ffffff;">
+                <td colspan="1" class="colum-s"
+                    style="font-weight: bold; text-align: center; text-decoration: underline; font-size: 11.5px;">
+                    I N F R A E S T R U C T U R A
+                </td>
+            </tr>
+            @php
+                $infraestructura = [
+                    'Almacén de Insumos' => 'Espacio donde se encuentran las cajas, botellas, tapones, etiquetas, sellos y todo lo necesario para el envasado del mezcal, es necesario que esté techado y con paredes de acuerdo a los materiales utilizados en la región y piso firme.',
+                    'Almacén de Graneles' => 'Espacio donde se encuentran los recipientes del mezcal, es necesario que esté techado y con paredes de acuerdo a los materiales utilizados en la región, no es necesario piso firme.',
+                    'Sistema de Filtrado' => 'Proceso donde el mezcal es filtrado para eliminar los sólidos suspendidos, previo al envasado, necesario al menos un filtro de retención de sólidos.',
+                    'Área de Envasado' => 'Espacio donde se realiza el llenado y taponado de botellas, es necesario contar con al menos una mesa de trabajo específica para ello, es necesario que esté techado y con paredes de acuerdo a los materiales utilizados en la región, piso firme; se permite el envasado a mano debiendo implementar medidas de buenas prácticas de manufactura como son el uso de cofias, cubre bocas, guantes etc.',
+                    'Área de Etiquetado' => 'Espacio donde se realizará el pegado de las etiquetas y sellos de certificación a la botella, es necesario contar con al menos una mesa de trabajo específica para ello, es necesario que esté techado y con paredes de acuerdo a los materiales utilizados en la región, piso firme; se permite el etiquetado a mano debiendo implementar medidas de buenas prácticas de manufactura como son el uso de cofias, cubre bocas, guantes etc.',
+                    'Almacén de Producto Terminado' => 'Espacio donde se resguarda el producto que fue filtrado, envasado, taponado y etiquetado, listo para su comercialización, es necesario que esté techado y con paredes de acuerdo a los materiales utilizados en la región, piso firme.',
+                    'Área de Aseo del Personal' => 'Baño o medio baño con los servicios básicos para mantener la higiene del personal, es necesario que esté techado y con paredes de acuerdo a los materiales utilizados en la región, piso firme y que cuenten con instalaciones hidráulicas.'
+                ];
+
+            @endphp
+
+            @foreach($infraestructura as $area => $detalle)
+                <tr style="background-color: {{ $loop->index % 2 == 0 ? '#ffffff' : '#e8e8e8ff' }};">
+                    <td
+                        style="border-left: 1px solid #cccccc; border-right: 1px solid #cccccc; border-top: none; border-bottom: none; padding: 3.5px;">
+                        <strong>{{ $area }}:</strong> {{ $detalle }}
+                    </td>
+                </tr>
+            @endforeach
+
+
+            <!-- EQUIPO -->
+            <tr style="background-color: #ffffff;">
+                <td class="colum-s" style="font-weight: bold; text-align: center; text-decoration: underline;">
+                    E Q U I P O
+                </td>
+            </tr>
+            @php
+                $equipo = [
+                    'Tarimas',
+                    'Tanques de almacenamiento de plástico grado alimenticio o acero inoxidable',
+                    'Bomba de ½ pulgada para productos alimenticios',
+                    'Todas las mangueras deberán ser grado alimenticio',
+                    'Juego de Alcoholímetros graduados a 20ºC: 0-100, 20-40, 40-60, 60-80 % Alc. Vol.',
+                    'Termómetro: -10-120 ºC',
+                    'Probeta de plástico: 500 ml.',
+                    'Tabla de correcciones para grado alcohólico por temperatura a 20ºC',
+                    'Bitácora de producto envasado.',
+                    'Bitácoras de almacén de graneles.',
+                    'Bitácora de hologramas.',
+                    'Resultados de laboratorio: Resultados de laboratorio dentro de los parámetros marcados por la NOM-070-SCFI-2016',
+                    'Resultados de Unidad de verificación: Dictamen de cumplimiento con la NOM-070-SCFI-2016'
+                ];
+            @endphp
+
+            @foreach($equipo as $index => $item)
+                <tr style="background-color: {{ $index % 2 == 0 ? '#ffffff' : '#e8e8e8ff' }};">
+                    <td
+                        style="border-left: 1px solid #cccccc; border-right: 1px solid #cccccc; border-top: none; border-bottom: solid #cccccc; padding: 3.5px; font-weight: bold">
+                        {{ $item }}
+                    </td>
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+
+    <p
+        style="width: 90%; margin: 10px auto; text-align: justify; font-family: 'Arial', sans-serif; font-size: 11px; line-height: 1.5;">
+        INFRAESTRUCTURA MÍNIMA El espacio de envasado no tiene un mínimo de metros cuadrados, sin embargo, debe
+        ubicarse en una construcción con techo y paredes de acuerdo a los materiales utilizados en la región y piso
+        firme, su uso debe ser exclusivo para envasadora, no debe funcionar como casa, dormitorio, cocina o comedor,
+        además es
+        necesario considerar que deben mantener la limpieza y buenas prácticas de manufactura, mantener alejados a los
+        animales de granja y fuentes de producción.
+    </p>
+
+    <p class="title2">
+        <strong><u>IV. REQUISITOS PARA COMERCIALIZADORES</u></strong>
+    </p>
+
+    <br><br><br>
+
+    <table>
+        <tbody>
+            <tr>
+                <td class="colum-n" style="width: 35%; background-color: #8aaef7;">Dirección de instalación:</td>
+                <td class="colum-n" style="width: 65%;"></td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table>
+        <thead>
+            <tr style="background-color: #ffffffff;">
+                <th class="colum-n" style="width: 10%;">C/NC</th>
+                <th class="colum-n" style="width: 70%;">Requisito documental</th>
+                <th class="colum-n" style="width: 20%;">Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="background-color: #ffffff;">
+                <td class="colum-n"></td>
+                <td class="colum-x"></td>
+                <td class="colum-n"></td>
+            </tr>
+        </tbody>
+    </table>
+            </div>
+            
+    <div class="footer">
+        <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y
+            no puede ser distribuido
+            externamente sin la autorización escrita del Director Ejecutivo
+        </div>
+        
+    </div>
+    
+
+    
+     <div class="content">
+        <p class="title"></p>
+    </div>
+    <br>
+
+    <div class="content">
+        <p class="title">NOM-070-SCFI-2016</p>
+    </div>
+    <table>
+        <tbody>
+            <tr>
+                <td class="colum-n" style="width: 35%; background-color: #8aaef7;">Cliente:</td>
+                <td class="colum-n" style="width: 65%;"></td>
+            </tr>
+        </tbody>
+    </table>
+    <table
+        style="width: 90%; margin: auto; border-collapse: collapse; font-size: 10px; font-family: 'Arial', sans-serif;">
+        <tbody>
+            <!-- INFRAESTRUCTURA -->
+            <tr style="background-color: #ffffff;">
+                <td colspan="1" class="colum-s"
+                    style="font-weight: bold; text-align: center; text-decoration: underline; font-size: 11px;">
+                    I N F R A E S T R U C T U R A
+                </td>
+            </tr>
+            @php
+                $infraestructura = [
+                    'Almacén de producto terminado:' => 'Espacio donde se guarda el producto que fue entregado por el envasador y listo 
+                para su comercialización (no es obligatorio pudiendo convenir con el envasador que el producto se guarde en la 
+                envasadora).'
+                ];
+
+            @endphp
+
+            @foreach($infraestructura as $area => $detalle)
+                <tr style="background-color: {{ $loop->index % 2 == 0 ? '#ffffff' : '#e8e8e8ff' }};">
+                    <td
+                        style="border-left: 1px solid #cccccc; border-right: 1px solid #cccccc; border-top: none; border-bottom: none; padding: 3.5px;">
+                        <strong>{{ $area }}:</strong> {{ $detalle }}
+                    </td>
+                </tr>
+            @endforeach
+
+
+            <!-- EQUIPO -->
+            <tr style="background-color: #ffffff;">
+                <td class="colum-s" style="font-weight: bold; text-align: center; text-decoration: underline;">
+                    E Q U I P O
+                </td>
+            </tr>
+            @php
+                $equipo = [
+                    'Tarimas',
+                    'Bitácora de producto terminado'
+                ];
+            @endphp
+
+            @foreach($equipo as $index => $item)
+                <tr style="background-color: {{ $index % 2 == 0 ? '#ffffff' : '#e8e8e8ff' }};">
+                    <td
+                        style="border-left: 1px solid #cccccc; border-right: 1px solid #cccccc; border-top: none; border-bottom: solid #cccccc; padding: 3.5px; font-weight: bold">
+                        {{ $item }}
+                    </td>
+                </tr>
+            @endforeach
+
+            <tr style="background-color: #ffffff;">
+                <td class="colum-s" style="font-weight: bold; text-align: center; text-decoration: underline; border-bottom: none;">
+                    
+ CUMPLIMIENTO DE LA NOM-070-SCFI-2016
+                </td>
+            </tr>
+            @php
+                $equipo = [
+                    ' Bitácoras para el comercializador'
+                ];
+            @endphp
+
+            @foreach($equipo as $index => $item)
+                <tr style="background-color: {{ $index % 2 == 0 ? '#e8e8e8ff' : '#ffffff' }};">
+                    <td
+                        style="border-left: 1px solid #cccccc; border-right: 1px solid #cccccc; border-top: none; border-bottom: none; padding: 3.5px; font-weight: bold text-align: center;">
+                        {{ $item }}
+                    </td>
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+
+
+    <div class="footer">
+        <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y
+            no puede ser distribuido
+            externamente sin la autorización escrita del Director Ejecutivo
+        </div>
+        
+    </div>
 </body>
 
 </html>
