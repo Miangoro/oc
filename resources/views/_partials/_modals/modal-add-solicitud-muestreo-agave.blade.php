@@ -94,16 +94,16 @@
                 success: function(response) {
                     console.log(response);
                     var contenido = "";
-                    for (let index = 0; index < response.instalaciones.length; index++) {
+                    for (let index = 0; index < response.instalaciones_produccion.length; index++) {
                         // Limpia el campo tipo usando la función limpiarTipo
-                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-                        contenido = '<option value="' + response.instalaciones[index]
+                        var tipoLimpio = limpiarTipo(response.instalaciones_produccion[index].tipo);
+                        contenido = '<option value="' + response.instalaciones_produccion[index]
                             .id_instalacion + '">' +
-                            tipoLimpio + ' | ' + response.instalaciones[index]
+                            tipoLimpio + ' | ' + response.instalaciones_produccion[index]
                             .direccion_completa + '</option>' +
                             contenido;
                     }
-                    if (response.instalaciones.length == 0) {
+                    if (response.instalaciones_produccion.length == 0) {
                         contenido = '<option value="">Sin instalaciones registradas</option>';
                     }
                     $('#id_instalacion_dic2').html(contenido);
