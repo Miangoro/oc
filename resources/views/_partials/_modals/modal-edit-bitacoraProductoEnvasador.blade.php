@@ -66,16 +66,22 @@
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="edit_lote_granel"
-                                                name="lote_granel" placeholder="Lote a granel">
-                                            <label for="lote_granel">Lote a granel</label>
+                                            <select class="form-select select2" id="edit_lote_granel"
+                                                name="lote_granel"{{--  onchange="editObtenerDatosGraneles();" --}}>
+                                                <option value="" disabled selected>Selecciona un lote a granel
+                                                </option>
+                                            </select>
+                                            <label for="id_lote_granel">Lote a granel</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 mb-3">
+                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="edit_lote_envasado"
-                                                name="lote_envasado" placeholder="Lote envasado">
-                                            <label for="lote_envasado">Lote envasado</label>
+                                            <select class="form-select select2" id="edit_lote_envasado" {{-- onchange="editObtenerDatosGranelesInspecciones();" --}}
+                                                name="lote_envasado">
+                                                <option value="" disabled selected>Selecciona un lote envasado
+                                                </option>
+                                            </select>
+                                            <label for="id_lote_envasado">Lote envasado</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4 mb-3">
@@ -379,61 +385,30 @@
 </div>
 
 <script>
-    function obtenerGranelesEdit(empresa) {
-        if (empresa !== "" && empresa !== null && empresa !== undefined) {
+
+    function editObtenerDatosGraneles() {
+        var lote_granel_id = $("#id_lote_granel").val();
+        if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
             $.ajax({
-                url: '/getDatos/' + empresa,
+                url: '/getDatos2/' + lote_granel_id,
                 method: 'GET',
                 success: function(response) {
-                    var contenido = "";
-                    for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                            response
-                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
-                    }
-                    if (response.lotes_granel.length == 0) {
-                        contenido = '<option value="">Sin lotes registrados</option>';
-                    } else {
-
-                    }
-
-                    $('#edit_id_lote_granel').html(contenido);
-                    const idlote = $('#edit_id_lote_granel').data('selected');
-                    if (idlote) {
-                        $('#edit_id_lote_granel').val(idlote).trigger('change');
-                    }
-
-                    var contenidoI = "";
-                    for (let index = 0; index < response.instalaciones.length; index++) {
-                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-
-                        contenidoI = '<option value="' + response.instalaciones[index].id_instalacion +
-                            '">' +
-                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                            '</option>' +
-                            contenidoI;
-                    }
-                    if (response.instalaciones.length == 0) {
-                        contenidoI = '<option value="">Sin instalaciones registradas</option>';
-                    }
-                    $('#edit_id_instalacion').html(contenidoI);
-                    const idInst = $('#edit_id_instalacion').data('selected');
-                    if (idInst) {
-                        $('#edit_id_instalacion').val(idInst).trigger('change');
-                    }
-
+                    // Setear valores para los campos individuales
+                    $('#volumen_inicial').val(response.lotes_granel.volumen_restante);
+                    $('#alcohol_inicial').val(response.lotes_granel.cont_alc);
+                    $('#folio_fq').val(response.lotes_granel.folio_fq);
                 },
-                error: function() {}
+                error: function() {
+                    console.error('Error al obtener datos de graneles');
+                }
             });
+        } else {
+            $('#volumen_inicial').val('');
+            $('#alcohol_inicial').val('');
+            $('#folio_fq').val('');
         }
-    }
+         }
 
-    function limpiarTipo(tipo) {
-        try {
-            let tipoArray = JSON.parse(tipo);
-            return tipoArray.join(', ');
-        } catch (error) {
-            return tipo;
-        }
-    }
+
+
 </script>

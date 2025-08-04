@@ -21,7 +21,7 @@
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <select onchange="obtenerGraneles(this.value);" id="id_empresa"
+                                            <select  id="id_empresa"
                                                 name="id_empresa" class="select2 form-select"
                                                 data-error-message="por favor selecciona la empresa">
                                                 @if ($tipo_usuario != 3)
@@ -67,16 +67,22 @@
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="lote_granel"
-                                                name="lote_granel" placeholder="Lote a granel">
-                                            <label for="lote_granel">Lote a granel</label>
+                                            <select class="form-select select2" id="lote_granel"
+                                                name="lote_granel" onchange="obtenerDatosGraneles();">
+                                                <option value="" disabled selected>Selecciona un lote a granel
+                                                </option>
+                                            </select>
+                                            <label for="id_lote_granel">Lote a granel</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 mb-3">
+                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="lote_envasado"
-                                                name="lote_envasado" placeholder="Lote envasado">
-                                            <label for="lote_envasado">Lote envasado</label>
+                                            <select class="form-select select2" id="lote_envasado" onchange="obtenerDatosGranelesInspecciones();"
+                                                name="lote_envasado">
+                                                <option value="" disabled selected>Selecciona un lote envasado
+                                                </option>
+                                            </select>
+                                            <label for="id_lote_envasado">Lote envasado</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4 mb-3">
@@ -377,55 +383,9 @@
 </div>
 
 <script>
-    function obtenerGraneles(empresa) {
-        if (empresa !== "" && empresa !== null && empresa !== undefined) {
-            $.ajax({
-                url: '/getDatos/' + empresa,
-                method: 'GET',
-                success: function(response) {
-                    var contenido = "";
-                    for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                            response
-                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
-                    }
-                    if (response.lotes_granel.length == 0) {
-                        contenido = '<option value="">Sin lotes registrados</option>';
-                    } else {}
-                    $('#id_lote_granel').html(contenido);
-
-                    var contenidoI = "";
-                    for (let index = 0; index < response.instalaciones.length; index++) {
-                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-
-                        contenidoI = '<option value="' + response.instalaciones[index].id_instalacion +
-                            '">' +
-                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                            '</option>' +
-                            contenidoI;
-                    }
-                    if (response.instalaciones.length == 0) {
-                        contenidoI = '<option value="">Sin instalaciones registradas</option>';
-                    }
-                    $('#id_instalacion').html(contenidoI);
-                    obtenerDatosGraneles();
-                },
-                error: function() {}
-            });
-        }
-    }
-
-    function limpiarTipo(tipo) {
-        try {
-            let tipoArray = JSON.parse(tipo);
-            return tipoArray.join(', ');
-        } catch (error) {
-            return tipo; // En caso de que no sea un JSON válido, regresamos el texto original
-        }
-    }
 
     function obtenerDatosGraneles() {
-        var lote_granel_id = $("#id_lote_granel").val();
+        var lote_granel_id = $("#lote_granel").val();
         if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
             $.ajax({
                 url: '/getDatos2/' + lote_granel_id,
@@ -433,7 +393,25 @@
                 success: function(response) {
                     // Setear valores para los campos individuales
                     $('#volumen_inicial').val(response.lotes_granel.volumen_restante);
-                    $('#alcohol_inicial').val(response.lotes_granel.cont_alc);
+                    $('#alc_vol').val(response.lotes_granel.cont_alc);
+                    $('#folio_fq').val(response.lotes_granel.folio_fq);
+                    $('#edad').val(response.lotes_granel.edad);
+                    $('#ingredientes').val(response.lotes_granel.ingredientes);
+                    $('#id_tipo').val('');
+                   if (Array.isArray(response.tipo)) {
+                    response.tipo.forEach(t => {
+                        $('#id_tipo').append(
+                            $('<option>', {
+                                value: t.id_tipo,
+                                text: `${t.nombre} (${t.cientifico})`,
+                                selected: true // si deseas marcarlo automáticamente
+                            })
+                        );
+                    });
+                }
+
+                  $('#id_tipo').trigger('change');
+
                 },
                 error: function() {
                     console.error('Error al obtener datos de graneles');
@@ -441,7 +419,49 @@
             });
         } else {
             $('#volumen_inicial').val('');
-            $('#alcohol_inicial').val('');
+            $('#alc_vol').val('');
+            $('#folio_fq').val('');
+            $('#edad').val('');
+            $('#ingredientes').val('');
+            $('#id_tipo').val('');
         }
     }
+
+     function obtenerDatosGranelesInspecciones() {
+    var lote_envasado_id = $("#lote_envasado").val();
+    if (lote_envasado_id !== "" && lote_envasado_id !== null && lote_envasado_id !== undefined) {
+
+        $.ajax({
+            url: '/getDatosLoteEnvasado/' + lote_envasado_id,
+            method: 'GET',
+            success: function(response) {
+                const lotes_envasado = response.lotes_envasado || {};
+                const skuLimpio = limpiarSku(lotes_envasado.sku);
+                $('#sku').val(skuLimpio);
+
+                $('#cantidad_botellas_cajas').val(lotes_envasado.cant_botellas || '');
+            },
+            error: function() {
+                console.error('Error al obtener los datos del lote granel.');
+                $('#sku').val();
+                $('#cantidad_botellas_cajas').val();
+            }
+        });
+    }
+}
+
+function limpiarSku(sku) {
+    try {
+        const parsed = JSON.parse(sku);
+        if (parsed && typeof parsed === 'object' && parsed.inicial) {
+            return parsed.inicial;
+        }
+        return 'Sin definir';
+    } catch (e) {
+        return 'Sin definir';
+    }
+}
+
 </script>
+
+

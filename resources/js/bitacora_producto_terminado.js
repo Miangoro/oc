@@ -782,8 +782,8 @@ $(function () {
           $('#edit_tipo_op').val(bitacora.tipo_operacion).trigger('change');
           $('#edit_tipo').val(bitacora.tipo);
 
-          $('#edit_lote_granel').val(bitacora.lote_granel);
-          $('#edit_lote_envasado').val(bitacora.lote_envasado);
+          $('#edit_lote_granel').data('selected', bitacora.lote_granel);
+          $('#edit_lote_envasado').data('selected', bitacora.lote_envasado);
 
           $('#edit_id_marca').data('selected', bitacora.id_marca).trigger('change');
           $('#edit_id_categoria').val(bitacora.id_categoria).trigger('change');
@@ -1331,17 +1331,17 @@ $(function () {
     });
   });
 
-$(document).ready(function () {
-  // Al abrir el modal, cargar marcas para el cliente seleccionado
-  $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
-    cargarMarcas();
-  });
+  $(document).ready(function () {
+    // Al abrir el modal, cargar marcas para el cliente seleccionado
+    $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
+      cargarMarcas();
+    });
 
-  // Al cambiar la empresa, recargar marcas
-  $('#id_empresa').on('change', function () {
-    cargarMarcas();
+    // Al cambiar la empresa, recargar marcas
+    $('#id_empresa').on('change', function () {
+      cargarMarcas();
+    });
   });
-});
 
   function cargarMarcas() {
     var empresa = $('#id_empresa').val();
@@ -1362,6 +1362,46 @@ $(document).ready(function () {
           Macontenido = '<option value="" disabled selected>Sin marcas registradas</option>';
         }
         $('#id_marca').html(Macontenido);
+
+        var contenidoGranel = '<option value="" disabled selected>Selecciona un lote a granel</option>';
+
+        for (let index = 0; index < response.lotes_granel.length; index++) {
+          contenidoGranel +=
+            '<option value="' +
+            response.lotes_granel[index].id_lote_granel +
+            '">' +
+            response.lotes_granel[index].nombre_lote +
+            '</option>';
+        }
+        if (response.lotes_granel.length === 0) {
+          contenidoGranel = '<option value="">Sin lotes registrados</option>';
+        }
+        $('#lote_granel').html(contenidoGranel);
+
+        obtenerDatosGraneles();
+
+        var contenidoEnvasado = '<option value="" disabled selected>Selecciona un lote envasado</option>';
+
+        for (let i = 0; i < response.lotes_envasado.length; i++) {
+          let lote = response.lotes_envasado[i];
+          // Construir texto concatenado
+          let texto =
+            lote.nombre +
+            ' - ' +
+            (lote.cant_bot_restantes || 0) +
+            ' botellas - ' +
+            (lote.presentacion ?? 'N/A') +
+            ' ' +
+            lote.unidad;
+
+          contenidoEnvasado += '<option value="' + lote.id_lote_envasado + '">' + texto + '</option>';
+        }
+
+        if (response.lotes_envasado.length === 0) {
+          contenidoEnvasado = '<option value="">Sin lotes registrados</option>';
+        }
+
+        $('#lote_envasado').html(contenidoEnvasado).trigger('change');
       },
       error: function () {}
     });
@@ -1397,6 +1437,67 @@ $(document).ready(function () {
         } else if (response.marcas.length == 0) {
           $('#edit_id_marca').val('').trigger('change');
         }
+
+
+
+
+
+        var contenidoGranel = '<option value="" disabled selected>Selecciona un lote a granel</option>';
+
+        for (let index = 0; index < response.lotes_granel.length; index++) {
+          contenidoGranel +=
+            '<option value="' +
+            response.lotes_granel[index].id_lote_granel +
+            '">' +
+            response.lotes_granel[index].nombre_lote +
+            '</option>';
+        }
+        if (response.lotes_granel.length === 0) {
+          contenidoGranel = '<option value="">Sin lotes registrados</option>';
+        }
+        $('#edit_lote_granel').html(contenidoGranel);
+
+        const id_granel = $('#edit_lote_granel').data('selected');
+        if (id_granel) {
+          $('#edit_lote_granel').val(id_granel).trigger('change');
+        } else if (response.lotes_granel.length == 0) {
+          $('#edit_lote_granel').val('').trigger('change');
+        }
+
+        /* obtenerDatosGraneles(); */
+
+        var contenidoEnvasado = '<option value="" disabled selected>Selecciona un lote envasado</option>';
+
+        for (let i = 0; i < response.lotes_envasado.length; i++) {
+          let lote = response.lotes_envasado[i];
+          // Construir texto concatenado
+          let texto =
+            lote.nombre +
+            ' - ' +
+            (lote.cant_bot_restantes || 0) +
+            ' botellas - ' +
+            (lote.presentacion ?? 'N/A') +
+            ' ' +
+            lote.unidad;
+
+          contenidoEnvasado += '<option value="' + lote.id_lote_envasado + '">' + texto + '</option>';
+        }
+
+        if (response.lotes_envasado.length === 0) {
+          contenidoEnvasado = '<option value="">Sin lotes registrados</option>';
+        }
+
+        $('#edit_lote_envasado').html(contenidoEnvasado).trigger('change');
+
+          const id_envasado = $('#edit_lote_envasado').data('selected');
+        if (id_envasado) {
+          $('#edit_lote_envasado').val(id_envasado).trigger('change');
+        } else if (response.lotes_envasado.length == 0) {
+          $('#edit_lote_envasado').val('').trigger('change');
+        }
+
+
+
       },
       error: function () {}
     });

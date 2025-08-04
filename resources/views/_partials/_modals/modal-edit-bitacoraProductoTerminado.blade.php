@@ -64,18 +64,24 @@
 
                                 <!-- NUEVOS CAMPOS AGREGADOS -->
                                 <div class="row">
-                                    <div class="col-md-4 mb-3">
+                                      <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="edit_lote_granel"
-                                                name="lote_granel" placeholder="Lote a granel">
-                                            <label for="lote_granel">Lote a granel</label>
+                                            <select class="form-select select2" id="edit_lote_granel"
+                                                name="lote_granel"{{--  onchange="editObtenerDatosGraneles();" --}}>
+                                                <option value="" disabled selected>Selecciona un lote a granel
+                                                </option>
+                                            </select>
+                                            <label for="id_lote_granel">Lote a granel</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 mb-3">
+                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="edit_lote_envasado"
-                                                name="lote_envasado" placeholder="Lote envasado">
-                                            <label for="lote_envasado">Lote envasado</label>
+                                            <select class="form-select select2" id="edit_lote_envasado" {{-- onchange="editObtenerDatosGranelesInspecciones();" --}}
+                                                name="lote_envasado">
+                                                <option value="" disabled selected>Selecciona un lote envasado
+                                                </option>
+                                            </select>
+                                            <label for="id_lote_envasado">Lote envasado</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4 mb-3">
@@ -377,3 +383,32 @@
         </div>
     </div>
 </div>
+<script>
+
+
+    function editObtenerDatosGraneles() {
+        var lote_granel_id = $("#id_lote_granel").val();
+        if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
+            $.ajax({
+                url: '/getDatos2/' + lote_granel_id,
+                method: 'GET',
+                success: function(response) {
+                    // Setear valores para los campos individuales
+                    $('#volumen_inicial').val(response.lotes_granel.volumen_restante);
+                    $('#alcohol_inicial').val(response.lotes_granel.cont_alc);
+                    $('#folio_fq').val(response.lotes_granel.folio_fq);
+                },
+                error: function() {
+                    console.error('Error al obtener datos de graneles');
+                }
+            });
+        } else {
+            $('#volumen_inicial').val('');
+            $('#alcohol_inicial').val('');
+            $('#folio_fq').val('');
+        }
+         }
+
+
+
+</script>
