@@ -424,7 +424,7 @@
             @endcan
             <div class="row">
                 @can('Estadísticas ui')
-                    <!-- Line Chart -->
+                    <!-- Line Chart 
                     <div class="col-6 mb-6">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between">
@@ -444,7 +444,7 @@
                                 <div id="lineChart2"></div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 @endcan
 
                 @canany(['Estadísticas consejo', 'Estadísticas oc'])
