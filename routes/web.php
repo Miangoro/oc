@@ -726,6 +726,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/eliminar-documento/{id}', [documentacionController::class, 'eliminarDocumento'])->name('eliminarDocumento');
 
     Route::get('/requisitos_evaluar/{id}', [documentacionController::class, 'mostrarRequisitosEvaluar'])->name('PDF-requisitos-evaluar-documentos');
+    Route::get('/documentos/requisitos-pdf', [documentacionController::class, 'generarRequisitosPDF'])->name('requisitos.pdf');
 });
 
 //-------------------TIPOS DE MAGUEY/AGAVE-------------------
