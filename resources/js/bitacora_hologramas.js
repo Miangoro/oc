@@ -155,31 +155,34 @@ $(function () {
           targets: 6,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
-            var $serie_mermas = (full['serie_merma'] || '').trim();
-            var $serie_final = (full['serie_final'] ?? 'N/A').trim();
-            var $num_sellos_final = (full['num_sellos_final'] ?? 'N/A').trim();
+    var $serie_mermas = (full['serie_merma'] || '').trim();
+    var $num_sellos_merma = (full['mermas'] ?? '').toString().trim();
+  console.log('num_sellos_merma:', $num_sellos_merma);
 
-            let html =
-              '<span class="fw-bold small">Serie Final: </span>' +
-              '<span class="small">' +
-              $serie_final +
-              '</span>' +
-              '<br><span class="fw-bold small">N° de sellos Final: </span>' +
-              '<span class="small">' +
-              $num_sellos_final +
-              '</span>';
+    var $serie_final = (full['serie_final'] ?? 'N/A').trim();
+    var $num_sellos_final = (full['num_sellos_final'] ?? 'N/A').trim();
 
-            // Mostrar mermas solo si hay contenido
-            if ($serie_mermas !== '') {
-              html +=
-                '<br><span class="fw-bold small">Serie mermas: </span>' +
-                '<span class="small">' +
-                $serie_mermas +
-                '</span>';
-            }
+    let html =
+        '<span class="fw-bold small">Serie Final: </span>' +
+        '<span class="small">' + $serie_final + '</span>' +
+        '<br><span class="fw-bold small">N° de sellos Final: </span>' +
+        '<span class="small">' + $num_sellos_final + '</span>';
 
-            return html;
-          }
+    if ($serie_mermas !== '' && $serie_mermas !== '0') {
+        html +=
+            '<br><span class="fw-bold small">Serie mermas: </span>' +
+            '<span class="small">' + $serie_mermas + '</span>';
+    }
+
+    if ($num_sellos_merma !== '' && $num_sellos_merma !== '0') {
+        html +=
+            '<br><span class="fw-bold small">N° de sellos Mermas: </span>' +
+            '<span class="small">' + $num_sellos_merma + '</span>';
+    }
+
+    return html;
+}
+
         },
         {
           targets: 7,
@@ -206,6 +209,10 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             let acciones = '';
+            const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
+             if (!estaFirmado) {
+
+
             if (window.puedeFirmarElUsuario) {
               acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
             }
@@ -215,11 +222,12 @@ $(function () {
             if (window.puedeEliminarElUsuario) {
               acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
             }
+            }
             // Si no hay acciones, no retornar el dropdown
             if (!acciones.trim()) {
               return `
                 <button class="btn btn-sm btn-secondary" disabled>
-                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
+                  <i class="ri-settings-5-fill ri-20px me-1"></i> Opciones
                 </button>
               `;
             }

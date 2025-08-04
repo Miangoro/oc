@@ -29,10 +29,10 @@
             <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                 <button disabled class="btn btn-primary me-1 d-none" type="button" id="btnSpinner">
                     <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
-                    Registrando...
+                    Firmando...
                 </button>
-                <button type="submit" class="btn btn-primary me-sm-3 data-submit"><i
-                        class="ri-ball-pen-line me-1"></i>Firmar</button>
+                <button type="submit" class="btn btn-primary me-sm-3 data-submit" id="btnFirma"><i
+                        class="ri-ball-pen-line me-1" ></i>Firmar</button>
                 <button type="reset" class="btn btn-danger" data-bs-dismiss="offcanvas"><i
                         class="ri-close-line me-1"></i>Cancelar</button>
             </div>

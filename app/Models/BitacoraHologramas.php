@@ -31,8 +31,8 @@ class BitacoraHologramas extends Model
         //INVENTARIO FINAL
         'serie_final',
         'num_sellos_final',
-        'serie_mermas',
-        'num_sellos_mermas',
+        'serie_merma',
+        'num_sellos_merma',
         'id_firmante',
         'observaciones',
     ];

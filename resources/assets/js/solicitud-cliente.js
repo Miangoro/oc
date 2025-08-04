@@ -158,11 +158,11 @@ document.addEventListener('DOMContentLoaded', function () {
   mostrarSecciones();
 
   // Sección del switch
-  const switchInput = document.querySelector('.switch-input');
+/*   const switchInput = document.querySelector('.switch-input');
   const localidad1 = document.getElementById('localidad1');
-  const estado = document.getElementById('estado');
+  const estado = document.getElementById('estado'); */
 
-  function copyAddress() {
+  /* function copyAddress() {
     const addressContainers = [
       document.getElementById('domiProductAgace'),
       document.getElementById('domiEnvasaMezcal'),
@@ -182,9 +182,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (estadoSelect) estadoSelect.selectedIndex = 0;
       }
     });
-  }
+  } */
 
-  switchInput.addEventListener('change', copyAddress);
+  /* switchInput.addEventListener('change', copyAddress); */
 });
 
 // Resto del código para wizard y Cleave sigue aquí...
@@ -200,7 +200,7 @@ import Stepper from 'bs-stepper/dist/js/bs-stepper';
 const bsStepper = document.querySelectorAll('.bs-stepper');
 
 // Adds crossed class
-bsStepper.forEach(el => {
+/* bsStepper.forEach(el => {
   el.addEventListener('show.bs-stepper', function (event) {
     var index = event.detail.indexStep;
     var numberOfSteps = el.querySelectorAll('.line').length;
@@ -219,7 +219,7 @@ bsStepper.forEach(el => {
       line[0].classList.remove('crossed');
     }
   });
-});
+}); */
 
 try {
   window.Stepper = Stepper;
@@ -389,7 +389,7 @@ new Cleave(".phone-number-mask", {
   phoneRegionCode: "US"
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+/* document.addEventListener('DOMContentLoaded', () => {
   function toggleSection() {
     // Obtener el estado de cada checkbox
     const agaveCheckbox = document.getElementById('customRadioIcon8');
@@ -469,12 +469,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Inicializa el estado de las secciones al cargar la página
   toggleSection();
-});
+}); */
 
 
 /* seccion del switch */
 
-document.addEventListener('DOMContentLoaded', () => {
+/* document.addEventListener('DOMContentLoaded', () => {
   const switchInput = document.querySelector('.switch-input');
   const localidad1 = document.getElementById('localidad1');
   const estado = document.getElementById('estado');
@@ -521,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Escuchar cambios en el switch
   switchInput.addEventListener('change', copyAddress);
 });
-
+ */
 
 $(document).ready(function () {
   // Mapeamos los valores de los checkboxes a sus respectivas secciones

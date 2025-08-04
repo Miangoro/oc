@@ -274,6 +274,7 @@
             $('.etiquetasNA').hide(); // ocultar el tr
         }
 
+        ///DOCUMENTACION DE LA SOLICITUD GENERADA
         $.ajax({
             url: '/getDocumentosSolicitud/' +
             id_solicitud, // URL del servidor (puede ser .php, .json, .html, etc.)

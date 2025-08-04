@@ -31,10 +31,12 @@ class Analytics extends Controller
     /* $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')->where('fecha_solicitud','>','2024-12-31')->count(); */
     $solicitudesSinInspeccion = solicitudesModel::doesntHave('inspeccion')
     ->where('fecha_solicitud', '>', '2024-12-31')
+    ->where('habilitado', 1)
     ->whereNotIn('id_tipo', [12, 13, 15])
     ->get();
     $solicitudesSinActa = solicitudesModel::whereNotIn('id_tipo', [12, 13, 15])
     ->where('fecha_solicitud', '>', '2024-12-31')
+    ->where('habilitado', 1)
     ->where(function ($query) {
         $query->doesntHave('documentacion_completa')
               ->orWhereDoesntHave('documentacion_completa', function ($q) {
@@ -44,6 +46,7 @@ class Analytics extends Controller
     ->get();
 
 $solicitudesSinDictamen = solicitudesModel::where('fecha_solicitud', '>', '2024-12-31')
+ ->where('habilitado', 1)
     ->where(function ($query) {
         $query
             ->where(function ($q) {
@@ -122,21 +125,36 @@ $certificadosPorVencer = $certificadosInstalacion;
     $certificadoExportacionSinEscaneado = Certificado_Exportacion::whereDoesntHave('certificadoEscaneado')->orderByDesc('fecha_emision')->get();
     $certificadoInstalacionesSinEscaneado = Certificados::whereDoesntHave('certificadoEscaneado')->orderByDesc('fecha_emision')->get();
 
-    
+
 
     $empresaId = Auth::user()?->empresa?->id_empresa;
 
-$TotalCertificadosExportacionPorMes = Certificado_Exportacion::select(
-        DB::raw("DATE_FORMAT(fecha_emision, '%Y-%m') as mes"),
-        DB::raw("COUNT(*) as total")
-    )
+$TotalCertificadosExportacionPorMes = Certificado_Exportacion::with('dictamen.inspeccione.solicitud')
     ->whereHas('dictamen.inspeccione.solicitud.empresa', function ($query) use ($empresaId) {
         $query->where('id_empresa', $empresaId);
     })
-    ->where('fecha_emision','>','2024-12-31')
-    ->groupBy('mes')
-    ->orderBy('mes')
-    ->get();
+    ->whereHas('dictamen.inspeccione.solicitud', function ($query) {
+        $query->where('fecha_visita', '>', '2024-12-31');
+    })
+    ->get()
+    ->groupBy(function ($item) {
+        return \Carbon\Carbon::parse($item->dictamen->inspeccione->solicitud->fecha_visita)->format('Y-m');
+    })
+    ->map(function ($group) {
+        return (object) [
+            'mes' => $group->first()->dictamen->inspeccione->solicitud->fecha_visita 
+                        ? \Carbon\Carbon::parse($group->first()->dictamen->inspeccione->solicitud->fecha_visita)->format('Y-m') 
+                        : null,
+            'total' => $group->count(),
+            'certificado_reexpedido' => $group->where('certificado_reexpedido', true)->count() > 0,
+        ];
+    })
+    ->sortBy(function ($item) { 
+        return \Carbon\Carbon::createFromFormat('Y-m', $item->mes); // 🔑 Ordena como fecha real
+    })
+    ->values();
+
+
 
 
 

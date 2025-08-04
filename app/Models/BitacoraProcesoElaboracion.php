@@ -62,5 +62,18 @@ class BitacoraProcesoElaboracion extends Model
         });
     }
 
+    /* public function getTiposMagueyNombresAttribute()
+    {
+        $ids = $this->id_tipo_maguey_array;
+        return tipos::whereIn('id_tipo', $ids)->pluck('nombre')->toArray();
+    } */
+      public function getIdTipoMagueyArrayAttribute()
+    {
+        return json_decode($this->id_tipo_maguey, true) ?: [];
+    }
+
+
+
+
 
 }

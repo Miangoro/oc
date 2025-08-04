@@ -16,25 +16,6 @@ $(function () {
     });
   }
 
-  const tipoLoteSelect = document.getElementById('tipo_lote');
-  const ocCidamFields = document.getElementById('oc_cidam_fields');
-  const otroOrganismoFields = document.getElementById('otro_organismo_fields');
-
-  tipoLoteSelect.addEventListener('change', function () {
-    const selectedValue = tipoLoteSelect.value;
-
-    if (selectedValue === '1') {
-      ocCidamFields.classList.remove('d-none');
-      otroOrganismoFields.classList.add('d-none');
-    } else if (selectedValue === '2') {
-      ocCidamFields.classList.add('d-none');
-      otroOrganismoFields.classList.remove('d-none');
-    } else {
-      ocCidamFields.classList.add('d-none');
-      otroOrganismoFields.classList.add('d-none');
-    }
-  });
-
   $('.select2').select2(); // Inicializa select2 en el documento
 
   //DATE PICKER
@@ -561,7 +542,7 @@ $(function () {
         if (lotesDisponibles.length > 0) {
           lotesDisponibles.forEach(function (lote) {
             // Usar backticks para agregar la opción correctamente
-            $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote}</option>`);
+            $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote} (${lote.cont_alc}% Alc. Vol.) (${lote.volumen_restante} L)</option>`);
           });
           if (valorSeleccionado) {
             $select.val(valorSeleccionado); // Seleccionar el valor si ya está definido
@@ -635,6 +616,45 @@ $(function () {
       }
     });
 
+    $(function () {
+  $('#tipo_lote').on('change', function () {
+    var selectedValue = $(this).val();
+
+    if (selectedValue === '1') {
+      $('#oc_cidam_fields').removeClass('d-none');
+      $('#otro_organismo_fields').addClass('d-none');
+
+      // Desactivar validaciones para otro organismo
+      fv.disableValidator('folio_certificado');
+      fv.disableValidator('id_organismo');
+      fv.disableValidator('fecha_emision');
+      fv.disableValidator('fecha_vigencia');
+      fv.disableValidator('documentos[0][url]');
+    } else if (selectedValue === '2') {
+      $('#oc_cidam_fields').addClass('d-none');
+      $('#otro_organismo_fields').removeClass('d-none');
+
+      // Activar validaciones para otro organismo
+      fv.enableValidator('folio_certificado');
+      fv.enableValidator('id_organismo');
+      fv.enableValidator('fecha_emision');
+      fv.enableValidator('fecha_vigencia');
+      fv.enableValidator('documentos[0][url]');
+    } else {
+      $('#oc_cidam_fields').addClass('d-none');
+      $('#otro_organismo_fields').addClass('d-none');
+
+      // Desactivar validaciones en ambos casos
+      fv.disableValidator('folio_certificado');
+      fv.disableValidator('id_organismo');
+      fv.disableValidator('fecha_emision');
+      fv.disableValidator('fecha_vigencia');
+      fv.disableValidator('documentos[0][url]');
+    }
+  });
+});
+
+
     const addNewLote = document.getElementById('loteForm');
     const fv = FormValidation.formValidation(addNewLote, {
       fields: {
@@ -700,7 +720,46 @@ $(function () {
               message: 'Por favor seleccione un tipo de agave'
             }
           }
+        },
+
+
+
+         'folio_certificado': {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingresa el folio del certificado'
         }
+      }
+    },
+    'id_organismo': {
+      validators: {
+        notEmpty: {
+          message: 'Por favor selecciona el organismo'
+        }
+      }
+    },
+    'fecha_emision': {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingresa la fecha de emisión'
+        }
+      }
+    },
+    'fecha_vigencia': {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingresa la fecha de vigencia'
+        }
+      }
+    },
+    'documentos[0][url]': {
+      validators: {
+        notEmpty: {
+          message: 'Por favor adjunta el certificado'
+        }
+      }
+    },
+
       },
 
       plugins: {

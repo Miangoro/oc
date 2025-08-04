@@ -16,6 +16,7 @@ use App\Models\Documentacion_url;
 use App\Models\preguntas_revision;
 use Illuminate\Support\Facades\Schema;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;//Autentificar
 use Illuminate\Support\Facades\Log;
 
@@ -49,6 +50,7 @@ class RevisionPersonalController extends Controller
 
     public function index(Request $request)
     {
+        DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
         $columns = [
             1 => 'id_revision',
             2 => 'tipo',
@@ -89,9 +91,28 @@ class RevisionPersonalController extends Controller
         // Filtros de búsqueda
         if ($search) {
             $queryRevisor->where(function ($q) use ($search) {
+          $tipoCertificado = null;
+        $searchLower = strtolower($search);
+        if (str_contains($searchLower, 'granel')) {
+            $tipoCertificado = 2;
+        } elseif (str_contains($searchLower, 'exportacion') || str_contains($searchLower, 'exportación')) {
+            $tipoCertificado = 3;
+        } elseif (
+            str_contains($searchLower, 'instalacion') || str_contains($searchLower, 'instalación') ||
+            str_contains($searchLower, 'productor') || str_contains($searchLower, 'envasador') ||
+            str_contains($searchLower, 'comercializador') || str_contains($searchLower, 'bodega') ||
+            str_contains($searchLower, 'maduracion') || str_contains($searchLower, 'maduración')
+        ) {
+            $tipoCertificado = 1;
+        }
+
+
                 $q->orWhereHas('user', function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%");
-                })
+                })->orWhere(function ($date) use ($search) {
+                       $date->whereRaw("DATE_FORMAT(created_at, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
+                       ->orWhere(function ($date2) use ($search) {
+                       $date2->whereRaw("DATE_FORMAT(updated_at, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
                 ->orWhereHas('certificadoNormal', function ($sub) use ($search) {
                     $sub->where('num_certificado', 'like', "%{$search}%");
                 })
@@ -100,9 +121,14 @@ class RevisionPersonalController extends Controller
                 })
                 ->orWhereHas('certificadoExportacion', function ($sub) use ($search) {
                     $sub->where('num_certificado', 'like', "%{$search}%");
-                });
-            });
+                }) ->orWhere('tipo_certificado', 'LIKE', "%{$search}%");
+                if (!is_null($tipoCertificado)) {
+            $q->orWhere('tipo_certificado', $tipoCertificado);
         }
+            });
+
+        }
+
 
         // Paginación y ordenación
         $limit = $request->input('length');
@@ -111,7 +137,7 @@ class RevisionPersonalController extends Controller
         $orderDir = $request->input('order.0.dir');
         $order = $columns[$orderIndex] ?? 'id_revision';
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
-        
+
 
         // Obtener los totales de registros por separado
         $totalDataRevisor = $queryRevisor->count();
@@ -385,19 +411,12 @@ class RevisionPersonalController extends Controller
 
 
 
-
-
-
     public function add_revision($id_revision)
     {
-
         $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
         $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->get();
         $revisor_consejo = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where('id_certificado',$datos->id_certificado)->where('tipo_revision',2)->where('tipo_certificado', $datos->tipo_certificado)->first();
         $id_dictamen = $datos->certificado->dictamen->tipo_dictamen ?? '';
-
-
-
 
         if ($datos->tipo_certificado == 1) { //Instalaciones
 
@@ -445,6 +464,9 @@ class RevisionPersonalController extends Controller
 
         return view('certificados.add_revision', compact('datos', 'preguntas', 'url', 'tipo','certificadoEscaneado','revisor_consejo'));
     }
+
+
+
     public function registrar_revision(Request $request)
     {
         try {

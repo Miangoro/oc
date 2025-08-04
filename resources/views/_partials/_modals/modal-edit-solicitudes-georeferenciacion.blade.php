@@ -50,7 +50,7 @@
                                 id="edit_id_predio_geo" name="id_predio" aria-label="id_predio" required>
                                 <option value="" disable selected>Lista de predios</option>
                             </select>
-                            <{{-- label for="id_predio">Domicilio del predio a inspeccionar</label> --}}
+                            {{-- <label for="id_predio">Domicilio del predio a inspeccionar</label> --}}
                             <label >Domicilio de inspección</label>
                         </div>
                     </div>

@@ -1200,6 +1200,8 @@ Route::middleware(['auth'])->controller(Certificado_InstalacionesController::cla
     Route::get('/certificados/instalacion/documento/{id}', [Certificado_InstalacionesController::class, 'CertificadoFirmado']);
     Route::delete('/certificados/instalacion/documento/{id}', [Certificado_InstalacionesController::class, 'borrarCertificadofirmado']);
 
+    Route::get('/descargar_directorio_instalaciones', 'exportarDirectorio')->name('directorio-instalaciones');
+
 /*         Route::get('/certificado-sin-marca-ins/{id}', function($id) {
         return app(Certificado_InstalacionesController::class)->pdf_certificado_productor($id, false);
         })->name('PDF-cer-insta-sin-marca');
@@ -1245,6 +1247,8 @@ Route::middleware(['auth'])->controller(Certificado_GranelController::class)->gr
     Route::post('/certificados/granel/documento', [Certificado_GranelController::class, 'subirCertificado']);
     Route::get('/certificados/granel/documento/{id}', [Certificado_GranelController::class, 'CertificadoFirmado']);
     Route::delete('/certificados/granel/documento/{id}', [Certificado_GranelController::class, 'borrarCertificadofirmado']);
+
+    Route::get('/descargar_directorio_granel', 'exportarDirectorio')->name('directorio-granel');
 });
 
 //-------------------CERTIFICADO EXPORTACION-------------------
@@ -1286,10 +1290,12 @@ Route::middleware(['auth'])->controller(Certificado_ExportacionController::class
     Route::get('/certificados/exportacion/documento/{id}', [Certificado_ExportacionController::class, 'CertificadoFirmado']);
     Route::delete('/certificados/exportacion/documento/{id}', [Certificado_ExportacionController::class, 'borrarCertificadofirmado']);
 
-    Route::get('/certificados/exportar', 'exportar')->name('certificados.exportar');
+    //Exportar excel
+    Route::get('/certificados/exportar', 'exportar')->name('exportar.excel.exportacion');
+    Route::get('/descargar_reporte_directorio', 'exportarDirectorio')->name('directorio-exportacion');
+
     //Obtener N° de lotes para hologramas en certificado
     Route::get('/certificados/contar-lotes/{id}', [Certificado_ExportacionController::class, 'contarLotes']);
-
 });
 
 Route::controller(Certificado_ExportacionController::class)->group(function () {
@@ -1299,13 +1305,7 @@ Route::controller(Certificado_ExportacionController::class)->group(function () {
 Route::controller(Certificado_InstalacionesController::class)->group(function () {
     //Mostrar
      Route::get('/api/certificados_instalaciones', [Certificado_InstalacionesController::class, 'api']);
-    
 });
-//Exportar directorio
-Route::get('/descargar_reporte_directorio', [Certificado_ExportacionController::class, 'exportarDirectorio'])->name('certificados.exportarDirectorio');
-
-// Ruta para exportar con filtros desde el botón
-Route::get('/descargar_reporte_directorio', [Certificado_ExportacionController::class, 'exportarExcel'])->name('descargar_reporte_directorio');
 
 
 //-------------------CERTIFICADO VENTA NACIONAL-------------------

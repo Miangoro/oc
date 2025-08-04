@@ -1,0 +1,370 @@
+[33m112e368a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m fix firma bitacora
+[33m2aa878b4[m fix bitacora proceso elaboración de mezcal PDF
+[33mb6d8c077[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33me43011f1[m fix clientes prospectos??????
+[33m443a5efa[m formato sol. serv
+[33m16c66b3b[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m5c47c956[m fix folio solicitud in predios
+[33m48f4cd17[m dictamen expor. formato
+[33ma96a2676[m asignar cer. expor
+[33mb7fe7d0f[m fix revalidation in lotes granel otro organismo
+[33mbc1b33c0[m fix bitacora hologramas firmado y find
+[33ma8c3aeed[m fix filtro solicitudes habilitado
+[33mef8d61ab[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33mc93cdb91[m fix vol restante in lotes envasado
+[33m63ecd174[m etiqueta art
+[33m4f1c9006[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33md7bc8056[m fix volumen alcohol lotes granel
+[33m8333b4e7[m fix clientes prospectos
+[33m93ef67ed[m doc-revisor. cambiado relacion id_revisor-id_certificado
+[33m7659f1ac[m buscador en exportacion
+[33me5540288[m requisistos a evaluar
+[33mc46500c8[m requisistos a evaluar
+[33m819c9b95[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33mb9da644f[m feat filtro autentication maquilador dictamen envasado
+[33md9dbd8c6[m buscador en exportacion
+[33m2b77a488[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33md8893a8d[m fix validacion si en solciitudes-historial
+[33m1b124959[m formato, modelo y ruta para requistos a evaluar documentos
+[33m7d38dee1[m fix serie mermas in hologramas bitacoras
+[33m13b64fb7[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33mb0f4c528[m feat informacion in find bitacoras
+[33m1ee8f8ea[m Cer. gran 2023
+[33mb7aee54a[m Cer. gran 2023
+[33m53b0caa2[m Cer. gran 2023
+[33mb1ec733c[m sin dictamen quit. de inspecc. , eti-ART solo 1 , bitacora holograma obs y mesmas en find
+[33m4f4be00f[m sin dictamen quit. de inspecc. , eti-ART solo 1 , bitacora holograma obs y mesmas en find
+[33m28213a8c[m buscador caracteristicas en inspeccion y soli
+[33m9fdba3e7[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33mf7437a8e[m fix datos iniciales
+[33m42400f8d[m revisoon granel
+[33m739905a1[m CP en revisoon granel
+[33mfca1b7b1[m BUSCADOR SOLICITUDES CARACTETISTICAS
+[33m3dd9e159[m soli amarilla Cer. GRa
+[33mbe02a9ad[m revision certificados consejo DOM y CONVENIO
+[33m37c07ce2[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m730f8ff6[m fix clientes prospectos in aceptar clientes
+[33mfedf6ec5[m revision certificados convenio
+[33mf27588d6[m revision certificados convenio
+[33mac64f677[m revision certificados convenio
+[33m8be26eb7[m revision certificados convenio
+[33m4e000518[m revision certificados convenio
+[33mf9a291c0[m revision certificados dom
+[33m8b6649e8[m revision certificados dom
+[33medc229b2[m fix titulo bitacoras Pdf
+[33m3c98d437[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33mfaa83fa6[m fix maquiladores in bitacoras mezcal
+[33md1c9c6dc[m sol. serv. num cer y FQ
+[33m49cb508e[m fix empresa sin maquiladores in bitacora mezcal
+[33m61f94393[m inspecciones buscador lotes
+[33mf7873cd0[m fix proceso elaboracion mezcal artesanal
+[33m80613f9a[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m9eb32041[m order desc in bitacoras find
+[33mf22b7e73[m revision personal
+[33m7e7e35b2[m pdf solicitud junto al folio
+[33m06e6105d[m columna caracteristicas en inspecciones
+[33m4e8dec98[m ORIGEN DICTAMEN
+[33m38ec4121[m ORIGEN DICTAMEN
+[33mb4eee627[m ORIGEN DICTAMEN
+[33m549daf9f[m ORIGEN DICTAMEN
+[33m9d05732c[m fix agua agregada in bitacora error salida
+[33m685b5d19[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m04a46ec4[m fix paginado y encabezado pdfs bitacoras
+[33m2f370c4f[m ordenamiento de predios
+[33m706738a3[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m0fd634aa[m fix firma desborde in pdf
+[33m43dc047c[m etiqueta de meustreo lote
+[33m46b4b401[m etiqueta de meustreo lote
+[33m93ddaf94[m sol. certificado ed12
+[33ma3d61707[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33mb8f167c6[m fix paginator in pdf bitacoras
+[33mb479c551[m btn exportar directorio
+[33m8e7eb2f9[m btn exportar directorio
+[33m77134341[m sol. certificado ed12
+[33m66e76de7[m buscador por lotes en solicitudes
+[33m9d1bdb88[m revision consejo y OC
+[33mcdc57782[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m7cd946cf[m fix filtro bitacoras
+[33m7f912b57[m sol. serv. ed11
+[33m7d0b3485[m predios reemplazar documento
+[33m2768c4cb[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33md6002f29[m fix update bitacora comercializador
+[33mdfd15c2e[m ver revisiones sam
+[33m47d9516c[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33mab9377f6[m ver revisiones sam
+[33m72a39894[m fix filtro in select empresa Bitacoras
+[33md2db6560[m ver revisiones sam
+[33m48b75972[m delete 69 y 70 doc inspeccion
+[33med25c102[m fix update de bitacoras
+[33mb902ef35[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m76571d60[m fix chelo
+[33m03fa7542[m delete 69 y 70 doc inspeccion
+[33me075f60b[m fix volumen retante en lotes
+[33me73739fc[m fix producto terminado comercializador
+[33m0010dfea[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m4cb542a5[m feat tanque in lotes granel
+[33mc28ac4ab[m CER. Asignar rev
+[33mcd6e66f0[m CER. Asignar rev
+[33ma2b0da56[m CER. Asignar rev
+[33m01cce682[m CER. Asignar rev
+[33mbeff3192[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m628d3d9c[m fix bitacoras
+[33m2e3065c3[m hologramas
+[33m6125317d[m hologramas
+[33m39608a23[m hologramas
+[33mb223b3e2[m hologramas
+[33mc2282933[m hologramas
+[33mf8b41f5c[m hologramas
+[33m264fc752[m hologramas
+[33mc37ee646[m hologramas
+[33m3b004f68[m hologramas
+[33mc3c77bcc[m hologramas
+[33m18feca09[m hologramas
+[33m33319c3d[m hologramas
+[33mddcc20ca[m CER. Asignar rev
+[33ma0ad3d22[m CER. EXPOR HOLOGRAMAS
+[33m9fc4b4c4[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33mcb3cdb1b[m fix vertical menu
+[33me3b83237[m CER. EXPOR HOLOGRAMAS
+[33m6868b4cb[m CER. EXPOR HOLOGRAMAS
+[33mf1b3662d[m CER. EXPOR HOLOGRAMAS
+[33m5e044aef[m CER. EXPOR HOLOGRAMAS
+[33m25c73ad6[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33md0a4fbb0[m feat bitacora producto sin etiquetas
+[33m92d0001b[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33mc94e84fe[m xxx
+[33m7caf234e[m paginas de error
+[33mb7654fe9[m paginas de error
+[33m7be0ba9e[m xxx
+[33mb5a3eee9[m revisiones certificados
+[33m1e1f9103[m xxx
+[33m4fcfad09[m xxx
+[33m595ae788[m revisiones certificados
+[33m87dcf8b5[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m7cdbd677[m fix lote granel editar usuario
+[33mad1c3632[m subir
+[33m360be3c9[m subir
+[33m24bf77c4[m doc inspecciones
+[33m47164ff0[m doc inspecciones
+[33m2a69eb0c[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m189674b7[m fix pdf bitacora maduracion
+[33md2f55c10[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m4e7e01d0[m subir
+[33mf7b4f04c[m doc inspecciones
+[33me83d07a0[m subir
+[33ma39a3e41[m subir
+[33m6298f433[m subir
+[33m38391793[m subir
+[33m13e3c60c[m subir
+[33m67f710c9[m subir
+[33m53d4353f[m subir
+[33m52f26e46[m subir
+[33m083d1c13[m subir
+[33m9de64b1e[m subir
+[33m72a97107[m subir
+[33m65bf9d27[m subir
+[33m6dcc20cf[m subir
+[33mc6aaba60[m subir
+[33m3e780e54[m subir
+[33m49758966[m subir
+[33med39782a[m subir
+[33maff059b9[m subir
+[33m5816cbd9[m subir
+[33m4843b6fb[m subir
+[33m2f92e4ef[m subir
+[33mefe1eb5b[m subir
+[33m21922e9d[m subir
+[33mc9069495[m cambios generales
+[33m5668420a[m cambios generales
+[33m154e7716[m cambios generales
+[33m74cd9069[m cambios generales
+[33mdee62614[m cambios generales
+[33me06de386[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33mc3709b83[m cambios generales
+[33m63c5d3b1[m Cer. Expor
+[33m774b75da[m cambios generales
+[33m143d75de[m cambios generales
+[33m485eedd8[m cambios generales
+[33mf66b57b1[m cambios generales
+[33me81d417d[m Cer. Expor
+[33m864287d4[m Cer. Expor
+[33ma52c90e7[m cambios generales
+[33md4564527[m Cer. Expor
+[33m10d1878d[m Cer. Expor
+[33mc8755a7b[m cambios generales
+[33m71c374a2[m cambios generales
+[33me4cf76be[m cambios generales
+[33m482372bd[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33me1b34566[m cambios generales
+[33md0216419[m Cer. Expor
+[33m9eac6703[m Cer. Expor
+[33m30fbf44f[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m94bb80f4[m cambios generales
+[33mde92e529[m Cer. Expor
+[33mdaa779f1[m cambios generales
+[33mb1a9259f[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m9350247c[m cambios generales
+[33m971ad4b6[m numero cliente
+[33m79ca9191[m cambios generales
+[33m230346b4[m cer granel
+[33maec45943[m cer granel
+[33m97879e89[m cer granel
+[33maa0989ef[m cer granel
+[33m11f0edeb[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33mf9ed72e9[m fix volumen restante
+[33md5b93617[m paginas de error
+[33m68fbfd15[m paginas de error
+[33m6dbe50a5[m fix tipo bitacora
+[33mb0c4ff7d[m fix model lotes granel
+[33m3fddfcfb[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m25c59527[m feat registro de bitacora with lotes envasado
+[33me409b9c0[m solicitud, inspeccion, cer.expor activar hologramas
+[33m18030526[m fix agua agregada in lotes granel
+[33m31973cf9[m fix PDF and registro editar bitacoras
+[33mccb445e2[m solicitud, inspeccion, cer.expor activar hologramas
+[33m5322f5ba[m solicitud, inspeccion, cer.expor activar hologramas
+[33ma39ed391[m cambios en revision
+[33maebcbf53[m cambios en revision
+[33m62c943c2[m cambios en revision
+[33m062890d8[m cambios en revision
+[33m13f2f656[m cambios en revision
+[33maf877749[m cambios en revision
+[33m0cf6d5c6[m cambios en revision
+[33m4ea960c2[m cambios en revision
+[33m5db23f69[m cambios en revision
+[33m629630e6[m cambios en revision
+[33m94454e82[m cambios en revision
+[33m06139131[m cambios en revision
+[33m3b4f054c[m dictamen a granel
+[33md8fc1c85[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m5561aa55[m pdf producto terminado
+[33me2e0d069[m CP dictamen granel
+[33m364218bd[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m8c93d393[m fix modals producto terminado
+[33m8c515509[m solicitud activar hologramas estatus
+[33m2a93f457[m solicitud activar hologramas estatus
+[33mf54d3577[m fix agua entrada - volumen
+[33mb1095ee5[m fix bitacora de producto envasador
+[33m868a3b39[m chelo
+[33mb1e4d4ac[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m56554198[m fix id tipo 3
+[33m2ff1cab6[m formatos asignados auditoria
+[33mb67105a8[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m7f81c74a[m fix bitacora filtro por maquiladoras
+[33m1c714737[m avance del aparatado de olvide mi contraseña
+[33m833a723a[m avance del aparatado de olvide mi contraseña
+[33m4a537a2c[m dictamen a granel
+[33m8cffc170[m dictamen a granel
+[33mdba6f03f[m formatos asignados
+[33m3636a073[m fix volumen inicial alcohol incial
+[33m39d23bb5[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33me7539b6b[m fix inventario inicial bitacoras
+[33m712b9d84[m formatos asignados
+[33m0bcc77ae[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m52ba7729[m fix chelo
+[33m50ad65ee[m formatos asignados
+[33m3142b8fe[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m095520a7[m fix datos in bitacora y granel
+[33m16fff75e[m feat lotes granel and bitacoras mezcal
+[33m78868246[m cer. export asignar revision
+[33m2998e4a9[m cer. export asignar revision
+[33mbb55a6e2[m cer. export asignar revision
+[33mb1987743[m fix bitacora PT
+[33m1836bf84[m fix bitacora de comercializador PT
+[33mc7a771af[m fix bitacora de comercializador PT
+[33m6712188f[m fix chelo
+[33mcc58c6e6[m fix bitacora
+[33m001cf999[m filtro ordenamiento en tabla
+[33md3d09539[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m9276e5c6[m fix bitacora proceso
+[33m81aa47e3[m dictamen a granel
+[33m37bfe616[m dictamen a granel
+[33m719d6e2e[m avance de dictamen_exportacion
+[33m3dd54be6[m avance de dictamen_exportacion
+[33m742eeb73[m avance de dictamen_exportacion
+[33m3fdb24bd[m dictamen a granel
+[33mf6dc4f00[m dictamen a granel
+[33m484036ad[m avance de dictamen_exportacion
+[33m0714c428[m avance de dictamen_exportacion
+[33m85171e83[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m14278d45[m chelo
+[33m4bdc3c75[m solo ver guias con folio
+[33m55db2a3a[m avance de dictamen_exportacion
+[33m7a0dd024[m avance de dictamen_exportacion
+[33md1842d7e[m dictamen a granel
+[33m79bceff3[m avance de dictamen_exportacion
+[33m944ab761[m dictamen a granel
+[33md6f43af0[m dashboard
+[33mfd933f7e[m revision certificados
+[33mecbbb4f4[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33mec710d47[m fix bitacora busqueda search
+[33mfdd029b7[m Ceertificados en el sitio web cidam.org
+[33md8538639[m revision certificados
+[33m79806df3[m revision certificados
+[33mf6dac80f[m fix chelo
+[33m45cdb07a[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m97b8f598[m fix chelo
+[33m09bbf127[m Eliminar actas restauración
+[33mce2aca2c[m Eliminar actas restauración
+[33m1fc8892a[m Eliminar actas restauración
+[33m2a468f48[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33mec3f0acb[m fix visualizar bitacoras
+[33mb795ea07[m revision certificados
+[33m66303eb7[m revision certificados
+[33m49389430[m fix edit bitacora
+[33m26d954ee[m fix edit bitacora
+[33m66e4efe6[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m1f3634af[m fix solicitudes and eidt bitacoras proceso
+[33me67af8cd[m dashboard
+[33ma7f06cee[m dashboard
+[33m2400fe81[m dashboard
+[33m47ecd247[m dashboard
+[33mc49c9a42[m dashboard
+[33m9b5cda7c[m dashboard
+[33mba1635aa[m dashboard
+[33mcb836e10[m dashboard
+[33m62bb418d[m dashboard
+[33m9b6840b2[m dashboard
+[33ma8123aa0[m dashboard
+[33m6b450ad5[m dashboard
+[33m986e2459[m dashboard
+[33m9e41bf61[m revision exportacion
+[33m48bc75d5[m dashboard
+[33m7d0cb0ad[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m6cb5081f[m dashboard
+[33m016bddf1[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m454a4d1e[m fix chelo
+[33m2256bb5e[m dashboard
+[33m0a0bb864[m vista de modal editar y agregar bitacora proceso
+[33mebe93c0c[m revision exportacion
+[33m2faf9403[m revision exportacion
+[33mf32fa240[m dasboard
+[33m91285a34[m revision exportacion
+[33mf6576e62[m dasboard
+[33m8148e943[m FQ cer. granel
+[33mafacde81[m Cambios en el dashboard
+[33m83ce2b91[m FQ cer. granel
+[33m83e068ba[m Merge branch 'master' of https://github.com/Miangoro/oc
+[33m391060cd[m fix chelo name add modal bitacora proceso
+[33mfb346a6b[m solicitud de informacion al cliente
+[33m905cf404[m solicitud de informacion al cliente
+[33mbbe3ab85[m solicitud de informacion al cliente
+[33md2e7239a[m solicitud de informacion al cliente
+[33m79dd0487[m solicitud de informacion al cliente
+[33m68dc9572[m solicitud de informacion al cliente
+[33m7068577f[m solicitud de informacion al cliente
+[33m2446495d[m solicitud de informacion al cliente
+[33m07bd27a9[m solicitud de informacion al cliente
+[33m1bc3dd27[m solicitud de informacion al cliente
+[33mfbacf86c[m solicitud de informacion al cliente
+[33m2b1d28d3[m solicitud de informacion al cliente
+[33mda5a37a8[m solicitud de informacion al cliente
+[33m398365a1[m solicitud de informacion al cliente
+[33m1e263c54[m FORMATOS PDF DICTAMENES
+[33m34669808[m solicitud de informacion al cliente
+[33mb4180b9f[m solicitud de informacion al cliente
+[33m81631ccd[m solicitud de informacion al cliente
+[33m30d738a2[m cer. expor. formato
+[33m06ae2cdc[m cer. asignar titulo
+[33m1c053931[m dictamen no cumplimiento
+[33m2f15433b[m dictamen no cumplimiento

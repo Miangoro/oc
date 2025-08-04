@@ -31,6 +31,8 @@ class SolicitudesExport implements FromCollection, WithHeadings, WithEvents, Wit
     public function collection()
     {
         $query = SolicitudesModel::with('empresa', 'tipo_solicitud', 'instalaciones', 'predios', 'inspeccion', 'inspector');
+         $query->where('habilitado', 1);
+
         if (isset($this->filtros['id_empresa']) && $this->filtros['id_empresa']) {
             $query->where('id_empresa', $this->filtros['id_empresa']);
         }

@@ -193,6 +193,7 @@ class BitacoraHologramasComercializadorController extends Controller
                 // Inventario final
                 'serie_final' => $bitacora->serie_final ?? 'N/A',
                 'num_sellos_final' => $bitacora->num_sellos_final ?? 'N/A',
+                /* 'num_sellos_merma' => $bitacora->num_sellos_merma ?? 'N/A', */
               'serie_merma' => $bitacora->serie_merma,
                 'observaciones' => $bitacora->observaciones ?? 'N/A',
                 'firma_ui' => $bitacora->firma_ui ?? 'N/A',

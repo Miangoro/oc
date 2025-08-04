@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Auth;//Permiso empresa
 
 class PrediosController extends Controller
 {
-    
+
 public function UserManagement() {
     //Permiso de empresa
     $empresaId = null;
@@ -190,8 +190,8 @@ public function UserManagement() {
 
             foreach ($predios as $predio) {
 
-              $hasSolicitud = $predio->solicitudes()->exists();
-              $solicitud = $predio->solicitudes()->first();
+              $hasSolicitud = $predio->solicitudes()->where('id_tipo', 10)->exists();
+              $solicitud = $predio->solicitudes()->where('id_tipo', 10)->first();
 
                 $nestedData['id_predio'] = $predio->id_predio;
                 $nestedData['fake_id'] = ++$ids;
@@ -211,8 +211,8 @@ public function UserManagement() {
                 $nestedData['superficie'] = $predio->superficie;
                 $nestedData['estatus']=$predio->estatus;
                 $nestedData['hasSolicitud'] = $hasSolicitud;
-                $nestedData['id_solicitud'] = $predio->solicitudes()->first()->id_solicitud ?? null;
-                $nestedData['folio_solicitud'] = $predio->solicitudes()->first()->folio ?? null;
+                $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? null;
+                $nestedData['folio_solicitud'] = $solicitud->folio ?? null;
                 $nestedData['num_servicio'] = $solicitud?->inspeccion?->num_servicio ?? 'Sin asignar';
                 /* ACTAS INSPECCION */
                 $documentoActaInspeccion = null;
@@ -1074,7 +1074,7 @@ public function registroPredio(Request $request, $id_predio)
                   ->where('id_relacion', $predio->id_predio)
                   ->first();
 
-              
+
               // Obtener número de cliente desde la tabla intermedia
               $numeroCliente = DB::table('empresa_num_cliente')
                   ->where('id_empresa', $id_empresa)

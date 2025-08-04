@@ -472,7 +472,9 @@ public function MostrarDictamenExportacion($id_dictamen)
             : collect(); // Si no hay IDs, devolvemos una colección vacía
 
         
-        $DOM = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->registro_productor ?? 'NA';
+        $DOM = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->registro_productor
+            ?? $lotes[0]->lotesGranel[0]->empresa?->registro_productor 
+            ?? 'NA';
         $convenio = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA';
         $estado_productor = $lotes[0]->lotesGranel[0]->estados->nombre ?? 'No encontrado';
     //return response()->json(['message' => 'No se encontraron características.', $data], 404);
