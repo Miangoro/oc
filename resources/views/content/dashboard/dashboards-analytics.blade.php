@@ -544,7 +544,8 @@
                                             <tr>
                                                 <td class="ps-0 pe-12 py-4">
                                                     <span class="text-heading">
-                                                        
+                                                    {{ ucfirst(\Carbon\Carbon::createFromFormat('Y-m-d', $item->mes . '-01')->locale('es')->isoFormat('MMMM YYYY')) }}
+
                                                     </span>
                                                 </td>
                                                 <td class="text-end py-4">
