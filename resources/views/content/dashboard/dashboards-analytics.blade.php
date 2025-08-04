@@ -357,7 +357,7 @@
                 </div>
             @endcan
             @can('Estadísticas ui')
-                <div class="col-md-6 col-xxl-3">
+                <div class="col-md-6 col-xxl-4">
                     <div class="card h-100">
                         <div class="card-header d-flex align-items-center justify-content-between">
                             <h5 class="card-title m-0 me-2">Inspecciones por inspector 2025</h5>
@@ -401,7 +401,7 @@
             @endcan
             @can('Estadísticas oc')
                 <!-- Line Chart -->
-                <div class="col-6 mb-6">
+                <div class="col-8 mb-8">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <div>
@@ -422,9 +422,9 @@
                     </div>
                 </div>
             @endcan
-            <div class="row">
+          
                 @can('Estadísticas ui')
-                    <!-- Line Chart -->
+                    <!-- Line Chart 
                     <div class="col-6 mb-6">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between">
@@ -444,7 +444,7 @@
                                 <div id="lineChart2"></div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 @endcan
 
                 @canany(['Estadísticas consejo', 'Estadísticas oc'])
@@ -541,8 +541,7 @@
 
                 @endcanany
 
-            </div>
-
+    
 
 
 
@@ -919,6 +918,7 @@
                                     <thead>
                                         <tr>
                                             <th>Folio</th>
+                                            <th>Servicio</th>
                                             <th>Tipo</th>
                                             <th>Cliente</th>
                                             <th>Fecha</th>
@@ -930,6 +930,8 @@
                                         @foreach ($solicitudesSinActa as $solicitud)
                                             <tr>
                                                 <td>{{ $solicitud->folio }}</td>
+                                              <td>{!! $solicitud->inspeccion->num_servicio ?? "<span class='badge bg-danger'>Sin asignar</span>" !!}</td>
+
                                                 <td>{{ $solicitud->tipo_solicitud->tipo }}</td>
                                                 <td>{{ $solicitud->empresa->razon_social ?? 'N/A' }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($solicitud->fecha_solicitud)->format('d/m/Y') }}

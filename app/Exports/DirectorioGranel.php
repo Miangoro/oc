@@ -5,12 +5,18 @@ use App\Models\CertificadosGranel;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\FromCollection;
+
 use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
 
-class DirectorioGranel implements FromCollection, WithMapping, WithHeadings, WithEvents
+class DirectorioGranel implements FromCollection, WithMapping, WithHeadings, WithEvents, WithCustomStartCell
 {
     protected $filtros;
 
@@ -52,10 +58,13 @@ class DirectorioGranel implements FromCollection, WithMapping, WithHeadings, Wit
     }
 
 
+    public function startCell(): string
+    {
+        return 'A2';
+    }
     public function headings(): array
     {
         return [
-            ['Directorio de Certificados a Granel'],
             ['Fecha expedición / vigencia', 'Indicación del producto', 'Documentos a certificar', 'Identificación del cliente', 'Marca', 'Evaluador', 'No. de Certificación', 'Vigencia de certificación', 'Vigencia modificada']
         ];
     }
@@ -69,11 +78,6 @@ class DirectorioGranel implements FromCollection, WithMapping, WithHeadings, Wit
         //Lote envasado
         $lotes_env = $certificado->dictamen?->inspeccione?->solicitud?->lotesEnvasadoDesdeJson();//obtener todos los lotes
         $marca = $lotes_env?->first()?->marca->marca ?? ' ';
-        /*$documentos = implode(', ', array_filter([
-            $certificado->solicitud_numero ?? null,
-            $certificado->opinion_codigo ?? null,
-            $certificado->servicio_codigo ?? null
-        ]));*/
 
         return [
             $fechas,
@@ -89,34 +93,58 @@ class DirectorioGranel implements FromCollection, WithMapping, WithHeadings, Wit
     }
 
 
-public function registerEvents(): array
-{
-    return [
-        AfterSheet::class => function (AfterSheet $event) {
-            $sheet = $event->sheet->getDelegate();
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $sheet = $event->sheet->getDelegate();
 
-            // Título
-            $sheet->mergeCells('A1:I1');
-            $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-            $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                // Logo en columnas A
+                $drawing = new Drawing();
+                $drawing->setName('Logo OC');
+                $drawing->setDescription('Logo Organismo Certificador');
+                $drawing->setPath(public_path('img_pdf/logo_oc_3d.png'));
+                $drawing->setHeight(85);
+                //$drawing->setWidth(60);
+                $drawing->setOffsetX(15);
+                //$drawing->setOffsetY(0);
+                $drawing->setCoordinates('A1');
+                $drawing->setWorksheet($sheet);
 
-            // Encabezados
-            $sheet->getStyle('A2:I2')->getFont()->setBold(true)->getColor()->setARGB('000000');
-            $sheet->getStyle('A2:I2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                ->getStartColor()->setRGB('8eaadc'); // color institucional
+                // 2. Título centrado (columnas B a F)
+                $sheet->mergeCells('B1:F1');
+                $sheet->setCellValue('B1', 'Directorio de Certificados a Granel NOM-070-SCFI-2016');
+                $sheet->getStyle('B1')->getFont()->setBold(true)->setSize(14);
+                $sheet->getStyle('B1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-            // Autoajuste
-            foreach (range('A', 'I') as $col) {
-                $sheet->getColumnDimension($col)->setAutoSize(true);
+                // 3. Vigencia (columnas H e I)
+                $sheet->mergeCells('G1:I1');
+                $sheet->setCellValue('G1', "Directorio de Certificados a Granel NOM-070-SCFI-2016 F7.1-01-20\nEdición 2 Entrada en vigor: 02/09/2022");
+                $sheet->getStyle('G1')->getFont()->setSize(10);
+                $sheet->getStyle('G1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+                $sheet->getStyle('G1')->getAlignment()->setWrapText(true);
+
+                // 4. Ajustes de altura y alineación
+                $sheet->getRowDimension(1)->setRowHeight(60);
+                $sheet->getStyle('A1:I1')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+
+
+                // El resto de columnas para encabezados, bordes, autoajuste...
+                $sheet->getStyle('A2:I2')->getFont()->setBold(true)->getColor()->setARGB('000000');
+                $sheet->getStyle('A2:I2')->getFill()->setFillType(Fill::FILL_SOLID)
+                    ->getStartColor()->setRGB('8eaadc');
+
+                foreach (range('A', 'I') as $col) {
+                    $sheet->getColumnDimension($col)->setAutoSize(true);
+                }
+
+                $sheet->getStyle('A2:I2' . $sheet->getHighestRow())
+                    ->getBorders()->getAllBorders()
+                    ->setBorderStyle(Border::BORDER_THIN);
             }
+        ];
+    }
 
-            // Bordes
-            $sheet->getStyle('A2:I' . $sheet->getHighestRow())
-                ->getBorders()->getAllBorders()
-                ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        }
-    ];
-}
 
 
 

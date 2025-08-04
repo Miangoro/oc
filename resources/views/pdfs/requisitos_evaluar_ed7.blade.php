@@ -20,11 +20,21 @@
 
         .header {
             position: fixed;
-            top: -65px;
-            left: 30px;
-            width: calc(100% - 60px);
-            height: 100px;
-            overflow: hidden;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            /* Ajusta según el diseño institucional */
+            padding: 0;
+            /* Asegura que no haya espacio extra */
+        }
+
+        .header img {
+            margin-top: -85px;
+            /* Baja la imagen */
+            margin-bottom: 0px;
+            /* Evita que se desplace más abajo */
+            vertical-align: top;
         }
 
         .logo {
@@ -299,6 +309,8 @@
             font-size: 14px;
         }
 
+
+
         .cuadro {
             text-align: justify;
         }
@@ -368,11 +380,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr style="background-color: #ffffff;">
-                <td class="colum-n"></td>
-                <td class="colum-x"></td>
-                <td class="colum-n"></td>
-            </tr>
+            @foreach ($data->where('tipo', 1) as $pregunta)
+                <tr>
+                    <td class="colum-n"></td>
+                    <td class="colum-x">{{ $pregunta->pregunta }}</td>
+                    <td class="colum-n"></td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
     <div style="width: 90%; margin: 20px auto; font-family: 'Arial', sans-serif; font-size: 12px;">
@@ -407,20 +421,22 @@
             </tr>
         </thead>
         <tbody>
-            <tr style="background-color: #ffffff;">
-                <td class="colum-n"></td>
-                <td class="colum-x"></td>
-                <td class="colum-n"></td>
-            </tr>
+            @foreach ($data->where('tipo', 2) as $pregunta)
+                <tr style="background-color: #ffffff;">
+                    <td class="colum-n"></td>
+                    <td class="colum-x">{{ $pregunta->pregunta }}</td>
+                    <td class="colum-n"></td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
-    
+
     <div class="footer">
         <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y
             no puede ser distribuido
             externamente sin la autorización escrita del Director Ejecutivo
         </div>
-        
+
     </div>
 
     <div style="page-break-after: always;"></div>
@@ -558,11 +574,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr style="background-color: #ffffff;">
-                <td class="colum-n"></td>
-                <td class="colum-x"></td>
-                <td class="colum-n"></td>
-            </tr>
+            @foreach ($data->where('tipo', 3) as $pregunta)
+                <tr style="background-color: #e8e8e8ff;">
+                    <td class="colum-n"></td>
+                    <td class="colum-x">{{ $pregunta->pregunta }}</td>
+                    <td class="colum-n"></td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 
@@ -571,7 +589,7 @@
             no puede ser distribuido
             externamente sin la autorización escrita del Director Ejecutivo
         </div>
-        
+
     </div>
 
     <div style="page-break-after: always;"></div>
@@ -692,26 +710,28 @@
             </tr>
         </thead>
         <tbody>
-            <tr style="background-color: #ffffff;">
-                <td class="colum-n"></td>
-                <td class="colum-x"></td>
-                <td class="colum-n"></td>
-            </tr>
+            @foreach ($data->where('tipo', 4) as $pregunta)
+                <tr style="background-color: #ffffffff;">
+                    <td class="colum-n"></td>
+                    <td class="colum-x">{{ $pregunta->pregunta }}</td>
+                    <td class="colum-n"></td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
-            </div>
-            
+    </div>
+
     <div class="footer">
         <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y
             no puede ser distribuido
             externamente sin la autorización escrita del Director Ejecutivo
         </div>
-        
-    </div>
-    
 
-    
-     <div class="content">
+    </div>
+
+
+
+    <div class="content">
         <p class="title"></p>
     </div>
     <br>
@@ -740,8 +760,8 @@
             @php
                 $infraestructura = [
                     'Almacén de producto terminado:' => 'Espacio donde se guarda el producto que fue entregado por el envasador y listo 
-                para su comercialización (no es obligatorio pudiendo convenir con el envasador que el producto se guarde en la 
-                envasadora).'
+                                                                para su comercialización (no es obligatorio pudiendo convenir con el envasador que el producto se guarde en la 
+                                                                envasadora).'
                 ];
 
             @endphp
@@ -779,9 +799,10 @@
             @endforeach
 
             <tr style="background-color: #ffffff;">
-                <td class="colum-s" style="font-weight: bold; text-align: center; text-decoration: underline; border-bottom: none;">
-                    
- CUMPLIMIENTO DE LA NOM-070-SCFI-2016
+                <td class="colum-s"
+                    style="font-weight: bold; text-align: center; text-decoration: underline; border-bottom: none;">
+
+                    CUMPLIMIENTO DE LA NOM-070-SCFI-2016
                 </td>
             </tr>
             @php
@@ -808,7 +829,7 @@
             no puede ser distribuido
             externamente sin la autorización escrita del Director Ejecutivo
         </div>
-        
+
     </div>
 </body>
 
