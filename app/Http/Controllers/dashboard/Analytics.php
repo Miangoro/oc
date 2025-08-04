@@ -33,6 +33,7 @@ class Analytics extends Controller
     ->where('fecha_solicitud', '>', '2024-12-31')
     ->where('habilitado', 1)
     ->whereNotIn('id_tipo', [12, 13, 15])
+    ->orderByDesc('fecha_solicitud')
     ->get();
     $solicitudesSinActa = solicitudesModel::whereNotIn('id_tipo', [12, 13, 15])
     ->where('fecha_solicitud', '>', '2024-12-31')
