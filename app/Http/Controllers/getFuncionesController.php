@@ -102,9 +102,9 @@ class getFuncionesController extends Controller
                 ->with('lotes_envasado_granel.lotes_granel', 'dictamenEnvasado')
                 ->orderByDesc('id_lote_envasado')
                 ->get(),
-            'direcciones_destino' => Destinos::where("id_empresa", $empresa->id_empresa)->where('tipo_direccion', 1)->get(),
-            'instalaciones_produccion' => Instalaciones::where('tipo', 'like', '%Productora%')->where("id_empresa", $empresa->id_empresa)->get(),
-            'instalaciones_comercializadora' => Instalaciones::where('tipo', 'like', '%Comercializadora%')->where("id_empresa", $empresa->id_empresa)->get(),
+            'direcciones_destino' => Destinos::where("id_empresa", $idsEmpresas)->where('tipo_direccion', 1)->get(),
+            'instalaciones_produccion' => Instalaciones::where('tipo', 'like', '%Productora%')->where("id_empresa", $idsEmpresas)->get(),
+            'instalaciones_comercializadora' => Instalaciones::where('tipo', 'like', '%Comercializadora%')->where("id_empresa", $idsEmpresas)->get(),
             'instalaciones_envasadora' => Instalaciones::where('tipo', 'like', '%Envasadora%')->whereIn('id_empresa', $idsEmpresas)->get(),
         ]);
     }
