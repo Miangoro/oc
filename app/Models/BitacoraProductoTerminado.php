@@ -47,6 +47,12 @@ class BitacoraProductoTerminado extends Model
 
        public $timestamps = false;
        // En BitacoraMezcal.php
+       public function granel(){
+        return $this->belongsTo(LotesGranel::class, 'lote_granel', 'id_lote_granel');
+       }
+        public function envasado(){
+        return $this->belongsTo(lotes_envasado::class, 'lote_envasado', 'id_lote_envasado');
+       }
     public function marca()
     {
         return $this->belongsTo(marcas::class, 'id_marca', 'id_marca');

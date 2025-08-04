@@ -219,8 +219,8 @@ class BitacoraProductoTerminadoController extends Controller
                   // Datos generales
                 'tipo_operacion' => $bitacora->tipo_operacion ?? 'N/A',
                 'tipo' => $bitacora->tipo ?? 'N/A',
-                'lote_granel' => $bitacora->lote_granel ?? 'N/A',
-                'lote_envasado' => $bitacora->lote_envasado ?? 'N/A',
+                'lote_granel' => $bitacora->granel->nombre_lote ?? 'N/A',
+                'lote_envasado' => $bitacora->envasado->nombre ?? 'N/A',
                 'proforma_predio' => $bitacora->proforma_predio ?? 'N/A',
                 'folio_fq' => $bitacora->folio_fq ?? 'N/A',
                 'alc_vol' => $bitacora->alc_vol ?? 'N/A',
