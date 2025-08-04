@@ -5024,7 +5024,8 @@ $(document).on('click', '.pdfSolicitud', function () {
           if (Array.isArray(response.lotesEnvasado) && response.lotesEnvasado.length > 0) {
             $('.nombreLoteEnvasado').text(response.lotesEnvasado[0].nombre || 'Nombre no disponible');
 
-            response.lotesEnvasado.forEach((lote, index) => {
+            //response.lotesEnvasado.forEach((lote, index) => {
+              const lote = response.lotesEnvasado[0];
               let html = 'N/A';
 
               if (lote.dictamen_envasado) {
@@ -5039,8 +5040,10 @@ $(document).on('click', '.pdfSolicitud', function () {
               }
 
               // Aplicar por índice si hay varios
-              $(`.dictamenEnvasado[data-index="${index}"]`).html(html);
-            });
+              //$(`.dictamenEnvasado[data-index="${index}"]`).html(html);
+            //});
+            $('.dictamenEnvasado').html(html); // Aplica solo a un elemento
+
           } else {
             // Si no hay lotes, dejar los campos limpios o con texto por defecto
             $('.nombreLoteEnvasado').text('Nombre no disponible');
