@@ -536,6 +536,7 @@ class lotesGranelController extends Controller
                 'alcohol_final' => $info['lote']->cont_alc,
                 'observaciones' => 'Salida por creación del lote ' . $lote->nombre_lote,
                 'id_firmante' => 0,
+                 'id_usuario_registro' => auth()->id() ?? null,
             ]);
         }
 
@@ -591,6 +592,7 @@ class lotesGranelController extends Controller
                 'alcohol_final' => $lote->cont_alc,
                 'observaciones' => 'Registro automático por nuevo lote',
                 'id_firmante' => 0,
+                'id_usuario_registro' => auth()->id() ?? null,
             ]);
 
         // Almacenar las guías en la tabla intermedia usando el modelo LotesGranelGuia
