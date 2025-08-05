@@ -431,6 +431,7 @@ class inspeccionesController extends Controller
                 $nestedData['cajas'] = $cajas ?? 'N/A';
                 $nestedData['botellas'] = $botellas ?? 'N/A';
                 $nestedData['no_pedido'] = $caracteristicas['no_pedido'] ?? 'N/A';
+                $nestedData['pais'] = $solicitud->direccion_destino->pais_destino ?? 'No encontrado';
                 $nestedData['certificado_exportacion'] = $solicitud->certificadoExportacion()?->num_certificado ?? '';
                 $nestedData['combinado'] = ($caracteristicas['tipo_solicitud'] ?? null) == 2
                     ? '<span class="badge rounded-pill bg-info"><b>Combinado</b></span>'

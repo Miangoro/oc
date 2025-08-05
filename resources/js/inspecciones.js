@@ -251,7 +251,7 @@ $(function () {
               return `<br><span class="fw-bold small">Punto de reunión:</span><span class="small"> ${data.punto_reunion || 'N/A'}</span>
                       <br>
                       <span class="fw-bold small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
-            case 11:
+            case 11://Pedidos para exportacion
               return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
                       <br>
                       <span class="fw-bold  small">Granel:</span><span class="small"> ${data.lote_granel || 'N/A'}</span>
@@ -265,6 +265,8 @@ $(function () {
                       <span class="fw-bold  small">Botellas:</span><span class="small"> ${data.botellas || 'N/A'}</span>
                        <br>
                        <span class="fw-bold  small">Proforma:</span><span class="small"> ${data.no_pedido || 'N/A'}</span>
+                       <br>
+                       <span class="fw-bold  small">Pais destino:</span><span class="small"> ${data.pais || 'N/A'}</span>
                        <br>
                       <span class="fw-bold  small">Certificado:</span><span class="small"> ${data.certificado_exportacion || 'N/A'}</span>
                        ${data.combinado}`;

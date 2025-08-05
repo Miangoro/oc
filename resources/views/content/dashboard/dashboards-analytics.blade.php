@@ -1030,6 +1030,7 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>Folio</th>
+                                            <th>Servicio</th>
                                             <th>Tipo</th>
                                             <th>Cliente</th>
                                             <th>Fecha</th>
@@ -1040,6 +1041,7 @@
                                         @foreach ($solicitudesSinDictamen as $solicitud)
                                             <tr>
                                                 <td><strong>{{ $solicitud->folio }}</strong></td>
+                                                <td>{!! $solicitud->inspeccion->num_servicio ?? "<span class='badge bg-danger'>Sin asignar</span>" !!}</td>
                                                 <td>{{ $solicitud->tipo_solicitud->tipo ?? '—' }}</td>
                                                 <td>{{ $solicitud->empresa->razon_social ?? 'N/A' }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}

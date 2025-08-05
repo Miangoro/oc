@@ -576,6 +576,7 @@ $loteGranelIds = DB::table('lotes_granel')
                 $nestedData['cont_alc'] = $caracteristicas['cont_alc'] ?? 'N/A';
                 $nestedData['id_certificado_muestreo'] = $caracteristicas['id_certificado_muestreo'] ?? 'N/A';
                 $nestedData['no_pedido'] = $caracteristicas['no_pedido'] ?? 'N/A';
+                $nestedData['pais'] = $solicitud->direccion_destino->pais_destino ?? 'No encontrado';
                 $nestedData['id_categoria_traslado'] = $caracteristicas['id_categoria_traslado'] ?? 'N/A';
                 $nestedData['id_clase_traslado'] = $caracteristicas['id_clase_traslado'] ?? 'N/A';
                 $nestedData['id_tipo_maguey_traslado'] = $caracteristicas['id_tipo_maguey_traslado'] ?? 'N/A';
