@@ -35,6 +35,7 @@ class BitacoraHologramas extends Model
         'num_sellos_merma',
         'id_firmante',
         'observaciones',
+        'id_usuario_registro',
     ];
        public $timestamps = false;
     public function loteBitacora()

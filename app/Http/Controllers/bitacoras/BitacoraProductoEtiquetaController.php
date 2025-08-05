@@ -412,6 +412,7 @@ public function store(Request $request)
         $bitacora->mermas = $request->mermas ?? null;
 
         $bitacora->observaciones = $request->observaciones;
+        $bitacora->id_usuario_registro = auth()->id();
 
         $bitacora->tipo = 2; // Fijo
 
@@ -572,6 +573,7 @@ public function store(Request $request)
             'mermas' => $request->mermas ?? null,
 
             'observaciones' => $request->observaciones,
+            'id_usuario_registro' => auth()->id(),
 
             'tipo' => 2, // fijo
         ]);

@@ -45,6 +45,7 @@ class BitacoraProductoEtiqueta extends Model
 
           'mermas',
           'id_firmante',
+          'id_usuario_registro',
       ];
 
        public $timestamps = false;

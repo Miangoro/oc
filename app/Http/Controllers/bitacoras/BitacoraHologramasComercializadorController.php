@@ -311,6 +311,7 @@ class BitacoraHologramasComercializadorController extends Controller
             $bitacora->serie_merma = $request->serie_merma ?? 0;
             $bitacora->num_sellos_merma = $request->num_sellos_merma ?? 0;
             $bitacora->observaciones = $request->observaciones;
+            $bitacora->id_usuario_registro = auth()->id();
 
             $bitacora->save();
 
@@ -416,6 +417,7 @@ class BitacoraHologramasComercializadorController extends Controller
               'serie_merma' => $request->serie_merma ?? 0,
               'num_sellos_merma' => $request->num_sellos_merma ?? 0,
               'observaciones'    => $request->observaciones,
+              'id_usuario_registro' => auth()->id(),
           ]);
 
           return response()->json(['success' => 'Bitácora actualizada correctamente.']);

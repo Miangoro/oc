@@ -40,6 +40,7 @@ class BitacoraMezcal extends Model
         'alcohol_final',
         'id_firmante',
         'observaciones',
+        'id_usuario_registro',
     ];
        public $timestamps = false;
        // En BitacoraMezcal.php

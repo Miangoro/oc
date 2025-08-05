@@ -334,6 +334,8 @@ class BitacoraMezcalController extends Controller
             $bitacora->volumen_final = $request->volumen_final;
             $bitacora->alcohol_final = $request->alc_vol_final;
             $bitacora->observaciones = $request->observaciones;
+            $bitacora->id_usuario_registro = auth()->id();
+
 
             $bitacora->save();
 
@@ -445,6 +447,8 @@ class BitacoraMezcalController extends Controller
               'volumen_final'    => $request->volumen_final,
               'alcohol_final'    => $request->alc_vol_final,
               'observaciones'    => $request->observaciones,
+              'id_usuario_registro' => auth()->id(),
+
           ]);
 
           return response()->json(['success' => 'Bitácora actualizada correctamente.']);

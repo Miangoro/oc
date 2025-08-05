@@ -37,6 +37,7 @@ class BitacoraProductoMaduracion extends Model
         'alcohol_final',
         'observaciones',
         'id_firmante',
+        'id_usuario_registro',
     ];
 
     public $timestamps = false;

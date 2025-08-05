@@ -362,6 +362,7 @@ class BitacoraProductoMaduracionController extends Controller
           $bitacora->volumen_final = $request->volumen_final;
           $bitacora->alcohol_final = $request->alc_vol_final;
           $bitacora->observaciones = $request->observaciones;
+          $bitacora->id_usuario_registro = auth()->id();
 
     $bitacora->save();
 
@@ -493,6 +494,7 @@ class BitacoraProductoMaduracionController extends Controller
               'alcohol_final'    => $request->alc_vol_final,
               'num_recipientes_final'=> $request->num_recipientes_final ?? 0,
               'observaciones'    => $request->observaciones,
+              'id_usuario_registro' => auth()->id(),
           ]);
 
           return response()->json(['success' => 'Bitácora actualizada correctamente.']);
