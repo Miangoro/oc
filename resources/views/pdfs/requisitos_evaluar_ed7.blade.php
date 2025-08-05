@@ -243,7 +243,7 @@
             margin-top: -70px;
         }
 
-        
+
 
         .table-x {
             width: 40%;
@@ -304,8 +304,6 @@
         .cuadro {
             text-align: justify;
         }
-
-        
     </style>
 </head>
 
@@ -357,7 +355,7 @@
             <tr>
                 <td class="colum-n" style="width: 35%; background-color: #8aaef7; height: 20px;">Dirección de
                     instalación:</td>
-                <td class="colum-n" style="width: 65%;"></td>
+                <td class="colum-n" style="width: 65%;color: #000000; text-align: center; vertical-align: middle;">  – – – – – – – – – –</td>
             </tr>
         </tbody>
     </table>
@@ -374,15 +372,21 @@
             </tr>
         </thead>
 
-       <tbody>
-     @foreach ($data->where('tipo', 1) as $index => $pregunta)
+        <tbody>
+            @foreach ($data->where('tipo', 1) as $index => $pregunta)
                 <tr style="background-color: {{ $index % 2 == 0 ? '#e8e8e8' : '#ffffff' }};">
-                    <td class="colum-n"></td>
+                    <td style="color: #000000; text-align: center; vertical-align: middle;">
+                        – – – – –
+                    </td>
+
+
                     <td class="colum-x">{{ $pregunta->pregunta }}</td>
-                    <td class="colum-n"></td>
+                    <td style="color: #000000; text-align: center; vertical-align: middle;">
+                        – – – – –
+                    </td>
                 </tr>
             @endforeach
-</tbody>
+        </tbody>
     </table>
     <table
         style="width: 90%; margin: auto; border-collapse: collapse; font-size: 11px; font-family: 'Arial', sans-serif;">
@@ -393,15 +397,15 @@
                 </td>
             </tr>
             <tr style="background-color: #ffffff;">
-                <td style="width: 1%;"></td>
+                <td style="width: 1%; color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
                 <td style="width: 280%;">Copia de identificación oficial vigente de la persona autorizada.</td>
-                <td style="width: 150%;"></td>
+                <td style="width: 150%; color: #000000; text-align: center; vertical-align: middle;">   – – – – –</td>
             </tr>
             <tr style="background-color: #e8e8e8ff;">
-                <td></td>
+                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
                 <td>Carta de designación de persona autorizada para realizar los trámites ante el Organismo Certificador
                     CIDAM.</td>
-                <td></td>
+                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
             </tr>
         </tbody>
     </table>
@@ -410,7 +414,7 @@
             Nota: No requiere infraestructura ni equipamiento
         </p>
     </div>
-     <div class="footer">
+    <div class="footer">
         <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y
             no puede ser distribuido
             externamente sin la autorización escrita del Director Ejecutivo
@@ -430,7 +434,7 @@
             <tr>
                 <td class="colum-n" style="width: 35%; background-color: #8aaef7; height: 20px;">Dirección de
                     instalación:</td>
-                <td class="colum-n" style="width: 65%;"></td>
+                <td class="colum-n" style="width: 65%;color: #000000; text-align: center; vertical-align: middle;">  – – – – – – – – – –</td>
             </tr>
         </tbody>
     </table>
@@ -448,9 +452,13 @@
         <tbody>
             @foreach ($data->where('tipo', 2) as $index => $pregunta)
                 <tr style="background-color: {{ $index % 2 == 0 ? '#e8e8e8' : '#ffffff' }};">
-                    <td class="colum-n"></td>
+                    <td style="color: #000000; text-align: center; vertical-align: middle;">
+                        – – – – –
+                    </td>
                     <td class="colum-x">{{ $pregunta->pregunta }}</td>
-                    <td class="colum-n"></td>
+                    <td style="color: #000000; text-align: center; vertical-align: middle;">
+                        – – – – –
+                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -475,15 +483,15 @@
                 </td>
             </tr>
             <tr style="background-color: #ffffff;">
-                <td style="width: 1%;"></td>
+                <td style="width: 1%;color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
                 <td style="width: 280%;">Copia de identificación oficial vigente de la persona autorizada.</td>
-                <td style="width: 150%;"></td>
+                <td style="width: 150%;color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
             </tr>
             <tr style="background-color: #e8e8e8ff;">
-                <td></td>
+                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
                 <td>Carta de designación de persona autorizada para realizar los trámites ante el Organismo Certificador
                     CIDAM.</td>
-                <td></td>
+                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
             </tr>
         </tbody>
     </table>
@@ -574,7 +582,7 @@
             <tr>
                 <td class="colum-n" style="width: 35%; background-color: #8aaef7; height: 20px;">Dirección de
                     instalación:</td>
-                <td class="colum-n" style="width: 65%;"></td>
+                <td class="colum-n" style="width: 65%;color: #000000; text-align: center; vertical-align: middle;">  – – – – – – – – – –</td>
             </tr>
         </tbody>
     </table>
@@ -591,9 +599,13 @@
         <tbody>
             @foreach ($data->where('tipo', 3) as $index => $pregunta)
                 <tr style="background-color: {{ $index % 2 == 0 ? '#e8e8e8' : '#ffffff' }};">
-                    <td class="colum-n"></td>
+                    <td style="color: #000000; text-align: center; vertical-align: middle;">
+                        – – – – –
+                    </td>
                     <td class="colum-x">{{ $pregunta->pregunta }}</td>
-                    <td class="colum-n"></td>
+                    <td style="color: #000000; text-align: center; vertical-align: middle;">
+                        – – – – –
+                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -607,15 +619,15 @@
                 </td>
             </tr>
             <tr style="background-color: #ffffff;">
-                <td style="width: 1%;"></td>
+                <td style="width: 1%;color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
                 <td style="width: 280%;">Copia de identificación oficial vigente de la persona autorizada.</td>
-                <td style="width: 150%;"></td>
+                <td style="width: 150%;color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
             </tr>
             <tr style="background-color: #e8e8e8ff;">
-                <td></td>
+                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
                 <td>Carta de designación de persona autorizada para realizar los trámites ante el Organismo Certificador
                     CIDAM.</td>
-                <td></td>
+                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
             </tr>
         </tbody>
     </table>
@@ -708,7 +720,7 @@
         necesario considerar que deben mantener la limpieza y buenas prácticas de manufactura, mantener alejados a los
         animales de granja y fuentes de producción.
     </p>
-     <div class="footer">
+    <div class="footer">
         <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y
             no puede ser distribuido
             externamente sin la autorización escrita del Director Ejecutivo
@@ -727,7 +739,7 @@
             <tr>
                 <td class="colum-n" style="width: 35%; background-color: #8aaef7; height: 20px;">Dirección de
                     instalación:</td>
-                <td class="colum-n" style="width: 65%;"></td>
+                <td class="colum-n" style="width: 65%;color: #000000; text-align: center; vertical-align: middle;">  – – – – – – – – – –</td>
             </tr>
         </tbody>
     </table>
@@ -744,9 +756,13 @@
         <tbody>
             @foreach ($data->where('tipo', 4) as $index => $pregunta)
                 <tr style="background-color: {{ $index % 2 == 0 ? '#e8e8e8' : '#ffffff' }};">
-                    <td class="colum-n"></td>
+                    <td style="color: #000000; text-align: center; vertical-align: middle;">
+                        – – – – –
+                    </td>
                     <td class="colum-x">{{ $pregunta->pregunta }}</td>
-                    <td class="colum-n"></td>
+                    <td style="color: #000000; text-align: center; vertical-align: middle;">
+                        – – – – –
+                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -760,15 +776,15 @@
                 </td>
             </tr>
             <tr style="background-color: #ffffff;">
-                <td style="width: 1%;"></td>
+                <td style="width: 1%;color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
                 <td style="width: 280%;">Copia de identificación oficial vigente de la persona autorizada.</td>
-                <td style="width: 150%;"></td>
+                <td style="width: 150%;color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
             </tr>
             <tr style="background-color: #e8e8e8ff;">
-                <td></td>
+                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
                 <td>Carta de designación de persona autorizada para realizar los trámites ante el Organismo Certificador
                     CIDAM.</td>
-                <td></td>
+                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
             </tr>
         </tbody>
     </table>
@@ -795,8 +811,8 @@
             @php
                 $infraestructura = [
                     'Almacén de producto terminado:' => 'Espacio donde se guarda el producto que fue entregado por el envasador y listo 
-                                                                                                para su comercialización (no es obligatorio pudiendo convenir con el envasador que el producto se guarde en la 
-                                                                                                envasadora).'
+                                                                                                                                para su comercialización (no es obligatorio pudiendo convenir con el envasador que el producto se guarde en la 
+                                                                                                                                envasadora).'
                 ];
 
             @endphp
