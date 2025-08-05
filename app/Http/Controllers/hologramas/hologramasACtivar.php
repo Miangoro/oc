@@ -56,11 +56,17 @@ class hologramasActivar extends Controller
 
     public function index(Request $request)
     {
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
+        }
+
         $columns = [
             1 => 'id',
             2 => 'folio_activacion',
-
         ];
+
         $limit = $request->input('length');
         $start = $request->input('start');
         $orderColumnIndex = $request->input('order.0.column');
@@ -68,11 +74,7 @@ class hologramasActivar extends Controller
         $dir = $request->input('order.0.dir');
         $searchValue = $request->input('search.value');
 
-        if (auth()->user()->tipo =3){
-          $empresaId = auth()->user()->empresa?->id_empresa;
-        } else {
-          $empresaId = null;
-        }
+
 
     $query = activarHologramasModelo::when(['inspeccion', 'solicitudHolograma.marcas', 'solicitudHolograma.empresa'])
         ->when($empresaId, function ($q) use ($empresaId) {
