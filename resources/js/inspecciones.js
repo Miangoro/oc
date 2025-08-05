@@ -2,6 +2,44 @@ $(function () {
   // Definir la URL base
   var baseUrl = window.location.origin + '/';
 
+  // 1. Declarar primero los filtros
+  const filtros = [
+    'Muestreo de agave (ART)',
+    'Dictaminación de instalaciones',
+    'Vigilancia en producción de lote',
+    'Muestreo de lote a granel',
+    'Vigilancia en el traslado del lote',
+    'Emisión de certificado NOM a granel',
+    'Inspección ingreso a barrica/ contenedor de vidrio',
+    'Inspección de liberación a barrica/contenedor de vidrio',
+    'Georreferenciación',
+    'Inspección de envasado',
+    'Muestreo de lote envasado',
+    'Liberación de producto terminado nacional',
+    'Pedidos para exportación',
+    'Emisión de certificado venta nacional',
+    'Revisión de etiquetas'
+  ];
+
+  // 2. Generar los botones dinámicamente
+  const filtroButtons = filtros.map(filtro => ({
+    text: filtro,
+    className: 'dropdown-item',
+    action: function (e, dt, node, config) {
+      dt_instalaciones_table.search(filtro).draw();
+      $('.dt-button-collection').hide(); // Ocultar el dropdown al seleccionar
+    }
+  }));
+  filtroButtons.unshift({
+    text: '<i class="ri-close-line text-danger me-2"></i>Quitar filtro',
+    className: 'dropdown-item text-danger fw-semibold border',
+    action: function (e, dt, node, config) {
+      dt_instalaciones_table.search('').draw();
+      $('.dt-button-collection').hide(); // Ocultar dropdown también
+    }
+  });
+
+
   // Inicializar DataTable
   var dt_instalaciones_table = $('.datatables-users').DataTable({
     processing: true,
@@ -28,7 +66,7 @@ $(function () {
     columns: [
       { data: '' },
       { //data: 'folio'
-        render: function (data, type, full, meta) { 
+        render: function (data, type, full, meta) {
           var $folio = full['folio'];
           var $id = full['id_solicitud'];
 
@@ -36,7 +74,7 @@ $(function () {
             <i data-id="${$id}" data-folio="${$folio}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitud" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>
             `;
         }
-       },
+      },
 
       {
         data: 'num_servicio',
@@ -278,7 +316,7 @@ $(function () {
          }
          }
        },*/
-       {///caracteristicas
+      {///caracteristicas
         targets: 8,
         searchable: false,
         orderable: false
@@ -317,8 +355,8 @@ $(function () {
 
           // DICTAMEN
           if (tiposValidos.includes(Number(full['id_tipo']))) {
-                if (dictamen && dictamen !== 'Sin subir') {
-                  html += `<i class="ri-file-pdf-2-fill text-primary ri-30px pdf cursor-pointer"
+            if (dictamen && dictamen !== 'Sin subir') {
+              html += `<i class="ri-file-pdf-2-fill text-primary ri-30px pdf cursor-pointer"
                               title="Ver Dictamen"
                               data-bs-target="#mostrarPdf"
                               data-bs-toggle="modal"
@@ -326,9 +364,9 @@ $(function () {
                               data-id="../${dictamen}"
                               data-registro="${razon}">
                           </i>`;
-                } else {
-                  html += '<span class="badge bg-warning">Sin dictamen</span>';
-                }
+            } else {
+              html += '<span class="badge bg-warning">Sin dictamen</span>';
+            }
           }
 
           return html;
@@ -394,7 +432,7 @@ $(function () {
       }
     },
     buttons: [
-      {
+    /*   {
         extend: 'collection',
         className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
         text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
@@ -520,6 +558,13 @@ $(function () {
             }
           }
         ]
+      }, */
+       {
+        extend: 'collection',
+        className:
+          'btn btn-outline-primary btn-lg dropdown-toggle me-4 waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4 mt-md-0',
+        text: '<i class="ri-filter-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Filtrar</span>',
+        buttons: filtroButtons
       },
       {
         text: '<i class="ri-file-excel-2-fill ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
@@ -546,18 +591,18 @@ $(function () {
           var data = $.map(columns, function (col, i) {
             return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
               ? '<tr data-dt-row="' +
-                  col.rowIndex +
-                  '" data-dt-column="' +
-                  col.columnIndex +
-                  '">' +
-                  '<td>' +
-                  col.title +
-                  ':' +
-                  '</td> ' +
-                  '<td>' +
-                  col.data +
-                  '</td>' +
-                  '</tr>'
+              col.rowIndex +
+              '" data-dt-column="' +
+              col.columnIndex +
+              '">' +
+              '<td>' +
+              col.title +
+              ':' +
+              '</td> ' +
+              '<td>' +
+              col.data +
+              '</td>' +
+              '</tr>'
               : '';
           }).join('');
 
@@ -584,31 +629,31 @@ $(function () {
 
 
 
-///FORMATO PDF SOLICITUD SERVICIOS
-$(document).on('click', '.pdfSolicitud', function () {
-  var id = $(this).data('id');
-  var folio = $(this).data('folio');
-  var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
-  var iframe = $('#pdfViewer');
-  var spinner = $('#cargando');
+  ///FORMATO PDF SOLICITUD SERVICIOS
+  $(document).on('click', '.pdfSolicitud', function () {
+    var id = $(this).data('id');
+    var folio = $(this).data('folio');
+    var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
 
-  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-  spinner.show();
-  iframe.hide();
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
 
-  //Cargar el PDF con el ID
-  iframe.attr('src', pdfUrl);
-  //Configurar el botón para abrir el PDF en una nueva pestaña
-  $("#NewPestana").attr('href', pdfUrl).show();
+    //Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
 
-  $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
-  $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
-  //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-  iframe.on('load', function () {
-    spinner.hide();
-    iframe.show();
+    $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
+    $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
   });
-});
 
 
 
@@ -2174,8 +2219,8 @@ $(document).on('click', '.pdfSolicitud', function () {
           if (response.data.instalacion) {
             $('.domicilioInstalacion').html(
               response.data.instalacion.direccion_completa +
-                ' <b>Vigencia: </b>' +
-                response.data.instalacion.fecha_vigencia
+              ' <b>Vigencia: </b>' +
+              response.data.instalacion.fecha_vigencia
             );
           } else {
             // Si está vacío, usar `ubicacion_predio`
@@ -2183,8 +2228,8 @@ $(document).on('click', '.pdfSolicitud', function () {
             $('.nombrePredio').text(response.data?.predios?.nombre_predio);
             $('.preregistro').html(
               "<a target='_Blank' href='/pre-registro_predios/" +
-                response.data?.predios?.id_predio +
-                "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
+              response.data?.predios?.id_predio +
+              "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
             );
           }
 
@@ -2198,24 +2243,24 @@ $(document).on('click', '.pdfSolicitud', function () {
           // Validar categoría
           $('.categoria').text(
             response?.data?.lote_granel?.categoria?.categoria ||
-              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
-              'No disponible'
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
+            'No disponible'
           );
 
           // Validar clase
           $('.clase').text(
             response?.data?.lote_granel?.clase?.clase ||
-              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
-              'No disponible'
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
+            'No disponible'
           );
 
           $('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
           $('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
           $('.certificadoGranel').text(
             response?.data?.lote_granel?.certificado_granel?.num_certificado ||
-              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.certificado_granel
-                ?.num_certificado ||
-              'No disponible'
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.certificado_granel
+              ?.num_certificado ||
+            'No disponible'
           );
 
           $('.tipos').text(response?.tipos_agave || 'No disponible');
@@ -2245,15 +2290,15 @@ $(document).on('click', '.pdfSolicitud', function () {
           $('.volumenIngresado').text(caracteristicas.volumen_ingresado);
           $('.etiqueta').html(
             '<a href="files/' +
-              response.data.empresa.empresa_num_clientes[0].numero_cliente +
-              '/' +
-              response?.url_etiqueta +
-              '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
+            response.data.empresa.empresa_num_clientes[0].numero_cliente +
+            '/' +
+            response?.url_etiqueta +
+            '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
           );
           $('.dictamenEnvasado').html(
             '<a href="/dictamen_envasado/' +
-              response?.data?.lote_envasado?.dictamen_envasado?.id_dictamen_envasado +
-              '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
+            response?.data?.lote_envasado?.dictamen_envasado?.id_dictamen_envasado +
+            '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
           );
 
           // Verificar si 'detalles' existe y es un arreglo
@@ -2367,5 +2412,5 @@ $(document).on('click', '.pdfSolicitud', function () {
 
 
 
-  
+
 });//end function
