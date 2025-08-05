@@ -290,6 +290,7 @@ class BitacoraProcesoElaboracionController extends Controller
 
       public function store(Request $request)
       {
+
           $request->validate([
               'fecha_ingreso'           => 'required|date',
               'id_empresa'              => 'required|integer|exists:empresa,id_empresa',
@@ -312,6 +313,7 @@ class BitacoraProcesoElaboracionController extends Controller
               'colas_volumen'          => 'nullable|numeric|min:0',
               'colas_alcohol'          => 'nullable|numeric|min:0|max:100',
               'observaciones'          => 'nullable|string',
+
               'molienda'                      => 'nullable|array',
               'molienda.*.fecha_molienda'    => 'nullable|date',
               'molienda.*.numero_tina'       => 'nullable|string',
@@ -358,10 +360,12 @@ class BitacoraProcesoElaboracionController extends Controller
                   'total_colas_volumen'      => $request->colas_volumen,
                   'total_colas_porcentaje'   => $request->colas_alcohol,
                   'observaciones'            => $request->observaciones,
+                  'id_usuario_registro'      => auth()->id(),
               ]);
               // Guardar molienda
-              foreach ($request->input('molienda', []) as $fila) {
-                  BitacoraProcesoMoliendaDestilacion::create([
+              if (is_array($request->input('molienda')) && count($request->input('molienda')) > 0) {
+                  foreach ($request->input('molienda') as $fila) {
+                          BitacoraProcesoMoliendaDestilacion::create([
                       'id_bitacora'         => $bitacora->id,
                       'fecha_molienda'      => $fila['fecha_molienda'],
                       'numero_tina'         => $fila['numero_tina'],
@@ -374,11 +378,13 @@ class BitacoraProcesoElaboracionController extends Controller
                       'mezcal_porcentaje'   => $fila['mezcal_alcohol'],
                       'colas_volumen'       => $fila['colas_volumen'],
                       'colas_porcentaje'    => $fila['colas_alcohol'],
-                  ]);
-              }
+                                  ]);
+                    }
+                }
               // Guardar segunda destilación
-              foreach ($request->input('segunda_destilacion', []) as $fila) {
-                  BitacoraProcesoSegundaDestilacion::create([
+              if (is_array($request->input('segunda_destilacion')) && count($request->input('segunda_destilacion')) > 0) {
+                  foreach ($request->input('segunda_destilacion') as $fila) {
+                      BitacoraProcesoSegundaDestilacion::create([
                       'id_bitacora'        => $bitacora->id,
                       'fecha_destilacion'  => $fila['fecha_destilacion'],
                       'puntas_volumen'     => $fila['puntas_volumen'],
@@ -389,6 +395,7 @@ class BitacoraProcesoElaboracionController extends Controller
                       'colas_porcentaje'   => $fila['colas_alcohol'],
                   ]);
               }
+            }
               DB::commit();
               return response()->json(['success' => 'Bitácora registrada correctamente']);
           } catch (\Throwable $e) {
