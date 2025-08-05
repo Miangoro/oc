@@ -364,53 +364,46 @@
 
 
     <table>
-        <thead>
-            <tr style="background-color: #ffffffff;">
-                <th class="colum-n" style="width: 1%;">C/NC</th>
-                <th class="colum-n" style="width: 280%; font-weight: bold;">Requisito documental</th>
-                <th class="colum-n" style="width: 150%;">Observaciones</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach ($data->where('tipo', 1) as $index => $pregunta)
-                <tr style="background-color: {{ $index % 2 == 0 ? '#e8e8e8' : '#ffffff' }};">
-                    <td style="color: #000000; text-align: center; vertical-align: middle;">
-                        – – – – –
-                    </td>
-
-
-                    <td class="colum-x">{{ $pregunta->pregunta }}</td>
-                    <td style="color: #000000; text-align: center; vertical-align: middle;">
-                        – – – – –
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    <table
-        style="width: 90%; margin: auto; border-collapse: collapse; font-size: 11px; font-family: 'Arial', sans-serif;">
-        <tbody>
-            <tr style="background-color: #ffffff;">
-                <td colspan="3" class="colum-s" style="font-weight: bold; text-align: left;">
-                    En caso de nombrar a un representante o responsable de trámites, anexar:
+    <thead>
+        <tr style="background-color: #ffffffff;">
+            <th class="colum-n" style="width: 1%;">C/NC</th>
+            <th class="colum-n" style="width: 280%; font-weight: bold;">Requisito documental</th>
+            <th class="colum-n" style="width: 150%;">Observaciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($data->where('tipo', 1)->take(5) as $index => $pregunta)
+            <tr style="background-color: {{ $index % 2 == 0 ? '#e8e8e8' : '#ffffff' }};">
+                <td style="color: #000000; text-align: center; vertical-align: middle;">
+                    – – – – –
+                </td>
+                <td class="colum-x">{{ $pregunta->pregunta }}</td>
+                <td style="color: #000000; text-align: center; vertical-align: middle;">
+                    – – – – –
                 </td>
             </tr>
-            <tr style="background-color: #ffffff;">
-                <td style="width: 1%; color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-                <td style="width: 280%;">Copia de identificación oficial vigente de la persona autorizada.</td>
-                <td style="width: 150%; color: #000000; text-align: center; vertical-align: middle;">   – – – – –</td>
+        @endforeach
+    </tbody>
+</table>
+    <table style="width: 90%; margin: auto; border-collapse: collapse; font-size: 12px; font-family: 'Arial', sans-serif;">
+    <tbody>
+        <tr style="background-color: #ffffff;">
+            <td colspan="3" class="colum-s" style="font-weight: bold; text-align: left;">
+                En caso de nombrar a un representante o responsable de trámites, anexar:
+            </td>
+        </tr>
+
+        @foreach ($data->where('tipo', 1)->skip(5)->take(2) as $index => $pregunta)
+            <tr style="background-color: {{ $index % 2 == 0 ? '#ffffff' : '#e8e8e8' }};">
+                <td style="width: 50%; color: #000000; text-align: center; vertical-align: middle;">– – – – –</td>
+                <td style="width: 280%;">{{ $pregunta->pregunta }}</td>
+                <td style="width: 150%; color: #000000; text-align: center; vertical-align: middle;">– – – – –</td>
             </tr>
-            <tr style="background-color: #e8e8e8ff;">
-                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-                <td>Carta de designación de persona autorizada para realizar los trámites ante el Organismo Certificador
-                    CIDAM.</td>
-                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-            </tr>
-        </tbody>
-    </table>
-    <div style="width: 90%; margin: 20px auto; font-family: 'Arial', sans-serif; font-size: 12px;">
-        <p style="font-weight: bold; text-decoration: underline; margin-bottom: 10px;">
+        @endforeach
+    </tbody>
+</table>
+    <div style="width: 90%; margin: 3px auto; font-family: 'Arial', sans-serif; font-size: 12px;">
+        <p style="font-weight: bold; text-decoration: underline; margin-bottom: 5px;">
             Nota: No requiere infraestructura ni equipamiento
         </p>
     </div>
@@ -423,9 +416,9 @@
     </div>
 
 
-    <p class="title2">
-        <strong><u>II. REQUISITOS PRODUCTOR DE MEZCAL</u></strong>
-    </p>
+    <p class="title2" style="margin-top: .5px; margin-bottom: 8px;">
+    <strong><u>II.REQUISITOS PRODUCTOR DE MEZCA</u></strong>
+</p>
 
     <br><br><br>
 
@@ -450,17 +443,17 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($data->where('tipo', 2) as $index => $pregunta)
-                <tr style="background-color: {{ $index % 2 == 0 ? '#e8e8e8' : '#ffffff' }};">
-                    <td style="color: #000000; text-align: center; vertical-align: middle;">
-                        – – – – –
-                    </td>
-                    <td class="colum-x">{{ $pregunta->pregunta }}</td>
-                    <td style="color: #000000; text-align: center; vertical-align: middle;">
-                        – – – – –
-                    </td>
-                </tr>
-            @endforeach
+             @foreach ($data->where('tipo', 2)->take(8) as $index => $pregunta)
+            <tr style="background-color: {{ $index % 2 == 0 ? '#e8e8e8' : '#ffffff' }};">
+                <td style="color: #000000; text-align: center; vertical-align: middle;">
+                    – – – – –
+                </td>
+                <td class="colum-x">{{ $pregunta->pregunta }}</td>
+                <td style="color: #000000; text-align: center; vertical-align: middle;">
+                    – – – – –
+                </td>
+            </tr>
+        @endforeach
         </tbody>
     </table>
 
@@ -474,27 +467,23 @@
     </div>
 
     <!-- ░ REPRESENTANTE O RESPONSABLE DE TRÁMITES ░ -->
-    <table
-        style="width: 90%; margin: auto; border-collapse: collapse; font-size: 11px; font-family: 'Arial', sans-serif;">
-        <tbody>
-            <tr style="background-color: #ffffff;">
-                <td colspan="3" class="colum-s" style="font-weight: bold; text-align: left;">
-                    En caso de nombrar a un representante o responsable de trámites, anexar:
-                </td>
+     <table style="width: 90%; margin: auto; border-collapse: collapse; font-size: 12px; font-family: 'Arial', sans-serif;">
+    <tbody>
+        <tr style="background-color: #ffffff;">
+            <td colspan="3" class="colum-s" style="font-weight: bold; text-align: left;">
+                En caso de nombrar a un representante o responsable de trámites, anexar:
+            </td>
+        </tr>
+
+        @foreach ($data->where('tipo', 2)->skip(8)->take(2) as $index => $pregunta)
+            <tr style="background-color: {{ $index % 2 == 0 ? '#ffffff' : '#e8e8e8' }};">
+                <td style="width: 50%; color: #000000; text-align: center; vertical-align: middle;">– – – – –</td>
+                <td style="width: 280%;">{{ $pregunta->pregunta }}</td>
+                <td style="width: 150%; color: #000000; text-align: center; vertical-align: middle;">– – – – –</td>
             </tr>
-            <tr style="background-color: #ffffff;">
-                <td style="width: 1%;color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-                <td style="width: 280%;">Copia de identificación oficial vigente de la persona autorizada.</td>
-                <td style="width: 150%;color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-            </tr>
-            <tr style="background-color: #e8e8e8ff;">
-                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-                <td>Carta de designación de persona autorizada para realizar los trámites ante el Organismo Certificador
-                    CIDAM.</td>
-                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-            </tr>
-        </tbody>
-    </table>
+        @endforeach
+    </tbody>
+</table>
 
 
 
@@ -571,9 +560,9 @@
         deseable que se encuentre delimitado. Además, es necesario considerar que deben mantenerse la limpieza y las
         buenas prácticas de manufactura, mantener alejados a los animales de granja y fuentes de producción.
     </p>
-    <p class="title2">
-        <strong><u>III. REQUISITOS PARA ENVASADORES</u></strong>
-    </p>
+    <p class="title2" style="margin-top: .5px; margin-bottom: 8px;">
+    <strong><u>III. REQUISITOS PARA ENVASADORES</u></strong>
+</p>
 
     <br><br><br>
 
@@ -597,40 +586,36 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($data->where('tipo', 3) as $index => $pregunta)
-                <tr style="background-color: {{ $index % 2 == 0 ? '#e8e8e8' : '#ffffff' }};">
-                    <td style="color: #000000; text-align: center; vertical-align: middle;">
-                        – – – – –
-                    </td>
-                    <td class="colum-x">{{ $pregunta->pregunta }}</td>
-                    <td style="color: #000000; text-align: center; vertical-align: middle;">
-                        – – – – –
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    <table
-        style="width: 90%; margin: auto; border-collapse: collapse; font-size: 11px; font-family: 'Arial', sans-serif;">
-        <tbody>
-            <tr style="background-color: #ffffff;">
-                <td colspan="3" class="colum-s" style="font-weight: bold; text-align: left;">
-                    En caso de nombrar a un representante o responsable de trámites, anexar:
+            @foreach ($data->where('tipo', 3)->take(8) as $index => $pregunta)
+            <tr style="background-color: {{ $index % 2 == 0 ? '#e8e8e8' : '#ffffff' }};">
+                <td style="color: #000000; text-align: center; vertical-align: middle;">
+                    – – – – –
+                </td>
+                <td class="colum-x">{{ $pregunta->pregunta }}</td>
+                <td style="color: #000000; text-align: center; vertical-align: middle;">
+                    – – – – –
                 </td>
             </tr>
-            <tr style="background-color: #ffffff;">
-                <td style="width: 1%;color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-                <td style="width: 280%;">Copia de identificación oficial vigente de la persona autorizada.</td>
-                <td style="width: 150%;color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-            </tr>
-            <tr style="background-color: #e8e8e8ff;">
-                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-                <td>Carta de designación de persona autorizada para realizar los trámites ante el Organismo Certificador
-                    CIDAM.</td>
-                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-            </tr>
+        @endforeach
         </tbody>
     </table>
+     <table style="width: 90%; margin: auto; border-collapse: collapse; font-size: 12px; font-family: 'Arial', sans-serif;">
+    <tbody>
+        <tr style="background-color: #ffffff;">
+            <td colspan="3" class="colum-s" style="font-weight: bold; text-align: left;">
+                En caso de nombrar a un representante o responsable de trámites, anexar:
+            </td>
+        </tr>
+
+        @foreach ($data->where('tipo', 3)->skip(8)->take(2) as $index => $pregunta)
+            <tr style="background-color: {{ $index % 2 == 0 ? '#ffffff' : '#e8e8e8' }};">
+                <td style="width: 50%; color: #000000; text-align: center; vertical-align: middle;">– – – – –</td>
+                <td style="width: 280%;">{{ $pregunta->pregunta }}</td>
+                <td style="width: 150%; color: #000000; text-align: center; vertical-align: middle;">– – – – –</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
 
     <div class="footer">
         <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y
@@ -728,11 +713,10 @@
 
     </div>
 
-    <p class="title2">
-        <strong><u>IV. REQUISITOS PARA COMERCIALIZADORES</u></strong>
-    </p>
-
-    <br><br><br>
+    <p class="title2" style="margin-top: .5px; margin-bottom: 8px;">
+    <strong><u>IV. REQUISITOS PARA COMERCIALIZADORES</u></strong>
+</p>
+  <br><br><br>
 
     <table>
         <tbody>
@@ -754,40 +738,36 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($data->where('tipo', 4) as $index => $pregunta)
-                <tr style="background-color: {{ $index % 2 == 0 ? '#e8e8e8' : '#ffffff' }};">
-                    <td style="color: #000000; text-align: center; vertical-align: middle;">
-                        – – – – –
-                    </td>
-                    <td class="colum-x">{{ $pregunta->pregunta }}</td>
-                    <td style="color: #000000; text-align: center; vertical-align: middle;">
-                        – – – – –
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    <table
-        style="width: 90%; margin: auto; border-collapse: collapse; font-size: 11px; font-family: 'Arial', sans-serif;">
-        <tbody>
-            <tr style="background-color: #ffffff;">
-                <td colspan="3" class="colum-s" style="font-weight: bold; text-align: left;">
-                    En caso de nombrar a un representante o responsable de trámites, anexar:
+            @foreach ($data->where('tipo', 4)->take(16) as $index => $pregunta)
+            <tr style="background-color: {{ $index % 2 == 0 ? '#e8e8e8' : '#ffffff' }};">
+                <td style="color: #000000; text-align: center; vertical-align: middle;">
+                    – – – – –
+                </td>
+                <td class="colum-x">{{ $pregunta->pregunta }}</td>
+                <td style="color: #000000; text-align: center; vertical-align: middle;">
+                    – – – – –
                 </td>
             </tr>
-            <tr style="background-color: #ffffff;">
-                <td style="width: 1%;color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-                <td style="width: 280%;">Copia de identificación oficial vigente de la persona autorizada.</td>
-                <td style="width: 150%;color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-            </tr>
-            <tr style="background-color: #e8e8e8ff;">
-                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-                <td>Carta de designación de persona autorizada para realizar los trámites ante el Organismo Certificador
-                    CIDAM.</td>
-                <td style="color: #000000; text-align: center; vertical-align: middle;">  – – – – –</td>
-            </tr>
+        @endforeach
         </tbody>
     </table>
+    <table style="width: 90%; margin: auto; border-collapse: collapse; font-size: 12px; font-family: 'Arial', sans-serif;">
+    <tbody>
+        <tr style="background-color: #ffffff;">
+            <td colspan="3" class="colum-s" style="font-weight: bold; text-align: left;">
+                En caso de nombrar a un representante o responsable de trámites, anexar:
+            </td>
+        </tr>
+
+        @foreach ($data->where('tipo', 4)->skip(16)->take(2) as $index => $pregunta)
+            <tr style="background-color: {{ $index % 2 == 0 ? '#ffffff' : '#e8e8e8' }};">
+                <td style="width: 50%; color: #000000; text-align: center; vertical-align: middle;">– – – – –</td>
+                <td style="width: 280%;">{{ $pregunta->pregunta }}</td>
+                <td style="width: 150%; color: #000000; text-align: center; vertical-align: middle;">– – – – –</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
     </div>
 
     <div class="footer">
