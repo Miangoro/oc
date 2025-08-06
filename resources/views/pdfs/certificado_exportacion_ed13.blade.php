@@ -322,7 +322,7 @@
 
     $empresa_hol = $solic->empresa ?? null;
     $num_clien_hol = $empresa_hol && $empresa_hol->empresaNumClientes->isNotEmpty()
-        ? $empresa_hol->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa_hol
+        ? $empresa_hol->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa_hol,
         ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
     $no_cliente = explode('070-', $num_clien_hol)[1] ?? null;
 

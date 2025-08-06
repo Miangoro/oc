@@ -324,7 +324,7 @@
                 {{-- {{ $lote->lotesGranel->first()->certificadoGranel->num_certificado ?? 'No encontrado' }}&nbsp; --}}
                 {{ $lote->lotesGranel->first()?->certificadoGranel?->num_certificado 
                     ?? $lote->lotesGranel->first()->folio_certificado
-                    ?? 'No encontrado'; }}&nbsp;
+                    ?? 'No encontrado' }}&nbsp;
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">Volumen:</td>
             <td style="text-align: left; padding-left: 4px;">

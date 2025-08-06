@@ -408,6 +408,16 @@
       "icon": "menu-icon ri-shield-keyhole-fill",
       "slug": "find_permisos",
       "can": "Visualizar permisos"
-    }
+    },
+    {
+  "name": "Tickets",
+  "url": "tickets",
+  "icon": "menu-icon ri-customer-service-2-fill",
+  "slug": "tickets",
+  "can": "Visualizar activación de hologramas"
+ 
+}
+
+   
   ]
 }

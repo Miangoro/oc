@@ -235,6 +235,8 @@ use App\Http\Controllers\insertar_datos_bd_predios;
 use App\Http\Controllers\insertar_datos_bd_solicitudes_granel;
 use App\Http\Controllers\permisos\permisosController;
 use App\Http\Controllers\permisos\rolesController;
+//Tickets
+use App\Http\Controllers\TicketController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -1353,4 +1355,17 @@ Route::middleware(['auth'])->controller(resumenController::class)->group(functio
 
 Route::middleware(['auth'])->controller(firmaController::class)->group(function () {
     Route::get('firmarCadena', 'firmarCadena')->name('firmarCadena');
+
 });
+//------------------Tickets------------------
+Route::prefix('tickets')->group(function () {
+    Route::get('/', [TicketController::class, 'index'])->name('tickets.index');
+    Route::get('/crear', [TicketController::class, 'create'])->name('tickets.create');
+    Route::post('/guardar', [TicketController::class, 'store'])->name('tickets.store');
+    Route::get('/{id}', [TicketController::class, 'show'])->name('tickets.show');
+    Route::post('/{id}/mensaje', [TicketController::class, 'addMessage'])->name('tickets.message');
+    Route::post('/{id}/cerrar', [TicketController::class, 'updateStatus'])->name('tickets.close');
+    Route::get('/tickets/{id}/detalle', [TicketController::class, 'detalle'])->name('tickets.detalle');
+
+});
+
