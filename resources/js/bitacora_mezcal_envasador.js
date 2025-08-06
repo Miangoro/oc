@@ -223,8 +223,9 @@ $(function () {
             let acciones = '';
 
             const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
+            const esAdminBitacoras = window.adminBitacoras === true;
 
-            if (!estaFirmado) {
+            if (!estaFirmado || esAdminBitacoras) {
               if (window.puedeFirmarElUsuario) {
                 acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
               }

@@ -26,6 +26,7 @@
       window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar bitácoras'));
       window.puedeEditarElUsuario = @json(auth()->user()->can('Editar bitácoras'));
       window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar bitácoras'));
+      window.adminBitacoras = @json(auth()->user()->can('Admin bitácoras'));
       window.puedeFirmarElUsuario = @json(auth()->user()->can('Firmar bitácoras'));
       window.tipoUsuario = {{ auth()->user()->tipo }};
         const opcionesEmpresas = `{!! collect($empresas)->map(function ($e) {
