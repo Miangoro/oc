@@ -392,7 +392,8 @@
             <tr>
                 <td class="custom-title" style="text-align: left;">Lote de procedencia:</td>
                 <td class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->lote_original_id ?? 'N/A' }}</strong></td>
+                    <strong>{{ !empty($lotes_procedencia) ? implode(', ', $lotes_procedencia) : 'N/A' }}</strong>
+                  </td>
                 <td class="custom-title">No. de Fisicoquímico:</td>
                 <td colspan="2" class="white-background-custom">
                     <strong>{{ $datos->solicitud->lote_granel->folio_fq }}</strong></td>
@@ -490,7 +491,7 @@
             <tr>
                 <td class="custom-title" style="text-align: left;">Lote de procedencia:</td>
                 <td class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->lote_original_id ?? 'N/A' }}</strong></td>
+                   <strong>{{ !empty($lotes_procedencia) ? implode(', ', $lotes_procedencia) : 'N/A' }}</strong></td>
                 <td class="custom-title">No. de Fisicoquímico:</td>
                 <td colspan="2" class="white-background-custom">
                     <strong>{{ $datos->solicitud->lote_granel->folio_fq }}</strong></td>
@@ -587,7 +588,7 @@
             <tr>
                 <td class="custom-title" style="text-align: left;">Lote de procedencia:</td>
                 <td class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->lote_original_id ?? 'N/A' }}</strong></td>
+                   <strong>{{ !empty($lotes_procedencia) ? implode(', ', $lotes_procedencia) : 'N/A' }}</strong></td>
                 <td class="custom-title">No. de Fisicoquímico:</td>
                 <td colspan="2" class="white-background-custom">
                     <strong>{{ $datos->solicitud->lote_granel->folio_fq }}</strong></td>
@@ -768,7 +769,7 @@
                 <td colspan="2" class="header-cell" style="font-size: 10px;">No. de certificado NOM:</td>
                 <td colspan="2" style="font-size: 10px;">
                     <strong>
-                        {{$datos->solicitud?->lote_granel?->certificadoGranel?->num_certificado 
+                        {{$datos->solicitud?->lote_granel?->certificadoGranel?->num_certificado
                             ?? $datos->solicitud?->lote_granel?->folio_certificado
                             ?? 'No encontrado'}}
                     </strong>
@@ -850,7 +851,7 @@
                 <td colspan="2" class="header-cell" style="font-size: 10px;">No. de certificado NOM:</td>
                 <td colspan="2" style="font-size: 10px;">
                     <strong>
-                        {{$datos->solicitud?->lote_granel?->certificadoGranel?->num_certificado 
+                        {{$datos->solicitud?->lote_granel?->certificadoGranel?->num_certificado
                             ?? $datos->solicitud?->lote_granel?->folio_certificado
                             ?? 'No encontrado'}}
                     </strong>
@@ -933,7 +934,7 @@
                 <td colspan="2" class="header-cell" style="font-size: 10px;">No. de certificado NOM:</td>
                 <td colspan="2" style="font-size: 10px;">
                     <strong>
-                        {{$datos->solicitud?->lote_granel?->certificadoGranel?->num_certificado 
+                        {{$datos->solicitud?->lote_granel?->certificadoGranel?->num_certificado
                             ?? $datos->solicitud?->lote_granel?->folio_certificado
                             ?? 'No encontrado'}}
                     </strong>
