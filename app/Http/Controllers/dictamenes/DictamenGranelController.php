@@ -222,6 +222,22 @@ public function index(Request $request)
                 $idLote = $caracteristicas['id_lote_granel'] ?? null;
             $loteGranel = LotesGranel::find($idLote);
             $nestedData['nombre_lote'] = $loteGranel?->nombre_lote ?? 'No encontrado';
+            //certificado
+            /*$certificado = $loteGranel?->certificadoGranel 
+                ?? $loteGranel->folio_certificado
+                ?? null;
+            if ($loteGranel->first()?->certificadoGranel) {
+                // Si vino desde certificadoGranel, incluye id_doc
+                $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel->id_lote_granel)
+                    ->where('id_doc', $id_lote_granel->id_certificado)
+                    ->where('id_documento', 59)
+                    ->first();
+            } else {
+                // Si vino desde folio_certificado, no incluir id_doc
+                $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel->id_lote_granel)
+                    ->where('id_documento', 59)
+                    ->first();
+            }*/
             //obtener folios FQ con URL
                 $empresa_granel = $loteGranel->empresa ?? null;
                 $num_cliente_granel = $empresa_granel && $empresa_granel->empresaNumClientes->isNotEmpty()
