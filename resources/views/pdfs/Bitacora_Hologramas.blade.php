@@ -147,7 +147,7 @@
         {{-- Limpiar floats --}}
         <div style="clear: both;"></div>
     </div>
-
+ @php use Carbon\Carbon; @endphp
     <table>
         <tbody>
             <tr class="text-title">
@@ -182,7 +182,8 @@
             @forelse($bitacoras as $bitacora)
                 <tr class="bitacora-row">
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $bitacora->fecha ?? '----' }}</td>
+                    <td>{{ $bitacora->fecha ? \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('d \d\e F \d\e Y') : '----' }}</td>
+
                     {{-- Marca (puedes cambiar esto por nombre de marca si hay relación) --}}
                     <td>{{ $bitacora->loteBitacora->marca->marca ?? '----' }}</td>
                     {{-- Lote de envasado --}}
