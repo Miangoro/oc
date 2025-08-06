@@ -1016,24 +1016,28 @@ if ($request->has('documentos')) {
           ]);
           $lote->save();
 
-                $totalVolumenEntrada = 0;
+
                 $nombresLotesOrigen = [];
+                $totalVolumenEntrada = 0;
 
                 foreach ($nuevosLotes as $index => $idLoteOrigen) {
                     $volumenParcial = $nuevosVolumenes[$index];
                     $loteRelacionado = LotesGranel::find($idLoteOrigen);
 
-                    // Guarda la bitácora de salida
                     $this->registrarBitacoraSalida($loteRelacionado, $lote, $volumenParcial);
 
                     $totalVolumenEntrada += $volumenParcial;
                     $nombresLotesOrigen[] = $loteRelacionado->nombre_lote;
                 }
 
+                if (!empty($nombresLotesOrigen)) {
+                    $this->registrarBitacoraEntrada($lote, $nombresLotesOrigen, $totalVolumenEntrada);
+                }
 
       } // Una sola bitácora de entrada
+      if (!empty($nombresLotesOrigen)) {
           $this->registrarBitacoraEntrada($lote, $nombresLotesOrigen, $totalVolumenEntrada);
-
+ }
             // Almacenar las guías en la tabla intermedia usando el modelo LotesGranelGuia
             LotesGranelGuia::where('id_lote_granel', $id_lote_granel)->delete();
             if (isset($validated['id_guia'])) {
