@@ -305,7 +305,9 @@ class getFuncionesController extends Controller
         }
         $id_dictamen_envasado = null;
         if ($id_envasado) {
-            $id_dictamen_envasado = Dictamen_Envasado::where('id_lote_envasado', $id_envasado)->value('id_dictamen_envasado');
+            $data = Dictamen_Envasado::where('id_lote_envasado', $id_envasado)
+                ->select('id_lote_envasado', 'num_dictamen')
+                ->first();
         }
 
 
@@ -411,7 +413,8 @@ class getFuncionesController extends Controller
             'url_fqs' => $url_fqs ?? '',
             'id_lote_envasado' => $certificados ?? '',
             /* 'id_envasado' => $id_envasado ?? $id_lote_envasado ?? null, */
-            'id_dictamen_envasado' => $id_dictamen_envasado ?? null,
+            'id_dictamen_envasado' => $data->id_lote_envasado ?? null,
+            'num_dictamen_envasado' => $data->num_dictamen ?? null,
             'url_etiqueta_envasado' => $url_etiqueta_envasado->etiquetas->url_etiqueta->url ?? '',
          
 

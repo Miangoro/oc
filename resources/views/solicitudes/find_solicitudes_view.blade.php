@@ -257,11 +257,13 @@
         $('.id_deinspeccion').text(id_inspeccion);
         $('.solicitud').text(tipo);
         $('.nombre_empresa').text(nombre_empresa);
-        $('.numero_tipo').text(id_tipo);
+        //$('.numero_tipo').text(id_tipo);
         $('.folio_solicitud').html('<b class="text-primary">' + (folio) + '</b>');
         $('.numero_servicio').html('<b class="text-primary">' + noservicio + '</b>');
         $('.inspectorName').html(inspectorName);
 
+
+        
 
         const links = [{
                 id: '#link_solicitud_servicio',
@@ -472,7 +474,7 @@
 
                         html += `
                             <tr>
-                                <td>Dictamen de envasado</td>
+                                <td>Dictamen de envasado ${response.num_dictamen_envasado}</td>
                                 <td>
                                     <a href="/dictamen_envasado/${id_dictamen_envasado}" target="_blank">
                                         <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
