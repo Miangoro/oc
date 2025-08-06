@@ -73,6 +73,17 @@ $(function () {
           }
         },
         {
+          targets: 4,
+          searchable: false,
+          orderable: false,
+          render: function (data, type, full, meta) {
+            return `${full['url']
+                  ? `<a href="${full['url']}" class="text-primary" target="_blank">${full['num_servicio']}</a>`
+                  : `<span>${full['num_servicio']}</span>`
+                } `;
+          }
+        },
+        {
           // Actions
           targets: -1,
           title: 'Acciones',
@@ -916,12 +927,21 @@ $(function () {
     });
   });
 
-  //Activar hologramas
+
+
+
+
+  //ACTIVAR HOLOGRAMAS
   $(document).on('click', '.activar_holograma', function () {
     var id_solicitud = $(this).data('id');
 
-    $('#id_solicitudActivacion').val(id_solicitud);
-
+    // Limpiar valor anterior y reiniciar select2
+    $('#id_solicitudActivacion').val('').trigger('change');
+    // Asignar nuevo valor si aplica
+    if (id_solicitud) {
+        $('#id_solicitudActivacion').val(id_solicitud).trigger('change');
+    }
+    
     // Mostrar el modal de edición
     $('#activarHologramas').modal('show');
   });
@@ -937,17 +957,17 @@ $(function () {
           }
         }
       },
-      folio_activacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor introduzca el folio'
-          }
-        }
-      },
       id_inspeccion: {
         validators: {
           notEmpty: {
             message: 'Por favor seleccione una opción'
+          }
+        }
+      },
+      folio_activacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor introduzca el folio'
           }
         }
       },
@@ -972,28 +992,6 @@ $(function () {
           }
         }
       },
-      no_analisis: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el número de análisis del laboratorio'
-          }
-        }
-      },
-      cont_neto: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione el contenido'
-          }
-        }
-      },
-
-      unidad: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione la unidad'
-          }
-        }
-      },
       clase: {
         validators: {
           notEmpty: {
@@ -1001,10 +999,24 @@ $(function () {
           }
         }
       },
-      contenido: {
+      id_tipo: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el contenido'
+            message: 'Por favor seleccione el tipo'
+          }
+        }
+      },
+      cont_neto: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione el contenido neto'
+          }
+        }
+      },
+      unidad: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione la unidad'
           }
         }
       },
@@ -1015,10 +1027,17 @@ $(function () {
           }
         }
       },
-      id_tipo: {
+      no_analisis: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione el tipo'
+            message: 'Por favor ingrese el número de análisis del laboratorio'
+          }
+        }
+      },
+      contenido: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el contenido'
           }
         }
       },
@@ -1085,6 +1104,11 @@ $(function () {
       }
     });
   });
+
+
+
+
+
 
   // Editar Registro Activos y validacion
   const edit_activarHologramasForm = document.getElementById('edit_activarHologramasForm');
@@ -1226,6 +1250,8 @@ $(function () {
     });
   });
 
+
+
   //Ver Activos en la tabla
   $(document).on('click', '.activos_hologramas', function () {
     var id = $(this).data('id');
@@ -1297,6 +1323,8 @@ $(function () {
       });
     });
   });
+
+
 
   // Editar Registro Activados y validacion
   $(document).on('click', '.edit-activos', function () {
@@ -1371,6 +1399,8 @@ $(function () {
       });
     });
   });
+
+
 
   // Agregar FILA A EDIT ACTIVADOS
   $(document).on('click', '.add-row-edit', function () {
@@ -1604,4 +1634,8 @@ $(function () {
           }
       });
   });*/
+
+
+
+  
 });
