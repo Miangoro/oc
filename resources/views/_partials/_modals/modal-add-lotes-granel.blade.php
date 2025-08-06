@@ -172,7 +172,19 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                           <div class="col-md-4">
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <select id="id_estado" name="id_estado" class="select2 form-select" >
+                                        <option value="" disabled selected>Selecciona el origen
+                                        </option>
+                                        @foreach ($estados as $estado)
+                                            <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label for="id_estado">Origen</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="clase_agave" name="id_clase" class=" form-select"
                                         data-error-message="Por favor selecciona una clase">
@@ -185,7 +197,7 @@
                                     <label for="clase_agave">Clase de Agave</label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="tipo_agave" name="id_tipo[]" class="select2 form-select" multiple>
                                         @foreach ($tipos as $tipo)
@@ -271,7 +283,7 @@
                                 <div class="col-md-6 mb-4">
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" id="fecha_emision" name="fecha_emision"
-                                            autocomplete="off" class="form-control datepicker"
+                                            autocomplete="off" class="feorm-control datepicker"
                                             placeholder="Fecha de Emisión" />
                                         <label for="fecha_emision">Fecha de Emisión</label>
                                     </div>
