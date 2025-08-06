@@ -161,7 +161,19 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                          <div class="col-md-4">
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <select id="edit_id_estado" name="id_estado" class="select2 form-select" >
+                                        <option value="" disabled selected>Selecciona el origen
+                                        </option>
+                                        @foreach ($estados as $estado)
+                                            <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label for="id_estado">Origen</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="edit_clase_agave" name="id_clase" class="form-select">
                                         <option value="" disabled selected>Selecciona la clase de agave</option>
@@ -172,7 +184,7 @@
                                     <label for="clase_agave">Clase de Agave</label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="edit_tipo_agave" name="id_tipo[]" class="select2 form-select"
                                         multiple>
