@@ -306,9 +306,6 @@ public function clases_agave()
             ->all();
 
         return lotes_envasado::whereIn('id_lote_envasado', $ids)->get();
-        /*return Lotes_Envasado::with(['lotesGranel'])
-            ->whereIn('id_lote_envasado', $ids)
-            ->get();*/
     }
 
     ///OBTENER COLLECCION CARACTERISTICAS

@@ -223,21 +223,25 @@ public function index(Request $request)
             $loteGranel = LotesGranel::find($idLote);
             $nestedData['nombre_lote'] = $loteGranel?->nombre_lote ?? 'No encontrado';
             //certificado
-            /*$certificado = $loteGranel?->certificadoGranel 
-                ?? $loteGranel->folio_certificado
-                ?? null;
-            if ($loteGranel->first()?->certificadoGranel) {
-                // Si vino desde certificadoGranel, incluye id_doc
-                $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel->id_lote_granel)
-                    ->where('id_doc', $id_lote_granel->id_certificado)
+            $nestedData['num_certificado'] = $loteGranel?->certificadoGranel->num_certificado
+                ?? $loteGranel?->folio_certificado
+                ?? 'Sin certificado';
+            $documento = null;
+            if ($loteGranel && $loteGranel->certificadoGranel) {
+                $documento = Documentacion_url::where('id_relacion', $loteGranel->id_lote_granel)
+                    ->where('id_doc', $loteGranel->certificadoGranel->id_certificado)
                     ->where('id_documento', 59)
                     ->first();
-            } else {
-                // Si vino desde folio_certificado, no incluir id_doc
-                $certificadoGranel = Documentacion_url::where('id_relacion', $id_lote_granel->id_lote_granel)
+            } elseif ($loteGranel) {
+                $documento = Documentacion_url::where('id_relacion', $loteGranel->id_lote_granel)
                     ->where('id_documento', 59)
                     ->first();
-            }*/
+            }
+
+            $nestedData['certificado'] = $documento?->url 
+                ? asset("files/{$numero_cliente}/certificados_granel/{$documento->url}") 
+                : null;
+
             //obtener folios FQ con URL
                 $empresa_granel = $loteGranel->empresa ?? null;
                 $num_cliente_granel = $empresa_granel && $empresa_granel->empresaNumClientes->isNotEmpty()
