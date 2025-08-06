@@ -130,7 +130,7 @@
         </tr>
         <tr>
             <td class="highlight-white-cell border-right-white">
-                {{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</td>
+                {{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</td>
             <td class="highlight-white-cell border-left-white">
                 {{ $datos->solicitud->lote_granel->categoria->categoria }} -
                 {{ $datos->solicitud->lote_granel->clase->clase }}</td>
@@ -161,7 +161,7 @@
         </tr>
         <tr>
             <td class="highlight-white-cell border-right-white">
-                {{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</td>
+                {{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</td>
             <td class="highlight-white-cell border-left-white">
                 {{ $datos->solicitud->lote_granel->categoria->categoria }} -
                 {{ $datos->solicitud->lote_granel->clase->clase }}</td>
@@ -192,7 +192,7 @@
         </tr>
         <tr>
             <td class="highlight-white-cell border-right-white">
-                {{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</td>
+                {{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</td>
             <td class="highlight-white-cell border-left-white">
                 {{ $datos->solicitud->lote_granel->categoria->categoria }} -
                 {{ $datos->solicitud->lote_granel->clase->clase }}</td>
@@ -341,7 +341,7 @@
             <tr>
                 <td class="custom-title">Fecha:</td>
                 <td colspan="2" class="white-background-custom">
-                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</strong>
+                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</strong>
                 </td>
                 <td class="custom-title">Folio / No. de servicio:</td>
                 <td colspan="2" class="white-background-custom">
@@ -443,7 +443,7 @@
             <tr>
                 <td class="custom-title">Fecha:</td>
                 <td colspan="2" class="white-background-custom">
-                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</strong>
+                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</strong>
                 </td>
                 <td class="custom-title">Folio / No. de servicio:</td>
                 <td colspan="2" class="white-background-custom">
@@ -541,7 +541,7 @@
             <tr>
                 <td class="custom-title">Fecha:</td>
                 <td colspan="2" class="white-background-custom">
-                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</strong>
+                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</strong>
                 </td>
                 <td class="custom-title">Folio / No. de servicio:</td>
                 <td colspan="2" class="white-background-custom">
@@ -720,7 +720,7 @@
             <tr>
                 <td class="header-cell" style="font-size: 10px;">Fecha:</td>
                 <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</strong>
+                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</strong>
                 </td>
                 <td class="header-cell" style="font-size: 10px;">Folio / No. de servicio:</td>
                 <td colspan="2" style="font-size: 10px;">
@@ -801,7 +801,7 @@
             <tr>
                 <td class="header-cell" style="font-size: 10px;">Fecha:</td>
                 <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</strong>
+                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</strong>
                 </td>
                 <td class="header-cell" style="font-size: 10px;">Folio / No. de servicio:</td>
                 <td colspan="2" style="font-size: 10px;">
@@ -884,7 +884,7 @@
             <tr>
                 <td class="header-cell" style="font-size: 10px;">Fecha:</td>
                 <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</strong>
+                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</strong>
                 </td>
                 <td class="header-cell" style="font-size: 10px;">Folio / No. de servicio:</td>
                 <td colspan="2" style="font-size: 10px;">
