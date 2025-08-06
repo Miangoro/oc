@@ -13,6 +13,7 @@ use App\Models\Documentacion_url;
 use App\Models\BitacoraMezcal;
 use App\Models\tipos;
 use App\Models\organismos;
+use App\Models\estados;
 use App\Models\Guias;
 use App\Models\LotesGranelGuia;
 use App\Helpers\Helpers;
@@ -31,10 +32,11 @@ class lotesGranelController extends Controller
         $clases = clases::all();
         $tipos = tipos::all(); // Obtén todos los tipos de agave
         $organismos = organismos::all(); // Obtén todos los organismos, aquí usa 'organismos' en minúscula
+        $estados = estados::where('dom', 1)->get();
         $guias = Guias::all(); // Obtén todas las guías
         $lotes = LotesGranel::with('empresa', 'categoria', 'clase', 'tipos', 'organismo', 'guias','certificadoGranel')->get();
         $documentos = Documentacion::where('id_documento', '=', '58')->get();
-        return view('catalogo.lotes_granel', compact('lotes', 'empresas', 'categorias', 'clases', 'tipos', 'organismos', 'guias', 'documentos'));
+        return view('catalogo.lotes_granel', compact('lotes', 'empresas', 'categorias', 'clases', 'tipos', 'organismos', 'estados', 'guias', 'documentos'));
     }
 
 
@@ -405,6 +407,7 @@ class lotesGranelController extends Controller
             'id_tipo.*' => 'integer|exists:catalogo_tipo_agave,id_tipo',
             'ingredientes' => 'nullable|string|max:100',
             'edad' => 'nullable|string|max:30',
+            'id_estado' => 'required|integer',
             'folio_certificado' => 'nullable|string|max:50',
             'id_organismo' => 'nullable|integer|exists:catalogo_organismos,id_organismo',
             'fecha_emision' => 'nullable|date',
@@ -432,6 +435,7 @@ class lotesGranelController extends Controller
         $lote->nombre_lote = $validatedData['nombre_lote'];
         $lote->tipo_lote = $validatedData['tipo_lote'];
         $lote->volumen = $validatedData['volumen'];
+        $lote->id_estado = $validatedData['id_estado'];
         $lote->volumen_restante = $validatedData['volumen'];
         $lote->cont_alc = $validatedData['cont_alc'];
         $lote->id_categoria = $validatedData['id_categoria'];
@@ -479,6 +483,7 @@ class lotesGranelController extends Controller
           'volumenes' => $volumenesParciales,
       ]);
 
+      $lote->save(); // 👈 Esto asegura que ya tenga id_lote_granel para usarlo después
 
         $bitacoras = [];
       // Procesar cada lote original y restar el volumen parcial
@@ -519,6 +524,7 @@ class lotesGranelController extends Controller
                 'id_tanque' => $info['lote']->id_tanque ?? 0,
                 'id_empresa' => $info['lote']->id_empresa,
                 'id_lote_granel' => $info['lote']->id_lote_granel,
+                 'id_lote_granel_destino' => $lote->id_lote_granel,
                 'id_instalacion' => auth()->user()->id_instalacion ?? 0,
                 'tipo_operacion' => 'Salidas',
                 'tipo' => 3,
@@ -802,6 +808,7 @@ if ($request->has('documentos')) {
                 'volumen' => 'required|numeric',
                 'cont_alc' => 'required|numeric',
                 'agua_entrada' => 'nullable|numeric',
+                 'id_estado' => 'required|integer',
                 'id_categoria' => 'required|integer|exists:catalogo_categorias,id_categoria',
                 'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
                 'id_tipo' => 'required|array', // Acepta un array de `id_tipo`
@@ -830,6 +837,7 @@ if ($request->has('documentos')) {
               'id_tanque' => $validated['id_tanque'],
               'nombre_lote' => $validated['nombre_lote'],
               'tipo_lote' => $validated['tipo_lote'],
+              'id_estado' => $validated['id_estado'],
               'cont_alc' => $validated['cont_alc'],
               'id_categoria' => $validated['id_categoria'],
               'agua_entrada' => $validated['agua_entrada'] ?? 0,
@@ -959,7 +967,7 @@ if ($request->has('documentos')) {
               $loteRelacionado = LotesGranel::find($idLote);
 
               if (!is_null($volumenParcial) && $loteRelacionado)
- {
+                {
                   $keyAnterior = array_search($idLote, $lotesPrevios);
 
                   // Restaurar el volumen previo si estaba en el JSON anterior
@@ -1007,8 +1015,35 @@ if ($request->has('documentos')) {
               'volumenes' => $nuevosVolumenes
           ]);
           $lote->save();
-      }
 
+
+                $nombresLotesOrigen = [];
+                $totalVolumenEntrada = 0;
+
+                foreach ($nuevosLotes as $index => $idLoteOrigen) {
+                    $volumenParcial = $nuevosVolumenes[$index];
+                    $loteRelacionado = LotesGranel::find($idLoteOrigen);
+
+                    $this->registrarBitacoraSalida($loteRelacionado, $lote, $volumenParcial);
+
+                    $totalVolumenEntrada += $volumenParcial;
+                    $nombresLotesOrigen[] = $loteRelacionado->nombre_lote;
+                }
+
+                if (!empty($nombresLotesOrigen)) {
+                    $this->registrarBitacoraEntrada($lote, $nombresLotesOrigen, $totalVolumenEntrada);
+                }
+
+      } // Una sola bitácora de entrada
+          if (!empty($nombresLotesOrigen)) {
+              // Caso: lote creado a partir de otros
+              $this->registrarBitacoraEntrada($lote, $nombresLotesOrigen);
+          } else {
+              // Caso: lote nuevo sin origen
+              $this->registrarBitacoraEntrada($lote, []);
+          }
+         /*  $this->registrarBitacoraEntrada($lote, $nombresLotesOrigen, $totalVolumenEntrada);
+ */
             // Almacenar las guías en la tabla intermedia usando el modelo LotesGranelGuia
             LotesGranelGuia::where('id_lote_granel', $id_lote_granel)->delete();
             if (isset($validated['id_guia'])) {
@@ -1037,6 +1072,71 @@ if ($request->has('documentos')) {
             ], 500);
         }
   }
+private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParcial)
+{
+    return BitacoraMezcal::updateOrCreate(
+        [
+            'id_lote_granel' => $loteOrigen->id_lote_granel,
+            'id_lote_granel_destino' => $loteDestino->id_lote_granel,
+        ],
+        [
+            'fecha' => now()->toDateString(),
+            'id_tanque' => $loteOrigen->id_tanque ?? 0,
+            'id_empresa' => $loteOrigen->id_empresa,
+            'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+            'tipo_operacion' => 'Salidas',
+            'tipo' => 3,
+            'procedencia_entrada' => 'Salida por creación de lote nuevo',
+            'operacion_adicional' => null,
+            'volumen_inicial' => $volumenParcial,
+            'alcohol_inicial' => $loteOrigen->cont_alc,
+            'volumen_entrada' => 0,
+            'alcohol_entrada' => 0,
+            'agua_entrada' => 0,
+            'volumen_salidas' => $volumenParcial,
+            'alcohol_salidas' => $loteOrigen->cont_alc,
+            'volumen_final' => $loteOrigen->volumen_restante,
+            'alcohol_final' => $loteOrigen->cont_alc,
+            'destino_salidas' => $loteDestino->nombre_lote,
+            'observaciones' => 'Salida actualizada para la creación del lote ' . $loteDestino->nombre_lote,
+            'id_firmante' => 0,
+            'id_usuario_registro' => auth()->id() ?? null,
+        ]
+    );
+}
+
+    private function registrarBitacoraEntrada($loteDestino, $lotesOrigenNombres)
+    {
+
+     /*  dd($volumenEntrada); */
+        BitacoraMezcal::updateOrCreate([
+            'id_lote_granel' => $loteDestino->id_lote_granel,
+            'tipo_operacion' => 'Entradas',
+            'tipo' => 3,
+        ], [
+            'fecha' => now()->toDateString(),
+            'id_tanque' => $loteDestino->id_tanque ?? 0,
+            'id_empresa' => $loteDestino->id_empresa,
+            'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+            'procedencia_entrada' => !empty($lotesOrigenNombres)
+            ? 'Creado a partir de: ' . implode(', ', $lotesOrigenNombres)
+            : 'Nuevo Lote',
+            'volumen_inicial' => 0,
+            'alcohol_inicial' => 0,
+            'volumen_entrada' => $loteDestino->volumen,
+            'alcohol_entrada' => $loteDestino->cont_alc,
+            'agua_entrada' => $loteDestino->agua_entrada,
+            'volumen_salidas' => 0,
+            'alcohol_salidas' => 0,
+            'volumen_final' => $loteDestino->volumen,
+            'alcohol_final' => $loteDestino->cont_alc,
+            'destino_salidas' => 0,
+            'observaciones' => 'Actualizacion automatica por actualizacion del lote',
+            'id_firmante' => 0,
+            'id_usuario_registro' => auth()->id() ?? null,
+        ]);
+
+    }
 
 
         public function eliminar_documento(Request $request)

@@ -679,6 +679,13 @@ $(function () {
             }
           }
         },
+        id_estado: {
+          validators: {
+            notEmpty:{
+              message: 'Por favor seleccione el origen'
+            }
+          }
+        },
         tipo_lote: {
           validators: {
             notEmpty: {
@@ -954,6 +961,9 @@ $(function () {
             $('#edit_tipo_lote').val(lote.tipo_lote);
             $('#edit_id_tanque').val(lote.id_tanque);
             $('#edit_agua_entrada').val(lote.agua_entrada);
+            $('#edit_id_estado').val(lote.id_estado).trigger('change');
+
+             /* $('#edit_id_estado').val(lote.id_estado).trigger('change'); */
             // Asigna los valores seleccionados (solo IDs)
             var guiasIds = guias.map(function (guia) {
               return guia.id;
@@ -997,6 +1007,7 @@ $(function () {
               $('#edit_otro_organismo_fields').addClass('d-none');
               $('#edit_ingredientes').val(lote.ingredientes);
               $('#edit_edad').val(lote.edad);
+
               // Mostrar las guías solo si el lote es CIDAM
               $('#edit_mostrar_guias').removeClass('d-none');
               $('#edit_volumen_in').removeClass('col-md-12').addClass('col-md-6');
@@ -1328,6 +1339,13 @@ function actualizarVolumenTotalEdit() {
           validators: {
             notEmpty: {
               message: 'Por favor seleccione el tipo de lote'
+            }
+          }
+        },
+        id_estado: {
+          validators: {
+            notEmpty:{
+              message: 'Por favor seleccione el origen'
             }
           }
         },

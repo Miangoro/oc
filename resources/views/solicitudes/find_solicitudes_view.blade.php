@@ -257,11 +257,13 @@
         $('.id_deinspeccion').text(id_inspeccion);
         $('.solicitud').text(tipo);
         $('.nombre_empresa').text(nombre_empresa);
-        $('.numero_tipo').text(id_tipo);
+        //$('.numero_tipo').text(id_tipo);
         $('.folio_solicitud').html('<b class="text-primary">' + (folio) + '</b>');
         $('.numero_servicio').html('<b class="text-primary">' + noservicio + '</b>');
         $('.inspectorName').html(inspectorName);
 
+
+        
 
         const links = [{
                 id: '#link_solicitud_servicio',
@@ -365,6 +367,7 @@
                     const url_corrugado = response.url_corrugado;
                     const url_evidencias = response.url_evidencias;
                     const url_etiqueta_envasado = response.url_etiqueta_envasado;
+                    const id_dictamen_envasado = response.id_dictamen_envasado;
                     let html = `
                     <table class="table table-bordered table-striped">
                         <thead class="table-dark">
@@ -466,6 +469,21 @@
                             </tr>`;
 
                     }
+
+                       if (id_dictamen_envasado) {
+
+                        html += `
+                            <tr>
+                                <td>Dictamen de envasado ${response.num_dictamen_envasado}</td>
+                                <td>
+                                    <a href="/dictamen_envasado/${id_dictamen_envasado}" target="_blank">
+                                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>`;
+
+                    }
+
 
 
                     html += `</tbody></table>`;

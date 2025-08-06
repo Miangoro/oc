@@ -13,6 +13,6 @@ class estados extends Model
 
     protected $primaryKey = 'id'; // Clave primaria de la tabla
 
-    protected $fillable = ['clave', 'nombre', 'abrev', 'activo']; // Campos que se pueden asignar masivamente
+    protected $fillable = ['clave', 'nombre', 'abrev', 'activo', 'dom']; // Campos que se pueden asignar masivamente
 
 }

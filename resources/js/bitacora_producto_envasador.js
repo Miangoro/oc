@@ -198,6 +198,11 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             let acciones = '';
+             const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
+            const esAdminBitacoras = window.adminBitacoras === true;
+
+            if (!estaFirmado || esAdminBitacoras) {
+
             if (window.puedeFirmarElUsuario) {
               acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
             }
@@ -207,11 +212,12 @@ $(function () {
             if (window.puedeEliminarElUsuario) {
               acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
             }
+          }
             // Si no hay acciones, no retornar el dropdown
             if (!acciones.trim()) {
               return `
                 <button class="btn btn-sm btn-secondary" disabled>
-                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
+                  <i class="ri-settings-5-fill ri-20px me-1"></i> Opciones
                 </button>
               `;
             }

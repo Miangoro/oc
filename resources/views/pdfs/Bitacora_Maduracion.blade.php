@@ -135,7 +135,7 @@
         <div style="clear: both;"></div>
     </div>
 
-
+ @php use Carbon\Carbon; @endphp
     <table>
         <tbody>
             <tr class="text-title">
@@ -177,7 +177,7 @@
             @foreach ($bitacoras as $bitacora)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $bitacora->fecha ?? '' }}</td>
+                    <td>{{ $bitacora->fecha ? \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('d \d\e F \d\e Y') : '----'  }}</td>
                     <td>{{ $bitacora->loteBitacora->nombre_lote ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora->categoria->categoria ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora->clase->clase ?? '----' }}</td>

@@ -163,10 +163,11 @@
                 <td>VOLUMEN</td>
                 <td>%ALC.VOL.</td>
             </tr>
+             @php use Carbon\Carbon; @endphp
             @forelse($bitacoras as $bitacora)
                 <tr class="bitacora-row">
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $bitacora->fecha ?? '----' }}</td>
+                    <td>{{ $bitacora->fecha ? \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('d \d\e F \d\e Y') : '----'  }}</td>
                     <td>{{ $bitacora->loteBitacora?->id_tanque ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora?->nombre_lote ?? '----' }}</td>
                     <td>{{ $bitacora->operacion_adicional ?? '----' }}</td>
