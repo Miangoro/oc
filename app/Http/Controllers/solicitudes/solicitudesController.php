@@ -432,10 +432,10 @@ $loteGranelIds = DB::table('lotes_granel')
                         foreach ($loteGranelIds as $idLoteGran) {
                             $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
                         }
-                        
+
                     });
 
-                    
+
 
                 if ($empresaId) {
                     $totalFilteredQuery->where('id_empresa', $empresaId);
@@ -2354,8 +2354,11 @@ $loteGranelIds = DB::table('lotes_granel')
     {
         $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes', 'id_soli']);
         // Pasar los filtros a la clase SolicitudesExport
-        return Excel::download(new SolicitudesExport($filtros), 'reporte_solicitudes.xlsx');
+         $fechaHora = now()->format('d-m-Y_H-i');
+         $nombreArchivo = "Reporte_de_solicitudes_{$fechaHora}.xlsx";
+        return Excel::download(new SolicitudesExport($filtros),  $nombreArchivo);
     }
+
 
     public function destroy(Request $request, $id_solicitud)
     {
