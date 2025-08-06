@@ -413,6 +413,7 @@ class getFuncionesController extends Controller
             /* 'id_envasado' => $id_envasado ?? $id_lote_envasado ?? null, */
             'id_dictamen_envasado' => $id_dictamen_envasado ?? null,
             'url_etiqueta_envasado' => $url_etiqueta_envasado->etiquetas->url_etiqueta->url ?? '',
+         
 
         ]);
     }
@@ -584,6 +585,7 @@ class getFuncionesController extends Controller
             'tipos_agave' => $tipos,
             'lotesEnvasado' => $lotesEnvasado,
             'guias' => $guias,
+            'url_dictamen_envasado' => $lotesEnvasado->marca ?? '',
         ]);
     }
 
