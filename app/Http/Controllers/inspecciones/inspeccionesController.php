@@ -944,10 +944,10 @@ public function asignarInspector(Request $request)
     {
         $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes', 'id_soli']);
         // Pasar los filtros a la clase InspeccionesExport
-        return Excel::download(new InspeccionesExport($filtros), 'reporte_inspecciones.xlsx');
+         $fechaHora = now()->format('d-m-Y H-i');
+         $nombreArchivo = "Reporte de Inspecciones {$fechaHora}.xlsx";
+        return Excel::download(new InspeccionesExport($filtros), $nombreArchivo);
     }
-
-
 
 //FUNCION ELIMINAR DOCUMENTOS 69 Y 70
 public function eliminarActa($id_solicitud, $id_documento, $id)

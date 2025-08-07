@@ -723,6 +723,16 @@ $(function () {
       }
     });
   });
+  $(document).ready(function () {
+    $('#exportarExcel').on('shown.bs.modal', function () {
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        const currentMonth = String(today.getMonth() + 1).padStart(2, '0'); // '01' a '12'
+
+        $('#anio').val(currentYear);
+        $('#mes').val(currentMonth);
+    });
+});
 
   $(document).ready(function () {
     $('#reporteForm').on('submit', function (e) {
@@ -744,43 +754,56 @@ $(function () {
       });
       // Realizar la solicitud GET para descargar el archivo
       $.ajax({
-        url: exportUrl,
-        type: 'GET',
-        data: formData,
-        xhrFields: {
-          responseType: 'blob' // Necesario para manejar la descarga de archivos
-        },
-        success: function (response) {
-          // Crear un enlace para descargar el archivo
-          const link = document.createElement('a');
-          const url = window.URL.createObjectURL(response);
-          link.href = url;
-          link.download = 'reporte_solicitudes.xlsx';
-          link.click();
-          window.URL.revokeObjectURL(url);
-          $('#exportarExcel').modal('hide');
-          Swal.fire({
-            title: '¡Éxito!',
-            text: 'El reporte se generó exitosamente.',
-            icon: 'success',
-            customClass: {
-              confirmButton: 'btn btn-success'
+          url: exportUrl,
+          type: 'GET',
+          data: formData,
+          xhrFields: {
+            responseType: 'blob' // Para manejar archivos binarios
+          },
+          success: function (data, textStatus, xhr) {
+            const disposition = xhr.getResponseHeader('Content-Disposition');
+            let filename = 'reporte_inspecciones.xlsx';
+
+            if (disposition && disposition.indexOf('filename=') !== -1) {
+              const matches = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+              if (matches != null && matches[1]) {
+                filename = matches[1].replace(/['"]/g, '');
+              }
             }
-          });
-        },
-        error: function (xhr, status, error) {
-          console.error('Error al generar el reporte:', error);
-          $('#exportarExcel').modal('hide');
-          Swal.fire({
-            title: '¡Error!',
-            text: 'Ocurrió un error al generar el reporte.',
-            icon: 'error',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
-        }
-      });
+
+            const link = document.createElement('a');
+            const url = window.URL.createObjectURL(data);
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+            $('#exportarExcel').modal('hide');
+            Swal.fire({
+              title: '¡Éxito!',
+              text: 'El reporte se generó exitosamente.',
+              icon: 'success',
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            });
+          },
+          error: function (xhr, status, error) {
+            console.error('Error al generar el reporte:', error);
+            $('#exportarExcel').modal('hide');
+            Swal.fire({
+              title: '¡Error!',
+              text: 'Ocurrió un error al generar el reporte.',
+              icon: 'error',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
+
     });
   });
   //funcion para exportar en excel

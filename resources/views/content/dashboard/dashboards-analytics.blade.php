@@ -149,7 +149,7 @@
                                     <div class="carousel-item active">
                                         <img class="d-block w-100" src="{{ asset('assets/img/carousel/primera.jpg') }}"
                                             alt="First slide" />
-                                        
+
                                     </div>
                                     <div class="carousel-item">
                                         <img class="d-block w-100" src="{{ asset('assets/img/carousel/segunda.jpg') }}"
@@ -422,9 +422,9 @@
                     </div>
                 </div>
             @endcan
-          
+
                 @can('Estadísticas ui')
-                    <!-- Line Chart 
+                    <!-- Line Chart
                     <div class="col-6 mb-6">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between">
@@ -479,10 +479,15 @@
                                                 @php
                                                     $revisor = $usuarios[$grupo->first()->user_id] ?? null;
                                                     $rol = $grupo->first()->rol;
-                                                    $inst = $grupo->firstWhere('tipo_certificado', 1)?->total ?? 0;
+                                                    $inst = $grupo->where('tipo_certificado', 1)->where('decision', '!=', 'Pendiente')->sum('total');
+                                                    $gran = $grupo->where('tipo_certificado', 2)->where('decision', '!=', 'Pendiente')->sum('total');
+                                                    $expo = $grupo->where('tipo_certificado', 3)->where('decision', '!=', 'Pendiente')->sum('total');
+                                                    $pendientes = $grupo->where('decision', 'Pendiente')->sum('total');
+
+                                                   /*  $inst = $grupo->firstWhere('tipo_certificado', 1)?->total ?? 0;
                                                     $gran = $grupo->firstWhere('tipo_certificado', 2)?->total ?? 0;
                                                     $expo = $grupo->firstWhere('tipo_certificado', 3)?->total ?? 0;
-                                                    $pendientes = $grupo->where('decision', 'Pendiente')->sum('total');
+                                                    $pendientes = $grupo->where('decision', 'Pendiente')->sum('total'); */
                                                 @endphp
                                                 <tr>
                                                     <td @class([
@@ -506,8 +511,8 @@
 
                                                                 </div>
                                                                 <div
-                                                                    class="badge 
-                                                    {{ $rol === 'Personal' ? 'bg-label-info' : ($rol === 'Consejo' ? 'bg-label-warning' : 'bg-label-secondary') }} 
+                                                                    class="badge
+                                                    {{ $rol === 'Personal' ? 'bg-label-info' : ($rol === 'Consejo' ? 'bg-label-warning' : 'bg-label-secondary') }}
                                                     rounded-pill">
                                                                     {{ $rol }}
                                                                 </div>
@@ -541,7 +546,7 @@
 
                 @endcanany
 
-    
+
 
 
 

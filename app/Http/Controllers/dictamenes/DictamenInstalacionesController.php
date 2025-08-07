@@ -12,6 +12,8 @@ use App\Models\inspecciones;
 use App\Models\empresa;
 use App\Models\solicitudesModel;
 use App\Models\User;
+use App\Models\instalaciones;
+use App\Models\Documentacion_url;
 ///Extensiones
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -215,9 +217,45 @@ public function index(Request $request)
                 $urls = $dictamen->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
                 $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
 
+                //certificado
+                $instalacion = instalaciones::find($dictamen?->inspeccione?->solicitud?->id_instalacion);
+                $nestedData['num_certificado'] = $dictamen->certificado?->num_certificado
+                    ?? $instalacion?->folio
+                    ?? 'Sin certificado';
 
-                $data[] = $nestedData;
-            }
+                $tipoDictamen = $dictamen->tipo_dictamen;
+                switch ($tipoDictamen) {
+                    case 1:
+                        $id_documento = 127;
+                        break;
+                    case 2:
+                        $id_documento = 128;
+                        break;
+                    case 3:
+                        $id_documento = 129;
+                        break;
+                    default:
+                }
+                $documento = null;
+                if ($instalacion && $dictamen->certificado) {
+                    $documento = Documentacion_url::where('id_relacion', $dictamen->id_instalacion)
+                        ->where('id_doc', $dictamen->certificado->id_certificado)
+                        ->where('id_documento', $id_documento)
+                        ->first();
+                } elseif ($instalacion) {
+                    $documento = Documentacion_url::where('id_relacion', $dictamen->id_instalacion)
+                        ->where('id_documento', $id_documento)
+                        ->whereNull('id_doc')
+                        ->first();
+                }
+
+                $nestedData['certificado'] = $documento?->url
+                    ? asset("files/{$numero_cliente}/certificados_instalaciones/{$documento->url}") 
+                    : null;
+
+
+                    $data[] = $nestedData;
+                }
         }
 
        
