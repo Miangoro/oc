@@ -23,7 +23,12 @@
 @endsection
 
 @section('page-script')
+<script>
+    const revisionesMesURL = "{{ route('estadisticas.revisiones-mes') }}";
+</script>
+
     @vite(['resources/assets/js/dashboards-analytics.js', 'resources/assets/js/ui-carousel.js'])
+
 @endsection
 
 
@@ -456,14 +461,36 @@
 
                     <div class="col-md-6">
                         <div class="card mb-4">
-                            <div class="card-header pb-2">
-                                <h5 class="mb-1">📊 Resumen de revisiones por revisor</h5>
-                                <small class="text-muted">Cantidad de revisiones realizadas por revisor y tipo de
-                                    certificado.</small>
-                            </div>
+                           <div class="card-header pb-2">
+                               <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                                  <div>
+                                      <h5 class="mb-1">📊 Resumen de revisiones por revisor</h5>
+                                      <small class="text-muted">Cantidad de revisiones realizadas por revisor y tipo de certificado.</small>
+                                  </div>
+                                     <form method="GET" class="mt-2 mt-md-0">
+                                      <div class="input-group input-group-sm">
+                                          <label class="input-group-text" for="mes">Mes</label>
+                                           @php
+                                                $mesSeleccionado = request('mes', now()->month);
+                                          @endphp
+                                          <select name="mes" id="mes" class="form-select form-select-sm">
+                                              <option value="">Todos</option>
+                                              @for ($i = 1; $i <= 12; $i++)
+                                                  {{-- <option value="{{ $i }}" {{ request('mes') == $i ? 'selected' : '' }}> --}}
+                                                  <option value="{{ $i }}" {{ $mesSeleccionado == $i ? 'selected' : '' }}>
+                                                        {{ ucfirst(\Carbon\Carbon::create()->month($i)->translatedFormat('F')) }}
+                                                  </option>
+                                              @endfor
+                                          </select>
+                                      </div>
+                                  </form>
+                              </div>
+                          </div>
+
 
                             <div class="card-body pt-2">
                                 <div class="table-responsive border-top">
+
                                     <table class="table table-bordered table-hover">
                                         <thead class="table-light">
                                             <tr>
@@ -474,7 +501,8 @@
                                                 <th class="text-center">Pendientes</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="tbody-revisiones">
+
                                             @forelse ($agrupado as $key => $grupo)
                                                 @php
                                                     $revisor = $usuarios[$grupo->first()->user_id] ?? null;
@@ -483,11 +511,6 @@
                                                     $gran = $grupo->where('tipo_certificado', 2)->where('decision', '!=', 'Pendiente')->sum('total');
                                                     $expo = $grupo->where('tipo_certificado', 3)->where('decision', '!=', 'Pendiente')->sum('total');
                                                     $pendientes = $grupo->where('decision', 'Pendiente')->sum('total');
-
-                                                   /*  $inst = $grupo->firstWhere('tipo_certificado', 1)?->total ?? 0;
-                                                    $gran = $grupo->firstWhere('tipo_certificado', 2)?->total ?? 0;
-                                                    $expo = $grupo->firstWhere('tipo_certificado', 3)?->total ?? 0;
-                                                    $pendientes = $grupo->where('decision', 'Pendiente')->sum('total'); */
                                                 @endphp
                                                 <tr>
                                                     <td @class([
