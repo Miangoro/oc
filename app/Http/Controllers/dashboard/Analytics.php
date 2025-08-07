@@ -254,7 +254,7 @@ public function revisionesPorMes(Request $request)
     $usuarios = User::whereIn('id', $revisiones->pluck('user_id'))->get()->keyBy('id');
 
     // Renderizar el contenido de <tbody> como HTML
-    $html = '';
+  $html = '';
     foreach ($agrupado as $key => $grupo) {
         $revisor = $usuarios[$grupo->first()->user_id] ?? null;
         $rol = $grupo->first()->rol;
@@ -263,7 +263,7 @@ public function revisionesPorMes(Request $request)
         $expo = $grupo->where('tipo_certificado', 3)->where('decision', '!=', 'Pendiente')->sum('total');
         $pendientes = $grupo->where('decision', 'Pendiente')->sum('total');
 
-        $class = $revisor?->id == auth()->id() ? 'bg-primary text-white fw-bold' : '';
+        $classTd = $revisor?->id == auth()->id() ? 'bg-primary text-white fw-bold' : '';
 
         $rolBadge = match ($rol) {
             'Personal' => 'bg-label-info',
@@ -271,33 +271,35 @@ public function revisionesPorMes(Request $request)
             default => 'bg-label-secondary',
         };
 
-        $html .= '
-        <tr>
-            <td class="' . $class . '">
-                <li class="d-flex align-items-center mb-6">
-                    <div class="avatar flex-shrink-0 me-4">';
-        if (!empty($revisor?->profile_photo_path)) {
-            $html .= '<img src="/storage/' . $revisor->profile_photo_path . '" class="rounded-3" style="width: 40px; height: 40px;">';
-        }
-        $html .= '</div>
-                    <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                        <div class="me-2">
-                            <h6 class="mb-0">' . ($revisor?->name ?? '—') . '</h6>
-                        </div>
-                        <div class="badge ' . $rolBadge . ' rounded-pill">' . $rol . '</div>
-                    </div>
-                </li>
-            </td>
-            <td class="text-end">' . number_format($inst) . '</td>
-            <td class="text-end">' . number_format($gran) . '</td>
-            <td class="text-end">' . number_format($expo) . '</td>
-            <td class="text-end ' . ($pendientes > 0 ? 'bg-danger text-white fw-bold' : '') . '">' . number_format($pendientes) . '</td>
-        </tr>';
-    }
+          $html .= '
+          <tr>
+              <td class="' . $classTd . '" style="padding: 0.25rem 0.5rem;">
+                  <div class="d-flex align-items-center gap-2" style="background-color: #f0f0f0; border-radius: 13px; padding: 0.10rem 0.5rem;">
+                      <div class="avatar flex-shrink-0">';
+          if (!empty($revisor?->profile_photo_path)) {
+              $html .= '<img src="/storage/' . $revisor->profile_photo_path . '" alt="' . htmlspecialchars($revisor->name) . '" class="rounded-pill" style="width: 36px; height: 36px; object-fit: cover;">';
+          }
+          $html .= '</div>
+                      <div class="d-flex flex-column">
+                          <h6 class="mb-0" style="font-weight: 600; font-size: 0.9rem; color: #212529;">
+                              ' . htmlspecialchars($revisor?->name ?? '—') . '
+                          </h6>
+                          <span class="badge rounded-pill ' . $rolBadge . '" style="font-size: 0.9rem; padding: 0.2em 0.5em;">
+                              ' . $rol . '
+                          </span>
+                      </div>
+                  </div>
+              </td>
+              <td class="text-end">' . number_format($inst) . '</td>
+              <td class="text-end">' . number_format($gran) . '</td>
+              <td class="text-end">' . number_format($expo) . '</td>
+              <td class="text-end ' . ($pendientes > 0 ? 'bg-danger text-white fw-bold' : '') . '">' . number_format($pendientes) . '</td>
+          </tr>';
+      }
 
-    if ($agrupado->isEmpty()) {
-        $html = '<tr><td colspan="5" class="text-center text-muted">No hay revisiones registradas.</td></tr>';
-    }
+      if ($agrupado->isEmpty()) {
+          $html = '<tr><td colspan="5" class="text-center text-muted">No hay revisiones registradas.</td></tr>';
+      }
 
     return response()->json(['html' => $html]);
 }

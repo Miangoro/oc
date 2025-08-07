@@ -23,9 +23,9 @@
 @endsection
 
 @section('page-script')
-<script>
-    const revisionesMesURL = "{{ route('estadisticas.revisiones-mes') }}";
-</script>
+    <script>
+        const revisionesMesURL = "{{ route('estadisticas.revisiones-mes') }}";
+    </script>
 
     @vite(['resources/assets/js/dashboards-analytics.js', 'resources/assets/js/ui-carousel.js'])
 
@@ -38,72 +38,72 @@
     <div class="row g-6">
         <!-- Gamification Card -->
         <!-- <div class="col-md-12 col-xxl-8">
-                                <div class="card">
-                                  <div class="d-flex align-items-end row">
-                                    <div class="col-md-6 order-2 order-md-1">
-                                      <div class="card-body">
-                                        <h4 class="card-title mb-4">Bienvenid@ <span class="fw-bold">
-                            @if (Auth::check())
+                                        <div class="card">
+                                          <div class="d-flex align-items-end row">
+                                            <div class="col-md-6 order-2 order-md-1">
+                                              <div class="card-body">
+                                                <h4 class="card-title mb-4">Bienvenid@ <span class="fw-bold">
+                                    @if (Auth::check())
     {{ Auth::user()->name }}
 @else
     John Doe
     @endif!
-                            </span> 🎉</h4>
-                                        <p class="mb-0">Personal del organismo certificador cidam</p><br>
-                                        <a href="javascript:;" class="btn btn-primary">Ver pendientes</a>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6 text-center text-md-end order-1 order-md-2">
-                                      <div class="card-body pb-0 px-0 pt-2">
-                                        <img src="{{ asset('assets/img/illustrations/illustration-john-' . $configData['style'] . '.png') }}" height="186" class="scaleX-n1-rtl" alt="View Profile" data-app-light-img="illustrations/illustration-john-light.png" data-app-dark-img="illustrations/illustration-john-dark.png">
-                                        <img  height="186" class="scaleX-n1-rtl" alt="View Profile" src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/1.png') }}" >
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>-->
+                                    </span> 🎉</h4>
+                                                <p class="mb-0">Personal del organismo certificador cidam</p><br>
+                                                <a href="javascript:;" class="btn btn-primary">Ver pendientes</a>
+                                              </div>
+                                            </div>
+                                            <div class="col-md-6 text-center text-md-end order-1 order-md-2">
+                                              <div class="card-body pb-0 px-0 pt-2">
+                                                <img src="{{ asset('assets/img/illustrations/illustration-john-' . $configData['style'] . '.png') }}" height="186" class="scaleX-n1-rtl" alt="View Profile" data-app-light-img="illustrations/illustration-john-light.png" data-app-dark-img="illustrations/illustration-john-dark.png">
+                                                <img  height="186" class="scaleX-n1-rtl" alt="View Profile" src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/1.png') }}" >
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>-->
         <!--/ Gamification Card -->
 
         <!-- Statistics Total Order -->
         <!--  <div class="col-xxl-2 col-sm-6">
-                                <div class="card h-100">
-                                  <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                                      <div class="avatar">
-                                        <div class="avatar-initial bg-label-primary rounded-3">
-                                          <i class="ri-shopping-cart-2-line ri-24px"></i>
+                                        <div class="card h-100">
+                                          <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                                              <div class="avatar">
+                                                <div class="avatar-initial bg-label-primary rounded-3">
+                                                  <i class="ri-shopping-cart-2-line ri-24px"></i>
+                                                </div>
+                                              </div>
+                                              <div class="d-flex align-items-center">
+                                                <p class="mb-0 text-success me-1">+22%</p>
+                                                <i class="ri-arrow-up-s-line text-success"></i>
+                                              </div>
+                                            </div>
+                                            <div class="card-info mt-5">
+                                              <h5 class="mb-1">50</h5>
+                                              <p>Certificados de exportación</p>
+                                              <div class="badge bg-label-secondary rounded-pill">Último mes</div>
+                                            </div>
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div class="d-flex align-items-center">
-                                        <p class="mb-0 text-success me-1">+22%</p>
-                                        <i class="ri-arrow-up-s-line text-success"></i>
-                                      </div>
-                                    </div>
-                                    <div class="card-info mt-5">
-                                      <h5 class="mb-1">50</h5>
-                                      <p>Certificados de exportación</p>
-                                      <div class="badge bg-label-secondary rounded-pill">Último mes</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>-->
+                                      </div>-->
         <!--/ Statistics Total Order -->
 
         <!-- Sessions line chart -->
         <!--<div class="col-xxl-2 col-sm-6">
-                                <div class="card h-100">
-                                  <div class="card-header pb-0">
-                                    <div class="d-flex align-items-center mb-1 flex-wrap">
-                                      <h5 class="mb-0 me-1">$38.5k</h5>
-                                      <p class="mb-0 text-success">+62%</p>
-                                    </div>
-                                    <span class="d-block card-subtitle">Sessions</span>
-                                  </div>
-                                  <div class="card-body">
-                                    <div id="sessions"></div>
-                                  </div>
-                                </div>
-                              </div>-->
+                                        <div class="card h-100">
+                                          <div class="card-header pb-0">
+                                            <div class="d-flex align-items-center mb-1 flex-wrap">
+                                              <h5 class="mb-0 me-1">$38.5k</h5>
+                                              <p class="mb-0 text-success">+62%</p>
+                                            </div>
+                                            <span class="d-block card-subtitle">Sessions</span>
+                                          </div>
+                                          <div class="card-body">
+                                            <div id="sessions"></div>
+                                          </div>
+                                        </div>
+                                      </div>-->
         <!--/ Sessions line chart -->
 
         <div class="row my-2">
@@ -355,7 +355,7 @@
                             <hr>
                             <p class="mb-0">
                                 <!--<span class="me-1 fw-medium">-2.5%</span>
-                                                                    <small class="text-muted">than last week</small>-->
+                                                                                    <small class="text-muted">than last week</small>-->
                             </p>
                         </div>
                     </div>
@@ -368,13 +368,13 @@
                             <h5 class="card-title m-0 me-2">Inspecciones por inspector 2025</h5>
                             <div class="dropdown">
                                 <!-- <button class="btn text-body-secondary p-0" type="button" id="meetingSchedule" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="icon-base ri ri-more-2-line"></i>
-                                              </button>
-                                              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="meetingSchedule">
-                                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
-                                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
-                                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
-                                              </div>-->
+                                                                <i class="icon-base ri ri-more-2-line"></i>
+                                                              </button>
+                                                              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="meetingSchedule">
+                                                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
+                                                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
+                                                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
+                                                              </div>-->
                             </div>
                         </div>
                         <div class="card-body">
@@ -391,7 +391,7 @@
                                                 <h6 class="mb-0">{{ $inspector['nombre'] }}</h6>
                                                 <small class="d-flex align-items-center">
                                                     <!-- <i class="icon-base ri ri-calendar-line icon-16px"></i>
-                                                      <span class="ms-2">21 Jul | 08:20-10:30</span>-->
+                                                                      <span class="ms-2">21 Jul | 08:20-10:30</span>-->
                                                 </small>
                                             </div>
                                             <div class="badge bg-label-primary rounded-pill">
@@ -428,146 +428,177 @@
                 </div>
             @endcan
 
-                @can('Estadísticas ui')
-                    <!-- Line Chart
-                    <div class="col-6 mb-6">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between">
+            @can('Estadísticas ui')
+                <!-- Line Chart
+                                    <div class="col-6 mb-6">
+                                        <div class="card">
+                                            <div class="card-header d-flex justify-content-between">
+                                                <div>
+                                                    <h5 class="card-title mb-0">Servicios realizados por mes</h5>
+                                                    <div class="mb-0">
+                                                        <label for="selectAnio2" class="form-label">Selecciona un año:</label>
+                                                        <select id="selectAnio2" class="form-select w-auto">
+                                                            @for ($i = now()->year; $i >= 2022; $i--)
+        <option value="{{ $i }}">{{ $i }}</option>
+        @endfor
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="lineChart2"></div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+            @endcan
+
+            @canany(['Estadísticas consejo', 'Estadísticas oc'])
+                @php
+                    $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
+                    $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
+                @endphp
+
+
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header pb-2">
+                            <div
+                                class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
                                 <div>
-                                    <h5 class="card-title mb-0">Servicios realizados por mes</h5>
-                                    <div class="mb-0">
-                                        <label for="selectAnio2" class="form-label">Selecciona un año:</label>
-                                        <select id="selectAnio2" class="form-select w-auto">
-                                            @for ($i = now()->year; $i >= 2022; $i--)
-                                                <option value="{{ $i }}">{{ $i }}</option>
+                                    <h5 class="mb-1">📊 Resumen de revisiones por revisor</h5>
+                                    <small class="text-muted">Cantidad de revisiones realizadas por revisor y tipo de
+                                        certificado.</small>
+                                </div>
+                                <form method="GET" class="mt-2 mt-md-0">
+                                    <div class="input-group input-group-sm">
+                                        <label class="input-group-text" for="mes">Mes</label>
+                                        @php
+                                            $mesSeleccionado = request('mes', now()->month);
+                                        @endphp
+                                        <select name="mes" id="mes" class="form-select form-select-sm">
+                                            <option value="">Todos</option>
+                                            @for ($i = 1; $i <= 12; $i++)
+                                                {{-- <option value="{{ $i }}" {{ request('mes') == $i ? 'selected' : '' }}> --}}
+                                                <option value="{{ $i }}"
+                                                    {{ $mesSeleccionado == $i ? 'selected' : '' }}>
+                                                    {{ ucfirst(\Carbon\Carbon::create()->month($i)->translatedFormat('F')) }}
+                                                </option>
                                             @endfor
                                         </select>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div id="lineChart2"></div>
+                                </form>
                             </div>
                         </div>
-                    </div> -->
-                @endcan
-
-                @canany(['Estadísticas consejo', 'Estadísticas oc'])
-                    @php
-                        $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
-                        $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
-                    @endphp
 
 
-                    <div class="col-md-6">
-                        <div class="card mb-4">
-                           <div class="card-header pb-2">
-                               <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-                                  <div>
-                                      <h5 class="mb-1">📊 Resumen de revisiones por revisor</h5>
-                                      <small class="text-muted">Cantidad de revisiones realizadas por revisor y tipo de certificado.</small>
-                                  </div>
-                                     <form method="GET" class="mt-2 mt-md-0">
-                                      <div class="input-group input-group-sm">
-                                          <label class="input-group-text" for="mes">Mes</label>
-                                           @php
-                                                $mesSeleccionado = request('mes', now()->month);
-                                          @endphp
-                                          <select name="mes" id="mes" class="form-select form-select-sm">
-                                              <option value="">Todos</option>
-                                              @for ($i = 1; $i <= 12; $i++)
-                                                  {{-- <option value="{{ $i }}" {{ request('mes') == $i ? 'selected' : '' }}> --}}
-                                                  <option value="{{ $i }}" {{ $mesSeleccionado == $i ? 'selected' : '' }}>
-                                                        {{ ucfirst(\Carbon\Carbon::create()->month($i)->translatedFormat('F')) }}
-                                                  </option>
-                                              @endfor
-                                          </select>
-                                      </div>
-                                  </form>
-                              </div>
-                          </div>
+                        <div class="card-body pt-2">
+                            <div class="table-responsive border-top">
 
+                                <table class="table table-bordered table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>👤 Revisor</th>
+                                            <th class="text-center">🏗️ Instalaciones</th>
+                                            <th class="text-center">🌾 Granel</th>
+                                            <th class="text-center">🚢 Exportación</th>
+                                            <th class="text-center">Pendientes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-revisiones">
 
-                            <div class="card-body pt-2">
-                                <div class="table-responsive border-top">
-
-                                    <table class="table table-bordered table-hover">
-                                        <thead class="table-light">
+                                        @forelse ($agrupado as $key => $grupo)
+                                            @php
+                                                $revisor = $usuarios[$grupo->first()->user_id] ?? null;
+                                                $rol = $grupo->first()->rol;
+                                                $inst = $grupo
+                                                    ->where('tipo_certificado', 1)
+                                                    ->where('decision', '!=', 'Pendiente')
+                                                    ->sum('total');
+                                                $gran = $grupo
+                                                    ->where('tipo_certificado', 2)
+                                                    ->where('decision', '!=', 'Pendiente')
+                                                    ->sum('total');
+                                                $expo = $grupo
+                                                    ->where('tipo_certificado', 3)
+                                                    ->where('decision', '!=', 'Pendiente')
+                                                    ->sum('total');
+                                                $pendientes = $grupo->where('decision', 'Pendiente')->sum('total');
+                                            @endphp
                                             <tr>
-                                                <th>👤 Revisor</th>
-                                                <th class="text-center">🏗️ Instalaciones</th>
-                                                <th class="text-center">🌾 Granel</th>
-                                                <th class="text-center">🚢 Exportación</th>
-                                                <th class="text-center">Pendientes</th>
+                                                <td class="{{ $revisor?->id == auth()->id() ? 'bg-primary text-white fw-bold' : '' }}"
+                                                    style="padding: 0.25rem 0.5rem;">
+                                                    <div class="d-flex align-items-center gap-2"
+                                                        style="background-color: #f0f0f0;  border-radius: 13px; padding: 0.10rem 0.5rem;">
+                                                        <div class="avatar flex-shrink-0">
+                                                            @if (!empty($revisor?->profile_photo_path))
+                                                                <img src="/storage/{{ $revisor->profile_photo_path }}"
+                                                                    alt="{{ $revisor->name ?? '—' }}" class="rounded-pill"
+                                                                    style="width: 36px; height: 36px; object-fit: cover;">
+                                                            @endif
+                                                        </div>
+                                                        <div class="d-flex flex-column">
+                                                            <h6 class="mb-0"
+                                                                style="font-weight: 600; font-size: 0.9rem; color: #212529;">
+                                                                {{ $revisor?->name ?? '—' }}
+                                                            </h6>
+                                                            <span
+                                                                class="badge rounded-pill
+                                                                 {{ $rol === 'Personal' ? 'bg-label-info' : ($rol === 'Consejo' ? 'bg-label-warning' : 'bg-label-secondary') }}"
+                                                                style="font-size: 0.9rem; padding: 0.2em 0.5em;">
+                                                                {{ $rol }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                {{-- <td
+                                                    class="{{ $revisor?->id == auth()->id() ? 'bg-primary text-white fw-bold' : '' }}">
+                                                    <div
+                                                        class="bg-{{ $revisor?->id == auth()->id() ? 'primary text-white' : 'light' }} shadow-sm rounded-pill px-3 py-2 d-flex align-items-center gap-3">
+
+                                                        <div class="avatar flex-shrink-0">
+                                                            @if (!empty($revisor?->profile_photo_path))
+                                                                <img src="/storage/{{ $revisor->profile_photo_path }}"
+                                                                    alt="{{ $revisor->name ?? '—' }}" class="rounded-circle"
+                                                                    style="width: 40px; height: 40px;">
+                                                            @endif
+                                                        </div>
+                                                        <div class="d-flex flex-column">
+                                                            <h6 class="mb-1 fw-semibold text-dark">
+                                                                {{ $revisor?->name ?? '—' }}</h6>
+                                                            <span
+                                                                class="badge {{ $rol === 'Personal' ? 'bg-label-info' : ($rol === 'Consejo' ? 'bg-label-warning' : 'bg-label-secondary') }} rounded-pill">
+                                                                {{ $rol }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </td> --}}
+
+                                                <td class="text-end">{{ number_format($inst) }}</td>
+                                                <td class="text-end">{{ number_format($gran) }}</td>
+                                                <td class="text-end">{{ number_format($expo) }}</td>
+                                                <td
+                                                    class="text-end {{ $pendientes > 0 ? 'bg-danger text-white fw-bold' : '' }}">
+                                                    {{ number_format($pendientes) }}
+                                                </td>
+
+
                                             </tr>
-                                        </thead>
-                                        <tbody id="tbody-revisiones">
-
-                                            @forelse ($agrupado as $key => $grupo)
-                                                @php
-                                                    $revisor = $usuarios[$grupo->first()->user_id] ?? null;
-                                                    $rol = $grupo->first()->rol;
-                                                    $inst = $grupo->where('tipo_certificado', 1)->where('decision', '!=', 'Pendiente')->sum('total');
-                                                    $gran = $grupo->where('tipo_certificado', 2)->where('decision', '!=', 'Pendiente')->sum('total');
-                                                    $expo = $grupo->where('tipo_certificado', 3)->where('decision', '!=', 'Pendiente')->sum('total');
-                                                    $pendientes = $grupo->where('decision', 'Pendiente')->sum('total');
-                                                @endphp
-                                                <tr>
-                                                    <td @class([
-                                                        'bg-primary text-white fw-bold' => $revisor?->id == auth()->id(),
-                                                    ])>
-
-                                                        <li class="d-flex align-items-center mb-6">
-                                                            <div class="avatar flex-shrink-0 me-4">
-                                                                @if (!empty($revisor?->profile_photo_path))
-                                                                    <img src="/storage/{{ $revisor->profile_photo_path }}"
-                                                                        alt="{{ $revisor->name ?? '—' }}" class="rounded-3"
-                                                                        style="width: 40px; height: 40px;">
-                                                                @endif
-
-
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0"> {{ $revisor?->name ?? '—' }}</h6>
-
-                                                                </div>
-                                                                <div
-                                                                    class="badge
-                                                    {{ $rol === 'Personal' ? 'bg-label-info' : ($rol === 'Consejo' ? 'bg-label-warning' : 'bg-label-secondary') }}
-                                                    rounded-pill">
-                                                                    {{ $rol }}
-                                                                </div>
-
-                                                            </div>
-                                                        </li>
-                                                    </td>
-                                                    <td class="text-end">{{ number_format($inst) }}</td>
-                                                    <td class="text-end">{{ number_format($gran) }}</td>
-                                                    <td class="text-end">{{ number_format($expo) }}</td>
-                                                    <td
-                                                        class="text-end {{ $pendientes > 0 ? 'bg-danger text-white fw-bold' : '' }}">
-                                                        {{ number_format($pendientes) }}
-                                                    </td>
-
-
-                                                </tr>
-                                            @empty
-                                                <tr>
-                                                    <td colspan="5" class="text-center text-muted">No hay revisiones
-                                                        registradas.</td>
-                                                </tr>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
+                                        @empty
+                                            <tr>
+                                                <td colspan="5" class="text-center text-muted">No hay revisiones
+                                                    registradas.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
+                </div>
 
 
-                @endcanany
+            @endcanany
 
 
 
@@ -779,10 +810,10 @@
                                                             class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a>
                                                 </th>
                                                 <!--<td>
-                                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                        Ver
-                                                    </a>
-                                                </td>-->
+                                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                                Ver
+                                                            </a>
+                                                        </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -836,10 +867,10 @@
                                                             class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a>
                                                 </th>
                                                 <!--<td>
-                                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                        Ver
-                                                    </a>
-                                                </td>-->
+                                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                                Ver
+                                                            </a>
+                                                        </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -910,10 +941,10 @@
                                                             class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a>
                                                 </th>
                                                 <!--<td>
-                                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                        Ver
-                                                    </a>
-                                                </td>-->
+                                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                                Ver
+                                                            </a>
+                                                        </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -958,7 +989,7 @@
                                         @foreach ($solicitudesSinActa as $solicitud)
                                             <tr>
                                                 <td>{{ $solicitud->folio }}</td>
-                                              <td>{!! $solicitud->inspeccion->num_servicio ?? "<span class='badge bg-danger'>Sin asignar</span>" !!}</td>
+                                                <td>{!! $solicitud->inspeccion->num_servicio ?? "<span class='badge bg-danger'>Sin asignar</span>" !!}</td>
 
                                                 <td>{{ $solicitud->tipo_solicitud->tipo }}</td>
                                                 <td>{{ $solicitud->empresa->razon_social ?? 'N/A' }}</td>
@@ -966,10 +997,10 @@
                                                 </td>
                                                 <td>{{ $solicitud->inspeccion->inspector->name ?? 'Sin asignar' }}</td>
                                                 <!--<td>
-                                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                        Ver
-                                                    </a>
-                                                </td>-->
+                                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                                Ver
+                                                            </a>
+                                                        </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -1019,10 +1050,10 @@
                                                 </td>
                                                 <td>{{ $solicitud->inspeccion->inspector->name ?? 'Sin asignar' }}</td>
                                                 <!--<td>
-                                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                        Ver
-                                                    </a>
-                                                </td>-->
+                                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                                Ver
+                                                            </a>
+                                                        </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
