@@ -845,18 +845,18 @@
           categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
         }
       });
-  
+
       lineChart.render();
     });
   }
-  
+
   // Al cambiar el año en el select
   $('#selectAnio').on('change', function() {
     const anio = $(this).val();
     $('#lineChart').html(''); // Limpia el gráfico anterior
     cargarDatosCertificados(anio);
   });
-  
+
   // Llamada inicial con el año actual
   $(document).ready(function () {
     const anioActual = $('#selectAnio').val();
@@ -871,7 +871,7 @@
         name: nombre,
         data: datos
       }));
-  
+
       const lineChart = new ApexCharts(document.querySelector('#lineChart2'), {
         chart: {
           type: 'line',
@@ -883,25 +883,45 @@
           categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
         }
       });
-  
+
       lineChart.render();
     });
   }
-  
-  
+
+
   // Al cambiar el año en el select
   $('#selectAnio2').on('change', function() {
     const anio = $(this).val();
     $('#lineChart2').html(''); // Limpia el gráfico anterior
     cargarDatosServicios(anio);
   });
-  
+
   // Llamada inicial con el año actual
   $(document).ready(function () {
     const anioActual = $('#selectAnio2').val();
     cargarDatosServicios(anioActual);
   });
-  
+
+
+
+$(document).ready(function () {
+    $('#mes').on('change', function () {
+        let mes = $(this).val();
+        $.ajax({
+            url: `${revisionesMesURL}?mes=${mes}`, // ✅ AQUÍ SIN fetch(),
+            type: 'GET',
+            data: { mes }, // opcional si ya lo pasas en la URL
+            success: function (response) {
+                /* $('table tbody').html(response.html); */
+                $('#tbody-revisiones').html(response.html);
+
+            },
+            error: function () {
+                alert('Ocurrió un error al obtener los datos.');
+            }
+        });
+    });
+});
 
 
 

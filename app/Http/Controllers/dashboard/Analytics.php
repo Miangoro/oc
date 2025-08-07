@@ -70,6 +70,8 @@ $solicitudesSinDictamen = solicitudesModel::where('fecha_solicitud', '>', '2024-
     ->get();
 
 
+$mes = request('mes', now()->month); // 👈 Usa el mes actual si no se envió ninguno
+
 
 $revisiones = Revisor::select(
         'id_revisor as user_id',
@@ -83,6 +85,10 @@ $revisiones = Revisor::select(
         DB::raw('COUNT(*) as total')
     )
     ->whereNotNull('id_revisor')
+    ->whereMonth('created_at', $mes)
+    /* ->when($mes, function ($query) use ($mes) {
+        $query->whereMonth('created_at', $mes);
+    }) */
     ->groupBy('id_revisor', 'tipo_revision', 'tipo_certificado', 'decision')
     ->get();
 
@@ -224,6 +230,78 @@ $pendientesRevisarCertificadosConsejo = Revisor::where('decision', 'Pendiente')
 
     return view('content.dashboard.dashboards-analytics', compact('certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
+
+public function revisionesPorMes(Request $request)
+{
+    $mes = $request->mes;
+
+    $revisiones = Revisor::select(
+        'id_revisor as user_id',
+        DB::raw("CASE WHEN tipo_revision = 1 THEN 'Personal'
+                      WHEN tipo_revision = 2 THEN 'Consejo'
+                      ELSE 'Desconocido' END as rol"),
+        'tipo_certificado',
+        'decision',
+        DB::raw('COUNT(*) as total')
+    )
+    ->whereNotNull('id_revisor')
+    ->when($mes, fn($q) => $q->whereMonth('created_at', $mes))
+    ->groupBy('id_revisor', 'tipo_revision', 'tipo_certificado', 'decision')
+    ->get();
+
+    $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
+
+    $usuarios = User::whereIn('id', $revisiones->pluck('user_id'))->get()->keyBy('id');
+
+    // Renderizar el contenido de <tbody> como HTML
+    $html = '';
+    foreach ($agrupado as $key => $grupo) {
+        $revisor = $usuarios[$grupo->first()->user_id] ?? null;
+        $rol = $grupo->first()->rol;
+        $inst = $grupo->where('tipo_certificado', 1)->where('decision', '!=', 'Pendiente')->sum('total');
+        $gran = $grupo->where('tipo_certificado', 2)->where('decision', '!=', 'Pendiente')->sum('total');
+        $expo = $grupo->where('tipo_certificado', 3)->where('decision', '!=', 'Pendiente')->sum('total');
+        $pendientes = $grupo->where('decision', 'Pendiente')->sum('total');
+
+        $class = $revisor?->id == auth()->id() ? 'bg-primary text-white fw-bold' : '';
+
+        $rolBadge = match ($rol) {
+            'Personal' => 'bg-label-info',
+            'Consejo' => 'bg-label-warning',
+            default => 'bg-label-secondary',
+        };
+
+        $html .= '
+        <tr>
+            <td class="' . $class . '">
+                <li class="d-flex align-items-center mb-6">
+                    <div class="avatar flex-shrink-0 me-4">';
+        if (!empty($revisor?->profile_photo_path)) {
+            $html .= '<img src="/storage/' . $revisor->profile_photo_path . '" class="rounded-3" style="width: 40px; height: 40px;">';
+        }
+        $html .= '</div>
+                    <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                        <div class="me-2">
+                            <h6 class="mb-0">' . ($revisor?->name ?? '—') . '</h6>
+                        </div>
+                        <div class="badge ' . $rolBadge . ' rounded-pill">' . $rol . '</div>
+                    </div>
+                </li>
+            </td>
+            <td class="text-end">' . number_format($inst) . '</td>
+            <td class="text-end">' . number_format($gran) . '</td>
+            <td class="text-end">' . number_format($expo) . '</td>
+            <td class="text-end ' . ($pendientes > 0 ? 'bg-danger text-white fw-bold' : '') . '">' . number_format($pendientes) . '</td>
+        </tr>';
+    }
+
+    if ($agrupado->isEmpty()) {
+        $html = '<tr><td colspan="5" class="text-center text-muted">No hay revisiones registradas.</td></tr>';
+    }
+
+    return response()->json(['html' => $html]);
+}
+
 
   public function estadisticasCertificados(Request $request)
   {

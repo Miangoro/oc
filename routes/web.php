@@ -479,8 +479,9 @@ Route::middleware([
      Route::get('/dashboard', [Analytics::class, 'index'])->name('dashboard');
      Route::get('/estadisticas/certificados', [Analytics::class, 'estadisticasCertificados'])->name('estadisticasCertificados');
      Route::get('/estadisticas/servicios', [Analytics::class, 'estadisticasServicios'])->name('estadisticasServicios');
-});
 
+});
+Route::get('/estadisticas/revisiones-por-mes', [Analytics::class, 'revisionesPorMes'])->name('estadisticas.revisiones-mes');
 //Solicitud de Cliente
 Route::get('/solicitud-cliente', [solicitudClienteController::class, 'index'])->name('solicitud-cliente');
 Route::post('/solicitud-cliente-registrar', [solicitudClienteController::class, 'registrar'])->name('solicitud-cliente-registrar');
