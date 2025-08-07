@@ -23,35 +23,36 @@ class TicketController extends Controller
         return view('tickets.crear_ticket');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'asunto' => 'required|string|max:255',
-            'prioridad' => 'required|in:alta,media,baja',
-            'mensaje' => 'required|string',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'asunto' => 'required|string|max:255',
+        'prioridad' => 'required|string',
+        'descripcion' => 'required|string',
+        'evidencias.*' => 'file|mimes:pdf,jpg,jpeg,png|max:2048',
+    ]);
 
-        $ticket = Ticket::create([
-            'asunto' => $request->asunto,
-            'prioridad' => $request->prioridad,
-            'mensaje' => $request->mensaje,
-            'id_usuario' => Auth::id(),
-            'estatus' => 'pendiente',
-        ]);
+    $ticket = Ticket::create([
+        'id_usuario' => Auth::id(),
+        'asunto' => $request->asunto,
+        'prioridad' => $request->prioridad,
+        'descripcion' => $request->descripcion,
+    ]);
 
-        // Guardar evidencias si hay
-        if ($request->hasFile('evidencias')) {
-            foreach ($request->file('evidencias') as $file) {
-                $path = $file->store('tickets_evidencias', 'public');
-                TicketEvidencia::create([
-                    'ticket_id' => $ticket->id_ticket,
-                    'evidencia_url' => $path,
-                ]);
-            }
+    if ($request->hasFile('evidencias')) {
+        foreach ($request->file('evidencias') as $archivo) {
+            $path = $archivo->store('evidencias', 'public');
+            TicketEvidencia::create([
+                'ticket_id' => $ticket->id,
+                'archivo' => $path,
+            ]);
         }
-
-        return redirect()->route('tickets.tickets_index')->with('success', 'Ticket creado correctamente.');
     }
+
+    return redirect()->route('tickets.index')->with('success', 'Ticket creado correctamente.');
+
+
+}
 
     public function detalle($id)
 {
@@ -64,4 +65,47 @@ class TicketController extends Controller
 
     return view('tickets.detalle_ticket', compact('ticket'));
 }
+public function filtrar(Request $request)
+{
+    $query = Ticket::query()->where('id_usuario', Auth::id());
+
+    if ($request->estado) {
+        $query->where('estado', $request->estado);
+    }
+
+    if ($request->prioridad) {
+        $query->where('prioridad', $request->prioridad);
+    }
+
+    if ($request->responsable) {
+        $query->where('responsable_id', $request->responsable);
+    }
+
+    $tickets = $query->orderBy('created_at', 'desc')->get();
+
+    $html = '';
+
+    if ($tickets->isEmpty()) {
+        $html = '<tr><td colspan="6" class="text-center text-muted">No se encontraron tickets con los filtros seleccionados.</td></tr>';
+    } else {
+        foreach ($tickets as $ticket) {
+            $html .= '
+            <tr>
+              <td>' . $ticket->id . '</td>
+              <td>' . e($ticket->asunto) . '</td>
+              <td>' . ucfirst($ticket->prioridad) . '</td>
+              <td>' . ucfirst($ticket->estado) . '</td>
+              <td>' . $ticket->created_at->format('d/m/Y') . '</td>
+              <td>
+                <a href="' . route('tickets.show', $ticket->id) . '" class="btn btn-sm btn-info">Ver</a>
+              </td>
+            </tr>';
+        }
+    }
+
+    return response()->json(['html' => $html]);
+}
+
+
+
 }

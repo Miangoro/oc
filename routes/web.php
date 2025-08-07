@@ -1366,6 +1366,10 @@ Route::prefix('tickets')->group(function () {
     Route::post('/{id}/mensaje', [TicketController::class, 'addMessage'])->name('tickets.message');
     Route::post('/{id}/cerrar', [TicketController::class, 'updateStatus'])->name('tickets.close');
     Route::get('/tickets/{id}/detalle', [TicketController::class, 'detalle'])->name('tickets.detalle');
+   Route::get('/tickets/filtrar', [TicketController::class, 'filtrar'])->name('tickets.filtrar');
+
+
+
 
 });
 
