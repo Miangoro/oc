@@ -242,16 +242,10 @@ public function index(Request $request)
                         ->where('id_doc', $dictamen->certificado->id_certificado)
                         ->where('id_documento', $id_documento)
                         ->first();
-                } elseif ($instalacion && $instalacion->certificado_instalacion && $instalacion->certificado_instalacion->certificado) {
-                    // Caso 2: dictamen actual no tiene certificado, pero la instalación tiene uno (usamos ese certificado)
-                    $documento = Documentacion_url::where('id_relacion', $instalacion->id_instalacion)
-                        ->where('id_doc', $instalacion->certificado_instalacion->certificado->id_certificado)
-                        ->where('id_documento', $id_documento)
-                        ->first();
                 } elseif ($instalacion) {
-                    // Caso 3: No hay certificado por ningún lado, pero buscamos por instalación y tipo de documento
-                    $documento = Documentacion_url::where('id_relacion', $instalacion->id_instalacion)
+                    $documento = Documentacion_url::where('id_relacion', $dictamen->id_instalacion)
                         ->where('id_documento', $id_documento)
+                        ->whereNull('id_doc')
                         ->first();
                 }
 
