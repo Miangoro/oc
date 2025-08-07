@@ -1,15 +1,21 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const btnNuevo = document.getElementById('btnNuevoTicket');
-  const btnCancelar = document.getElementById('btnCancelarTicket');
-  const formulario = document.getElementById('formularioTicket');
+  const form = document.getElementById('ticketFilterForm');
+  const tablaBody = document.querySelector('#ticketsTable tbody');
 
-  btnNuevo.addEventListener('click', () => {
-    formulario.classList.remove('d-none');
-    btnNuevo.classList.add('d-none');
-  });
+  form?.addEventListener('submit', function (e) {
+    e.preventDefault();
 
-  btnCancelar.addEventListener('click', () => {
-    formulario.classList.add('d-none');
-    btnNuevo.classList.remove('d-none');
+    const estado = document.getElementById('estado').value;
+    const prioridad = document.getElementById('prioridad').value;
+    const responsable = document.getElementById('responsable').value;
+
+    fetch(`${filtroURL}?estado=${estado}&prioridad=${prioridad}&responsable=${responsable}`)
+      .then(response => response.json())
+      .then(data => {
+        tablaBody.innerHTML = data.html;
+      })
+      .catch(error => {
+        console.error('Error al filtrar:', error);
+      });
   });
 });
