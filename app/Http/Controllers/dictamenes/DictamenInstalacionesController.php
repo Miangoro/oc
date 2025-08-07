@@ -243,7 +243,7 @@ public function index(Request $request)
                         ->where('id_documento', $id_documento)
                         ->first();
                 } elseif ($instalacion) {
-                    $documento = Documentacion_url::where('id_relacion', $instalacion->id_instalacion)
+                    $documento = Documentacion_url::where('id_relacion', $dictamen->id_instalacion)
                         ->where('id_documento', $id_documento)
                         ->first();
                 }
