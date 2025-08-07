@@ -38,7 +38,7 @@ class hologramasActivar extends Controller
         $tipos = tipos::all();
         $clases = clases::all();
 
-        $ModelsSolicitudHolograma = ModelsSolicitudHolograma::all();
+        $ModelsSolicitudHolograma = ModelsSolicitudHolograma::orderBy('id_solicitud', 'desc')->get();
         $userCount = $ModelsSolicitudHolograma->count();
         $verified = 5;
         $notVerified = 10;
