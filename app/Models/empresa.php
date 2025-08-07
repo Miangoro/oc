@@ -36,6 +36,12 @@ class empresa extends Model
         return $this->hasMany(User::class, 'id_empresa');
     }
 
+    public function contacto()
+    {
+        return $this->hasOne(User::class, 'id','id_contacto');
+    }
+
+
     public function instalaciones()
     {
         return $this->hasMany(instalaciones::class, 'id_empresa');

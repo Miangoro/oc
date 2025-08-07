@@ -575,6 +575,7 @@ Route::get('/cliente_confirmado/{id}/edit', [clientesConfirmadosController::clas
 Route::put('/cliente_confirmado/{id}', [clientesConfirmadosController::class, 'update_cliente'])->name('editarCliente')->middleware(['auth']);
 
 Route::get('/clientes/confirmados', [clientesConfirmadosController::class, 'UserManagement'])->name('clientes-confirmados')->middleware(['auth']);
+Route::get('/add_revision_requisitos/{id_cliente}', [clientesConfirmadosController::class, 'add_revision_requisitos'])->name('add_revision_requisitos')->middleware(['auth']);
 Route::resource('/clientes-list', clientesConfirmadosController::class)->middleware(['auth']);
 Route::get('/carta_asignacion/{id}', [clientesConfirmadosController::class, 'pdfCartaAsignacion'])->name('carta_asignacion')->middleware(['auth']);
 Route::get('/carta_asignacion052/{id}', [clientesConfirmadosController::class, 'pdfCartaAsignacion052'])->name('carta_asignacion052')->middleware(['auth']);

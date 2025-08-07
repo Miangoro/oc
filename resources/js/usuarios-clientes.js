@@ -199,6 +199,7 @@ $(function () {
           render: function (data, type, full, meta) {
 
           let acciones = '';
+     
             if (window.puedeEditarUsuario) {
               acciones += `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar clientes</a>`;
             }
