@@ -14,6 +14,7 @@ use App\Models\tipos;
 use App\Models\categorias;
 use App\Models\clases;
 use App\Models\Documentacion_url;
+use App\Models\lotes_envasado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -26,7 +27,10 @@ class hologramasActivar extends Controller
     {
         $Empresa = Empresa::with('empresaNumClientes')->where('tipo', 2)->get();
         $inspeccion = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
-            $query->where('id_tipo', 5)->Orwhere('id_tipo', 6)->Orwhere('id_tipo', 11)->Orwhere('id_tipo', 8);
+            $query->where('id_tipo', 5)
+            ->Orwhere('id_tipo', 6)
+            ->Orwhere('id_tipo', 11)
+            ->Orwhere('id_tipo', 8);
         })
             ->orderBy('id_inspeccion', 'desc')
             ->get();
@@ -34,7 +38,7 @@ class hologramasActivar extends Controller
         $tipos = tipos::all();
         $clases = clases::all();
 
-        $ModelsSolicitudHolograma = ModelsSolicitudHolograma::all();
+        $ModelsSolicitudHolograma = ModelsSolicitudHolograma::orderBy('id_solicitud', 'desc')->get();
         $userCount = $ModelsSolicitudHolograma->count();
         $verified = 5;
         $notVerified = 10;
@@ -141,13 +145,20 @@ class hologramasActivar extends Controller
                 }
                 $mensaje = implode('<br>', $rangoFolios);
 
+                $empresa2 = $dato->inspeccion->solicitud->empresa ?? null;
+                $numero_cliente2 = ($empresa2 && $empresa2->empresaNumClientes->isNotEmpty())
+                    ? optional($empresa2->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa2->id && !empty($item->numero_cliente)))->numero_cliente ?? 'No encontrado'
+                    : 'N/A';
+                $acta = $dato->inspeccion->solicitud->documentacion(69)->first()?->url ?? null;
 
                 $nestedData = [
                     'fake_id' => ++$ids,
                     'id' => $dato->id,
                     'folio_activacion' => $dato->folio_activacion,
                     'folio_solicitud' => $dato->solicitudHolograma->folio,
+                    //num_sercivio (acta)
                     'num_servicio' => $dato->inspeccion->num_servicio,
+                    'url'=>asset("files/{$numero_cliente2}/actas/{$acta}"),
                     'marca' => $marca,
                     'lote_granel' => $dato->no_lote_agranel,
                     'lote_envasado' => $dato->no_lote_envasado,
@@ -167,6 +178,7 @@ class hologramasActivar extends Controller
             'data' => $data,
         ]);
     }
+
 
 
     public function activarHologramas(Request $request)
@@ -190,18 +202,6 @@ class hologramasActivar extends Controller
     }
 
 
-    public function getDatosInpeccion($id_inspeccion)
-    {
-
-        $datos = inspecciones::with('solicitud.lote_envasado.lotesGranel.certificadoGranel')->find($id_inspeccion);
-
-        $numeroCliente = $datos->solicitud->empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
-            return !empty($numero);
-        });
-        $datos->url_acta = $datos->solicitud->documentacion(69)->pluck('url')->toArray();
-        $datos->numero_cliente = $numeroCliente;
-        return response()->json($datos); // Retorna en formato JSON
-    }
 
     public function verificarFolios(Request $request)
     {
@@ -248,6 +248,8 @@ class hologramasActivar extends Controller
         return response()->json(['success' => 'El rango de folios está disponible.']);
     }
 
+
+
     //Registrar activar
     public function storeActivar(Request $request)
     {
@@ -281,27 +283,31 @@ class hologramasActivar extends Controller
         return response()->json(['message' => 'Hologramas activados exitosamente']);
     }
 
-      //Editar activos
-      public function editActivados($id)
-      {
-          try {
-              // Obtener el registro
-              $activo = activarHologramasModelo::find($id);
-              // Decodificar el JSON de los folios
-              $folios = json_decode($activo->folios, true);
-              // Añadir los valores de folio inicial y folio final
-              $activo->folio_inicial = $folios['folio_inicial'] ?? null;
-              $activo->folio_final = $folios['folio_final'] ?? null;
-              $mermas = json_decode($activo->mermas, true);
-              $activo->mermas = $mermas['mermas'] ?? null;
 
-              return response()->json($activo); // Devolver el registro con los datos decodificados
-          } catch (\Exception $e) {
-              return response()->json(['error' => 'Error al obtener los hologramas activos'], 500);
-          }
-      }
 
-          //Actualizar activos
+    //Editar activos
+    public function editActivados($id)
+    {
+        try {
+            // Obtener el registro
+            $activo = activarHologramasModelo::find($id);
+            // Decodificar el JSON de los folios
+            $folios = json_decode($activo->folios, true);
+            // Añadir los valores de folio inicial y folio final
+            $activo->folio_inicial = $folios['folio_inicial'] ?? null;
+            $activo->folio_final = $folios['folio_final'] ?? null;
+            $mermas = json_decode($activo->mermas, true);
+            $activo->mermas = $mermas['mermas'] ?? null;
+
+            return response()->json($activo); // Devolver el registro con los datos decodificados
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener los hologramas activos'], 500);
+        }
+    }
+
+
+
+    //Actualizar activos
     public function updateActivados(Request $request)
     {
         // Buscar el registro existente usando el ID
@@ -339,5 +345,111 @@ class hologramasActivar extends Controller
             return response()->json(['error' => 'Error al actualizar los hologramas activossiiiiii'], 500);
         }
     }
+
+
+
+///OBTENER RELACION DE DATOS INSPECCION
+public function getDatosInpeccion($id_inspeccion)
+{
+    $inspecciones = inspecciones::with('solicitud')
+        ->find($id_inspeccion);
+    $numeroCliente = $inspecciones->solicitud->empresa->empresaNumClientes
+        ->pluck('numero_cliente')
+        ->filter() // elimina null, '', 0, false
+        ->first();
+
+    $inspecciones->url_acta = $inspecciones->solicitud->documentacion(69)->first()?->url;
+    $inspecciones->numero_cliente = $numeroCliente;
+
+    if ( in_array($inspecciones->solicitud->id_tipo, [5, 8]) ){//Inspeccion Envasado(5)/Liberación de producto terminado nacional(8)
+        $lote_envasados = lotes_envasado::with([
+            'lotesGranel.certificadoGranel',
+            'lotesGranel.clase',
+            'lotesGranel.categoria',
+            'Instalaciones.estados'
+        ])
+        ->where('id_lote_envasado', $inspecciones->solicitud->id_lote_envasado)
+        ->first();
+        //envasado
+        $nombre_envasado = $lote_envasados?->nombre ?? 'No encontrado';
+        $cont_neto = $lote_envasados->presentacion ?? 'No encontrado';
+        $unidad = $lote_envasados?->unidad ?: 'Sin asignar';
+        $envasado_en = $lote_envasados->Instalaciones->estados->nombre ?? 'Sin asignar';
+        //granel
+        $nombre_granel = $lote_envasados->lotesGranel->first()->nombre_lote ?? 'No encontrado';
+        $certificado = $lote_envasados->lotesGranel->first()?->certificadoGranel?->num_certificado
+            ?? $lote_envasados->lotesGranel->first()?->folio_certificado
+            ?? 'No encontrado';
+        $categoria = $lote_envasados->lotesGranel->first()->categoria->id_categoria ?? 'No encontrado';
+        $clase = $lote_envasados->lotesGranel->first()->clase->id_clase ?? 'No encontrado';
+        /*$tipos = $lote_envasados->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
+            return $tipo->nombre. ' (' .$tipo->cientifico. ')';
+            })?->implode(',') ?? 'No encontrado';*/
+        $tipos = collect($lote_envasados->lotesGranel->first()->tiposRelacionados ?? [])
+            ->pluck('id_tipo')->values()->all();
+        $fq = $lote_envasados->lotesGranel->first()?->folio_fq ?: 'Sin asignar';
+        $cont_alc = $lote_envasados->lotesGranel->first()->cont_alc ?? 'No encontrado';
+        $edad = $lote_envasados->lotesGranel->first()->edad ?: '';
+
+
+    }else if ($inspecciones->solicitud->id_tipo == 11){ //Pedidos para exportación(5), falta MUESTREO LOTE ENVASADO(6)
+        $lote_envasados = $inspecciones->solicitud->lotesEnvasadoDesdeJson();
+        //Cargar relaciones manualmente
+        $lote_envasados->load([
+            'lotesGranel.certificadoGranel',
+            'lotesGranel.clase',
+            'lotesGranel.categoria',
+            'Instalaciones.estados'
+        ]);
+        //envasado
+        $nombre_envasado = $lote_envasados->pluck('nombre')->implode(', ');
+        $cont_neto = $lote_envasados->first()->presentacion ?? 'No encontrado';
+        $unidad = $lote_envasados->first()->unidad ?: 'Sin asignar';
+        $envasado_en = $lote_envasados->first()->Instalaciones->estados->nombre ?? 'Sin asignar';
+        //granel
+        $lotes_granel = $lote_envasados?->flatMap(function ($lote) {
+            return $lote->lotesGranel; // Relación desde lote envasado
+        })->unique('id_lote_granel'); // Evita duplicados por ID
+        $nombre_granel = $lotes_granel?->pluck('nombre_lote')->filter()->implode(', ') ?: 'No encontrado';
+        $certificado = $lotes_granel->first()?->certificadoGranel?->num_certificado
+            ?? $lotes_granel->first()?->folio_certificado
+            ?? 'No encontrado';
+        $categoria = $lotes_granel->first()?->categoria?->id_categoria ?? 'No encontrado';
+        $clase = $lotes_granel->first()?->clase?->id_clase ?? 'No encontrado';
+        /*$tipos = $lotes_granel->first()?->tiposRelacionados?->map(function ($tipo) {
+            return $tipo->nombre . ' (' . $tipo->cientifico . ')';
+            })->implode(', ') ?: 'No encontrado';*/
+        $tipos = collect($lotes_granel->first()->tiposRelacionados ?? [])
+            ->pluck('id_tipo')->values()->all();
+        $fq = $lotes_granel->first()?->folio_fq ?: 'Sin asignar';
+        $cont_alc = $lotes_granel->first()?->cont_alc ?? 'No encontrado';
+        $edad = $lotes_granel->first()?->edad ?: '';
+    }
+    
+    return response()->json([
+        'inspecciones' => $inspecciones,
+        'lote_envasados' => $lote_envasados,
+        //envasado
+        'nombre_envasado' => $nombre_envasado,
+        'cont_neto' => $cont_neto,
+        'unidad' => $unidad,
+        'envasado_en' => $envasado_en,
+        //granel
+        'nombre_granel' => $nombre_granel,
+        'certificado' => $certificado,
+        'categoria' => $categoria,
+        'clase' => $clase,
+        'tipos' => $tipos,
+        'fq' => $fq,
+        'cont_alc' => $cont_alc,
+        'edad' => $edad
+    ]); // Retorna en formato JSON
+}
+
+
+
+
+
+
 
 }

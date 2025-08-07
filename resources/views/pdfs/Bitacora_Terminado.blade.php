@@ -177,10 +177,11 @@
                 <td>NÚM. CAJAS</td>
                 <td>NÚM. BOT</td>
             </tr>
+             @php use Carbon\Carbon; @endphp
             @foreach ($bitacoras as $bitacora)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $bitacora->fecha ?? '----' }}</td>
+                    <td>{{ $bitacora->fecha ? \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('d \d\e F \d\e Y') : '----'  }}</td>
                     <td>{{ $bitacora->cantidad_botellas_cajas ?? '' }}</td> {{-- botellas_por_caja --}}
                     <td>{{ $bitacora->marca->marca ?? '----' }}</td>
                     <td>{{ $bitacora->sku ?? '----' }}</td>

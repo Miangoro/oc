@@ -209,7 +209,12 @@ $(function () {
 
             // Retorna el badge con el texto y color apropiado
             return `<span class="badge rounded-pill bg-${$colorDictamen}">${$nombreDictamen}</span>
-                  <br><small>${full['direccion_completa']}
+                  <br><small>${full['direccion_completa']} <br>
+                  <b>Certificado:</b> ${full['certificado'] 
+                      ? `<a href="${full['certificado']}" class="text-primary" target="_blank">${full['num_certificado']}</a>`
+                      : `${full['num_certificado']}`
+                  }
+
                   ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''} </small>`;
           }
         },

@@ -68,7 +68,7 @@ class InspeccionesExport implements FromCollection, WithHeadings, WithEvents, Wi
             'fecha_visita',
             'id_instalacion',
             'id_predio',
-            'info_adicional',
+           /*  'info_adicional', */
             'caracteristicas'
         ]);
     }
@@ -78,9 +78,11 @@ class InspeccionesExport implements FromCollection, WithHeadings, WithEvents, Wi
      */
     public function headings(): array
     {
+       $fechaGeneracion = Carbon::now()->translatedFormat('d \d\e F \d\e Y');
         return [
             ['Reporte de Inspecciones'],
-            ['Folio', 'No. de Servicio', 'Empresa', 'Tipo de solicitud',  'Inspector','Estatus', 'Fecha de Solicitud', 'Fecha de Visita', 'Domicilio de Inspeccion o Predio', 'Información Adicional'],
+            ["Generado el $fechaGeneracion a través de la Plataforma OC CIDAM"],
+            ['Folio', 'No. de Servicio', 'Empresa', 'Tipo de solicitud',  'Inspector','Estatus', 'Fecha de Solicitud', 'Fecha de Visita', 'Domicilio de Inspeccion o Predio'],
         ];
     }
 
@@ -106,49 +108,61 @@ class InspeccionesExport implements FromCollection, WithHeadings, WithEvents, Wi
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet->getDelegate();
                 $sheet->getRowDimension(1)->setRowHeight(30); // Ajusta la altura de la fila 1
-                $sheet->mergeCells('A1:J1');
-                $sheet->getStyle('A1:J1')
+                $sheet->mergeCells('A1:I1');
+                $sheet->getStyle('A1:I1')
                     ->getFont()
                     ->setBold(true)
                     ->setSize(14)
-                    ->getColor()->setARGB('000000');
-                $sheet->getStyle('A1:J1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle('A1:J1')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-                $sheet->getStyle('A1:J1')
+                    ->getColor()->setARGB('FFFFFF');
+                $sheet->getStyle('A1:I1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $sheet->getStyle('A1:I1')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+                $sheet->getStyle('A1:I1')
                     ->getFill()
                     ->setFillType(Fill::FILL_SOLID)
-                    ->getStartColor()->setRGB('FFFFFF');
+                    ->getStartColor()->setRGB('003366');
+                // Fila 2: "Generado el ..."
+                $sheet->mergeCells('A2:I2');
+                $sheet->getStyle('A2:I2')
+                    ->getFont()
+                    ->setBold(true)
+                    ->getColor()->setARGB('000000'); //FONT NEGRA
+                $sheet->getStyle('A2:I2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $sheet->getStyle('A2:I2')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+                $sheet->getStyle('A2:I2')
+                    ->getFill()
+                    ->setFillType(Fill::FILL_SOLID)
+                    ->getStartColor()->setRGB('FFFFFF'); // blanco
 
-                $sheet->getStyle('A2:J2')
+                $sheet->getStyle('A3:I3')
                     ->getFont()
                     ->setBold(true)
                     ->getColor()->setARGB('000000');
-                $sheet->getStyle('A2:J2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle('A2:J2')
+                $sheet->getStyle('A3:I3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $sheet->getStyle('A3:I3')
                     ->getFill()
                     ->setFillType(Fill::FILL_SOLID)
                     ->getStartColor()->setRGB('8eaadc');
 
-                $sheet->getStyle('C2')->getFill()->setFillType(Fill::FILL_SOLID);
-                $sheet->getStyle('C2')->getFill()->getStartColor()->setARGB('ffc001'); // Cambia el color de fondo
-                $sheet->getStyle('C2')->getFont()->setBold(true); // Hacerlo en negrita
-                $sheet->getStyle('C2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $sheet->getStyle('C3')->getFill()->setFillType(Fill::FILL_SOLID);
+                $sheet->getStyle('C3')->getFill()->getStartColor()->setARGB('ffc001'); // Cambia el color de fondo
+                $sheet->getStyle('C3')->getFont()->setBold(true); // Hacerlo en negrita
+                $sheet->getStyle('C3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
                 // Establecer colores personalizados para el estatus
                 $lastRow = $event->sheet->getHighestRow();
                 $isOdd = true; // Variable para alternar colores de fila
 
-                for ($row = 3; $row <= $lastRow; $row++) {
+                for ($row = 4; $row <= $lastRow; $row++) {
                     $estatus = $sheet->getCell("F{$row}")->getValue(); // Suponiendo que el estatus está en la columna F
 
                     // Alternar colores de fondo de las filas
                     if ($isOdd) {
-                        $sheet->getStyle("A{$row}:J{$row}")
+                        $sheet->getStyle("A{$row}:I{$row}")
                             ->getFill()
                             ->setFillType(Fill::FILL_SOLID)
                             ->getStartColor()->setARGB('f2f2f2');
                     } else {
-                        $sheet->getStyle("A{$row}:J{$row}")
+                        $sheet->getStyle("A{$row}:I{$row}")
                             ->getFill()
                             ->setFillType(Fill::FILL_SOLID)
                             ->getStartColor()->setARGB('FFFFFF');
@@ -172,10 +186,10 @@ class InspeccionesExport implements FromCollection, WithHeadings, WithEvents, Wi
                     $isOdd = !$isOdd;
                 }
                 // Formato general para las celdas
-                foreach (range('A', 'J') as $column) {
+                foreach (range('A', 'I') as $column) {
                     $sheet->getColumnDimension($column)->setAutoSize(true);
                 }
-                $sheet->getStyle('A2:J'.($event->sheet->getHighestRow()))->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                $sheet->getStyle('A3:I'.($event->sheet->getHighestRow()))->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
             },
         ];
     }

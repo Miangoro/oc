@@ -38,7 +38,8 @@
                                     <option value="" disabled selected>Elige un numero de inspección</option>
                                     @foreach ($inspeccion as $insp)
                                         <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} |
-                                            {{ $insp->solicitud->folio }} | {{ $insp->solicitud->tipo_solicitud->tipo }}
+                                            {{ $insp->solicitud->folio }} | {{ $insp->solicitud->tipo_solicitud->tipo }} 
+                                            {{ ($insp->solicitud->id_tipo == 11 && $insp->solicitud->lotesEnvasadoDesdeJson()?->count() > 1) ? ' (combinado)' : '' }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -48,11 +49,11 @@
                         <div class="col-md-2">
                             <div id="contenedorActa"></div>
                         </div>
+
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="folio_activacion"
-                                    placeholder="Introduce el folio" name="folio_activacion"
-                                    aria-label="Nombre del lote" />
+                                    placeholder="Introduce el folio" name="folio_activacion"/>
                                 <label for="folio_activacion">Folio de activación:</label>
                             </div>
                         </div>
@@ -87,6 +88,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class=" form-select" id="clase" name="clase" aria-label="Clase">
+                                    <option value="" disabled selected>Elige una clase</option>
                                     @foreach ($clases as $clase)
                                         <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
                                     @endforeach
@@ -119,6 +121,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class=" form-select" id="unidad" name="unidad" aria-label="Unidad">
+                                    <option value="" disabled selected>Elige una unidad</option>
                                     <option value="L">Litros</option>
                                     <option value="mL">Mililitros</option>
                                     <option value="cL">Centilitros</option>
@@ -175,6 +178,8 @@
                         </div>
                     </div>
 
+
+                <!----------RANGOS HOLOGRAMAS---------->
                     <div class="text-center mb-6">
                         <h4 class="address-title mb-2">Activar</h4>
                         <p class="address-subtitle"></p>
@@ -250,39 +255,49 @@
     </div>
 </div>
 
+
 <script>
     function cargarInfoServicio() {
        
-         var id_inspeccion = $('#id_inspeccion').val();
+        var id_inspeccion = $('#id_inspeccion').val();
         if (id_inspeccion) {
             $.ajax({
                 url: '/getDatosInpeccion/' + id_inspeccion,
                 method: 'GET',
                 dataType: 'json', // Especificar que la respuesta es JSON
                 success: function(response) {
+                    console.log(response);
                     // Agregar el enlace dentro de un contenedor específico
-                    $('#contenedorActa').html(`
-            <a id="url_acta" target="_blank" href="/files/${response.numero_cliente}/actas/${response.url_acta[0]}">
-                <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-            </a>
-            `);
-                     $('#folio_activacion').val(response.num_servicio);
-                     $('#no_lote_agranel').val(response.solicitud.lote_envasado.lotes_granel[0].nombre_lote);
-                    $('#certificado_granel').val(response.solicitud.lote_envasado.lotes_granel[0].certificadoGranel?.num_certificado);
-                     $('#categoria').val(response.solicitud.lote_envasado.lotes_granel[0].id_categoria).trigger('change');
-                     $('#clase').val(response.solicitud.lote_envasado.lotes_granel[0].id_clase).trigger('change');
-                     $('#id_tipo').val(response.solicitud.lote_envasado.lotes_granel[0].tipo_lote).trigger('change');
-                    $('#cont_neto').val(response.solicitud.lote_envasado.presentacion);
-                    $('#unidad').val(response.solicitud.lote_envasado.unidad).trigger('change');
-                    $('#no_analisis').val(response.solicitud.lote_envasado.lotes_granel[0].folio_fq);
-                    $('#contenido').val(response.solicitud.lote_envasado.lotes_granel[0].cont_alc);
-                    $('#no_lote_envasado').val(response.solicitud.lote_envasado.nombre);
-                    $('#lugar_envasado').val(response.solicitud.instalacion?.direccion_completa);
-                    $('#edad').val(response.solicitud.lote_envasado.lotes_granel[0].edad);
+                    const inspeccion = response.inspecciones;
+                    if (inspeccion.url_acta) {
+                        $('#contenedorActa').html(`
+                            <a target="_blank" href="/files/${inspeccion.numero_cliente}/actas/${inspeccion.url_acta}">
+                                <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                            </a>
+                        `);
+                    } else {
+                        $('#contenedorActa').html(`<span class="text-muted">Sin acta</span>`);
+                    }
+                    //granel
+                    $('#folio_activacion').val(inspeccion.num_servicio);
+                    $('#no_lote_agranel').val(response.nombre_granel); // nombres separados por coma
+                    $('#certificado_granel').val(response.certificado);
+                    $('#categoria').val(response.categoria).trigger('change');
+                    $('#clase').val(response.clase).trigger('change');
+                    $('#id_tipo').val(response.tipos).trigger('change');
+                    $('#no_analisis').val(response.fq);
+                    $('#edad').val(response.edad);
+                    $('#contenido').val(response.cont_alc);
+                    //envasado
+                    $('#no_lote_envasado').val(response.nombre_envasado);
+                    $('#cont_neto').val(response.cont_neto);
+                    $('#unidad').val(response.unidad).trigger('change');
+                    $('#lugar_produccion').val(response.envasado_en);
+                    $('#lugar_envasado').val(response.envasado_en);
 
                 },
                 error: function(xhr) {
-                    console.error('Error al obtener marcas:', xhr);
+                    console.error('Error al obtener:', xhr);
                     $('#tabla_marcas tbody').html(
                     '<tr><td colspan="8">Error al cargar los datos</td></tr>');
                 }

@@ -184,8 +184,11 @@ $(function () {
                           : `${item.folio ?? ''}`
                       ).join(', ')
                     : 'Sin FQ registrado'
+                } <br>
+                <b>Certificado:</b> ${full['certificado'] 
+                    ? `<a href="${full['certificado']}" class="text-primary" target="_blank">${full['num_certificado']}</a>`
+                    : `${full['num_certificado']}`
                 }
-                
 
                 ${full['sustituye'] ? `<br><b>Sustituye:</b> ${full['sustituye']}` : ''}
               </div>`;

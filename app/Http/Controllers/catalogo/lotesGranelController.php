@@ -1016,24 +1016,34 @@ if ($request->has('documentos')) {
           ]);
           $lote->save();
 
-                $totalVolumenEntrada = 0;
+
                 $nombresLotesOrigen = [];
+                $totalVolumenEntrada = 0;
 
                 foreach ($nuevosLotes as $index => $idLoteOrigen) {
                     $volumenParcial = $nuevosVolumenes[$index];
                     $loteRelacionado = LotesGranel::find($idLoteOrigen);
 
-                    // Guarda la bitácora de salida
                     $this->registrarBitacoraSalida($loteRelacionado, $lote, $volumenParcial);
 
                     $totalVolumenEntrada += $volumenParcial;
                     $nombresLotesOrigen[] = $loteRelacionado->nombre_lote;
                 }
 
+                if (!empty($nombresLotesOrigen)) {
+                    $this->registrarBitacoraEntrada($lote, $nombresLotesOrigen, $totalVolumenEntrada);
+                }
 
       } // Una sola bitácora de entrada
-          $this->registrarBitacoraEntrada($lote, $nombresLotesOrigen, $totalVolumenEntrada);
-
+          if (!empty($nombresLotesOrigen)) {
+              // Caso: lote creado a partir de otros
+              $this->registrarBitacoraEntrada($lote, $nombresLotesOrigen);
+          } else {
+              // Caso: lote nuevo sin origen
+              $this->registrarBitacoraEntrada($lote, []);
+          }
+         /*  $this->registrarBitacoraEntrada($lote, $nombresLotesOrigen, $totalVolumenEntrada);
+ */
             // Almacenar las guías en la tabla intermedia usando el modelo LotesGranelGuia
             LotesGranelGuia::where('id_lote_granel', $id_lote_granel)->delete();
             if (isset($validated['id_guia'])) {
@@ -1095,8 +1105,9 @@ private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParc
     );
 }
 
-    private function registrarBitacoraEntrada($loteDestino, $lotesOrigenNombres, $volumenEntrada)
+    private function registrarBitacoraEntrada($loteDestino, $lotesOrigenNombres)
     {
+
      /*  dd($volumenEntrada); */
         BitacoraMezcal::updateOrCreate([
             'id_lote_granel' => $loteDestino->id_lote_granel,
@@ -1107,10 +1118,12 @@ private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParc
             'id_tanque' => $loteDestino->id_tanque ?? 0,
             'id_empresa' => $loteDestino->id_empresa,
             'id_instalacion' => auth()->user()->id_instalacion ?? 0,
-            'procedencia_entrada' => 'Creado apartir de: ' . implode(', ', $lotesOrigenNombres),
+            'procedencia_entrada' => !empty($lotesOrigenNombres)
+            ? 'Creado a partir de: ' . implode(', ', $lotesOrigenNombres)
+            : 'Nuevo Lote',
             'volumen_inicial' => 0,
             'alcohol_inicial' => 0,
-            'volumen_entrada' => $volumenEntrada,
+            'volumen_entrada' => $loteDestino->volumen,
             'alcohol_entrada' => $loteDestino->cont_alc,
             'agua_entrada' => $loteDestino->agua_entrada,
             'volumen_salidas' => 0,

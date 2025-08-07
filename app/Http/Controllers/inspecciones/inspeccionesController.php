@@ -924,8 +924,19 @@ public function asignarInspector(Request $request)
     public function etiqueta($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
+        //descodificar el json
+        $lotesOriginales = [];
+            if (!empty($datos->solicitud->lote_granel->lote_original_id)) {
+                $json = json_decode($datos->solicitud->lote_granel->lote_original_id, true);
 
-        $pdf = Pdf::loadView('pdfs.Etiquetas_tapas_sellado',  ['datos' => $datos]);
+                if (isset($json['lotes']) && is_array($json['lotes'])) {
+                    $lotesOriginales = LotesGranel::whereIn('id_lote_granel', $json['lotes'])
+                        ->pluck('nombre_lote')
+                        ->toArray();
+                }
+          }
+
+        $pdf = Pdf::loadView('pdfs.Etiquetas_tapas_sellado',  ['datos' => $datos, 'lotes_procedencia' => $lotesOriginales,]);
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
 
@@ -933,10 +944,10 @@ public function asignarInspector(Request $request)
     {
         $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes', 'id_soli']);
         // Pasar los filtros a la clase InspeccionesExport
-        return Excel::download(new InspeccionesExport($filtros), 'reporte_inspecciones.xlsx');
+         $fechaHora = now()->format('d-m-Y H-i');
+         $nombreArchivo = "Reporte de Inspecciones {$fechaHora}.xlsx";
+        return Excel::download(new InspeccionesExport($filtros), $nombreArchivo);
     }
-
-
 
 //FUNCION ELIMINAR DOCUMENTOS 69 Y 70
 public function eliminarActa($id_solicitud, $id_documento, $id)
