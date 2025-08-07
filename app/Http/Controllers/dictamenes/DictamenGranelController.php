@@ -223,13 +223,13 @@ public function index(Request $request)
             $loteGranel = LotesGranel::find($idLote);
             $nestedData['nombre_lote'] = $loteGranel?->nombre_lote ?? 'No encontrado';
             //certificado
-            $nestedData['num_certificado'] = $loteGranel?->certificadoGranel->num_certificado
+            $nestedData['num_certificado'] = $dictamen->certificado?->num_certificado
                 ?? $loteGranel?->folio_certificado
                 ?? 'Sin certificado';
             $documento = null;
-            if ($loteGranel && $loteGranel->certificadoGranel) {
-                $documento = Documentacion_url::where('id_relacion', $loteGranel->id_lote_granel)
-                    ->where('id_doc', $loteGranel->certificadoGranel->id_certificado)
+            if ($loteGranel && $dictamen->certificado) {
+                $documento = Documentacion_url::where('id_relacion', $dictamen->certificado->id_lote_granel)
+                    ->where('id_doc', $dictamen->certificado->id_certificado)
                     ->where('id_documento', 59)
                     ->first();
             } elseif ($loteGranel) {

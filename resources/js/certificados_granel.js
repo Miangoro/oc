@@ -528,6 +528,12 @@ $(document).ready(function () {
   $(document).on('click', '[data-bs-target="#exportarExcelCertificados"]', function () {
     exportarModo = $(this).data('export');
     console.log('Modo granel:', exportarModo);
+
+    const tituloModal = exportarModo === 'certificadoGranel'
+    ? 'Exportar Directorio de Certificados'
+    : 'Exportar Reporte de Certificados';
+
+    $('#modalexportarExcel').text(tituloModal);
   });
 
   // Botón "Generar"

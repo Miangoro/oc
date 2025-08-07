@@ -245,6 +245,7 @@ public function index(Request $request)
                 } elseif ($instalacion) {
                     $documento = Documentacion_url::where('id_relacion', $dictamen->id_instalacion)
                         ->where('id_documento', $id_documento)
+                        ->whereNull('id_doc')
                         ->first();
                 }
 

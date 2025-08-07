@@ -38,7 +38,7 @@ class hologramasActivar extends Controller
         $tipos = tipos::all();
         $clases = clases::all();
 
-        $ModelsSolicitudHolograma = ModelsSolicitudHolograma::all();
+        $ModelsSolicitudHolograma = ModelsSolicitudHolograma::orderBy('id_solicitud', 'desc')->get();
         $userCount = $ModelsSolicitudHolograma->count();
         $verified = 5;
         $notVerified = 10;
@@ -145,6 +145,10 @@ class hologramasActivar extends Controller
                 }
                 $mensaje = implode('<br>', $rangoFolios);
 
+                $empresa2 = $dato->inspeccion->solicitud->empresa ?? null;
+                $numero_cliente2 = ($empresa2 && $empresa2->empresaNumClientes->isNotEmpty())
+                    ? optional($empresa2->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa2->id && !empty($item->numero_cliente)))->numero_cliente ?? 'No encontrado'
+                    : 'N/A';
                 $acta = $dato->inspeccion->solicitud->documentacion(69)->first()?->url ?? null;
 
                 $nestedData = [
@@ -154,7 +158,7 @@ class hologramasActivar extends Controller
                     'folio_solicitud' => $dato->solicitudHolograma->folio,
                     //num_sercivio (acta)
                     'num_servicio' => $dato->inspeccion->num_servicio,
-                    'url'=>asset("files/{$numero_cliente}/actas/{$acta}"),
+                    'url'=>asset("files/{$numero_cliente2}/actas/{$acta}"),
                     'marca' => $marca,
                     'lote_granel' => $dato->no_lote_agranel,
                     'lote_envasado' => $dato->no_lote_envasado,

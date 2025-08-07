@@ -586,7 +586,6 @@ $(function () {
             'data-bs-target': '#exportarExcelCertificados',
             'data-export': 'certificados',
           }
-
         },
         {//EXPORTAR DIRECTORIO
           text: '<i class="ri-download-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar directorio</span>',
@@ -597,31 +596,6 @@ $(function () {
             'data-bs-target': '#exportarExcelCertificados',
             'data-export': 'directorio',
           }
-          /*action: function (e, dt, node, config) {
-            const selectedEmpresa = $('#empresaSelect').val();
-            const selectedAnio = $('#anioSelect').val();
-            const selectedMes = $('#mesSelect').val();
-            const selectedEstatus = $('#estatusSelect').val();
-
-            const params = new URLSearchParams({
-              id_empresa: selectedEmpresa,
-              anio: selectedAnio,
-              mes: selectedMes,
-              estatus: selectedEstatus
-            }).toString();
-
-            Swal.fire({
-              title: 'Exportando...',
-              text: 'Se está preparando el archivo para descargar.',
-              icon: 'info',
-              timer: 1800,
-              showConfirmButton: false,
-              timerProgressBar: true
-            });
-
-            window.location.href = '/descargar_reporte_directorio?' + params;
-          }*/
-
         }, buttons2, buttons,
             /*{//FIRMAR DOCUSIGN
               text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Firmar Docusign</span>',
@@ -757,6 +731,12 @@ $(document).ready(function () {
   $(document).on('click', '[data-bs-target="#exportarExcelCertificados"]', function () {
     exportarModo = $(this).data('export') || 'certificados';
     console.log('Modo de exportación:', exportarModo);
+
+    const tituloModal = exportarModo === 'directorio'
+    ? 'Exportar Directorio de Certificados'
+    : 'Exportar Reporte de Certificados';
+
+    $('#modalexportarExcel').text(tituloModal);
   });
 
   // Botón "Generar"

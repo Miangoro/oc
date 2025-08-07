@@ -509,6 +509,12 @@ $(document).ready(function () {
   $(document).on('click', '[data-bs-target="#exportarExcelCertificados"]', function () {
     exportarModo = $(this).data('export');
     console.log('Modo instalacion:', exportarModo);
+
+    const tituloModal = exportarModo === 'certificadoInsta'
+    ? 'Exportar Directorio de Certificados'
+    : 'Exportar Reporte de Certificados';
+
+    $('#modalexportarExcel').text(tituloModal);
   });
 
   // Botón "Generar"
