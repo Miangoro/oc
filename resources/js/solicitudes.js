@@ -5199,7 +5199,7 @@ $(document).ready(function () {
 
         Swal.fire({
           title: '¡Éxito!',
-          text: `El archivo "${filename}" fue generado exitosamente.`,
+          text: `El reporte se generó exitosamente.`,
           icon: 'success',
           customClass: {
             confirmButton: 'btn btn-success'

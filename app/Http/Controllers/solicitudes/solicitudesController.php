@@ -2354,8 +2354,8 @@ $loteGranelIds = DB::table('lotes_granel')
     {
         $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes', 'id_soli']);
         // Pasar los filtros a la clase SolicitudesExport
-         $fechaHora = now()->format('d-m-Y_H-i');
-         $nombreArchivo = "Reporte_de_solicitudes_{$fechaHora}.xlsx";
+         $fechaHora = now()->format('d-m-Y H-i');
+         $nombreArchivo = "Reporte de Solicitudes {$fechaHora}.xlsx";
         return Excel::download(new SolicitudesExport($filtros),  $nombreArchivo);
     }
 
