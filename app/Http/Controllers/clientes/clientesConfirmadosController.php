@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\catalogo_actividad_cliente;
 use App\Models\empresa_actividad;
 use App\Models\maquiladores_model;
+use App\Models\preguntasRequisitosModel;
 use App\Models\RequisitoEvaluar;
 use App\Notifications\GeneralNotification;
 use Illuminate\Support\Str;
@@ -682,6 +683,37 @@ public function mostrarRequisitosEvaluar($id)
     //nombre al descarga
     return $pdf->stream('F7.1-01-09 Requisitos a evaluar NOM-070-SCFI-2016 Ed7.pdf');
 }
+
+
+    public function add_revision_requisitos($id_cliente)
+    {
+        $datos = RequisitoEvaluar::where("id_cliente", $id_cliente)->first();
+        //$preguntas = preguntasRequisitosModel::with('actividad')->get();
+
+        
+
+    $actividadesEmpresa = DB::table('empresa_actividad_cliente')
+    ->where('id_empresa', $id_cliente)
+    ->pluck('id_actividad');
+
+    $cliente = empresa::with('empresaNumClientes', 'contacto')->find($id_cliente);
+
+$preguntas = preguntasRequisitosModel::with('actividad')
+    ->whereIn('tipo', $actividadesEmpresa)
+    ->get();
+       
+   
+
+       /* if (!empty($datos->certificado?->id_lote_granel)) {
+            $doc = Documentacion_url::where('id_documento', 59)
+                ->where('id_relacion', $datos->certificado->id_lote_granel)
+                ->first();
+
+            $certificadoEscaneado = $doc?->url ?? '';
+        }*/
+
+        return view('clientes.add_revision_requisitos', compact('datos', 'preguntas', 'cliente'));
+    }
 
 
 

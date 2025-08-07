@@ -158,6 +158,9 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
           let acciones = '';
+               if (window.puedeEditarUsuario) {
+              acciones += `<a data-id="${full['id']}"  href="/add_revision_requisitos/${full['id_empresa']}" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Requisitos a evaluar</a>`;
+            }
             if (window.puedeEditarUsuario) {
               acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editCliente"   onclick="abrirModal(${full['id_empresa']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-edit-fill"></i>Editar Cliente</a>`;
             }
