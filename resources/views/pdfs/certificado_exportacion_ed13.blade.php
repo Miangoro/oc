@@ -321,9 +321,6 @@
     }
 
     $empresa_hol = $solic->empresa ?? null;
-    /*$num_clien_hol = $empresa_hol && $empresa_hol->empresaNumClientes->isNotEmpty()
-        ? $empresa_hol->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa_hol,
-        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';*/
     $num_clien_hol = 'N/A';
     if ($empresa_hol && $empresa_hol->empresaNumClientes->isNotEmpty()) {
         $cliente = $empresa_hol->empresaNumClientes->first(function ($item) use ($empresa_hol) {
