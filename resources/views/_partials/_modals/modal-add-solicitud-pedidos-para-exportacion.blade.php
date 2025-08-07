@@ -195,7 +195,7 @@
                                     </span>
 
 
-                                    <div class="p-2">
+                                    <div class="p-2 table-responsive">
                                         <table id="tablaLotes" class="table table-bordered table-sm mb-2"
                                             style="width: 100%; border-collapse: collapse;">
                                             <thead>
