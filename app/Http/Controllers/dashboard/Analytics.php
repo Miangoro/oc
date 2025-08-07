@@ -114,7 +114,7 @@ $usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
     //$certificadosPorVencer = $certificadosInstalacion
     //  ->merge($certificadosGranel)
     //  ->merge($certificadosExportacion);
-$certificadosPorVencer = $certificadosInstalacion;
+    $certificadosPorVencer = $certificadosInstalacion;
 
     $dictamenesInstalacionesSinCertificado = Dictamen_instalaciones::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
     $dictamenesGranelesSinCertificado = Dictamen_Granel::whereDoesntHave('certificado')->where('fecha_emision','>','2024-12-31')->get();
@@ -143,14 +143,14 @@ $TotalCertificadosExportacionPorMes = Certificado_Exportacion::with('dictamen.in
     })
     ->map(function ($group) {
         return (object) [
-            'mes' => $group->first()->dictamen->inspeccione->solicitud->fecha_visita 
-                        ? \Carbon\Carbon::parse($group->first()->dictamen->inspeccione->solicitud->fecha_visita)->format('Y-m') 
+            'mes' => $group->first()->dictamen->inspeccione->solicitud->fecha_visita
+                        ? \Carbon\Carbon::parse($group->first()->dictamen->inspeccione->solicitud->fecha_visita)->format('Y-m')
                         : null,
             'total' => $group->count(),
             'certificado_reexpedido' => $group->where('certificado_reexpedido', true)->count() > 0,
         ];
     })
-    ->sortBy(function ($item) { 
+    ->sortBy(function ($item) {
         return \Carbon\Carbon::createFromFormat('Y-m', $item->mes); // 🔑 Ordena como fecha real
     })
     ->values();
