@@ -158,12 +158,19 @@
 
                     </div>
 
-
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button disabled class="btn btn-primary me-1 d-none" type="button"
+                            id="btnSpinner">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Registrando...
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnAdd"><i
+                                class="ri-add-line me-1"></i>
+                            Registrar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
+                            aria-label="Close"><i class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
+
                 </form>
             </div>
         </div>

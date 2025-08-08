@@ -774,7 +774,6 @@ $(function () {
     });
   });
 
-
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -785,7 +784,6 @@ $(function () {
     const addNewCliente = document.getElementById('addNewCliente');
     const fv2 = FormValidation.formValidation(addNewCliente, {
       fields: {
-
         id_contacto: {
           validators: {
             notEmpty: {
@@ -919,12 +917,16 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
+      $('#btnAdd').addClass('d-none');
+      $('#btnSpinner').removeClass('d-none');
       $.ajax({
         data: $('#addNewCliente').serialize(),
         url: `${baseUrl}aceptar-cliente`,
         type: 'POST',
         success: function (status) {
           dt_user.draw();
+          $('#btnSpinner').addClass('d-none');
+          $('#btnAdd').removeClass('d-none');
           $('#aceptarCliente').modal('hide');
           Swal.fire({
             icon: 'success',
@@ -932,6 +934,35 @@ $(function () {
             text: `Solicitud ${status} Exitosamente.`,
             customClass: { confirmButton: 'btn btn-success' }
           });
+        },
+        error: function (xhr) {
+          $('#btnSpinner').addClass('d-none');
+          $('#btnAdd').removeClass('d-none');
+
+          if (xhr.status === 422) {
+            // Errores de validación de Laravel
+            const errors = xhr.responseJSON.errors;
+            let errorMessages = '';
+            for (const key in errors) {
+              if (errors.hasOwnProperty(key)) {
+                errorMessages += errors[key].join('<br>') + '<br>';
+              }
+            }
+            Swal.fire({
+              icon: 'error',
+              title: 'Errores de validación',
+              html: errorMessages,
+              customClass: { confirmButton: 'btn btn-danger' }
+            });
+          } else {
+            // Otro tipo de error
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Ocurrió un error al procesar la solicitud.',
+              customClass: { confirmButton: 'btn btn-danger' }
+            });
+          }
         }
       });
     });
@@ -962,7 +993,7 @@ $(function () {
           'Información para el contrato <span class="badge rounded-pill bg-label-info">Persona física</span>'
         );
       }
-    /*   fv2.revalidateField('fecha_cedula');
+      /*   fv2.revalidateField('fecha_cedula');
       fv2.revalidateField('idcif');
       fv2.revalidateField('clave_ine');
       fv2.revalidateField('sociedad_mercantil');
@@ -982,7 +1013,6 @@ $(function () {
       actualizarSeccionRegimen('Persona física');
     });
   });
-
 
   const phoneMaskList = document.querySelectorAll('.phone-mask');
 
