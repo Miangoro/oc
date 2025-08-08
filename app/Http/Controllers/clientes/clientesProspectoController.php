@@ -39,38 +39,97 @@ class clientesProspectoController extends Controller
   }
 
 
-  public function aceptarCliente(Request $request) {
+/*   public function aceptarCliente(Request $request) {
 
-    for ($i=0; $i < count($request->numero_cliente); $i++) {
-      $cliente = new empresaNumCliente();
-      $cliente->id_empresa = $request->id_empresa;
-      $cliente->numero_cliente = $request->numero_cliente[$i];
-      $cliente->id_norma = $request->id_norma[$i];
-      $cliente->save();
-    }
+      for ($i = 0; $i < count($request->numero_cliente); $i++) {
+          $cliente = empresaNumCliente::where('id_empresa', $request->id_empresa)
+              ->where('id_norma', $request->id_norma[$i])
+              ->first();
 
-    $contrato = new empresaContrato();
-    $contrato->id_empresa = $request->id_empresa;
-    $contrato->fecha_cedula = $request->fecha_cedula;
-    $contrato->idcif = $request->idcif;
-    $contrato->clave_ine = $request->clave_ine;
-    $contrato->sociedad_mercantil = $request->sociedad_mercantil;
-    $contrato->num_instrumento = $request->	num_instrumento;
-    $contrato->vol_instrumento = $request->vol_instrumento;
-    $contrato->fecha_instrumento = $request->fecha_instrumento;
-    $contrato->num_notario = $request->num_notario;
-    $contrato->num_permiso = $request->num_permiso;
-    $contrato->nombre_notario = $request->nombre_notario;
-    $contrato->estado_notario = $request->estado_notario;
-    $contrato->save();
+          if ($cliente) {
+              // Actualiza
+              $cliente->numero_cliente = $request->numero_cliente[$i];
+              $cliente->save();
+          } else {
+              // Crea nuevo
+              $nuevo = new empresaNumCliente();
+              $nuevo->id_empresa = $request->id_empresa;
+              $nuevo->id_norma = $request->id_norma[$i];
+              $nuevo->numero_cliente = $request->numero_cliente[$i];
+              $nuevo->save();
+          }
+      }
 
-    $empresa = empresa::find($request->id_empresa);
-    $empresa->tipo = 2;
-    $empresa->id_contacto = $request->id_contacto;
-    $empresa->update();
+        $contrato = new empresaContrato();
+        $contrato->id_empresa = $request->id_empresa;
+        $contrato->fecha_cedula = $request->fecha_cedula;
+        $contrato->idcif = $request->idcif;
+        $contrato->clave_ine = $request->clave_ine;
+        $contrato->sociedad_mercantil = $request->sociedad_mercantil;
+        $contrato->num_instrumento = $request->	num_instrumento;
+        $contrato->vol_instrumento = $request->vol_instrumento;
+        $contrato->fecha_instrumento = $request->fecha_instrumento;
+        $contrato->num_notario = $request->num_notario;
+        $contrato->num_permiso = $request->num_permiso;
+        $contrato->nombre_notario = $request->nombre_notario;
+        $contrato->estado_notario = $request->estado_notario;
+        $contrato->save();
 
-  return response()->json('Validada');
+        $empresa = empresa::find($request->id_empresa);
+        $empresa->tipo = 2;
+        $empresa->id_contacto = $request->id_contacto;
+        $empresa->update();
+
+      return response()->json('Validada');
   }
+ */
+
+public function aceptarCliente(Request $request) {
+    DB::transaction(function() use ($request) {
+        for ($i = 0; $i < count($request->numero_cliente); $i++) {
+            $cliente = empresaNumCliente::where('id_empresa', $request->id_empresa)
+                ->where('id_norma', $request->id_norma[$i])
+                ->first();
+
+            if ($cliente) {
+                // Actualiza
+                $cliente->numero_cliente = $request->numero_cliente[$i];
+                $cliente->save();
+            } else {
+                // Crea nuevo
+                empresaNumCliente::create([
+                    'id_empresa' => $request->id_empresa,
+                    'id_norma' => $request->id_norma[$i],
+                    'numero_cliente' => $request->numero_cliente[$i],
+                ]);
+            }
+        }
+
+        empresaContrato::updateOrCreate(
+            ['id_empresa' => $request->id_empresa],
+            [
+                'fecha_cedula' => $request->fecha_cedula,
+                'idcif' => $request->idcif,
+                'clave_ine' => $request->clave_ine,
+                'sociedad_mercantil' => $request->sociedad_mercantil,
+                'num_instrumento' => $request->num_instrumento,
+                'vol_instrumento' => $request->vol_instrumento,
+                'fecha_instrumento' => $request->fecha_instrumento,
+                'num_notario' => $request->num_notario,
+                'num_permiso' => $request->num_permiso,
+                'nombre_notario' => $request->nombre_notario,
+                'estado_notario' => $request->estado_notario,
+            ]
+        );
+
+        $empresa = empresa::find($request->id_empresa);
+        $empresa->tipo = 2;
+        $empresa->id_contacto = $request->id_contacto;
+        $empresa->save();
+    });
+
+    return response()->json('Validada');
+}
 
 
   public function info($id) {

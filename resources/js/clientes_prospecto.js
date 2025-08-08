@@ -6,10 +6,8 @@
 
 // Datatable (jquery)
 $(function () {
-
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
-
     userView = baseUrl + 'app/user/view/account',
     offCanvasForm = $('#offcanvasValidarSolicitud');
 
@@ -74,7 +72,6 @@ $(function () {
               '<div class="d-flex justify-content-start align-items-center user-name">' +
               '<div class="avatar-wrapper">' +
               '<div class="avatar avatar-sm me-3">' +
-
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
@@ -97,7 +94,6 @@ $(function () {
           }
         },
 
-
         {
           // email verify
           targets: 4,
@@ -109,13 +105,14 @@ $(function () {
             } else {
               var $colorRegimen = 'warning';
             }
-            return `${$verified
-              ? '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-              : '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-              }`;
+            return `${
+              $verified
+                ? '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                : '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+            }`;
           }
         },
-       {
+        {
           targets: 5,
           searchable: false,
           orderable: false,
@@ -125,9 +122,11 @@ $(function () {
               return '<span class="text-muted">N/A</span>';
             }
 
-            return normas.map(function(norma) {
-              return '<div class="badge bg-secondary me-1">' + norma.norma + '</div>';
-            }).join('');
+            return normas
+              .map(function (norma) {
+                return '<div class="badge bg-secondary me-1">' + norma.norma + '</div>';
+              })
+              .join('');
           }
         },
         {
@@ -136,19 +135,28 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-              var idEmpresa = full['id_empresa'];
-              var normas = full['normas'] || []; // Accediendo al array de normas
-              if (normas.length === 0) {
-                  return '<i class="ri-file-damage-fill ri-40px icon-no-pdf"></i>';
-              }
-              var tieneNorma4 = normas.some(norma => norma.id_norma == 4);
-              if (tieneNorma4) {
-                  return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${idEmpresa}" data-registro="${full['razon_social']}"></i>`;
-              } else {
-                  return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${idEmpresa}" data-registro="${full['razon_social']}"></i>`;
-              }
+            var idEmpresa = full['id_empresa'];
+            var normas = full['normas'] || [];
+            if (normas.length === 0) {
+              return '<i class="ri-file-damage-fill ri-40px icon-no-pdf"></i>';
+            }
+
+            // Usar id si está disponible
+            //var tieneNorma4 = normas.some(n => n.id_norma == 4);
+
+            // O comparar por nombre si no hay id
+            var tieneNorma4 = normas.some(n => n.norma === 'NOM-199-SCFI-2017');
+
+            var clase = tieneNorma4 ? 'pdf2' : 'pdf';
+
+            return `<i class="ri-file-pdf-2-fill text-danger ri-40px ${clase} cursor-pointer"
+                     data-bs-target="#mostrarPdf"
+                     data-bs-toggle="modal"
+                     data-bs-dismiss="modal"
+                     data-id="${idEmpresa}"
+                     data-registro="${full['razon_social']}"></i>`;
           }
-      },
+        },
         {
           // Actions
           targets: -1,
@@ -163,7 +171,7 @@ $(function () {
               <a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud">
                 <i class="text-info ri-search-eye-line"></i> Validar solicitud
               </a>
-              <a data-id="${full['id_empresa']}" data-bs-toggle="modal" data-bs-dismiss="modal" onclick="abrirModal(${full['id_empresa']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2">
+              <a data-id="${full['id_empresa']}" data-regimen="${full['regimen']}"  data-bs-toggle="modal" data-bs-dismiss="modal" onclick="abrirModal(${full['id_empresa']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2">
                 <i class="text-success ri-checkbox-circle-fill"></i> Aceptar cliente
               </a>
             `;
@@ -187,7 +195,6 @@ $(function () {
               </div>
             `;
           }
-
         }
       ],
       order: [[2, 'desc']],
@@ -206,11 +213,12 @@ $(function () {
         search: '',
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
+        emptyTable: 'No hay datos disponibles en la tabla',
         paginate: {
-          "sFirst": "Primero",
-          "sLast": "Último",
-          "sNext": "Siguiente",
-          "sPrevious": "Anterior"
+          sFirst: 'Primero',
+          sLast: 'Último',
+          sNext: 'Siguiente',
+          sPrevious: 'Anterior'
         }
       },
       // Buttons with Dropdown
@@ -375,33 +383,27 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                col.rowIndex +
-                '" data-dt-column="' +
-                col.columnIndex +
-                '">' +
-                '<td>' +
-                col.title +
-                ':' +
-                '</td> ' +
-                '<td>' +
-                col.data +
-                '</td>' +
-                '</tr>'
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
                 : '';
             }).join('');
 
             return data ? $('<table class="table"/><tbody />').append(data) : false;
           }
         }
-
       }
-
     });
-
-
   }
-
-
 
   // Delete Record
   $(document).on('click', '.delete-record', function () {
@@ -416,7 +418,7 @@ $(function () {
     // sweetalert for confirmation of delete
     Swal.fire({
       title: '¿Está seguro?',
-      text: "No podrá revertir este evento",
+      text: 'No podrá revertir este evento',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Si, eliminar',
@@ -461,8 +463,6 @@ $(function () {
     });
   });
 
-
-
   $(document).on('click', '.pdf', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
@@ -472,10 +472,12 @@ $(function () {
     iframe.hide();
 
     iframe.attr('src', '../solicitudinfo_cliente/' + id);
+    var url = '../solicitudinfo_cliente/' + id;
 
+    $('#NewPestana').attr('href', url);
 
-    $("#titulo_modal").text("Solicitud de información del cliente");
-    $("#subtitulo_modal").text(registro);
+    $('#titulo_modal').text('Solicitud de información del cliente');
+    $('#subtitulo_modal').text(registro);
     $('#mostrarPdf').modal('show');
   });
 
@@ -484,8 +486,6 @@ $(function () {
     $('#cargando').hide(); // Ocultar el spinner
     $(this).show(); // Mostrar el iframe con el PDF
   });
-
-
 
   $(document).on('click', '.pdf2', function () {
     var id = $(this).data('id');
@@ -496,9 +496,12 @@ $(function () {
     iframe.hide();
 
     iframe.attr('src', '../solicitudInfoClienteNOM-199/' + id);
+    var url = '../solicitudInfoClienteNOM-199/' + id;
 
-    $("#titulo_modal").text("Solicitud de información del cliente");
-    $("#subtitulo_modal").text(registro);
+    $('#NewPestana').attr('href', url);
+
+    $('#titulo_modal').text('Solicitud de información del cliente');
+    $('#subtitulo_modal').text(registro);
     $('#mostrarPdf').modal('show');
   });
 
@@ -507,9 +510,6 @@ $(function () {
     $('#cargando').hide(); // Ocultar el spinner
     $(this).show(); // Mostrar el iframe con el PDF
   });
-
-
-
 
   $(function () {
     // Configuración CSRF para Laravel
@@ -523,21 +523,21 @@ $(function () {
     const form = document.getElementById('editClienteForm');
     const fv = FormValidation.formValidation(form, {
       fields: {
-        'nombre_cliente': {
+        nombre_cliente: {
           validators: {
             notEmpty: {
               message: 'Por favor selecciona el nombre del cliente.'
             }
           }
         },
-        'regimen': {
+        regimen: {
           validators: {
             notEmpty: {
               message: 'Por favor selecciona el régimen del cliente.'
             }
           }
         },
-        'domicilio_fiscal': {
+        domicilio_fiscal: {
           validators: {
             notEmpty: {
               message: 'Por favor selecciona el domicilio fiscal.'
@@ -584,9 +584,11 @@ $(function () {
         error: function (xhr) {
           if (xhr.status === 422) {
             var errors = xhr.responseJSON.errors;
-            var errorMessages = Object.keys(errors).map(function (key) {
-              return errors[key].join('<br>');
-            }).join('<br>');
+            var errorMessages = Object.keys(errors)
+              .map(function (key) {
+                return errors[key].join('<br>');
+              })
+              .join('<br>');
 
             Swal.fire({
               icon: 'error',
@@ -610,10 +612,9 @@ $(function () {
       });
     });
 
-
     $(document).on('click', '.edit-record', function () {
       var id = $(this).data('id');
-      $("#edit_id_cliente").val(id);
+      $('#edit_id_cliente').val(id);
       $.ajax({
         url: '/clientes-list/' + id + '/edit',
         method: 'GET',
@@ -646,16 +647,7 @@ $(function () {
         }
       });
     });
-
-
   });
-
-
-
-
-
-
-
 
   // Validar solicitud
   $(document).on('click', '.validar-solicitud', function () {
@@ -666,19 +658,37 @@ $(function () {
     if (dtrModal.length) {
       dtrModal.modal('hide');
     }
-
     // changing the title of offcanvas
     //  $('#offcanvasAddUserLabel').html('Edit User');
-
     $('#empresa_id').val(id_empresa);
   });
 
   // aceptar cliente
+  /*   $(document).on('click', '.validar-solicitud2', function () {
+    var id_empresa = $(this).data('id');
+    $('#empresaID').val(id_empresa);
+  }); */
   $(document).on('click', '.validar-solicitud2', function () {
     var id_empresa = $(this).data('id');
-
+    var regimen = $(this).data('regimen');
 
     $('#empresaID').val(id_empresa);
+    $('#regimenTipo').val(regimen);
+    $('.info-contrat').html('');
+    // Mostrar bloque según el régimen
+    if (regimen === 'Persona moral') {
+      $('.persona_moral').removeClass('d-none');
+      $('.persona_fisica').addClass('d-none');
+      $('.info-contrat').html(
+        'Información para el contrato <span class="badge rounded-pill bg-label-warning">Persona moral</span>'
+      );
+    } else if (regimen === 'Persona física') {
+      $('.info-contrat').html(
+        'Información para el contrato <span class="badge rounded-pill bg-label-info">Persona física</span>'
+      );
+      $('.persona_fisica').removeClass('d-none');
+      $('.persona_moral').addClass('d-none');
+    }
   });
 
   // changing the title
@@ -699,13 +709,15 @@ $(function () {
             message: 'Por favor selecciona una opción.'
           }
         }
-      }, competencia: {
+      },
+      competencia: {
         validators: {
           notEmpty: {
             message: 'Por favor selecciona una opción.'
           }
         }
-      }, capacidad: {
+      },
+      capacidad: {
         validators: {
           notEmpty: {
             message: 'Por favor selecciona una opción.'
@@ -749,7 +761,6 @@ $(function () {
         });
       },
       error: function (err) {
-
         offCanvasForm.offcanvas('hide');
         Swal.fire({
           title: 'Duplicate Entry!',
@@ -764,102 +775,214 @@ $(function () {
   });
 
 
-
-  // validating form and updating user's data
-  const addNewCliente = document.getElementById('addNewCliente');
-
-  // Validación del formulario de aceptar cliente
-  const fv2 = FormValidation.formValidation(addNewCliente, {
-    fields: {
-      'numero_cliente[]': {
-        validators: {
-          notEmpty: {
-            message: 'Por favor introduzca el número de cliente.'
-          }
-        }
-      }, fecha_cedula: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor introduzca la fecha de cédula de identificación fiscal.'
-          }
-        }
-      }, idcif: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor introduzca el idCIF del Servicio deAdministración Tributaria.'
-          }
-        }
-      },
-     /*  sociedad_mercantil: {
-        validators: {
-          notEmpty: {
-
-          }
-        }
-      }, */
-     /*  num_instrumento: {
-        validators: {
-          notEmpty: {
-
-          }
-        }
-      } */
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        // Use this for enabling/changing valid/invalid class
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          // field is the field name & ele is the field element
-          return '.col-sm-12';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      // Submit the form when all fields are valid
-      // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    // adding or updating user when form successfully validate
-    $.ajax({
-      data: $('#addNewCliente').serialize(),
-      url: `${baseUrl}aceptar-cliente`,
-      type: 'POST',
-      success: function (status) {
-        dt_user.draw();
-        offCanvasForm.modal('hide');
-        $('#aceptarCliente').modal('hide');
-        // sweetalert
-        Swal.fire({
-          icon: 'success',
-          title: `${status} Exitosamente`,
-          text: `Solicitud ${status} Exitosamente.`,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function (err) {
-
-        offCanvasForm.modal('hide');
-        $('#aceptarCliente').modal('hide');
-        Swal.fire({
-          title: 'Duplicate Entry!',
-          text: 'Your email should be unique.',
-          icon: 'error',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
+    });
+    const addNewCliente = document.getElementById('addNewCliente');
+    const fv2 = FormValidation.formValidation(addNewCliente, {
+      fields: {
+
+        id_contacto: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una opción'
+            }
+          }
+        },
+        // Persona física
+        fecha_cedula: {
+          validators: {
+            callback: {
+              message: 'Por favor selecciona la fecha de cédula.',
+              callback: function (input) {
+                return $('#regimenTipo').val() === 'Persona física' ? input.value.trim() !== '' : true;
+              }
+            }
+          }
+        },
+        idcif: {
+          validators: {
+            callback: {
+              message: 'Por favor ingresa el idCIF.',
+              callback: function (input) {
+                return $('#regimenTipo').val() === 'Persona física' ? input.value.trim() !== '' : true;
+              }
+            }
+          }
+        },
+        clave_ine: {
+          validators: {
+            callback: {
+              message: 'Por favor ingresa la clave INE.',
+              callback: function (input) {
+                return $('#regimenTipo').val() === 'Persona física' ? input.value.trim() !== '' : true;
+              }
+            }
+          }
+        },
+
+        // Persona moral
+        sociedad_mercantil: {
+          validators: {
+            callback: {
+              message: 'Por favor selecciona una sociedad mercantil.',
+              callback: function (input) {
+                return $('#regimenTipo').val() === 'Persona moral' ? input.value.trim() !== '' : true;
+              }
+            }
+          }
+        },
+        num_instrumento: {
+          validators: {
+            callback: {
+              message: 'Por favor ingresa el número de instrumento.',
+              callback: function (input) {
+                return $('#regimenTipo').val() === 'Persona moral' ? input.value.trim() !== '' : true;
+              }
+            }
+          }
+        },
+        vol_instrumento: {
+          validators: {
+            callback: {
+              message: 'Por favor ingresa el volumen del instrumento.',
+              callback: function (input) {
+                return $('#regimenTipo').val() === 'Persona moral' ? input.value.trim() !== '' : true;
+              }
+            }
+          }
+        },
+        fecha_instrumento: {
+          validators: {
+            callback: {
+              message: 'Por favor selecciona la fecha del instrumento.',
+              callback: function (input) {
+                return $('#regimenTipo').val() === 'Persona moral' ? input.value.trim() !== '' : true;
+              }
+            }
+          }
+        },
+        nombre_notario: {
+          validators: {
+            callback: {
+              message: 'Por favor ingresa el nombre del notario.',
+              callback: function (input) {
+                return $('#regimenTipo').val() === 'Persona moral' ? input.value.trim() !== '' : true;
+              }
+            }
+          }
+        },
+        num_notario: {
+          validators: {
+            callback: {
+              message: 'Por favor ingresa el número del notario.',
+              callback: function (input) {
+                return $('#regimenTipo').val() === 'Persona moral' ? input.value.trim() !== '' : true;
+              }
+            }
+          }
+        },
+        estado_notario: {
+          validators: {
+            callback: {
+              message: 'Por favor ingresa el estado del notario.',
+              callback: function (input) {
+                return $('#regimenTipo').val() === 'Persona moral' ? input.value.trim() !== '' : true;
+              }
+            }
+          }
+        },
+        num_permiso: {
+          validators: {
+            callback: {
+              message: 'Por favor ingresa el número de permiso.',
+              callback: function (input) {
+                return $('#regimenTipo').val() === 'Persona moral' ? input.value.trim() !== '' : true;
+              }
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: '.col-12, .col-md-6, .col-md-12, .col-md-4',
+          excluded: ':hidden' // <-- Esta línea es la clave para ignorar campos ocultos
+        }),
+
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      $.ajax({
+        data: $('#addNewCliente').serialize(),
+        url: `${baseUrl}aceptar-cliente`,
+        type: 'POST',
+        success: function (status) {
+          dt_user.draw();
+          $('#aceptarCliente').modal('hide');
+          Swal.fire({
+            icon: 'success',
+            title: `${status} Exitosamente`,
+            text: `Solicitud ${status} Exitosamente.`,
+            customClass: { confirmButton: 'btn btn-success' }
+          });
+        }
+      });
+    });
+
+    // Evento al abrir modal
+    $(document).on('click', '.validar-solicitud2', function () {
+      var id_empresa = $(this).data('id');
+      var regimen = $(this).data('regimen') || 'Persona física';
+
+      $('#empresaID').val(id_empresa);
+      $('#regimenTipo').val(regimen);
+
+      actualizarSeccionRegimen(regimen);
+    });
+
+    // Cambiar vista y validación según régimen
+    function actualizarSeccionRegimen(regimen) {
+      if (regimen === 'Persona moral') {
+        $('.persona_moral').removeClass('d-none');
+        $('.persona_fisica').addClass('d-none');
+        $('.info-contrat').html(
+          'Información para el contrato <span class="badge rounded-pill bg-label-warning">Persona moral</span>'
+        );
+      } else {
+        $('.persona_fisica').removeClass('d-none');
+        $('.persona_moral').addClass('d-none');
+        $('.info-contrat').html(
+          'Información para el contrato <span class="badge rounded-pill bg-label-info">Persona física</span>'
+        );
+      }
+    /*   fv2.revalidateField('fecha_cedula');
+      fv2.revalidateField('idcif');
+      fv2.revalidateField('clave_ine');
+      fv2.revalidateField('sociedad_mercantil');
+      fv2.revalidateField('num_instrumento');
+      fv2.revalidateField('vol_instrumento');
+      fv2.revalidateField('fecha_instrumento');
+      fv2.revalidateField('nombre_notario');
+      fv2.revalidateField('num_notario');
+      fv2.revalidateField('estado_notario');
+      fv2.revalidateField('num_permiso'); */
+    }
+
+    // Limpiar formulario al cerrar modal
+    $('#aceptarCliente').on('hidden.bs.modal', function () {
+      fv2.resetForm(true);
+      $('#regimenTipo').val('Persona física');
+      actualizarSeccionRegimen('Persona física');
     });
   });
 
-  // clearing form data when offcanvas hidden
-  offCanvasForm.on('hidden.bs.modal', function () {
-    fv2.resetForm(true);
-  });
 
   const phoneMaskList = document.querySelectorAll('.phone-mask');
 
@@ -872,7 +995,4 @@ $(function () {
       });
     });
   }
-
-
-
 });
