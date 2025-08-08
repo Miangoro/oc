@@ -339,7 +339,7 @@ class lotesGranelController extends Controller
                         : null;
                         
 
-                    
+                    dd($nestedData);
                     $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $lote->id_lote_granel . '">Eliminar</button>';
 
                     $data[] = $nestedData;
