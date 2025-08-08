@@ -16,6 +16,7 @@ use App\Models\organismos;
 use App\Models\estados;
 use App\Models\Guias;
 use App\Models\LotesGranelGuia;
+use App\Models\CertificadosGranel;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -293,8 +294,7 @@ class lotesGranelController extends Controller
                   $nestedData['lote_procedencia'] = 'No tiene procedencia de otros lotes.';
               }
 
-                    /*  */
-                        // Consulta la URL en la tabla Documentacion_url
+
                     // Obtén la URL del certificado desde la tabla Documentacion_url
                     $documentacion = Documentacion_url::where('id_relacion', $lote->id_lote_granel)->where('id_documento',59)->first();
                       // Obtener el número de cliente
@@ -304,14 +304,42 @@ class lotesGranelController extends Controller
                         return !empty($numero);
                     });
 
-                      // Ahora puedes usar el número de cliente en la URL
-                      if ($documentacion) {
-                          $nestedData['url_certificado'] = '/files/' . $numeroCliente . '/certificados_granel/' . rawurlencode($documentacion->url);
-                      } else {
-                          $nestedData['url_certificado'] = null;
-                      }
+                    // Ahora puedes usar el número de cliente en la URL
+                    if ($documentacion) {
+                        $nestedData['url_certificado'] = '/files/' . $numeroCliente . '/certificados_granel/' . rawurlencode($documentacion->url);
+                    } else {
+                        $nestedData['url_certificado'] = null;
+                    }
 
-                    /*  */
+
+                    
+                    //certificado
+                    $nestedData['num_certificado'] = $lote->certificadoGranel?->num_certificado
+                        ?? $lote?->folio_certificado
+                        ?? 'Sin certificado';
+
+                    $certificado = CertificadosGranel::where('id_lote_granel', $lote->id_lote_granel)->first();
+                    
+                    $documento = null;
+                    if ($lote && $certificado) {
+                        $documento = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+                            ->where('id_documento', 59)
+                            ->where('id_doc', $certificado->id_certificado)
+                            
+                            ->first();
+                    } elseif (!$certificado) {
+                        $documento = Documentacion_url::where('id_relacion', $lote->id_lote_granel)
+                            ->where('id_documento', 59)
+                            ->whereNull('id_doc')
+                            ->first();
+                    }
+
+                    $nestedData['certificado'] = $documento?->url 
+                        ? asset("files/{$numeroCliente}/certificados_granel/{$documento->url}") 
+                        : null;
+                        
+
+                    dd($nestedData);
                     $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $lote->id_lote_granel . '">Eliminar</button>';
 
                     $data[] = $nestedData;
@@ -517,7 +545,7 @@ class lotesGranelController extends Controller
             }
         }/* fin del foreach de volumenes */
 
-           // 🔥 Registrar bitácoras de salida
+           //Registrar bitácoras de salida
           foreach ($bitacoras as $info) {
             BitacoraMezcal::create([
                 'fecha' => now()->toDateString(),
@@ -525,7 +553,8 @@ class lotesGranelController extends Controller
                 'id_empresa' => $info['lote']->id_empresa,
                 'id_lote_granel' => $info['lote']->id_lote_granel,
                  'id_lote_granel_destino' => $lote->id_lote_granel,
-                'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+                //'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+                'id_instalacion' => Auth::user()->id_instalacion ?? 0,
                 'tipo_operacion' => 'Salidas',
                 'tipo' => 3,
                 'procedencia_entrada' => 'Salida por creación de lote nuevo',
@@ -542,7 +571,8 @@ class lotesGranelController extends Controller
                 'alcohol_final' => $info['lote']->cont_alc,
                 'observaciones' => 'Salida por creación del lote ' . $lote->nombre_lote,
                 'id_firmante' => 0,
-                 'id_usuario_registro' => auth()->id() ?? null,
+                //'id_usuario_registro' => auth()->id() ?? null,
+                'id_usuario_registro' => Auth::id() ?? null,
             ]);
         }
 
@@ -578,7 +608,8 @@ class lotesGranelController extends Controller
                 'id_tanque' => $lote->id_tanque ?? 0,
                 'id_empresa' => $lote->id_empresa,
                 'id_lote_granel' => $lote->id_lote_granel,
-                'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+                //'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+                'id_instalacion' => Auth::user()->id_instalacion ?? 0,
                 'tipo_operacion' => 'Entradas',
                 'tipo' => 3, //
                 'procedencia_entrada' => $procedencia,
@@ -598,7 +629,8 @@ class lotesGranelController extends Controller
                 'alcohol_final' => $lote->cont_alc,
                 'observaciones' => 'Registro automático por nuevo lote',
                 'id_firmante' => 0,
-                'id_usuario_registro' => auth()->id() ?? null,
+                //'id_usuario_registro' => auth()->id() ?? null,
+                'id_usuario_registro' => Auth::id() ?? null,
             ]);
 
         // Almacenar las guías en la tabla intermedia usando el modelo LotesGranelGuia
@@ -1083,7 +1115,8 @@ private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParc
             'fecha' => now()->toDateString(),
             'id_tanque' => $loteOrigen->id_tanque ?? 0,
             'id_empresa' => $loteOrigen->id_empresa,
-            'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+            //'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+            'id_instalacion' => Auth::user()->id_instalacion ?? 0,
             'tipo_operacion' => 'Salidas',
             'tipo' => 3,
             'procedencia_entrada' => 'Salida por creación de lote nuevo',
@@ -1100,7 +1133,8 @@ private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParc
             'destino_salidas' => $loteDestino->nombre_lote,
             'observaciones' => 'Salida actualizada para la creación del lote ' . $loteDestino->nombre_lote,
             'id_firmante' => 0,
-            'id_usuario_registro' => auth()->id() ?? null,
+            //'id_usuario_registro' => auth()->id() ?? null,
+            'id_usuario_registro' => Auth::id() ?? null,
         ]
     );
 }
@@ -1117,7 +1151,8 @@ private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParc
             'fecha' => now()->toDateString(),
             'id_tanque' => $loteDestino->id_tanque ?? 0,
             'id_empresa' => $loteDestino->id_empresa,
-            'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+            //'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+            'id_instalacion' => Auth::user()->id_instalacion ?? 0,
             'procedencia_entrada' => !empty($lotesOrigenNombres)
             ? 'Creado a partir de: ' . implode(', ', $lotesOrigenNombres)
             : 'Nuevo Lote',
@@ -1133,7 +1168,8 @@ private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParc
             'destino_salidas' => 0,
             'observaciones' => 'Actualizacion automatica por actualizacion del lote',
             'id_firmante' => 0,
-            'id_usuario_registro' => auth()->id() ?? null,
+            //'id_usuario_registro' => auth()->id() ?? null,
+            'id_usuario_registro' => Auth::id() ?? null,
         ]);
 
     }

@@ -147,12 +147,17 @@ $(function () {
               (row.id_organismo || 'CIDAM') +
               '</span><br><span class="fw-bold text-dark small">Certificado:</span><span class="small"> ' +
               // Verifica si hay URL del certificado
-              (row.url_certificado
+              
+              /*(row.url_certificado
                 ? `<a class="text-decoration-underline waves-effect text-primary pdfCerGranel" data-bs-target="#mostrarPdf"
                   data-bs-toggle="modal" data-bs-dismiss="modal"
                   data-id="${row.id_lote_granel}" data-registro="${row.id_empresa}"
                   data-url="${row.url_certificado}">${row.folio_certificado}</a>`
-                : row.folio_certificado) +
+                : row.folio_certificado) +*/
+                (row.certificado 
+                    ? `<a href="${row.certificado}" class="text-primary" target="_blank">${row.num_certificado}</a>`
+                    : row.num_certificado) +
+
               '</span>' +
               '<br><span class="fw-bold text-dark small">Emisión:</span><span class="small"> ' +
               row.fecha_emision +

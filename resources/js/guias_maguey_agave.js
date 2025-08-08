@@ -1,9 +1,9 @@
 'use strict';
 
 $(function () {
+
   // Declaras el arreglo de botones
   let buttons = [];
-
   // Si tiene permiso, agregas el botón
   if (puedeAgregarElUsuario) {
     buttons.push({
@@ -28,8 +28,10 @@ $(function () {
     }
   });
 
-  // Users datatable
-  if (dt_user_table.length) {
+
+
+//DATATABLE
+if (dt_user_table.length) {
     var dt_user = dt_user_table.DataTable({
       processing: true,
       serverSide: true,
@@ -117,6 +119,9 @@ $(function () {
             if (window.puedeEditarElUsuario) {
               acciones += `<a data-id="${full['run_folio']}" data-bs-toggle="modal" data-bs-target="#verGuiasRegistardas" href="javascript:;" class="dropdown-item ver-registros"><i class="ri-id-card-line ri-20px text-primary"></i> Ver guías de traslado</a>`;
             }
+
+      acciones += `<a data-id="${full['run_folio']}" data-bs-toggle="modal" data-bs-target="#ModalEditSolGuias" href="javascript:;" class="dropdown-item editSolGuias"><i class="ri-edit-box-line ri-20px text-info"></i> Editar solicitud de guía</a>`;
+      
             if (window.puedeEliminarElUsuario) {
               acciones += `<a data-id="${full['id_guia']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar guía de traslado</a>`;
             }
@@ -201,20 +206,21 @@ $(function () {
         }
       }
     });
-  }
+}
 
-  // Función para inicializar Select2 en elementos específicos
-  // Función para inicializar Select2 en elementos específicos
-  function initializeSelect2($elements) {
-    $elements.each(function () {
-      var $this = $(this);
-      select2Focus($this);
-      $this.wrap('<div class="position-relative"></div>').select2({
-        dropdownParent: $this.parent()
-      });
+
+
+// Función para inicializar Select2 en elementos específicos
+function initializeSelect2($elements) {
+  $elements.each(function () {
+    var $this = $(this);
+    select2Focus($this);
+    $this.wrap('<div class="position-relative"></div>').select2({
+      dropdownParent: $this.parent()
     });
-  }
-  initializeSelect2(select2Elements);
+  });
+}
+initializeSelect2(select2Elements);
 
   //Inicializar DatePicker
   $(document).ready(function () {
@@ -299,8 +305,8 @@ $(function () {
       formValidator.revalidateField('empresa');  // Revalidar el campo de empresa
     });
 */
-  // Agregar nuevo registro y validacion
-  $(function () {
+// Agregar nuevo registro y validacion
+$(function () {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -374,7 +380,6 @@ $(function () {
       </option>`;
       });*/
       
-
       if (plantaciones.length === 0) {
         contenido = '<option value="" disabled>Sin características registradas</option>';
       }
@@ -405,10 +410,7 @@ $(function () {
 
     
 
-
-
-
-    // Validaciónes
+    // Validaciónes Formulario
     const addGuiaForm = document.getElementById('addGuiaForm');
     const formValidator = FormValidation.formValidation(addGuiaForm, {
       fields: {
@@ -450,12 +452,9 @@ $(function () {
           }
         },
 
-
+       // Campos no obligatorios pero con validación de tipo
         anterior: {
           validators: {
-            notEmpty: {
-              message: 'El campo número de plantas anterior es obligatorio'
-            },
             numeric: {
               message: 'Solo se permiten números'
             },
@@ -467,9 +466,6 @@ $(function () {
         },
         comercializadas: {
           validators: {
-            notEmpty: {
-              message: 'El campo número de plantas comercializadas es obligatorio'
-            },
             numeric: {
               message: 'Solo se permiten números'
             },
@@ -481,15 +477,60 @@ $(function () {
         },
         mermas: {
           validators: {
-            notEmpty: {
-              message: 'El campo mermas plantas es obligatorio'
-            },
             numeric: {
               message: 'Solo se permiten números'
             },
             greaterThan: {
               min: 0,
               message: 'Debe ser un valor mayor o igual a 0'
+            }
+          }
+        },
+
+        //nuevos campos opcionales
+        edad: {
+          validators: {
+            stringLength: {
+              max: 255,
+              message: 'Máximo 255 caracteres'
+            }
+          }
+        },
+        art: {
+          validators: {
+            numeric: {
+              message: 'Debe ser un número'
+            },
+            greaterThan: {
+              min: 0,
+              message: 'Debe ser mayor o igual a 0'
+            }
+          }
+        },
+        kg_maguey: {
+          validators: {
+            numeric: {
+              message: 'Debe ser un número'
+            },
+            greaterThan: {
+              min: 0,
+              message: 'Debe ser mayor o igual a 0'
+            }
+          }
+        },
+        no_lote_pedido: {
+          validators: {
+            stringLength: {
+              max: 255,
+              message: 'Máximo 255 caracteres'
+            }
+          }
+        },
+        fecha_corte: {
+          validators: {
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'Fecha inválida'
             }
           }
         },
@@ -572,7 +613,174 @@ $(function () {
     });
 
     initializeSelect2(select2Elements);
+});
+
+
+/*
+///EDITAR SOL DE GUIAS
+$(function () {
+  // Configuración CSRF para Laravel
+  $.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
   });
+  
+  // Inicializar FormValidation para el formulario
+  const form = document.getElementById('FormEditar');
+  const fv = FormValidation.formValidation(form, {
+    fields: {
+      'id_inspeccion': {
+          validators: {
+          notEmpty: {
+            message: 'El número de servicio es obligatorio.'
+          }
+          }
+      },
+      'num_dictamen': {
+          validators: {
+          notEmpty: {
+            message: 'El número de dictamen es obligatorio.'
+          },
+          }
+      },
+      'id_firmante': {
+          validators: {
+          notEmpty: {
+            message: 'El nombre del firmante es obligatorio.',
+          }
+          }
+      },
+      'fecha_emision': {
+          validators: {
+          notEmpty: {
+            message: 'La fecha de emisión es obligatoria.'
+          },
+          date: {
+            format: 'YYYY-MM-DD',
+            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+          }
+          }
+      },
+      'fecha_vigencia': {
+          validators: {
+          notEmpty: {
+            message: 'La fecha de vigencia es obligatoria.'
+          },
+          date: {
+            format: 'YYYY-MM-DD',
+            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+          }
+          }
+      },
+    },
+    plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+              eleValidClass: '',
+              eleInvalidClass: 'is-invalid',
+              rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+      // Validar y enviar el formulario cuando pase la validación
+      var formData = new FormData(form);
+      var dictamen = $('#edit_id_dictamen').val();
+
+      $.ajax({
+          url: '/editar2/' + dictamen,
+          type: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+            dataTable.ajax.reload(null, false);//Recarga los datos del datatable, "null,false" evita que vuelva al inicio
+            $('#ModalEditar').modal('hide');//ocultar modal
+            Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.message,
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              }
+            });
+          },
+          error: function (xhr) {
+            //error de validación del lado del servidor
+            if (xhr.status === 422) {
+              var errors = xhr.responseJSON.errors;
+              var errorMessages = Object.keys(errors).map(function (key) {
+                return errors[key].join('<br>');
+              }).join('<br>');
+              /*var errorMessages = Object.values(errors).map(msgArray =>
+                msgArray.join('<br>')).join('<br><hr>');*
+
+              Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                html: errorMessages,
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
+            } else {//otro tipo de error
+              Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al actualizar.',
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
+            }
+          }
+      });
+  });
+
+  // Función para cargar los datos
+  $(document).on('click', '.editar', function () {
+      var id_dictamen = $(this).data('id');
+      $('#edit_id_dictamen').val(id_dictamen);
+
+      $.ajax({
+          url: '/editar2/' + id_dictamen + '/edit',
+          method: 'GET',
+          success: function (datos) {
+              // Asignar valores a los campos del formulario
+              $('#edit_num_dictamen').val(datos.num_dictamen);
+              $('#edit_id_inspeccion').val(datos.id_inspeccion).trigger('change');
+              $('#edit_fecha_emision').val(datos.fecha_emision);
+              $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
+              $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();
+            //$('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');//funciona igual que arriba
+
+              flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
+                dateFormat: "Y-m-d",
+                enableTime: false,
+                allowInput: true,
+                locale: "es"
+              });
+              // Mostrar el modal
+              $('#ModalEditar').modal('show');
+          },
+          error: function (error) {
+            console.error('Error al cargar los datos:', error);
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al cargar los datos.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+      });
+  });
+
+});
+*/
 
 
 
