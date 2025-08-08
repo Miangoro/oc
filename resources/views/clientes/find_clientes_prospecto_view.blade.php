@@ -80,10 +80,11 @@
 
   <!-- Offcanvas to add new user -->
   <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasValidarSolicitud" aria-labelledby="offcanvasValidarSolicitudLabel">
-    <div class="offcanvas-header border-bottom">
-      <h5 id="offcanvasValidarSolicitudLabel" class="offcanvas-title">Validar solicitud</h5>
+    <div class="offcanvas-header border-bottom bg-primary pb-4">
+      <h5 id="offcanvasValidarSolicitudLabel" class="offcanvas-title text-white">Validar solicitud</h5>
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
+
     <div class="offcanvas-body mx-0 flex-grow-0 h-100">
       <form class="add-new-user pt-0" id="addNewUserForm">
         <input type="hidden" name="id_empresa" id="empresa_id">
@@ -158,8 +159,10 @@
 
 
         </div>
-        <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Valiar</button>
-        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
+        <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit"><i class="ri-search-eye-line me-1"></i>Valiar</button>
+        {{-- <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button> --}}
+        <button type="reset" class="btn btn-danger " data-bs-dismiss="offcanvas" aria-label="Close"><i
+                                class="ri-close-line me-1"></i> Cancelar</button>
       </form>
     </div>
   </div>

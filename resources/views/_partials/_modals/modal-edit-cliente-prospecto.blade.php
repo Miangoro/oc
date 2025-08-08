@@ -1,11 +1,11 @@
 <div class="modal fade" id="editClientesProspectos" tabindex="-1" aria-labelledby="modalEditClientesProspectosLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-lg">
       <div class="modal-content">
-          <div class="modal-header">
-              <h5 id="modalEditClientesProspectosLabel" class="modal-title">Editar Cliente</h5>
+          <div class="modal-header bg-primary pb-4">
+              <h5 id="modalEditClientesProspectosLabel" class="modal-title text-white">Editar Cliente</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body p-8">
               <form id="editClienteForm">
                   @csrf
                   <input type="hidden" id="edit_id_cliente" name="id_cliente" value="">
@@ -36,10 +36,16 @@
                           </div>
                       </div>
                   </div>
-                  <div class="d-flex justify-content-end mt-3">
-                    <button type="submit" class="btn btn-primary me-3">Actualizar</button>
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                </div>
+                    <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+                        <button disabled class="btn btn-primary me-1 d-none" type="button" id="loading">
+                            <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                            Actualizando...
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnEdit"><i class="ri-pencil-fill me-1"></i>
+                            Editar</button>
+                        <button type="reset" class="btn btn-danger " data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-line me-1"></i> Cancelar</button>
+                    </div>
 
               </form>
           </div>
