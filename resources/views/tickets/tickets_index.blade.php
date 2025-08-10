@@ -3,6 +3,10 @@
   <script>
     const filtroURL = "{{ route('tickets.filtrar') }}";
   </script>
+  <script>
+  const esAdmin = {{ auth()->user()->tipo === 2 ? 'true' : 'false' }};
+</script>
+
 @vite('resources/js/ticket_index.js')
 @endsection
 
@@ -59,7 +63,7 @@
       </form>
     </div>
     </div>
-
+<div class="card-datatable table-responsive">
     <!-- Tabla de tickets -->
     <table class="table table-bordered table-striped" id="ticketsTable">
     <thead class="table-dark">
@@ -75,23 +79,32 @@
     <tbody>
       @foreach($tickets as $ticket)
       <tr>
-      <td>{{ $ticket->id }}</td>
+      <td>{{ $ticket->folio }}</td>
       <td>{{ $ticket->asunto }}</td>
       <td>{{ $ticket->prioridad }}</td>
-      <td>{{ $ticket->estado }}</td>
+      <td>{{ $ticket->estatus }}</td>
       <td>{{ $ticket->created_at->format('d/m/Y') }}</td>
       <td>
-      <a href="return redirect()->route('tickets.show', $ticket->id);
-    " class="btn btn-sm btn-info">Ver</a>
+     <button type="button"
+        class="btn btn-sm btn-info"
+       data-bs-toggle="modal"
+        data-bs-target="#modalDetalleTicket"
+        data-ticket='@json($ticket)'>
+  Ver
+</button>
+
+
       </td>
       </tr>
     @endforeach
     </tbody>
     </table>
+    </div>
 
   </div>
   @include('_partials/_modals/modal_nuevo_ticket')
   @include('_partials/_modals/modal-pdfs-frames')
+  @include('_partials/_modals/modalDetalleTicket')
 
 
 @endsection

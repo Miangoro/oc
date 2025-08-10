@@ -34,6 +34,17 @@
 
   <form action="{{ route('tickets.store') }}" method="POST" enctype="multipart/form-data" class="ticket-form">
     @csrf
+{{-- Datos del solicitante --}}
+<div class="row mb-4">
+  <div class="col-md-6">
+    <label for="nombre">Nombre del solicitante</label>
+    <input type="text" name="nombre" id="nombre" class="form-control" value="{{ $usuario->name }}" readonly>
+  </div>
+  <div class="col-md-6">
+    <label for="email">Correo institucional</label>
+    <input type="email" name="email" id="email" class="form-control" value="{{ $usuario->email }}" readonly>
+  </div>
+</div>
 
     {{-- Asunto --}}
     <div class="form-group mb-3">
@@ -72,4 +83,7 @@
     
   </form>
 </div>
+@include('tickets.modal_nuevo_ticket')
+@include('tickets.modal_nuevo_ticket', ['usuario' => $usuario])
+
 @endsection
