@@ -848,6 +848,9 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
     });
   });
 
+
+  
+
   // Agregar nuevo registro Pago y validacion
   const addPagoForm = document.getElementById('addPagoForm');
   const fv2 = FormValidation.formValidation(addPagoForm, {

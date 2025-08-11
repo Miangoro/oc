@@ -261,7 +261,7 @@ class solicitudHolograma extends Controller
     // Método para actualizar un registro existente
     public function update(Request $request)
     {
-        try {
+        //try {
             // Encuentra la solicitud de hologramas por su ID
             $holograma = ModelsSolicitudHolograma::findOrFail($request->input('id_solicitud'));
             // Actualiza los campos con los datos del formulario
@@ -292,10 +292,10 @@ class solicitudHolograma extends Controller
             $holograma->save();
             // Retorna una respuesta exitosa
             return response()->json(['success' => 'Solicitud actualizada correctamente']);
-        } catch (\Exception $e) {
+        /*} catch (\Exception $e) {
             // Maneja cualquier error que ocurra durante el proceso
             return response()->json(['error' => 'Error al actualizar la solicitud'], 500);
-        }
+        }*/
     }
 
 

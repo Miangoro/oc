@@ -150,16 +150,16 @@
 
     //Limpia en el boton cancelar
     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelector('#addHologramas .btn-outline-secondary').addEventListener('click',
+        document.querySelector('#editHologramas .btn-outline-secondary').addEventListener('click',
             function() {
-                document.getElementById('addHologramasForm').reset();
+                document.getElementById('editHologramasForm').reset();
                 $('.select2').val(null).trigger('change');
             });
     });
 
     document.addEventListener('DOMContentLoaded', () => {
-        const modal = document.getElementById('addHologramas');
-        const form = document.getElementById('addHologramasForm');
+        const modal = document.getElementById('editHologramas');
+        const form = document.getElementById('editHologramasForm');
 
         // Limpia los campos select2 al cerrar el modal
         modal.addEventListener('hidden.bs.modal', () => {
