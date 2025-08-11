@@ -85,6 +85,51 @@ $(function () {
             var $fecha = full['fecha'] ?? 'N/A';
             var $id_lote_granel = full['nombre_lote'] ?? 'N/A';
             var $folio_fq = full['folio_fq'] ?? 'N/A';
+            var $volumen_inicial = full['volumen_inicial'] ?? 'N/A';
+            var $alcohol_inicial = full['alcohol_inicial'] ?? 'N/A';
+            var $id_tanque = full['id_tanque'] ?? 'N/A';
+            var $certificado = full['folio_certificado'] ?? 'N/A';
+            var $obs = (full['observaciones'] || '').trim();
+
+            let html =
+              '<span class="fw-bold small">Fecha: </span>' +
+              '<span class="small">' + $fecha + '</span>' +
+
+              '<br><span class="fw-bold small">Lote a Granel: </span>' +
+              '<span class="small">' + $id_lote_granel + '</span>' +
+
+              '<br><span class="fw-bold small">Folio FQ: </span>' +
+              '<span class="small">' + $folio_fq + '</span>' +
+
+              '<br><span class="fw-bold small">Inventario Inicial:</span>' +
+              '<br>&nbsp;&nbsp;<span class="fw-bold small">Volumen:</span> ' +
+              '<span class="small">' + $volumen_inicial + ' L</span>' +
+              '<br>&nbsp;&nbsp;<span class="fw-bold small">%Alc. Vol:</span> ' +
+              '<span class="small">' + $alcohol_inicial + '% Alc.</span>' +
+
+
+              '<br><span class="fw-bold small">ID Tanque: </span>' +
+              '<span class="small">' + $id_tanque + '</span>' +
+
+              '<br><span class="fw-bold small">Certificado: </span>' +
+              '<span class="small">' + $certificado + '</span>';
+
+            if ($obs && $obs.toUpperCase() !== 'N/A') {
+              html += '<br><span class="fw-bold small">Observaciones: </span>' +
+                      '<span class="small">' + $obs + '</span>';
+            }
+
+            return html;
+          }
+        },
+
+        /* {
+          targets: 3,
+          responsivePriority: 1,
+          render: function (data, type, full, meta) {
+            var $fecha = full['fecha'] ?? 'N/A';
+            var $id_lote_granel = full['nombre_lote'] ?? 'N/A';
+            var $folio_fq = full['folio_fq'] ?? 'N/A';
             var $certificado = full['folio_certificado'] ?? 'N/A';
             var $operacion_adicional = (full['operacion_adicional'] || '').trim();
             var $obs = (full['observaciones'] || '').trim();
@@ -122,7 +167,7 @@ $(function () {
 
             return html;
           }
-        },
+        }, */
         {
           targets: 4,
           responsivePriority: 1,

@@ -215,8 +215,9 @@ class BitacoraMezcalController extends Controller
                 'nombre_lote' => $bitacora->loteBitacora->nombre_lote ?? 'N/A',
                 'folio_fq' => $bitacora->loteBitacora->folio_fq ?? 'N/A',
                 'folio_certificado' => $bitacora->loteBitacora->folio_certificado ?? 'N/A',
-/*                 'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
-                'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A', */
+                'id_tanque' => $bitacora->id_tanque ?? 'N/A',
+                'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
+                'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A',
 
                 //Entradas
                 'procedencia_entrada' => $bitacora->procedencia_entrada ?? 'N/A',
@@ -224,11 +225,13 @@ class BitacoraMezcalController extends Controller
                 'alcohol_entrada' => $bitacora->alcohol_entrada ?? 'N/A',
                 'agua_entrada' => $bitacora->agua_entrada ?? 'N/A',
                 'id_firmante' => $bitacora->id_firmante ?? 'N/A',
+                'id_tanque' => $bitacora->id_tanque ?? 'N/A',
+
                 // Salidas
                 'volumen_salidas' => $bitacora->volumen_salidas ?? 'N/A',
                 'alcohol_salidas' => $bitacora->alcohol_salidas ?? 'N/A',
                 'destino_salidas' => $bitacora->destino_salidas ?? 'N/A',
- 'operacion_adicional' => $bitacora->operacion_adicional ?? 'N/A',
+               'operacion_adicional' => $bitacora->operacion_adicional ?? 'N/A',
                 // Inventario final
                 'volumen_final' => $bitacora->volumen_final ?? 'N/A',
                 'alcohol_final' => $bitacora->alcohol_final ?? 'N/A',
