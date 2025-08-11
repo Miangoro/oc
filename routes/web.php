@@ -1373,6 +1373,8 @@ Route::prefix('tickets')->group(function () {
     Route::post('/{id}/cerrar', [TicketController::class, 'updateStatus'])->name('tickets.close');
     Route::get('/tickets/{id}/detalle', [TicketController::class, 'detalle'])->name('tickets.detalle');
    Route::get('/tickets/filtrar', [TicketController::class, 'filtrar'])->name('tickets.filtrar');
+   Route::put('/tickets/{id}/actualizar', [TicketController::class, 'actualizar'])->name('tickets.actualizar');
+
 
 
 
