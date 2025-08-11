@@ -7,7 +7,7 @@
                     <h4 class="address-title mb-2">Editar Solicitud de Hologramas</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form id="editHologramasForm"method="POST" enctype="multipart/form-data" onsubmit="return false">
+                <form id="editHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
 
                     @csrf
                     <input type="hidden" id="editt_id_solicitud" name="id_solicitud">
@@ -75,7 +75,7 @@
                         <label for="edit_comentarios">Comentarios</label>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
+                        <button type="submit" class="btn btn-primary">Editar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
                             aria-label="Close">Cancelar</button>
                     </div>
@@ -85,8 +85,9 @@
     </div>
 </div>
 
+
 <script>
-    function editobtenerMarcas() {
+    function editobtenerMarcas(callback) {
         var empresa = $("#edit_id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
@@ -104,8 +105,16 @@
                     contenido = '<option value="">Sin marcas registradas</option>';
                 }
                 $('#edit_id_marca').html(contenido);
+
+                if (typeof callback === 'function') {
+                    callback(); // Ejecuta el callback cuando se completa
+                }
             },
-            error: function() {}
+            error: function() {
+                if (typeof callback === 'function') {
+                    callback(); // También llama al callback en caso de error
+                }
+            }
         });
     }
 
@@ -137,6 +146,7 @@
             error: function() {}
         });
     }
+
 
     //Limpia en el boton cancelar
     document.addEventListener('DOMContentLoaded', function() {

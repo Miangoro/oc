@@ -734,15 +734,23 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
       $('#editt_id_solicitud').val(data.id_solicitud);
       $('#edit_folio').val(data.folio);
       $('#edit_id_empresa').val(data.id_empresa).trigger('change');
-      $('#edit_id_marca').val(data.id_marca).trigger('change');
+      //$('#edit_id_marca').val(data.id_marca).trigger('change');
+      //$('#edit_id_direccion').val(data.id_direccion).trigger('change');
+      // Llama al metodo obtener y luego selecciona
+      editobtenerMarcas(function() {
+          $('#edit_id_marca').val(data.id_marca).trigger('change');
+      });
+      editobtenerDirecciones(function() {
+            $('#edit_id_direccion').val(data.id_direccion).trigger('change');
+      });
+
       $('#tipo').val(data.tipo).trigger('change');
       $('#edit_id_solicitante').val(data.id_solicitante);
       $('#edit_cantidad_hologramas').val(data.cantidad_hologramas);
-      $('#edit_id_direccion').val(data.id_direccion).trigger('change');
       $('#edit_comentarios').val(data.comentarios);
       $('#editHologramas').modal('show');
     }).fail(function (jqXHR, textStatus, errorThrown) {
-      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      console.error('Error: ' + textStatus + ' - ' + errorThrown+' 2- '+jqXHR);
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
