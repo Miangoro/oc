@@ -82,28 +82,22 @@ $(function () {
           targets: 3,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
+            var $volumen_inicial = full['volumen_inicial'] ?? 'N/A';
+            var $alcohol_inicial = full['alcohol_inicial'] ?? 'N/A';
+            var $num_recipientes = full['num_recipientes'] ?? 'N/A';
             var $fecha = full['fecha'] ?? 'N/A';
             var $id_lote_granel = full['nombre_lote'] ?? 'N/A';
             var $folio_fq = full['folio_fq'] ?? 'N/A';
             var $certificado = full['folio_certificado'] ?? 'N/A';
-            return (
-              '<span class="fw-bold small">Fecha: </span>' +
-              '<span class="small">' +
-              $fecha +
-              '</span>' +
-              '<br><span class="fw-bold small">Lote a Granel: </span>' +
-              '<span class="small">' +
-              $id_lote_granel +
-              '</span>' +
-              '<br><span class="fw-bold small">Folio FQ: </span>' +
-              '<span class="small">' +
-              $folio_fq +
-              '</span>' +
-              '<br><span class="fw-bold small">Certificado: </span>' +
-              '<span class="small">' +
-              $certificado +
-              '</span>'
-            );
+            return `
+            <span class="fw-bold small">Volumen:</span> <span class="small">${$volumen_inicial} L</span>
+            <br><span class="fw-bold small">Alcohol:</span> <span class="small">${$alcohol_inicial} % Alc.</span>
+            <br><span class="fw-bold small">Recipientes:</span> <span class="small">${$num_recipientes}</span>
+            <br><span class="fw-bold small">Fecha: </span><span class="small">${$fecha}</span>
+            <br><span class="fw-bold small">Lote a Granel: </span><span class="small">${$id_lote_granel}</span>
+            <br><span class="fw-bold small">Folio FQ: </span><span class="small">${$folio_fq}</span>
+            <br><span class="fw-bold small">Certificado: </span><span class="small">${$certificado}</span>
+          `;
           }
         },
         {
@@ -215,16 +209,16 @@ $(function () {
             let acciones = '';
             const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
             const esAdminBitacoras = window.adminBitacoras === true;
-            if (!estaFirmado  || esAdminBitacoras) {
-            if (window.puedeFirmarElUsuario) {
-              acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
-            }
-            if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
-            }
-            if (window.puedeEliminarElUsuario) {
-              acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
-            }
+            if (!estaFirmado || esAdminBitacoras) {
+              if (window.puedeFirmarElUsuario) {
+                acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
+              }
+              if (window.puedeEditarElUsuario) {
+                acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
+              }
+              if (window.puedeEliminarElUsuario) {
+                acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
+              }
             }
             // Si no hay acciones, no retornar el dropdown
             if (!acciones.trim()) {
@@ -714,7 +708,7 @@ $(function () {
           $('#edit_alc_vol_salida').val(bitacora.alcohol_salidas);
           $('#edit_fecha_salida').val(bitacora.fecha_salida);
           $('#edit_destino_salida').val(bitacora.destino_salidas);
-          $('#edit_num_recipientes_salida').val(bitacora.num_recipientes_salida)
+          $('#edit_num_recipientes_salida').val(bitacora.num_recipientes_salida);
 
           $('#edit_volumen_final').val(bitacora.volumen_final);
           $('#edit_alc_vol_final').val(bitacora.alcohol_final);
@@ -930,11 +924,10 @@ $(function () {
           $(this).css('display', 'none');
           $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
-      }else if (tipo == 'Entradas y salidas') {
+      } else if (tipo == 'Entradas y salidas') {
         $('#editDisplayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 300);
         $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 400);
-      }
-       else {
+      } else {
         $('#editDisplayEntradas, #editDisplaySalidas').fadeOut(200);
       }
     });
@@ -947,7 +940,7 @@ $(function () {
       $('#bitacora_id_firma').val(bitacoraID);
     });
  */
-/*   $(function () {
+  /*   $(function () {
     // Configurar CSRF para Laravel
     $.ajaxSetup({
       headers: {
@@ -1101,21 +1094,21 @@ $(function () {
     });
   });
 
-$(document).ready(function () {
-  // Al abrir modal, disparas la carga inicial para el cliente seleccionado
-  $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
-    var empresaSeleccionada = $('#id_empresa').val();
-    if (empresaSeleccionada) {
-      obtenerGraneles(empresaSeleccionada);
-    }
-  });
+  $(document).ready(function () {
+    // Al abrir modal, disparas la carga inicial para el cliente seleccionado
+    $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
+      var empresaSeleccionada = $('#id_empresa').val();
+      if (empresaSeleccionada) {
+        obtenerGraneles(empresaSeleccionada);
+      }
+    });
 
-  // También cuando cambia el select
-  $('#id_empresa').on('change', function () {
-    var empresa = $(this).val();
-    obtenerGraneles(empresa);
+    // También cuando cambia el select
+    $('#id_empresa').on('change', function () {
+      var empresa = $(this).val();
+      obtenerGraneles(empresa);
+    });
   });
-});
 
   //end
 });

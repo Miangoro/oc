@@ -193,12 +193,11 @@ class BitacoraHologramasController extends Controller
                 'numero_cliente' => $numeroCliente,
                 'cliente' => '<b>' . $numeroCliente . '</b><br>' . $razonSocial,
                 //
-                'serie_inicial' => $bitacora->serie_inicial,
                 'nombre_lote' => $bitacora->loteBitacora->nombre ?? 'N/A',
                 'folio_fq' => $bitacora->loteBitacora->folio_fq ?? 'N/A',
                 'folio_certificado' => $bitacora->loteBitacora->folio_certificado ?? 'N/A',
-/*                 'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
-                'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A', */
+                'serie_inicial' => $bitacora->serie_inicial ?? 'N/A',
+                'num_sellos_inicial' => $bitacora->num_sellos_inicial ?? 'N/A',
                 //Entradas
                 'serie_entrada' => $bitacora->serie_entrada ?? 'N/A',
                 'num_sellos_entrada' => $bitacora->num_sellos_entrada ?? 'N/A',

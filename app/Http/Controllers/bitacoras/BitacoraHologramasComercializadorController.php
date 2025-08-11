@@ -180,6 +180,7 @@ class BitacoraHologramasComercializadorController extends Controller
                 'nombre_lote' => $bitacora->loteBitacora->nombre ?? 'N/A',
                 'folio_fq' => $bitacora->loteBitacora->folio_fq ?? 'N/A',
                 'folio_certificado' => $bitacora->loteBitacora->folio_certificado ?? 'N/A',
+                'num_sellos_inicial' => $bitacora->num_sellos_inicial ?? 'N/A',
 /*                 'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
                 'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A', */
                 //Entradas

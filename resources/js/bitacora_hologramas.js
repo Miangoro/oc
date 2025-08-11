@@ -87,15 +87,21 @@ $(function () {
             var $obs = full['observaciones'];
             var $tipo_operacion = full['tipo_operacion'];
             var $serie_inicial = (full['serie_inicial'] ?? '').trim();
+            var $num_sellos_inicial = full['num_sellos_inicial'] ?? 'N/A';
+
 
             let html = `
-      <span class="fw-bold small">Serie Inicial: </span>
-      <span class="small">${$serie_inicial || 'N/A'}</span><br>
-      <span class="fw-bold small">Fecha: </span>
-      <span class="small">${$fecha}</span><br>
-      <span class="fw-bold small">Lote envasado: </span>
-      <span class="small">${$id_lote_envasado}</span>
-    `;
+            <br><span class="fw-bold small">Serie Inicial:</span>
+            <span class="small">${$serie_inicial || 'N/A'}</span>
+            <br><span class="fw-bold small">N° Sellos Inicial:</span>
+            <span class="small">${$num_sellos_inicial || 'N/A'}</span><br>
+
+            <span class="fw-bold small">Fecha: </span>
+            <span class="small">${$fecha}</span><br>
+            <span class="fw-bold small">Lote envasado: </span>
+            <span class="small">${$id_lote_envasado}</span>
+
+          `;
 
             if ($tipo_operacion && $tipo_operacion !== 'N/A') {
               html += `
