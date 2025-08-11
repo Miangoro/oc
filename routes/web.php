@@ -762,11 +762,15 @@ Route::middleware(['auth'])->controller(GuiasController::class)->group(function 
     Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('traslado-guias')->middleware(['auth']);
     Route::resource('/guias-list', GuiasController::class)->middleware(['auth']);
     Route::post('/guias/store', [GuiasController::class, 'store'])->middleware(['auth']);
-    Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado')->middleware(['auth']);
-    Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit')->middleware(['auth']);
+
+    //por agrupacion
+    Route::get('/edit/{id_run_folio}', [GuiasController::class, 'edit'])->name('guias.edit')->middleware(['auth']);
+
     Route::post('/update', [GuiasController::class, 'update'])->name('guias.update')->middleware(['auth']);
+    
     Route::get('/editGuias/{run_folio}', [GuiasController::class, 'editGuias'])->middleware(['auth']);
 
+    Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado')->middleware(['auth']);//PDF
     //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
 });
 

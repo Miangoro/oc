@@ -234,7 +234,7 @@ public function destroy($id_guia)
 
     return response()->json(['success' => 'Guías y documentos con mismo run_folio eliminados correctamente.']);
 }
-    
+
 
 
 ///REGISTRAR
@@ -367,17 +367,14 @@ public function store(Request $request)
 
 
 
-    // Método para OBTENER GUIA por ID
-    public function edit($id_guia)
+
+    // Método para OBTENER SOLICITUD GUIA por AGRUPACION
+    public function edit($id_run_folio)
     {
-        try {
-            $guia = guias::findOrFail($id_guia);
-            return response()->json($guia);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener la guía'], 500);
-        }
+        $guia = guias::findOrFail($id_run_folio);
+        return response()->json($guia);
     }
-    //Metodo EDITAR GUIAS
+    //Metodo EDITAR GUIAS (POR UNA Y UNA)
     public function editGuias($run_folio)
     {
         $guias = Guias::where('run_folio', $run_folio)
@@ -389,7 +386,6 @@ public function store(Request $request)
     // Método para ACTUALIZAR una guía existente
     public function update(Request $request)
     {
-        try {
             $guia = guias::findOrFail($request->id_guia);
             $guia->id_empresa = $request->input('empresa');
             $guia->numero_guias = $request->input('numero_guias');
@@ -430,67 +426,65 @@ public function store(Request $request)
                     $documentacion_url->save();
                 }
             }
-            return response()->json(['success' => 'Guía actualizada correctamente']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al actualizar la guía'], 500);
-        }
+        return response()->json(['success' => 'Guía actualizada correctamente']);
+        
     }
 
 
 
 
 
-    //Metodo para LLENAR PDF
-    public function guiasTranslado($id_guia)
-    {   
-        
-        $res = DB::select('SELECT f.numero_cliente, p.nombre_productor, a.razon_social, p.nombre_predio, p.num_predio, a.razon_social, t.nombre, t.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas,
-            e.art,e.kg_maguey,e.no_lote_pedido,e.fecha_corte, e.edad, e.nombre_cliente,e.no_cliente,e.fecha_ingreso,e.domicilio, e.id_registro
-            FROM guias e 
-            JOIN predios p ON (e.id_predio = p.id_predio) 
-            JOIN predio_plantacion s ON (e.id_plantacion = s.id_plantacion) 
-            JOIN catalogo_tipo_agave t ON (t.id_tipo = s.id_tipo) 
-            JOIN empresa a ON (a.id_empresa = e.id_empresa) 
-            JOIN empresa_num_cliente f ON (f.id_empresa = e.id_empresa) 
-            WHERE e.id_guia=' . $id_guia);
 
-        
-        $id_empresa = $res[0]->id_empresa ?? null;
-        $data = empresa::find($id_empresa);//Obtener datos
-        $numero_cliente = $data && $data->empresaNumClientes->isNotEmpty()
-        ? $data->empresaNumClientes->first(fn($item) => $item->empresa_id === $data
-        ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
+///PDF GUIA
+public function guiasTranslado($id_guia)
+{
+    $res = DB::select('SELECT f.numero_cliente, p.nombre_productor, a.razon_social, p.nombre_predio, p.num_predio, a.razon_social, t.nombre, t.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas,
+        e.art,e.kg_maguey,e.no_lote_pedido,e.fecha_corte, e.edad, e.nombre_cliente,e.no_cliente,e.fecha_ingreso,e.domicilio, e.id_registro
+        FROM guias e 
+        JOIN predios p ON (e.id_predio = p.id_predio) 
+        JOIN predio_plantacion s ON (e.id_plantacion = s.id_plantacion) 
+        JOIN catalogo_tipo_agave t ON (t.id_tipo = s.id_tipo) 
+        JOIN empresa a ON (a.id_empresa = e.id_empresa) 
+        JOIN empresa_num_cliente f ON (f.id_empresa = e.id_empresa) 
+        WHERE e.id_guia=' . $id_guia);
 
-        //CODIGO QR
-        $url = route('QR-guias', ['id' => $id_guia]);
-        $qrCode = new QrCode(
-            data: $url,
-            encoding: new Encoding('UTF-8'),
-            errorCorrectionLevel: ErrorCorrectionLevel::Low,
-            size: 100,
-            margin: 10,
-            roundBlockSizeMode: RoundBlockSizeMode::Margin,
-            foregroundColor: new Color(0, 0, 0),
-            backgroundColor: new Color(255, 255, 255)
-        );
-        // Escribir el QR en formato PNG
-        $writer = new PngWriter();
-        $result = $writer->write($qrCode);
-        // Convertirlo a Base64
-        $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+    
+    $id_empresa = $res[0]->id_empresa ?? null;
+    $data = empresa::find($id_empresa);//Obtener datos
+    $numero_cliente = $data && $data->empresaNumClientes->isNotEmpty()
+    ? $data->empresaNumClientes->first(fn($item) => $item->empresa_id === $data
+    ->id && !empty($item->numero_cliente)) ?->numero_cliente ?? 'No encontrado' : 'N/A';
 
-        //dd($res[0]);
-        $id_registro = $res[0]->id_registro;
+    //CODIGO QR
+    $url = route('QR-guias', ['id' => $id_guia]);
+    $qrCode = new QrCode(
+        data: $url,
+        encoding: new Encoding('UTF-8'),
+        errorCorrectionLevel: ErrorCorrectionLevel::Low,
+        size: 100,
+        margin: 10,
+        roundBlockSizeMode: RoundBlockSizeMode::Margin,
+        foregroundColor: new Color(0, 0, 0),
+        backgroundColor: new Color(255, 255, 255)
+    );
+    // Escribir el QR en formato PNG
+    $writer = new PngWriter();
+    $result = $writer->write($qrCode);
+    // Convertirlo a Base64
+    $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
 
-        $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', [
-            'datos' => $res,
-            'razon_social' => $data->razon_social ?? '',
-            'numero_cliente' => $numero_cliente ?? '',
-            'id_registro' => $id_registro,
-            'qrCodeBase64' => $qrCodeBase64,
-        ]);
-        return $pdf->stream('Guia_de_traslado_de_maguey_o_agave.pdf');
-    }
+    //dd($res[0]);
+    $id_registro = $res[0]->id_registro;
+
+    $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', [
+        'datos' => $res,
+        'razon_social' => $data->razon_social ?? '',
+        'numero_cliente' => $numero_cliente ?? '',
+        'id_registro' => $id_registro,
+        'qrCodeBase64' => $qrCodeBase64,
+    ]);
+    return $pdf->stream('Guia_de_traslado_de_maguey_o_agave.pdf');
+}
 
 
 

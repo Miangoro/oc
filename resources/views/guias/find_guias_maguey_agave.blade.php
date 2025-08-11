@@ -51,38 +51,84 @@
  --}}
 <!-- Users List Table -->
 <div class="card">
-  <div class="card-header pb-0">
-    <h3 class="card-title mb-0">Solicitudes de guía de traslado de maguey o agave</h3>
-  </div>
-  <div class="card-datatable table-responsive">
-    <table class="datatables-users table">
-      <thead class="table-dark">
-        <tr>
-          <th></th>
-          <th>#</th>
-          <th>Cliente</th>
-          <th>Folio</th>
-          <th>Run Folio</th>
-          <th>Predio</th>
-          <th>Cantidad guias</th>
-          <th>Plantas actuales</th>
-          <th>No. anterior</th>
-          <th>Comercializadas</th>
-          <th>No. mermas</th>
-          <th>Doc. Adjuntos</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-    </table>
-  </div>
-
-
+    <div class="card-header pb-0">
+      <h3 class="card-title mb-0">Solicitudes de guía de traslado de maguey o agave</h3>
+    </div>
+    <div class="card-datatable table-responsive">
+      <table class="datatables-users table">
+        <thead class="table-dark">
+          <tr>
+            <th></th>
+            <th>#</th>
+            <th>Cliente</th>
+            <th>Folio</th>
+            <th>Run Folio</th>
+            <th>Predio</th>
+            <th>Cantidad guias</th>
+            <th>Plantas actuales</th>
+            <th>No. anterior</th>
+            <th>Comercializadas</th>
+            <th>No. mermas</th>
+            <th>Doc. Adjuntos</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
 </div>
+
+
+
+<!--MODAL SUBIR GUIA ESCANEADA Y RESULTADOS ART-->
+<div class="modal fade" id="ModalSubirPDF" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header bg-primary pb-4">
+          <h5 class="modal-title text-white">Subir archivos PDF<span id="folio_cer"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+        <form id="formSubirPDF">
+            <input type="hidden" id="editt_id_guia" name="id_guia">
+
+            <div class="row">
+                <div class="form-floating form-floating-outline mb-5">
+                    <input class="form-control form-control-sm" type="file" name="url[]">
+                    <input value="71" class="form-control" type="hidden" name="id_documento[]">
+                    <input value="Guía de traslado de agave" class="form-control" type="hidden"
+                        name="nombre_documento[]">
+                    <label for="Guía de traslado de agave">Adjuntar Guia escaneada</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-5">
+                    <input class="form-control form-control-sm" type="file" name="url[]">
+                    <input value="132" class="form-control" type="hidden" name="id_documento[]">
+                    <input value="Resultados ART" class="form-control" type="hidden"
+                        name="nombre_documento[]" step="0.01">
+                    <label for="Resultados ART">Adjuntar resultados de ART</label>
+                </div>
+            </div>
+
+            <div class="d-flex mt-6 justify-content-center">
+                {{-- <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
+                    Registrar</button> --}}
+                <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ri-close-line"></i> Cancelar</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-guias-agave')
-@include('_partials/_modals/modal-edit-guias-agave')
+{{-- @include('_partials/_modals/modal-edit-guias-agave') --}}
+
+
 @include('_partials/_modals/modal-ver-guias-registardas')
 <!-- /Modal -->
 

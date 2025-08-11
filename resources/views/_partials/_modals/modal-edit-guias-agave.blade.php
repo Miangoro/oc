@@ -1,5 +1,5 @@
 
-<div class="modal fade" id="editGuias" tabindex="-1" aria-hidden="true">
+{{-- <div class="modal fade" id="editGuias" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
             <button id="btnCloseModal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -193,11 +193,11 @@
             </form>
         </div>
     </div>
-</div>
-</div>
+</div> --}}
 
 
-<script>
+
+{{-- <script>
     function editobtenerNombrePredio() {
         var empresa = $("#edit_id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
@@ -287,3 +287,4 @@
         });
     });
 </script>
+ --}}
