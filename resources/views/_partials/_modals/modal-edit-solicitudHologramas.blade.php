@@ -93,6 +93,7 @@
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
+            dataType: 'json',
             success: function(response) {
                 var contenido = "";
                 for (let index = 0; index < response.marcas.length; index++) {
@@ -124,6 +125,7 @@
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
+            dataType: 'json',
             success: function(response) {
                 // Filtrar las direcciones para que solo se incluyan las que tienen tipo_direccion igual a 3
                 var direccionesFiltradas = response.direcciones.filter(function(direccion) {

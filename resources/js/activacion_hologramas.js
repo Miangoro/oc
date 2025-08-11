@@ -198,6 +198,7 @@ $(function () {
     });
   });
 
+  
   // Agregar nuevo registro y validacion
   $(function () {
     $.ajaxSetup({
