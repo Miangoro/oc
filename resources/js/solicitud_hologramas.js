@@ -737,11 +737,17 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
       //$('#edit_id_marca').val(data.id_marca).trigger('change');
       //$('#edit_id_direccion').val(data.id_direccion).trigger('change');
       // Llama al metodo obtener y luego selecciona
-      editobtenerMarcas(function() {
+      /*editobtenerMarcas(function() {
           $('#edit_id_marca').val(data.id_marca).trigger('change');
       });
       editobtenerDirecciones(function() {
             $('#edit_id_direccion').val(data.id_direccion).trigger('change');
+      });
+      */
+     // Cargar marcas y direcciones, luego seleccionar los valores correspondientes
+      cargarInfoEmpresa(function () {
+          $('#edit_id_marca').val(data.id_marca).trigger('change');
+          $('#edit_id_direccion').val(data.id_direccion).trigger('change');
       });
 
       $('#tipo').val(data.tipo).trigger('change');
@@ -835,7 +841,7 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
         });
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        console.error('Error: ' + textStatus + ' - ' + errorThrown);
+        console.error('Error: ' + textStatus + ' - ' + errorThrown+ '2erro'+ jqXHR);
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
