@@ -19,7 +19,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="editobtenerMarcas(); editobtenerDirecciones();" id="edit_id_empresa"
+                                <select onchange="cargarInfoEmpresa();" id="edit_id_empresa"
                                     name="edit_id_empresa" class="select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($Empresa as $cliente)
@@ -87,7 +87,7 @@
 
 
 <script>
-    function editobtenerMarcas(callback) {
+    /* function editobtenerMarcas(callback) {
         var empresa = $("#edit_id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
@@ -147,11 +147,78 @@
             },
             error: function() {}
         });
+    } */
+
+    function cargarInfoEmpresa(callback) {
+        const empresaId = $('#edit_id_empresa').val();
+        if (!empresaId) return;
+
+        $.ajax({
+            url: '/getDatos/' + empresaId,
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                // Cargar marcas
+                const marcas = response.marcas || [];
+                let opcionesMarcas = "";
+
+                if (marcas.length === 0) {
+                    opcionesMarcas = '<option value="">Sin marcas registradas</option>';
+                } else {
+                    marcas.forEach(marca => {
+                        opcionesMarcas += `<option value="${marca.id_marca}">${marca.folio} - ${marca.marca}</option>`;
+                    });
+                }
+                $('#edit_id_marca').html(opcionesMarcas);
+
+                // Cargar direcciones (tipo_direccion == 3)
+                const direcciones = (response.direcciones || []).filter(d => d.tipo_direccion == 3);
+                let opcionesDirecciones = "";
+
+                if (direcciones.length === 0) {
+                    opcionesDirecciones = '<option value="">Sin direcciones registradas</option>';
+                } else {
+                    direcciones.forEach(d => {
+                        opcionesDirecciones += `
+                            <option value="${d.id_direccion}">
+                                Nombre de destinatario: ${d.nombre_recibe} - Dirección: ${d.direccion} - Correo: ${d.correo_recibe} - Celular: ${d.celular_recibe}
+                            </option>`;
+                    });
+                }
+                $('#edit_id_direccion').html(opcionesDirecciones);
+
+                // Callback si lo necesitas para preseleccionar marca o dirección
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            },
+            error: function(xhr) {
+                console.error('Error al cargar los datos de la empresa:', xhr);
+                $('#edit_id_marca').html('<option value="">Error al cargar marcas</option>');
+                $('#edit_id_direccion').html('<option value="">Error al cargar direcciones</option>');
+            }
+        });
     }
 
 
-    //Limpia en el boton cancelar
+
     document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('#editHologramas .btn-outline-secondary').addEventListener('click', function() {
+            document.getElementById('editHologramasForm').reset();
+            $('.select2').val(null).trigger('change');
+        });
+
+        const modal = document.getElementById('editHologramas');
+        const form = document.getElementById('editHologramasForm');
+
+        modal.addEventListener('hidden.bs.modal', () => {
+            form.reset();
+            $('.select2').val(null).trigger('change');
+        });
+    });
+
+    //Limpia en el boton cancelar
+    /*document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#editHologramas .btn-outline-secondary').addEventListener('click',
             function() {
                 document.getElementById('editHologramasForm').reset();
@@ -188,5 +255,5 @@
                 }
             });
         });
-    });
+    });*/
 </script>
