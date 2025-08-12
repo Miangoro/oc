@@ -15,6 +15,7 @@ use App\Models\normas_catalo;
 use App\Models\User;
 use App\Models\catalogo_actividad_cliente;
 use App\Models\empresa_actividad;
+use App\Models\instalaciones;
 use App\Models\maquiladores_model;
 use App\Models\preguntasRequisitosModel;
 use App\Models\RequisitoEvaluar;
@@ -685,8 +686,11 @@ public function mostrarRequisitosEvaluar($id)
 }
 
 
-    public function add_revision_requisitos($id_cliente)
-    {
+    public function add_revision_requisitos($id_instalacion)
+    {   
+
+     $id_cliente = instalaciones::find($id_instalacion)->id_empresa;
+
         $datos = RequisitoEvaluar::where("id_cliente", $id_cliente)->first();
         //$preguntas = preguntasRequisitosModel::with('actividad')->get();
 
@@ -700,7 +704,20 @@ public function mostrarRequisitosEvaluar($id)
 
 $preguntas = preguntasRequisitosModel::with('actividad')
     ->whereIn('tipo', $actividadesEmpresa)
+    ->orWhere(function($q) {
+        $q->where('tipo', 0)
+          ->select('pregunta') // Cambia por el campo
+          ->distinct();
+    })
+    ->orderBy('tipo')
     ->get();
+
+
+
+
+
+
+  
        
    
 
@@ -712,7 +729,7 @@ $preguntas = preguntasRequisitosModel::with('actividad')
             $certificadoEscaneado = $doc?->url ?? '';
         }*/
 
-        return view('clientes.add_revision_requisitos', compact('datos', 'preguntas', 'cliente'));
+        return view('clientes.add_revision_requisitos', compact('datos', 'preguntas' ,'cliente'));
     }
 
 
