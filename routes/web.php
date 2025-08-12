@@ -763,6 +763,7 @@ Route::middleware(['auth'])->controller(GuiasController::class)->group(function 
     Route::resource('/guias-list', GuiasController::class)->middleware(['auth']);
     Route::post('/guias/store', [GuiasController::class, 'store'])->middleware(['auth']);
 
+    
     //por agrupacion
     Route::get('/edit/{id_run_folio}', [GuiasController::class, 'edit'])->name('guias.edit')->middleware(['auth']);
 
@@ -772,6 +773,11 @@ Route::middleware(['auth'])->controller(GuiasController::class)->group(function 
 
     Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado')->middleware(['auth']);//PDF
     //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
+
+    //subir guia y art
+    Route::post('/guias/subir_documento', [GuiasController::class, 'subirDocGuias']);
+    Route::get('/guias/mostrar_documento/{id}/{id_documento}', [GuiasController::class, 'mostrarDocGuias']);
+    Route::delete('/guias/borrar_documento/{id}/{id_documento}', [GuiasController::class, 'borrarDocGuias']);
 });
 
 //Documentacion

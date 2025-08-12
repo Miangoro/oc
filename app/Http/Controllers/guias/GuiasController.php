@@ -516,6 +516,147 @@ public function update(Request $request, $id)
 
 
 
+///SUBIR DOCUMENTOS GUIA Y ART
+public function subirDocGuias(Request $request)
+{
+    $request->validate([
+        'id_guia' => 'required|exists:guias,id_guia',
+        'documento.*' => 'nullable|mimes:pdf|max:3072',
+    ]);
+
+    $guia = Guias::findOrFail($request->id_guia);
+
+    $guia_folio = preg_replace('/[^A-Za-z0-9_\-]/', '_', $guia->folio ?? 'No_encontrado');
+
+    $empresa = empresa::with("empresaNumClientes")
+        ->where("id_empresa", $guia->id_empresa)
+        ->first();
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')
+        ->first(function ($numero) {
+            return !empty($numero);
+        });
+
+    $rutaCarpeta = "public/uploads/{$numeroCliente}/guias";
+
+    // Recorremos los archivos enviados
+    foreach ($request->documento as $id_documento => $archivo) {
+        if ($archivo) {
+            // Generar nombre único
+            $nombreArchivo = $guia_folio . '_' . uniqid() . '.pdf';
+
+            // Guardar archivo nuevo
+            $upload = Storage::putFileAs($rutaCarpeta, $archivo, $nombreArchivo);
+
+            if ($upload) {
+                // Buscar si hay documento previo
+                $docAnterior = Documentacion_url::where('id_documento', $id_documento)
+                    ->where('id_relacion', $guia->id_guia)
+                    ->first();
+
+                // Solo eliminar si existe y ya guardamos el nuevo
+                if ($docAnterior && Storage::exists($rutaCarpeta . '/' . $docAnterior->url)) {
+                    Storage::delete($rutaCarpeta . '/' . $docAnterior->url);
+                }
+
+                // Crear o actualizar registro
+                Documentacion_url::updateOrCreate(
+                    [
+                        'id_documento' => $id_documento,
+                        'id_relacion' => $guia->id_guia,
+                    ],
+                    [
+                        'nombre_documento' => $id_documento == 71
+                            ? "Guía de traslado de agave"
+                            : "Resultados ART",
+                        'url' => $nombreArchivo,
+                        'id_empresa' => $guia->id_empresa,
+                    ]
+                );
+            }
+        }
+    }
+
+
+    return response()->json(['message' => 'Documento actualizado correctamente.']);
+}
+///OBTENER DOCUMENTOS GUIA Y ART
+public function mostrarDocGuias($id, $id_documento)
+{
+    $guia = Guias::findOrFail($id);
+
+    // Buscar documento según tipo
+    $documentacion = Documentacion_url::where('id_documento', $id_documento)
+        ->where('id_relacion', $guia->id_guia)
+        ->first();
+
+    $empresa = empresa::with("empresaNumClientes")
+        ->where("id_empresa", $guia->id_empresa)
+        ->first();
+
+    $numeroCliente = $empresa->empresaNumClientes
+        ->pluck('numero_cliente')
+        ->first(function ($numero) {
+            return !empty($numero);
+        });
+
+    if ($documentacion) {
+        $rutaArchivo = "{$numeroCliente}/guias/{$documentacion->url}";
+
+        if (Storage::exists("public/uploads/{$rutaArchivo}")) {
+            return response()->json([
+                'documento_url' => asset("files/{$rutaArchivo}"),
+                'nombre_archivo' => basename($documentacion->url),
+            ]);
+        } else {
+            return response()->json([
+                'documento_url' => null,
+                'nombre_archivo' => null,
+            ], 404);
+        }
+    }
+
+    return response()->json([
+        'documento_url' => null,
+        'nombre_archivo' => null,
+    ]);
+}
+///BORRAR DOCUMENTOS GUIA Y ART
+public function borrarDocGuias($id, $id_documento)
+{
+    $guia = Guias::findOrFail($id);
+
+    $documentacion = Documentacion_url::where('id_documento', $id_documento)
+        ->where('id_relacion', $guia->id_guia)
+        ->first();
+
+    if (!$documentacion) {
+        return response()->json(['message' => 'Documento no encontrado.'], 404);
+    }
+
+    $empresa = empresa::with("empresaNumClientes")
+        ->where("id_empresa", $guia->id_empresa)
+        ->first();
+
+    $numeroCliente = $empresa->empresaNumClientes
+        ->pluck('numero_cliente')
+        ->first(function ($numero) {
+            return !empty($numero);
+        });
+
+    $rutaArchivo = "public/uploads/{$numeroCliente}/guias/{$documentacion->url}";
+
+    // Eliminar archivo físico
+    if (Storage::exists($rutaArchivo)) {
+        Storage::delete($rutaArchivo);
+    }
+
+    // Eliminar registro en la base de datos
+    $documentacion->delete();
+
+    return response()->json(['message' => 'Documento eliminado correctamente.']);
+}
+
+
 
 
 
