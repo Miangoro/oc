@@ -134,6 +134,8 @@
                                 placeholder="Observaciones..."></textarea>
                             <label for="edit_id_observaciones">Observaciones</label>
                         </div>
+
+
                         <div class="form-floating form-floating-outline mb-5">
                             <input class="form-control form-control-sm" type="file" name="url[]">
                             <input value="71" class="form-control" type="hidden" name="id_documento[]">
@@ -149,6 +151,8 @@
                             <label for="Resultados ART">Adjuntar resultados de ART</label>
                         </div>
                     </div>
+
+                    
                     <div class="text-center mb-6">
                         <h4 class="address-title mb-2">Datos del comprador</h4>
                     </div>
