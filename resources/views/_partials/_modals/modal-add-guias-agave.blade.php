@@ -243,8 +243,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number"
-                                    placeholder="Número de guías solicitadas" id="edit_numero_guias" name="numero_guias" />
+                                <input class="form-control bg-light text-muted" type="number"
+                                    placeholder="Número de guías solicitadas" id="edit_numero_guias" name="numero_guias" 
+                                    style="pointer-events: none;" readonly/>
                                 <label>Número de guías solicitadas</label>
                             </div>
                         </div>

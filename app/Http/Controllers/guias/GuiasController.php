@@ -439,12 +439,19 @@ public function update(Request $request, $id)
 {
     $guia = Guias::findOrFail($id);
     $runFolio = $guia->run_folio;
+    $diferencia = $guia->num_anterior - $request->anterior;
 
     // Restaurar plantas en la plantacion anterior
     $plantacionAnterior = predio_plantacion::find($guia->id_plantacion);
     if ($plantacionAnterior) {
+
+        $plantacionAnterior->num_plantas += $diferencia; 
+        // Aquí sumas la diferencia, puede ser positivo o negativo, así ajustas el inventario
+        if ($plantacionAnterior->num_plantas < 0) {
+            $plantacionAnterior->num_plantas = 0; // no puede quedar negativo
+        }
         //$plantacionAnterior->num_plantas += $guia->num_anterior;
-        $plantacionAnterior->num_plantas = $guia->num_anterior;
+        //$plantacionAnterior->num_plantas = $guia->num_anterior;
         $plantacionAnterior->save();
     }
 
@@ -470,13 +477,37 @@ public function update(Request $request, $id)
         'domicilio' => $request->domicilio,
     ]);
 
-    // Descontar plantas en la nueva plantación (restar num_anterior)
+        // Si cambió la plantación, hay que mover las plantas del inventario también
+        /*if ($request->plantacion != $guia->id_plantacion) {
+            // Devolver plantas a la plantación vieja (porque se cambia de plantación)
+            $plantacionVieja = predio_plantacion::find($guia->id_plantacion);
+            if ($plantacionVieja) {
+                $plantacionVieja->num_plantas += $guia->num_anterior;
+                $plantacionVieja->save();
+            }
+
+            // Descontar plantas de la nueva plantación
+            $plantacionNueva = predio_plantacion::find($request->plantacion);
+            if ($plantacionNueva) {
+                $plantacionNueva->num_plantas -= $request->anterior;
+                if ($plantacionNueva->num_plantas < 0) $plantacionNueva->num_plantas = 0;
+                $plantacionNueva->save();
+            }
+        }else{
+            $plantacionNueva = predio_plantacion::find($request->plantacion);
+            if ($plantacionNueva) {
+                //$plantacionNueva->num_plantas = max(0, $plantacionNueva->num_plantas - $request->plantas);
+                $plantacionNueva->num_plantas = $request->plantas;
+                $plantacionNueva->save();
+            }
+        }*/
+    // Descontar plantas en la plantación
     $plantacionNueva = predio_plantacion::find($request->plantacion);
     if ($plantacionNueva) {
-        //$plantacionNueva->num_plantas = max(0, $plantacionNueva->num_plantas - $request->plantas);
         $plantacionNueva->num_plantas = $request->plantas;
         $plantacionNueva->save();
     }
+
 
     return response()->json(['success' => 'Guías actualizadas correctamente']);
 }
