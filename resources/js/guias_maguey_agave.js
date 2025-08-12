@@ -625,7 +625,7 @@ $(function () {
 
 
 ///EDITAR SOL DE GUIAS
-  $(document).on('click', '.edit-guia', function () {
+$(document).on('click', '.edit-guia', function () {
     var id_guia = $(this).data('id');
     console.log('ver id:' ,id_guia);
 
@@ -634,10 +634,13 @@ $(function () {
       $('#editt_id_guia').val(data.id_guia);
       $('#edit_id_empresa').val(data.id_empresa).trigger('change');
       $('#edit_numero_guias').val(data.numero_guias);
-      $('#edit_nombre_predio').val(data.id_predio).trigger('change'); // Cambiado a 'id_predio'
+      //$('#edit_nombre_predio').val(data.id_predio).trigger('change'); // Cambiado a 'id_predio'
+      editobtenerNombrePredio(function() {
+          $('#edit_nombre_predio').val(data.id_predio).trigger('change');
+      });
 
       // Ahora cargas las plantaciones y cuando terminen, seleccionas la correcta
-      $.ajax({
+      /*$.ajax({
         url: '/getDatos/' + data.id_empresa,
         method: 'GET',
         success: function(response) {
@@ -650,9 +653,12 @@ $(function () {
           // Seleccionar el valor que viene de la base
           $('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
         }
+      });*/
+      // Uso:
+      editobtenerPlantacionPredio(function() {
+          $('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
       });
-
-      //$('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
+      
 
       $('#edit_num_anterior').val(data.num_anterior);
       $('#edit_num_comercializadas').val(data.num_comercializadas);
@@ -681,7 +687,7 @@ $(function () {
         }
       });
     });
-  });
+});
 
   
 
@@ -732,8 +738,9 @@ $(function () {
   }).on('core.form.valid', function (e) {
     //e.preventDefault();
     var formData = new FormData(editGuiaForm);
+    var id = $('#editt_id_guia').val();
     $.ajax({
-      url: '/update/', // Actualiza con la URL correcta
+      url: '/update/' + id, // Actualiza con la URL correcta
       type: 'POST',
       data: formData,
       processData: false,

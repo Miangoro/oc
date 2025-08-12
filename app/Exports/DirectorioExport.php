@@ -53,8 +53,8 @@ class DirectorioExport implements FromCollection, WithMapping, WithHeadings, Wit
             $query->where('certificados_exportacion.estatus', $this->filtros['estatus']);
         }
 
-        // Ordenar por empresa
-        return $query->orderBy('certificados_exportacion.fecha_emision', 'asc')->get();
+        // Ordenar por fecha_emision
+        return $query->orderBy('certificados_exportacion.fecha_emision', 'desc')->get();
     }
 
 
