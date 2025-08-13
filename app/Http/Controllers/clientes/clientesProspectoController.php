@@ -12,6 +12,7 @@ use App\Models\solicitud_informacion;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\marcas;
@@ -131,16 +132,9 @@ public function aceptarCliente(Request $request) {
     return response()->json('Validada');
 }
 
-
-  public function info($id) {
-    /* $res = DB::select('SELECT p.id_producto, n.id_norma, a.id_actividad, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono
-    FROM empresa e
-    JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
-    JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
-    JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
-    JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
-    WHERE e.id_empresa='.$id); */
-  $res = DB::select('
+  //funcion para el pdf de la solicitud de información del cliente
+public function info($id) {
+    $res = DB::select('
     SELECT
         p.id_producto,
         nc.id_norma,
@@ -148,6 +142,10 @@ public function aceptarCliente(Request $request) {
         s.medios,
         s.competencia,
         s.capacidad,
+        s.id_revisor,
+        u.name AS nombre_revisor,
+        u.puesto AS puesto_revisor,
+        u.firma AS firma_revisor,
         s.comentarios,
         e.representante,
         e.razon_social,
@@ -156,16 +154,22 @@ public function aceptarCliente(Request $request) {
         e.correo,
         e.telefono
     FROM empresa e
-    LEFT JOIN solicitud_informacion s ON e.id_empresa = s.id_empresa
-    LEFT JOIN empresa_producto_certificar p ON p.id_empresa = e.id_empresa
-    LEFT JOIN empresa_num_cliente nc ON nc.id_empresa = e.id_empresa
-    LEFT JOIN catalogo_norma_certificar n ON n.id_norma = nc.id_norma
-    LEFT JOIN empresa_actividad_cliente a ON a.id_empresa = e.id_empresa
+    LEFT JOIN solicitud_informacion s
+        ON e.id_empresa = s.id_empresa
+    LEFT JOIN users u
+        ON u.id = s.id_revisor
+    LEFT JOIN empresa_producto_certificar p
+        ON p.id_empresa = e.id_empresa
+    LEFT JOIN empresa_num_cliente nc
+        ON nc.id_empresa = e.id_empresa
+    LEFT JOIN catalogo_norma_certificar n
+        ON n.id_norma = nc.id_norma
+    LEFT JOIN empresa_actividad_cliente a
+        ON a.id_empresa = e.id_empresa
     WHERE e.id_empresa = ?
 ', [$id]);
 
-
-    $pdf = Pdf::loadView('pdfs.SolicitudInfoCliente',['datos'=>$res]);
+    $pdf = Pdf::loadView('pdfs.SolicitudInfoCliente', ['datos' => $res]);
   return $pdf->stream('F7.1-01-02  Solicitud de Información del Cliente NOM-070-SCFI-2016 y NMX-V-052-NORMEX-2016 Ed.pdf');
   }
 
@@ -188,7 +192,7 @@ public function aceptarCliente(Request $request) {
     $solicitud->competencia = $request->competencia;
     $solicitud->capacidad =  $request->capacidad;
     $solicitud->comentarios =  $request->comentarios;
-
+    $solicitud->id_revisor = Auth::id();
     $solicitud->update();
     // user created
     return response()->json('Validada');

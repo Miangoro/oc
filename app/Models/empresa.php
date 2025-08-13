@@ -67,14 +67,14 @@ class empresa extends Model
         $idsEmpresas = maquiladores_model::where('id_maquiladora', $this->id_empresa)
             ->pluck('id_maquilador')
             ->toArray(); // Convertir la colección en array
-    
+
         // Agregar la empresa actual al array
         $idsEmpresas[] = $this->id_empresa;
-    
+
         // Obtener todos los lotes de granel de esas empresas
         return LotesGranel::whereIn('id_empresa', $idsEmpresas)->get();
     }
-    
+
     public function lotes_envasado()
     {
     // Aquí deberías implementar la lógica para obtener los lotes envasados
@@ -112,10 +112,6 @@ class empresa extends Model
         // Obtener todas las marcas de esas empresas
         return marcas::whereIn('id_empresa', $idsEmpresas);
     }
-
-
-
-
 
     public function guias(){
         return Guias::where('id_empresa', $this->id_empresa)->get();
